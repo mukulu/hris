@@ -1,0 +1,29 @@
+Eclipse Plugins:
+1. Yedit ( Eclipse plugin for YAML Files - http://code.google.com/p/yedit/)
+	update site: http://dadacoalition.org/yedit
+2. Symfony Eclipse Plugin ( https://github.com/pulse00/Symfony-2-Eclipse-Plugin )
+	update site: http://p2.dubture.com
+
+
+Configurations:
+1. Setting Date time Zone
+	Set date time zone inside php.ini to:
+	date.timezone = 'Africa/Dar_es_Salaam'
+2. Turn off short_open_tag
+	Disable detection of PHP codes between <? and ?> for better PHP >=5.3 Experience
+	Set it inside php.ini to:
+	short_open_tag = Off
+3. Give Web readwrite access to cache and log directory in your SymfonyProject
+	To enjoy both user and web read-write access in linux use the following commands:
+		cd SymfonyProject/app/
+		sudo chown mukulu:www-data cache/ logs/ config/parameters.yml -R
+4. Database Configurations
+	HRHIS Makes use of postgres set the configurations accordingly
+		Driver: PostgreSQL(PDO) "pdo_pgsql"
+		Username: databaseusername "hris"
+		Password: userpassword "hris"
+		Database: databasename "hris"
+		Host: serveraddress "localhost"
+		Post: defaultpostgresport "5432"
+5. Save Global secret key:
+	4a4c7ff139bd79e577eebc95ead5310b7
