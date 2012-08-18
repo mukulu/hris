@@ -1,0 +1,7 @@
+parameters:
+#    udsm_hrhis_auth.example.class: Udsm\Hrhis\AuthBundle\Example
+
+services:
+#    udsm_hrhis_auth.example:
+#        class: %udsm_hrhis_auth.example.class%
+#        arguments: [@service_id, "plain_value", %parameter%]

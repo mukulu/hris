@@ -1,0 +1,76 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml" xml:lang="en" lang="en">
+	<head>
+		<meta charset="UTF-8" />
+		<meta http-equiv="content-type" content="text/html;charset=utf-8" />
+		<title>{% block title %}HRHIS{% endblock %}</title>
+		<link rel="icon" sizes="16x16" href="{{ asset('bundles/udsmhrhis/images/favicon.ico') }}" />
+		{% stylesheets 
+			'@UdsmHrhisAuthBundle/Resources/public/css/*'
+			'@UdsmHrhisAuthBundle/Resource/public/css/style.css'
+		output='js/compiled/main.js'
+		%}
+		<script src="{{ asset_url }}"></script>
+		{% stylesheets %}
+		
+		{% block  page_head %}{% endblock page_head %}
+	</head>
+	<body>
+	{% block page_body %}
+		<div id="wrapper">
+		<!-- Top page banner with Ministry Logo -->
+		{% block page_banner %}
+			<div id="banner">
+			{% block banner_logo %}
+				<div id="logo">
+					<h1>Ministry of Health And Social Welfare(MoHSW)</h1>
+					<h2>Human Resource for Health Information System (HRHIS)</h2>
+				</div>
+				<!-- end #logo -->
+			{% endblock banner_logo %}
+			</div>
+			<!-- end #banner -->
+		{% endblock page_banner %}
+		{% block page_content %}
+			<div id="page">
+			<div id="content">
+				<div id="login-form">
+					<form name="loginform" action="?pg=login" method="post">
+						<p class="form_errors"></p>
+						<fieldset class="login">
+							<legend class="title">HRHIS System Login</legend>
+							<div>
+								<label for="username">Username</label>
+								<input id="username" name="username" maxlength="30" type="text" style="width:15em">
+							</div>
+							<div>
+								<label for="password">Password</label>
+								<input name="password" id="password" type="password" style="width:15em">
+							</div>
+							<div>
+								<input name="next" value="" type="hidden">
+							</div>
+							<div id="submit-buttons">
+								<button name="login" type="submit" id="submit-go" value="Login" style="width:6.7em">Login</button>
+								<button type="reset" id="submit-go" value="Reset" style="width:6.7em">Reset</button>
+							</div>
+						</fieldset>
+					</form>
+					<div style="clear: both;">&nbsp;</div>
+				</div>
+			</div>
+			<!-- End of contents -->
+			<div style="clear: both;">&nbsp;</div>
+			</div>
+			<!-- End of page -->
+		{% endblock page_content %}
+		</div>
+		<!-- End of wrapper -->
+		{% block page_footer %}
+		<div id="footer">
+			<p>Copyright © 2010  Ministry of Health and Social welfare - Human resource for Health Information System</p>
+		</div>
+		{% endblock page_footer %}
+	{% endblock page_body %}
+	</body>
+</html>

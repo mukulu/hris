@@ -1,0 +1,40 @@
+{% extends 'UdsmHrhisAuthBundle::base.html.twig' %}
+{% block  page_head %}
+	<link rel="stylesheet" href="{{ asset('bundles/udsmhrhis/css/login.css') }}" />
+{% endblock page_head %}
+{% block page_content %}
+	<div id="page">
+	<div id="content">
+		<div id="login-form">
+			<form name="loginform" action="?pg=login" method="post">
+			{% if error %}
+				<p class="form_errors">{{ error.message }}</p>
+			{% endif %}
+				<fieldset class="login">
+					<legend class="title">HRHIS System Login</legend>
+					<div>
+						<label for="username">Username</label>
+						<input id="username" name="username" maxlength="30" type="text" style="width:15em">
+					</div>
+					<div>
+						<label for="password">Password</label>
+						<input name="password" id="password" type="password" style="width:15em">
+					</div>
+					<div>
+						<input name="next" value="" type="hidden">
+					</div>
+					<div id="submit-buttons">
+						<button name="login" type="submit" id="submit-go" value="Login" style="width:6.7em">Login</button>
+						<button type="reset" id="submit-go" value="Reset" style="width:6.7em">Reset</button>
+					</div>
+				</fieldset>
+			</form>
+			<div style="clear: both;">&nbsp;</div>
+		</div>
+	</div>
+	<!-- End of contents -->
+	<div style="clear: both;">&nbsp;</div>
+	</div>
+	<!-- End of page -->
+{% endblock page_content %}
+{% set code = code(_self) %}

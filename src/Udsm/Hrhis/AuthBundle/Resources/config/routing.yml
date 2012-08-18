@@ -1,0 +1,3 @@
+UdsmHrhisAuthBundle_homepage:
+    pattern:  /hello/{name}
+    defaults: { _controller: UdsmHrhisAuthBundle:Default:index }

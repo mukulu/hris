@@ -15,8 +15,17 @@ Configurations:
 	short_open_tag = Off
 3. Give Web readwrite access to cache and log directory in your SymfonyProject
 	To enjoy both user and web read-write access in linux use the following commands:
-		cd SymfonyProject/app/
-		sudo chown mukulu:www-data cache/ logs/ config/parameters.yml -R
+		cd SymfonyProject/
+		rm -rf app/cache/*
+		rm -rf app/logs/*
+	On Systems supporting chmod +a
+		sudo chmod +a "www-data allow delete,write,append,file_inherit,directory_inherit" app/cache app/logs
+		sudo chmod +a "`whoami` allow delete,write,append,file_inherit,directory_inherit" app/cache app/logs
+	On Systems that don't support chmod +a
+		sudo setfacl -R -m u:www-data:rwx -m u:`whoami`:rwx app/cache app/logs
+		sudo setfacl -dR -m u:www-data:rwx -m u:`whoami`:rwx app/cache app/logs
+	On Systems that doesn't support either
+		sudo chown youruseraccount:www-data cache/ logs/ config/parameters.yml -R
 4. Database Configurations
 	HRHIS Makes use of postgres set the configurations accordingly
 		Driver: PostgreSQL(PDO) "pdo_pgsql"
@@ -27,3 +36,13 @@ Configurations:
 		Post: defaultpostgresport "5432"
 5. Save Global secret key:
 	4a4c7ff139bd79e577eebc95ead5310b7
+
+	
+Developers Section:
+1. Help on console commands
+	app/console help
+	app/console list #Lists all commands offered by console
+2. Create a bundle
+	app/console generate:bundle
+3. On deployment run
+	php app/console assetic:dump --env=prod --no-debug  #To generate assets static urls
