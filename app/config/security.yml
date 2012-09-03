@@ -23,17 +23,17 @@ security:
             security: false
 
         login:
-            pattern:  ^/demo/secured/login$
+            pattern:  ^/secured/login$
             security: false
 
         secured_area:
-            pattern:    ^/demo/secured/
+            pattern:    ^/secured/
             form_login:
-                check_path: /demo/secured/login_check
-                login_path: /demo/secured/login
+                check_path: /secured/login_check
+                login_path: /secured/login
             logout:
-                path:   /demo/secured/logout
-                target: /demo/
+                path:   /secured/logout
+                target: /secured/dashboard
             #anonymous: ~
             #http_basic:
             #    realm: "Secured Demo Area"

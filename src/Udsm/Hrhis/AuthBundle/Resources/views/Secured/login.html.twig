@@ -1,12 +1,13 @@
 {% extends 'UdsmHrhisAuthBundle::base.html.twig' %}
 {% block  page_head %}
-	<link rel="stylesheet" href="{{ asset('bundles/udsmhrhis/css/login.css') }}" />
+	<link rel="stylesheet" href="{{ asset('bundles/udsmhrhisauth/css/style.css') }}" />
+	<link rel="stylesheet" href="{{ asset('bundles/udsmhrhisauth/css/login.css') }}" />
 {% endblock page_head %}
 {% block page_content %}
 	<div id="page">
 	<div id="content">
 		<div id="login-form">
-			<form name="loginform" action="?pg=login" method="post">
+			<form action="{{ path("_hrhis_security_check") }}" method="post" id="login">
 			{% if error %}
 				<p class="form_errors">{{ error.message }}</p>
 			{% endif %}
@@ -14,11 +15,11 @@
 					<legend class="title">HRHIS System Login</legend>
 					<div>
 						<label for="username">Username</label>
-						<input id="username" name="username" maxlength="30" type="text" style="width:15em">
+						<input id="username" name="username" name="_username" value="{{ last_username }}" maxlength="30" type="text" style="width:15em">
 					</div>
 					<div>
 						<label for="password">Password</label>
-						<input name="password" id="password" type="password" style="width:15em">
+						<input name="password" id="password" type="password" name="_password" style="width:15em">
 					</div>
 					<div>
 						<input name="next" value="" type="hidden">

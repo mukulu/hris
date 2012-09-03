@@ -46,3 +46,7 @@ Developers Section:
 	app/console generate:bundle
 3. On deployment run
 	php app/console assetic:dump --env=prod --no-debug  #To generate assets static urls
+	php app/console assets:install --symlink web #Creates symbolic links to package assets
+4. Clearing web server cache
+	php app/console cache:clear --env=prod --no-debug
+	php app/console cache:clear --env=dev --no-warmup

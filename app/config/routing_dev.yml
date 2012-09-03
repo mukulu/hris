@@ -1,6 +1,6 @@
-_login:
-    pattern: /
-    defaults: { _controller: UdsmHrhisAuthBundle:Secured:login }
+_hrhis_secured:
+    resource: "@UdsmHrhisAuthBundle/Controller/SecuredController.php"
+    type:     annotation
 
 _welcome:
     pattern:  /

@@ -1,0 +1,21 @@
+
+#login-status{  position:absolute;  top: 0;  right: 0;  color: #FFFFFF;  font-size: 1em;}
+#login-status a{  color: #FFF;  font-weight: bold;  text-decoration: none;}
+#login-status a:hover{  text-decoration: underline;}
+#login-form {float: left;padding: 30px 0px 30px 10%;margin:2% 0px;}
+#login-form label{color: #3b5998;font-size: 12px;}
+#login-form #id_username, #login-form #id_password{border: 2px solid #3b5998;}
+#login-form #id_username:hover, #login-form #id_password:hover{   border: 2px solid #255df8;}
+#login-form .title{	color:#4366ad;    font-size:14px;    text-align:left;}
+#login-form form{background:#ebf1ff;padding:1em;border:1px solid #eee;margin:1em;width:32em;-moz-border-radius:5px 5px 5px 5px;-webkit-border-radius:5px 5px 5px 5px;}
+#login-form .login {background:#eceff8;border:1px solid #999;-moz-border-radius:3px 3px 3px 3px;}
+#login-form input {padding:0.15em;width:10em;border:1px solid #ddd;background:#fafafa;font:bold 0.95em arial, sans-serif;-moz-border-radius:2px 2px 2px 2px;}
+#login-form input:hover, input:focus {border-color:#677798;-moz-border-radius:3px 3px 3px 3px;background:#f6f6f6;} 
+#login-form fieldset {border:1px solid #ddd;padding:0 0.5em 0.5em;}
+#login-form fieldset div {margin:0.3em 0;clear:both;}
+#login-form label {float:left;width:10em;text-align:right;margin-right:1em;}
+#login-form .form_errors {text-align: center;font-weight:bold;font-size:12px;color: red;}
+#submit-go:hover {background-position:0 -26px; background-color: #5079cf;	}
+#submit-go {width:60px;height:23px;text-align: center;color: #fff;overflow:hidden;border: 1px solid #1e58f8;background-color: #3b5998;display:inline;cursor:pointer !important;font-family:"Helvetica Neue",Helvetica,Arial,sans-serif;line-height:125%;-moz-border-radius:3px 3px 3px 3px;}
+#submit-buttons {padding:0px 0px 0px 130px;}
+
