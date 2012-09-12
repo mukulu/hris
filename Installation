@@ -36,17 +36,42 @@ Configurations:
 		Post: defaultpostgresport "5432"
 5. Save Global secret key:
 	4a4c7ff139bd79e577eebc95ead5310b7
-
 	
+
 Developers Section:
 1. Help on console commands
 	app/console help
-	app/console list #Lists all commands offered by console
+	app/console list   #List all commands offered by console
+	app/console --list #List all commands offered by console
 2. Create a bundle
 	app/console generate:bundle
-3. On deployment run
-	php app/console assetic:dump --env=prod --no-debug  #To generate assets static urls
-	php app/console assets:install --symlink web #Creates symbolic links to package assets
+3. Management of assets on deployment
+	Updating symbolic links to bundle assets
+		- php app/console assets:install --symlink web #Creates symbolic links to package assets
+	Using assetic to generate static urls
+		- php app/console assetic:dump --env=prod --no-debug  #To generate assets static urls
 4. Clearing web server cache
 	php app/console cache:clear --env=prod --no-debug
 	php app/console cache:clear --env=dev --no-warmup
+5. Updating project package dependecies with composer.phar
+	- Update composer itself
+		php composer.phar self-update
+	- Update dependencies
+		php composer.phar update
+	- Updating single repository
+		php composer.phar update friendsofsymfony/user-bundle
+6. Generating doctrine entity
+	php app/console doctrine:generate:entity
+7. Checking existing routes in the project
+	php app/console router:debug
+8. Cretaing symfony database
+	php app/console doctrine:database:create
+9. Listing schema updates/changes
+	php app/console doctrine:schema:update --dump-sql
+10. Applying schema updates/changes
+	php app/console doctrine:schema:update --force
+11. Creating user account using fos user bundle commands
+	php app/console fos:user:create
+12. Promote user's roles using fos user bundle commands
+	php app/console fos:user:promote	#Roles must start with ROLE_ prefix
+	

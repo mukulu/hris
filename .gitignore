@@ -4,13 +4,11 @@ app/cache/*
 app/logs/*
 build/
 bin
-composer.phar
 app/config/parameters.yml
 .project
 .buildpath
 .settings/
 phpunit.xml
 composer.lock
-composer.phar
 autoload.php
 /vendor/
