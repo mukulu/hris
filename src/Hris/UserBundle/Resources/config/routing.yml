@@ -1,5 +1,5 @@
 HrisUserBundle_homepage:
-    pattern:  /hello/{name}
+    pattern:  /user/{name}
     defaults: { _controller: "HrisUserBundle:Default:index" }
 fos_user_security:
     resource: "@FOSUserBundle/Resources/config/routing/security.xml"

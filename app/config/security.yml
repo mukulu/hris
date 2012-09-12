@@ -16,7 +16,10 @@ security:
 
 
     firewalls:
-        main:
+        login_firewall:
+            pattern:  ^/login$
+            anonymous: ~
+        main_firewall:
             pattern:    ^/
             form_login:
                 check_path: /login_check
@@ -24,11 +27,13 @@ security:
                 provider: fos_userbundle
             logout:
                 path:   /logout
-                target: /
-            anonymous: ~
+                target: /login
+            #anonymous: ~
             #http_basic:
             #    realm: "Secured Demo Area"
-
     access_control:
-        #- { path: ^/login, roles: IS_AUTHENTICATED_ANONYMOUSLY, requires_channel: https }
+        - { path: ^/login, roles: IS_AUTHENTICATED_ANONYMOUSLY }
+        - { path: ^/, roles: ROLE_USER }
+        
+        #- { path: ^/login, roles: IS_AUTHENTICATED_ANONYMOUSLY}
         #- { path: ^/_internal/secure, roles: IS_AUTHENTICATED_ANONYMOUSLY, ip: 127.0.0.1 }

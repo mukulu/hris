@@ -1,0 +1,117 @@
+ul.accordion,
+ol.accordion {
+    margin: 0;
+    padding: 0;
+}
+.accordion li {
+    list-style-type: none;
+    margin: 0;
+    padding: 0;
+}
+.accordion li:after {
+    content: ".";
+    display: block;
+    height: 0;
+    clear: both;
+    visibility: hidden;
+    *zoom: 1;
+}
+.accordion li li {
+    list-style-type: disc;
+    margin-left: 1em;
+}
+.accordion a {
+    color: inherit;
+    text-decoration: inherit;
+}
+.accordion .loading {
+    display: none;
+}
+.loading {
+	display: none;
+}
+.accordion {
+	width:  200px;
+}
+.accordion li h3 a {
+	background:             #666;
+	background:             #666 -webkit-gradient(linear, left top, left bottom, from(#5BAAD6), to(#2877A3)) no-repeat;
+	background:             #666 -moz-linear-gradient(top,  #5BAAD6,  #2877A3) no-repeat;
+	-moz-border-radius:4px 4px 0px 0px; 
+	-webkit-border-radius:4px 4px 0px 0px;
+	border-bottom:          1px solid #333;
+	border-top:             1px solid #ccc;
+	color:                  #fff;
+	display:                block;
+	font: bold 12px tahoma,verdana,sans-serif;
+	font-style:             normal;
+	margin:                 0;
+	padding:                5px 10px;
+	text-shadow:            0 -1px 2px #333, #ccc 0 1px 2px;
+}
+	.accordion li.active h3 a {
+		background:             #369;
+		background:             #369 -webkit-gradient(linear, left top, left bottom, from(#69c), to(#369)) no-repeat;
+		background:             #369 -moz-linear-gradient(top,  #69c,  #369) no-repeat;
+		border-bottom:          1px solid #036;
+		border-top:             1px solid #9cf;
+		text-shadow:            0 -1px 2px #036, #9cf 0 1px 2px;
+	}
+	.accordion li.locked h3 a {
+		background:             #963;
+		background:             #963 -webkit-gradient(linear, left top, left bottom, from(#c96), to(#963)) no-repeat;
+		background:             #963 -moz-linear-gradient(top,  #c96,  #963) no-repeat;
+		border-bottom:          1px solid #630;
+		border-top:             1px solid #fc9;
+		text-shadow:            0 -1px 2px #630, #fc9 0 1px 2px;
+	}
+.accordion li h3 {
+	margin:         0;
+	padding:        0px 0px 5px 0px;
+}
+
+.accordion li ul.dropdown {
+	font: bold 11px tahoma,verdana,sans-serif;
+	background-color: #D6DFF7;
+	color: black;
+	border: 1px solid white;
+	border-width: 0 1px 1px 1px;
+	padding-top: 5px;
+	padding-bottom: 5px;
+}
+
+.accordion li ul.dropdown li {
+	margin-left: -35px;
+	margin-top: 2px;
+	height: 18px;
+	text-decoration: none;
+	list-style:none;
+	color: #428eff;
+}
+
+.accordion li ul.dropdown li a {
+   margin-left:10px;
+   font: 12px tahoma,verdana,sans-serif;	 	
+   text-decoration:none;
+}
+
+.accordion li ul.dropdown li:hover {
+   margin-left:-30px;
+   margin-top:2px;
+   font: 14px tahoma,verdana,sans-serif;	  
+   height:18px;
+   color: #428eff;
+   background:#fff url("gradient.gif") repeat-x;
+   cursor:pointer;
+   text-decoration:none;
+}
+
+.accordion li ul.dropdown li  a:hover
+{
+   margin-left:12px;
+   font: 12px tahoma,verdana,sans-serif;
+   cursor:pointer;	
+   color: #428eff;
+   text-decoration:none;
+   cursor:pointer;
+}

@@ -1,0 +1,7 @@
+parameters:
+#    hris_dashboard.example.class: Hris\DashboardBundle\Example
+
+services:
+#    hris_dashboard.example:
+#        class: %hris_dashboard.example.class%
+#        arguments: [@service_id, "plain_value", %parameter%]

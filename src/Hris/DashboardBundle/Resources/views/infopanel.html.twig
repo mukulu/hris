@@ -1,0 +1,70 @@
+{# src/Hris/DashboardBundle/Resources/views/infopanel.html.twig #}
+{% block stylesheets %}
+	<link rel="stylesheet" href="{{ asset('bundles/hrisassets/css/slide.css') }}" />
+	<style type="text/css">
+		.tab{background:url({{ asset('bundles/hrisassets/images/tab_b.png') }}) repeat-x 0 0;height:42px;position:relative;top:0;z-index:999}
+		.tab a.open{background:url({{ asset('bundles/hrisassets/images/bt_open.png') }}) no-repeat left 0}
+		.tab a.close{background:url({{ asset('bundles/hrisassets/images/bt_close.png') }}) no-repeat left 0}
+		.tab a:hover.open{background:url({{ asset('bundles/hrisassets/images/bt_open.png') }}) no-repeat left -19px}
+		.tab a:hover.close{background:url({{ asset('bundles/hrisassets/images/bt_close.png') }}) no-repeat left -19px}
+		.tab ul.login li.left{background:url({{ asset('bundles/hrisassets/images/tab_l.png') }}) no-repeat left 0;height:42px;width:30px;display:block;float:left;margin:0;padding:0}
+		.tab ul.login li.right{background:url({{ asset('bundles/hrisassets/images/tab_r.png') }}) no-repeat left 0;height:42px;width:30px;display:block;float:left;margin:0;padding:0}
+		.tab ul.login li{text-align:left;display:block;float:left;height:42px;background:url({{ asset('bundles/hrisassets/images/tab_m.png') }}) repeat-x 0 0;padding:0 6px}
+		#panel .content input.bt_login{width:74px;background:transparent url({{ asset('bundles/hrisassets/images/bt_login.png') }}) no-repeat 0 0}
+		#panel .content input.bt_register{width:94px;color:#FFF;background:transparent url({{ asset('bundles/hrisassets/images/bt_register.png') }}) no-repeat 0 0}
+	</style>
+{% endblock stylesheets %}
+<div id="toppanel">
+	<div id="panel" style="display: none; ">
+		<div class="content clearfix">
+			<div class="left">
+				<h1>Server Info &amp; Conf</h1>
+				<h2>Apache Version:&nbsp;&nbsp;Apache/2.2.22 (Ubuntu)</h2>
+				<h2>PHP Version:&nbsp;&nbsp;5.3.10-1ubuntu3.2</h2>
+				<h2>Machine Info:&nbsp;&nbsp;Linux 3.2.0-30-generic-pae</h2>
+				<h2>Distribution:&nbsp;&nbsp;Ubuntu 12.04.1 LTS'precise'</h2>
+				<h2>Memory Limit:&nbsp;&nbsp;1280M</h2>
+				<h2>Max. execution time:&nbsp;&nbsp;5000 mins.</h2>
+			</div>
+			<div class="left">
+				<h1>Server Info &amp; Conf</h1>
+				<h2>Display errors:&nbsp;&nbsp;Off</h2>
+				<h2>Max. input time:&nbsp;&nbsp;10000mins.</h2>
+				<h2>Max. post size:&nbsp;&nbsp;800M</h2>
+				<h2>Max. upload file size:&nbsp;&nbsp;200M</h2>
+				<h2>Default socket timeout:&nbsp;&nbsp;1000mins.</h2>
+			</div>
+			<div class="left">
+				<h1>Database &amp; Sys Revision</h1>
+				<h2>Postgres version:&nbsp;&nbsp;9.1.4</h2>
+				<h2>Database name:&nbsp;&nbsp;hris2_dev</h2>
+				<h2>Database user:&nbsp;&nbsp;hris</h2>
+				<h2>Database driver:&nbsp;&nbsp;pdo_pgsql</h2>
+				<h2>System revision:&nbsp;&nbsp;595</h2>
+				<h2>System version:&nbsp;&nbsp;2.5</h2>
+			</div>
+		</div>
+		<!-- content clearfix -->
+	</div>
+	<!-- /panel -->	
+	<!-- The tab on top -->	
+	<div class="tab">
+		<ul class="login">
+			<li class="left">&nbsp;</li>
+			<li>12th September 2012</li>
+			<li class="sep">|</li>
+			<li>Welcome, admin admin</li>
+			<li class="sep">|</li>
+			<li><a href="?pg=dashboard" style="font-weight:bold;font-size:13px;" data-bitly-type="bitly_hover_card">Home</a></li>
+			<li><a href="?pg=settings" style="font-weight:bold;font-size:13px;" data-bitly-type="bitly_hover_card">Settings</a></li>
+			<li><a href="./media/docs/user_manual.pdf" style="font-weight:bold;font-size:13px;" data-bitly-type="bitly_hover_card">Manual</a></li>
+			<li><a href="{{ url('fos_user_security_logout') }}" style="font-weight:bold;font-size:13px;" data-bitly-type="bitly_hover_card">Log out</a></li>
+			<li id="toggle">
+				<a id="open" class="open" href="#" data-bitly-type="bitly_hover_card" style="display: block; ">Open | Info. Panel</a>
+				<a id="close" style="display: none; " class="close" href="#" data-bitly-type="bitly_hover_card">Close | Info. Panel</a>			
+			</li>
+			<li class="right">&nbsp;</li>
+		</ul> 
+	</div>
+	<!-- / tab -->
+</div>

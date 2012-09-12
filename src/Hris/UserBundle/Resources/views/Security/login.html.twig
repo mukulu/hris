@@ -1,14 +1,14 @@
-{# src/Hris/UserBundle/Resources/views/Security/layout.html.twig #}
+{# src/Hris/UserBundle/Resources/views/Security/login.html.twig #}
 {% extends "FOSUserBundle::layout.html.twig" %}
 {% block fos_user_content %}
-{% if error %}
-    <div>{{ error|trans({}, 'FOSUserBundle') }}</div>
-{% endif %}
 <div id="page">
 	<div id="content">
 		<div id="login-form">
 			<form action="{{ path("fos_user_security_check") }}" method="post">
 			    <input type="hidden" name="_csrf_token" value="{{ csrf_token }}" />
+			    {% if error %}
+				    <div class="form_errors"><p>{{ error|trans({}, 'FOSUserBundle') }}</p></div>
+				{% endif %}
 			    <fieldset class="login">
 				    <legend class="title">HRHIS System Login</legend>
 					<div>

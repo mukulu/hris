@@ -1,0 +1,6 @@
+hris_homepage:
+    pattern: /
+    defaults: { _controller: "HrisDashboardBundle:Dashboard:index", name: "Symfony" }
+hris_dashboard_homepage:
+    pattern:  /dashboard/{name}
+    defaults: { _controller: "HrisDashboardBundle:Dashboard:index", name: "Symfony"}
