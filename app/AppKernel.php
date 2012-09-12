@@ -23,6 +23,7 @@ class AppKernel extends Kernel
             new Hris\UserBundle\HrisUserBundle(),
             new Hris\DashboardBundle\HrisDashboardBundle(),
             new Hris\AssetsBundle\HrisAssetsBundle(),
+            new Hris\OrganisationunitBundle\HrisOrganisationunitBundle(),
         );
 
         if (in_array($this->getEnvironment(), array('dev', 'test'))) {

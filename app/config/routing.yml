@@ -1,3 +1,7 @@
+hris_organisationunit:
+    resource: "@HrisOrganisationunitBundle/Resources/config/routing.yml"
+    prefix:   /
+
 hris_dashboard:
     resource: "@HrisDashboardBundle/Resources/config/routing.yml"
     prefix:   /
