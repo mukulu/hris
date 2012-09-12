@@ -1,5 +1,5 @@
-UdsmHrhisAuthBundle:
-    resource: "@UdsmHrhisAuthBundle/Resources/config/routing.yml"
+HrisUserBundle:
+    resource: "@HrisUserBundle/Resources/config/routing.yml"
     prefix:   /
 
 # Internal routing configuration to handle ESI

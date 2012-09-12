@@ -1,10 +1,6 @@
-_hrhis_secured:
-    resource: "@UdsmHrhisAuthBundle/Controller/SecuredController.php"
-    type:     annotation
-
 _welcome:
     pattern:  /
-    defaults: { _controller: AcmeDemoBundle:Welcome:index }
+    defaults: { _controller: "AcmeDemoBundle:Welcome:index" }
 
 _demo_secured:
     resource: "@AcmeDemoBundle/Controller/SecuredController.php"

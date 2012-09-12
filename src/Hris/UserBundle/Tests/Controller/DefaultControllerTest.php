@@ -1,6 +1,6 @@
 <?php
 
-namespace Udsm\Hrhis\AuthBundle\Tests\Controller;
+namespace Hris\UserBundle\Tests\Controller;
 
 use Symfony\Bundle\FrameworkBundle\Test\WebTestCase;
 
