@@ -17,7 +17,7 @@
 	<script type="text/javascript" src="{{ asset('bundles/hrisassets/js/jquery.min.js') }}" charset="utf-8"></script>
 	<script type="text/javascript" src="{{ asset('bundles/hrisassets/js/jquery.accordion.2.0.min.js') }}" charset="utf-8"></script>
 	<script type="text/javascript">
-		$('#navigationmenu').accordion({canToggle: true,canOpenMultiple: true});
+		$('#navigationmenu').accordion({canToggle: true});
 		function SideBar() {
 		    this.showAnimated = function () {setMenuVisible();setMainPageNormal("270px");$("div#sidebar").show("fast");$("span#showSideBar").hide("fast");};
 		    this.hideAnimated = function () {if ($("#sidebar").is(":visible")) {$("#content").css({"min-height":"350px","width": "100%"});$("div#sidebar").hide("fast");$("#hideSideBarLink").html('<img height="16"width="16" alt="Show menu" title="Show Menu" src="{{ asset('bundles/hrisassets/images/show_menu.png') }}"/>');} else { $("#content").css({"width":"76%"});$("div#sidebar").show("fast");$("#hideSideBarLink").html('<img height="16" width="16" alt="Hide menu" title="Hide menu" src="{{ asset('bundles/hrisassets/images/hide_menu.png') }}"/>');}};
