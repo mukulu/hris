@@ -2,12 +2,14 @@
 
 namespace Hris\OrganisationunitBundle\Entity;
 
+use Hris\UserBundle\Entity\User;
+use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\ORM\Mapping as ORM;
 
 /**
  * Hris\OrganisationunitBundle\Entity\Organisationunit
  *
- * @ORM\Table()
+ * @ORM\Table(name="hris_organiationunit")
  * @ORM\Entity(repositoryClass="Hris\OrganisationunitBundle\Entity\OrganisationunitRepository")
  */
 class Organisationunit
@@ -20,6 +22,13 @@ class Organisationunit
      * @ORM\GeneratedValue(strategy="AUTO")
      */
     private $id;
+    
+    /**
+     * @var Hris\UserBundle\Entity\User $user
+     * 
+     * @ORM\ManyToMany(targetEntity="Hris\UserBundle\Entity\User", mappedBy="organisationunit")
+     */
+    private $user;
 
     /**
      * @var string $code
@@ -480,5 +489,45 @@ class Organisationunit
     public function getDescription()
     {
         return $this->description;
+    }
+    /**
+     * Constructor
+     */
+    public function __construct()
+    {
+        $this->user = new \Doctrine\Common\Collections\ArrayCollection();
+    }
+    
+    /**
+     * Add user
+     *
+     * @param Hris\UserBundle\Entity\User $user
+     * @return Organisationunit
+     */
+    public function addUser(\Hris\UserBundle\Entity\User $user)
+    {
+        $this->user[] = $user;
+    
+        return $this;
+    }
+
+    /**
+     * Remove user
+     *
+     * @param Hris\UserBundle\Entity\User $user
+     */
+    public function removeUser(\Hris\UserBundle\Entity\User $user)
+    {
+        $this->user->removeElement($user);
+    }
+
+    /**
+     * Get user
+     *
+     * @return Doctrine\Common\Collections\Collection 
+     */
+    public function getUser()
+    {
+        return $this->user;
     }
 }

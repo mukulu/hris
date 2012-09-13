@@ -7,7 +7,7 @@ use Doctrine\ORM\Mapping as ORM;
 /**
  * Hris\OrganisationunitBundle\Entity\OrganisationunitStructure
  *
- * @ORM\Table()
+ * @ORM\Table(name="hris_organiationunitstructure")
  * @ORM\Entity(repositoryClass="Hris\OrganisationunitBundle\Entity\OrganisationunitStructureRepository")
  */
 class OrganisationunitStructure
