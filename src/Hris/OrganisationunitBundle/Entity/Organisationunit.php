@@ -29,6 +29,13 @@ class Organisationunit
      * @ORM\ManyToMany(targetEntity="Hris\UserBundle\Entity\User", mappedBy="organisationunit")
      */
     private $user;
+    
+    /**
+     * @var OrganisationunitGroup $organisationunitGroup
+     * 
+     * @ORM\ManyToMany(targetEntity="OrganisationunitGroup", mappedBy="organisationunit")
+     */
+    private $organisationunitGroup;
 
     /**
      * @var string $code
@@ -496,6 +503,7 @@ class Organisationunit
     public function __construct()
     {
         $this->user = new \Doctrine\Common\Collections\ArrayCollection();
+        $this->organisationunitGroup = new \Doctrine\Common\Collections\ArrayCollection();
     }
     
     /**
@@ -529,5 +537,38 @@ class Organisationunit
     public function getUser()
     {
         return $this->user;
+    }
+
+    /**
+     * Add organisationunitGroup
+     *
+     * @param Hris\OrganisationunitBundle\Entity\OrganisationunitGroup $organisationunitGroup
+     * @return Organisationunit
+     */
+    public function addOrganisationunitGroup(\Hris\OrganisationunitBundle\Entity\OrganisationunitGroup $organisationunitGroup)
+    {
+        $this->organisationunitGroup[] = $organisationunitGroup;
+    
+        return $this;
+    }
+
+    /**
+     * Remove organisationunitGroup
+     *
+     * @param Hris\OrganisationunitBundle\Entity\OrganisationunitGroup $organisationunitGroup
+     */
+    public function removeOrganisationunitGroup(\Hris\OrganisationunitBundle\Entity\OrganisationunitGroup $organisationunitGroup)
+    {
+        $this->organisationunitGroup->removeElement($organisationunitGroup);
+    }
+
+    /**
+     * Get organisationunitGroup
+     *
+     * @return Doctrine\Common\Collections\Collection 
+     */
+    public function getOrganisationunitGroup()
+    {
+        return $this->organisationunitGroup;
     }
 }

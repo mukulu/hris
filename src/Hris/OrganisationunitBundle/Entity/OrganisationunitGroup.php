@@ -55,6 +55,22 @@ class OrganisationunitGroup
      * @ORM\Column(name="datecreated", type="datetime")
      */
     private $datecreated;
+    
+    /**
+     * @var Organisationunit $organisationunit
+     *
+     * @ORM\ManyToMany(targetEntity="Organisationunit", inversedBy="organisationunitGroup")
+     * @ORM\JoinTable(name="hris_organisationunitgroup_members",
+     *   joinColumns={
+     *     @ORM\JoinColumn(name="organisationunitgroup_id", referencedColumnName="id", onDelete="CASCADE")
+     *   },
+     *   inverseJoinColumns={
+     *     @ORM\JoinColumn(name="organisationunit_id", referencedColumnName="id", onDelete="CASCADE")
+     *   }
+     * )
+     * @ORM\OrderBy({"longname" = "ASC"})
+     */
+    private $organisationunit;
 
 
     /**
@@ -180,5 +196,45 @@ class OrganisationunitGroup
     public function getDatecreated()
     {
         return $this->datecreated;
+    }
+    /**
+     * Constructor
+     */
+    public function __construct()
+    {
+        $this->organisationunit = new \Doctrine\Common\Collections\ArrayCollection();
+    }
+    
+    /**
+     * Add organisationunit
+     *
+     * @param Hris\OrganisationunitBundle\Entity\Organisationunit $organisationunit
+     * @return OrganisationunitGroup
+     */
+    public function addOrganisationunit(\Hris\OrganisationunitBundle\Entity\Organisationunit $organisationunit)
+    {
+        $this->organisationunit[] = $organisationunit;
+    
+        return $this;
+    }
+
+    /**
+     * Remove organisationunit
+     *
+     * @param Hris\OrganisationunitBundle\Entity\Organisationunit $organisationunit
+     */
+    public function removeOrganisationunit(\Hris\OrganisationunitBundle\Entity\Organisationunit $organisationunit)
+    {
+        $this->organisationunit->removeElement($organisationunit);
+    }
+
+    /**
+     * Get organisationunit
+     *
+     * @return Doctrine\Common\Collections\Collection 
+     */
+    public function getOrganisationunit()
+    {
+        return $this->organisationunit;
     }
 }
