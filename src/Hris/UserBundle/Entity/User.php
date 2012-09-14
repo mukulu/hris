@@ -99,6 +99,7 @@ class User extends BaseUser
     {
     	parent::__construct();
     	$this->organisationunit = new ArrayCollection();
+    	$this->datecreated = new \DateTime('now');
     }
 
     /**
