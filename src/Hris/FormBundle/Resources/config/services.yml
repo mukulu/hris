@@ -1,0 +1,7 @@
+parameters:
+#    hris_form.example.class: Hris\FormBundle\Example
+
+services:
+#    hris_form.example:
+#        class: %hris_form.example.class%
+#        arguments: [@service_id, "plain_value", %parameter%]

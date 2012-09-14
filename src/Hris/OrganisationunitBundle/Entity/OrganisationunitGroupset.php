@@ -1,13 +1,34 @@
 <?php
-
+/*
+ *
+ * Copyright 2012John Francis Mukulu <john.f.mukulu@gmail.com>
+ *
+ * This program is free software; you can redistribute it and/or modify
+ * it under the terms of the GNU General Public License as published by
+ * the Free Software Foundation; either version 2 of the License, or
+ * (at your option) any later version.
+ *
+ * This program is distributed in the hope that it will be useful,
+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ * GNU General Public License for more details.
+ *
+ * You should have received a copy of the GNU General Public License
+ * along with this program; if not, write to the Free Software
+ * Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston,
+ * MA 02110-1301, USA.
+ *
+ *
+ */
 namespace Hris\OrganisationunitBundle\Entity;
 
+use Hris\OrganisationunitBundle\Entity\OrganisationunitGroup;
 use Doctrine\ORM\Mapping as ORM;
 
 /**
  * Hris\OrganisationunitBundle\Entity\OrganisationunitGroupset
  *
- * @ORM\Table(name="hris_organiationunitgroupset")
+ * @ORM\Table(name="hris_organisationunitgroupset")
  * @ORM\Entity(repositoryClass="Hris\OrganisationunitBundle\Entity\OrganisationunitGroupsetRepository")
  */
 class OrganisationunitGroupset
@@ -24,51 +45,67 @@ class OrganisationunitGroupset
     /**
      * @var string $name
      *
-     * @ORM\Column(name="name", type="string", length=64)
+     * @ORM\Column(name="name", type="string", length=64, nullable=false, unique=true)
      */
     private $name;
 
     /**
      * @var string $description
      *
-     * @ORM\Column(name="description", type="string", length=255)
+     * @ORM\Column(name="description", type="string", length=255, nullable=true)
      */
     private $description;
 
     /**
      * @var boolean $compulsory
      *
-     * @ORM\Column(name="compulsory", type="boolean")
+     * @ORM\Column(name="compulsory", type="boolean", nullable=true)
      */
     private $compulsory;
 
     /**
      * @var string $uid
      *
-     * @ORM\Column(name="uid", type="string", length=11)
+     * @ORM\Column(name="uid", type="string", length=11, nullable=false, unique=true)
      */
     private $uid;
 
     /**
      * @var string $code
      *
-     * @ORM\Column(name="code", type="string", length=50)
+     * @ORM\Column(name="code", type="string", length=50, nullable=true,unique=true)
      */
     private $code;
 
     /**
      * @var \DateTime $lastupdated
      *
-     * @ORM\Column(name="lastupdated", type="datetime")
+     * @ORM\Column(name="lastupdated", type="datetime", nullable=true)
      */
     private $lastupdated;
 
     /**
      * @var \DateTime $datecreated
      *
-     * @ORM\Column(name="datecreated", type="datetime")
+     * @ORM\Column(name="datecreated", type="datetime", nullable=false)
      */
     private $datecreated;
+    
+    /**
+     * @var Hris\OrganisationunitBundle\Entity\OrganisationunitGroup $organisationunitGroup
+     *
+     * @ORM\ManyToMany(targetEntity="Hris\OrganisationunitBundle\Entity\OrganisationunitGroup", inversedBy="organisationunitGroupset")
+     * @ORM\JoinTable(name="hris_organisationunitgroupset_members",
+     *   joinColumns={
+     *     @ORM\JoinColumn(name="organisationunitgroupset_id", referencedColumnName="id", onDelete="CASCADE")
+     *   },
+     *   inverseJoinColumns={
+     *     @ORM\JoinColumn(name="organisationunitgroup_id", referencedColumnName="id", onDelete="CASCADE")
+     *   }
+     * )
+     * @ORM\OrderBy({"name" = "ASC"})
+     */
+    private $organisationunitGroup;
 
 
     /**
@@ -240,5 +277,45 @@ class OrganisationunitGroupset
     public function getDatecreated()
     {
         return $this->datecreated;
+    }
+    /**
+     * Constructor
+     */
+    public function __construct()
+    {
+        $this->organisationunitGroup = new \Doctrine\Common\Collections\ArrayCollection();
+    }
+    
+    /**
+     * Add organisationunitGroup
+     *
+     * @param Hris\OrganisationunitBundle\Entity\OrganisationunitGroup $organisationunitGroup
+     * @return OrganisationunitGroupset
+     */
+    public function addOrganisationunitGroup(\Hris\OrganisationunitBundle\Entity\OrganisationunitGroup $organisationunitGroup)
+    {
+        $this->organisationunitGroup[] = $organisationunitGroup;
+    
+        return $this;
+    }
+
+    /**
+     * Remove organisationunitGroup
+     *
+     * @param Hris\OrganisationunitBundle\Entity\OrganisationunitGroup $organisationunitGroup
+     */
+    public function removeOrganisationunitGroup(\Hris\OrganisationunitBundle\Entity\OrganisationunitGroup $organisationunitGroup)
+    {
+        $this->organisationunitGroup->removeElement($organisationunitGroup);
+    }
+
+    /**
+     * Get organisationunitGroup
+     *
+     * @return Doctrine\Common\Collections\Collection 
+     */
+    public function getOrganisationunitGroup()
+    {
+        return $this->organisationunitGroup;
     }
 }

@@ -1,15 +1,36 @@
 <?php
-
+/*
+ *
+ * Copyright 2012John Francis Mukulu <john.f.mukulu@gmail.com>
+ *
+ * This program is free software; you can redistribute it and/or modify
+ * it under the terms of the GNU General Public License as published by
+ * the Free Software Foundation; either version 2 of the License, or
+ * (at your option) any later version.
+ *
+ * This program is distributed in the hope that it will be useful,
+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ * GNU General Public License for more details.
+ *
+ * You should have received a copy of the GNU General Public License
+ * along with this program; if not, write to the Free Software
+ * Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston,
+ * MA 02110-1301, USA.
+ *
+ *
+ */
 namespace Hris\OrganisationunitBundle\Entity;
 
 use Hris\UserBundle\Entity\User;
+use Hris\OrganisationunitBundle\Entity\OrganisationunitGroup;
 use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\ORM\Mapping as ORM;
 
 /**
  * Hris\OrganisationunitBundle\Entity\Organisationunit
  *
- * @ORM\Table(name="hris_organiationunit")
+ * @ORM\Table(name="hris_organisationunit",uniqueConstraints={@ORM\UniqueConstraint(name="organisationunits_with_one_parent_idx",columns={"longname", "parent_id"})})
  * @ORM\Entity(repositoryClass="Hris\OrganisationunitBundle\Entity\OrganisationunitRepository")
  */
 class Organisationunit
@@ -31,114 +52,132 @@ class Organisationunit
     private $user;
     
     /**
-     * @var OrganisationunitGroup $organisationunitGroup
+     * @var Hris\OrganisationunitBundle\Entity\OrganisationunitGroup $organisationunitGroup
      * 
-     * @ORM\ManyToMany(targetEntity="OrganisationunitGroup", mappedBy="organisationunit")
+     * @ORM\ManyToMany(targetEntity="Hris\OrganisationunitBundle\Entity\OrganisationunitGroup", mappedBy="organisationunit")
      */
     private $organisationunitGroup;
 
     /**
      * @var string $code
      *
-     * @ORM\Column(name="code", type="string", length=25)
+     * @ORM\Column(name="code", type="string", length=25, nullable=true, unique=true)
      */
     private $code;
 
     /**
      * @var string $uid
      *
-     * @ORM\Column(name="uid", type="string", length=11)
+     * @ORM\Column(name="uid", type="string", length=11, nullable=false, unique=true)
      */
     private $uid;
+    
+    /**
+     * @var Hris\OrganisationunitBundle\Entity\Organisationunit $parent
+     *
+     * @ORM\ManyToOne(targetEntity="Hris\OrganisationunitBundle\Entity\Organisationunit")
+     * @ORM\JoinColumns({
+     *   @ORM\JoinColumn(name="parent_id", referencedColumnName="id", nullable=true)
+     * })
+     * @ORM\OrderBy({"longname" = "ASC"})
+     */
+    private $parent;
 
     /**
      * @var string $shortname
      *
-     * @ORM\Column(name="shortname", type="string", length=20)
+     * @ORM\Column(name="shortname", type="string", length=20, nullable=false, unique=true)
      */
     private $shortname;
 
     /**
      * @var string $longname
      *
-     * @ORM\Column(name="longname", type="string", length=64)
+     * @ORM\Column(name="longname", type="string", length=64, nullable=false)
      */
     private $longname;
 
     /**
      * @var boolean $active
      *
-     * @ORM\Column(name="active", type="boolean")
+     * @ORM\Column(name="active", type="boolean", nullable=false)
      */
     private $active;
 
     /**
      * @var \DateTime $openingdate
      *
-     * @ORM\Column(name="openingdate", type="date")
+     * @ORM\Column(name="openingdate", type="date", nullable=true)
      */
     private $openingdate;
 
     /**
      * @var \DateTime $closingdate
      *
-     * @ORM\Column(name="closingdate", type="date")
+     * @ORM\Column(name="closingdate", type="date", nullable=true)
      */
     private $closingdate;
 
     /**
      * @var string $geocode
      *
-     * @ORM\Column(name="geocode", type="string", length=255)
+     * @ORM\Column(name="geocode", type="string", length=255, nullable=true)
      */
     private $geocode;
 
     /**
      * @var string $coordinates
      *
-     * @ORM\Column(name="coordinates", type="text")
+     * @ORM\Column(name="coordinates", type="text", nullable=true)
      */
     private $coordinates;
 
     /**
      * @var string $featuretype
      *
-     * @ORM\Column(name="featuretype", type="string", length=20)
+     * @ORM\Column(name="featuretype", type="string", length=20, nullable=true)
      */
     private $featuretype;
+    
+    /**
+     * @var \DateTime $datecreated
+     *
+     * @ORM\Column(name="datecreated", type="datetime", nullable=false)
+     */
+    private $datecreated;
 
     /**
      * @var \DateTime $lastupdated
      *
-     * @ORM\Column(name="lastupdated", type="datetime")
+     * @ORM\Column(name="lastupdated", type="datetime", nullable=true)
      */
     private $lastupdated;
 
     /**
      * @var string $address
      *
-     * @ORM\Column(name="address", type="text")
+     * @ORM\Column(name="address", type="text", nullable=true)
      */
     private $address;
 
     /**
      * @var string $email
      *
-     * @ORM\Column(name="email", type="string", length=150)
+     * @ORM\Column(name="email", type="string", length=150, nullable=true)
      */
     private $email;
 
     /**
      * @var string $phonenumber
      *
-     * @ORM\Column(name="phonenumber", type="string", length=150)
+     * @ORM\Column(name="phonenumber", type="string", length=150, nullable=true)
      */
     private $phonenumber;
 
     /**
      * @var string $description
      *
-     * @ORM\Column(name="description", type="text")
+     * @ORM\Column(name="description", type="text", nullable=true)
      */
     private $description;
 
@@ -504,6 +543,7 @@ class Organisationunit
     {
         $this->user = new \Doctrine\Common\Collections\ArrayCollection();
         $this->organisationunitGroup = new \Doctrine\Common\Collections\ArrayCollection();
+        $this->active = TRUE;
     }
     
     /**
@@ -570,5 +610,51 @@ class Organisationunit
     public function getOrganisationunitGroup()
     {
         return $this->organisationunitGroup;
+    }
+
+    /**
+     * Set parent
+     *
+     * @param Hris\OrganisationunitBundle\Entity\Organisationunit $parent
+     * @return Organisationunit
+     */
+    public function setParent(\Hris\OrganisationunitBundle\Entity\Organisationunit $parent = null)
+    {
+        $this->parent = $parent;
+    
+        return $this;
+    }
+
+    /**
+     * Get parent
+     *
+     * @return Hris\OrganisationunitBundle\Entity\Organisationunit 
+     */
+    public function getParent()
+    {
+        return $this->parent;
+    }
+
+    /**
+     * Set datecreated
+     *
+     * @param \DateTime $datecreated
+     * @return Organisationunit
+     */
+    public function setDatecreated($datecreated)
+    {
+        $this->datecreated = $datecreated;
+    
+        return $this;
+    }
+
+    /**
+     * Get datecreated
+     *
+     * @return \DateTime 
+     */
+    public function getDatecreated()
+    {
+        return $this->datecreated;
     }
 }

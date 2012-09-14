@@ -1,5 +1,25 @@
 <?php
-
+/*
+ *
+ * Copyright 2012John Francis Mukulu <john.f.mukulu@gmail.com>
+ *
+ * This program is free software; you can redistribute it and/or modify
+ * it under the terms of the GNU General Public License as published by
+ * the Free Software Foundation; either version 2 of the License, or
+ * (at your option) any later version.
+ *
+ * This program is distributed in the hope that it will be useful,
+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ * GNU General Public License for more details.
+ *
+ * You should have received a copy of the GNU General Public License
+ * along with this program; if not, write to the Free Software
+ * Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston,
+ * MA 02110-1301, USA.
+ *
+ *
+ */
 namespace Hris\UserBundle\Entity;
 
 use FOS\UserBundle\Entity\User as BaseUser;
@@ -29,7 +49,7 @@ class User extends BaseUser
      * @var Hris\OrganisationunitBundle\Entity\Organisationunit $organisationunit
      *
      * @ORM\ManyToMany(targetEntity="Hris\OrganisationunitBundle\Entity\Organisationunit", inversedBy="user")
-     * @ORM\JoinTable(name="hris_user_orgunanisationunits",
+     * @ORM\JoinTable(name="hris_user_organisationunits",
      *   joinColumns={
      *     @ORM\JoinColumn(name="user_id", referencedColumnName="id", onDelete="CASCADE")
      *   },
@@ -40,6 +60,20 @@ class User extends BaseUser
      * @ORM\OrderBy({"longname" = "ASC"})
      */
     private $organisationunit;
+    
+    /**
+     * @var \DateTime $lastupdated
+     *
+     * @ORM\Column(name="lastupdated", type="datetime", nullable=true)
+     */
+    private $lastupdated;
+    
+    /**
+     * @var \DateTime $datecreated
+     *
+     * @ORM\Column(name="datecreated", type="datetime", nullable=false)
+     */
+    private $datecreated;
 
 
     /**
@@ -98,5 +132,51 @@ class User extends BaseUser
     public function getOrganisationunit()
     {
         return $this->organisationunit;
+    }
+
+    /**
+     * Set lastupdated
+     *
+     * @param \DateTime $lastupdated
+     * @return User
+     */
+    public function setLastupdated($lastupdated)
+    {
+        $this->lastupdated = $lastupdated;
+    
+        return $this;
+    }
+
+    /**
+     * Get lastupdated
+     *
+     * @return \DateTime 
+     */
+    public function getLastupdated()
+    {
+        return $this->lastupdated;
+    }
+
+    /**
+     * Set datecreated
+     *
+     * @param \DateTime $datecreated
+     * @return User
+     */
+    public function setDatecreated($datecreated)
+    {
+        $this->datecreated = $datecreated;
+    
+        return $this;
+    }
+
+    /**
+     * Get datecreated
+     *
+     * @return \DateTime 
+     */
+    public function getDatecreated()
+    {
+        return $this->datecreated;
     }
 }

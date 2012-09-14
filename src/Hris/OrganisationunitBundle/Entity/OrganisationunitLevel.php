@@ -1,5 +1,25 @@
 <?php
-
+/*
+ *
+ * Copyright 2012John Francis Mukulu <john.f.mukulu@gmail.com>
+ *
+ * This program is free software; you can redistribute it and/or modify
+ * it under the terms of the GNU General Public License as published by
+ * the Free Software Foundation; either version 2 of the License, or
+ * (at your option) any later version.
+ *
+ * This program is distributed in the hope that it will be useful,
+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ * GNU General Public License for more details.
+ *
+ * You should have received a copy of the GNU General Public License
+ * along with this program; if not, write to the Free Software
+ * Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston,
+ * MA 02110-1301, USA.
+ *
+ *
+ */
 namespace Hris\OrganisationunitBundle\Entity;
 
 use Doctrine\ORM\Mapping as ORM;
@@ -7,7 +27,7 @@ use Doctrine\ORM\Mapping as ORM;
 /**
  * Hris\OrganisationunitBundle\Entity\OrganisationunitLevel
  *
- * @ORM\Table(name="hris_organiationunitlevel")
+ * @ORM\Table(name="hris_organisationunitlevel")
  * @ORM\Entity(repositoryClass="Hris\OrganisationunitBundle\Entity\OrganisationunitLevelRepository")
  */
 class OrganisationunitLevel
@@ -24,51 +44,59 @@ class OrganisationunitLevel
     /**
      * @var integer $level
      *
-     * @ORM\Column(name="level", type="integer")
+     * @ORM\Column(name="level", type="integer", nullable=false, unique=true)
      */
     private $level;
 
     /**
      * @var string $name
      *
-     * @ORM\Column(name="name", type="string", length=128)
+     * @ORM\Column(name="name", type="string", length=128, nullable=false, unique=true)
      */
     private $name;
 
     /**
      * @var \DateTime $lastupdated
      *
-     * @ORM\Column(name="lastupdated", type="datetime")
+     * @ORM\Column(name="lastupdated", type="datetime", nullable=true)
      */
     private $lastupdated;
 
     /**
      * @var \DateTime $datecreated
      *
-     * @ORM\Column(name="datecreated", type="datetime")
+     * @ORM\Column(name="datecreated", type="datetime", nullable=false)
      */
     private $datecreated;
 
     /**
      * @var string $uid
      *
-     * @ORM\Column(name="uid", type="string", length=11)
+     * @ORM\Column(name="uid", type="string", length=11, nullable=false, unique=true)
      */
     private $uid;
 
     /**
      * @var string $description
      *
-     * @ORM\Column(name="description", type="text")
+     * @ORM\Column(name="description", type="text", nullable=true)
      */
     private $description;
 
     /**
      * @var boolean $dataentrylevel
      *
-     * @ORM\Column(name="dataentrylevel", type="boolean")
+     * @ORM\Column(name="dataentrylevel", type="boolean", nullable=false)
      */
     private $dataentrylevel;
+    
+    /**
+     * Constructor
+     */
+    public function __construct()
+    {
+    	$this->dataentrylevel = FALSE;
+    }
 
 
     /**
