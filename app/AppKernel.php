@@ -25,6 +25,7 @@ class AppKernel extends Kernel
             new Hris\AssetsBundle\HrisAssetsBundle(),
             new Hris\OrganisationunitBundle\HrisOrganisationunitBundle(),
             new Hris\FormBundle\HrisFormBundle(),
+            new Hris\RecordsBundle\HrisRecordsBundle(),
         );
 
         if (in_array($this->getEnvironment(), array('dev', 'test'))) {

@@ -1,3 +1,7 @@
+hris_records:
+    resource: "@HrisRecordsBundle/Resources/config/routing.yml"
+    prefix:   /
+
 hris_form:
     resource: "@HrisFormBundle/Resources/config/routing.yml"
     prefix:   /

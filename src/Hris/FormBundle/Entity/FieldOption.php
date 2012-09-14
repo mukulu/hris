@@ -109,7 +109,7 @@ class FieldOption
     /**
      * @var Hris\FormBundle\Entity\Field $field
      *
-     * @ORM\ManyToOne(targetEntity="Field", inversedBy="fieldOption")
+     * @ORM\ManyToOne(targetEntity="Hris\FormBundle\Entity\Field", inversedBy="fieldOption")
      * @ORM\JoinColumns({
      *   @ORM\JoinColumn(name="field_id", referencedColumnName="id")
      * })
