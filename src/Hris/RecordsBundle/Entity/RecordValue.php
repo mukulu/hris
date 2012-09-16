@@ -246,4 +246,27 @@ class RecordValue
     {
         return $this->record;
     }
+
+    /**
+     * Set field
+     *
+     * @param Hris\FormBundle\Entity\Field $field
+     * @return RecordValue
+     */
+    public function setField(\Hris\FormBundle\Entity\Field $field = null)
+    {
+        $this->field = $field;
+    
+        return $this;
+    }
+
+    /**
+     * Get field
+     *
+     * @return Hris\FormBundle\Entity\Field 
+     */
+    public function getField()
+    {
+        return $this->field;
+    }
 }

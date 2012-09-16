@@ -43,6 +43,13 @@ class Form
      * @ORM\GeneratedValue(strategy="AUTO")
      */
     private $id;
+    
+    /**
+     * @var string $uid
+     *
+     * @ORM\Column(name="uid", type="string", length=11, nullable=false, unique=true)
+     */
+    private $uid;
 
     /**
      * @var string $name
@@ -414,5 +421,28 @@ class Form
     		}
     	}
     	return $simpleVisibleFields;
+    }
+
+    /**
+     * Set uid
+     *
+     * @param string $uid
+     * @return Form
+     */
+    public function setUid($uid)
+    {
+        $this->uid = $uid;
+    
+        return $this;
+    }
+
+    /**
+     * Get uid
+     *
+     * @return string 
+     */
+    public function getUid()
+    {
+        return $this->uid;
     }
 }

@@ -44,6 +44,12 @@ class User extends BaseUser
      */
     protected $id;
     
+    /**
+     * @var string $uid
+     *
+     * @ORM\Column(name="uid", type="string", length=11, nullable=false, unique=true)
+     */
+    private $uid;
     
     /**
      * @var Hris\OrganisationunitBundle\Entity\Organisationunit $organisationunit
@@ -179,5 +185,28 @@ class User extends BaseUser
     public function getDatecreated()
     {
         return $this->datecreated;
+    }
+
+    /**
+     * Set uid
+     *
+     * @param string $uid
+     * @return User
+     */
+    public function setUid($uid)
+    {
+        $this->uid = $uid;
+    
+        return $this;
+    }
+
+    /**
+     * Get uid
+     *
+     * @return string 
+     */
+    public function getUid()
+    {
+        return $this->uid;
     }
 }
