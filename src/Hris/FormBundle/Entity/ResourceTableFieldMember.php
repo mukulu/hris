@@ -22,14 +22,15 @@
  */
 namespace Hris\FormBundle\Entity;
 
+use Doctrine\ORM\Mapping as ORM;
+
 use Hris\FormBundle\Entity\Field;
 use Hris\FormBundle\Entity\ResourceTable;
-use Doctrine\ORM\Mapping as ORM;
 
 /**
  * Hris\FormBundle\Entity\ResourceTableFieldMember
  *
- * @ORM\Table(name="hris_resourcetablefield_members")
+ * @ORM\Table(name="hris_resourcetable_fieldmembers")
  * @ORM\Entity(repositoryClass="Hris\FormBundle\Entity\ResourceTableFieldMemberRepository")
  */
 class ResourceTableFieldMember

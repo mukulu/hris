@@ -4,6 +4,8 @@ namespace Hris\FormBundle\Entity;
 
 use Doctrine\ORM\Mapping as ORM;
 
+use Hris\FormBundle\Entity\ResourceTableFieldMember;
+
 /**
  * Hris\FormBundle\Entity\ResourceTable
  *
@@ -29,12 +31,12 @@ class ResourceTable
     private $name;
     
     /**
-     * @var Hris\FormBundle\Entity\ResourceTableFieldMember $field
+     * @var Hris\FormBundle\Entity\ResourceTableFieldMember $resourceTableFieldMember
      *
      * @ORM\OneToMany(targetEntity="Hris\FormBundle\Entity\ResourceTableFieldMember", mappedBy="resourceTable",cascade={"ALL"})
      * @ORM\OrderBy({"sort" = "ASC"})
      */
-    private $field;
+    private $resourceTableFieldMember;
     
     /**
      * @var \DateTime $datecreated
@@ -53,7 +55,7 @@ class ResourceTable
     /**
      * @var string $uid
      *
-     * @ORM\Column(name="uid", type="string", length=11, nullable=false, unique=true)
+     * @ORM\Column(name="uid", type="string", length=13, nullable=false, unique=true)
      */
     private $uid;
 
@@ -89,13 +91,6 @@ class ResourceTable
     public function getName()
     {
         return $this->name;
-    }
-    /**
-     * Constructor
-     */
-    public function __construct()
-    {
-        $this->field = new \Doctrine\Common\Collections\ArrayCollection();
     }
     
     /**
@@ -168,35 +163,43 @@ class ResourceTable
     }
 
     /**
-     * Add field
+     * Add resourceTableFieldMember
      *
-     * @param Hris\FormBundle\Entity\ResourceTableFieldMember $field
+     * @param Hris\FormBundle\Entity\ResourceTableFieldMember $resourceTableFieldMember
      * @return ResourceTable
      */
-    public function addField(\Hris\FormBundle\Entity\ResourceTableFieldMember $field)
+    public function addResourceTableFieldMember(\Hris\FormBundle\Entity\ResourceTableFieldMember $resourceTableFieldMember)
     {
-        $this->field[] = $field;
+        $this->resourceTableFieldMember[] = $resourceTableFieldMember;
     
         return $this;
     }
 
     /**
-     * Remove field
+     * Remove resourceTableFieldMember
      *
-     * @param Hris\FormBundle\Entity\ResourceTableFieldMember $field
+     * @param Hris\FormBundle\Entity\ResourceTableFieldMember $resourceTableFieldMember
      */
-    public function removeField(\Hris\FormBundle\Entity\ResourceTableFieldMember $field)
+    public function removeResourceTableFieldMember(\Hris\FormBundle\Entity\ResourceTableFieldMember $resourceTableFieldMember)
     {
-        $this->field->removeElement($field);
+        $this->resourceTableFieldMember->removeElement($resourceTableFieldMember);
     }
 
     /**
-     * Get field
+     * Get resourceTableFieldMember
      *
      * @return Doctrine\Common\Collections\Collection 
      */
-    public function getField()
+    public function getResourceTableFieldMember()
     {
-        return $this->field;
+        return $this->resourceTableFieldMember;
     }
+    /**
+     * Constructor
+     */
+    public function __construct()
+    {
+        $this->resourceTableFieldMember = new \Doctrine\Common\Collections\ArrayCollection();
+    }
+    
 }

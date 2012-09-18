@@ -22,23 +22,24 @@
  */
 namespace Hris\FormBundle\Entity;
 
-use Hris\FormBundle\Entity\Field;
-use Hris\FormBundle\Entity\Form;
 use Doctrine\ORM\Mapping as ORM;
 
+use Hris\FormBundle\Entity\Field;
+use Hris\FormBundle\Entity\Form;
+
 /**
- * Hris\FormBundle\Entity\VisibleFormFields
+ * Hris\FormBundle\Entity\FormVisibleFields
  *
- * @ORM\Table(name="hris_formvisiblefields")
+ * @ORM\Table(name="hris_form_visiblefields")
  * @ORM\Entity(repositoryClass="Hris\FormBundle\Entity\VisibleFormFieldsRepository")
  */
-class VisibleFormFields
+class FormVisibleFields
 {
     
     /**
      * @var Hris\FormBundle\Entity\Form $form
      *
-     * @ORM\ManyToOne(targetEntity="Hris\FormBundle\Entity\Form",inversedBy="visibleFormFields")
+     * @ORM\ManyToOne(targetEntity="Hris\FormBundle\Entity\Form",inversedBy="formVisibleFields")
      * @ORM\JoinColumns({
      *   @ORM\JoinColumn(name="form_id", referencedColumnName="id",nullable=false)
      * })
@@ -50,7 +51,7 @@ class VisibleFormFields
     /**
      * @var Hris\FormBundle\Entity\Field $field
      *
-     * @ORM\ManyToOne(targetEntity="Hris\FormBundle\Entity\Field",inversedBy="visibleFormFields")
+     * @ORM\ManyToOne(targetEntity="Hris\FormBundle\Entity\Field",inversedBy="formVisibleFields")
      * @ORM\JoinColumns({
      *   @ORM\JoinColumn(name="field_id", referencedColumnName="id",nullable=false)
      * })

@@ -22,9 +22,10 @@
  */
 namespace Hris\FormBundle\Entity;
 
+use Doctrine\ORM\Mapping as ORM;
+
 use Hris\FormBundle\Entity\FieldOption;
 use Hris\FormBundle\Entity\Field;
-use Doctrine\ORM\Mapping as ORM;
 
 /**
  * Hris\FormBundle\Entity\FieldOptionMerge
@@ -73,7 +74,7 @@ class FieldOptionMerge
     /**
      * @var string $uid
      *
-     * @ORM\Column(name="uid", type="string", length=11)
+     * @ORM\Column(name="uid", type="string", length=13)
      */
     private $uid;
 

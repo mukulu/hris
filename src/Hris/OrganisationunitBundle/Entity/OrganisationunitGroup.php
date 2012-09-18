@@ -22,9 +22,10 @@
  */
 namespace Hris\OrganisationunitBundle\Entity;
 
+use Doctrine\ORM\Mapping as ORM;
+
 use Hris\OrganisationunitBundle\Entity\Organisationunit;
 use Hris\OrganisationunitBundle\Entity\OrganisationunitGroupset;
-use Doctrine\ORM\Mapping as ORM;
 
 /**
  * Hris\OrganisationunitBundle\Entity\OrganisationunitGroup
@@ -53,9 +54,16 @@ class OrganisationunitGroup
     /**
      * @var string $uid
      *
-     * @ORM\Column(name="uid", type="string", length=11, nullable=false, unique=true)
+     * @ORM\Column(name="uid", type="string", length=13, nullable=false, unique=true)
      */
     private $uid;
+    
+    /**
+     * @var string $dhisUid
+     *
+     * @ORM\Column(name="dhisUid", type="string", length=11, nullable=false, unique=true)
+     */
+    private $dhisUid;
 
     /**
      * @var string $code
@@ -97,7 +105,10 @@ class OrganisationunitGroup
     /**
      * @var Hris\OrganisationunitBundle\Entity\OrganisationunitGroupset $organisationunitGroupset
      *
-     * @ORM\ManyToMany(targetEntity="Hris\OrganisationunitBundle\Entity\OrganisationunitGroupset", mappedBy="organisationunitGroup")
+     * @ORM\ManyToOne(targetEntity="Hris\OrganisationunitBundle\Entity\OrganisationunitGroupset",inversedBy="organisationunitGroup")
+     * @ORM\JoinColumns({
+     *   @ORM\JoinColumn(name="organisationunitgroupset_id", referencedColumnName="id")
+     * })
      */
     private $organisationunitGroupset;
 
@@ -226,13 +237,6 @@ class OrganisationunitGroup
     {
         return $this->datecreated;
     }
-    /**
-     * Constructor
-     */
-    public function __construct()
-    {
-        $this->organisationunit = new \Doctrine\Common\Collections\ArrayCollection();
-    }
     
     /**
      * Add organisationunit
@@ -266,34 +270,54 @@ class OrganisationunitGroup
     {
         return $this->organisationunit;
     }
-
     /**
-     * Add organisationunitGroupset
+     * Constructor
+     */
+    public function __construct()
+    {
+        $this->organisationunit = new \Doctrine\Common\Collections\ArrayCollection();
+    }
+    
+    /**
+     * Set dhisUid
      *
-     * @param Hris\OrganisationunitBundle\Entity\OrganisationunitGroupset $organisationunitGroupset
+     * @param string $dhisUid
      * @return OrganisationunitGroup
      */
-    public function addOrganisationunitGroupset(\Hris\OrganisationunitBundle\Entity\OrganisationunitGroupset $organisationunitGroupset)
+    public function setDhisUid($dhisUid)
     {
-        $this->organisationunitGroupset[] = $organisationunitGroupset;
+        $this->dhisUid = $dhisUid;
     
         return $this;
     }
 
     /**
-     * Remove organisationunitGroupset
+     * Get dhisUid
+     *
+     * @return string 
+     */
+    public function getDhisUid()
+    {
+        return $this->dhisUid;
+    }
+
+    /**
+     * Set organisationunitGroupset
      *
      * @param Hris\OrganisationunitBundle\Entity\OrganisationunitGroupset $organisationunitGroupset
+     * @return OrganisationunitGroup
      */
-    public function removeOrganisationunitGroupset(\Hris\OrganisationunitBundle\Entity\OrganisationunitGroupset $organisationunitGroupset)
+    public function setOrganisationunitGroupset(\Hris\OrganisationunitBundle\Entity\OrganisationunitGroupset $organisationunitGroupset = null)
     {
-        $this->organisationunitGroupset->removeElement($organisationunitGroupset);
+        $this->organisationunitGroupset = $organisationunitGroupset;
+    
+        return $this;
     }
 
     /**
      * Get organisationunitGroupset
      *
-     * @return Doctrine\Common\Collections\Collection 
+     * @return Hris\OrganisationunitBundle\Entity\OrganisationunitGroupset 
      */
     public function getOrganisationunitGroupset()
     {

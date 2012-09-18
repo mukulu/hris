@@ -28,12 +28,12 @@ use Hris\OrganisationunitBundle\Entity\Organisationunit;
 use Hris\FormBundle\Entity\Form;
 
 /**
- * Hris\RecordsBundle\Entity\Record
+ * Hris\RecordsBundle\Entity\RecordStats
  *
- * @ORM\Table(name="hris_record")
- * @ORM\Entity(repositoryClass="Hris\RecordsBundle\Entity\RecordRepository")
+ * @ORM\Table(name="hris_record_stats")
+ * @ORM\Entity(repositoryClass="Hris\RecordsBundle\Entity\RecordStatsRepository")
  */
-class Record
+class RecordStats
 {
     /**
      * @var integer $id
@@ -43,13 +43,6 @@ class Record
      * @ORM\GeneratedValue(strategy="AUTO")
      */
     private $id;
-
-    /**
-     * @var string $instance
-     *
-     * @ORM\Column(name="instance", type="string", length=64, unique=true)
-     */
-    private $instance;
     
     /**
      * @var Hris\OrganisationunitBundle\Entity\Organisationunit $organisationunit
@@ -98,21 +91,20 @@ class Record
      * @ORM\Column(name="correct", type="boolean")
      */
     private $correct;
-
-    /**
-     * @var boolean $hashistory
-     *
-     * @ORM\Column(name="hashistory", type="boolean")
-     */
-    private $hashistory;
-
-    /**
-     * @var boolean $hastraining
-     *
-     * @ORM\Column(name="hastraining", type="boolean")
-     */
-    private $hastraining;
     
+    /**
+     * @var string $value
+     *
+     * @ORM\Column(name="value", type="string", length=255)
+     */
+    private $value;
+    
+    /**
+     * @var integer $count
+     *
+     * @ORM\Column(name="count", type="integer")
+     */
+    private $count;
     
     /**
      * @var string $uid
@@ -124,9 +116,8 @@ class Record
     public function __construct()
     {
     	$this->complete = FALSE;
-    	$this->hashistory = FALSE;
-    	$this->hastraining = FALSE;
     	$this->correct = TRUE;
+    	$this->value = 0;
     }
 
 
@@ -138,29 +129,6 @@ class Record
     public function getId()
     {
         return $this->id;
-    }
-
-    /**
-     * Set instance
-     *
-     * @param string $instance
-     * @return Record
-     */
-    public function setInstance($instance)
-    {
-        $this->instance = $instance;
-    
-        return $this;
-    }
-
-    /**
-     * Get instance
-     *
-     * @return string 
-     */
-    public function getInstance()
-    {
-        return $this->instance;
     }
 
     /**
@@ -210,29 +178,6 @@ class Record
     }
 
     /**
-     * Set username
-     *
-     * @param string $username
-     * @return Record
-     */
-    public function setUsername($username)
-    {
-        $this->username = $username;
-    
-        return $this;
-    }
-
-    /**
-     * Get username
-     *
-     * @return string 
-     */
-    public function getUsername()
-    {
-        return $this->username;
-    }
-
-    /**
      * Set complete
      *
      * @param boolean $complete
@@ -253,52 +198,6 @@ class Record
     public function getComplete()
     {
         return $this->complete;
-    }
-
-    /**
-     * Set hashistory
-     *
-     * @param boolean $hashistory
-     * @return Record
-     */
-    public function setHashistory($hashistory)
-    {
-        $this->hashistory = $hashistory;
-    
-        return $this;
-    }
-
-    /**
-     * Get hashistory
-     *
-     * @return boolean 
-     */
-    public function getHashistory()
-    {
-        return $this->hashistory;
-    }
-
-    /**
-     * Set hastraining
-     *
-     * @param boolean $hastraining
-     * @return Record
-     */
-    public function setHastraining($hastraining)
-    {
-        $this->hastraining = $hastraining;
-    
-        return $this;
-    }
-
-    /**
-     * Get hastraining
-     *
-     * @return boolean 
-     */
-    public function getHastraining()
-    {
-        return $this->hastraining;
     }
 
     /**
@@ -391,5 +290,77 @@ class Record
     public function getForm()
     {
         return $this->form;
+    }
+
+    /**
+     * Set value
+     *
+     * @param string $value
+     * @return RecordStats
+     */
+    public function setValue($value)
+    {
+        $this->value = $value;
+    
+        return $this;
+    }
+
+    /**
+     * Get value
+     *
+     * @return string 
+     */
+    public function getValue()
+    {
+        return $this->value;
+    }
+
+    /**
+     * Set count
+     *
+     * @param integer $count
+     * @return RecordStats
+     */
+    public function setCount($count)
+    {
+        $this->count = $count;
+    
+        return $this;
+    }
+
+    /**
+     * Get count
+     *
+     * @return integer 
+     */
+    public function getCount()
+    {
+        return $this->count;
+    }
+    
+    /**
+     * Increment count
+     *
+     * @param integer $count
+     * @return RecordStats
+     */
+    public function incrementCount($count=1)
+    {
+    	$this->count += $count;
+    
+    	return $this;
+    }
+    
+    /**
+     * Decrement count
+     *
+     * @param integer $count
+     * @return RecordStats
+     */
+    public function decrementCount($count=1)
+    {
+    	$this->count -= $count;
+    
+    	return $this;
     }
 }

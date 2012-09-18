@@ -24,6 +24,8 @@ namespace Hris\FormBundle\Entity;
 
 use Doctrine\ORM\Mapping as ORM;
 
+use Hris\FormBundle\Entity\Field;
+
 /**
  * Hris\FormBundle\Entity\InputType
  *
@@ -44,7 +46,7 @@ class InputType
     /**
      * @var string $uid
      *
-     * @ORM\Column(name="uid", type="string", length=11, nullable=false, unique=true)
+     * @ORM\Column(name="uid", type="string", length=13, nullable=false, unique=true)
      */
     private $uid;
 
@@ -82,6 +84,14 @@ class InputType
      * @ORM\Column(name="lastupdated", type="datetime", nullable=true)
      */
     private $lastupdated;
+    
+    /**
+     * @var Hris\FormBundle\Entity\Field $field
+     *
+     * @ORM\OneToMany(targetEntity="Hris\FormBundle\Entity\Field", mappedBy="inputType",cascade={"ALL"})
+     * @ORM\OrderBy({"name" = "ASC"})
+     */
+    private $field;
 
     /**
      * Get id
@@ -229,5 +239,45 @@ class InputType
     public function getLastupdated()
     {
         return $this->lastupdated;
+    }
+    /**
+     * Constructor
+     */
+    public function __construct()
+    {
+        $this->field = new \Doctrine\Common\Collections\ArrayCollection();
+    }
+    
+    /**
+     * Add field
+     *
+     * @param Hris\FormBundle\Entity\Field $field
+     * @return InputType
+     */
+    public function addField(\Hris\FormBundle\Entity\Field $field)
+    {
+        $this->field[] = $field;
+    
+        return $this;
+    }
+
+    /**
+     * Remove field
+     *
+     * @param Hris\FormBundle\Entity\Field $field
+     */
+    public function removeField(\Hris\FormBundle\Entity\Field $field)
+    {
+        $this->field->removeElement($field);
+    }
+
+    /**
+     * Get field
+     *
+     * @return Doctrine\Common\Collections\Collection 
+     */
+    public function getField()
+    {
+        return $this->field;
     }
 }

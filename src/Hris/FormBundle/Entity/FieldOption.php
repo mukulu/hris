@@ -22,8 +22,11 @@
  */
 namespace Hris\FormBundle\Entity;
 
-use Hris\FormBundle\Entity\FieldOptionGroup;
 use Doctrine\ORM\Mapping as ORM;
+
+use Hris\FormBundle\Entity\FieldOptionMerge;
+use Hris\FormBundle\Entity\RelationalFilter;
+use Hris\FormBundle\Entity\FieldOptionGroup;
 
 /**
  * Hris\FormBundle\Entity\FieldOption
@@ -45,7 +48,7 @@ class FieldOption
     /**
      * @var string $uid
      *
-     * @ORM\Column(name="uid", type="string", length=11, nullable=false, unique=true)
+     * @ORM\Column(name="uid", type="string", length=13, nullable=false, unique=true)
      */
     private $uid;
 
@@ -80,14 +83,14 @@ class FieldOption
     /**
      * @var Hris\FormBundle\Entity\FieldOption $parentFieldOption
      *
-     * @ORM\ManyToMany(targetEntity="Hris\FormBundle\Entity\FieldOption", mappedBy="fieldOption")
+     * @ORM\ManyToMany(targetEntity="Hris\FormBundle\Entity\FieldOption", mappedBy="childFieldOption")
      */
     private $parentFieldOption;
     
     /**
      * @var Hris\FormBundle\Entity\FieldOption $childFieldOption
      *
-     * @ORM\ManyToMany(targetEntity="Hris\FormBundle\Entity\FieldOption", inversedBy="fieldOption")
+     * @ORM\ManyToMany(targetEntity="Hris\FormBundle\Entity\FieldOption", inversedBy="parentFieldOption")
      * @ORM\JoinTable(name="hris_fieldoption_children",
      *   joinColumns={
      *     @ORM\JoinColumn(name="parent_fieldoption", referencedColumnName="id", onDelete="CASCADE")
@@ -115,6 +118,20 @@ class FieldOption
      * })
      */
     private $field;
+    
+    /**
+     * @var Hris\FormBundle\Entity\RelationalFilter $relationalFilter
+     *
+     * @ORM\ManyToMany(targetEntity="Hris\FormBundle\Entity\RelationalFilter", mappedBy="fieldOption")
+     */
+    private $relationalFilter;
+    
+    /**
+     * @var Hris\FormBundle\Entity\FieldOptionMerge $fieldOptionMerge
+     *
+     * @ORM\OneToMany(targetEntity="Hris\FormBundle\Entity\FieldOptionMerge", mappedBy="mergedFieldOption")
+     */
+    private $fieldOptionMerge;
 
 
     /**
@@ -171,16 +188,6 @@ class FieldOption
     public function getDatecreated()
     {
         return $this->datecreated;
-    }
-    
-    /**
-     * Constructor
-     */
-    public function __construct()
-    {
-        $this->parentFieldOption = new \Doctrine\Common\Collections\ArrayCollection();
-        $this->childFieldOption = new \Doctrine\Common\Collections\ArrayCollection();
-        $this->fieldOptionGroup = new \Doctrine\Common\Collections\ArrayCollection();
     }
     
     /**
@@ -373,4 +380,82 @@ class FieldOption
     {
         return $this->lastupdated;
     }
+
+    /**
+     * Add relationalFilter
+     *
+     * @param Hris\FormBundle\Entity\RelationalFilter $relationalFilter
+     * @return FieldOption
+     */
+    public function addRelationalFilter(\Hris\FormBundle\Entity\RelationalFilter $relationalFilter)
+    {
+        $this->relationalFilter[] = $relationalFilter;
+    
+        return $this;
+    }
+
+    /**
+     * Remove relationalFilter
+     *
+     * @param Hris\FormBundle\Entity\RelationalFilter $relationalFilter
+     */
+    public function removeRelationalFilter(\Hris\FormBundle\Entity\RelationalFilter $relationalFilter)
+    {
+        $this->relationalFilter->removeElement($relationalFilter);
+    }
+
+    /**
+     * Get relationalFilter
+     *
+     * @return Doctrine\Common\Collections\Collection 
+     */
+    public function getRelationalFilter()
+    {
+        return $this->relationalFilter;
+    }
+
+    /**
+     * Add fieldOptionMerge
+     *
+     * @param Hris\FormBundle\Entity\FieldOptionMerge $fieldOptionMerge
+     * @return FieldOption
+     */
+    public function addFieldOptionMerge(\Hris\FormBundle\Entity\FieldOptionMerge $fieldOptionMerge)
+    {
+        $this->fieldOptionMerge[] = $fieldOptionMerge;
+    
+        return $this;
+    }
+
+    /**
+     * Remove fieldOptionMerge
+     *
+     * @param Hris\FormBundle\Entity\FieldOptionMerge $fieldOptionMerge
+     */
+    public function removeFieldOptionMerge(\Hris\FormBundle\Entity\FieldOptionMerge $fieldOptionMerge)
+    {
+        $this->fieldOptionMerge->removeElement($fieldOptionMerge);
+    }
+
+    /**
+     * Get fieldOptionMerge
+     *
+     * @return Doctrine\Common\Collections\Collection 
+     */
+    public function getFieldOptionMerge()
+    {
+        return $this->fieldOptionMerge;
+    }
+    /**
+     * Constructor
+     */
+    public function __construct()
+    {
+        $this->parentFieldOption = new \Doctrine\Common\Collections\ArrayCollection();
+        $this->childFieldOption = new \Doctrine\Common\Collections\ArrayCollection();
+        $this->fieldOptionGroup = new \Doctrine\Common\Collections\ArrayCollection();
+        $this->relationalFilter = new \Doctrine\Common\Collections\ArrayCollection();
+        $this->fieldOptionMerge = new \Doctrine\Common\Collections\ArrayCollection();
+    }
+    
 }

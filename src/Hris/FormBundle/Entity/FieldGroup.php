@@ -22,8 +22,10 @@
  */
 namespace Hris\FormBundle\Entity;
 
-use Hris\FormBundle\Entity\Field;
 use Doctrine\ORM\Mapping as ORM;
+
+use Hris\FormBundle\Entity\Field;
+use Hris\FormBundle\Entity\FieldGroupset;
 
 /**
  * Hris\FormBundle\Entity\FieldGroup
@@ -52,7 +54,7 @@ class FieldGroup
     /**
      * @var string $uid
      *
-     * @ORM\Column(name="uid", type="string", length=11)
+     * @ORM\Column(name="uid", type="string", length=13)
      */
     private $uid;
 
@@ -66,7 +68,7 @@ class FieldGroup
     /**
      * @var \DateTime $datecreated
      *
-     * @ORM\Column(name="datecreated", type="datetime", nullable=false)
+     * @ORM\Column(name="datecreated", type="datetime")
      */
     private $datecreated;
     
@@ -92,6 +94,13 @@ class FieldGroup
      * @ORM\OrderBy({"name" = "ASC"})
      */
     private $field;
+    
+    /**
+     * @var Hris\FormBundle\Entity\FieldGroupset $fieldGroupset
+     *
+     * @ORM\ManyToMany(targetEntity="Hris\FormBundle\Entity\FieldGroupset", mappedBy="fieldGroup")
+     */
+    private $fieldGroupset;
 
 
     /**
@@ -172,13 +181,6 @@ class FieldGroup
     {
         return $this->description;
     }
-    /**
-     * Constructor
-     */
-    public function __construct()
-    {
-        $this->field = new \Doctrine\Common\Collections\ArrayCollection();
-    }
     
     /**
      * Set datecreated
@@ -257,5 +259,46 @@ class FieldGroup
     public function getField()
     {
         return $this->field;
+    }
+    /**
+     * Constructor
+     */
+    public function __construct()
+    {
+        $this->field = new \Doctrine\Common\Collections\ArrayCollection();
+        $this->fieldGroupset = new \Doctrine\Common\Collections\ArrayCollection();
+    }
+    
+    /**
+     * Add fieldGroupset
+     *
+     * @param Hris\FormBundle\Entity\FieldGroupset $fieldGroupset
+     * @return FieldGroup
+     */
+    public function addFieldGroupset(\Hris\FormBundle\Entity\FieldGroupset $fieldGroupset)
+    {
+        $this->fieldGroupset[] = $fieldGroupset;
+    
+        return $this;
+    }
+
+    /**
+     * Remove fieldGroupset
+     *
+     * @param Hris\FormBundle\Entity\FieldGroupset $fieldGroupset
+     */
+    public function removeFieldGroupset(\Hris\FormBundle\Entity\FieldGroupset $fieldGroupset)
+    {
+        $this->fieldGroupset->removeElement($fieldGroupset);
+    }
+
+    /**
+     * Get fieldGroupset
+     *
+     * @return Doctrine\Common\Collections\Collection 
+     */
+    public function getFieldGroupset()
+    {
+        return $this->fieldGroupset;
     }
 }

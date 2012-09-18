@@ -23,9 +23,10 @@
 namespace Hris\UserBundle\Entity;
 
 use FOS\UserBundle\Entity\User as BaseUser;
-use Hris\OrganisationunitBundle\Entity\Organisationunit;
 use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\ORM\Mapping as ORM;
+
+use Hris\UserBundle\Entity\UserInfo;
 
 /**
  * Hris\UserBundle\Entity\User
@@ -45,29 +46,6 @@ class User extends BaseUser
     protected $id;
     
     /**
-     * @var string $uid
-     *
-     * @ORM\Column(name="uid", type="string", length=11, nullable=false, unique=true)
-     */
-    private $uid;
-    
-    /**
-     * @var Hris\OrganisationunitBundle\Entity\Organisationunit $organisationunit
-     *
-     * @ORM\ManyToMany(targetEntity="Hris\OrganisationunitBundle\Entity\Organisationunit", inversedBy="user")
-     * @ORM\JoinTable(name="hris_user_organisationunits",
-     *   joinColumns={
-     *     @ORM\JoinColumn(name="user_id", referencedColumnName="id", onDelete="CASCADE")
-     *   },
-     *   inverseJoinColumns={
-     *     @ORM\JoinColumn(name="organisationunit_id", referencedColumnName="id", onDelete="CASCADE")
-     *   }
-     * )
-     * @ORM\OrderBy({"longname" = "ASC"})
-     */
-    private $organisationunit;
-    
-    /**
      * @var \DateTime $lastupdated
      *
      * @ORM\Column(name="lastupdated", type="datetime", nullable=true)
@@ -80,8 +58,15 @@ class User extends BaseUser
      * @ORM\Column(name="datecreated", type="datetime", nullable=false)
      */
     private $datecreated;
-
-
+    
+    /**
+     * @var Hris\UserBundle\Entity\UserInfo $userInfo
+     *
+     * @ORM\OneToOne(targetEntity="Hris\UserBundle\Entity\UserInfo", inversedBy="user")
+     */
+    private $userInfo;
+    
+    
     /**
      * Get id
      *
@@ -92,53 +77,10 @@ class User extends BaseUser
         return $this->id;
     }
     
-    /*
-     * @todo
-     * 	- Organisation unit (many)
-     * 	- Phone numbers
-     * 	- Job title
-     * 	- date added
-     *  - last updated
-     */
-    
     public function __construct()
     {
     	parent::__construct();
-    	$this->organisationunit = new ArrayCollection();
     	$this->datecreated = new \DateTime('now');
-    }
-
-    /**
-     * Add organisationunit
-     *
-     * @param Hris\OrganisationunitBundle\Entity\Organisationunit $organisationunit
-     * @return User
-     */
-    public function addOrganisationunit(\Hris\OrganisationunitBundle\Entity\Organisationunit $organisationunit)
-    {
-        $this->organisationunit[] = $organisationunit;
-    
-        return $this;
-    }
-
-    /**
-     * Remove organisationunit
-     *
-     * @param Hris\OrganisationunitBundle\Entity\Organisationunit $organisationunit
-     */
-    public function removeOrganisationunit(\Hris\OrganisationunitBundle\Entity\Organisationunit $organisationunit)
-    {
-        $this->organisationunit->removeElement($organisationunit);
-    }
-
-    /**
-     * Get organisationunit
-     *
-     * @return Doctrine\Common\Collections\Collection 
-     */
-    public function getOrganisationunit()
-    {
-        return $this->organisationunit;
     }
 
     /**
@@ -188,25 +130,25 @@ class User extends BaseUser
     }
 
     /**
-     * Set uid
+     * Set userInfo
      *
-     * @param string $uid
+     * @param Hris\UserBundle\Entity\UserInfo $userInfo
      * @return User
      */
-    public function setUid($uid)
+    public function setUserInfo(\Hris\UserBundle\Entity\UserInfo $userInfo = null)
     {
-        $this->uid = $uid;
+        $this->userInfo = $userInfo;
     
         return $this;
     }
 
     /**
-     * Get uid
+     * Get userInfo
      *
-     * @return string 
+     * @return Hris\UserBundle\Entity\UserInfo 
      */
-    public function getUid()
+    public function getUserInfo()
     {
-        return $this->uid;
+        return $this->userInfo;
     }
 }

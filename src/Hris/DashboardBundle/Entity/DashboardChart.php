@@ -22,10 +22,11 @@
  */
 namespace Hris\DashboardBundle\Entity;
 
-use Hris\FormBundle\Entity\Form;
-use Hris\UserBundle\Entity\User;
-use Hris\OrganisationunitBundle\Entity\Organisationunit;
 use Doctrine\ORM\Mapping as ORM;
+
+use Hris\FormBundle\Entity\Form;
+use Hris\UserBundle\Entity\UserInfo;
+use Hris\OrganisationunitBundle\Entity\Organisationunit;
 
 /**
  * Hris\DashboardBundle\Entity\DashboardChart
@@ -80,16 +81,23 @@ class DashboardChart
     private $graphType;
 
     /**
-     * @var string $lowerLevels
+     * @var boolean $lowerLevels
      *
-     * @ORM\Column(name="lowerLevels", type="string", length=64)
+     * @ORM\Column(name="lowerLevels", type="boolean")
      */
     private $lowerLevels;
     
     /**
+     * @var boolean $systemWide
+     *
+     * @ORM\Column(name="systemWide", type="boolean")
+     */
+    private $systemWide;
+    
+    /**
      * @var string $uid
      *
-     * @ORM\Column(name="uid", type="string", length=11, nullable=false, unique=true)
+     * @ORM\Column(name="uid", type="string", length=13, nullable=false, unique=true)
      */
     private $uid;
     
@@ -110,28 +118,34 @@ class DashboardChart
     /**
      * @var Hris\OrganisationunitBundle\Entity\Organisationunit $organisationunit
      *
-     * @ORM\ManyToOne(targetEntity="Hris\OrganisationunitBundle\Entity\Organisationunit")
-     * @ORM\JoinColumns({
-     *   @ORM\JoinColumn(name="organisationunit_id", referencedColumnName="id")
-     * })
+     * @ORM\ManyToMany(targetEntity="Hris\OrganisationunitBundle\Entity\Organisationunit", inversedBy="dashboardChart")
+     * @ORM\JoinTable(name="hris_dashboardchart_organisationunitmembers",
+     *   joinColumns={
+     *     @ORM\JoinColumn(name="dashboardchart_id", referencedColumnName="id", onDelete="CASCADE")
+     *   },
+     *   inverseJoinColumns={
+     *     @ORM\JoinColumn(name="organisationunit_id", referencedColumnName="id", onDelete="CASCADE")
+     *   }
+     * )
+     * @ORM\OrderBy({"longname" = "ASC"})
      */
     private $organisationunit;
     
     /**
-     * @var Hris\UserBundle\Entity\User $user
+     * @var Hris\UserBundle\Entity\UserInfo $userInfo
      *
-     * @ORM\ManyToOne(targetEntity="Hris\UserBundle\Entity\User")
+     * @ORM\ManyToOne(targetEntity="Hris\UserBundle\Entity\UserInfo",inversedBy="dashboardChart")
      * @ORM\JoinColumns({
-     *   @ORM\JoinColumn(name="user_id", referencedColumnName="id")
+     *   @ORM\JoinColumn(name="userinfo_id", referencedColumnName="id")
      * })
      */
-    private $user;
+    private $userInfo;
     
     /**
      * @var Hris\FormBundle\Entity\Form $form
      *
      * @ORM\ManyToMany(targetEntity="Hris\FormBundle\Entity\Form", inversedBy="dashboardChart")
-     * @ORM\JoinTable(name="hris_dashboardchartform_members",
+     * @ORM\JoinTable(name="hris_dashboardchart_formmembers",
      *   joinColumns={
      *     @ORM\JoinColumn(name="dashboardchart_id", referencedColumnName="id", onDelete="CASCADE")
      *   },
@@ -267,36 +281,6 @@ class DashboardChart
     {
         return $this->graphType;
     }
-
-    /**
-     * Set lowerLevels
-     *
-     * @param string $lowerLevels
-     * @return DashboardChart
-     */
-    public function setLowerLevels($lowerLevels)
-    {
-        $this->lowerLevels = $lowerLevels;
-    
-        return $this;
-    }
-
-    /**
-     * Get lowerLevels
-     *
-     * @return string 
-     */
-    public function getLowerLevels()
-    {
-        return $this->lowerLevels;
-    }
-    /**
-     * Constructor
-     */
-    public function __construct()
-    {
-        $this->form = new \Doctrine\Common\Collections\ArrayCollection();
-    }
     
     /**
      * Set uid
@@ -368,52 +352,6 @@ class DashboardChart
     }
 
     /**
-     * Set organisationunit
-     *
-     * @param Hris\OrganisationunitBundle\Entity\Organisationunit $organisationunit
-     * @return DashboardChart
-     */
-    public function setOrganisationunit(\Hris\OrganisationunitBundle\Entity\Organisationunit $organisationunit = null)
-    {
-        $this->organisationunit = $organisationunit;
-    
-        return $this;
-    }
-
-    /**
-     * Get organisationunit
-     *
-     * @return Hris\OrganisationunitBundle\Entity\Organisationunit 
-     */
-    public function getOrganisationunit()
-    {
-        return $this->organisationunit;
-    }
-
-    /**
-     * Set user
-     *
-     * @param Hris\UserBundle\Entity\User $user
-     * @return DashboardChart
-     */
-    public function setUser(\Hris\UserBundle\Entity\User $user = null)
-    {
-        $this->user = $user;
-    
-        return $this;
-    }
-
-    /**
-     * Get user
-     *
-     * @return Hris\UserBundle\Entity\User 
-     */
-    public function getUser()
-    {
-        return $this->user;
-    }
-
-    /**
      * Add form
      *
      * @param Hris\FormBundle\Entity\Form $form
@@ -444,5 +382,117 @@ class DashboardChart
     public function getForm()
     {
         return $this->form;
+    }
+
+    /**
+     * Set lowerLevels
+     *
+     * @param boolean $lowerLevels
+     * @return DashboardChart
+     */
+    public function setLowerLevels($lowerLevels)
+    {
+        $this->lowerLevels = $lowerLevels;
+    
+        return $this;
+    }
+
+    /**
+     * Get lowerLevels
+     *
+     * @return boolean 
+     */
+    public function getLowerLevels()
+    {
+        return $this->lowerLevels;
+    }
+
+    /**
+     * Add organisationunit
+     *
+     * @param Hris\OrganisationunitBundle\Entity\Organisationunit $organisationunit
+     * @return DashboardChart
+     */
+    public function addOrganisationunit(\Hris\OrganisationunitBundle\Entity\Organisationunit $organisationunit)
+    {
+        $this->organisationunit[] = $organisationunit;
+    
+        return $this;
+    }
+
+    /**
+     * Remove organisationunit
+     *
+     * @param Hris\OrganisationunitBundle\Entity\Organisationunit $organisationunit
+     */
+    public function removeOrganisationunit(\Hris\OrganisationunitBundle\Entity\Organisationunit $organisationunit)
+    {
+        $this->organisationunit->removeElement($organisationunit);
+    }
+
+    /**
+     * Get organisationunit
+     *
+     * @return Doctrine\Common\Collections\Collection 
+     */
+    public function getOrganisationunit()
+    {
+        return $this->organisationunit;
+    }
+    /**
+     * Constructor
+     */
+    public function __construct()
+    {
+        $this->organisationunit = new \Doctrine\Common\Collections\ArrayCollection();
+        $this->form = new \Doctrine\Common\Collections\ArrayCollection();
+        $this->lowerLevels = True;
+    }
+    
+
+    /**
+     * Set systemWide
+     *
+     * @param boolean $systemWide
+     * @return DashboardChart
+     */
+    public function setSystemWide($systemWide)
+    {
+        $this->systemWide = $systemWide;
+    
+        return $this;
+    }
+
+    /**
+     * Get systemWide
+     *
+     * @return boolean 
+     */
+    public function getSystemWide()
+    {
+        return $this->systemWide;
+    }
+
+    /**
+     * Set userInfo
+     *
+     * @param Hris\UserBundle\Entity\UserInfo $userInfo
+     * @return DashboardChart
+     */
+    public function setUserInfo(\Hris\UserBundle\Entity\UserInfo $userInfo = null)
+    {
+        $this->userInfo = $userInfo;
+    
+        return $this;
+    }
+
+    /**
+     * Get userInfo
+     *
+     * @return Hris\UserBundle\Entity\UserInfo 
+     */
+    public function getUserInfo()
+    {
+        return $this->userInfo;
     }
 }

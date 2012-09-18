@@ -24,6 +24,8 @@ namespace Hris\OrganisationunitBundle\Entity;
 
 use Doctrine\ORM\Mapping as ORM;
 
+use Hris\OrganisationunitBundle\Entity\OrganisationunitStructure;
+
 /**
  * Hris\OrganisationunitBundle\Entity\OrganisationunitLevel
  *
@@ -72,9 +74,16 @@ class OrganisationunitLevel
     /**
      * @var string $uid
      *
-     * @ORM\Column(name="uid", type="string", length=11, nullable=false, unique=true)
+     * @ORM\Column(name="uid", type="string", length=13, nullable=false, unique=true)
      */
     private $uid;
+    
+    /**
+     * @var string $dhisUid
+     *
+     * @ORM\Column(name="dhisUid", type="string", length=11, nullable=false, unique=true)
+     */
+    private $dhisUid;
 
     /**
      * @var string $description
@@ -91,14 +100,12 @@ class OrganisationunitLevel
     private $dataentrylevel;
     
     /**
-     * Constructor
+     * @var Hris\OrganisationunitBundle\Entity\OrganisationunitStructure $organisationunitStructure
+     *
+     * @ORM\OneToMany(targetEntity="Hris\OrganisationunitBundle\Entity\OrganisationunitStructure", mappedBy="level",cascade={"ALL"})
      */
-    public function __construct()
-    {
-    	$this->dataentrylevel = FALSE;
-    }
-
-
+    private $organisationunitStructure;
+    
     /**
      * Get id
      *
@@ -269,4 +276,69 @@ class OrganisationunitLevel
     {
         return $this->dataentrylevel;
     }
+
+    /**
+     * Set dhisUid
+     *
+     * @param string $dhisUid
+     * @return OrganisationunitLevel
+     */
+    public function setDhisUid($dhisUid)
+    {
+        $this->dhisUid = $dhisUid;
+    
+        return $this;
+    }
+
+    /**
+     * Get dhisUid
+     *
+     * @return string 
+     */
+    public function getDhisUid()
+    {
+        return $this->dhisUid;
+    }
+
+    /**
+     * Add organisationunitStructure
+     *
+     * @param Hris\OrganisationunitBundle\Entity\OrganisationunitStructure $organisationunitStructure
+     * @return OrganisationunitLevel
+     */
+    public function addOrganisationunitStructure(\Hris\OrganisationunitBundle\Entity\OrganisationunitStructure $organisationunitStructure)
+    {
+        $this->organisationunitStructure[] = $organisationunitStructure;
+    
+        return $this;
+    }
+
+    /**
+     * Remove organisationunitStructure
+     *
+     * @param Hris\OrganisationunitBundle\Entity\OrganisationunitStructure $organisationunitStructure
+     */
+    public function removeOrganisationunitStructure(\Hris\OrganisationunitBundle\Entity\OrganisationunitStructure $organisationunitStructure)
+    {
+        $this->organisationunitStructure->removeElement($organisationunitStructure);
+    }
+
+    /**
+     * Get organisationunitStructure
+     *
+     * @return Doctrine\Common\Collections\Collection 
+     */
+    public function getOrganisationunitStructure()
+    {
+        return $this->organisationunitStructure;
+    }
+    /**
+     * Constructor
+     */
+    public function __construct()
+    {
+        $this->organisationunitStructure = new \Doctrine\Common\Collections\ArrayCollection();
+        $this->dataentrylevel = FALSE;
+    }
+    
 }

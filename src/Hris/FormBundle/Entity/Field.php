@@ -22,10 +22,17 @@
  */
 namespace Hris\FormBundle\Entity;
 
+use Doctrine\ORM\Mapping as ORM;
+
+use Hris\FormBundle\Entity\ResourceTableFieldMember;
+use Hris\FormBundle\Entity\FormSectionFieldMember;
+use Hris\FormBundle\Entity\Form;
+use Hris\FormBundle\Entity\FormFieldMember;
+use Hris\FormBundle\Entity\FieldOptionMerge;
+use Hris\FormBundle\Entity\FormVisibleFields;
 use Hris\FormBundle\Entity\FieldGroup;
 use Hris\FormBundle\Entity\DataType;
 use Hris\FormBundle\Entity\InputType;
-use Doctrine\ORM\Mapping as ORM;
 
 /**
  * Hris\FormBundle\Entity\Field
@@ -47,7 +54,7 @@ class Field
     /**
      * @var string $uid
      *
-     * @ORM\Column(name="uid", type="string", length=11, nullable=false, unique=true)
+     * @ORM\Column(name="uid", type="string", length=13, nullable=false, unique=true)
      */
     private $uid;
 
@@ -124,14 +131,14 @@ class Field
     /**
      * @var Hris\FormBundle\Entity\Field $parentField
      *
-     * @ORM\ManyToMany(targetEntity="Hris\FormBundle\Entity\Field", mappedBy="field")
+     * @ORM\ManyToMany(targetEntity="Hris\FormBundle\Entity\Field", mappedBy="childField")
      */
     private $parentField;
     
     /**
      * @var Hris\FormBundle\Entity\Field $childField
      *
-     * @ORM\ManyToMany(targetEntity="Hris\FormBundle\Entity\Field", inversedBy="Field")
+     * @ORM\ManyToMany(targetEntity="Hris\FormBundle\Entity\Field", inversedBy="parentField")
      * @ORM\JoinTable(name="hris_field_relation",
      *   joinColumns={
      *     @ORM\JoinColumn(name="parent_field", referencedColumnName="id", onDelete="CASCADE")
@@ -146,7 +153,7 @@ class Field
     /**
      * @var Hris\FormBundle\Entity\DataType $dataType
      *
-     * @ORM\ManyToOne(targetEntity="Hris\FormBundle\Entity\DataType")
+     * @ORM\ManyToOne(targetEntity="Hris\FormBundle\Entity\DataType",inversedBy="field")
      * @ORM\JoinColumns({
      *   @ORM\JoinColumn(name="datatype_id", referencedColumnName="id")
      * })
@@ -156,7 +163,7 @@ class Field
     /**
      * @var Hris\FormBundle\Entity\InputType $inputType
      *
-     * @ORM\ManyToOne(targetEntity="Hris\FormBundle\Entity\InputType")
+     * @ORM\ManyToOne(targetEntity="Hris\FormBundle\Entity\InputType",inversedBy="field")
      * @ORM\JoinColumns({
      *   @ORM\JoinColumn(name="inputtype_id", referencedColumnName="id")
      * })
@@ -166,10 +173,59 @@ class Field
     /**
      *	@var Hris\FormBundle\Entity\FieldOption $fieldOption
      *
-     * @ORM\OneToMany(targetEntity="Hris\FormBundle\Entity\FieldOption", mappedBy="field")
+     * @ORM\OneToMany(targetEntity="Hris\FormBundle\Entity\FieldOption", mappedBy="field",cascade={"ALL"})
      * @ORM\OrderBy({"value" = "ASC"})
      */
     private $fieldOption;
+    
+    /**
+     * @var Hris\FormBundle\Entity\FormVisibleFields $formVisibleFields
+     *
+     * @ORM\OneToMany(targetEntity="Hris\FormBundle\Entity\FormVisibleFields", mappedBy="field",cascade={"ALL"})
+     * @ORM\OrderBy({"sort" = "ASC"})
+     */
+    private $formVisibleFields;
+    
+    /**
+     * @var Hris\FormBundle\Entity\FieldOptionMerge $fieldOptionMerge
+     *
+     * @ORM\OneToMany(targetEntity="Hris\FormBundle\Entity\FieldOptionMerge", mappedBy="removedOptionField",cascade={"ALL"})
+     * @ORM\OrderBy({"removedoptionvalue" = "ASC"})
+     */
+    private $fieldOptionMerge;
+    
+    /**
+     * @var Hris\FormBundle\Entity\FormFieldMember $formFieldMember
+     *
+     * @ORM\OneToMany(targetEntity="Hris\FormBundle\Entity\FormFieldMember", mappedBy="field", cascade={"ALL"})
+     * @ORM\OrderBy({"sort" = "ASC"})
+     */
+    private $formFieldMember;
+    
+    /**
+     * @var Hris\FormBundle\Entity\FormSectionFieldMember $formSectionFieldMember
+     *
+     * @ORM\OneToMany(targetEntity="Hris\FormBundle\Entity\FormSectionFieldMember", mappedBy="field",cascade={"ALL"})
+     * @ORM\OrderBy({"sort" = "ASC"})
+     */
+    private $formSectionFieldMember;
+    
+    /**
+     * @var Hris\FormBundle\Entity\Form $uniqueRecordForms
+     * Forms in which this field together(or not) with others makes a record unique in the form
+     *
+     * @ORM\ManyToMany(targetEntity="Hris\FormBundle\Entity\Form", mappedBy="uniqueRecordFields")
+     * @ORM\OrderBy({"name" = "ASC"})
+     */
+    private $uniqueRecordForms;
+    
+    /**
+     * @var Hris\FormBundle\Entity\ResourceTableFieldMember $resourceTableFieldMember
+     *
+     * @ORM\OneToMany(targetEntity="Hris\FormBundle\Entity\ResourceTableFieldMember", mappedBy="field",cascade={"ALL"})
+     * @ORM\OrderBy({"sort" = "ASC"})
+     */
+    private $resourceTableFieldMember;
 
 
     /**
@@ -341,16 +397,6 @@ class Field
     public function getFieldrelation()
     {
         return $this->fieldrelation;
-    }
-    /**
-     * Constructor
-     */
-    public function __construct()
-    {
-        $this->fieldGroup = new \Doctrine\Common\Collections\ArrayCollection();
-        $this->parentField = new \Doctrine\Common\Collections\ArrayCollection();
-        $this->childField = new \Doctrine\Common\Collections\ArrayCollection();
-        $this->fieldOption = new \Doctrine\Common\Collections\ArrayCollection();
     }
     
     /**
@@ -598,5 +644,220 @@ class Field
     public function getUid()
     {
         return $this->uid;
+    }
+
+    /**
+     * Add fieldOptionMerge
+     *
+     * @param Hris\FormBundle\Entity\FieldOptionMerge $fieldOptionMerge
+     * @return Field
+     */
+    public function addFieldOptionMerge(\Hris\FormBundle\Entity\FieldOptionMerge $fieldOptionMerge)
+    {
+        $this->fieldOptionMerge[] = $fieldOptionMerge;
+    
+        return $this;
+    }
+
+    /**
+     * Remove fieldOptionMerge
+     *
+     * @param Hris\FormBundle\Entity\FieldOptionMerge $fieldOptionMerge
+     */
+    public function removeFieldOptionMerge(\Hris\FormBundle\Entity\FieldOptionMerge $fieldOptionMerge)
+    {
+        $this->fieldOptionMerge->removeElement($fieldOptionMerge);
+    }
+
+    /**
+     * Get fieldOptionMerge
+     *
+     * @return Doctrine\Common\Collections\Collection 
+     */
+    public function getFieldOptionMerge()
+    {
+        return $this->fieldOptionMerge;
+    }
+
+    /**
+     * Add formFieldMember
+     *
+     * @param Hris\FormBundle\Entity\FormFieldMember $formFieldMember
+     * @return Field
+     */
+    public function addFormFieldMember(\Hris\FormBundle\Entity\FormFieldMember $formFieldMember)
+    {
+        $this->formFieldMember[] = $formFieldMember;
+    
+        return $this;
+    }
+
+    /**
+     * Remove formFieldMember
+     *
+     * @param Hris\FormBundle\Entity\FormFieldMember $formFieldMember
+     */
+    public function removeFormFieldMember(\Hris\FormBundle\Entity\FormFieldMember $formFieldMember)
+    {
+        $this->formFieldMember->removeElement($formFieldMember);
+    }
+
+    /**
+     * Get formFieldMember
+     *
+     * @return Doctrine\Common\Collections\Collection 
+     */
+    public function getFormFieldMember()
+    {
+        return $this->formFieldMember;
+    }
+    
+
+    /**
+     * Add formSectionFieldMember
+     *
+     * @param Hris\FormBundle\Entity\FormSectionFieldMember $formSectionFieldMember
+     * @return Field
+     */
+    public function addFormSectionFieldMember(\Hris\FormBundle\Entity\FormSectionFieldMember $formSectionFieldMember)
+    {
+        $this->formSectionFieldMember[] = $formSectionFieldMember;
+    
+        return $this;
+    }
+
+    /**
+     * Remove formSectionFieldMember
+     *
+     * @param Hris\FormBundle\Entity\FormSectionFieldMember $formSectionFieldMember
+     */
+    public function removeFormSectionFieldMember(\Hris\FormBundle\Entity\FormSectionFieldMember $formSectionFieldMember)
+    {
+        $this->formSectionFieldMember->removeElement($formSectionFieldMember);
+    }
+
+    /**
+     * Get formSectionFieldMember
+     *
+     * @return Doctrine\Common\Collections\Collection 
+     */
+    public function getFormSectionFieldMember()
+    {
+        return $this->formSectionFieldMember;
+    }
+
+    /**
+     * Add resourceTableFieldMember
+     *
+     * @param Hris\FormBundle\Entity\ResourceTableFieldMember $resourceTableFieldMember
+     * @return Field
+     */
+    public function addResourceTableFieldMember(\Hris\FormBundle\Entity\ResourceTableFieldMember $resourceTableFieldMember)
+    {
+        $this->resourceTableFieldMember[] = $resourceTableFieldMember;
+    
+        return $this;
+    }
+
+    /**
+     * Remove resourceTableFieldMember
+     *
+     * @param Hris\FormBundle\Entity\ResourceTableFieldMember $resourceTableFieldMember
+     */
+    public function removeResourceTableFieldMember(\Hris\FormBundle\Entity\ResourceTableFieldMember $resourceTableFieldMember)
+    {
+        $this->resourceTableFieldMember->removeElement($resourceTableFieldMember);
+    }
+
+    /**
+     * Get resourceTableFieldMember
+     *
+     * @return Doctrine\Common\Collections\Collection 
+     */
+    public function getResourceTableFieldMember()
+    {
+        return $this->resourceTableFieldMember;
+    }
+    
+    /**
+     * Add uniqueRecordForms
+     *
+     * @param Hris\FormBundle\Entity\Form $uniqueRecordForms
+     * @return Field
+     */
+    public function addUniqueRecordForm(\Hris\FormBundle\Entity\Form $uniqueRecordForms)
+    {
+        $this->uniqueRecordForms[] = $uniqueRecordForms;
+    
+        return $this;
+    }
+
+    /**
+     * Remove uniqueRecordForms
+     *
+     * @param Hris\FormBundle\Entity\Form $uniqueRecordForms
+     */
+    public function removeUniqueRecordForm(\Hris\FormBundle\Entity\Form $uniqueRecordForms)
+    {
+        $this->uniqueRecordForms->removeElement($uniqueRecordForms);
+    }
+
+    /**
+     * Get uniqueRecordForms
+     *
+     * @return Doctrine\Common\Collections\Collection 
+     */
+    public function getUniqueRecordForms()
+    {
+        return $this->uniqueRecordForms;
+    }
+    /**
+     * Constructor
+     */
+    public function __construct()
+    {
+        $this->fieldGroup = new \Doctrine\Common\Collections\ArrayCollection();
+        $this->parentField = new \Doctrine\Common\Collections\ArrayCollection();
+        $this->childField = new \Doctrine\Common\Collections\ArrayCollection();
+        $this->fieldOption = new \Doctrine\Common\Collections\ArrayCollection();
+        $this->formVisibleFields = new \Doctrine\Common\Collections\ArrayCollection();
+        $this->fieldOptionMerge = new \Doctrine\Common\Collections\ArrayCollection();
+        $this->formFieldMember = new \Doctrine\Common\Collections\ArrayCollection();
+        $this->formSectionFieldMember = new \Doctrine\Common\Collections\ArrayCollection();
+        $this->uniqueRecordForms = new \Doctrine\Common\Collections\ArrayCollection();
+        $this->resourceTableFieldMember = new \Doctrine\Common\Collections\ArrayCollection();
+    }
+    
+    /**
+     * Add formVisibleFields
+     *
+     * @param Hris\FormBundle\Entity\FormVisibleFields $formVisibleFields
+     * @return Field
+     */
+    public function addFormVisibleField(\Hris\FormBundle\Entity\FormVisibleFields $formVisibleFields)
+    {
+        $this->formVisibleFields[] = $formVisibleFields;
+    
+        return $this;
+    }
+
+    /**
+     * Remove formVisibleFields
+     *
+     * @param Hris\FormBundle\Entity\FormVisibleFields $formVisibleFields
+     */
+    public function removeFormVisibleField(\Hris\FormBundle\Entity\FormVisibleFields $formVisibleFields)
+    {
+        $this->formVisibleFields->removeElement($formVisibleFields);
+    }
+
+    /**
+     * Get formVisibleFields
+     *
+     * @return Doctrine\Common\Collections\Collection 
+     */
+    public function getFormVisibleFields()
+    {
+        return $this->formVisibleFields;
     }
 }

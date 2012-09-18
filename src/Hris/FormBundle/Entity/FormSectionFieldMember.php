@@ -22,14 +22,15 @@
  */
 namespace Hris\FormBundle\Entity;
 
+use Doctrine\ORM\Mapping as ORM;
+
 use Hris\FormBundle\Entity\Field;
 use Hris\FormBundle\Entity\FormSection;
-use Doctrine\ORM\Mapping as ORM;
 
 /**
  * Hris\FormBundle\Entity\FormSectionFieldMember
  *
- * @ORM\Table(name="hris_formsectionfield_members")
+ * @ORM\Table(name="hris_formsection_fieldmembers")
  * @ORM\Entity(repositoryClass="Hris\FormBundle\Entity\FormSectionFieldMemberRepository")
  */
 class FormSectionFieldMember
@@ -49,7 +50,7 @@ class FormSectionFieldMember
     /**
      * @var Hris\FormBundle\Entity\Field $field
      *
-     * @ORM\ManyToOne(targetEntity="Hris\FormBundle\Entity\Field",inversedBy="formFieldMembers")
+     * @ORM\ManyToOne(targetEntity="Hris\FormBundle\Entity\Field",inversedBy="formSectionFieldMember")
      * @ORM\JoinColumns({
      *   @ORM\JoinColumn(name="field_id", referencedColumnName="id",nullable=false)
      * })

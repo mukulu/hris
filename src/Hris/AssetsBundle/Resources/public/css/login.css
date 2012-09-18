@@ -1,4 +1,3 @@
-
 #login-status{  position:absolute;  top: 0;  right: 0;  color: #FFFFFF;  font-size: 1em;}
 #login-status a{  color: #FFF;  font-weight: bold;  text-decoration: none;}
 #login-status a:hover{  text-decoration: underline;}
@@ -7,7 +6,7 @@
 #login-form #id_username, #login-form #id_password{border: 2px solid #3b5998;}
 #login-form #id_username:hover, #login-form #id_password:hover{   border: 2px solid #255df8;}
 #login-form .title{	color:#4366ad;    font-size:14px;    text-align:left;}
-#login-form form{background:#ebf1ff;padding:1em;border:1px solid #eee;margin:1em;width:32em;-moz-border-radius:5px 5px 5px 5px;-webkit-border-radius:5px 5px 5px 5px;}
+#login-form form{background:#ebf1ff;padding:1em;border:1px solid #eee;margin:1em;width:32em;-webkit-border-radius:5px 5px 5px 5px;-moz-border-radius:15px 15px 15px 15px;}
 #login-form .login {background:#eceff8;border:1px solid #999;-moz-border-radius:3px 3px 3px 3px;}
 #login-form input {padding:0.15em;width:16em;border:1px solid #ddd;background:#fafafa;font:bold 0.95em arial, sans-serif;-moz-border-radius:2px 2px 2px 2px;}
 #login-form input:hover, input:focus {border-color:#677798;-moz-border-radius:3px 3px 3px 3px;background:#f6f6f6;} 

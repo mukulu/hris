@@ -22,9 +22,12 @@
  */
 namespace Hris\FormBundle\Entity;
 
+use Doctrine\ORM\Mapping as ORM;
+
+use Hris\FormBundle\Entity\FriendlyReportCategory;
+use Hris\FormBundle\Entity\FieldOptionGroupset;
 use Hris\FormBundle\Entity\FieldOption;
 use Hris\FormBundle\Entity\Field;
-use Doctrine\ORM\Mapping as ORM;
 
 /**
  * Hris\FormBundle\Entity\FieldOptionGroup
@@ -53,7 +56,7 @@ class FieldOptionGroup
     /**
      * @var string $uid
      *
-     * @ORM\Column(name="uid", type="string", length=11)
+     * @ORM\Column(name="uid", type="string", length=13)
      */
     private $uid;
     
@@ -103,6 +106,20 @@ class FieldOptionGroup
      * })
      */
     private $field;
+    
+    /**
+     * @var Hris\FormBundle\Entity\FieldOptionGroupset $fieldOptionGroupset
+     *
+     * @ORM\ManyToMany(targetEntity="Hris\FormBundle\Entity\FieldOptionGroupset", mappedBy="fieldOptionGroup")
+     */
+    private $fieldOptionGroupset;
+    
+    /**
+     * @var Hris\FormBundle\Entity\FriendlyReportCategory $friendlyReportCategory
+     *
+     * @ORM\OneToMany(targetEntity="Hris\FormBundle\Entity\FriendlyReportCategory", mappedBy="fieldOptionGroup")
+     */
+    private $friendlyReportCategory;
 
 
     /**
@@ -291,5 +308,71 @@ class FieldOptionGroup
     public function getField()
     {
         return $this->field;
+    }
+
+    /**
+     * Add fieldOptionGroupset
+     *
+     * @param Hris\FormBundle\Entity\FieldOptionGroupset $fieldOptionGroupset
+     * @return FieldOptionGroup
+     */
+    public function addFieldOptionGroupset(\Hris\FormBundle\Entity\FieldOptionGroupset $fieldOptionGroupset)
+    {
+        $this->fieldOptionGroupset[] = $fieldOptionGroupset;
+    
+        return $this;
+    }
+
+    /**
+     * Remove fieldOptionGroupset
+     *
+     * @param Hris\FormBundle\Entity\FieldOptionGroupset $fieldOptionGroupset
+     */
+    public function removeFieldOptionGroupset(\Hris\FormBundle\Entity\FieldOptionGroupset $fieldOptionGroupset)
+    {
+        $this->fieldOptionGroupset->removeElement($fieldOptionGroupset);
+    }
+
+    /**
+     * Get fieldOptionGroupset
+     *
+     * @return Doctrine\Common\Collections\Collection 
+     */
+    public function getFieldOptionGroupset()
+    {
+        return $this->fieldOptionGroupset;
+    }
+
+    /**
+     * Add friendlyReportCategory
+     *
+     * @param Hris\FormBundle\Entity\FriendlyReportCategory $friendlyReportCategory
+     * @return FieldOptionGroup
+     */
+    public function addFriendlyReportCategory(\Hris\FormBundle\Entity\FriendlyReportCategory $friendlyReportCategory)
+    {
+        $this->friendlyReportCategory[] = $friendlyReportCategory;
+    
+        return $this;
+    }
+
+    /**
+     * Remove friendlyReportCategory
+     *
+     * @param Hris\FormBundle\Entity\FriendlyReportCategory $friendlyReportCategory
+     */
+    public function removeFriendlyReportCategory(\Hris\FormBundle\Entity\FriendlyReportCategory $friendlyReportCategory)
+    {
+        $this->friendlyReportCategory->removeElement($friendlyReportCategory);
+    }
+
+    /**
+     * Get friendlyReportCategory
+     *
+     * @return Doctrine\Common\Collections\Collection 
+     */
+    public function getFriendlyReportCategory()
+    {
+        return $this->friendlyReportCategory;
     }
 }

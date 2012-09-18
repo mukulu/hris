@@ -22,9 +22,10 @@
  */
 namespace Hris\RecordsBundle\Entity;
 
+use Doctrine\ORM\Mapping as ORM;
+
 use Hris\FormBundle\Entity\Field;
 use Hris\RecordsBundle\Entity\Record;
-use Doctrine\ORM\Mapping as ORM;
 
 /**
  * Hris\RecordsBundle\Entity\RecordValue
@@ -94,7 +95,7 @@ class RecordValue
     /**
      * @var string $uid
      *
-     * @ORM\Column(name="uid", type="string", length=11)
+     * @ORM\Column(name="uid", type="string", length=13)
      */
     private $uid;
 

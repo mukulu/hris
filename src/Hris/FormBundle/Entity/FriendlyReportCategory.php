@@ -22,9 +22,10 @@
  */
 namespace Hris\FormBundle\Entity;
 
+use Doctrine\ORM\Mapping as ORM;
+
 use Hris\FormBundle\Entity\FieldOptionGroup;
 use Hris\FormBundle\Entity\FriendlyReport;
-use Doctrine\ORM\Mapping as ORM;
 
 /**
  * Hris\FormBundle\Entity\FriendlyReportCategory

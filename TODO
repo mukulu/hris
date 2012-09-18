@@ -1,0 +1,13 @@
+1. Installation of Doctrine Extension
+2. Installation of Sonata Admin Bundles
+3. Installation of fixtures bundle
+4. Getting views of all entities operational
+5. Automating the menu & ROLES
+6. Get the interface to perform data entry
+7. Unit-test for all functionalities
+8. Applying logging mechanisms to all classes through doctrine extra bundle
+9. Getting mode rewrite to work with symfony to make app.php dissapear.
+
+Future Features:
+1. OrganisationUnitGroupHierarchy
+	e.g. Wards that orgunit belongs

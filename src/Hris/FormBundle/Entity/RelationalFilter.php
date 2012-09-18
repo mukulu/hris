@@ -22,8 +22,10 @@
  */
 namespace Hris\FormBundle\Entity;
 
-use Hris\FormBundle\Entity\FieldOption;
 use Doctrine\ORM\Mapping as ORM;
+
+use Hris\FormBundle\Entity\FriendlyReport;
+use Hris\FormBundle\Entity\FieldOption;
 
 /**
  * Hris\FormBundle\Entity\RelationalFilter
@@ -73,7 +75,7 @@ class RelationalFilter
     /**
      * @var string $uid
      *
-     * @ORM\Column(name="uid", type="string", length=11, nullable=false, unique=true)
+     * @ORM\Column(name="uid", type="string", length=13, nullable=false, unique=true)
      */
     private $uid;
     
@@ -101,6 +103,14 @@ class RelationalFilter
      * })
      */
     private $field;
+    
+    /**
+     * @var Hris\FormBundle\Entity\FriendlyReport $friendlyReport
+     *
+     * @ORM\ManyToMany(targetEntity="Hris\FormBundle\Entity\FriendlyReport", mappedBy="relationalFilter")
+     * @ORM\OrderBy({"name" = "ASC"})
+     */
+    private $friendlyReport;
 
 
     /**
@@ -157,13 +167,6 @@ class RelationalFilter
     public function getExcludeFieldOptions()
     {
         return $this->excludeFieldOptions;
-    }
-    /**
-     * Constructor
-     */
-    public function __construct()
-    {
-        $this->fieldOption = new \Doctrine\Common\Collections\ArrayCollection();
     }
     
     /**
@@ -290,4 +293,46 @@ class RelationalFilter
     {
         return $this->field;
     }
+
+    /**
+     * Add friendlyReport
+     *
+     * @param Hris\FormBundle\Entity\FriendlyReport $friendlyReport
+     * @return RelationalFilter
+     */
+    public function addFriendlyReport(\Hris\FormBundle\Entity\FriendlyReport $friendlyReport)
+    {
+        $this->friendlyReport[] = $friendlyReport;
+    
+        return $this;
+    }
+
+    /**
+     * Remove friendlyReport
+     *
+     * @param Hris\FormBundle\Entity\FriendlyReport $friendlyReport
+     */
+    public function removeFriendlyReport(\Hris\FormBundle\Entity\FriendlyReport $friendlyReport)
+    {
+        $this->friendlyReport->removeElement($friendlyReport);
+    }
+
+    /**
+     * Get friendlyReport
+     *
+     * @return Doctrine\Common\Collections\Collection 
+     */
+    public function getFriendlyReport()
+    {
+        return $this->friendlyReport;
+    }
+    /**
+     * Constructor
+     */
+    public function __construct()
+    {
+        $this->fieldOption = new \Doctrine\Common\Collections\ArrayCollection();
+        $this->friendlyReport = new \Doctrine\Common\Collections\ArrayCollection();
+    }
+    
 }

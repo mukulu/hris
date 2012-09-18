@@ -22,8 +22,9 @@
  */
 namespace Hris\OrganisationunitBundle\Entity;
 
-use Hris\OrganisationunitBundle\Entity\OrganisationunitGroup;
 use Doctrine\ORM\Mapping as ORM;
+
+use Hris\OrganisationunitBundle\Entity\OrganisationunitGroup;
 
 /**
  * Hris\OrganisationunitBundle\Entity\OrganisationunitGroupset
@@ -66,9 +67,16 @@ class OrganisationunitGroupset
     /**
      * @var string $uid
      *
-     * @ORM\Column(name="uid", type="string", length=11, nullable=false, unique=true)
+     * @ORM\Column(name="uid", type="string", length=13, nullable=false, unique=true)
      */
     private $uid;
+    
+    /**
+     * @var string $dhisUid
+     *
+     * @ORM\Column(name="dhisUid", type="string", length=11, nullable=false, unique=true)
+     */
+    private $dhisUid;
 
     /**
      * @var string $code
@@ -94,15 +102,7 @@ class OrganisationunitGroupset
     /**
      * @var Hris\OrganisationunitBundle\Entity\OrganisationunitGroup $organisationunitGroup
      *
-     * @ORM\ManyToMany(targetEntity="Hris\OrganisationunitBundle\Entity\OrganisationunitGroup", inversedBy="organisationunitGroupset")
-     * @ORM\JoinTable(name="hris_organisationunitgroupset_members",
-     *   joinColumns={
-     *     @ORM\JoinColumn(name="organisationunitgroupset_id", referencedColumnName="id", onDelete="CASCADE")
-     *   },
-     *   inverseJoinColumns={
-     *     @ORM\JoinColumn(name="organisationunitgroup_id", referencedColumnName="id", onDelete="CASCADE")
-     *   }
-     * )
+     * @ORM\OneToMany(targetEntity="Hris\OrganisationunitBundle\Entity\OrganisationunitGroup", mappedBy="organisationunitGroupset",cascade={"ALL"})
      * @ORM\OrderBy({"name" = "ASC"})
      */
     private $organisationunitGroup;
@@ -317,5 +317,28 @@ class OrganisationunitGroupset
     public function getOrganisationunitGroup()
     {
         return $this->organisationunitGroup;
+    }
+
+    /**
+     * Set dhisUid
+     *
+     * @param string $dhisUid
+     * @return OrganisationunitGroupset
+     */
+    public function setDhisUid($dhisUid)
+    {
+        $this->dhisUid = $dhisUid;
+    
+        return $this;
+    }
+
+    /**
+     * Get dhisUid
+     *
+     * @return string 
+     */
+    public function getDhisUid()
+    {
+        return $this->dhisUid;
     }
 }

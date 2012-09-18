@@ -24,6 +24,8 @@ namespace Hris\OrganisationunitBundle\Entity;
 
 use Doctrine\ORM\Mapping as ORM;
 
+use Hris\OrganisationunitBundle\Entity\Organisationunit;
+
 /**
  * Hris\OrganisationunitBundle\Entity\OrganisationunitCompleteness
  *
@@ -44,7 +46,7 @@ class OrganisationunitCompleteness
     /**
      * @var string $uid
      *
-     * @ORM\Column(name="uid", type="string", length=11, nullable=false, unique=true)
+     * @ORM\Column(name="uid", type="string", length=13, nullable=false, unique=true)
      */
     private $uid;
     

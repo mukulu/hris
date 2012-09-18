@@ -22,14 +22,15 @@
  */
 namespace Hris\FormBundle\Entity;
 
+use Doctrine\ORM\Mapping as ORM;
+
 use Hris\FormBundle\Entity\Field;
 use Hris\FormBundle\Entity\Form;
-use Doctrine\ORM\Mapping as ORM;
 
 /**
  * Hris\FormBundle\Entity\FormFieldMember
  *
- * @ORM\Table(name="hris_formfield_members")
+ * @ORM\Table(name="hris_form_fieldmembers")
  * @ORM\Entity(repositoryClass="Hris\FormBundle\Entity\FormFieldMemberRepository")
  */
 class FormFieldMember
@@ -37,7 +38,7 @@ class FormFieldMember
     /**
      * @var Hris\FormBundle\Entity\Form $form
      *
-     * @ORM\ManyToOne(targetEntity="Hris\FormBundle\Entity\Form",inversedBy="formFieldMembers")
+     * @ORM\ManyToOne(targetEntity="Hris\FormBundle\Entity\Form",inversedBy="formFieldMember")
      * @ORM\JoinColumns({
      *   @ORM\JoinColumn(name="form_id", referencedColumnName="id",nullable=false)
      * })
@@ -49,7 +50,7 @@ class FormFieldMember
     /**
      * @var Hris\FormBundle\Entity\Field $field
      *
-     * @ORM\ManyToOne(targetEntity="Hris\FormBundle\Entity\Field",inversedBy="formFieldMembers")
+     * @ORM\ManyToOne(targetEntity="Hris\FormBundle\Entity\Field",inversedBy="formFieldMember")
      * @ORM\JoinColumns({
      *   @ORM\JoinColumn(name="field_id", referencedColumnName="id",nullable=false)
      * })

@@ -22,8 +22,9 @@
  */
 namespace Hris\RecordsBundle\Entity;
 
-use Hris\RecordsBundle\Entity\Record;
 use Doctrine\ORM\Mapping as ORM;
+
+use Hris\RecordsBundle\Entity\Record;
 
 /**
  * Hris\RecordsBundle\Entity\Training
@@ -55,7 +56,7 @@ class Training
     /**
      * @var string $uid
      *
-     * @ORM\Column(name="uid", type="string", length=11)
+     * @ORM\Column(name="uid", type="string", length=13)
      */
     private $uid;
 

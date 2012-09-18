@@ -24,15 +24,15 @@ namespace Hris\FormBundle\Entity;
 
 use Doctrine\ORM\Mapping as ORM;
 
-use Hris\FormBundle\Entity\FieldOptionGroup;
+use Hris\FormBundle\Entity\FieldGroup;
 
 /**
- * Hris\FormBundle\Entity\FieldOptionGroupset
+ * Hris\FormBundle\Entity\FieldGroupset
  *
- * @ORM\Table(name="hris_fieldoptiongroupset")
- * @ORM\Entity(repositoryClass="Hris\FormBundle\Entity\FieldOptionGroupsetRepository")
+ * @ORM\Table(name="hris_fieldgroupset")
+ * @ORM\Entity(repositoryClass="Hris\FormBundle\Entity\FieldGroupsetRepository")
  */
-class FieldOptionGroupset
+class FieldGroupset
 {
     /**
      * @var integer $id
@@ -46,53 +46,54 @@ class FieldOptionGroupset
     /**
      * @var string $name
      *
-     * @ORM\Column(name="name", type="string", length=64, unique=true)
+     * @ORM\Column(name="name", type="string", length=64)
      */
     private $name;
 
     /**
      * @var string $uid
      *
-     * @ORM\Column(name="uid", type="string", length=13, unique=true)
+     * @ORM\Column(name="uid", type="string", length=13)
      */
     private $uid;
-    
+
     /**
      * @var string $description
      *
      * @ORM\Column(name="description", type="text", nullable=true)
      */
     private $description;
-    
+
     /**
      * @var \DateTime $datecreated
      *
      * @ORM\Column(name="datecreated", type="datetime")
      */
     private $datecreated;
-    
+
     /**
-     * @var \DateTime $lastmodified
+     * @var \DateTime $lastupdated
      *
-     * @ORM\Column(name="lastmodified", type="datetime")
+     * @ORM\Column(name="lastupdated", type="datetime", nullable=true)
      */
-    private $lastmodified;
+    private $lastupdated;
     
     /**
-     * @var Hris\FormBundle\Entity\FieldOptionGroup $fieldOptionGroup 
+     * @var Hris\FormBundle\Entity\FieldGroup $fieldGroup
      *
-     * @ORM\ManyToMany(targetEntity="Hris\FormBundle\Entity\FieldOptionGroup", inversedBy="fieldOptionGroupset")
-     * @ORM\JoinTable(name="hris_fieldoptiongroupset_members",
+     * @ORM\ManyToMany(targetEntity="Hris\FormBundle\Entity\FieldGroup", inversedBy="fieldGroupset")
+     * @ORM\JoinTable(name="hris_fieldgroupset_members",
      *   joinColumns={
-     *     @ORM\JoinColumn(name="fieldoptiongroupset_id", referencedColumnName="id", onDelete="CASCADE")
+     *     @ORM\JoinColumn(name="fieldgroupset_id", referencedColumnName="id", onDelete="CASCADE")
      *   },
      *   inverseJoinColumns={
-     *     @ORM\JoinColumn(name="fieldoptiongroup_id", referencedColumnName="id", onDelete="CASCADE")
+     *     @ORM\JoinColumn(name="fieldgroup_id", referencedColumnName="id", onDelete="CASCADE")
      *   }
      * )
      * @ORM\OrderBy({"name" = "ASC"})
      */
-    private $fieldOptionGroup;
+    private $fieldGroup;
+
 
     /**
      * Get id
@@ -108,7 +109,7 @@ class FieldOptionGroupset
      * Set name
      *
      * @param string $name
-     * @return FieldOptionGroupset
+     * @return FieldGroupset
      */
     public function setName($name)
     {
@@ -131,7 +132,7 @@ class FieldOptionGroupset
      * Set uid
      *
      * @param string $uid
-     * @return FieldOptionGroupset
+     * @return FieldGroupset
      */
     public function setUid($uid)
     {
@@ -149,19 +150,12 @@ class FieldOptionGroupset
     {
         return $this->uid;
     }
-    /**
-     * Constructor
-     */
-    public function __construct()
-    {
-        $this->fieldOptionGroup = new \Doctrine\Common\Collections\ArrayCollection();
-    }
-    
+
     /**
      * Set description
      *
      * @param string $description
-     * @return FieldOptionGroupset
+     * @return FieldGroupset
      */
     public function setDescription($description)
     {
@@ -184,7 +178,7 @@ class FieldOptionGroupset
      * Set datecreated
      *
      * @param \DateTime $datecreated
-     * @return FieldOptionGroupset
+     * @return FieldGroupset
      */
     public function setDatecreated($datecreated)
     {
@@ -204,58 +198,65 @@ class FieldOptionGroupset
     }
 
     /**
-     * Set lastmodified
+     * Set lastupdated
      *
-     * @param \DateTime $lastmodified
-     * @return FieldOptionGroupset
+     * @param \DateTime $lastupdated
+     * @return FieldGroupset
      */
-    public function setLastmodified($lastmodified)
+    public function setLastupdated($lastupdated)
     {
-        $this->lastmodified = $lastmodified;
+        $this->lastupdated = $lastupdated;
     
         return $this;
     }
 
     /**
-     * Get lastmodified
+     * Get lastupdated
      *
      * @return \DateTime 
      */
-    public function getLastmodified()
+    public function getLastupdated()
     {
-        return $this->lastmodified;
+        return $this->lastupdated;
     }
-
     /**
-     * Add fieldOptionGroup
-     *
-     * @param Hris\FormBundle\Entity\FieldOptionGroup $fieldOptionGroup
-     * @return FieldOptionGroupset
+     * Constructor
      */
-    public function addFieldOptionGroup(\Hris\FormBundle\Entity\FieldOptionGroup $fieldOptionGroup)
+    public function __construct()
     {
-        $this->fieldOptionGroup[] = $fieldOptionGroup;
+        $this->fieldGroup = new \Doctrine\Common\Collections\ArrayCollection();
+    }
+    
+    /**
+     * Add fieldGroup
+     *
+     * @param Hris\FormBundle\Entity\FieldGroup $fieldGroup
+     * @return FieldGroupset
+     */
+    public function addFieldGroup(\Hris\FormBundle\Entity\FieldGroup $fieldGroup)
+    {
+        $this->fieldGroup[] = $fieldGroup;
     
         return $this;
     }
 
     /**
-     * Remove fieldOptionGroup
+     * Remove fieldGroup
      *
-     * @param Hris\FormBundle\Entity\FieldOptionGroup $fieldOptionGroup
+     * @param Hris\FormBundle\Entity\FieldGroup $fieldGroup
      */
-    public function removeFieldOptionGroup(\Hris\FormBundle\Entity\FieldOptionGroup $fieldOptionGroup)
+    public function removeFieldGroup(\Hris\FormBundle\Entity\FieldGroup $fieldGroup)
     {
-        $this->fieldOptionGroup->removeElement($fieldOptionGroup);
+        $this->fieldGroup->removeElement($fieldGroup);
     }
 
     /**
-     * Get fieldOptionGroup
+     * Get fieldGroup
      *
      * @return Doctrine\Common\Collections\Collection 
      */
-    public function getFieldOptionGroup()
+    public function getFieldGroup()
     {
-        return $this->fieldOptionGroup;
+        return $this->fieldGroup;
     }
 }
