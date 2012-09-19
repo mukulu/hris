@@ -44,18 +44,18 @@ class FieldOptionGroupset
     private $id;
 
     /**
-     * @var string $name
-     *
-     * @ORM\Column(name="name", type="string", length=64, unique=true)
-     */
-    private $name;
-
-    /**
      * @var string $uid
      *
      * @ORM\Column(name="uid", type="string", length=13, unique=true)
      */
     private $uid;
+
+    /**
+     * @var string $name
+     *
+     * @ORM\Column(name="name", type="string", length=64, unique=true)
+     */
+    private $name;
     
     /**
      * @var string $description
@@ -63,20 +63,6 @@ class FieldOptionGroupset
      * @ORM\Column(name="description", type="text", nullable=true)
      */
     private $description;
-    
-    /**
-     * @var \DateTime $datecreated
-     *
-     * @ORM\Column(name="datecreated", type="datetime")
-     */
-    private $datecreated;
-    
-    /**
-     * @var \DateTime $lastmodified
-     *
-     * @ORM\Column(name="lastmodified", type="datetime")
-     */
-    private $lastmodified;
     
     /**
      * @var Hris\FormBundle\Entity\FieldOptionGroup $fieldOptionGroup 
@@ -93,6 +79,20 @@ class FieldOptionGroupset
      * @ORM\OrderBy({"name" = "ASC"})
      */
     private $fieldOptionGroup;
+    
+    /**
+     * @var \DateTime $datecreated
+     *
+     * @ORM\Column(name="datecreated", type="datetime")
+     */
+    private $datecreated;
+    
+    /**
+     * @var \DateTime $lastmodified
+     *
+     * @ORM\Column(name="lastmodified", type="datetime", nullable=true)
+     */
+    private $lastmodified;
 
     /**
      * Get id
@@ -155,6 +155,7 @@ class FieldOptionGroupset
     public function __construct()
     {
         $this->fieldOptionGroup = new \Doctrine\Common\Collections\ArrayCollection();
+        $this->uid = uniqid();
     }
     
     /**

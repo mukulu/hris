@@ -44,18 +44,18 @@ class FieldGroupset
     private $id;
 
     /**
-     * @var string $name
-     *
-     * @ORM\Column(name="name", type="string", length=64)
-     */
-    private $name;
-
-    /**
      * @var string $uid
      *
-     * @ORM\Column(name="uid", type="string", length=13)
+     * @ORM\Column(name="uid", type="string", length=13, unique=true)
      */
     private $uid;
+
+    /**
+     * @var string $name
+     *
+     * @ORM\Column(name="name", type="string", length=64, unique=true)
+     */
+    private $name;
 
     /**
      * @var string $description
@@ -63,20 +63,6 @@ class FieldGroupset
      * @ORM\Column(name="description", type="text", nullable=true)
      */
     private $description;
-
-    /**
-     * @var \DateTime $datecreated
-     *
-     * @ORM\Column(name="datecreated", type="datetime")
-     */
-    private $datecreated;
-
-    /**
-     * @var \DateTime $lastupdated
-     *
-     * @ORM\Column(name="lastupdated", type="datetime", nullable=true)
-     */
-    private $lastupdated;
     
     /**
      * @var Hris\FormBundle\Entity\FieldGroup $fieldGroup
@@ -93,6 +79,20 @@ class FieldGroupset
      * @ORM\OrderBy({"name" = "ASC"})
      */
     private $fieldGroup;
+
+    /**
+     * @var \DateTime $datecreated
+     *
+     * @ORM\Column(name="datecreated", type="datetime")
+     */
+    private $datecreated;
+
+    /**
+     * @var \DateTime $lastupdated
+     *
+     * @ORM\Column(name="lastupdated", type="datetime", nullable=true)
+     */
+    private $lastupdated;
 
 
     /**
@@ -225,6 +225,7 @@ class FieldGroupset
     public function __construct()
     {
         $this->fieldGroup = new \Doctrine\Common\Collections\ArrayCollection();
+        $this->uid = uniqid();
     }
     
     /**

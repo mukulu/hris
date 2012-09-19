@@ -45,39 +45,25 @@ class FieldGroup
     private $id;
 
     /**
-     * @var string $name
-     *
-     * @ORM\Column(name="name", type="string", length=64)
-     */
-    private $name;
-
-    /**
      * @var string $uid
      *
-     * @ORM\Column(name="uid", type="string", length=13)
+     * @ORM\Column(name="uid", type="string", length=13, unique=true)
      */
     private $uid;
 
     /**
+     * @var string $name
+     *
+     * @ORM\Column(name="name", type="string", length=64, unique=true)
+     */
+    private $name;
+
+    /**
      * @var string $description
      *
-     * @ORM\Column(name="description", type="text")
+     * @ORM\Column(name="description", type="text", nullable=true)
      */
     private $description;
-    
-    /**
-     * @var \DateTime $datecreated
-     *
-     * @ORM\Column(name="datecreated", type="datetime")
-     */
-    private $datecreated;
-    
-    /**
-     * @var \DateTime $lastupdated
-     *
-     * @ORM\Column(name="lastupdated", type="datetime", nullable=true)
-     */
-    private $lastupdated;
     
     /**
      * @var Hris\FormBundle\Entity\Field $field
@@ -99,8 +85,23 @@ class FieldGroup
      * @var Hris\FormBundle\Entity\FieldGroupset $fieldGroupset
      *
      * @ORM\ManyToMany(targetEntity="Hris\FormBundle\Entity\FieldGroupset", mappedBy="fieldGroup")
+     * @ORM\OrderBy({"name" = "ASC"})
      */
     private $fieldGroupset;
+    
+    /**
+     * @var \DateTime $datecreated
+     *
+     * @ORM\Column(name="datecreated", type="datetime")
+     */
+    private $datecreated;
+    
+    /**
+     * @var \DateTime $lastupdated
+     *
+     * @ORM\Column(name="lastupdated", type="datetime", nullable=true)
+     */
+    private $lastupdated;
 
 
     /**
@@ -267,6 +268,7 @@ class FieldGroup
     {
         $this->field = new \Doctrine\Common\Collections\ArrayCollection();
         $this->fieldGroupset = new \Doctrine\Common\Collections\ArrayCollection();
+        $this->uid = uniqid();
     }
     
     /**

@@ -7,7 +7,7 @@ use Doctrine\ORM\Mapping as ORM;
 /**
  * Hris\DataQualityBundle\Entity\Validation
  *
- * @ORM\Table(name="hris_validation")
+ * @ORM\Table(name="hris_validation", uniqueConstraints={@ORM\UniqueConstraint(name="validation_equation_idx",columns={"operator", "leftExpression","rightExpression"})})
  * @ORM\Entity(repositoryClass="Hris\DataQualityBundle\Entity\ValidationRepository")
  */
 class Validation
@@ -20,18 +20,25 @@ class Validation
      * @ORM\GeneratedValue(strategy="AUTO")
      */
     private $id;
+    
+    /**
+     * @var string $uid
+     *
+     * @ORM\Column(name="uid", type="string", length=13, unique=true)
+     */
+    private $uid;
 
     /**
      * @var string $name
      *
-     * @ORM\Column(name="name", type="string", length=64)
+     * @ORM\Column(name="name", type="string", length=64, unique=true)
      */
     private $name;
 
     /**
      * @var string $description
      *
-     * @ORM\Column(name="description", type="text")
+     * @ORM\Column(name="description", type="text",nullable=true)
      */
     private $description;
 
@@ -59,7 +66,7 @@ class Validation
     /**
      * @var \DateTime $datecreated
      *
-     * @ORM\Column(name="datecreated", type="datetime", nullable=false)
+     * @ORM\Column(name="datecreated", type="datetime")
      */
     private $datecreated;
     
@@ -70,13 +77,15 @@ class Validation
      */
     private $lastupdated;
     
+    
+    
     /**
-     * @var string $uid
-     *
-     * @ORM\Column(name="uid", type="string", length=13, nullable=false, unique=true)
+     * Constructor
      */
-    private $uid;
-
+    public function __construct()
+    {
+    	$this->uid = uniqid();
+    }
 
     /**
      * Get id

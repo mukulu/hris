@@ -26,6 +26,7 @@ use Doctrine\ORM\Mapping as ORM;
 
 use Hris\OrganisationunitBundle\Entity\Organisationunit;
 use Hris\FormBundle\Entity\Form;
+use Hris\FormBundle\Entity\Field;
 
 /**
  * Hris\RecordsBundle\Entity\RecordStats
@@ -43,6 +44,13 @@ class RecordStats
      * @ORM\GeneratedValue(strategy="AUTO")
      */
     private $id;
+    
+    /**
+     * @var string $uid
+     *
+     * @ORM\Column(name="uid", type="string", length=13, unique=true)
+     */
+    private $uid;
     
     /**
      * @var Hris\OrganisationunitBundle\Entity\Organisationunit $organisationunit
@@ -65,20 +73,6 @@ class RecordStats
     private $form;
 
     /**
-     * @var \DateTime $datecreated
-     *
-     * @ORM\Column(name="datecreated", type="datetime")
-     */
-    private $datecreated;
-
-    /**
-     * @var \DateTime $lastupdated
-     *
-     * @ORM\Column(name="lastupdated", type="datetime", nullable=true)
-     */
-    private $lastupdated;
-
-    /**
      * @var boolean $complete
      *
      * @ORM\Column(name="complete", type="boolean")
@@ -93,6 +87,16 @@ class RecordStats
     private $correct;
     
     /**
+     * @var Hris\FormBundle\Entity\Field $field
+     *
+     * @ORM\ManyToOne(targetEntity="Hris\FormBundle\Entity\Field", inversedBy="recordStats")
+     * @ORM\JoinColumns({
+     *   @ORM\JoinColumn(name="field_id", referencedColumnName="id")
+     * })
+     */
+    private $field;
+    
+    /**
      * @var string $value
      *
      * @ORM\Column(name="value", type="string", length=255)
@@ -105,19 +109,30 @@ class RecordStats
      * @ORM\Column(name="count", type="integer")
      */
     private $count;
+
+    /**
+     * @var \DateTime $datecreated
+     *
+     * @ORM\Column(name="datecreated", type="datetime")
+     */
+    private $datecreated;
+
+    /**
+     * @var \DateTime $lastupdated
+     *
+     * @ORM\Column(name="lastupdated", type="datetime", nullable=true)
+     */
+    private $lastupdated;
     
     /**
-     * @var string $uid
-     *
-     * @ORM\Column(name="uid", type="string", length=13, unique=true)
+     * Constructor
      */
-    private $uid;
-    
     public function __construct()
     {
     	$this->complete = FALSE;
     	$this->correct = TRUE;
     	$this->value = 0;
+    	$this->uid = uniqid();
     }
 
 
@@ -362,5 +377,28 @@ class RecordStats
     	$this->count -= $count;
     
     	return $this;
+    }
+
+    /**
+     * Set field
+     *
+     * @param Hris\FormBundle\Entity\Field $field
+     * @return RecordStats
+     */
+    public function setField(\Hris\FormBundle\Entity\Field $field = null)
+    {
+        $this->field = $field;
+    
+        return $this;
+    }
+
+    /**
+     * Get field
+     *
+     * @return Hris\FormBundle\Entity\Field 
+     */
+    public function getField()
+    {
+        return $this->field;
     }
 }

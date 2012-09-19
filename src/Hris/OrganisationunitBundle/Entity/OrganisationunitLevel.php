@@ -44,46 +44,32 @@ class OrganisationunitLevel
     private $id;
 
     /**
-     * @var integer $level
-     *
-     * @ORM\Column(name="level", type="integer", nullable=false, unique=true)
-     */
-    private $level;
-
-    /**
-     * @var string $name
-     *
-     * @ORM\Column(name="name", type="string", length=128, nullable=false, unique=true)
-     */
-    private $name;
-
-    /**
-     * @var \DateTime $lastupdated
-     *
-     * @ORM\Column(name="lastupdated", type="datetime", nullable=true)
-     */
-    private $lastupdated;
-
-    /**
-     * @var \DateTime $datecreated
-     *
-     * @ORM\Column(name="datecreated", type="datetime", nullable=false)
-     */
-    private $datecreated;
-
-    /**
      * @var string $uid
      *
-     * @ORM\Column(name="uid", type="string", length=13, nullable=false, unique=true)
+     * @ORM\Column(name="uid", type="string", length=13, unique=true)
      */
     private $uid;
     
     /**
      * @var string $dhisUid
      *
-     * @ORM\Column(name="dhisUid", type="string", length=11, nullable=false, unique=true)
+     * @ORM\Column(name="dhisUid", type="string", length=11, nullable=true, unique=true)
      */
     private $dhisUid;
+
+    /**
+     * @var integer $level
+     *
+     * @ORM\Column(name="level", type="integer", unique=true)
+     */
+    private $level;
+
+    /**
+     * @var string $name
+     *
+     * @ORM\Column(name="name", type="string", length=128, unique=true)
+     */
+    private $name;
 
     /**
      * @var string $description
@@ -95,7 +81,7 @@ class OrganisationunitLevel
     /**
      * @var boolean $dataentrylevel
      *
-     * @ORM\Column(name="dataentrylevel", type="boolean", nullable=false)
+     * @ORM\Column(name="dataentrylevel", type="boolean")
      */
     private $dataentrylevel;
     
@@ -105,6 +91,20 @@ class OrganisationunitLevel
      * @ORM\OneToMany(targetEntity="Hris\OrganisationunitBundle\Entity\OrganisationunitStructure", mappedBy="level",cascade={"ALL"})
      */
     private $organisationunitStructure;
+
+    /**
+     * @var \DateTime $datecreated
+     *
+     * @ORM\Column(name="datecreated", type="datetime")
+     */
+    private $datecreated;
+
+    /**
+     * @var \DateTime $lastupdated
+     *
+     * @ORM\Column(name="lastupdated", type="datetime", nullable=true)
+     */
+    private $lastupdated;
     
     /**
      * Get id
@@ -337,6 +337,7 @@ class OrganisationunitLevel
      */
     public function __construct()
     {
+    	$this->uid = uniqid();
         $this->organisationunitStructure = new \Doctrine\Common\Collections\ArrayCollection();
         $this->dataentrylevel = FALSE;
     }

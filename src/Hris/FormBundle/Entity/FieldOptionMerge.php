@@ -45,6 +45,13 @@ class FieldOptionMerge
     private $id;
 
     /**
+     * @var string $uid
+     *
+     * @ORM\Column(name="uid", type="string", length=13)
+     */
+    private $uid;
+
+    /**
      * @var Hris\FormBundle\Entity\FieldOption $mergedFieldOption
      *
      * @ORM\ManyToOne(targetEntity="Hris\FormBundle\Entity\FieldOption", inversedBy="fieldOptionMerge")
@@ -70,13 +77,20 @@ class FieldOptionMerge
      * @ORM\Column(name="removedoptionvalue", type="string", length=64)
      */
     private $removedoptionvalue;
-
+    
     /**
-     * @var string $uid
+     * @var \DateTime $datecreated
      *
-     * @ORM\Column(name="uid", type="string", length=13)
+     * @ORM\Column(name="datecreated", type="datetime")
      */
-    private $uid;
+    private $datecreated;
+    
+    /**
+     * @var \DateTime $lastmodified
+     *
+     * @ORM\Column(name="lastmodified", type="datetime", nullable=true)
+     */
+    private $lastmodified;
 
 
     /**

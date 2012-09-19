@@ -46,6 +46,20 @@ class Organisationunit
      * @ORM\GeneratedValue(strategy="AUTO")
      */
     private $id;
+
+    /**
+     * @var string $uid
+     *
+     * @ORM\Column(name="uid", type="string", length=13, unique=true)
+     */
+    private $uid;
+    
+    /**
+     * @var string $dhisUid
+     *
+     * @ORM\Column(name="dhisUid", type="string", length=11, unique=true, nullable=true)
+     */
+    private $dhisUid;
     
     /**
      * @var Hris\UserBundle\Entity\UserInfo $userInfo
@@ -77,20 +91,6 @@ class Organisationunit
      * @ORM\Column(name="code", type="string", length=25, nullable=true, unique=true)
      */
     private $code;
-
-    /**
-     * @var string $uid
-     *
-     * @ORM\Column(name="uid", type="string", length=13, nullable=false, unique=true)
-     */
-    private $uid;
-    
-    /**
-     * @var string $dhisUid
-     *
-     * @ORM\Column(name="dhisUid", type="string", length=11, nullable=false, unique=true)
-     */
-    private $dhisUid;
     
     /**
      * @var Hris\OrganisationunitBundle\Entity\Organisationunit $parent
@@ -105,14 +105,14 @@ class Organisationunit
     /**
      * @var string $shortname
      *
-     * @ORM\Column(name="shortname", type="string", length=20, nullable=false, unique=true)
+     * @ORM\Column(name="shortname", type="string", length=20, unique=true)
      */
     private $shortname;
 
     /**
      * @var string $longname
      *
-     * @ORM\Column(name="longname", type="string", length=64, nullable=false)
+     * @ORM\Column(name="longname", type="string", length=64)
      */
     private $longname;
 
@@ -157,20 +157,6 @@ class Organisationunit
      * @ORM\Column(name="featuretype", type="string", length=20, nullable=true)
      */
     private $featuretype;
-    
-    /**
-     * @var \DateTime $datecreated
-     *
-     * @ORM\Column(name="datecreated", type="datetime", nullable=false)
-     */
-    private $datecreated;
-
-    /**
-     * @var \DateTime $lastupdated
-     *
-     * @ORM\Column(name="lastupdated", type="datetime", nullable=true)
-     */
-    private $lastupdated;
 
     /**
      * @var string $address
@@ -276,6 +262,20 @@ class Organisationunit
      * @ORM\OneToMany(targetEntity="Hris\OrganisationunitBundle\Entity\OrganisationunitStructure", mappedBy="level10Organisationunit",cascade={"ALL"})
      */
     private $level10OrganisationunitStructure;
+    
+    /**
+     * @var \DateTime $datecreated
+     *
+     * @ORM\Column(name="datecreated", type="datetime")
+     */
+    private $datecreated;
+
+    /**
+     * @var \DateTime $lastupdated
+     *
+     * @ORM\Column(name="lastupdated", type="datetime", nullable=true)
+     */
+    private $lastupdated;
 
 
     /**
@@ -1162,6 +1162,7 @@ class Organisationunit
         $this->organisationunitGroup = new \Doctrine\Common\Collections\ArrayCollection();
         $this->dashboardChart = new \Doctrine\Common\Collections\ArrayCollection();
         $this->active = FALSE;
+        $this->uid = uniqid();
         $this->level1OrganisationunitStructure = new \Doctrine\Common\Collections\ArrayCollection();
         $this->level2OrganisationunitStructure = new \Doctrine\Common\Collections\ArrayCollection();
         $this->level3OrganisationunitStructure = new \Doctrine\Common\Collections\ArrayCollection();

@@ -45,39 +45,25 @@ class FormSection
     private $id;
 
     /**
+     * @var string $uid
+     *
+     * @ORM\Column(name="uid", type="string", length=13, unique=true)
+     */
+    private $uid;
+
+    /**
      * @var string $name
      *
-     * @ORM\Column(name="name", type="string", length=64)
+     * @ORM\Column(name="name", type="string", length=64, unique=true)
      */
     private $name;
 
     /**
      * @var string $description
      *
-     * @ORM\Column(name="description", type="text")
+     * @ORM\Column(name="description", type="text", nullable=true)
      */
     private $description;
-
-    /**
-     * @var string $uid
-     *
-     * @ORM\Column(name="uid", type="string", length=13)
-     */
-    private $uid;
-    
-    /**
-     * @var \DateTime $datecreated
-     *
-     * @ORM\Column(name="datecreated", type="datetime", nullable=false)
-     */
-    private $datecreated;
-    
-    /**
-     * @var \DateTime $lastupdated
-     *
-     * @ORM\Column(name="lastupdated", type="datetime", nullable=true)
-     */
-    private $lastupdated;
     
     /**
      * @var Hris\FormBundle\Entity\Form $form
@@ -96,6 +82,20 @@ class FormSection
      * @ORM\OrderBy({"sort" = "ASC"})
      */
     private $formSectionFieldMember;
+    
+    /**
+     * @var \DateTime $datecreated
+     *
+     * @ORM\Column(name="datecreated", type="datetime")
+     */
+    private $datecreated;
+    
+    /**
+     * @var \DateTime $lastupdated
+     *
+     * @ORM\Column(name="lastupdated", type="datetime", nullable=true)
+     */
+    private $lastupdated;
 
 
     /**
@@ -282,6 +282,7 @@ class FormSection
     public function __construct()
     {
         $this->formSectionFieldMember = new \Doctrine\Common\Collections\ArrayCollection();
+        $this->uid = uniqid();
     }
     
     /**

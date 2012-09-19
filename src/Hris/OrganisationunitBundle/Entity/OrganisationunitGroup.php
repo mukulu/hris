@@ -45,23 +45,23 @@ class OrganisationunitGroup
     private $id;
 
     /**
-     * @var string $name
-     *
-     * @ORM\Column(name="name", type="string", length=64, nullable=false, unique=true)
-     */
-    private $name;
-
-    /**
      * @var string $uid
      *
-     * @ORM\Column(name="uid", type="string", length=13, nullable=false, unique=true)
+     * @ORM\Column(name="uid", type="string", length=13, unique=true)
      */
     private $uid;
+
+    /**
+     * @var string $name
+     *
+     * @ORM\Column(name="name", type="string", length=64, unique=true)
+     */
+    private $name;
     
     /**
      * @var string $dhisUid
      *
-     * @ORM\Column(name="dhisUid", type="string", length=11, nullable=false, unique=true)
+     * @ORM\Column(name="dhisUid", type="string", length=11, unique=true, nullable=true)
      */
     private $dhisUid;
 
@@ -71,20 +71,6 @@ class OrganisationunitGroup
      * @ORM\Column(name="code", type="string", length=50, nullable=true, unique=true)
      */
     private $code;
-
-    /**
-     * @var \DateTime $lastupdated
-     *
-     * @ORM\Column(name="lastupdated", type="datetime", nullable=true)
-     */
-    private $lastupdated;
-
-    /**
-     * @var \DateTime $datecreated
-     *
-     * @ORM\Column(name="datecreated", type="datetime", nullable=false)
-     */
-    private $datecreated;
     
     /**
      * @var Hris\OrganisationunitBundle\Entity\Organisationunit $organisationunit
@@ -111,6 +97,20 @@ class OrganisationunitGroup
      * })
      */
     private $organisationunitGroupset;
+
+    /**
+     * @var \DateTime $datecreated
+     *
+     * @ORM\Column(name="datecreated", type="datetime")
+     */
+    private $datecreated;
+
+    /**
+     * @var \DateTime $lastupdated
+     *
+     * @ORM\Column(name="lastupdated", type="datetime", nullable=true)
+     */
+    private $lastupdated;
 
 
     /**
@@ -276,6 +276,7 @@ class OrganisationunitGroup
     public function __construct()
     {
         $this->organisationunit = new \Doctrine\Common\Collections\ArrayCollection();
+        $this->uid = uniqid();
     }
     
     /**

@@ -44,9 +44,23 @@ class OrganisationunitGroupset
     private $id;
 
     /**
+     * @var string $uid
+     *
+     * @ORM\Column(name="uid", type="string", length=13, unique=true)
+     */
+    private $uid;
+    
+    /**
+     * @var string $dhisUid
+     *
+     * @ORM\Column(name="dhisUid", type="string", length=11, nullable=true, unique=true)
+     */
+    private $dhisUid;
+
+    /**
      * @var string $name
      *
-     * @ORM\Column(name="name", type="string", length=64, nullable=false, unique=true)
+     * @ORM\Column(name="name", type="string", length=64, unique=true)
      */
     private $name;
 
@@ -59,24 +73,12 @@ class OrganisationunitGroupset
 
     /**
      * @var boolean $compulsory
-     *
-     * @ORM\Column(name="compulsory", type="boolean", nullable=true)
+     * 
+     * Compulsory means that ALL Organisationunits must be member of a group in this groupset.
+     * 
+     * @ORM\Column(name="compulsory", type="boolean")
      */
     private $compulsory;
-
-    /**
-     * @var string $uid
-     *
-     * @ORM\Column(name="uid", type="string", length=13, nullable=false, unique=true)
-     */
-    private $uid;
-    
-    /**
-     * @var string $dhisUid
-     *
-     * @ORM\Column(name="dhisUid", type="string", length=11, nullable=false, unique=true)
-     */
-    private $dhisUid;
 
     /**
      * @var string $code
@@ -283,6 +285,8 @@ class OrganisationunitGroupset
      */
     public function __construct()
     {
+    	$this->compulsory = FALSE;
+    	$this->uid = uniqid();
         $this->organisationunitGroup = new \Doctrine\Common\Collections\ArrayCollection();
     }
     

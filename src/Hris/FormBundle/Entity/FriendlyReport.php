@@ -45,18 +45,25 @@ class FriendlyReport
      * @ORM\GeneratedValue(strategy="AUTO")
      */
     private $id;
+    
+    /**
+     * @var string $uid
+     *
+     * @ORM\Column(name="uid", type="string", length=13, unique=true)
+     */
+    private $uid;
 
     /**
      * @var string $name
      *
-     * @ORM\Column(name="name", type="string", length=64)
+     * @ORM\Column(name="name", type="string", length=64, unique=true)
      */
     private $name;
 
     /**
      * @var string $description
      *
-     * @ORM\Column(name="description", type="text")
+     * @ORM\Column(name="description", type="text", nullable=true)
      */
     private $description;
 
@@ -66,27 +73,6 @@ class FriendlyReport
      * @ORM\Column(name="sort", type="integer")
      */
     private $sort;
-    
-    /**
-     * @var \DateTime $datecreated
-     *
-     * @ORM\Column(name="datecreated", type="datetime", nullable=false)
-     */
-    private $datecreated;
-    
-    /**
-     * @var \DateTime $lastupdated
-     *
-     * @ORM\Column(name="lastupdated", type="datetime", nullable=true)
-     */
-    private $lastupdated;
-    
-    /**
-     * @var string $uid
-     *
-     * @ORM\Column(name="uid", type="string", length=13, nullable=false, unique=true)
-     */
-    private $uid;
     
     /**
      * @var Hris\FormBundle\Entity\FieldOptionGroup $serie
@@ -118,6 +104,7 @@ class FriendlyReport
      *     @ORM\JoinColumn(name="arithmeticfilter_id", referencedColumnName="id", onDelete="CASCADE")
      *   }
      * )
+     * @ORM\OrderBy({"name" = "ASC"})
      */
     private $arithmeticFilter;
     
@@ -133,8 +120,23 @@ class FriendlyReport
      *     @ORM\JoinColumn(name="relationalfilter_id", referencedColumnName="id", onDelete="CASCADE")
      *   }
      * )
+     * @ORM\OrderBy({"name" = "ASC"})
      */
     private $relationalFilter;
+    
+    /**
+     * @var \DateTime $datecreated
+     *
+     * @ORM\Column(name="datecreated", type="datetime")
+     */
+    private $datecreated;
+    
+    /**
+     * @var \DateTime $lastupdated
+     *
+     * @ORM\Column(name="lastupdated", type="datetime", nullable=true)
+     */
+    private $lastupdated;
 
 
     /**
@@ -215,6 +217,7 @@ class FriendlyReport
     {
         return $this->sort;
     }
+    
     /**
      * Constructor
      */
@@ -224,6 +227,7 @@ class FriendlyReport
         $this->arithmeticFilter = new \Doctrine\Common\Collections\ArrayCollection();
         $this->relationalFilter = new \Doctrine\Common\Collections\ArrayCollection();
         $this->sort = 0;
+        $this->uid = uniqid();
     }
     
     /**

@@ -43,11 +43,18 @@ class RelationalFilter
      * @ORM\GeneratedValue(strategy="AUTO")
      */
     private $id;
+    
+    /**
+     * @var string $uid
+     *
+     * @ORM\Column(name="uid", type="string", length=13, unique=true)
+     */
+    private $uid;
 
     /**
      * @var string $name
      *
-     * @ORM\Column(name="name", type="string", length=64)
+     * @ORM\Column(name="name", type="string", length=64, unique=true)
      */
     private $name;
 
@@ -57,27 +64,6 @@ class RelationalFilter
      * @ORM\Column(name="excludeFieldOptions", type="boolean")
      */
     private $excludeFieldOptions;
-    
-    /**
-     * @var \DateTime $datecreated
-     *
-     * @ORM\Column(name="datecreated", type="datetime", nullable=false)
-     */
-    private $datecreated;
-    
-    /**
-     * @var \DateTime $lastupdated
-     *
-     * @ORM\Column(name="lastupdated", type="datetime", nullable=true)
-     */
-    private $lastupdated;
-    
-    /**
-     * @var string $uid
-     *
-     * @ORM\Column(name="uid", type="string", length=13, nullable=false, unique=true)
-     */
-    private $uid;
     
     /**
      * @var Hris\FormBundle\Entity\FieldOption $fieldOption
@@ -91,6 +77,7 @@ class RelationalFilter
      *     @ORM\JoinColumn(name="fieldoption_id", referencedColumnName="id", onDelete="CASCADE")
      *   }
      * )
+     * @ORM\OrderBy({"value" = "ASC"})
      */
     private $fieldOption;
     
@@ -111,6 +98,20 @@ class RelationalFilter
      * @ORM\OrderBy({"name" = "ASC"})
      */
     private $friendlyReport;
+    
+    /**
+     * @var \DateTime $datecreated
+     *
+     * @ORM\Column(name="datecreated", type="datetime")
+     */
+    private $datecreated;
+    
+    /**
+     * @var \DateTime $lastupdated
+     *
+     * @ORM\Column(name="lastupdated", type="datetime", nullable=true)
+     */
+    private $lastupdated;
 
 
     /**
@@ -333,6 +334,8 @@ class RelationalFilter
     {
         $this->fieldOption = new \Doctrine\Common\Collections\ArrayCollection();
         $this->friendlyReport = new \Doctrine\Common\Collections\ArrayCollection();
+        $this->uid = uniqid();
+        $this->excludeFieldOptions = FALSE;
     }
     
 }

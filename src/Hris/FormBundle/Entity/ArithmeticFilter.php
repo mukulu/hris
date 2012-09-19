@@ -29,7 +29,7 @@ use Hris\FormBundle\Entity\FriendlyReport;
 /**
  * Hris\FormBundle\Entity\ArithmeticFilter
  *
- * @ORM\Table(name="hris_arithmeticfilter")
+ * @ORM\Table(name="hris_arithmeticfilter", uniqueConstraints={@ORM\UniqueConstraint(name="arithmetic_filter_idx",columns={"operator", "leftExpression","rightExpression"})})
  * @ORM\Entity(repositoryClass="Hris\FormBundle\Entity\ArithmeticFilterRepository")
  */
 class ArithmeticFilter
@@ -42,18 +42,25 @@ class ArithmeticFilter
      * @ORM\GeneratedValue(strategy="AUTO")
      */
     private $id;
+    
+    /**
+     * @var string $uid
+     *
+     * @ORM\Column(name="uid", type="string", length=13, unique=true)
+     */
+    private $uid;
 
     /**
      * @var string $name
      *
-     * @ORM\Column(name="name", type="string", length=64)
+     * @ORM\Column(name="name", type="string", length=64, unique=true)
      */
     private $name;
 
     /**
      * @var string $description
      *
-     * @ORM\Column(name="description", type="text")
+     * @ORM\Column(name="description", type="text", nullable=true)
      */
     private $description;
 
@@ -79,9 +86,17 @@ class ArithmeticFilter
     private $rightExpression;
     
     /**
+     * @var Hris\FormBundle\Entity\FriendlyReport $friendlyReport
+     *
+     * @ORM\ManyToMany(targetEntity="Hris\FormBundle\Entity\FriendlyReport", mappedBy="arithmeticFilter")
+     * @ORM\OrderBy({"name" = "ASC"})
+     */
+    private $friendlyReport;
+    
+    /**
      * @var \DateTime $datecreated
      *
-     * @ORM\Column(name="datecreated", type="datetime", nullable=false)
+     * @ORM\Column(name="datecreated", type="datetime")
      */
     private $datecreated;
     
@@ -91,21 +106,6 @@ class ArithmeticFilter
      * @ORM\Column(name="lastupdated", type="datetime", nullable=true)
      */
     private $lastupdated;
-    
-    /**
-     * @var string $uid
-     *
-     * @ORM\Column(name="uid", type="string", length=13, nullable=false, unique=true)
-     */
-    private $uid;
-    
-    /**
-     * @var Hris\FormBundle\Entity\FriendlyReport $friendlyReport
-     *
-     * @ORM\ManyToMany(targetEntity="Hris\FormBundle\Entity\FriendlyReport", mappedBy="arithmeticFilter")
-     * @ORM\OrderBy({"name" = "ASC"})
-     */
-    private $friendlyReport;
 
 
     /**
@@ -307,6 +307,7 @@ class ArithmeticFilter
     public function __construct()
     {
         $this->friendlyReport = new \Doctrine\Common\Collections\ArrayCollection();
+        $this->uid = uniqid();
     }
     
     /**

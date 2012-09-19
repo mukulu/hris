@@ -49,14 +49,14 @@ class Form
     /**
      * @var string $uid
      *
-     * @ORM\Column(name="uid", type="string", length=13, nullable=false, unique=true)
+     * @ORM\Column(name="uid", type="string", length=13, unique=true)
      */
     private $uid;
 
     /**
      * @var string $name
      *
-     * @ORM\Column(name="name", type="string", length=64, nullable=false, unique=true)
+     * @ORM\Column(name="name", type="string", length=64, unique=true)
      */
     private $name;
 
@@ -73,20 +73,6 @@ class Form
      * @ORM\Column(name="formtitle", type="string", length=64, nullable=true)
      */
     private $formtitle;
-
-    /**
-     * @var \DateTime $datecreated
-     *
-     * @ORM\Column(name="datecreated", type="datetime", nullable=false)
-     */
-    private $datecreated;
-    
-    /**
-     * @var \DateTime $lastupdated
-     *
-     * @ORM\Column(name="lastupdated", type="datetime", nullable=true)
-     */
-    private $lastupdated;
     
     /**
      * @var Hris\FormBundle\Entity\Field $uniqueRecordFields
@@ -101,6 +87,7 @@ class Form
      *     @ORM\JoinColumn(name="field_id", referencedColumnName="id", onDelete="CASCADE")
      *   }
      * )
+     * @ORM\OrderBy({"name" = "ASC"})
      */
     private $uniqueRecordFields;
     
@@ -135,6 +122,20 @@ class Form
      * @ORM\OrderBy({"name" = "ASC"})
      */
     private $dashboardChart;
+
+    /**
+     * @var \DateTime $datecreated
+     *
+     * @ORM\Column(name="datecreated", type="datetime")
+     */
+    private $datecreated;
+    
+    /**
+     * @var \DateTime $lastupdated
+     *
+     * @ORM\Column(name="lastupdated", type="datetime", nullable=true)
+     */
+    private $lastupdated;
     
     /**
      * Field position in the form counter
@@ -494,6 +495,7 @@ class Form
         $this->record = new \Doctrine\Common\Collections\ArrayCollection();
         $this->formVisibleFields = new \Doctrine\Common\Collections\ArrayCollection();
         $this->dashboardChart = new \Doctrine\Common\Collections\ArrayCollection();
+        $this->uid = uniqid();
     }
     
     /**

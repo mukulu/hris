@@ -46,25 +46,25 @@ class User extends BaseUser
     protected $id;
     
     /**
-     * @var \DateTime $lastupdated
-     *
-     * @ORM\Column(name="lastupdated", type="datetime", nullable=true)
-     */
-    private $lastupdated;
-    
-    /**
-     * @var \DateTime $datecreated
-     *
-     * @ORM\Column(name="datecreated", type="datetime", nullable=false)
-     */
-    private $datecreated;
-    
-    /**
      * @var Hris\UserBundle\Entity\UserInfo $userInfo
      *
      * @ORM\OneToOne(targetEntity="Hris\UserBundle\Entity\UserInfo", inversedBy="user")
      */
     private $userInfo;
+    
+    /**
+     * @var \DateTime $datecreated
+     *
+     * @ORM\Column(name="datecreated", type="datetime")
+     */
+    private $datecreated;
+    
+    /**
+     * @var \DateTime $lastupdated
+     *
+     * @ORM\Column(name="lastupdated", type="datetime", nullable=true)
+     */
+    private $lastupdated;
     
     
     /**
@@ -80,7 +80,10 @@ class User extends BaseUser
     public function __construct()
     {
     	parent::__construct();
-    	$this->datecreated = new \DateTime('now');
+    	if(empty($this->datecreated))
+    	{
+    		$this->datecreated = new \DateTime('now');
+    	}
     }
 
     /**

@@ -42,23 +42,23 @@ class Training
      * @ORM\GeneratedValue(strategy="AUTO")
      */
     private $id;
+
+    /**
+     * @var string $uid
+     *
+     * @ORM\Column(name="uid", type="string", length=13, unique=true)
+     */
+    private $uid;
     
     /**
      * @var Hris\RecordsBundle\Entity\Record $record
      *
      * @ORM\ManyToOne(targetEntity="Hris\RecordsBundle\Entity\Record")
      * @ORM\JoinColumns({
-     *   @ORM\JoinColumn(name="record_id", referencedColumnName="id", nullable=true)
+     *   @ORM\JoinColumn(name="record_id", referencedColumnName="id")
      * })
      */
     private $record;
-
-    /**
-     * @var string $uid
-     *
-     * @ORM\Column(name="uid", type="string", length=13)
-     */
-    private $uid;
 
     /**
      * @var string $instance

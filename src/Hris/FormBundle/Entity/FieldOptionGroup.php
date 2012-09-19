@@ -47,18 +47,18 @@ class FieldOptionGroup
     private $id;
 
     /**
-     * @var string $name
-     *
-     * @ORM\Column(name="name", type="string", length=64)
-     */
-    private $name;
-
-    /**
      * @var string $uid
      *
-     * @ORM\Column(name="uid", type="string", length=13)
+     * @ORM\Column(name="uid", type="string", length=13, unique=true)
      */
     private $uid;
+
+    /**
+     * @var string $name
+     *
+     * @ORM\Column(name="name", type="string", length=64,unique=true)
+     */
+    private $name;
     
     /**
      * @var string $description
@@ -66,20 +66,6 @@ class FieldOptionGroup
      * @ORM\Column(name="description", type="text", nullable=true)
      */
     private $description;
-    
-    /**
-     * @var \DateTime $datecreated
-     *
-     * @ORM\Column(name="datecreated", type="datetime")
-     */
-    private $datecreated;
-    
-    /**
-     * @var \DateTime $lastmodified
-     *
-     * @ORM\Column(name="lastmodified", type="datetime")
-     */
-    private $lastmodified;
     
     /**
      * @var Hris\FormBundle\Entity\FieldOption $fieldOption
@@ -93,6 +79,7 @@ class FieldOptionGroup
      *     @ORM\JoinColumn(name="fieldoption_id", referencedColumnName="id", onDelete="CASCADE")
      *   }
      * )
+     * @ORM\OrderBy({"value" = "ASC"})
      */
     
     private $fieldOption;
@@ -111,6 +98,7 @@ class FieldOptionGroup
      * @var Hris\FormBundle\Entity\FieldOptionGroupset $fieldOptionGroupset
      *
      * @ORM\ManyToMany(targetEntity="Hris\FormBundle\Entity\FieldOptionGroupset", mappedBy="fieldOptionGroup")
+     * @ORM\OrderBy({"name" = "ASC"})
      */
     private $fieldOptionGroupset;
     
@@ -118,8 +106,23 @@ class FieldOptionGroup
      * @var Hris\FormBundle\Entity\FriendlyReportCategory $friendlyReportCategory
      *
      * @ORM\OneToMany(targetEntity="Hris\FormBundle\Entity\FriendlyReportCategory", mappedBy="fieldOptionGroup")
+     * @ORM\OrderBy({"sort" = "ASC"})
      */
     private $friendlyReportCategory;
+    
+    /**
+     * @var \DateTime $datecreated
+     *
+     * @ORM\Column(name="datecreated", type="datetime")
+     */
+    private $datecreated;
+    
+    /**
+     * @var \DateTime $lastmodified
+     *
+     * @ORM\Column(name="lastmodified", type="datetime", nullable=true)
+     */
+    private $lastmodified;
 
 
     /**
@@ -183,6 +186,7 @@ class FieldOptionGroup
     public function __construct()
     {
         $this->fieldOption = new \Doctrine\Common\Collections\ArrayCollection();
+        $this->uid = uniqid();
     }
     
     /**

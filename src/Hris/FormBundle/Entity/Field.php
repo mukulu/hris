@@ -33,6 +33,8 @@ use Hris\FormBundle\Entity\FormVisibleFields;
 use Hris\FormBundle\Entity\FieldGroup;
 use Hris\FormBundle\Entity\DataType;
 use Hris\FormBundle\Entity\InputType;
+use Hris\RecordsBundle\Entity\RecordValue;
+use Hris\RecordsBundle\Entity\RecordStats;
 
 /**
  * Hris\FormBundle\Entity\Field
@@ -54,7 +56,7 @@ class Field
     /**
      * @var string $uid
      *
-     * @ORM\Column(name="uid", type="string", length=13, nullable=false, unique=true)
+     * @ORM\Column(name="uid", type="string", length=13, unique=true)
      */
     private $uid;
 
@@ -103,28 +105,15 @@ class Field
     /**
      * @var boolean $fieldrelation
      *
-     * @ORM\Column(name="fieldrelation", type="boolean")
+     * @ORM\Column(name="fieldrelation", type="boolean", nullable=true)
      */
     private $fieldrelation;
-    
-    /**
-     * @var \DateTime $datecreated
-     *
-     * @ORM\Column(name="datecreated", type="datetime", nullable=false)
-     */
-    private $datecreated;
-    
-    /**
-     * @var \DateTime $lastupdated
-     *
-     * @ORM\Column(name="lastupdated", type="datetime", nullable=true)
-     */
-    private $lastupdated;
     
     /**
      * @var Hris\FormBundle\Entity\FieldGroup $fieldGroup
      *
      * @ORM\ManyToMany(targetEntity="Hris\FormBundle\Entity\FieldGroup", mappedBy="field")
+     * @ORM\OrderBy({"name" = "ASC"})
      */
     private $fieldGroup;
     
@@ -132,6 +121,7 @@ class Field
      * @var Hris\FormBundle\Entity\Field $parentField
      *
      * @ORM\ManyToMany(targetEntity="Hris\FormBundle\Entity\Field", mappedBy="childField")
+     * @ORM\OrderBy({"name" = "ASC"})
      */
     private $parentField;
     
@@ -147,6 +137,7 @@ class Field
      *     @ORM\JoinColumn(name="child_field", referencedColumnName="id", onDelete="CASCADE")
      *   }
      * )
+     * @ORM\OrderBy({"name" = "ASC"})
      */
     private $childField;
     
@@ -177,6 +168,22 @@ class Field
      * @ORM\OrderBy({"value" = "ASC"})
      */
     private $fieldOption;
+    
+    /**
+     *	@var Hris\RecordsBundle\Entity\RecordValue $recordValue
+     *
+     * @ORM\OneToMany(targetEntity="Hris\RecordsBundle\Entity\RecordValue", mappedBy="field",cascade={"ALL"})
+     * @ORM\OrderBy({"value" = "ASC"})
+     */
+    private $recordValue;
+    
+    /**
+     *	@var Hris\RecordsBundle\Entity\RecordStats $recordStats
+     *
+     * @ORM\OneToMany(targetEntity="Hris\RecordsBundle\Entity\RecordStats", mappedBy="field",cascade={"ALL"})
+     * @ORM\OrderBy({"count" = "ASC"})
+     */
+    private $recordStats;
     
     /**
      * @var Hris\FormBundle\Entity\FormVisibleFields $formVisibleFields
@@ -226,6 +233,20 @@ class Field
      * @ORM\OrderBy({"sort" = "ASC"})
      */
     private $resourceTableFieldMember;
+    
+    /**
+     * @var \DateTime $datecreated
+     *
+     * @ORM\Column(name="datecreated", type="datetime")
+     */
+    private $datecreated;
+    
+    /**
+     * @var \DateTime $lastupdated
+     *
+     * @ORM\Column(name="lastupdated", type="datetime", nullable=true)
+     */
+    private $lastupdated;
 
 
     /**
@@ -826,6 +847,7 @@ class Field
         $this->formSectionFieldMember = new \Doctrine\Common\Collections\ArrayCollection();
         $this->uniqueRecordForms = new \Doctrine\Common\Collections\ArrayCollection();
         $this->resourceTableFieldMember = new \Doctrine\Common\Collections\ArrayCollection();
+        $this->uid = uniqid();
     }
     
     /**
@@ -859,5 +881,71 @@ class Field
     public function getFormVisibleFields()
     {
         return $this->formVisibleFields;
+    }
+
+    /**
+     * Add recordValue
+     *
+     * @param Hris\RecordsBundle\Entity\RecordValue $recordValue
+     * @return Field
+     */
+    public function addRecordValue(\Hris\RecordsBundle\Entity\RecordValue $recordValue)
+    {
+        $this->recordValue[] = $recordValue;
+    
+        return $this;
+    }
+
+    /**
+     * Remove recordValue
+     *
+     * @param Hris\RecordsBundle\Entity\RecordValue $recordValue
+     */
+    public function removeRecordValue(\Hris\RecordsBundle\Entity\RecordValue $recordValue)
+    {
+        $this->recordValue->removeElement($recordValue);
+    }
+
+    /**
+     * Get recordValue
+     *
+     * @return Doctrine\Common\Collections\Collection 
+     */
+    public function getRecordValue()
+    {
+        return $this->recordValue;
+    }
+
+    /**
+     * Add recordStats
+     *
+     * @param Hris\RecordsBundle\Entity\RecordStats $recordStats
+     * @return Field
+     */
+    public function addRecordStat(\Hris\RecordsBundle\Entity\RecordStats $recordStats)
+    {
+        $this->recordStats[] = $recordStats;
+    
+        return $this;
+    }
+
+    /**
+     * Remove recordStats
+     *
+     * @param Hris\RecordsBundle\Entity\RecordStats $recordStats
+     */
+    public function removeRecordStat(\Hris\RecordsBundle\Entity\RecordStats $recordStats)
+    {
+        $this->recordStats->removeElement($recordStats);
+    }
+
+    /**
+     * Get recordStats
+     *
+     * @return Doctrine\Common\Collections\Collection 
+     */
+    public function getRecordStats()
+    {
+        return $this->recordStats;
     }
 }

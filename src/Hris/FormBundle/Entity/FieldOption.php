@@ -48,14 +48,14 @@ class FieldOption
     /**
      * @var string $uid
      *
-     * @ORM\Column(name="uid", type="string", length=13, nullable=false, unique=true)
+     * @ORM\Column(name="uid", type="string", length=13, unique=true)
      */
     private $uid;
 
     /**
      * @var string $value
      *
-     * @ORM\Column(name="value", type="string", length=64, nullable=false)
+     * @ORM\Column(name="value", type="string", length=64)
      */
     private $value;
     
@@ -65,25 +65,12 @@ class FieldOption
      * @ORM\Column(name="description", type="text", nullable=true)
      */
     private $description;
-
-    /**
-     * @var \DateTime $datecreated
-     *
-     * @ORM\Column(name="datecreated", type="datetime")
-     */
-    private $datecreated;
-    
-    /**
-     * @var \DateTime $lastupdated
-     *
-     * @ORM\Column(name="lastupdated", type="datetime", nullable=true)
-     */
-    private $lastupdated;
     
     /**
      * @var Hris\FormBundle\Entity\FieldOption $parentFieldOption
      *
      * @ORM\ManyToMany(targetEntity="Hris\FormBundle\Entity\FieldOption", mappedBy="childFieldOption")
+     * @ORM\OrderBy({"value" = "ASC"})
      */
     private $parentFieldOption;
     
@@ -99,6 +86,7 @@ class FieldOption
      *     @ORM\JoinColumn(name="child_fieldoption", referencedColumnName="id", onDelete="CASCADE")
      *   }
      * )
+     * @ORM\OrderBy({"value" = "ASC"})
      */
     private $childFieldOption;
     
@@ -123,6 +111,7 @@ class FieldOption
      * @var Hris\FormBundle\Entity\RelationalFilter $relationalFilter
      *
      * @ORM\ManyToMany(targetEntity="Hris\FormBundle\Entity\RelationalFilter", mappedBy="fieldOption")
+     * @ORM\OrderBy({"name" = "ASC"})
      */
     private $relationalFilter;
     
@@ -130,8 +119,23 @@ class FieldOption
      * @var Hris\FormBundle\Entity\FieldOptionMerge $fieldOptionMerge
      *
      * @ORM\OneToMany(targetEntity="Hris\FormBundle\Entity\FieldOptionMerge", mappedBy="mergedFieldOption")
+     * @ORM\OrderBy({"removedoptionvalue" = "ASC"})
      */
     private $fieldOptionMerge;
+
+    /**
+     * @var \DateTime $datecreated
+     *
+     * @ORM\Column(name="datecreated", type="datetime")
+     */
+    private $datecreated;
+    
+    /**
+     * @var \DateTime $lastupdated
+     *
+     * @ORM\Column(name="lastupdated", type="datetime", nullable=true)
+     */
+    private $lastupdated;
 
 
     /**
@@ -456,6 +460,7 @@ class FieldOption
         $this->fieldOptionGroup = new \Doctrine\Common\Collections\ArrayCollection();
         $this->relationalFilter = new \Doctrine\Common\Collections\ArrayCollection();
         $this->fieldOptionMerge = new \Doctrine\Common\Collections\ArrayCollection();
+        $this->uid = uniqid();
     }
     
 }

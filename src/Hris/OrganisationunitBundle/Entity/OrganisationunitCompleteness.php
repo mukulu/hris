@@ -46,7 +46,7 @@ class OrganisationunitCompleteness
     /**
      * @var string $uid
      *
-     * @ORM\Column(name="uid", type="string", length=13, nullable=false, unique=true)
+     * @ORM\Column(name="uid", type="string", length=13, unique=true)
      */
     private $uid;
     
@@ -63,7 +63,7 @@ class OrganisationunitCompleteness
     /**
      * @var integer $expectation
      *
-     * @ORM\Column(name="expectation", type="integer")
+     * @ORM\Column(name="expectation", type="integer", nullable=true)
      */
     private $expectation;
     
@@ -80,8 +80,17 @@ class OrganisationunitCompleteness
      * @ORM\Column(name="datecreated", type="datetime", nullable=false)
      */
     private $datecreated;
-
-
+    
+    
+    /**
+     * Constructor
+     */
+    public function __construct()
+    {
+    	$this->uid = uniqid();
+    }
+    
+    
     /**
      * Get id
      *

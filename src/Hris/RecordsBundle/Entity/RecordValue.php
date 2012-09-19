@@ -43,13 +43,20 @@ class RecordValue
      * @ORM\GeneratedValue(strategy="AUTO")
      */
     private $id;
+
+    /**
+     * @var string $uid
+     *
+     * @ORM\Column(name="uid", type="string", length=13, unique=true)
+     */
+    private $uid;
     
     /**
      * @var Hris\RecordsBundle\Entity\Record $record
      *
      * @ORM\ManyToOne(targetEntity="Hris\RecordsBundle\Entity\Record")
      * @ORM\JoinColumns({
-     *   @ORM\JoinColumn(name="record_id", referencedColumnName="id", nullable=true)
+     *   @ORM\JoinColumn(name="record_id", referencedColumnName="id")
      * })
      */
     private $record;
@@ -57,7 +64,7 @@ class RecordValue
     /**
      * @var Hris\FormBundle\Entity\Field $field
      *
-     * @ORM\ManyToOne(targetEntity="Hris\FormBundle\Entity\Field", inversedBy="fieldOption")
+     * @ORM\ManyToOne(targetEntity="Hris\FormBundle\Entity\Field", inversedBy="recordValue")
      * @ORM\JoinColumns({
      *   @ORM\JoinColumn(name="field_id", referencedColumnName="id")
      * })
@@ -91,13 +98,17 @@ class RecordValue
      * @ORM\Column(name="lastupdated", type="datetime")
      */
     private $lastupdated;
-
+    
     /**
-     * @var string $uid
-     *
-     * @ORM\Column(name="uid", type="string", length=13)
+     * Constructor
      */
-    private $uid;
+    public function __construct()
+    {
+    	$this->complete = FALSE;
+    	$this->correct = TRUE;
+    	$this->value = 0;
+    	$this->uid = uniqid();
+    }
 
 
     /**

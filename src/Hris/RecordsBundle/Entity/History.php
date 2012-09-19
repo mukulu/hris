@@ -29,7 +29,7 @@ use Hris\RecordsBundle\Entity\Record;
 /**
  * Hris\RecordsBundle\Entity\History
  *
- * @ORM\Table(name="hris_record_history")
+ * @ORM\Table(name="hris_record_history",uniqueConstraints={@ORM\UniqueConstraint(name="unique_recordhistory_idx",columns={"record_id", "history","startdate"}),@ORM\UniqueConstraint(name="unique_recordinstancehistory_idx",columns={"instance", "history","startdate"})})
  * @ORM\Entity(repositoryClass="Hris\RecordsBundle\Entity\HistoryRepository")
  */
 class History
@@ -42,6 +42,13 @@ class History
      * @ORM\GeneratedValue(strategy="AUTO")
      */
     private $id;
+    
+    /**
+     * @var string $uid
+     *
+     * @ORM\Column(name="uid", type="string", length=13, unique=true)
+     */
+    private $uid;
     
     /**
      * @var Hris\RecordsBundle\Entity\Record $record
@@ -77,7 +84,7 @@ class History
     /**
      * @var string $reason
      *
-     * @ORM\Column(name="reason", type="string", length=255)
+     * @ORM\Column(name="reason", type="string", length=255, nullable=true)
      */
     private $reason;
 
@@ -98,16 +105,17 @@ class History
     /**
      * @var \DateTime $lastupdated
      *
-     * @ORM\Column(name="lastupdated", type="datetime")
+     * @ORM\Column(name="lastupdated", type="datetime", nullable=true)
      */
     private $lastupdated;
     
     /**
-     * @var string $uid
-     *
-     * @ORM\Column(name="uid", type="string", length=13)
+     * Constructor
      */
-    private $uid;
+    public function __construct()
+    {
+    	$this->uid = uniqid();
+    }
 
 
     /**

@@ -43,6 +43,13 @@ class Record
      * @ORM\GeneratedValue(strategy="AUTO")
      */
     private $id;
+    
+    /**
+     * @var string $uid
+     *
+     * @ORM\Column(name="uid", type="string", length=13, unique=true)
+     */
+    private $uid;
 
     /**
      * @var string $instance
@@ -72,20 +79,6 @@ class Record
     private $form;
 
     /**
-     * @var \DateTime $datecreated
-     *
-     * @ORM\Column(name="datecreated", type="datetime")
-     */
-    private $datecreated;
-
-    /**
-     * @var \DateTime $lastupdated
-     *
-     * @ORM\Column(name="lastupdated", type="datetime", nullable=true)
-     */
-    private $lastupdated;
-
-    /**
      * @var boolean $complete
      *
      * @ORM\Column(name="complete", type="boolean")
@@ -112,21 +105,31 @@ class Record
      * @ORM\Column(name="hastraining", type="boolean")
      */
     private $hastraining;
-    
+
+    /**
+     * @var \DateTime $datecreated
+     *
+     * @ORM\Column(name="datecreated", type="datetime")
+     */
+    private $datecreated;
+
+    /**
+     * @var \DateTime $lastupdated
+     *
+     * @ORM\Column(name="lastupdated", type="datetime", nullable=true)
+     */
+    private $lastupdated;
     
     /**
-     * @var string $uid
-     *
-     * @ORM\Column(name="uid", type="string", length=13, unique=true)
+     * Constructor
      */
-    private $uid;
-    
     public function __construct()
     {
     	$this->complete = FALSE;
     	$this->hashistory = FALSE;
     	$this->hastraining = FALSE;
-    	$this->correct = TRUE;
+    	$this->correct = FALSE;
+    	$this->uid = uniqid();
     }
 
 

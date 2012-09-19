@@ -22,11 +22,18 @@ class ResourceTable
      * @ORM\GeneratedValue(strategy="AUTO")
      */
     private $id;
+    
+    /**
+     * @var string $uid
+     *
+     * @ORM\Column(name="uid", type="string", length=13, unique=true)
+     */
+    private $uid;
 
     /**
      * @var string $name
      *
-     * @ORM\Column(name="name", type="string", length=64)
+     * @ORM\Column(name="name", type="string", length=64, unique=true)
      */
     private $name;
     
@@ -51,13 +58,6 @@ class ResourceTable
      * @ORM\Column(name="lastupdated", type="datetime", nullable=true)
      */
     private $lastupdated;
-    
-    /**
-     * @var string $uid
-     *
-     * @ORM\Column(name="uid", type="string", length=13, nullable=false, unique=true)
-     */
-    private $uid;
 
 
     /**
@@ -200,6 +200,7 @@ class ResourceTable
     public function __construct()
     {
         $this->resourceTableFieldMember = new \Doctrine\Common\Collections\ArrayCollection();
+        $this->uid = uniqid();
     }
     
 }

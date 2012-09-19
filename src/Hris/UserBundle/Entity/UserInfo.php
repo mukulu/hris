@@ -51,6 +51,14 @@ class UserInfo
      * @ORM\Column(name="uid", type="string", length=13, nullable=false, unique=true)
      */
     private $uid;
+    
+    /**
+     * @var Hris\UserBundle\Entity\User $user
+     *
+     * @ORM\OneToOne(targetEntity="Hris\UserBundle\Entity\User", mappedBy="userInfo")
+     * @ORM\JoinColumn(name="user_id", referencedColumnName="id", nullable=false,unique=true)
+     */
+    private $user;
 
     /**
      * @var string $phonenumber
@@ -86,14 +94,6 @@ class UserInfo
      * @ORM\Column(name="surname", type="string", length=64)
      */
     private $surname;
-    
-    /**
-     * @var Hris\UserBundle\Entity\User $user
-     *
-     * @ORM\OneToOne(targetEntity="Hris\UserBundle\Entity\User", mappedBy="userInfo")
-     * @ORM\JoinColumn(name="user_id", referencedColumnName="id", nullable=false,unique=true)
-     */
-    private $user;
     
     /**
      * @var Hris\OrganisationunitBundle\Entity\Organisationunit $organisationunit
