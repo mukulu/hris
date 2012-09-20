@@ -61,3 +61,13 @@ fos_user:
     db_driver: orm # other valid values are 'mongodb', 'couchdb' and 'propel'
     firewall_name: main_firewall
     user_class: Hris\UserBundle\Entity\User
+
+#sonata_block:
+#    default_contexts: [cms]
+#    blocks:
+#		sonata.admin.block.admin_list:
+#			contexts:   [admin]
+#
+#		sonata.block.service.text:
+#		sonata.block.service.action:
+#		sonata.block.service.rss:
