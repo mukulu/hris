@@ -123,6 +123,12 @@ class FieldOptionGroup
      * @ORM\Column(name="lastmodified", type="datetime", nullable=true)
      */
     private $lastmodified;
+    
+    /**
+     * @todo Support filter to further constraint criteria for items fitting in the field group
+     * e.g. Medical attendants can be mortuary, labolartory, etc, which is determined by department
+     * 
+     */
 
 
     /**
@@ -150,12 +156,19 @@ class FieldOptionGroup
 
     /**
      * Get name
+     * Returns "name - field" or simply "name"
      *
      * @return string 
      */
     public function getName()
     {
-        return $this->name;
+    	$fieldCaption = $this->field->getCaption();
+    	if( empty($fieldCaption) ) {
+        	$descriptiveName = $this->name;
+    	}else {
+    		$descriptiveName = $this->name ." - ". $this->field->getCaption();
+    	}
+    	return $descriptiveName;
     }
 
     /**

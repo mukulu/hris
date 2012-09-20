@@ -95,10 +95,8 @@ HRIS Version 3 Consist of Several modules designed to collect, validate, report 
 ## Eclipse Tricks
 -----------------
 Eclipse is the favoured IDE for HRIS development, the following are development plugins
-1. Yedit ( Eclipse plugin for YAML Files - http://code.google.com/p/yedit/)
-	update site: http://dadacoalition.org/yedit
-2. Symfony Eclipse Plugin ( https://github.com/pulse00/Symfony-2-Eclipse-Plugin )
-	update site: http://p2.dubture.com
+1. [Yedit - Eclipse plugin for YAML Files](http://code.google.com/p/yedit/) from Update site: http://dadacoalition.org/yedit
+2. [Symfony Eclipse Plugin](https://github.com/pulse00/Symfony-2-Eclipse-Plugin) from Update site: http://p2.dubture.com or [MarketPlace](http://marketplace.eclipse.org/marketplace-client-intro?mpc_install=220368)
 	
 ## Database Setup
 -----------------
@@ -117,7 +115,7 @@ Eclipse is the favoured IDE for HRIS development, the following are development 
 	mailer_user: null
 	mailer_password: null
 	locale: en
-	secret: 39057bef4fc167ce3b7103e487939ba41
+	secret: %secret_generated_key%
 	database_path: null
 
 ### Generating database

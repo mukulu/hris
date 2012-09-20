@@ -94,6 +94,7 @@ class FieldOption
      * @var Hris\FormBundle\Entity\FieldOptionGroup $fieldOptionGroup
      *
      * @ORM\ManyToMany(targetEntity="Hris\FormBundle\Entity\FieldOptionGroup", mappedBy="fieldOption")
+     * @ORM\OrderBy({"name" = "ASC"})
      */
     private $fieldOptionGroup;
     
