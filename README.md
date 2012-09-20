@@ -103,8 +103,9 @@ Eclipse is the favoured IDE for HRIS development, the following are development 
 ## Database Setup
 -----------------
 [System source code can be downloaded from github](https://github.com/mukulu/hris)
-* Configuration file can be found from hris/app/config/parameters
-parameters:
+* Configuration file can be found from hris/app/config/parameters.yml
+
+### Parameters.yml:
 	database_driver: pdo_pgsql
 	database_host: %databasehost%
 	database_port: %portnumber%
@@ -118,6 +119,13 @@ parameters:
 	locale: en
 	secret: 39057bef4fc167ce3b7103e487939ba41
 	database_path: null
+
+### Generating database
+	app/console doctrine:database:drop --force		#Drops Database if it exist
+	app/console doctrine:database:create			#Creates Fresh new database
+	app/console doctrine:schema:update --force		#Updates Database schema
+	app/console list								#List all commands offered
+	
 
 ## Performance tuning
 	File php.ini can be used to tweak performance of the system 
