@@ -10,6 +10,5 @@ app/config/parameters.yml
 .buildpath
 .settings/
 phpunit.xml
-composer.lock
 autoload.php
 /vendor/
