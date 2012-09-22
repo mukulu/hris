@@ -98,31 +98,51 @@ Eclipse is the favoured IDE for HRIS development, the following are development 
 
 1. [Yedit - Eclipse plugin for YAML Files](http://code.google.com/p/yedit/) from Update site: http://dadacoalition.org/yedit
 2. [Symfony Eclipse Plugin](https://github.com/pulse00/Symfony-2-Eclipse-Plugin) from Update site: http://p2.dubture.com or [MarketPlace](http://marketplace.eclipse.org/marketplace-client-intro?mpc_install=220368)
+3. With those software sources, install plugins from the two sources, that is
+	Composer
+	Json Edit
+	Miscellaneous
+	Phing
+	Symfony
+	Twig
+	YEdit
+4. [Install PHP Tool Integration for testing](http://www.phpsrc.org/) offers PHPUnit test and Copy/Paste Detector, update site: http://www.phpsrc.org/eclipse/pti/
+	
 	
 ## Installing Hris Software
 ----------------------------
+
 Download system source codes from our [github repository](https://github.com/mukulu/hris) - https://github.com/mukulu/hris
 	git clone git@github.com:mukulu/hris.git
+	
 Install composer
 	curl -s https://getcomposer.org/installer | php
+	
 If you don't have curl, install composer with this script
 	php -r "eval('?>'.file_get_contents('https://getcomposer.org/installer'));"
+	
 Update your repository with latest dependecies
 	php composer.phar install
 	php composer.phar update
+	
 Symbolic Link your web directory to the webroot directory
 	ln -s ${PWD}/web/ /var/www/hris		#Assuming your current directory(PWD) is inside hris project and your webroot is on /var/www/
+	
 Set date time zone inside php.ini to your location,change line date.timezone to your locale, e.g in Dar-es-salaam, Tanzania
 	date.timezone = 'Africa/Dar_es_Salaam'
+	
 Turn off short_open_tag inside php.ini to disable detection of PHP codes between <? and ?> for better PHP >=5.3 Experience
 	short_open_tag = Off
+	
 Give Web readwrite access to cache and log directory in your hris directory.
 To enjoy both user and web read-write access in linux use the following commands:
 	rm -rf app/cache/*
 	rm -rf app/logs/*
+	
 On Systems supporting chmod +a, you can give readwrite permission via
 	sudo chmod +a "www-data allow delete,write,append,file_inherit,directory_inherit" app/cache app/logs
 	sudo chmod +a "`whoami` allow delete,write,append,file_inherit,directory_inherit" app/cache app/logs
+	
 On Systems that don't support chmod +a, you can give readwrite permission via
 	sudo setfacl -R -m u:www-data:rwx -m u:`whoami`:rwx app/cache app/logs
 	sudo setfacl -dR -m u:www-data:rwx -m u:`whoami`:rwx app/cache app/logs
