@@ -27,6 +27,7 @@ class AppKernel extends Kernel
             new Hris\FormBundle\HrisFormBundle(),
             new Hris\RecordsBundle\HrisRecordsBundle(),
             new Hris\DataQualityBundle\HrisDataQualityBundle(),
+        	new Doctrine\Bundle\FixturesBundle\DoctrineFixturesBundle(),
             //new Sonata\AdminBundle\SonataAdminBundle(),
         );
 
