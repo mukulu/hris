@@ -75,3 +75,23 @@ Developers Section:
 12. Promote user's roles using fos user bundle commands
 	php app/console fos:user:promote	#Roles must start with ROLE_ prefix
 	
+	Documentation on FixturesBundle
+		http://symfony.com/doc/current/bundles/DoctrineFixturesBundle/index.html
+	Documentation on Database Migrations
+		http://symfony.com/doc/current/bundles/DoctrineMigrationsBundle/index.html
+	Documentation on Framework Extra Bundle
+		https://github.com/sensio/SensioFrameworkExtraBundle/tree/master/Resources/doc
+	Documentation on JMS Security Extra bundle
+		http://jmsyst.com/bundles/JMSSecurityExtraBundle/1.2
+
+Sonata Dependencies
+1. Exporter
+	https://github.com/sonata-project/exporter
+2. Knp Menu Bundle
+	https://github.com/KnpLabs/KnpMenuBundle
+3. Sonata Cache Bundle
+	https://github.com/sonata-project/SonataCacheBundle
+4. Sonata Block Bundle
+	https://github.com/sonata-project/SonataBlockBundle
+5. Sonata JQuery Bundle
+	https://github.com/sonata-project/SonatajQueryBundle

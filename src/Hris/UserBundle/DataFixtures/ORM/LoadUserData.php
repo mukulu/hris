@@ -20,29 +20,43 @@
  *
  *
  */
-namespace Hris\FormBundle\DataFixtures\ORM;
+namespace Hris\UserBundle\DataFixtures\ORM;
 
-use Doctrine\Common\DataFixtures\FixtureInterface;
+use Doctrine\Common\DataFixtures\OrderedFixtureInterface;
+use Doctrine\Common\DataFixtures\AbstractFixture;
 use Doctrine\Common\Persistence\ObjectManager;
 
 use Hris\UserBundle\Entity\User;
 
-class LoadUserData implements FixtureInterface	{
+class LoadUserData extends AbstractFixture implements OrderedFixtureInterface 
+{
 	/**
 	 * {@inheritDoc}
 	 * @see Doctrine\Common\DataFixtures.FixtureInterface::load()
 	 */
-	public function load(ObjectManager $manager) {
+	public function load(ObjectManager $manager)
+	{
 		$userAdmin = new User;
 		$userAdmin->setUsername('admin');
-		$userAdmin->setPassword('district');
+		$userAdmin->setPlainPassword('district');
 		$userAdmin->setEmail('admin@hris.info');
 		$userAdmin->addRole('ROLE_SUPERUSER');
 		$userAdmin->addRole('ROLE_USER');
+		$userAdmin->setEnabled(True);
 		
 		$manager->persist($userAdmin);
 		$manager->flush();
-
+		
+		$this->addReference('admin', $userAdmin);
 	}
+	
+	/**
+	 * @return The order in which this fixture will be loaded
+	 */
+	public function getOrder()
+	{
+		return 1;
+	}
+
 
 }

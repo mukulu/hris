@@ -217,4 +217,50 @@ class FieldOptionMerge
     {
         return $this->removedOptionField;
     }
+
+    /**
+     * Set datecreated
+     *
+     * @param \DateTime $datecreated
+     * @return FieldOptionMerge
+     */
+    public function setDatecreated($datecreated)
+    {
+        $this->datecreated = $datecreated;
+    
+        return $this;
+    }
+
+    /**
+     * Get datecreated
+     *
+     * @return \DateTime 
+     */
+    public function getDatecreated()
+    {
+        return $this->datecreated;
+    }
+
+    /**
+     * Set lastmodified
+     *
+     * @param \DateTime $lastmodified
+     * @return FieldOptionMerge
+     */
+    public function setLastmodified($lastmodified)
+    {
+        $this->lastmodified = $lastmodified;
+    
+        return $this;
+    }
+
+    /**
+     * Get lastmodified
+     *
+     * @return \DateTime 
+     */
+    public function getLastmodified()
+    {
+        return $this->lastmodified;
+    }
 }

@@ -28,7 +28,8 @@ class AppKernel extends Kernel
             new Hris\RecordsBundle\HrisRecordsBundle(),
             new Hris\DataQualityBundle\HrisDataQualityBundle(),
         	new Doctrine\Bundle\FixturesBundle\DoctrineFixturesBundle(),
-            //new Sonata\AdminBundle\SonataAdminBundle(),
+        	new Doctrine\Bundle\MigrationsBundle\DoctrineMigrationsBundle(),
+            new Sonata\AdminBundle\SonataAdminBundle(),
         );
 
         if (in_array($this->getEnvironment(), array('dev', 'test'))) {

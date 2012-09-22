@@ -68,11 +68,11 @@ class Form
     private $hypertext;
 
     /**
-     * @var string $formtitle
+     * @var string $title
      *
-     * @ORM\Column(name="formtitle", type="string", length=64, nullable=true)
+     * @ORM\Column(name="title", type="string", length=64, nullable=true)
      */
-    private $formtitle;
+    private $title;
     
     /**
      * @var Hris\FormBundle\Entity\Field $uniqueRecordFields
@@ -197,29 +197,6 @@ class Form
     public function getHypertext()
     {
         return $this->hypertext;
-    }
-
-    /**
-     * Set formtitle
-     *
-     * @param string $formtitle
-     * @return Form
-     */
-    public function setFormtitle($formtitle)
-    {
-        $this->formtitle = $formtitle;
-    
-        return $this;
-    }
-
-    /**
-     * Get formtitle
-     *
-     * @return string 
-     */
-    public function getFormtitle()
-    {
-        return $this->formtitle;
     }
     
     /**
@@ -529,5 +506,28 @@ class Form
     public function getFormVisibleFields()
     {
         return $this->formVisibleFields;
+    }
+
+    /**
+     * Set title
+     *
+     * @param string $title
+     * @return Form
+     */
+    public function setTitle($title)
+    {
+        $this->title = $title;
+    
+        return $this;
+    }
+
+    /**
+     * Get title
+     *
+     * @return string 
+     */
+    public function getTitle()
+    {
+        return $this->title;
     }
 }

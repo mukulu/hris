@@ -20,7 +20,10 @@
         "sensio/generator-bundle": "2.1.*",
         "jms/security-extra-bundle": "1.2.*",
         "jms/di-extra-bundle": "1.1.*",
-        "friendsofsymfony/user-bundle": "*"
+        "friendsofsymfony/user-bundle": "*",
+        "doctrine/doctrine-migrations-bundle": "dev-master",
+        "sonata-project/cache-bundle": "master-dev",
+        "mukulu/admin-bundle": "dev-master"
     },
     "scripts": {
         "post-install-cmd": [
