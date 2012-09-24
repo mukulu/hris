@@ -284,7 +284,7 @@ class Form
      * @param Hris\FormBundle\Entity\Field $field
      * @return Form
      */
-    public function addSimpleField(Hris\FormBundle\Entity\Field $field)
+    public function addSimpleField(\Hris\FormBundle\Entity\Field $field)
     {
     	$this->sort += 1;
     	$this->formFieldMember[] = new \Hris\FormBundle\Entity\FormFieldMember($this, $field, $this->sort);
@@ -315,7 +315,7 @@ class Form
      * @param Hris\FormBundle\Entity\Field $field
      * @return Form
      */
-    public function addSimpleFormVisibleField(Hris\FormBundle\Entity\Field $field)
+    public function addSimpleFormVisibleField(\Hris\FormBundle\Entity\Field $field)
     {
     	$this->sort += 1;
     	$this->formVisibleFields[] = new \Hris\FormBundle\Entity\FormVisibleFields($this, $field, $this->sort);

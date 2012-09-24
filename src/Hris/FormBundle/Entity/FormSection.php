@@ -252,7 +252,7 @@ class FormSection
      * @param Hris\FormBundle\Entity\Field $field
      * @return Form
      */
-    public function addSimpleField(Hris\FormBundle\Entity\Field $field)
+    public function addSimpleField(\Hris\FormBundle\Entity\Field $field)
     {
     	$this->sort += 1;
     	$this->formSectionFieldMember[] = new \Hris\FormBundle\Entity\FormSectionFieldMember($this, $field, $this->sort);
