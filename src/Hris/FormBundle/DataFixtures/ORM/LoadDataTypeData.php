@@ -25,9 +25,9 @@ use Doctrine\Common\DataFixtures\OrderedFixtureInterface;
 use Doctrine\Common\DataFixtures\AbstractFixture;
 use Doctrine\Common\Persistence\ObjectManager;
 
-use Hris\FormBundle\Entity\Form;
+use Hris\FormBundle\Entity\DataType;
 
-class LoadFormData extends AbstractFixture implements OrderedFixtureInterface
+class LoadDataTypeData extends AbstractFixture implements OrderedFixtureInterface
 {
 	/**
 	 * {@inheritDoc}
@@ -36,15 +36,14 @@ class LoadFormData extends AbstractFixture implements OrderedFixtureInterface
 	public function load(ObjectManager $manager)
 	{
 		// Load Public Data
-		$publicForm = new Form();
-		$publicForm->setName('Public Employee Form');
-		$publicForm->setTitle('Public Employee Data Entry Form');
-		$publicForm->setDatecreated(new \DateTime('now'));
-
-		$manager->persist($publicForm);
+		$dataTypeNames = Array('String','Integer','Double','Date');
+		$dataType = new DataType();
+		foreach($dataTypeNames as $key=>$dataTypeName) {
+			$dataType->setName($dataTypeName);
+			$manager->persist($dataType);
+			$this->addReference(strtolower($dataTypeName).'-datatype', $dataType);
+		}
 		$manager->flush();
-		
-		$this->addReference('public-employee-form', $publicForm);
 	}
 	
 	/**
@@ -52,7 +51,7 @@ class LoadFormData extends AbstractFixture implements OrderedFixtureInterface
 	 */
 	public function getOrder()
 	{
-		return 5;
+		return 3;
 	}
 
 }

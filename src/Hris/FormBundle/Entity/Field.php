@@ -35,6 +35,7 @@ use Hris\FormBundle\Entity\DataType;
 use Hris\FormBundle\Entity\InputType;
 use Hris\RecordsBundle\Entity\RecordValue;
 use Hris\RecordsBundle\Entity\RecordStats;
+use \DateTime;
 
 /**
  * Hris\FormBundle\Entity\Field
@@ -82,11 +83,11 @@ class Field
     private $compulsory;
 
     /**
-     * @var boolean $uniqueid
+     * @var boolean $unique
      *
-     * @ORM\Column(name="uniqueid", type="boolean")
+     * @ORM\Column(name="unique", type="boolean")
      */
-    private $uniqueid;
+    private $unique;
 
     /**
      * @var string $description
@@ -329,26 +330,26 @@ class Field
     }
 
     /**
-     * Set uniqueid
+     * Set unique
      *
-     * @param boolean $uniqueid
+     * @param boolean $unique
      * @return Field
      */
-    public function setUniqueid($uniqueid)
+    public function setUnique($unique)
     {
-        $this->uniqueid = $uniqueid;
+        $this->unique = $unique;
     
         return $this;
     }
 
     /**
-     * Get uniqueid
+     * Get unique
      *
      * @return boolean 
      */
-    public function getUniqueid()
+    public function getUnique()
     {
-        return $this->uniqueid;
+        return $this->unique;
     }
 
     /**
@@ -848,6 +849,7 @@ class Field
         $this->uniqueRecordForms = new \Doctrine\Common\Collections\ArrayCollection();
         $this->resourceTableFieldMember = new \Doctrine\Common\Collections\ArrayCollection();
         $this->uid = uniqid();
+        $this->datecreated = new \DateTime('now');
     }
     
     /**

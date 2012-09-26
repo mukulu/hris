@@ -25,6 +25,7 @@ namespace Hris\FormBundle\Entity;
 use Doctrine\ORM\Mapping as ORM;
 
 use Hris\FormBundle\Entity\Field;
+use \DateTime;
 
 /**
  * Hris\FormBundle\Entity\DataType
@@ -218,6 +219,7 @@ class DataType
     {
         $this->field = new \Doctrine\Common\Collections\ArrayCollection();
         $this->uid = uniqid();
+        $this->datecreated = new \DateTime('now');
     }
     
     /**
