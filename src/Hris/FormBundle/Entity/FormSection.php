@@ -1,7 +1,7 @@
 <?php
 /*
  *
- * Copyright 2012John Francis Mukulu <john.f.mukulu@gmail.com>
+ * Copyright 2012 Human Resource Information System
  *
  * This program is free software; you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -18,6 +18,8 @@
  * Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston,
  * MA 02110-1301, USA.
  *
+ * @since 2012
+ * @author John Francis Mukulu <john.f.mukulu@gmail.com>
  *
  */
 namespace Hris\FormBundle\Entity;
@@ -66,7 +68,7 @@ class FormSection
     private $description;
     
     /**
-     * @var Hris\FormBundle\Entity\Form $form
+     * @var \Hris\FormBundle\Entity\Form $form
      *
      * @ORM\ManyToOne(targetEntity="Hris\FormBundle\Entity\Form")
      * @ORM\JoinColumns({
@@ -76,7 +78,7 @@ class FormSection
     private $form;
     
     /**
-     * @var Hris\FormBundle\Entity\FormSectionFieldMember $formSectionFieldMember
+     * @var \Hris\FormBundle\Entity\FormSectionFieldMember $formSectionFieldMember
      *
      * @ORM\OneToMany(targetEntity="Hris\FormBundle\Entity\FormSectionFieldMember", mappedBy="formSection",cascade={"ALL"})
      * @ORM\OrderBy({"sort" = "ASC"})
@@ -226,7 +228,7 @@ class FormSection
     /**
      * Set form
      *
-     * @param Hris\FormBundle\Entity\Form $form
+     * @param \Hris\FormBundle\Entity\Form $form
      * @return FormSection
      */
     public function setForm(\Hris\FormBundle\Entity\Form $form = null)
@@ -239,7 +241,7 @@ class FormSection
     /**
      * Get form
      *
-     * @return Hris\FormBundle\Entity\Form 
+     * @return \Hris\FormBundle\Entity\Form
      */
     public function getForm()
     {
@@ -249,7 +251,7 @@ class FormSection
     /**
      * Add field
      *
-     * @param Hris\FormBundle\Entity\Field $field
+     * @param \Hris\FormBundle\Entity\Field $field
      * @return Form
      */
     public function addSimpleField(\Hris\FormBundle\Entity\Field $field)
@@ -263,7 +265,7 @@ class FormSection
     /**
      * Get field
      *
-     * @return Doctrine\Common\Collections\Collection
+     * @return \Doctrine\Common\Collections\Collection
      */
     public function getSimpleField()
     {
@@ -288,7 +290,7 @@ class FormSection
     /**
      * Add formSectionFieldMember
      *
-     * @param Hris\FormBundle\Entity\FormSectionFieldMember $formSectionFieldMember
+     * @param \Hris\FormBundle\Entity\FormSectionFieldMember $formSectionFieldMember
      * @return FormSection
      */
     public function addFormSectionFieldMember(\Hris\FormBundle\Entity\FormSectionFieldMember $formSectionFieldMember)
@@ -301,7 +303,7 @@ class FormSection
     /**
      * Remove formSectionFieldMember
      *
-     * @param Hris\FormBundle\Entity\FormSectionFieldMember $formSectionFieldMember
+     * @param \Hris\FormBundle\Entity\FormSectionFieldMember $formSectionFieldMember
      */
     public function removeFormSectionFieldMember(\Hris\FormBundle\Entity\FormSectionFieldMember $formSectionFieldMember)
     {
@@ -311,7 +313,7 @@ class FormSection
     /**
      * Get formSectionFieldMember
      *
-     * @return Doctrine\Common\Collections\Collection 
+     * @return \Doctrine\Common\Collections\Collection
      */
     public function getFormSectionFieldMember()
     {

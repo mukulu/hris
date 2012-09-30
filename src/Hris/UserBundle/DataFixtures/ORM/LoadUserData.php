@@ -51,7 +51,8 @@ class LoadUserData extends AbstractFixture implements OrderedFixtureInterface
 	}
 	
 	/**
-	 * @return The order in which this fixture will be loaded
+     * The order in which this fixture will be loaded
+	 * @return integer
 	 */
 	public function getOrder()
 	{

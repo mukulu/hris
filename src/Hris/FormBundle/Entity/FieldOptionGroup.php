@@ -1,7 +1,7 @@
 <?php
 /*
  *
- * Copyright 2012John Francis Mukulu <john.f.mukulu@gmail.com>
+ * Copyright 2012 Human Resource Information System
  *
  * This program is free software; you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -18,6 +18,8 @@
  * Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston,
  * MA 02110-1301, USA.
  *
+ * @since 2012
+ * @author John Francis Mukulu <john.f.mukulu@gmail.com>
  *
  */
 namespace Hris\FormBundle\Entity;
@@ -68,7 +70,7 @@ class FieldOptionGroup
     private $description;
     
     /**
-     * @var Hris\FormBundle\Entity\FieldOption $fieldOption
+     * @var \Hris\FormBundle\Entity\FieldOption $fieldOption
      *
      * @ORM\ManyToMany(targetEntity="Hris\FormBundle\Entity\FieldOption", inversedBy="fieldOptionGroup")
      * @ORM\JoinTable(name="hris_fieldoptiongroup_members",
@@ -85,7 +87,7 @@ class FieldOptionGroup
     private $fieldOption;
     
     /**
-     * @var Hris\FormBundle\Entity\Field $field
+     * @var \Hris\FormBundle\Entity\Field $field
      *
      * @ORM\ManyToOne(targetEntity="Hris\FormBundle\Entity\Field")
      * @ORM\JoinColumns({
@@ -95,7 +97,7 @@ class FieldOptionGroup
     private $field;
     
     /**
-     * @var Hris\FormBundle\Entity\FieldOptionGroupset $fieldOptionGroupset
+     * @var \Hris\FormBundle\Entity\FieldOptionGroupset $fieldOptionGroupset
      *
      * @ORM\ManyToMany(targetEntity="Hris\FormBundle\Entity\FieldOptionGroupset", mappedBy="fieldOptionGroup")
      * @ORM\OrderBy({"name" = "ASC"})
@@ -103,7 +105,7 @@ class FieldOptionGroup
     private $fieldOptionGroupset;
     
     /**
-     * @var Hris\FormBundle\Entity\FriendlyReportCategory $friendlyReportCategory
+     * @var \Hris\FormBundle\Entity\FriendlyReportCategory $friendlyReportCategory
      *
      * @ORM\OneToMany(targetEntity="Hris\FormBundle\Entity\FriendlyReportCategory", mappedBy="fieldOptionGroup")
      * @ORM\OrderBy({"sort" = "ASC"})
@@ -274,7 +276,7 @@ class FieldOptionGroup
     /**
      * Add fieldOption
      *
-     * @param Hris\FormBundle\Entity\FieldOption $fieldOption
+     * @param \Hris\FormBundle\Entity\FieldOption $fieldOption
      * @return FieldOptionGroup
      */
     public function addFieldOption(\Hris\FormBundle\Entity\FieldOption $fieldOption)
@@ -287,7 +289,7 @@ class FieldOptionGroup
     /**
      * Remove fieldOption
      *
-     * @param Hris\FormBundle\Entity\FieldOption $fieldOption
+     * @param \Hris\FormBundle\Entity\FieldOption $fieldOption
      */
     public function removeFieldOption(\Hris\FormBundle\Entity\FieldOption $fieldOption)
     {
@@ -297,7 +299,7 @@ class FieldOptionGroup
     /**
      * Get fieldOption
      *
-     * @return Doctrine\Common\Collections\Collection 
+     * @return \Doctrine\Common\Collections\Collection
      */
     public function getFieldOption()
     {
@@ -307,7 +309,7 @@ class FieldOptionGroup
     /**
      * Set field
      *
-     * @param Hris\FormBundle\Entity\Field $field
+     * @param \Hris\FormBundle\Entity\Field $field
      * @return FieldOptionGroup
      */
     public function setField(\Hris\FormBundle\Entity\Field $field = null)
@@ -320,7 +322,7 @@ class FieldOptionGroup
     /**
      * Get field
      *
-     * @return Hris\FormBundle\Entity\Field 
+     * @return \Hris\FormBundle\Entity\Field
      */
     public function getField()
     {
@@ -330,7 +332,7 @@ class FieldOptionGroup
     /**
      * Add fieldOptionGroupset
      *
-     * @param Hris\FormBundle\Entity\FieldOptionGroupset $fieldOptionGroupset
+     * @param \Hris\FormBundle\Entity\FieldOptionGroupset $fieldOptionGroupset
      * @return FieldOptionGroup
      */
     public function addFieldOptionGroupset(\Hris\FormBundle\Entity\FieldOptionGroupset $fieldOptionGroupset)
@@ -343,7 +345,7 @@ class FieldOptionGroup
     /**
      * Remove fieldOptionGroupset
      *
-     * @param Hris\FormBundle\Entity\FieldOptionGroupset $fieldOptionGroupset
+     * @param \Hris\FormBundle\Entity\FieldOptionGroupset $fieldOptionGroupset
      */
     public function removeFieldOptionGroupset(\Hris\FormBundle\Entity\FieldOptionGroupset $fieldOptionGroupset)
     {
@@ -353,7 +355,7 @@ class FieldOptionGroup
     /**
      * Get fieldOptionGroupset
      *
-     * @return Doctrine\Common\Collections\Collection 
+     * @return \Doctrine\Common\Collections\Collection
      */
     public function getFieldOptionGroupset()
     {
@@ -363,7 +365,7 @@ class FieldOptionGroup
     /**
      * Add friendlyReportCategory
      *
-     * @param Hris\FormBundle\Entity\FriendlyReportCategory $friendlyReportCategory
+     * @param \Hris\FormBundle\Entity\FriendlyReportCategory $friendlyReportCategory
      * @return FieldOptionGroup
      */
     public function addFriendlyReportCategory(\Hris\FormBundle\Entity\FriendlyReportCategory $friendlyReportCategory)
@@ -376,7 +378,7 @@ class FieldOptionGroup
     /**
      * Remove friendlyReportCategory
      *
-     * @param Hris\FormBundle\Entity\FriendlyReportCategory $friendlyReportCategory
+     * @param \Hris\FormBundle\Entity\FriendlyReportCategory $friendlyReportCategory
      */
     public function removeFriendlyReportCategory(\Hris\FormBundle\Entity\FriendlyReportCategory $friendlyReportCategory)
     {
@@ -386,7 +388,7 @@ class FieldOptionGroup
     /**
      * Get friendlyReportCategory
      *
-     * @return Doctrine\Common\Collections\Collection 
+     * @return \Doctrine\Common\Collections\Collection
      */
     public function getFriendlyReportCategory()
     {

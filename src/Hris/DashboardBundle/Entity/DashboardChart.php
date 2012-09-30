@@ -1,7 +1,7 @@
 <?php
 /*
  *
- * Copyright 2012John Francis Mukulu <john.f.mukulu@gmail.com>
+ * Copyright 2012 Human Resource Information System
  *
  * This program is free software; you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -18,6 +18,8 @@
  * Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston,
  * MA 02110-1301, USA.
  *
+ * @since 2012
+ * @author John Francis Mukulu <john.f.mukulu@gmail.com>
  *
  */
 namespace Hris\DashboardBundle\Entity;
@@ -102,7 +104,7 @@ class DashboardChart
     private $systemWide;
     
     /**
-     * @var Hris\OrganisationunitBundle\Entity\Organisationunit $organisationunit
+     * @var \Hris\OrganisationunitBundle\Entity\Organisationunit $organisationunit
      *
      * @ORM\ManyToMany(targetEntity="Hris\OrganisationunitBundle\Entity\Organisationunit", inversedBy="dashboardChart")
      * @ORM\JoinTable(name="hris_dashboardchart_organisationunitmembers",
@@ -118,7 +120,7 @@ class DashboardChart
     private $organisationunit;
     
     /**
-     * @var Hris\UserBundle\Entity\UserInfo $userInfo
+     * @var \Hris\UserBundle\Entity\UserInfo $userInfo
      *
      * @ORM\ManyToOne(targetEntity="Hris\UserBundle\Entity\UserInfo",inversedBy="dashboardChart")
      * @ORM\JoinColumns({
@@ -128,7 +130,7 @@ class DashboardChart
     private $userInfo;
     
     /**
-     * @var Hris\FormBundle\Entity\Form $form
+     * @var \Hris\FormBundle\Entity\Form $form
      *
      * @ORM\ManyToMany(targetEntity="Hris\FormBundle\Entity\Form", inversedBy="dashboardChart")
      * @ORM\JoinTable(name="hris_dashboardchart_formmembers",
@@ -355,7 +357,7 @@ class DashboardChart
     /**
      * Add form
      *
-     * @param Hris\FormBundle\Entity\Form $form
+     * @param \Hris\FormBundle\Entity\Form $form
      * @return DashboardChart
      */
     public function addForm(\Hris\FormBundle\Entity\Form $form)
@@ -368,7 +370,7 @@ class DashboardChart
     /**
      * Remove form
      *
-     * @param Hris\FormBundle\Entity\Form $form
+     * @param \Hris\FormBundle\Entity\Form $form
      */
     public function removeForm(\Hris\FormBundle\Entity\Form $form)
     {
@@ -378,7 +380,7 @@ class DashboardChart
     /**
      * Get form
      *
-     * @return Doctrine\Common\Collections\Collection 
+     * @return \Doctrine\Common\Collections\Collection
      */
     public function getForm()
     {
@@ -411,7 +413,7 @@ class DashboardChart
     /**
      * Add organisationunit
      *
-     * @param Hris\OrganisationunitBundle\Entity\Organisationunit $organisationunit
+     * @param \Hris\OrganisationunitBundle\Entity\Organisationunit $organisationunit
      * @return DashboardChart
      */
     public function addOrganisationunit(\Hris\OrganisationunitBundle\Entity\Organisationunit $organisationunit)
@@ -424,7 +426,7 @@ class DashboardChart
     /**
      * Remove organisationunit
      *
-     * @param Hris\OrganisationunitBundle\Entity\Organisationunit $organisationunit
+     * @param \Hris\OrganisationunitBundle\Entity\Organisationunit $organisationunit
      */
     public function removeOrganisationunit(\Hris\OrganisationunitBundle\Entity\Organisationunit $organisationunit)
     {
@@ -434,7 +436,7 @@ class DashboardChart
     /**
      * Get organisationunit
      *
-     * @return Doctrine\Common\Collections\Collection 
+     * @return \Doctrine\Common\Collections\Collection
      */
     public function getOrganisationunit()
     {
@@ -479,7 +481,7 @@ class DashboardChart
     /**
      * Set userInfo
      *
-     * @param Hris\UserBundle\Entity\UserInfo $userInfo
+     * @param \Hris\UserBundle\Entity\UserInfo $userInfo
      * @return DashboardChart
      */
     public function setUserInfo(\Hris\UserBundle\Entity\UserInfo $userInfo = null)
@@ -492,7 +494,7 @@ class DashboardChart
     /**
      * Get userInfo
      *
-     * @return Hris\UserBundle\Entity\UserInfo 
+     * @return \Hris\UserBundle\Entity\UserInfo
      */
     public function getUserInfo()
     {

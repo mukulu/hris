@@ -53,7 +53,7 @@ class UserInfo
     private $uid;
     
     /**
-     * @var Hris\UserBundle\Entity\User $user
+     * @var \Hris\UserBundle\Entity\User $user
      *
      * @ORM\OneToOne(targetEntity="Hris\UserBundle\Entity\User", mappedBy="userInfo")
      * @ORM\JoinColumn(name="user_id", referencedColumnName="id", nullable=false,unique=true)
@@ -96,7 +96,7 @@ class UserInfo
     private $surname;
     
     /**
-     * @var Hris\OrganisationunitBundle\Entity\Organisationunit $organisationunit
+     * @var \Hris\OrganisationunitBundle\Entity\Organisationunit $organisationunit
      *
      * @ORM\ManyToMany(targetEntity="Hris\OrganisationunitBundle\Entity\Organisationunit", inversedBy="userInfo")
      * @ORM\JoinTable(name="hris_userinfo_organisationunits",
@@ -112,7 +112,7 @@ class UserInfo
     private $organisationunit;
     
     /**
-     * @var Hris\DashboardBundle\Entity\DashboardChart $dashboardChart
+     * @var \Hris\DashboardBundle\Entity\DashboardChart $dashboardChart
      *
      * @ORM\OneToMany(targetEntity="Hris\DashboardBundle\Entity\DashboardChart", mappedBy="userInfo",cascade={"ALL"})
      * @ORM\OrderBy({"name" = "ASC"})
@@ -279,7 +279,7 @@ class UserInfo
     /**
      * Set user
      *
-     * @param Hris\UserBundle\Entity\User $user
+     * @param \Hris\UserBundle\Entity\User $user
      * @return UserInfo
      */
     public function setUser(\Hris\UserBundle\Entity\User $user)
@@ -292,7 +292,7 @@ class UserInfo
     /**
      * Get user
      *
-     * @return Hris\UserBundle\Entity\User 
+     * @return \Hris\UserBundle\Entity\User
      */
     public function getUser()
     {
@@ -302,7 +302,7 @@ class UserInfo
     /**
      * Add organisationunit
      *
-     * @param Hris\OrganisationunitBundle\Entity\Organisationunit $organisationunit
+     * @param \Hris\OrganisationunitBundle\Entity\Organisationunit $organisationunit
      * @return UserInfo
      */
     public function addOrganisationunit(\Hris\OrganisationunitBundle\Entity\Organisationunit $organisationunit)
@@ -315,7 +315,7 @@ class UserInfo
     /**
      * Remove organisationunit
      *
-     * @param Hris\OrganisationunitBundle\Entity\Organisationunit $organisationunit
+     * @param \Hris\OrganisationunitBundle\Entity\Organisationunit $organisationunit
      */
     public function removeOrganisationunit(\Hris\OrganisationunitBundle\Entity\Organisationunit $organisationunit)
     {
@@ -325,7 +325,7 @@ class UserInfo
     /**
      * Get organisationunit
      *
-     * @return Doctrine\Common\Collections\Collection 
+     * @return \Doctrine\Common\Collections\Collection
      */
     public function getOrganisationunit()
     {
@@ -335,7 +335,7 @@ class UserInfo
     /**
      * Add dashboardChart
      *
-     * @param Hris\DashboardBundle\Entity\DashboardChart $dashboardChart
+     * @param \Hris\DashboardBundle\Entity\DashboardChart $dashboardChart
      * @return UserInfo
      */
     public function addDashboardChart(\Hris\DashboardBundle\Entity\DashboardChart $dashboardChart)
@@ -348,7 +348,7 @@ class UserInfo
     /**
      * Remove dashboardChart
      *
-     * @param Hris\DashboardBundle\Entity\DashboardChart $dashboardChart
+     * @param \Hris\DashboardBundle\Entity\DashboardChart $dashboardChart
      */
     public function removeDashboardChart(\Hris\DashboardBundle\Entity\DashboardChart $dashboardChart)
     {
@@ -358,7 +358,7 @@ class UserInfo
     /**
      * Get dashboardChart
      *
-     * @return Doctrine\Common\Collections\Collection 
+     * @return \Doctrine\Common\Collections\Collection
      */
     public function getDashboardChart()
     {

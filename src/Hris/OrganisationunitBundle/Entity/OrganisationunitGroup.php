@@ -1,7 +1,7 @@
 <?php
 /*
  *
- * Copyright 2012John Francis Mukulu <john.f.mukulu@gmail.com>
+ * Copyright 2012 Human Resource Information System
  *
  * This program is free software; you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -18,6 +18,8 @@
  * Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston,
  * MA 02110-1301, USA.
  *
+ * @since 2012
+ * @author John Francis Mukulu <john.f.mukulu@gmail.com>
  *
  */
 namespace Hris\OrganisationunitBundle\Entity;
@@ -73,7 +75,7 @@ class OrganisationunitGroup
     private $code;
     
     /**
-     * @var Hris\OrganisationunitBundle\Entity\Organisationunit $organisationunit
+     * @var \Hris\OrganisationunitBundle\Entity\Organisationunit $organisationunit
      *
      * @ORM\ManyToMany(targetEntity="Hris\OrganisationunitBundle\Entity\Organisationunit", inversedBy="organisationunitGroup")
      * @ORM\JoinTable(name="hris_organisationunitgroup_members",
@@ -89,7 +91,7 @@ class OrganisationunitGroup
     private $organisationunit;
     
     /**
-     * @var Hris\OrganisationunitBundle\Entity\OrganisationunitGroupset $organisationunitGroupset
+     * @var \Hris\OrganisationunitBundle\Entity\OrganisationunitGroupset $organisationunitGroupset
      *
      * @ORM\ManyToOne(targetEntity="Hris\OrganisationunitBundle\Entity\OrganisationunitGroupset",inversedBy="organisationunitGroup")
      * @ORM\JoinColumns({
@@ -241,7 +243,7 @@ class OrganisationunitGroup
     /**
      * Add organisationunit
      *
-     * @param Hris\OrganisationunitBundle\Entity\Organisationunit $organisationunit
+     * @param \Hris\OrganisationunitBundle\Entity\Organisationunit $organisationunit
      * @return OrganisationunitGroup
      */
     public function addOrganisationunit(\Hris\OrganisationunitBundle\Entity\Organisationunit $organisationunit)
@@ -254,7 +256,7 @@ class OrganisationunitGroup
     /**
      * Remove organisationunit
      *
-     * @param Hris\OrganisationunitBundle\Entity\Organisationunit $organisationunit
+     * @param \Hris\OrganisationunitBundle\Entity\Organisationunit $organisationunit
      */
     public function removeOrganisationunit(\Hris\OrganisationunitBundle\Entity\Organisationunit $organisationunit)
     {
@@ -264,7 +266,7 @@ class OrganisationunitGroup
     /**
      * Get organisationunit
      *
-     * @return Doctrine\Common\Collections\Collection 
+     * @return \Doctrine\Common\Collections\Collection
      */
     public function getOrganisationunit()
     {
@@ -305,7 +307,7 @@ class OrganisationunitGroup
     /**
      * Set organisationunitGroupset
      *
-     * @param Hris\OrganisationunitBundle\Entity\OrganisationunitGroupset $organisationunitGroupset
+     * @param \Hris\OrganisationunitBundle\Entity\OrganisationunitGroupset $organisationunitGroupset
      * @return OrganisationunitGroup
      */
     public function setOrganisationunitGroupset(\Hris\OrganisationunitBundle\Entity\OrganisationunitGroupset $organisationunitGroupset = null)
@@ -318,7 +320,7 @@ class OrganisationunitGroup
     /**
      * Get organisationunitGroupset
      *
-     * @return Hris\OrganisationunitBundle\Entity\OrganisationunitGroupset 
+     * @return \Hris\OrganisationunitBundle\Entity\OrganisationunitGroupset
      */
     public function getOrganisationunitGroupset()
     {

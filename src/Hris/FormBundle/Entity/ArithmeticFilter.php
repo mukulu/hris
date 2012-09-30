@@ -1,7 +1,7 @@
 <?php
 /*
  *
- * Copyright 2012John Francis Mukulu <john.f.mukulu@gmail.com>
+ * Copyright 2012 Human Resource Information System
  *
  * This program is free software; you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -18,6 +18,8 @@
  * Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston,
  * MA 02110-1301, USA.
  *
+ * @since 2012
+ * @author John Francis Mukulu <john.f.mukulu@gmail.com>
  *
  */
 namespace Hris\FormBundle\Entity;
@@ -86,7 +88,7 @@ class ArithmeticFilter
     private $rightExpression;
     
     /**
-     * @var Hris\FormBundle\Entity\FriendlyReport $friendlyReport
+     * @var \Hris\FormBundle\Entity\FriendlyReport $friendlyReport
      *
      * @ORM\ManyToMany(targetEntity="Hris\FormBundle\Entity\FriendlyReport", mappedBy="arithmeticFilter")
      * @ORM\OrderBy({"name" = "ASC"})
@@ -313,7 +315,7 @@ class ArithmeticFilter
     /**
      * Add friendlyReport
      *
-     * @param Hris\FormBundle\Entity\FriendlyReport $friendlyReport
+     * @param \Hris\FormBundle\Entity\FriendlyReport $friendlyReport
      * @return ArithmeticFilter
      */
     public function addFriendlyReport(\Hris\FormBundle\Entity\FriendlyReport $friendlyReport)
@@ -326,7 +328,7 @@ class ArithmeticFilter
     /**
      * Remove friendlyReport
      *
-     * @param Hris\FormBundle\Entity\FriendlyReport $friendlyReport
+     * @param \Hris\FormBundle\Entity\FriendlyReport $friendlyReport
      */
     public function removeFriendlyReport(\Hris\FormBundle\Entity\FriendlyReport $friendlyReport)
     {
@@ -336,7 +338,7 @@ class ArithmeticFilter
     /**
      * Get friendlyReport
      *
-     * @return Doctrine\Common\Collections\Collection 
+     * @return \Doctrine\Common\Collections\Collection
      */
     public function getFriendlyReport()
     {

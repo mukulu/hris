@@ -1,7 +1,7 @@
 <?php
 /*
  *
- * Copyright 2012John Francis Mukulu <john.f.mukulu@gmail.com>
+ * Copyright 2012 Human Resource Information System
  *
  * This program is free software; you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -18,6 +18,8 @@
  * Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston,
  * MA 02110-1301, USA.
  *
+ * @since 2012
+ * @author John Francis Mukulu <john.f.mukulu@gmail.com>
  *
  */
 namespace Hris\FormBundle\Entity;
@@ -37,7 +39,7 @@ class FormVisibleFields
 {
     
     /**
-     * @var Hris\FormBundle\Entity\Form $form
+     * @var \Hris\FormBundle\Entity\Form $form
      *
      * @ORM\ManyToOne(targetEntity="Hris\FormBundle\Entity\Form",inversedBy="formVisibleFields")
      * @ORM\JoinColumns({
@@ -49,7 +51,7 @@ class FormVisibleFields
     private $form;
     
     /**
-     * @var Hris\FormBundle\Entity\Field $field
+     * @var \Hris\FormBundle\Entity\Field $field
      *
      * @ORM\ManyToOne(targetEntity="Hris\FormBundle\Entity\Field",inversedBy="formVisibleFields")
      * @ORM\JoinColumns({
@@ -75,20 +77,10 @@ class FormVisibleFields
     }
 
     /**
-     * Get id
-     *
-     * @return integer 
-     */
-    public function getId()
-    {
-        return $this->id;
-    }
-
-    /**
      * Set sort
      *
      * @param integer $sort
-     * @return VisibleFormFields
+     * @return FormVisibleFields
      */
     public function setSort($sort)
     {
@@ -110,8 +102,8 @@ class FormVisibleFields
     /**
      * Set form
      *
-     * @param Hris\FormBundle\Entity\Form $form
-     * @return VisibleFormFields
+     * @param \Hris\FormBundle\Entity\Form $form
+     * @return FormVisibleFields
      */
     public function setForm(\Hris\FormBundle\Entity\Form $form)
     {
@@ -123,7 +115,7 @@ class FormVisibleFields
     /**
      * Get form
      *
-     * @return Hris\FormBundle\Entity\Form 
+     * @return \Hris\FormBundle\Entity\Form
      */
     public function getForm()
     {
@@ -133,8 +125,8 @@ class FormVisibleFields
     /**
      * Set field
      *
-     * @param Hris\FormBundle\Entity\Field $field
-     * @return VisibleFormFields
+     * @param \Hris\FormBundle\Entity\Field $field
+     * @return FormVisibleFields
      */
     public function setField(\Hris\FormBundle\Entity\Field $field)
     {
@@ -146,7 +138,7 @@ class FormVisibleFields
     /**
      * Get field
      *
-     * @return Hris\FormBundle\Entity\Field 
+     * @return \Hris\FormBundle\Entity\Field
      */
     public function getField()
     {

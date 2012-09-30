@@ -1,7 +1,7 @@
 <?php
 /*
  *
- * Copyright 2012John Francis Mukulu <john.f.mukulu@gmail.com>
+ * Copyright 2012 Human Resource Information System
  *
  * This program is free software; you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -18,6 +18,8 @@
  * Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston,
  * MA 02110-1301, USA.
  *
+ * @since 2012
+ * @author John Francis Mukulu <john.f.mukulu@gmail.com>
  *
  */
 namespace Hris\OrganisationunitBundle\Entity;
@@ -45,7 +47,7 @@ class OrganisationunitStructure
     private $id;
     
     /**
-     * @var Hris\OrganisationunitBundle\Entity\Organisationunit $organisationunit
+     * @var \Hris\OrganisationunitBundle\Entity\Organisationunit $organisationunit
      *
      * @ORM\OneToOne(targetEntity="Hris\OrganisationunitBundle\Entity\Organisationunit", mappedBy="organisationunitStructure")
      * @ORM\JoinColumn(name="organisationunit_id", referencedColumnName="id", nullable=false,unique=true)
@@ -53,7 +55,7 @@ class OrganisationunitStructure
     private $organisationunit;
 
     /**
-     * @var Hris\OrganisationunitBundle\Entity\OrganisationunitLevel $level
+     * @var \Hris\OrganisationunitBundle\Entity\OrganisationunitLevel $level
      *
      * @ORM\ManyToOne(targetEntity="Hris\OrganisationunitBundle\Entity\OrganisationunitLevel",inversedBy="organisationunitStructure")
      * @ORM\JoinColumns({
@@ -63,7 +65,7 @@ class OrganisationunitStructure
     private $level;
     
     /**
-     * @var Hris\OrganisationunitBundle\Entity\Organisationunit $level1Organisationunit
+     * @var \Hris\OrganisationunitBundle\Entity\Organisationunit $level1Organisationunit
      *
      * @ORM\ManyToOne(targetEntity="Hris\OrganisationunitBundle\Entity\Organisationunit",inversedBy="level1OrganisationunitStructure")
      * @ORM\JoinColumns({
@@ -73,7 +75,7 @@ class OrganisationunitStructure
     private $level1Organisationunit;
     
     /**
-     * @var Hris\OrganisationunitBundle\Entity\Organisationunit $level2Organisationunit
+     * @var \Hris\OrganisationunitBundle\Entity\Organisationunit $level2Organisationunit
      *
      * @ORM\ManyToOne(targetEntity="Hris\OrganisationunitBundle\Entity\Organisationunit",inversedBy="level2OrganisationunitStructure")
      * @ORM\JoinColumns({
@@ -83,7 +85,7 @@ class OrganisationunitStructure
     private $level2Organisationunit;
     
     /**
-     * @var Hris\OrganisationunitBundle\Entity\Organisationunit $level3Organisationunit
+     * @var \Hris\OrganisationunitBundle\Entity\Organisationunit $level3Organisationunit
      *
      * @ORM\ManyToOne(targetEntity="Hris\OrganisationunitBundle\Entity\Organisationunit",inversedBy="level3OrganisationunitStructure")
      * @ORM\JoinColumns({
@@ -93,7 +95,7 @@ class OrganisationunitStructure
     private $level3Organisationunit;
     
     /**
-     * @var Hris\OrganisationunitBundle\Entity\Organisationunit $level4Organisationunit
+     * @var \Hris\OrganisationunitBundle\Entity\Organisationunit $level4Organisationunit
      *
      * @ORM\ManyToOne(targetEntity="Hris\OrganisationunitBundle\Entity\Organisationunit",inversedBy="level4OrganisationunitStructure")
      * @ORM\JoinColumns({
@@ -103,7 +105,7 @@ class OrganisationunitStructure
     private $level4Organisationunit;
     
     /**
-     * @var Hris\OrganisationunitBundle\Entity\Organisationunit $level5Organisationunit
+     * @var \Hris\OrganisationunitBundle\Entity\Organisationunit $level5Organisationunit
      *
      * @ORM\ManyToOne(targetEntity="Hris\OrganisationunitBundle\Entity\Organisationunit",inversedBy="level5OrganisationunitStructure")
      * @ORM\JoinColumns({
@@ -113,7 +115,7 @@ class OrganisationunitStructure
     private $level5Organisationunit;
     
     /**
-     * @var Hris\OrganisationunitBundle\Entity\Organisationunit $level6Organisationunit
+     * @var \Hris\OrganisationunitBundle\Entity\Organisationunit $level6Organisationunit
      *
      * @ORM\ManyToOne(targetEntity="Hris\OrganisationunitBundle\Entity\Organisationunit",inversedBy="level6OrganisationunitStructure")
      * @ORM\JoinColumns({
@@ -123,7 +125,7 @@ class OrganisationunitStructure
     private $level6Organisationunit;
     
     /**
-     * @var Hris\OrganisationunitBundle\Entity\Organisationunit $level7Organisationunit
+     * @var \Hris\OrganisationunitBundle\Entity\Organisationunit $level7Organisationunit
      *
      * @ORM\ManyToOne(targetEntity="Hris\OrganisationunitBundle\Entity\Organisationunit",inversedBy="level7OrganisationunitStructure")
      * @ORM\JoinColumns({
@@ -133,7 +135,7 @@ class OrganisationunitStructure
     private $level7Organisationunit;
     
     /**
-     * @var Hris\OrganisationunitBundle\Entity\Organisationunit $level8Organisationunit
+     * @var \Hris\OrganisationunitBundle\Entity\Organisationunit $level8Organisationunit
      *
      * @ORM\ManyToOne(targetEntity="Hris\OrganisationunitBundle\Entity\Organisationunit",inversedBy="level8OrganisationunitStructure")
      * @ORM\JoinColumns({
@@ -143,7 +145,7 @@ class OrganisationunitStructure
     private $level8Organisationunit;
     
     /**
-     * @var Hris\OrganisationunitBundle\Entity\Organisationunit $level9Organisationunit
+     * @var \Hris\OrganisationunitBundle\Entity\Organisationunit $level9Organisationunit
      *
      * @ORM\ManyToOne(targetEntity="Hris\OrganisationunitBundle\Entity\Organisationunit",inversedBy="level9OrganisationunitStructure")
      * @ORM\JoinColumns({
@@ -153,7 +155,7 @@ class OrganisationunitStructure
     private $level9Organisationunit;
     
     /**
-     * @var Hris\OrganisationunitBundle\Entity\Organisationunit $level10Organisationunit
+     * @var \Hris\OrganisationunitBundle\Entity\Organisationunit $level10Organisationunit
      *
      * @ORM\ManyToOne(targetEntity="Hris\OrganisationunitBundle\Entity\Organisationunit",inversedBy="level10OrganisationunitStructure")
      * @ORM\JoinColumns({
@@ -259,7 +261,7 @@ class OrganisationunitStructure
     /**
      * Set organisationunit
      *
-     * @param Hris\OrganisationunitBundle\Entity\Organisationunit $organisationunit
+     * @param \Hris\OrganisationunitBundle\Entity\Organisationunit $organisationunit
      * @return OrganisationunitStructure
      */
     public function setOrganisationunit(\Hris\OrganisationunitBundle\Entity\Organisationunit $organisationunit)
@@ -272,7 +274,7 @@ class OrganisationunitStructure
     /**
      * Get organisationunit
      *
-     * @return Hris\OrganisationunitBundle\Entity\Organisationunit 
+     * @return \Hris\OrganisationunitBundle\Entity\Organisationunit
      */
     public function getOrganisationunit()
     {
@@ -282,7 +284,7 @@ class OrganisationunitStructure
     /**
      * Set level1Organisationunit
      *
-     * @param Hris\OrganisationunitBundle\Entity\Organisationunit $level1Organisationunit
+     * @param \Hris\OrganisationunitBundle\Entity\Organisationunit $level1Organisationunit
      * @return OrganisationunitStructure
      */
     public function setLevel1Organisationunit(\Hris\OrganisationunitBundle\Entity\Organisationunit $level1Organisationunit = null)
@@ -295,7 +297,7 @@ class OrganisationunitStructure
     /**
      * Get level1Organisationunit
      *
-     * @return Hris\OrganisationunitBundle\Entity\Organisationunit 
+     * @return \Hris\OrganisationunitBundle\Entity\Organisationunit
      */
     public function getLevel1Organisationunit()
     {
@@ -305,7 +307,7 @@ class OrganisationunitStructure
     /**
      * Set level2Organisationunit
      *
-     * @param Hris\OrganisationunitBundle\Entity\Organisationunit $level2Organisationunit
+     * @param \Hris\OrganisationunitBundle\Entity\Organisationunit $level2Organisationunit
      * @return OrganisationunitStructure
      */
     public function setLevel2Organisationunit(\Hris\OrganisationunitBundle\Entity\Organisationunit $level2Organisationunit = null)
@@ -318,7 +320,7 @@ class OrganisationunitStructure
     /**
      * Get level2Organisationunit
      *
-     * @return Hris\OrganisationunitBundle\Entity\Organisationunit 
+     * @return \Hris\OrganisationunitBundle\Entity\Organisationunit
      */
     public function getLevel2Organisationunit()
     {
@@ -328,7 +330,7 @@ class OrganisationunitStructure
     /**
      * Set level3Organisationunit
      *
-     * @param Hris\OrganisationunitBundle\Entity\Organisationunit $level3Organisationunit
+     * @param \Hris\OrganisationunitBundle\Entity\Organisationunit $level3Organisationunit
      * @return OrganisationunitStructure
      */
     public function setLevel3Organisationunit(\Hris\OrganisationunitBundle\Entity\Organisationunit $level3Organisationunit = null)
@@ -341,7 +343,7 @@ class OrganisationunitStructure
     /**
      * Get level3Organisationunit
      *
-     * @return Hris\OrganisationunitBundle\Entity\Organisationunit 
+     * @return \Hris\OrganisationunitBundle\Entity\Organisationunit
      */
     public function getLevel3Organisationunit()
     {
@@ -351,7 +353,7 @@ class OrganisationunitStructure
     /**
      * Set level4Organisationunit
      *
-     * @param Hris\OrganisationunitBundle\Entity\Organisationunit $level4Organisationunit
+     * @param \Hris\OrganisationunitBundle\Entity\Organisationunit $level4Organisationunit
      * @return OrganisationunitStructure
      */
     public function setLevel4Organisationunit(\Hris\OrganisationunitBundle\Entity\Organisationunit $level4Organisationunit = null)
@@ -364,7 +366,7 @@ class OrganisationunitStructure
     /**
      * Get level4Organisationunit
      *
-     * @return Hris\OrganisationunitBundle\Entity\Organisationunit 
+     * @return \Hris\OrganisationunitBundle\Entity\Organisationunit
      */
     public function getLevel4Organisationunit()
     {
@@ -374,7 +376,7 @@ class OrganisationunitStructure
     /**
      * Set level5Organisationunit
      *
-     * @param Hris\OrganisationunitBundle\Entity\Organisationunit $level5Organisationunit
+     * @param \Hris\OrganisationunitBundle\Entity\Organisationunit $level5Organisationunit
      * @return OrganisationunitStructure
      */
     public function setLevel5Organisationunit(\Hris\OrganisationunitBundle\Entity\Organisationunit $level5Organisationunit = null)
@@ -387,7 +389,7 @@ class OrganisationunitStructure
     /**
      * Get level5Organisationunit
      *
-     * @return Hris\OrganisationunitBundle\Entity\Organisationunit 
+     * @return \Hris\OrganisationunitBundle\Entity\Organisationunit
      */
     public function getLevel5Organisationunit()
     {
@@ -397,7 +399,7 @@ class OrganisationunitStructure
     /**
      * Set level6Organisationunit
      *
-     * @param Hris\OrganisationunitBundle\Entity\Organisationunit $level6Organisationunit
+     * @param \Hris\OrganisationunitBundle\Entity\Organisationunit $level6Organisationunit
      * @return OrganisationunitStructure
      */
     public function setLevel6Organisationunit(\Hris\OrganisationunitBundle\Entity\Organisationunit $level6Organisationunit = null)
@@ -410,7 +412,7 @@ class OrganisationunitStructure
     /**
      * Get level6Organisationunit
      *
-     * @return Hris\OrganisationunitBundle\Entity\Organisationunit 
+     * @return \Hris\OrganisationunitBundle\Entity\Organisationunit
      */
     public function getLevel6Organisationunit()
     {
@@ -420,7 +422,7 @@ class OrganisationunitStructure
     /**
      * Set level7Organisationunit
      *
-     * @param Hris\OrganisationunitBundle\Entity\Organisationunit $level7Organisationunit
+     * @param \Hris\OrganisationunitBundle\Entity\Organisationunit $level7Organisationunit
      * @return OrganisationunitStructure
      */
     public function setLevel7Organisationunit(\Hris\OrganisationunitBundle\Entity\Organisationunit $level7Organisationunit = null)
@@ -433,7 +435,7 @@ class OrganisationunitStructure
     /**
      * Get level7Organisationunit
      *
-     * @return Hris\OrganisationunitBundle\Entity\Organisationunit 
+     * @return \Hris\OrganisationunitBundle\Entity\Organisationunit
      */
     public function getLevel7Organisationunit()
     {
@@ -443,7 +445,7 @@ class OrganisationunitStructure
     /**
      * Set level8Organisationunit
      *
-     * @param Hris\OrganisationunitBundle\Entity\Organisationunit $level8Organisationunit
+     * @param \Hris\OrganisationunitBundle\Entity\Organisationunit $level8Organisationunit
      * @return OrganisationunitStructure
      */
     public function setLevel8Organisationunit(\Hris\OrganisationunitBundle\Entity\Organisationunit $level8Organisationunit = null)
@@ -456,7 +458,7 @@ class OrganisationunitStructure
     /**
      * Get level8Organisationunit
      *
-     * @return Hris\OrganisationunitBundle\Entity\Organisationunit 
+     * @return \Hris\OrganisationunitBundle\Entity\Organisationunit
      */
     public function getLevel8Organisationunit()
     {
@@ -466,7 +468,7 @@ class OrganisationunitStructure
     /**
      * Set level9Organisationunit
      *
-     * @param Hris\OrganisationunitBundle\Entity\Organisationunit $level9Organisationunit
+     * @param \Hris\OrganisationunitBundle\Entity\Organisationunit $level9Organisationunit
      * @return OrganisationunitStructure
      */
     public function setLevel9Organisationunit(\Hris\OrganisationunitBundle\Entity\Organisationunit $level9Organisationunit = null)
@@ -479,7 +481,7 @@ class OrganisationunitStructure
     /**
      * Get level9Organisationunit
      *
-     * @return Hris\OrganisationunitBundle\Entity\Organisationunit 
+     * @return \Hris\OrganisationunitBundle\Entity\Organisationunit
      */
     public function getLevel9Organisationunit()
     {
@@ -489,7 +491,7 @@ class OrganisationunitStructure
     /**
      * Set level10Organisationunit
      *
-     * @param Hris\OrganisationunitBundle\Entity\Organisationunit $level10Organisationunit
+     * @param \Hris\OrganisationunitBundle\Entity\Organisationunit $level10Organisationunit
      * @return OrganisationunitStructure
      */
     public function setLevel10Organisationunit(\Hris\OrganisationunitBundle\Entity\Organisationunit $level10Organisationunit = null)
@@ -502,7 +504,7 @@ class OrganisationunitStructure
     /**
      * Get level10Organisationunit
      *
-     * @return Hris\OrganisationunitBundle\Entity\Organisationunit 
+     * @return \Hris\OrganisationunitBundle\Entity\Organisationunit
      */
     public function getLevel10Organisationunit()
     {

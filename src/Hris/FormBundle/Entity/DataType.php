@@ -1,7 +1,7 @@
 <?php
 /*
  *
- * Copyright 2012John Francis Mukulu <john.f.mukulu@gmail.com>
+ * Copyright 2012 Human Resource Information System
  *
  * This program is free software; you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -18,6 +18,8 @@
  * Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston,
  * MA 02110-1301, USA.
  *
+ * @since 2012
+ * @author John Francis Mukulu <john.f.mukulu@gmail.com>
  *
  */
 namespace Hris\FormBundle\Entity;
@@ -66,7 +68,7 @@ class DataType
     private $description;
     
     /**
-     * @var Hris\FormBundle\Entity\Field $field
+     * @var \Hris\FormBundle\Entity\Field $field
      *
      * @ORM\OneToMany(targetEntity="Hris\FormBundle\Entity\Field", mappedBy="dataType",cascade={"ALL"})
      * @ORM\OrderBy({"name" = "ASC"})
@@ -225,7 +227,7 @@ class DataType
     /**
      * Add field
      *
-     * @param Hris\FormBundle\Entity\Field $field
+     * @param \Hris\FormBundle\Entity\Field $field
      * @return DataType
      */
     public function addField(\Hris\FormBundle\Entity\Field $field)
@@ -238,7 +240,7 @@ class DataType
     /**
      * Remove field
      *
-     * @param Hris\FormBundle\Entity\Field $field
+     * @param \Hris\FormBundle\Entity\Field $field
      */
     public function removeField(\Hris\FormBundle\Entity\Field $field)
     {
@@ -248,7 +250,7 @@ class DataType
     /**
      * Get field
      *
-     * @return Doctrine\Common\Collections\Collection 
+     * @return \Doctrine\Common\Collections\Collection
      */
     public function getField()
     {

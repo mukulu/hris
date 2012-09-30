@@ -1,7 +1,7 @@
 <?php
 /*
  *
- * Copyright 2012John Francis Mukulu <john.f.mukulu@gmail.com>
+ * Copyright 2012 Human Resource Information System
  *
  * This program is free software; you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -18,6 +18,8 @@
  * Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston,
  * MA 02110-1301, USA.
  *
+ * @since 2012
+ * @author John Francis Mukulu <john.f.mukulu@gmail.com>
  *
  */
 namespace Hris\OrganisationunitBundle\Entity;
@@ -86,7 +88,7 @@ class OrganisationunitLevel
     private $dataentrylevel;
     
     /**
-     * @var Hris\OrganisationunitBundle\Entity\OrganisationunitStructure $organisationunitStructure
+     * @var \Hris\OrganisationunitBundle\Entity\OrganisationunitStructure $organisationunitStructure
      *
      * @ORM\OneToMany(targetEntity="Hris\OrganisationunitBundle\Entity\OrganisationunitStructure", mappedBy="level",cascade={"ALL"})
      */
@@ -303,7 +305,7 @@ class OrganisationunitLevel
     /**
      * Add organisationunitStructure
      *
-     * @param Hris\OrganisationunitBundle\Entity\OrganisationunitStructure $organisationunitStructure
+     * @param \Hris\OrganisationunitBundle\Entity\OrganisationunitStructure $organisationunitStructure
      * @return OrganisationunitLevel
      */
     public function addOrganisationunitStructure(\Hris\OrganisationunitBundle\Entity\OrganisationunitStructure $organisationunitStructure)
@@ -316,7 +318,7 @@ class OrganisationunitLevel
     /**
      * Remove organisationunitStructure
      *
-     * @param Hris\OrganisationunitBundle\Entity\OrganisationunitStructure $organisationunitStructure
+     * @param \Hris\OrganisationunitBundle\Entity\OrganisationunitStructure $organisationunitStructure
      */
     public function removeOrganisationunitStructure(\Hris\OrganisationunitBundle\Entity\OrganisationunitStructure $organisationunitStructure)
     {
@@ -326,7 +328,7 @@ class OrganisationunitLevel
     /**
      * Get organisationunitStructure
      *
-     * @return Doctrine\Common\Collections\Collection 
+     * @return \Doctrine\Common\Collections\Collection
      */
     public function getOrganisationunitStructure()
     {

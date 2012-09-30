@@ -1,7 +1,7 @@
 <?php
 /*
  *
- * Copyright 2012John Francis Mukulu <john.f.mukulu@gmail.com>
+ * Copyright 2012 Human Resource Information System
  *
  * This program is free software; you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -18,6 +18,8 @@
  * Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston,
  * MA 02110-1301, USA.
  *
+ * @since 2012
+ * @author John Francis Mukulu <john.f.mukulu@gmail.com>
  *
  */
 namespace Hris\FormBundle\DataFixtures\ORM;
@@ -74,8 +76,8 @@ class LoadFieldData extends AbstractFixture implements OrderedFixtureInterface
 						'description'=>"Employee's Date of Birth(Compulsory)",
 						'history'=>False),
 		);
-		$field = new Field();
 		foreach($humanResourceFields as $key=>$humanResourceField) {
+			$field = new Field();
 			$field->setDataType( $manager->merge($this->getReference(strtolower($humanResourceField['dataType']). '-datatype')));
 			$field->setInputType($manager->merge($this->getReference(strtolower($humanResourceField['inputType']).'-inputtype')));
 			$field->setName($humanResourceField['name']);
@@ -85,12 +87,14 @@ class LoadFieldData extends AbstractFixture implements OrderedFixtureInterface
 			$field->setCompulsory($humanResourceField['compulsory']);
 			$field->setDatecreated(new \DateTime('now'));
 			$this->addReference(strtolower($humanResourceField['name']).'-field', $field);
+			$manager->persist($field);
 		}
 		$manager->flush();
 	}
 	
 	/**
-	 * @return The order in which this fixture will be loaded
+     * The order in which this fixture will be loaded
+	 * @return integer
 	 */
 	public function getOrder()
 	{

@@ -1,7 +1,7 @@
 <?php
 /*
  *
- * Copyright 2012John Francis Mukulu <john.f.mukulu@gmail.com>
+ * Copyright 2012 Human Resource Information System
  *
  * This program is free software; you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -18,6 +18,8 @@
  * Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston,
  * MA 02110-1301, USA.
  *
+ * @since 2012
+ * @author John Francis Mukulu <john.f.mukulu@gmail.com>
  *
  */
 namespace Hris\FormBundle\Entity;
@@ -111,7 +113,7 @@ class Field
     private $fieldrelation;
     
     /**
-     * @var Hris\FormBundle\Entity\FieldGroup $fieldGroup
+     * @var \Hris\FormBundle\Entity\FieldGroup $fieldGroup
      *
      * @ORM\ManyToMany(targetEntity="Hris\FormBundle\Entity\FieldGroup", mappedBy="field")
      * @ORM\OrderBy({"name" = "ASC"})
@@ -119,7 +121,7 @@ class Field
     private $fieldGroup;
     
     /**
-     * @var Hris\FormBundle\Entity\Field $parentField
+     * @var \Hris\FormBundle\Entity\Field $parentField
      *
      * @ORM\ManyToMany(targetEntity="Hris\FormBundle\Entity\Field", mappedBy="childField")
      * @ORM\OrderBy({"name" = "ASC"})
@@ -127,7 +129,7 @@ class Field
     private $parentField;
     
     /**
-     * @var Hris\FormBundle\Entity\Field $childField
+     * @var \Hris\FormBundle\Entity\Field $childField
      *
      * @ORM\ManyToMany(targetEntity="Hris\FormBundle\Entity\Field", inversedBy="parentField")
      * @ORM\JoinTable(name="hris_field_relation",
@@ -143,7 +145,7 @@ class Field
     private $childField;
     
     /**
-     * @var Hris\FormBundle\Entity\DataType $dataType
+     * @var \Hris\FormBundle\Entity\DataType $dataType
      *
      * @ORM\ManyToOne(targetEntity="Hris\FormBundle\Entity\DataType",inversedBy="field")
      * @ORM\JoinColumns({
@@ -153,7 +155,7 @@ class Field
     private $dataType;
     
     /**
-     * @var Hris\FormBundle\Entity\InputType $inputType
+     * @var \Hris\FormBundle\Entity\InputType $inputType
      *
      * @ORM\ManyToOne(targetEntity="Hris\FormBundle\Entity\InputType",inversedBy="field")
      * @ORM\JoinColumns({
@@ -163,7 +165,7 @@ class Field
     private $inputType;
     
     /**
-     *	@var Hris\FormBundle\Entity\FieldOption $fieldOption
+     *	@var \Hris\FormBundle\Entity\FieldOption $fieldOption
      *
      * @ORM\OneToMany(targetEntity="Hris\FormBundle\Entity\FieldOption", mappedBy="field",cascade={"ALL"})
      * @ORM\OrderBy({"value" = "ASC"})
@@ -171,7 +173,7 @@ class Field
     private $fieldOption;
     
     /**
-     *	@var Hris\RecordsBundle\Entity\RecordValue $recordValue
+     *	@var \Hris\RecordsBundle\Entity\RecordValue $recordValue
      *
      * @ORM\OneToMany(targetEntity="Hris\RecordsBundle\Entity\RecordValue", mappedBy="field",cascade={"ALL"})
      * @ORM\OrderBy({"value" = "ASC"})
@@ -179,7 +181,7 @@ class Field
     private $recordValue;
     
     /**
-     *	@var Hris\RecordsBundle\Entity\RecordStats $recordStats
+     *	@var \Hris\RecordsBundle\Entity\RecordStats $recordStats
      *
      * @ORM\OneToMany(targetEntity="Hris\RecordsBundle\Entity\RecordStats", mappedBy="field",cascade={"ALL"})
      * @ORM\OrderBy({"count" = "ASC"})
@@ -187,7 +189,7 @@ class Field
     private $recordStats;
     
     /**
-     * @var Hris\FormBundle\Entity\FormVisibleFields $formVisibleFields
+     * @var \Hris\FormBundle\Entity\FormVisibleFields $formVisibleFields
      *
      * @ORM\OneToMany(targetEntity="Hris\FormBundle\Entity\FormVisibleFields", mappedBy="field",cascade={"ALL"})
      * @ORM\OrderBy({"sort" = "ASC"})
@@ -195,7 +197,7 @@ class Field
     private $formVisibleFields;
     
     /**
-     * @var Hris\FormBundle\Entity\FieldOptionMerge $fieldOptionMerge
+     * @var \Hris\FormBundle\Entity\FieldOptionMerge $fieldOptionMerge
      *
      * @ORM\OneToMany(targetEntity="Hris\FormBundle\Entity\FieldOptionMerge", mappedBy="removedOptionField",cascade={"ALL"})
      * @ORM\OrderBy({"removedoptionvalue" = "ASC"})
@@ -203,7 +205,7 @@ class Field
     private $fieldOptionMerge;
     
     /**
-     * @var Hris\FormBundle\Entity\FormFieldMember $formFieldMember
+     * @var \Hris\FormBundle\Entity\FormFieldMember $formFieldMember
      *
      * @ORM\OneToMany(targetEntity="Hris\FormBundle\Entity\FormFieldMember", mappedBy="field", cascade={"ALL"})
      * @ORM\OrderBy({"sort" = "ASC"})
@@ -211,7 +213,7 @@ class Field
     private $formFieldMember;
     
     /**
-     * @var Hris\FormBundle\Entity\FormSectionFieldMember $formSectionFieldMember
+     * @var \Hris\FormBundle\Entity\FormSectionFieldMember $formSectionFieldMember
      *
      * @ORM\OneToMany(targetEntity="Hris\FormBundle\Entity\FormSectionFieldMember", mappedBy="field",cascade={"ALL"})
      * @ORM\OrderBy({"sort" = "ASC"})
@@ -219,7 +221,7 @@ class Field
     private $formSectionFieldMember;
     
     /**
-     * @var Hris\FormBundle\Entity\Form $uniqueRecordForms
+     * @var \Hris\FormBundle\Entity\Form $uniqueRecordForms
      * Forms in which this field together(or not) with others makes a record unique in the form
      *
      * @ORM\ManyToMany(targetEntity="Hris\FormBundle\Entity\Form", mappedBy="uniqueRecordFields")
@@ -228,7 +230,7 @@ class Field
     private $uniqueRecordForms;
     
     /**
-     * @var Hris\FormBundle\Entity\ResourceTableFieldMember $resourceTableFieldMember
+     * @var \Hris\FormBundle\Entity\ResourceTableFieldMember $resourceTableFieldMember
      *
      * @ORM\OneToMany(targetEntity="Hris\FormBundle\Entity\ResourceTableFieldMember", mappedBy="field",cascade={"ALL"})
      * @ORM\OrderBy({"sort" = "ASC"})
@@ -424,7 +426,7 @@ class Field
     /**
      * Add fieldGroup
      *
-     * @param Hris\FormBundle\Entity\FieldGroup $fieldGroup
+     * @param \Hris\FormBundle\Entity\FieldGroup $fieldGroup
      * @return Field
      */
     public function addFieldGroup(\Hris\FormBundle\Entity\FieldGroup $fieldGroup)
@@ -437,7 +439,7 @@ class Field
     /**
      * Remove fieldGroup
      *
-     * @param Hris\FormBundle\Entity\FieldGroup $fieldGroup
+     * @param \Hris\FormBundle\Entity\FieldGroup $fieldGroup
      */
     public function removeFieldGroup(\Hris\FormBundle\Entity\FieldGroup $fieldGroup)
     {
@@ -447,7 +449,7 @@ class Field
     /**
      * Get fieldGroup
      *
-     * @return Doctrine\Common\Collections\Collection 
+     * @return \Doctrine\Common\Collections\Collection
      */
     public function getFieldGroup()
     {
@@ -457,7 +459,7 @@ class Field
     /**
      * Add parentField
      *
-     * @param Hris\FormBundle\Entity\Field $parentField
+     * @param \Hris\FormBundle\Entity\Field $parentField
      * @return Field
      */
     public function addParentField(\Hris\FormBundle\Entity\Field $parentField)
@@ -470,7 +472,7 @@ class Field
     /**
      * Remove parentField
      *
-     * @param Hris\FormBundle\Entity\Field $parentField
+     * @param \Hris\FormBundle\Entity\Field $parentField
      */
     public function removeParentField(\Hris\FormBundle\Entity\Field $parentField)
     {
@@ -480,7 +482,7 @@ class Field
     /**
      * Get parentField
      *
-     * @return Doctrine\Common\Collections\Collection 
+     * @return \Doctrine\Common\Collections\Collection
      */
     public function getParentField()
     {
@@ -490,7 +492,7 @@ class Field
     /**
      * Add childField
      *
-     * @param Hris\FormBundle\Entity\Field $childField
+     * @param \Hris\FormBundle\Entity\Field $childField
      * @return Field
      */
     public function addChildField(\Hris\FormBundle\Entity\Field $childField)
@@ -503,7 +505,7 @@ class Field
     /**
      * Remove childField
      *
-     * @param Hris\FormBundle\Entity\Field $childField
+     * @param \Hris\FormBundle\Entity\Field $childField
      */
     public function removeChildField(\Hris\FormBundle\Entity\Field $childField)
     {
@@ -513,7 +515,7 @@ class Field
     /**
      * Get childField
      *
-     * @return Doctrine\Common\Collections\Collection 
+     * @return \Doctrine\Common\Collections\Collection
      */
     public function getChildField()
     {
@@ -523,7 +525,7 @@ class Field
     /**
      * Set dataType
      *
-     * @param Hris\FormBundle\Entity\DataType $dataType
+     * @param \Hris\FormBundle\Entity\DataType $dataType
      * @return Field
      */
     public function setDataType(\Hris\FormBundle\Entity\DataType $dataType = null)
@@ -536,7 +538,7 @@ class Field
     /**
      * Get dataType
      *
-     * @return Hris\FormBundle\Entity\DataType 
+     * @return \Hris\FormBundle\Entity\DataType
      */
     public function getDataType()
     {
@@ -546,7 +548,7 @@ class Field
     /**
      * Set inputType
      *
-     * @param Hris\FormBundle\Entity\InputType $inputType
+     * @param \Hris\FormBundle\Entity\InputType $inputType
      * @return Field
      */
     public function setInputType(\Hris\FormBundle\Entity\InputType $inputType = null)
@@ -559,7 +561,7 @@ class Field
     /**
      * Get inputType
      *
-     * @return Hris\FormBundle\Entity\InputType 
+     * @return \Hris\FormBundle\Entity\InputType
      */
     public function getInputType()
     {
@@ -569,7 +571,7 @@ class Field
     /**
      * Add fieldOption
      *
-     * @param Hris\FormBundle\Entity\FieldOption $fieldOption
+     * @param \Hris\FormBundle\Entity\FieldOption $fieldOption
      * @return Field
      */
     public function addFieldOption(\Hris\FormBundle\Entity\FieldOption $fieldOption)
@@ -582,7 +584,7 @@ class Field
     /**
      * Remove fieldOption
      *
-     * @param Hris\FormBundle\Entity\FieldOption $fieldOption
+     * @param \Hris\FormBundle\Entity\FieldOption $fieldOption
      */
     public function removeFieldOption(\Hris\FormBundle\Entity\FieldOption $fieldOption)
     {
@@ -592,7 +594,7 @@ class Field
     /**
      * Get fieldOption
      *
-     * @return Doctrine\Common\Collections\Collection 
+     * @return \Doctrine\Common\Collections\Collection
      */
     public function getFieldOption()
     {
@@ -671,7 +673,7 @@ class Field
     /**
      * Add fieldOptionMerge
      *
-     * @param Hris\FormBundle\Entity\FieldOptionMerge $fieldOptionMerge
+     * @param \Hris\FormBundle\Entity\FieldOptionMerge $fieldOptionMerge
      * @return Field
      */
     public function addFieldOptionMerge(\Hris\FormBundle\Entity\FieldOptionMerge $fieldOptionMerge)
@@ -684,7 +686,7 @@ class Field
     /**
      * Remove fieldOptionMerge
      *
-     * @param Hris\FormBundle\Entity\FieldOptionMerge $fieldOptionMerge
+     * @param \Hris\FormBundle\Entity\FieldOptionMerge $fieldOptionMerge
      */
     public function removeFieldOptionMerge(\Hris\FormBundle\Entity\FieldOptionMerge $fieldOptionMerge)
     {
@@ -694,7 +696,7 @@ class Field
     /**
      * Get fieldOptionMerge
      *
-     * @return Doctrine\Common\Collections\Collection 
+     * @return \Doctrine\Common\Collections\Collection
      */
     public function getFieldOptionMerge()
     {
@@ -704,7 +706,7 @@ class Field
     /**
      * Add formFieldMember
      *
-     * @param Hris\FormBundle\Entity\FormFieldMember $formFieldMember
+     * @param \Hris\FormBundle\Entity\FormFieldMember $formFieldMember
      * @return Field
      */
     public function addFormFieldMember(\Hris\FormBundle\Entity\FormFieldMember $formFieldMember)
@@ -717,7 +719,7 @@ class Field
     /**
      * Remove formFieldMember
      *
-     * @param Hris\FormBundle\Entity\FormFieldMember $formFieldMember
+     * @param \Hris\FormBundle\Entity\FormFieldMember $formFieldMember
      */
     public function removeFormFieldMember(\Hris\FormBundle\Entity\FormFieldMember $formFieldMember)
     {
@@ -727,7 +729,7 @@ class Field
     /**
      * Get formFieldMember
      *
-     * @return Doctrine\Common\Collections\Collection 
+     * @return \Doctrine\Common\Collections\Collection
      */
     public function getFormFieldMember()
     {
@@ -738,7 +740,7 @@ class Field
     /**
      * Add formSectionFieldMember
      *
-     * @param Hris\FormBundle\Entity\FormSectionFieldMember $formSectionFieldMember
+     * @param \Hris\FormBundle\Entity\FormSectionFieldMember $formSectionFieldMember
      * @return Field
      */
     public function addFormSectionFieldMember(\Hris\FormBundle\Entity\FormSectionFieldMember $formSectionFieldMember)
@@ -751,7 +753,7 @@ class Field
     /**
      * Remove formSectionFieldMember
      *
-     * @param Hris\FormBundle\Entity\FormSectionFieldMember $formSectionFieldMember
+     * @param \Hris\FormBundle\Entity\FormSectionFieldMember $formSectionFieldMember
      */
     public function removeFormSectionFieldMember(\Hris\FormBundle\Entity\FormSectionFieldMember $formSectionFieldMember)
     {
@@ -761,7 +763,7 @@ class Field
     /**
      * Get formSectionFieldMember
      *
-     * @return Doctrine\Common\Collections\Collection 
+     * @return \Doctrine\Common\Collections\Collection
      */
     public function getFormSectionFieldMember()
     {
@@ -771,7 +773,7 @@ class Field
     /**
      * Add resourceTableFieldMember
      *
-     * @param Hris\FormBundle\Entity\ResourceTableFieldMember $resourceTableFieldMember
+     * @param \Hris\FormBundle\Entity\ResourceTableFieldMember $resourceTableFieldMember
      * @return Field
      */
     public function addResourceTableFieldMember(\Hris\FormBundle\Entity\ResourceTableFieldMember $resourceTableFieldMember)
@@ -784,7 +786,7 @@ class Field
     /**
      * Remove resourceTableFieldMember
      *
-     * @param Hris\FormBundle\Entity\ResourceTableFieldMember $resourceTableFieldMember
+     * @param \Hris\FormBundle\Entity\ResourceTableFieldMember $resourceTableFieldMember
      */
     public function removeResourceTableFieldMember(\Hris\FormBundle\Entity\ResourceTableFieldMember $resourceTableFieldMember)
     {
@@ -794,7 +796,7 @@ class Field
     /**
      * Get resourceTableFieldMember
      *
-     * @return Doctrine\Common\Collections\Collection 
+     * @return \Doctrine\Common\Collections\Collection
      */
     public function getResourceTableFieldMember()
     {
@@ -804,7 +806,7 @@ class Field
     /**
      * Add uniqueRecordForms
      *
-     * @param Hris\FormBundle\Entity\Form $uniqueRecordForms
+     * @param \Hris\FormBundle\Entity\Form $uniqueRecordForms
      * @return Field
      */
     public function addUniqueRecordForm(\Hris\FormBundle\Entity\Form $uniqueRecordForms)
@@ -817,7 +819,7 @@ class Field
     /**
      * Remove uniqueRecordForms
      *
-     * @param Hris\FormBundle\Entity\Form $uniqueRecordForms
+     * @param \Hris\FormBundle\Entity\Form $uniqueRecordForms
      */
     public function removeUniqueRecordForm(\Hris\FormBundle\Entity\Form $uniqueRecordForms)
     {
@@ -827,7 +829,7 @@ class Field
     /**
      * Get uniqueRecordForms
      *
-     * @return Doctrine\Common\Collections\Collection 
+     * @return \Doctrine\Common\Collections\Collection
      */
     public function getUniqueRecordForms()
     {
@@ -855,7 +857,7 @@ class Field
     /**
      * Add formVisibleFields
      *
-     * @param Hris\FormBundle\Entity\FormVisibleFields $formVisibleFields
+     * @param \Hris\FormBundle\Entity\FormVisibleFields $formVisibleFields
      * @return Field
      */
     public function addFormVisibleField(\Hris\FormBundle\Entity\FormVisibleFields $formVisibleFields)
@@ -868,7 +870,7 @@ class Field
     /**
      * Remove formVisibleFields
      *
-     * @param Hris\FormBundle\Entity\FormVisibleFields $formVisibleFields
+     * @param \Hris\FormBundle\Entity\FormVisibleFields $formVisibleFields
      */
     public function removeFormVisibleField(\Hris\FormBundle\Entity\FormVisibleFields $formVisibleFields)
     {
@@ -878,7 +880,7 @@ class Field
     /**
      * Get formVisibleFields
      *
-     * @return Doctrine\Common\Collections\Collection 
+     * @return \Doctrine\Common\Collections\Collection
      */
     public function getFormVisibleFields()
     {
@@ -888,7 +890,7 @@ class Field
     /**
      * Add recordValue
      *
-     * @param Hris\RecordsBundle\Entity\RecordValue $recordValue
+     * @param \Hris\RecordsBundle\Entity\RecordValue $recordValue
      * @return Field
      */
     public function addRecordValue(\Hris\RecordsBundle\Entity\RecordValue $recordValue)
@@ -901,7 +903,7 @@ class Field
     /**
      * Remove recordValue
      *
-     * @param Hris\RecordsBundle\Entity\RecordValue $recordValue
+     * @param \Hris\RecordsBundle\Entity\RecordValue $recordValue
      */
     public function removeRecordValue(\Hris\RecordsBundle\Entity\RecordValue $recordValue)
     {
@@ -911,7 +913,7 @@ class Field
     /**
      * Get recordValue
      *
-     * @return Doctrine\Common\Collections\Collection 
+     * @return \Doctrine\Common\Collections\Collection
      */
     public function getRecordValue()
     {
@@ -921,7 +923,7 @@ class Field
     /**
      * Add recordStats
      *
-     * @param Hris\RecordsBundle\Entity\RecordStats $recordStats
+     * @param \Hris\RecordsBundle\Entity\RecordStats $recordStats
      * @return Field
      */
     public function addRecordStat(\Hris\RecordsBundle\Entity\RecordStats $recordStats)
@@ -934,7 +936,7 @@ class Field
     /**
      * Remove recordStats
      *
-     * @param Hris\RecordsBundle\Entity\RecordStats $recordStats
+     * @param \Hris\RecordsBundle\Entity\RecordStats $recordStats
      */
     public function removeRecordStat(\Hris\RecordsBundle\Entity\RecordStats $recordStats)
     {
@@ -944,7 +946,7 @@ class Field
     /**
      * Get recordStats
      *
-     * @return Doctrine\Common\Collections\Collection 
+     * @return \Doctrine\Common\Collections\Collection
      */
     public function getRecordStats()
     {

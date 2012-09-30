@@ -1,7 +1,7 @@
 <?php
 /*
  *
- * Copyright 2012John Francis Mukulu <john.f.mukulu@gmail.com>
+ * Copyright 2012 Human Resource Information System
  *
  * This program is free software; you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -18,6 +18,8 @@
  * Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston,
  * MA 02110-1301, USA.
  *
+ * @since 2012
+ * @author John Francis Mukulu <john.f.mukulu@gmail.com>
  *
  */
 namespace Hris\FormBundle\Entity;
@@ -66,7 +68,7 @@ class FieldGroup
     private $description;
     
     /**
-     * @var Hris\FormBundle\Entity\Field $field
+     * @var \Hris\FormBundle\Entity\Field $field
      *
      * @ORM\ManyToMany(targetEntity="Hris\FormBundle\Entity\Field", inversedBy="fieldGroup")
      * @ORM\JoinTable(name="hris_fieldgroup_members",
@@ -82,7 +84,7 @@ class FieldGroup
     private $field;
     
     /**
-     * @var Hris\FormBundle\Entity\FieldGroupset $fieldGroupset
+     * @var \Hris\FormBundle\Entity\FieldGroupset $fieldGroupset
      *
      * @ORM\ManyToMany(targetEntity="Hris\FormBundle\Entity\FieldGroupset", mappedBy="fieldGroup")
      * @ORM\OrderBy({"name" = "ASC"})
@@ -232,7 +234,7 @@ class FieldGroup
     /**
      * Add field
      *
-     * @param Hris\FormBundle\Entity\Field $field
+     * @param \Hris\FormBundle\Entity\Field $field
      * @return FieldGroup
      */
     public function addField(\Hris\FormBundle\Entity\Field $field)
@@ -245,7 +247,7 @@ class FieldGroup
     /**
      * Remove field
      *
-     * @param Hris\FormBundle\Entity\Field $field
+     * @param \Hris\FormBundle\Entity\Field $field
      */
     public function removeField(\Hris\FormBundle\Entity\Field $field)
     {
@@ -255,7 +257,7 @@ class FieldGroup
     /**
      * Get field
      *
-     * @return Doctrine\Common\Collections\Collection 
+     * @return \Doctrine\Common\Collections\Collection
      */
     public function getField()
     {
@@ -274,7 +276,7 @@ class FieldGroup
     /**
      * Add fieldGroupset
      *
-     * @param Hris\FormBundle\Entity\FieldGroupset $fieldGroupset
+     * @param \Hris\FormBundle\Entity\FieldGroupset $fieldGroupset
      * @return FieldGroup
      */
     public function addFieldGroupset(\Hris\FormBundle\Entity\FieldGroupset $fieldGroupset)
@@ -287,7 +289,7 @@ class FieldGroup
     /**
      * Remove fieldGroupset
      *
-     * @param Hris\FormBundle\Entity\FieldGroupset $fieldGroupset
+     * @param \Hris\FormBundle\Entity\FieldGroupset $fieldGroupset
      */
     public function removeFieldGroupset(\Hris\FormBundle\Entity\FieldGroupset $fieldGroupset)
     {
@@ -297,7 +299,7 @@ class FieldGroup
     /**
      * Get fieldGroupset
      *
-     * @return Doctrine\Common\Collections\Collection 
+     * @return \Doctrine\Common\Collections\Collection
      */
     public function getFieldGroupset()
     {

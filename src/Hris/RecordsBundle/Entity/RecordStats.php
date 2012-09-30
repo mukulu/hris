@@ -1,7 +1,7 @@
 <?php
 /*
  *
- * Copyright 2012John Francis Mukulu <john.f.mukulu@gmail.com>
+ * Copyright 2012 Human Resource Information System
  *
  * This program is free software; you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -18,6 +18,8 @@
  * Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston,
  * MA 02110-1301, USA.
  *
+ * @since 2012
+ * @author John Francis Mukulu <john.f.mukulu@gmail.com>
  *
  */
 namespace Hris\RecordsBundle\Entity;
@@ -53,7 +55,7 @@ class RecordStats
     private $uid;
     
     /**
-     * @var Hris\OrganisationunitBundle\Entity\Organisationunit $organisationunit
+     * @var \Hris\OrganisationunitBundle\Entity\Organisationunit $organisationunit
      *
      * @ORM\ManyToOne(targetEntity="Hris\OrganisationunitBundle\Entity\Organisationunit")
      * @ORM\JoinColumns({
@@ -63,7 +65,7 @@ class RecordStats
     private $organisationunit;
     
     /**
-     * @var Hris\FormBundle\Entity\Form $form
+     * @var \Hris\FormBundle\Entity\Form $form
      *
      * @ORM\ManyToOne(targetEntity="Hris\FormBundle\Entity\Form",inversedBy="record")
      * @ORM\JoinColumns({
@@ -87,7 +89,7 @@ class RecordStats
     private $correct;
     
     /**
-     * @var Hris\FormBundle\Entity\Field $field
+     * @var \Hris\FormBundle\Entity\Field $field
      *
      * @ORM\ManyToOne(targetEntity="Hris\FormBundle\Entity\Field", inversedBy="recordStats")
      * @ORM\JoinColumns({
@@ -264,7 +266,7 @@ class RecordStats
     /**
      * Set organisationunit
      *
-     * @param Hris\OrganisationunitBundle\Entity\Organisationunit $organisationunit
+     * @param \Hris\OrganisationunitBundle\Entity\Organisationunit $organisationunit
      * @return Record
      */
     public function setOrganisationunit(\Hris\OrganisationunitBundle\Entity\Organisationunit $organisationunit = null)
@@ -277,7 +279,7 @@ class RecordStats
     /**
      * Get organisationunit
      *
-     * @return Hris\OrganisationunitBundle\Entity\Organisationunit 
+     * @return \Hris\OrganisationunitBundle\Entity\Organisationunit
      */
     public function getOrganisationunit()
     {
@@ -287,7 +289,7 @@ class RecordStats
     /**
      * Set form
      *
-     * @param Hris\FormBundle\Entity\Form $form
+     * @param \Hris\FormBundle\Entity\Form $form
      * @return Record
      */
     public function setForm(\Hris\FormBundle\Entity\Form $form)
@@ -300,7 +302,7 @@ class RecordStats
     /**
      * Get form
      *
-     * @return Hris\FormBundle\Entity\Form 
+     * @return \Hris\FormBundle\Entity\Form
      */
     public function getForm()
     {
@@ -382,7 +384,7 @@ class RecordStats
     /**
      * Set field
      *
-     * @param Hris\FormBundle\Entity\Field $field
+     * @param \Hris\FormBundle\Entity\Field $field
      * @return RecordStats
      */
     public function setField(\Hris\FormBundle\Entity\Field $field = null)
@@ -395,7 +397,7 @@ class RecordStats
     /**
      * Get field
      *
-     * @return Hris\FormBundle\Entity\Field 
+     * @return \Hris\FormBundle\Entity\Field
      */
     public function getField()
     {

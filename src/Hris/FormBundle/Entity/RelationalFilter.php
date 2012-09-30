@@ -1,7 +1,7 @@
 <?php
 /*
  *
- * Copyright 2012John Francis Mukulu <john.f.mukulu@gmail.com>
+ * Copyright 2012 Human Resource Information System
  *
  * This program is free software; you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -18,6 +18,8 @@
  * Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston,
  * MA 02110-1301, USA.
  *
+ * @since 2012
+ * @author John Francis Mukulu <john.f.mukulu@gmail.com>
  *
  */
 namespace Hris\FormBundle\Entity;
@@ -66,7 +68,7 @@ class RelationalFilter
     private $excludeFieldOptions;
     
     /**
-     * @var Hris\FormBundle\Entity\FieldOption $fieldOption
+     * @var \Hris\FormBundle\Entity\FieldOption $fieldOption
      *
      * @ORM\ManyToMany(targetEntity="Hris\FormBundle\Entity\FieldOption", inversedBy="relationalFilter")
      * @ORM\JoinTable(name="hris_relationalfilter_member",
@@ -82,7 +84,7 @@ class RelationalFilter
     private $fieldOption;
     
     /**
-     * @var Hris\FormBundle\Entity\Field $field
+     * @var \Hris\FormBundle\Entity\Field $field
      *
      * @ORM\ManyToOne(targetEntity="Hris\FormBundle\Entity\Field")
      * @ORM\JoinColumns({
@@ -92,7 +94,7 @@ class RelationalFilter
     private $field;
     
     /**
-     * @var Hris\FormBundle\Entity\FriendlyReport $friendlyReport
+     * @var \Hris\FormBundle\Entity\FriendlyReport $friendlyReport
      *
      * @ORM\ManyToMany(targetEntity="Hris\FormBundle\Entity\FriendlyReport", mappedBy="relationalFilter")
      * @ORM\OrderBy({"name" = "ASC"})
@@ -242,7 +244,7 @@ class RelationalFilter
     /**
      * Add fieldOption
      *
-     * @param Hris\FormBundle\Entity\FieldOption $fieldOption
+     * @param \Hris\FormBundle\Entity\FieldOption $fieldOption
      * @return RelationalFilter
      */
     public function addFieldOption(\Hris\FormBundle\Entity\FieldOption $fieldOption)
@@ -255,7 +257,7 @@ class RelationalFilter
     /**
      * Remove fieldOption
      *
-     * @param Hris\FormBundle\Entity\FieldOption $fieldOption
+     * @param \Hris\FormBundle\Entity\FieldOption $fieldOption
      */
     public function removeFieldOption(\Hris\FormBundle\Entity\FieldOption $fieldOption)
     {
@@ -265,7 +267,7 @@ class RelationalFilter
     /**
      * Get fieldOption
      *
-     * @return Doctrine\Common\Collections\Collection 
+     * @return \Doctrine\Common\Collections\Collection
      */
     public function getFieldOption()
     {
@@ -275,7 +277,7 @@ class RelationalFilter
     /**
      * Set field
      *
-     * @param Hris\FormBundle\Entity\Field $field
+     * @param \Hris\FormBundle\Entity\Field $field
      * @return RelationalFilter
      */
     public function setField(\Hris\FormBundle\Entity\Field $field = null)
@@ -288,7 +290,7 @@ class RelationalFilter
     /**
      * Get field
      *
-     * @return Hris\FormBundle\Entity\Field 
+     * @return \Hris\FormBundle\Entity\Field
      */
     public function getField()
     {
@@ -298,7 +300,7 @@ class RelationalFilter
     /**
      * Add friendlyReport
      *
-     * @param Hris\FormBundle\Entity\FriendlyReport $friendlyReport
+     * @param \Hris\FormBundle\Entity\FriendlyReport $friendlyReport
      * @return RelationalFilter
      */
     public function addFriendlyReport(\Hris\FormBundle\Entity\FriendlyReport $friendlyReport)
@@ -311,7 +313,7 @@ class RelationalFilter
     /**
      * Remove friendlyReport
      *
-     * @param Hris\FormBundle\Entity\FriendlyReport $friendlyReport
+     * @param \Hris\FormBundle\Entity\FriendlyReport $friendlyReport
      */
     public function removeFriendlyReport(\Hris\FormBundle\Entity\FriendlyReport $friendlyReport)
     {
@@ -321,7 +323,7 @@ class RelationalFilter
     /**
      * Get friendlyReport
      *
-     * @return Doctrine\Common\Collections\Collection 
+     * @return \Doctrine\Common\Collections\Collection
      */
     public function getFriendlyReport()
     {

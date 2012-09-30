@@ -1,7 +1,7 @@
 <?php
 /*
  *
- * Copyright 2012John Francis Mukulu <john.f.mukulu@gmail.com>
+ * Copyright 2012 Human Resource Information System
  *
  * This program is free software; you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -18,6 +18,8 @@
  * Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston,
  * MA 02110-1301, USA.
  *
+ * @since 2012
+ * @author John Francis Mukulu <john.f.mukulu@gmail.com>
  *
  */
 namespace Hris\FormBundle\Entity;
@@ -36,7 +38,7 @@ use Hris\FormBundle\Entity\FormSection;
 class FormSectionFieldMember
 {
     /**
-     * @var Hris\FormBundle\Entity\FormSection $formSection
+     * @var \Hris\FormBundle\Entity\FormSection $formSection
      *
      * @ORM\ManyToOne(targetEntity="Hris\FormBundle\Entity\FormSection",inversedBy="formSectionFieldMember")
      * @ORM\JoinColumns({
@@ -48,7 +50,7 @@ class FormSectionFieldMember
     private $formSection;
     
     /**
-     * @var Hris\FormBundle\Entity\Field $field
+     * @var \Hris\FormBundle\Entity\Field $field
      *
      * @ORM\ManyToOne(targetEntity="Hris\FormBundle\Entity\Field",inversedBy="formSectionFieldMember")
      * @ORM\JoinColumns({
@@ -68,7 +70,7 @@ class FormSectionFieldMember
     
     public function __construct($formSection=NULL,$field=NULL,$sort=NULL)
     {
-    	if(!empty($formSection)) $this->formSection = $form;
+    	if(!empty($formSection)) $this->formSection = $formSection;
     	if(!empty($field)) $this->field = $field;
     	if(!empty($sort)) $this->sort = $sort;
     }
@@ -99,7 +101,7 @@ class FormSectionFieldMember
     /**
      * Set formSection
      *
-     * @param Hris\FormBundle\Entity\FormSection $formSection
+     * @param \Hris\FormBundle\Entity\FormSection $formSection
      * @return FormSectionFieldMember
      */
     public function setFormSection(\Hris\FormBundle\Entity\FormSection $formSection)
@@ -112,7 +114,7 @@ class FormSectionFieldMember
     /**
      * Get formSection
      *
-     * @return Hris\FormBundle\Entity\FormSection 
+     * @return \Hris\FormBundle\Entity\FormSection
      */
     public function getFormSection()
     {
@@ -122,7 +124,7 @@ class FormSectionFieldMember
     /**
      * Set field
      *
-     * @param Hris\FormBundle\Entity\Field $field
+     * @param \Hris\FormBundle\Entity\Field $field
      * @return FormSectionFieldMember
      */
     public function setField(\Hris\FormBundle\Entity\Field $field)
@@ -135,7 +137,7 @@ class FormSectionFieldMember
     /**
      * Get field
      *
-     * @return Hris\FormBundle\Entity\Field 
+     * @return \Hris\FormBundle\Entity\Field
      */
     public function getField()
     {

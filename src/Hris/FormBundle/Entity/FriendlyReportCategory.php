@@ -1,7 +1,7 @@
 <?php
 /*
  *
- * Copyright 2012John Francis Mukulu <john.f.mukulu@gmail.com>
+ * Copyright 2012 Human Resource Information System
  *
  * This program is free software; you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -18,6 +18,8 @@
  * Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston,
  * MA 02110-1301, USA.
  *
+ * @since 2012
+ * @author John Francis Mukulu <john.f.mukulu@gmail.com>
  *
  */
 namespace Hris\FormBundle\Entity;
@@ -36,7 +38,7 @@ use Hris\FormBundle\Entity\FriendlyReport;
 class FriendlyReportCategory
 {
     /**
-     * @var Hris\FormBundle\Entity\FriendlyReport $friendlyReport
+     * @var \Hris\FormBundle\Entity\FriendlyReport $friendlyReport
      *
      * @ORM\ManyToOne(targetEntity="Hris\FormBundle\Entity\FriendlyReport",inversedBy="friendlyReportCategory")
      * @ORM\JoinColumns({
@@ -48,7 +50,7 @@ class FriendlyReportCategory
     private $friendlyReport;
     
     /**
-     * @var Hris\FormBundle\Entity\FieldOptionGroup $fieldOptionGroup
+     * @var \Hris\FormBundle\Entity\FieldOptionGroup $fieldOptionGroup
      *
      * @ORM\ManyToOne(targetEntity="Hris\FormBundle\Entity\FieldOptionGroup",inversedBy="friendlyReportCategory")
      * @ORM\JoinColumns({
@@ -65,17 +67,6 @@ class FriendlyReportCategory
      * @ORM\Column(name="sort", type="integer")
      */
     private $sort;
-
-
-    /**
-     * Get id
-     *
-     * @return integer 
-     */
-    public function getId()
-    {
-        return $this->id;
-    }
 
     /**
      * Set sort
@@ -103,7 +94,7 @@ class FriendlyReportCategory
     /**
      * Set friendlyReport
      *
-     * @param Hris\FormBundle\Entity\FriendlyReport $friendlyReport
+     * @param \Hris\FormBundle\Entity\FriendlyReport $friendlyReport
      * @return FriendlyReportCategory
      */
     public function setFriendlyReport(\Hris\FormBundle\Entity\FriendlyReport $friendlyReport)
@@ -116,7 +107,7 @@ class FriendlyReportCategory
     /**
      * Get friendlyReport
      *
-     * @return Hris\FormBundle\Entity\FriendlyReport 
+     * @return \Hris\FormBundle\Entity\FriendlyReport
      */
     public function getFriendlyReport()
     {
@@ -126,7 +117,7 @@ class FriendlyReportCategory
     /**
      * Set fieldOptionGroup
      *
-     * @param Hris\FormBundle\Entity\FieldOptionGroup $fieldOptionGroup
+     * @param \Hris\FormBundle\Entity\FieldOptionGroup $fieldOptionGroup
      * @return FriendlyReportCategory
      */
     public function setFieldOptionGroup(\Hris\FormBundle\Entity\FieldOptionGroup $fieldOptionGroup)
@@ -139,7 +130,7 @@ class FriendlyReportCategory
     /**
      * Get fieldOptionGroup
      *
-     * @return Hris\FormBundle\Entity\FieldOptionGroup 
+     * @return \Hris\FormBundle\Entity\FieldOptionGroup
      */
     public function getFieldOptionGroup()
     {

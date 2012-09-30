@@ -1,25 +1,27 @@
 <?php
 /*
  *
-* Copyright 2012John Francis Mukulu <john.f.mukulu@gmail.com>
-*
-* This program is free software; you can redistribute it and/or modify
-* it under the terms of the GNU General Public License as published by
-* the Free Software Foundation; either version 2 of the License, or
-* (at your option) any later version.
-*
-* This program is distributed in the hope that it will be useful,
-* but WITHOUT ANY WARRANTY; without even the implied warranty of
-* MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
-* GNU General Public License for more details.
-*
-* You should have received a copy of the GNU General Public License
-* along with this program; if not, write to the Free Software
-* Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston,
-* MA 02110-1301, USA.
-*
-*
-*/
+ * Copyright 2012 Human Resource Information System
+ *
+ * This program is free software; you can redistribute it and/or modify
+ * it under the terms of the GNU General Public License as published by
+ * the Free Software Foundation; either version 2 of the License, or
+ * (at your option) any later version.
+ *
+ * This program is distributed in the hope that it will be useful,
+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ * GNU General Public License for more details.
+ *
+ * You should have received a copy of the GNU General Public License
+ * along with this program; if not, write to the Free Software
+ * Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston,
+ * MA 02110-1301, USA.
+ *
+ * @since 2012
+ * @author John Francis Mukulu <john.f.mukulu@gmail.com>
+ *
+ */
 namespace Hris\FormBundle\Entity;
 
 use Doctrine\ORM\Mapping as ORM;
@@ -75,7 +77,7 @@ class FriendlyReport
     private $sort;
     
     /**
-     * @var Hris\FormBundle\Entity\FieldOptionGroup $serie
+     * @var \Hris\FormBundle\Entity\FieldOptionGroup $serie
      *
      * @ORM\ManyToOne(targetEntity="Hris\FormBundle\Entity\FieldOptionGroup")
      * @ORM\JoinColumns({
@@ -85,7 +87,7 @@ class FriendlyReport
     private $serie;
     
     /**
-     * @var Hris\FormBundle\Entity\FriendlyReportCategory $friendlyReportCategory
+     * @var \Hris\FormBundle\Entity\FriendlyReportCategory $friendlyReportCategory
      *
      * @ORM\OneToMany(targetEntity="Hris\FormBundle\Entity\FriendlyReportCategory", mappedBy="friendlyReport",cascade={"ALL"})
      * @ORM\OrderBy({"sort" = "ASC"})
@@ -93,7 +95,7 @@ class FriendlyReport
     private $friendlyReportCategory;
     
     /**
-     * @var Hris\FormBundle\Entity\ArithmeticFilter $arithmeticFilter
+     * @var \Hris\FormBundle\Entity\ArithmeticFilter $arithmeticFilter
      *
      * @ORM\ManyToMany(targetEntity="Hris\FormBundle\Entity\ArithmeticFilter", inversedBy="friendlyReport")
      * @ORM\JoinTable(name="hris_friendlyreport_arithmeticfilter",
@@ -109,7 +111,7 @@ class FriendlyReport
     private $arithmeticFilter;
     
     /**
-     * @var Hris\FormBundle\Entity\RelationalFilter $relationalFilter
+     * @var \Hris\FormBundle\Entity\RelationalFilter $relationalFilter
      *
      * @ORM\ManyToMany(targetEntity="Hris\FormBundle\Entity\RelationalFilter", inversedBy="friendlyReport")
      * @ORM\JoinTable(name="hris_friendlyreport_relationalfilter",
@@ -302,7 +304,7 @@ class FriendlyReport
     /**
      * Add friendlyReportCategory
      *
-     * @param Hris\FormBundle\Entity\FriendlyReportCategory $friendlyReportCategory
+     * @param \Hris\FormBundle\Entity\FriendlyReportCategory $friendlyReportCategory
      * @return FriendlyReport
      */
     public function addFriendlyReportCategory(\Hris\FormBundle\Entity\FriendlyReportCategory $friendlyReportCategory)
@@ -315,7 +317,7 @@ class FriendlyReport
     /**
      * Remove friendlyReportCategory
      *
-     * @param Hris\FormBundle\Entity\FriendlyReportCategory $friendlyReportCategory
+     * @param \Hris\FormBundle\Entity\FriendlyReportCategory $friendlyReportCategory
      */
     public function removeFriendlyReportCategory(\Hris\FormBundle\Entity\FriendlyReportCategory $friendlyReportCategory)
     {
@@ -325,7 +327,7 @@ class FriendlyReport
     /**
      * Get friendlyReportCategory
      *
-     * @return Doctrine\Common\Collections\Collection 
+     * @return \Doctrine\Common\Collections\Collection
      */
     public function getFriendlyReportCategory()
     {
@@ -335,7 +337,7 @@ class FriendlyReport
     /**
      * Add arithmeticFilter
      *
-     * @param Hris\FormBundle\Entity\ArithmeticFilter $arithmeticFilter
+     * @param \Hris\FormBundle\Entity\ArithmeticFilter $arithmeticFilter
      * @return FriendlyReport
      */
     public function addArithmeticFilter(\Hris\FormBundle\Entity\ArithmeticFilter $arithmeticFilter)
@@ -348,7 +350,7 @@ class FriendlyReport
     /**
      * Remove arithmeticFilter
      *
-     * @param Hris\FormBundle\Entity\ArithmeticFilter $arithmeticFilter
+     * @param \Hris\FormBundle\Entity\ArithmeticFilter $arithmeticFilter
      */
     public function removeArithmeticFilter(\Hris\FormBundle\Entity\ArithmeticFilter $arithmeticFilter)
     {
@@ -358,7 +360,7 @@ class FriendlyReport
     /**
      * Get arithmeticFilter
      *
-     * @return Doctrine\Common\Collections\Collection 
+     * @return \Doctrine\Common\Collections\Collection
      */
     public function getArithmeticFilter()
     {
@@ -368,7 +370,7 @@ class FriendlyReport
     /**
      * Add relationalFilter
      *
-     * @param Hris\FormBundle\Entity\RelationalFilter $relationalFilter
+     * @param \Hris\FormBundle\Entity\RelationalFilter $relationalFilter
      * @return FriendlyReport
      */
     public function addRelationalFilter(\Hris\FormBundle\Entity\RelationalFilter $relationalFilter)
@@ -381,7 +383,7 @@ class FriendlyReport
     /**
      * Remove relationalFilter
      *
-     * @param Hris\FormBundle\Entity\RelationalFilter $relationalFilter
+     * @param \Hris\FormBundle\Entity\RelationalFilter $relationalFilter
      */
     public function removeRelationalFilter(\Hris\FormBundle\Entity\RelationalFilter $relationalFilter)
     {
@@ -391,7 +393,7 @@ class FriendlyReport
     /**
      * Get relationalFilter
      *
-     * @return Doctrine\Common\Collections\Collection 
+     * @return \Doctrine\Common\Collections\Collection
      */
     public function getRelationalFilter()
     {
@@ -401,7 +403,7 @@ class FriendlyReport
     /**
      * Set serie
      *
-     * @param Hris\FormBundle\Entity\FieldOptionGroup  $serie
+     * @param \Hris\FormBundle\Entity\FieldOptionGroup  $serie
      * @return FriendlyReport
      */
     public function setSerie(\Hris\FormBundle\Entity\FieldOptionGroup  $serie = null)
@@ -414,7 +416,7 @@ class FriendlyReport
     /**
      * Get serie
      *
-     * @return Hris\FormBundle\Entity\FieldOptionGroup  
+     * @return \Hris\FormBundle\Entity\FieldOptionGroup
      */
     public function getSerie()
     {

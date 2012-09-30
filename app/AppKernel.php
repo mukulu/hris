@@ -15,10 +15,14 @@ class AppKernel extends Kernel
             new Symfony\Bundle\SwiftmailerBundle\SwiftmailerBundle(),
             new Symfony\Bundle\AsseticBundle\AsseticBundle(),
             new Doctrine\Bundle\DoctrineBundle\DoctrineBundle(),
+            new Doctrine\Bundle\FixturesBundle\DoctrineFixturesBundle(),
+            new Doctrine\Bundle\MigrationsBundle\DoctrineMigrationsBundle(),
             new Sensio\Bundle\FrameworkExtraBundle\SensioFrameworkExtraBundle(),
             new JMS\AopBundle\JMSAopBundle(),
             new JMS\DiExtraBundle\JMSDiExtraBundle($this),
             new JMS\SecurityExtraBundle\JMSSecurityExtraBundle(),
+            new Sonata\AdminBundle\SonataAdminBundle(),
+            new Knp\Bundle\MenuBundle\KnpMenuBundle(),
         	new FOS\UserBundle\FOSUserBundle(),
             new Hris\UserBundle\HrisUserBundle(),
             new Hris\DashboardBundle\HrisDashboardBundle(),
@@ -27,15 +31,15 @@ class AppKernel extends Kernel
             new Hris\FormBundle\HrisFormBundle(),
             new Hris\RecordsBundle\HrisRecordsBundle(),
             new Hris\DataQualityBundle\HrisDataQualityBundle(),
-        	new Doctrine\Bundle\FixturesBundle\DoctrineFixturesBundle(),
-        	new Doctrine\Bundle\MigrationsBundle\DoctrineMigrationsBundle(),
-            new Sonata\AdminBundle\SonataAdminBundle(),
         );
 
         if (in_array($this->getEnvironment(), array('dev', 'test'))) {
             $bundles[] = new Acme\DemoBundle\AcmeDemoBundle();
+            /** @noinspection PhpUndefinedNamespaceInspection */
             $bundles[] = new Symfony\Bundle\WebProfilerBundle\WebProfilerBundle();
+            /** @noinspection PhpUndefinedNamespaceInspection */
             $bundles[] = new Sensio\Bundle\DistributionBundle\SensioDistributionBundle();
+            /** @noinspection PhpUndefinedNamespaceInspection */
             $bundles[] = new Sensio\Bundle\GeneratorBundle\SensioGeneratorBundle();
         }
 

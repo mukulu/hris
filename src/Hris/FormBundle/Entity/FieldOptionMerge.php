@@ -1,7 +1,7 @@
 <?php
 /*
  *
- * Copyright 2012John Francis Mukulu <john.f.mukulu@gmail.com>
+ * Copyright 2012 Human Resource Information System
  *
  * This program is free software; you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -18,6 +18,8 @@
  * Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston,
  * MA 02110-1301, USA.
  *
+ * @since 2012
+ * @author John Francis Mukulu <john.f.mukulu@gmail.com>
  *
  */
 namespace Hris\FormBundle\Entity;
@@ -52,7 +54,7 @@ class FieldOptionMerge
     private $uid;
 
     /**
-     * @var Hris\FormBundle\Entity\FieldOption $mergedFieldOption
+     * @var \Hris\FormBundle\Entity\FieldOption $mergedFieldOption
      *
      * @ORM\ManyToOne(targetEntity="Hris\FormBundle\Entity\FieldOption", inversedBy="fieldOptionMerge")
      * @ORM\JoinColumns({
@@ -62,7 +64,7 @@ class FieldOptionMerge
     private $mergedFieldOption;
 
     /**
-     * @var Hris\FormBundle\Entity\Field $removedOptionField
+     * @var \Hris\FormBundle\Entity\Field $removedOptionField
      *
      * @ORM\ManyToOne(targetEntity="Hris\FormBundle\Entity\Field", inversedBy="fieldOptionMerge")
      * @ORM\JoinColumns({
@@ -101,29 +103,6 @@ class FieldOptionMerge
     public function getId()
     {
         return $this->id;
-    }
-
-    /**
-     * Set mergedoption
-     *
-     * @param integer $mergedoption
-     * @return FieldOptionMerge
-     */
-    public function setMergedoption($mergedoption)
-    {
-        $this->mergedoption = $mergedoption;
-    
-        return $this;
-    }
-
-    /**
-     * Get mergedoption
-     *
-     * @return integer 
-     */
-    public function getMergedoption()
-    {
-        return $this->mergedoption;
     }
 
     /**
@@ -175,7 +154,7 @@ class FieldOptionMerge
     /**
      * Set mergedFieldOption
      *
-     * @param Hris\FormBundle\Entity\FieldOption $mergedFieldOption
+     * @param \Hris\FormBundle\Entity\FieldOption $mergedFieldOption
      * @return FieldOptionMerge
      */
     public function setMergedFieldOption(\Hris\FormBundle\Entity\FieldOption $mergedFieldOption = null)
@@ -188,7 +167,7 @@ class FieldOptionMerge
     /**
      * Get mergedFieldOption
      *
-     * @return Hris\FormBundle\Entity\FieldOption 
+     * @return \Hris\FormBundle\Entity\FieldOption
      */
     public function getMergedFieldOption()
     {
@@ -198,7 +177,7 @@ class FieldOptionMerge
     /**
      * Set removedOptionField
      *
-     * @param Hris\FormBundle\Entity\Field $removedOptionField
+     * @param \Hris\FormBundle\Entity\Field $removedOptionField
      * @return FieldOptionMerge
      */
     public function setRemovedOptionField(\Hris\FormBundle\Entity\Field $removedOptionField = null)
@@ -211,7 +190,7 @@ class FieldOptionMerge
     /**
      * Get removedOptionField
      *
-     * @return Hris\FormBundle\Entity\Field 
+     * @return \Hris\FormBundle\Entity\Field
      */
     public function getRemovedOptionField()
     {

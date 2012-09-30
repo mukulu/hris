@@ -1,7 +1,7 @@
 <?php
 /*
  *
- * Copyright 2012John Francis Mukulu <john.f.mukulu@gmail.com>
+ * Copyright 2012 Human Resource Information System
  *
  * This program is free software; you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -18,6 +18,8 @@
  * Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston,
  * MA 02110-1301, USA.
  *
+ * @since 2012
+ * @author John Francis Mukulu <john.f.mukulu@gmail.com>
  *
  */
 namespace Hris\FormBundle\Entity;
@@ -36,7 +38,7 @@ use Hris\FormBundle\Entity\Form;
 class FormFieldMember
 {
     /**
-     * @var Hris\FormBundle\Entity\Form $form
+     * @var \Hris\FormBundle\Entity\Form $form
      *
      * @ORM\ManyToOne(targetEntity="Hris\FormBundle\Entity\Form",inversedBy="formFieldMember")
      * @ORM\JoinColumns({
@@ -48,7 +50,7 @@ class FormFieldMember
     private $form;
     
     /**
-     * @var Hris\FormBundle\Entity\Field $field
+     * @var \Hris\FormBundle\Entity\Field $field
      *
      * @ORM\ManyToOne(targetEntity="Hris\FormBundle\Entity\Field",inversedBy="formFieldMember")
      * @ORM\JoinColumns({
@@ -99,7 +101,7 @@ class FormFieldMember
     /**
      * Set form
      *
-     * @param Hris\FormBundle\Entity\Form $form
+     * @param \Hris\FormBundle\Entity\Form $form
      * @return FormFieldMember
      */
     public function setForm(\Hris\FormBundle\Entity\Form $form)
@@ -112,7 +114,7 @@ class FormFieldMember
     /**
      * Get form
      *
-     * @return Hris\FormBundle\Entity\Form 
+     * @return \Hris\FormBundle\Entity\Form
      */
     public function getForm()
     {
@@ -122,7 +124,7 @@ class FormFieldMember
     /**
      * Set field
      *
-     * @param Hris\FormBundle\Entity\Field $field
+     * @param \Hris\FormBundle\Entity\Field $field
      * @return FormFieldMember
      */
     public function setField(\Hris\FormBundle\Entity\Field $field)
@@ -135,7 +137,7 @@ class FormFieldMember
     /**
      * Get field
      *
-     * @return Hris\FormBundle\Entity\Field 
+     * @return \Hris\FormBundle\Entity\Field
      */
     public function getField()
     {

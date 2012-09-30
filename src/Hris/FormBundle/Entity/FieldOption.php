@@ -1,7 +1,7 @@
 <?php
 /*
  *
- * Copyright 2012John Francis Mukulu <john.f.mukulu@gmail.com>
+ * Copyright 2012 Human Resource Information System
  *
  * This program is free software; you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -18,6 +18,8 @@
  * Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston,
  * MA 02110-1301, USA.
  *
+ * @since 2012
+ * @author John Francis Mukulu <john.f.mukulu@gmail.com>
  *
  */
 namespace Hris\FormBundle\Entity;
@@ -67,7 +69,7 @@ class FieldOption
     private $description;
     
     /**
-     * @var Hris\FormBundle\Entity\FieldOption $parentFieldOption
+     * @var \Hris\FormBundle\Entity\FieldOption $parentFieldOption
      *
      * @ORM\ManyToMany(targetEntity="Hris\FormBundle\Entity\FieldOption", mappedBy="childFieldOption")
      * @ORM\OrderBy({"value" = "ASC"})
@@ -75,7 +77,7 @@ class FieldOption
     private $parentFieldOption;
     
     /**
-     * @var Hris\FormBundle\Entity\FieldOption $childFieldOption
+     * @var \Hris\FormBundle\Entity\FieldOption $childFieldOption
      *
      * @ORM\ManyToMany(targetEntity="Hris\FormBundle\Entity\FieldOption", inversedBy="parentFieldOption")
      * @ORM\JoinTable(name="hris_fieldoption_children",
@@ -91,7 +93,7 @@ class FieldOption
     private $childFieldOption;
     
     /**
-     * @var Hris\FormBundle\Entity\FieldOptionGroup $fieldOptionGroup
+     * @var \Hris\FormBundle\Entity\FieldOptionGroup $fieldOptionGroup
      *
      * @ORM\ManyToMany(targetEntity="Hris\FormBundle\Entity\FieldOptionGroup", mappedBy="fieldOption")
      * @ORM\OrderBy({"name" = "ASC"})
@@ -99,7 +101,7 @@ class FieldOption
     private $fieldOptionGroup;
     
     /**
-     * @var Hris\FormBundle\Entity\Field $field
+     * @var \Hris\FormBundle\Entity\Field $field
      *
      * @ORM\ManyToOne(targetEntity="Hris\FormBundle\Entity\Field", inversedBy="fieldOption")
      * @ORM\JoinColumns({
@@ -109,7 +111,7 @@ class FieldOption
     private $field;
     
     /**
-     * @var Hris\FormBundle\Entity\RelationalFilter $relationalFilter
+     * @var \Hris\FormBundle\Entity\RelationalFilter $relationalFilter
      *
      * @ORM\ManyToMany(targetEntity="Hris\FormBundle\Entity\RelationalFilter", mappedBy="fieldOption")
      * @ORM\OrderBy({"name" = "ASC"})
@@ -117,7 +119,7 @@ class FieldOption
     private $relationalFilter;
     
     /**
-     * @var Hris\FormBundle\Entity\FieldOptionMerge $fieldOptionMerge
+     * @var \Hris\FormBundle\Entity\FieldOptionMerge $fieldOptionMerge
      *
      * @ORM\OneToMany(targetEntity="Hris\FormBundle\Entity\FieldOptionMerge", mappedBy="mergedFieldOption")
      * @ORM\OrderBy({"removedoptionvalue" = "ASC"})
@@ -244,7 +246,7 @@ class FieldOption
     /**
      * Add parentFieldOption
      *
-     * @param Hris\FormBundle\Entity\FieldOption $parentFieldOption
+     * @param \Hris\FormBundle\Entity\FieldOption $parentFieldOption
      * @return FieldOption
      */
     public function addParentFieldOption(\Hris\FormBundle\Entity\FieldOption $parentFieldOption)
@@ -257,7 +259,7 @@ class FieldOption
     /**
      * Remove parentFieldOption
      *
-     * @param Hris\FormBundle\Entity\FieldOption $parentFieldOption
+     * @param \Hris\FormBundle\Entity\FieldOption $parentFieldOption
      */
     public function removeParentFieldOption(\Hris\FormBundle\Entity\FieldOption $parentFieldOption)
     {
@@ -267,7 +269,7 @@ class FieldOption
     /**
      * Get parentFieldOption
      *
-     * @return Doctrine\Common\Collections\Collection 
+     * @return \Doctrine\Common\Collections\Collection
      */
     public function getParentFieldOption()
     {
@@ -277,7 +279,7 @@ class FieldOption
     /**
      * Add childFieldOption
      *
-     * @param Hris\FormBundle\Entity\FieldOption $childFieldOption
+     * @param \Hris\FormBundle\Entity\FieldOption $childFieldOption
      * @return FieldOption
      */
     public function addChildFieldOption(\Hris\FormBundle\Entity\FieldOption $childFieldOption)
@@ -290,7 +292,7 @@ class FieldOption
     /**
      * Remove childFieldOption
      *
-     * @param Hris\FormBundle\Entity\FieldOption $childFieldOption
+     * @param \Hris\FormBundle\Entity\FieldOption $childFieldOption
      */
     public function removeChildFieldOption(\Hris\FormBundle\Entity\FieldOption $childFieldOption)
     {
@@ -300,7 +302,7 @@ class FieldOption
     /**
      * Get childFieldOption
      *
-     * @return Doctrine\Common\Collections\Collection 
+     * @return \Doctrine\Common\Collections\Collection
      */
     public function getChildFieldOption()
     {
@@ -310,7 +312,7 @@ class FieldOption
     /**
      * Add fieldOptionGroup
      *
-     * @param Hris\FormBundle\Entity\FieldOptionGroup $fieldOptionGroup
+     * @param \Hris\FormBundle\Entity\FieldOptionGroup $fieldOptionGroup
      * @return FieldOption
      */
     public function addFieldOptionGroup(\Hris\FormBundle\Entity\FieldOptionGroup $fieldOptionGroup)
@@ -323,7 +325,7 @@ class FieldOption
     /**
      * Remove fieldOptionGroup
      *
-     * @param Hris\FormBundle\Entity\FieldOptionGroup $fieldOptionGroup
+     * @param \Hris\FormBundle\Entity\FieldOptionGroup $fieldOptionGroup
      */
     public function removeFieldOptionGroup(\Hris\FormBundle\Entity\FieldOptionGroup $fieldOptionGroup)
     {
@@ -333,7 +335,7 @@ class FieldOption
     /**
      * Get fieldOptionGroup
      *
-     * @return Doctrine\Common\Collections\Collection 
+     * @return \Doctrine\Common\Collections\Collection
      */
     public function getFieldOptionGroup()
     {
@@ -343,7 +345,7 @@ class FieldOption
     /**
      * Set field
      *
-     * @param Hris\FormBundle\Entity\Field $field
+     * @param \Hris\FormBundle\Entity\Field $field
      * @return FieldOption
      */
     public function setField(\Hris\FormBundle\Entity\Field $field = null)
@@ -356,7 +358,7 @@ class FieldOption
     /**
      * Get field
      *
-     * @return Hris\FormBundle\Entity\Field 
+     * @return \Hris\FormBundle\Entity\Field
      */
     public function getField()
     {
@@ -389,7 +391,7 @@ class FieldOption
     /**
      * Add relationalFilter
      *
-     * @param Hris\FormBundle\Entity\RelationalFilter $relationalFilter
+     * @param \Hris\FormBundle\Entity\RelationalFilter $relationalFilter
      * @return FieldOption
      */
     public function addRelationalFilter(\Hris\FormBundle\Entity\RelationalFilter $relationalFilter)
@@ -402,7 +404,7 @@ class FieldOption
     /**
      * Remove relationalFilter
      *
-     * @param Hris\FormBundle\Entity\RelationalFilter $relationalFilter
+     * @param \Hris\FormBundle\Entity\RelationalFilter $relationalFilter
      */
     public function removeRelationalFilter(\Hris\FormBundle\Entity\RelationalFilter $relationalFilter)
     {
@@ -412,7 +414,7 @@ class FieldOption
     /**
      * Get relationalFilter
      *
-     * @return Doctrine\Common\Collections\Collection 
+     * @return \Doctrine\Common\Collections\Collection
      */
     public function getRelationalFilter()
     {
@@ -422,7 +424,7 @@ class FieldOption
     /**
      * Add fieldOptionMerge
      *
-     * @param Hris\FormBundle\Entity\FieldOptionMerge $fieldOptionMerge
+     * @param \Hris\FormBundle\Entity\FieldOptionMerge $fieldOptionMerge
      * @return FieldOption
      */
     public function addFieldOptionMerge(\Hris\FormBundle\Entity\FieldOptionMerge $fieldOptionMerge)
@@ -435,7 +437,7 @@ class FieldOption
     /**
      * Remove fieldOptionMerge
      *
-     * @param Hris\FormBundle\Entity\FieldOptionMerge $fieldOptionMerge
+     * @param \Hris\FormBundle\Entity\FieldOptionMerge $fieldOptionMerge
      */
     public function removeFieldOptionMerge(\Hris\FormBundle\Entity\FieldOptionMerge $fieldOptionMerge)
     {
@@ -445,7 +447,7 @@ class FieldOption
     /**
      * Get fieldOptionMerge
      *
-     * @return Doctrine\Common\Collections\Collection 
+     * @return \Doctrine\Common\Collections\Collection
      */
     public function getFieldOptionMerge()
     {

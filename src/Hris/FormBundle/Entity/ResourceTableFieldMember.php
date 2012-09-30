@@ -1,7 +1,7 @@
 <?php
 /*
  *
- * Copyright 2012John Francis Mukulu <john.f.mukulu@gmail.com>
+ * Copyright 2012 Human Resource Information System
  *
  * This program is free software; you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -18,6 +18,8 @@
  * Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston,
  * MA 02110-1301, USA.
  *
+ * @since 2012
+ * @author John Francis Mukulu <john.f.mukulu@gmail.com>
  *
  */
 namespace Hris\FormBundle\Entity;
@@ -36,7 +38,7 @@ use Hris\FormBundle\Entity\ResourceTable;
 class ResourceTableFieldMember
 {
 	/**
-	 * @var Hris\FormBundle\Entity\ResourceTable $resourceTable
+	 * @var \Hris\FormBundle\Entity\ResourceTable $resourceTable
 	 *
 	 * @ORM\ManyToOne(targetEntity="Hris\FormBundle\Entity\ResourceTable",inversedBy="resourceTableFieldMember")
 	 * @ORM\JoinColumns({
@@ -48,7 +50,7 @@ class ResourceTableFieldMember
 	private $resourceTable;
 	
 	/**
-	 * @var Hris\FormBundle\Entity\Field $field
+	 * @var \Hris\FormBundle\Entity\Field $field
 	 *
 	 * @ORM\ManyToOne(targetEntity="Hris\FormBundle\Entity\Field",inversedBy="resourceTableFieldMember")
 	 * @ORM\JoinColumns({
@@ -66,16 +68,6 @@ class ResourceTableFieldMember
      */
     private $sort;
 
-
-    /**
-     * Get id
-     *
-     * @return integer 
-     */
-    public function getId()
-    {
-        return $this->id;
-    }
 
     /**
      * Set sort
@@ -103,7 +95,7 @@ class ResourceTableFieldMember
     /**
      * Set resourceTable
      *
-     * @param Hris\FormBundle\Entity\ResourceTable $resourceTable
+     * @param \Hris\FormBundle\Entity\ResourceTable $resourceTable
      * @return ResourceTableFieldMember
      */
     public function setResourceTable(\Hris\FormBundle\Entity\ResourceTable $resourceTable)
@@ -116,7 +108,7 @@ class ResourceTableFieldMember
     /**
      * Get resourceTable
      *
-     * @return Hris\FormBundle\Entity\ResourceTable 
+     * @return \Hris\FormBundle\Entity\ResourceTable
      */
     public function getResourceTable()
     {
@@ -126,7 +118,7 @@ class ResourceTableFieldMember
     /**
      * Set field
      *
-     * @param Hris\FormBundle\Entity\Field $field
+     * @param \Hris\FormBundle\Entity\Field $field
      * @return ResourceTableFieldMember
      */
     public function setField(\Hris\FormBundle\Entity\Field $field)
@@ -139,7 +131,7 @@ class ResourceTableFieldMember
     /**
      * Get field
      *
-     * @return Hris\FormBundle\Entity\Field 
+     * @return \Hris\FormBundle\Entity\Field
      */
     public function getField()
     {

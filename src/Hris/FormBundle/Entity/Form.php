@@ -1,7 +1,7 @@
 <?php
 /*
  *
- * Copyright 2012John Francis Mukulu <john.f.mukulu@gmail.com>
+ * Copyright 2012 Human Resource Information System
  *
  * This program is free software; you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -18,6 +18,8 @@
  * Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston,
  * MA 02110-1301, USA.
  *
+ * @since 2012
+ * @author John Francis Mukulu <john.f.mukulu@gmail.com>
  *
  */
 namespace Hris\FormBundle\Entity;
@@ -75,7 +77,7 @@ class Form
     private $title;
     
     /**
-     * @var Hris\FormBundle\Entity\Field $uniqueRecordFields
+     * @var \Hris\FormBundle\Entity\Field $uniqueRecordFields
      * Fields that together makes a record unique in this form
      *
      * @ORM\ManyToMany(targetEntity="Hris\FormBundle\Entity\Field", inversedBy="uniqueRecordForms")
@@ -92,7 +94,7 @@ class Form
     private $uniqueRecordFields;
     
     /**
-     * @var Hris\FormBundle\Entity\FormFieldMember $formFieldMember
+     * @var \Hris\FormBundle\Entity\FormFieldMember $formFieldMember
      *
      * @ORM\OneToMany(targetEntity="Hris\FormBundle\Entity\FormFieldMember", mappedBy="form",cascade={"ALL"})
      * @ORM\OrderBy({"sort" = "ASC"})
@@ -100,7 +102,7 @@ class Form
     private $formFieldMember;
     
     /**
-     * @var Hris\RecordsBundle\Entity\Record $record
+     * @var \Hris\RecordsBundle\Entity\Record $record
      *
      * @ORM\OneToMany(targetEntity="Hris\RecordsBundle\Entity\Record", mappedBy="form",cascade={"ALL"})
      * @ORM\OrderBy({"datecreated" = "ASC"})
@@ -108,7 +110,7 @@ class Form
     private $record;
     
     /**
-     * @var Hris\FormBundle\Entity\FormVisibleFields $formVisibleFields
+     * @var \Hris\FormBundle\Entity\FormVisibleFields $formVisibleFields
      *
      * @ORM\OneToMany(targetEntity="Hris\FormBundle\Entity\FormVisibleFields", mappedBy="form",cascade={"ALL"})
      * @ORM\OrderBy({"sort" = "ASC"})
@@ -116,7 +118,7 @@ class Form
     private $formVisibleFields;
     
     /**
-     * @var Hris\DashboardBundle\Entity\DashboardChart $dashboardChart
+     * @var \Hris\DashboardBundle\Entity\DashboardChart $dashboardChart
      *
      * @ORM\ManyToMany(targetEntity="Hris\DashboardBundle\Entity\DashboardChart", mappedBy="form",cascade={"ALL"})
      * @ORM\OrderBy({"name" = "ASC"})
@@ -202,7 +204,7 @@ class Form
     /**
      * Add uniqueRecordFields
      *
-     * @param Hris\FormBundle\Entity\Field $uniqueRecordFields
+     * @param \Hris\FormBundle\Entity\Field $uniqueRecordFields
      * @return Form
      */
     public function addUniqueRecordField(\Hris\FormBundle\Entity\Field $uniqueRecordFields)
@@ -215,7 +217,7 @@ class Form
     /**
      * Remove uniqueRecordFields
      *
-     * @param Hris\FormBundle\Entity\Field $uniqueRecordFields
+     * @param \Hris\FormBundle\Entity\Field $uniqueRecordFields
      */
     public function removeUniqueRecordField(\Hris\FormBundle\Entity\Field $uniqueRecordFields)
     {
@@ -225,7 +227,7 @@ class Form
     /**
      * Get uniqueRecordFields
      *
-     * @return Doctrine\Common\Collections\Collection 
+     * @return \Doctrine\Common\Collections\Collection
      */
     public function getUniqueRecordFields()
     {
@@ -281,7 +283,7 @@ class Form
     /**
      * Add field
      *
-     * @param Hris\FormBundle\Entity\Field $field
+     * @param \Hris\FormBundle\Entity\Field $field
      * @return Form
      */
     public function addSimpleField(\Hris\FormBundle\Entity\Field $field)
@@ -295,12 +297,12 @@ class Form
     /**
      * Get field
      *
-     * @return Doctrine\Common\Collections\Collection
+     * @return \Doctrine\Common\Collections\Collection
      */
     public function getSimpleField()
     {
-    	$simpleFields = new \Doctrine\Common\Collections\ArrayCollection();
-    
+        $simpleFields = new \Doctrine\Common\Collections\ArrayCollection();
+        $key = NULL;
     	if(!empty($this->formFieldMember)) {
     		foreach( $this->formFieldMember as $key => $formFieldMember ) {
     			$simpleFields->add($formFieldMember->getField());
@@ -312,7 +314,7 @@ class Form
     /**
      * Add field
      *
-     * @param Hris\FormBundle\Entity\Field $field
+     * @param \Hris\FormBundle\Entity\Field $field
      * @return Form
      */
     public function addSimpleFormVisibleField(\Hris\FormBundle\Entity\Field $field)
@@ -326,11 +328,11 @@ class Form
     /**
      * Get field
      *
-     * @return Doctrine\Common\Collections\Collection
+     * @return \Doctrine\Common\Collections\Collection
      */
     public function getSimpleFormVisibleFields()
     {
-    	$simpleFormVisibleFields = new \Doctrine\Common\Collections\ArrayCollection();
+        $simpleFormVisibleFields = new \Doctrine\Common\Collections\ArrayCollection();
     
     	if(!empty($this->formVisibleFields)) {
     		foreach( $this->formVisibleFields as $key => $formVisibleFields ) {
@@ -366,7 +368,7 @@ class Form
     /**
      * Add formFieldMember
      *
-     * @param Hris\FormBundle\Entity\FormFieldMember $formFieldMember
+     * @param \Hris\FormBundle\Entity\FormFieldMember $formFieldMember
      * @return Form
      */
     public function addFormFieldMember(\Hris\FormBundle\Entity\FormFieldMember $formFieldMember)
@@ -379,7 +381,7 @@ class Form
     /**
      * Remove formFieldMember
      *
-     * @param Hris\FormBundle\Entity\FormFieldMember $formFieldMember
+     * @param \Hris\FormBundle\Entity\FormFieldMember $formFieldMember
      */
     public function removeFormFieldMember(\Hris\FormBundle\Entity\FormFieldMember $formFieldMember)
     {
@@ -389,7 +391,7 @@ class Form
     /**
      * Get formFieldMember
      *
-     * @return Doctrine\Common\Collections\Collection 
+     * @return \Doctrine\Common\Collections\Collection
      */
     public function getFormFieldMember()
     {
@@ -399,7 +401,7 @@ class Form
     /**
      * Add dashboardChart
      *
-     * @param Hris\DashboardBundle\Entity\DashboardChart $dashboardChart
+     * @param \Hris\DashboardBundle\Entity\DashboardChart $dashboardChart
      * @return Form
      */
     public function addDashboardChart(\Hris\DashboardBundle\Entity\DashboardChart $dashboardChart)
@@ -412,7 +414,7 @@ class Form
     /**
      * Remove dashboardChart
      *
-     * @param Hris\DashboardBundle\Entity\DashboardChart $dashboardChart
+     * @param \Hris\DashboardBundle\Entity\DashboardChart $dashboardChart
      */
     public function removeDashboardChart(\Hris\DashboardBundle\Entity\DashboardChart $dashboardChart)
     {
@@ -422,7 +424,7 @@ class Form
     /**
      * Get dashboardChart
      *
-     * @return Doctrine\Common\Collections\Collection 
+     * @return \Doctrine\Common\Collections\Collection
      */
     public function getDashboardChart()
     {
@@ -433,7 +435,7 @@ class Form
     /**
      * Add record
      *
-     * @param Hris\RecordsBundle\Entity\Record $record
+     * @param \Hris\RecordsBundle\Entity\Record $record
      * @return Form
      */
     public function addRecord(\Hris\RecordsBundle\Entity\Record $record)
@@ -446,7 +448,7 @@ class Form
     /**
      * Remove record
      *
-     * @param Hris\RecordsBundle\Entity\Record $record
+     * @param \Hris\RecordsBundle\Entity\Record $record
      */
     public function removeRecord(\Hris\RecordsBundle\Entity\Record $record)
     {
@@ -456,7 +458,7 @@ class Form
     /**
      * Get record
      *
-     * @return Doctrine\Common\Collections\Collection 
+     * @return \Doctrine\Common\Collections\Collection
      */
     public function getRecord()
     {
@@ -478,7 +480,7 @@ class Form
     /**
      * Add formVisibleFields
      *
-     * @param Hris\FormBundle\Entity\FormVisibleFields $formVisibleFields
+     * @param \Hris\FormBundle\Entity\FormVisibleFields $formVisibleFields
      * @return Form
      */
     public function addFormVisibleField(\Hris\FormBundle\Entity\FormVisibleFields $formVisibleFields)
@@ -491,7 +493,7 @@ class Form
     /**
      * Remove formVisibleFields
      *
-     * @param Hris\FormBundle\Entity\FormVisibleFields $formVisibleFields
+     * @param \Hris\FormBundle\Entity\FormVisibleFields $formVisibleFields
      */
     public function removeFormVisibleField(\Hris\FormBundle\Entity\FormVisibleFields $formVisibleFields)
     {
@@ -501,7 +503,7 @@ class Form
     /**
      * Get formVisibleFields
      *
-     * @return Doctrine\Common\Collections\Collection 
+     * @return \Doctrine\Common\Collections\Collection
      */
     public function getFormVisibleFields()
     {

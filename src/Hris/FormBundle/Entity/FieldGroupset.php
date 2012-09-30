@@ -1,7 +1,7 @@
 <?php
 /*
  *
- * Copyright 2012John Francis Mukulu <john.f.mukulu@gmail.com>
+ * Copyright 2012 Human Resource Information System
  *
  * This program is free software; you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -18,6 +18,8 @@
  * Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston,
  * MA 02110-1301, USA.
  *
+ * @since 2012
+ * @author John Francis Mukulu <john.f.mukulu@gmail.com>
  *
  */
 namespace Hris\FormBundle\Entity;
@@ -65,7 +67,7 @@ class FieldGroupset
     private $description;
     
     /**
-     * @var Hris\FormBundle\Entity\FieldGroup $fieldGroup
+     * @var \Hris\FormBundle\Entity\FieldGroup $fieldGroup
      *
      * @ORM\ManyToMany(targetEntity="Hris\FormBundle\Entity\FieldGroup", inversedBy="fieldGroupset")
      * @ORM\JoinTable(name="hris_fieldgroupset_members",
@@ -231,7 +233,7 @@ class FieldGroupset
     /**
      * Add fieldGroup
      *
-     * @param Hris\FormBundle\Entity\FieldGroup $fieldGroup
+     * @param \Hris\FormBundle\Entity\FieldGroup $fieldGroup
      * @return FieldGroupset
      */
     public function addFieldGroup(\Hris\FormBundle\Entity\FieldGroup $fieldGroup)
@@ -244,7 +246,7 @@ class FieldGroupset
     /**
      * Remove fieldGroup
      *
-     * @param Hris\FormBundle\Entity\FieldGroup $fieldGroup
+     * @param \Hris\FormBundle\Entity\FieldGroup $fieldGroup
      */
     public function removeFieldGroup(\Hris\FormBundle\Entity\FieldGroup $fieldGroup)
     {
@@ -254,7 +256,7 @@ class FieldGroupset
     /**
      * Get fieldGroup
      *
-     * @return Doctrine\Common\Collections\Collection 
+     * @return \Doctrine\Common\Collections\Collection
      */
     public function getFieldGroup()
     {

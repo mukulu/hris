@@ -1,7 +1,7 @@
 <?php
 /*
  *
- * Copyright 2012John Francis Mukulu <john.f.mukulu@gmail.com>
+ * Copyright 2012 Human Resource Information System
  *
  * This program is free software; you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -18,6 +18,8 @@
  * Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston,
  * MA 02110-1301, USA.
  *
+ * @since 2012
+ * @author John Francis Mukulu <john.f.mukulu@gmail.com>
  *
  */
 namespace Hris\RecordsBundle\Entity;
@@ -239,7 +241,7 @@ class RecordValue
     /**
      * Set record
      *
-     * @param Hris\RecordsBundle\Entity\Record $record
+     * @param \Hris\RecordsBundle\Entity\Record $record
      * @return RecordValue
      */
     public function setRecord(\Hris\RecordsBundle\Entity\Record $record = null)
@@ -252,7 +254,7 @@ class RecordValue
     /**
      * Get record
      *
-     * @return Hris\RecordsBundle\Entity\Record 
+     * @return \Hris\RecordsBundle\Entity\Record
      */
     public function getRecord()
     {
@@ -262,7 +264,7 @@ class RecordValue
     /**
      * Set field
      *
-     * @param Hris\FormBundle\Entity\Field $field
+     * @param \Hris\FormBundle\Entity\Field $field
      * @return RecordValue
      */
     public function setField(\Hris\FormBundle\Entity\Field $field = null)

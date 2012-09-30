@@ -46,7 +46,7 @@ class User extends BaseUser
     protected $id;
     
     /**
-     * @var Hris\UserBundle\Entity\UserInfo $userInfo
+     * @var \Hris\UserBundle\Entity\UserInfo $userInfo
      *
      * @ORM\OneToOne(targetEntity="Hris\UserBundle\Entity\UserInfo", inversedBy="user")
      */
@@ -135,7 +135,7 @@ class User extends BaseUser
     /**
      * Set userInfo
      *
-     * @param Hris\UserBundle\Entity\UserInfo $userInfo
+     * @param \Hris\UserBundle\Entity\UserInfo $userInfo
      * @return User
      */
     public function setUserInfo(\Hris\UserBundle\Entity\UserInfo $userInfo = null)
@@ -148,7 +148,7 @@ class User extends BaseUser
     /**
      * Get userInfo
      *
-     * @return Hris\UserBundle\Entity\UserInfo 
+     * @return \Hris\UserBundle\Entity\UserInfo
      */
     public function getUserInfo()
     {

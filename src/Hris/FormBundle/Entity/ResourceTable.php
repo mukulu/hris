@@ -1,5 +1,27 @@
 <?php
-
+/*
+ *
+ * Copyright 2012 Human Resource Information System
+ *
+ * This program is free software; you can redistribute it and/or modify
+ * it under the terms of the GNU General Public License as published by
+ * the Free Software Foundation; either version 2 of the License, or
+ * (at your option) any later version.
+ *
+ * This program is distributed in the hope that it will be useful,
+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ * GNU General Public License for more details.
+ *
+ * You should have received a copy of the GNU General Public License
+ * along with this program; if not, write to the Free Software
+ * Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston,
+ * MA 02110-1301, USA.
+ *
+ * @since 2012
+ * @author John Francis Mukulu <john.f.mukulu@gmail.com>
+ *
+ */
 namespace Hris\FormBundle\Entity;
 
 use Doctrine\ORM\Mapping as ORM;
@@ -38,7 +60,7 @@ class ResourceTable
     private $name;
     
     /**
-     * @var Hris\FormBundle\Entity\ResourceTableFieldMember $resourceTableFieldMember
+     * @var \Hris\FormBundle\Entity\ResourceTableFieldMember $resourceTableFieldMember
      *
      * @ORM\OneToMany(targetEntity="Hris\FormBundle\Entity\ResourceTableFieldMember", mappedBy="resourceTable",cascade={"ALL"})
      * @ORM\OrderBy({"sort" = "ASC"})
@@ -165,7 +187,7 @@ class ResourceTable
     /**
      * Add resourceTableFieldMember
      *
-     * @param Hris\FormBundle\Entity\ResourceTableFieldMember $resourceTableFieldMember
+     * @param \Hris\FormBundle\Entity\ResourceTableFieldMember $resourceTableFieldMember
      * @return ResourceTable
      */
     public function addResourceTableFieldMember(\Hris\FormBundle\Entity\ResourceTableFieldMember $resourceTableFieldMember)
@@ -178,7 +200,7 @@ class ResourceTable
     /**
      * Remove resourceTableFieldMember
      *
-     * @param Hris\FormBundle\Entity\ResourceTableFieldMember $resourceTableFieldMember
+     * @param \Hris\FormBundle\Entity\ResourceTableFieldMember $resourceTableFieldMember
      */
     public function removeResourceTableFieldMember(\Hris\FormBundle\Entity\ResourceTableFieldMember $resourceTableFieldMember)
     {
@@ -188,7 +210,7 @@ class ResourceTable
     /**
      * Get resourceTableFieldMember
      *
-     * @return Doctrine\Common\Collections\Collection 
+     * @return \Doctrine\Common\Collections\Collection
      */
     public function getResourceTableFieldMember()
     {

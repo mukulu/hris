@@ -1,7 +1,7 @@
 <?php
 /*
  *
- * Copyright 2012John Francis Mukulu <john.f.mukulu@gmail.com>
+ * Copyright 2012 Human Resource Information System
  *
  * This program is free software; you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -18,6 +18,8 @@
  * Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston,
  * MA 02110-1301, USA.
  *
+ * @since 2012
+ * @author John Francis Mukulu <john.f.mukulu@gmail.com>
  *
  */
 namespace Hris\RecordsBundle\Entity;
@@ -119,6 +121,13 @@ class Record
      * @ORM\Column(name="lastupdated", type="datetime", nullable=true)
      */
     private $lastupdated;
+
+    /**
+     * @var string $username
+     *
+     * @ORM\Column(name="username", type="string", length=64, unique=true)
+     */
+    private $username;
     
     /**
      * Constructor
@@ -353,7 +362,7 @@ class Record
     /**
      * Set organisationunit
      *
-     * @param Hris\OrganisationunitBundle\Entity\Organisationunit $organisationunit
+     * @param \Hris\OrganisationunitBundle\Entity\Organisationunit $organisationunit
      * @return Record
      */
     public function setOrganisationunit(\Hris\OrganisationunitBundle\Entity\Organisationunit $organisationunit = null)
@@ -366,7 +375,7 @@ class Record
     /**
      * Get organisationunit
      *
-     * @return Hris\OrganisationunitBundle\Entity\Organisationunit 
+     * @return \Hris\OrganisationunitBundle\Entity\Organisationunit
      */
     public function getOrganisationunit()
     {
@@ -376,7 +385,7 @@ class Record
     /**
      * Set form
      *
-     * @param Hris\FormBundle\Entity\Form $form
+     * @param \Hris\FormBundle\Entity\Form $form
      * @return Record
      */
     public function setForm(\Hris\FormBundle\Entity\Form $form)

@@ -1,7 +1,7 @@
 <?php
 /*
  *
- * Copyright 2012John Francis Mukulu <john.f.mukulu@gmail.com>
+ * Copyright 2012 Human Resource Information System
  *
  * This program is free software; you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -18,6 +18,8 @@
  * Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston,
  * MA 02110-1301, USA.
  *
+ * @since 2012
+ * @author John Francis Mukulu <john.f.mukulu@gmail.com>
  *
  */
 namespace Hris\FormBundle\Entity;
@@ -65,7 +67,7 @@ class FieldOptionGroupset
     private $description;
     
     /**
-     * @var Hris\FormBundle\Entity\FieldOptionGroup $fieldOptionGroup 
+     * @var \Hris\FormBundle\Entity\FieldOptionGroup $fieldOptionGroup
      *
      * @ORM\ManyToMany(targetEntity="Hris\FormBundle\Entity\FieldOptionGroup", inversedBy="fieldOptionGroupset")
      * @ORM\JoinTable(name="hris_fieldoptiongroupset_members",
@@ -230,7 +232,7 @@ class FieldOptionGroupset
     /**
      * Add fieldOptionGroup
      *
-     * @param Hris\FormBundle\Entity\FieldOptionGroup $fieldOptionGroup
+     * @param \Hris\FormBundle\Entity\FieldOptionGroup $fieldOptionGroup
      * @return FieldOptionGroupset
      */
     public function addFieldOptionGroup(\Hris\FormBundle\Entity\FieldOptionGroup $fieldOptionGroup)
@@ -243,7 +245,7 @@ class FieldOptionGroupset
     /**
      * Remove fieldOptionGroup
      *
-     * @param Hris\FormBundle\Entity\FieldOptionGroup $fieldOptionGroup
+     * @param \Hris\FormBundle\Entity\FieldOptionGroup $fieldOptionGroup
      */
     public function removeFieldOptionGroup(\Hris\FormBundle\Entity\FieldOptionGroup $fieldOptionGroup)
     {
@@ -253,7 +255,7 @@ class FieldOptionGroupset
     /**
      * Get fieldOptionGroup
      *
-     * @return Doctrine\Common\Collections\Collection 
+     * @return \Doctrine\Common\Collections\Collection
      */
     public function getFieldOptionGroup()
     {
