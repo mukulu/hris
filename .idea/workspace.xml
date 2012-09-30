@@ -5,92 +5,26 @@
   </component>
   <component name="ChangeListManager">
     <list default="true" id="29d301eb-051c-4b52-b0e4-a6b9efd3f1a5" name="Default" comment="">
-      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/.idea/encodings.xml" />
-      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/.idea/inspectionProfiles/Project_Default.xml" />
-      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/.idea/inspectionProfiles/profiles_settings.xml" />
-      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/.idea/misc.xml" />
-      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/.idea/modules.xml" />
-      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/.idea/scopes/scope_settings.xml" />
-      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/.idea/symfony2.iml" />
-      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/.idea/vcs.xml" />
+      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/src/Hris/FormBundle/Admin/InputTypeAdmin.php" />
+      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/src/Hris/UserBundle/Admin/UserAdmin.php" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/.idea/workspace.xml" afterPath="$PROJECT_DIR$/.idea/workspace.xml" />
       <change type="MODIFICATION" beforePath="$PROJECT_DIR$/app/AppKernel.php" afterPath="$PROJECT_DIR$/app/AppKernel.php" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/src/Hris/DashboardBundle/Entity/DashboardChart.php" afterPath="$PROJECT_DIR$/src/Hris/DashboardBundle/Entity/DashboardChart.php" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/src/Hris/DashboardBundle/Entity/DashboardChartRepository.php" afterPath="$PROJECT_DIR$/src/Hris/DashboardBundle/Entity/DashboardChartRepository.php" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/src/Hris/DashboardBundle/HrisDashboardBundle.php" afterPath="$PROJECT_DIR$/src/Hris/DashboardBundle/HrisDashboardBundle.php" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/src/Hris/DataQualityBundle/Entity/Validation.php" afterPath="$PROJECT_DIR$/src/Hris/DataQualityBundle/Entity/Validation.php" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/src/Hris/DataQualityBundle/HrisDataQualityBundle.php" afterPath="$PROJECT_DIR$/src/Hris/DataQualityBundle/HrisDataQualityBundle.php" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/src/Hris/FormBundle/DataFixtures/ORM/LoadDataTypeData.php" afterPath="$PROJECT_DIR$/src/Hris/FormBundle/DataFixtures/ORM/LoadDataTypeData.php" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/app/config/config.yml" afterPath="$PROJECT_DIR$/app/config/config.yml" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/app/config/routing.yml" afterPath="$PROJECT_DIR$/app/config/routing.yml" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/composer.json" afterPath="$PROJECT_DIR$/composer.json" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/composer.lock" afterPath="$PROJECT_DIR$/composer.lock" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/src/Hris/AssetsBundle/HrisAssetsBundle.php" afterPath="$PROJECT_DIR$/src/Hris/AssetsBundle/HrisAssetsBundle.php" />
       <change type="MODIFICATION" beforePath="$PROJECT_DIR$/src/Hris/FormBundle/DataFixtures/ORM/LoadFieldData.php" afterPath="$PROJECT_DIR$/src/Hris/FormBundle/DataFixtures/ORM/LoadFieldData.php" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/src/Hris/FormBundle/DataFixtures/ORM/LoadFormData.php" afterPath="$PROJECT_DIR$/src/Hris/FormBundle/DataFixtures/ORM/LoadFormData.php" />
       <change type="MODIFICATION" beforePath="$PROJECT_DIR$/src/Hris/FormBundle/DataFixtures/ORM/LoadInputTypeData.php" afterPath="$PROJECT_DIR$/src/Hris/FormBundle/DataFixtures/ORM/LoadInputTypeData.php" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/src/Hris/FormBundle/Entity/ArithmeticFilter.php" afterPath="$PROJECT_DIR$/src/Hris/FormBundle/Entity/ArithmeticFilter.php" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/src/Hris/FormBundle/Entity/ArithmeticFilterRepository.php" afterPath="$PROJECT_DIR$/src/Hris/FormBundle/Entity/ArithmeticFilterRepository.php" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/src/Hris/FormBundle/Entity/DataType.php" afterPath="$PROJECT_DIR$/src/Hris/FormBundle/Entity/DataType.php" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/src/Hris/FormBundle/Entity/DataTypeRepository.php" afterPath="$PROJECT_DIR$/src/Hris/FormBundle/Entity/DataTypeRepository.php" />
       <change type="MODIFICATION" beforePath="$PROJECT_DIR$/src/Hris/FormBundle/Entity/Field.php" afterPath="$PROJECT_DIR$/src/Hris/FormBundle/Entity/Field.php" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/src/Hris/FormBundle/Entity/FieldGroup.php" afterPath="$PROJECT_DIR$/src/Hris/FormBundle/Entity/FieldGroup.php" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/src/Hris/FormBundle/Entity/FieldGroupRepository.php" afterPath="$PROJECT_DIR$/src/Hris/FormBundle/Entity/FieldGroupRepository.php" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/src/Hris/FormBundle/Entity/FieldGroupset.php" afterPath="$PROJECT_DIR$/src/Hris/FormBundle/Entity/FieldGroupset.php" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/src/Hris/FormBundle/Entity/FieldGroupsetRepository.php" afterPath="$PROJECT_DIR$/src/Hris/FormBundle/Entity/FieldGroupsetRepository.php" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/src/Hris/FormBundle/Entity/FieldOption.php" afterPath="$PROJECT_DIR$/src/Hris/FormBundle/Entity/FieldOption.php" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/src/Hris/FormBundle/Entity/FieldOptionGroup.php" afterPath="$PROJECT_DIR$/src/Hris/FormBundle/Entity/FieldOptionGroup.php" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/src/Hris/FormBundle/Entity/FieldOptionGroupRepository.php" afterPath="$PROJECT_DIR$/src/Hris/FormBundle/Entity/FieldOptionGroupRepository.php" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/src/Hris/FormBundle/Entity/FieldOptionGroupset.php" afterPath="$PROJECT_DIR$/src/Hris/FormBundle/Entity/FieldOptionGroupset.php" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/src/Hris/FormBundle/Entity/FieldOptionGroupsetRepository.php" afterPath="$PROJECT_DIR$/src/Hris/FormBundle/Entity/FieldOptionGroupsetRepository.php" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/src/Hris/FormBundle/Entity/FieldOptionMerge.php" afterPath="$PROJECT_DIR$/src/Hris/FormBundle/Entity/FieldOptionMerge.php" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/src/Hris/FormBundle/Entity/FieldOptionMergeRepository.php" afterPath="$PROJECT_DIR$/src/Hris/FormBundle/Entity/FieldOptionMergeRepository.php" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/src/Hris/FormBundle/Entity/FieldOptionRepository.php" afterPath="$PROJECT_DIR$/src/Hris/FormBundle/Entity/FieldOptionRepository.php" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/src/Hris/FormBundle/Entity/FieldRepository.php" afterPath="$PROJECT_DIR$/src/Hris/FormBundle/Entity/FieldRepository.php" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/src/Hris/FormBundle/Entity/Form.php" afterPath="$PROJECT_DIR$/src/Hris/FormBundle/Entity/Form.php" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/src/Hris/FormBundle/Entity/FormFieldMember.php" afterPath="$PROJECT_DIR$/src/Hris/FormBundle/Entity/FormFieldMember.php" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/src/Hris/FormBundle/Entity/FormFieldMemberRepository.php" afterPath="$PROJECT_DIR$/src/Hris/FormBundle/Entity/FormFieldMemberRepository.php" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/src/Hris/FormBundle/Entity/FormRepository.php" afterPath="$PROJECT_DIR$/src/Hris/FormBundle/Entity/FormRepository.php" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/src/Hris/FormBundle/Entity/FormSection.php" afterPath="$PROJECT_DIR$/src/Hris/FormBundle/Entity/FormSection.php" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/src/Hris/FormBundle/Entity/FormSectionFieldMember.php" afterPath="$PROJECT_DIR$/src/Hris/FormBundle/Entity/FormSectionFieldMember.php" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/src/Hris/FormBundle/Entity/FormSectionFieldMemberRepository.php" afterPath="$PROJECT_DIR$/src/Hris/FormBundle/Entity/FormSectionFieldMemberRepository.php" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/src/Hris/FormBundle/Entity/FormSectionRepository.php" afterPath="$PROJECT_DIR$/src/Hris/FormBundle/Entity/FormSectionRepository.php" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/src/Hris/FormBundle/Entity/FormVisibleFields.php" afterPath="$PROJECT_DIR$/src/Hris/FormBundle/Entity/FormVisibleFields.php" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/src/Hris/FormBundle/Entity/FormVisibleFieldsRepository.php" afterPath="$PROJECT_DIR$/src/Hris/FormBundle/Entity/FormVisibleFieldsRepository.php" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/src/Hris/FormBundle/Entity/FriendlyReport.php" afterPath="$PROJECT_DIR$/src/Hris/FormBundle/Entity/FriendlyReport.php" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/src/Hris/FormBundle/Entity/FriendlyReportCategory.php" afterPath="$PROJECT_DIR$/src/Hris/FormBundle/Entity/FriendlyReportCategory.php" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/src/Hris/FormBundle/Entity/FriendlyReportCategoryRepository.php" afterPath="$PROJECT_DIR$/src/Hris/FormBundle/Entity/FriendlyReportCategoryRepository.php" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/src/Hris/FormBundle/Entity/FriendlyReportRepository.php" afterPath="$PROJECT_DIR$/src/Hris/FormBundle/Entity/FriendlyReportRepository.php" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/src/Hris/FormBundle/Entity/InputType.php" afterPath="$PROJECT_DIR$/src/Hris/FormBundle/Entity/InputType.php" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/src/Hris/FormBundle/Entity/InputTypeRepository.php" afterPath="$PROJECT_DIR$/src/Hris/FormBundle/Entity/InputTypeRepository.php" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/src/Hris/FormBundle/Entity/RelationalFilter.php" afterPath="$PROJECT_DIR$/src/Hris/FormBundle/Entity/RelationalFilter.php" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/src/Hris/FormBundle/Entity/RelationalFilterRepository.php" afterPath="$PROJECT_DIR$/src/Hris/FormBundle/Entity/RelationalFilterRepository.php" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/src/Hris/FormBundle/Entity/ResourceTable.php" afterPath="$PROJECT_DIR$/src/Hris/FormBundle/Entity/ResourceTable.php" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/src/Hris/FormBundle/Entity/ResourceTableFieldMember.php" afterPath="$PROJECT_DIR$/src/Hris/FormBundle/Entity/ResourceTableFieldMember.php" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/src/Hris/FormBundle/Entity/ResourceTableFieldMemberRepository.php" afterPath="$PROJECT_DIR$/src/Hris/FormBundle/Entity/ResourceTableFieldMemberRepository.php" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/src/Hris/FormBundle/Entity/ResourceTableRepository.php" afterPath="$PROJECT_DIR$/src/Hris/FormBundle/Entity/ResourceTableRepository.php" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/src/Hris/FormBundle/HrisFormBundle.php" afterPath="$PROJECT_DIR$/src/Hris/FormBundle/HrisFormBundle.php" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/src/Hris/OrganisationunitBundle/Entity/Organisationunit.php" afterPath="$PROJECT_DIR$/src/Hris/OrganisationunitBundle/Entity/Organisationunit.php" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/src/Hris/OrganisationunitBundle/Entity/OrganisationunitCompleteness.php" afterPath="$PROJECT_DIR$/src/Hris/OrganisationunitBundle/Entity/OrganisationunitCompleteness.php" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/src/Hris/OrganisationunitBundle/Entity/OrganisationunitCompletenessRepository.php" afterPath="$PROJECT_DIR$/src/Hris/OrganisationunitBundle/Entity/OrganisationunitCompletenessRepository.php" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/src/Hris/OrganisationunitBundle/Entity/OrganisationunitGroup.php" afterPath="$PROJECT_DIR$/src/Hris/OrganisationunitBundle/Entity/OrganisationunitGroup.php" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/src/Hris/OrganisationunitBundle/Entity/OrganisationunitGroupRepository.php" afterPath="$PROJECT_DIR$/src/Hris/OrganisationunitBundle/Entity/OrganisationunitGroupRepository.php" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/src/Hris/OrganisationunitBundle/Entity/OrganisationunitGroupset.php" afterPath="$PROJECT_DIR$/src/Hris/OrganisationunitBundle/Entity/OrganisationunitGroupset.php" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/src/Hris/OrganisationunitBundle/Entity/OrganisationunitGroupsetRepository.php" afterPath="$PROJECT_DIR$/src/Hris/OrganisationunitBundle/Entity/OrganisationunitGroupsetRepository.php" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/src/Hris/OrganisationunitBundle/Entity/OrganisationunitLevel.php" afterPath="$PROJECT_DIR$/src/Hris/OrganisationunitBundle/Entity/OrganisationunitLevel.php" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/src/Hris/OrganisationunitBundle/Entity/OrganisationunitLevelRepository.php" afterPath="$PROJECT_DIR$/src/Hris/OrganisationunitBundle/Entity/OrganisationunitLevelRepository.php" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/src/Hris/OrganisationunitBundle/Entity/OrganisationunitRepository.php" afterPath="$PROJECT_DIR$/src/Hris/OrganisationunitBundle/Entity/OrganisationunitRepository.php" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/src/Hris/OrganisationunitBundle/Entity/OrganisationunitStructure.php" afterPath="$PROJECT_DIR$/src/Hris/OrganisationunitBundle/Entity/OrganisationunitStructure.php" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/src/Hris/OrganisationunitBundle/Entity/OrganisationunitStructureRepository.php" afterPath="$PROJECT_DIR$/src/Hris/OrganisationunitBundle/Entity/OrganisationunitStructureRepository.php" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/src/Hris/OrganisationunitBundle/HrisOrganisationunitBundle.php" afterPath="$PROJECT_DIR$/src/Hris/OrganisationunitBundle/HrisOrganisationunitBundle.php" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/src/Hris/RecordsBundle/Entity/History.php" afterPath="$PROJECT_DIR$/src/Hris/RecordsBundle/Entity/History.php" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/src/Hris/RecordsBundle/Entity/HistoryRepository.php" afterPath="$PROJECT_DIR$/src/Hris/RecordsBundle/Entity/HistoryRepository.php" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/src/Hris/RecordsBundle/Entity/Record.php" afterPath="$PROJECT_DIR$/src/Hris/RecordsBundle/Entity/Record.php" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/src/Hris/RecordsBundle/Entity/RecordRepository.php" afterPath="$PROJECT_DIR$/src/Hris/RecordsBundle/Entity/RecordRepository.php" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/src/Hris/RecordsBundle/Entity/RecordStats.php" afterPath="$PROJECT_DIR$/src/Hris/RecordsBundle/Entity/RecordStats.php" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/src/Hris/RecordsBundle/Entity/RecordStatsRepository.php" afterPath="$PROJECT_DIR$/src/Hris/RecordsBundle/Entity/RecordStatsRepository.php" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/src/Hris/RecordsBundle/Entity/RecordValue.php" afterPath="$PROJECT_DIR$/src/Hris/RecordsBundle/Entity/RecordValue.php" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/src/Hris/RecordsBundle/Entity/RecordValueRepository.php" afterPath="$PROJECT_DIR$/src/Hris/RecordsBundle/Entity/RecordValueRepository.php" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/src/Hris/RecordsBundle/Entity/Training.php" afterPath="$PROJECT_DIR$/src/Hris/RecordsBundle/Entity/Training.php" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/src/Hris/RecordsBundle/Entity/TrainingRepository.php" afterPath="$PROJECT_DIR$/src/Hris/RecordsBundle/Entity/TrainingRepository.php" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/src/Hris/RecordsBundle/HrisRecordsBundle.php" afterPath="$PROJECT_DIR$/src/Hris/RecordsBundle/HrisRecordsBundle.php" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/src/Hris/FormBundle/Resources/config/services.yml" afterPath="$PROJECT_DIR$/src/Hris/FormBundle/Resources/config/services.yml" />
       <change type="MODIFICATION" beforePath="$PROJECT_DIR$/src/Hris/UserBundle/DataFixtures/ORM/LoadUserData.php" afterPath="$PROJECT_DIR$/src/Hris/UserBundle/DataFixtures/ORM/LoadUserData.php" />
       <change type="MODIFICATION" beforePath="$PROJECT_DIR$/src/Hris/UserBundle/Entity/User.php" afterPath="$PROJECT_DIR$/src/Hris/UserBundle/Entity/User.php" />
       <change type="MODIFICATION" beforePath="$PROJECT_DIR$/src/Hris/UserBundle/Entity/UserInfo.php" afterPath="$PROJECT_DIR$/src/Hris/UserBundle/Entity/UserInfo.php" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/src/Hris/UserBundle/Entity/UserRepository.php" afterPath="$PROJECT_DIR$/src/Hris/UserBundle/Entity/UserRepository.php" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/src/Hris/UserBundle/HrisUserBundle.php" afterPath="$PROJECT_DIR$/src/Hris/UserBundle/HrisUserBundle.php" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/src/Hris/UserBundle/Resources/config/services.yml" afterPath="$PROJECT_DIR$/src/Hris/UserBundle/Resources/config/services.yml" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/src/Hris/UserBundle/Tests/Controller/DefaultControllerTest.php" afterPath="$PROJECT_DIR$/src/Hris/UserBundle/Tests/Controller/DefaultControllerTest.php" />
     </list>
     <ignored path="symfony2.iws" />
     <ignored path=".idea/workspace.xml" />
@@ -115,19 +49,10 @@
   <component name="ExecutionTargetManager" SELECTED_TARGET="default_target" />
   <component name="FileEditorManager">
     <leaf>
-      <file leaf-file-name="AppKernel.php" pinned="false" current="false" current-in-tab="false">
-        <entry file="file://$PROJECT_DIR$/app/AppKernel.php">
+      <file leaf-file-name="InputTypeAdmin.php" pinned="false" current="false" current-in-tab="false">
+        <entry file="file://$PROJECT_DIR$/src/Hris/FormBundle/Admin/InputTypeAdmin.php">
           <provider selected="true" editor-type-id="text-editor">
-            <state line="15" column="45" selection-start="568" selection-end="568" vertical-scroll-proportion="-9.375">
-              <folding />
-            </state>
-          </provider>
-        </entry>
-      </file>
-      <file leaf-file-name="DashboardChart.php" pinned="false" current="true" current-in-tab="true">
-        <entry file="file://$PROJECT_DIR$/src/Hris/DashboardBundle/Entity/DashboardChart.php">
-          <provider selected="true" editor-type-id="text-editor">
-            <state line="49" column="7" selection-start="1625" selection-end="1625" vertical-scroll-proportion="0.6130536">
+            <state line="62" column="26" selection-start="1827" selection-end="1827" vertical-scroll-proportion="-16.875">
               <folding>
                 <element signature="e#6#869#0" expanded="true" />
               </folding>
@@ -135,12 +60,59 @@
           </provider>
         </entry>
       </file>
-      <file leaf-file-name="AsseticBundle.php" pinned="false" current="false" current-in-tab="false">
-        <entry file="file://$PROJECT_DIR$/vendor/symfony/assetic-bundle/Symfony/Bundle/AsseticBundle/AsseticBundle.php">
+      <file leaf-file-name="AppKernel.php" pinned="false" current="false" current-in-tab="false">
+        <entry file="file://$PROJECT_DIR$/app/AppKernel.php">
           <provider selected="true" editor-type-id="text-editor">
-            <state line="2" column="0" selection-start="7" selection-end="7" vertical-scroll-proportion="4.375">
+            <state line="24" column="57" selection-start="1165" selection-end="1165" vertical-scroll-proportion="-13.75">
+              <folding />
+            </state>
+          </provider>
+        </entry>
+      </file>
+      <file leaf-file-name="LoadFieldData.php" pinned="false" current="false" current-in-tab="false">
+        <entry file="file://$PROJECT_DIR$/src/Hris/FormBundle/DataFixtures/ORM/LoadFieldData.php">
+          <provider selected="true" editor-type-id="text-editor">
+            <state line="84" column="14" selection-start="2867" selection-end="2867" vertical-scroll-proportion="-9.75">
+              <folding />
+            </state>
+          </provider>
+        </entry>
+      </file>
+      <file leaf-file-name="Field.php" pinned="false" current="false" current-in-tab="false">
+        <entry file="file://$PROJECT_DIR$/src/Hris/FormBundle/Entity/Field.php">
+          <provider selected="true" editor-type-id="text-editor">
+            <state line="856" column="15" selection-start="20693" selection-end="20693" vertical-scroll-proportion="-13.541667">
+              <folding />
+            </state>
+          </provider>
+        </entry>
+      </file>
+      <file leaf-file-name="services.yml" pinned="false" current="false" current-in-tab="false">
+        <entry file="file://$PROJECT_DIR$/src/Hris/FormBundle/Resources/config/services.yml">
+          <provider selected="true" editor-type-id="text-editor">
+            <state line="8" column="85" selection-start="334" selection-end="334" vertical-scroll-proportion="0.0">
+              <folding />
+            </state>
+          </provider>
+        </entry>
+      </file>
+      <file leaf-file-name="LoadUserData.php" pinned="false" current="false" current-in-tab="false">
+        <entry file="file://$PROJECT_DIR$/src/Hris/UserBundle/DataFixtures/ORM/LoadUserData.php">
+          <provider selected="true" editor-type-id="text-editor">
+            <state line="42" column="36" selection-start="1404" selection-end="1417" vertical-scroll-proportion="-6.0416665">
               <folding>
-                <element signature="e#7#223#0" expanded="true" />
+                <element signature="e#6#869#0" expanded="true" />
+              </folding>
+            </state>
+          </provider>
+        </entry>
+      </file>
+      <file leaf-file-name="UserAdmin.php" pinned="false" current="true" current-in-tab="true">
+        <entry file="file://$PROJECT_DIR$/src/Hris/UserBundle/Admin/UserAdmin.php">
+          <provider selected="true" editor-type-id="text-editor">
+            <state line="39" column="27" selection-start="1321" selection-end="1329" vertical-scroll-proportion="0.34375">
+              <folding>
+                <element signature="e#6#869#0" expanded="true" />
               </folding>
             </state>
           </provider>
@@ -159,30 +131,30 @@
   <component name="IdeDocumentHistory">
     <option name="changedFiles">
       <list>
-        <option value="$PROJECT_DIR$/src/Hris/OrganisationunitBundle/Entity/OrganisationunitStructure.php" />
-        <option value="$PROJECT_DIR$/src/Hris/OrganisationunitBundle/Entity/OrganisationunitStructureRepository.php" />
-        <option value="$PROJECT_DIR$/src/Hris/OrganisationunitBundle/HrisOrganisationunitBundle.php" />
-        <option value="$PROJECT_DIR$/src/Hris/RecordsBundle/Entity/HistoryRepository.php" />
-        <option value="$PROJECT_DIR$/src/Hris/RecordsBundle/Entity/History.php" />
-        <option value="$PROJECT_DIR$/src/Hris/RecordsBundle/Entity/Record.php" />
-        <option value="$PROJECT_DIR$/src/Hris/RecordsBundle/Entity/RecordRepository.php" />
-        <option value="$PROJECT_DIR$/src/Hris/RecordsBundle/Entity/RecordStats.php" />
-        <option value="$PROJECT_DIR$/src/Hris/RecordsBundle/Entity/RecordStatsRepository.php" />
-        <option value="$PROJECT_DIR$/src/Hris/RecordsBundle/Entity/RecordValue.php" />
-        <option value="$PROJECT_DIR$/src/Hris/RecordsBundle/Entity/RecordValueRepository.php" />
-        <option value="$PROJECT_DIR$/src/Hris/RecordsBundle/Entity/Training.php" />
-        <option value="$PROJECT_DIR$/src/Hris/RecordsBundle/Entity/TrainingRepository.php" />
-        <option value="$PROJECT_DIR$/src/Hris/RecordsBundle/HrisRecordsBundle.php" />
+        <option value="$PROJECT_DIR$/composer.json" />
+        <option value="$PROJECT_DIR$/src/Hris/UserBundle/Resources/config/services.yml" />
+        <option value="$PROJECT_DIR$/src/Hris/AssetsBundle/HrisAssetsBundle.php" />
+        <option value="$PROJECT_DIR$/src/Hris/UserBundle/HrisUserBundle.php" />
+        <option value="$PROJECT_DIR$/src/Hris/UserBundle/DataFixtures/ORM/LoadUserData.php" />
+        <option value="$PROJECT_DIR$/src/Hris/UserBundle/Entity/User.php" />
+        <option value="$PROJECT_DIR$/src/Hris/UserBundle/Entity/UserInfo.php" />
+        <option value="$PROJECT_DIR$/src/Hris/UserBundle/Entity/UserRepository.php" />
+        <option value="$PROJECT_DIR$/src/Hris/UserBundle/Tests/Controller/DefaultControllerTest.php" />
+        <option value="$PROJECT_DIR$/src/Hris/FormBundle/Admin/InputTypeAdmin.php" />
+        <option value="$PROJECT_DIR$/src/Hris/FormBundle/Resources/config/services.yml" />
         <option value="$PROJECT_DIR$/app/AppKernel.php" />
-        <option value="$PROJECT_DIR$/src/Hris/DashboardBundle/Entity/DashboardChart.php" />
+        <option value="$PROJECT_DIR$/src/Hris/FormBundle/DataFixtures/ORM/LoadInputTypeData.php" />
+        <option value="$PROJECT_DIR$/src/Hris/FormBundle/Entity/Field.php" />
+        <option value="$PROJECT_DIR$/src/Hris/FormBundle/DataFixtures/ORM/LoadFieldData.php" />
+        <option value="$PROJECT_DIR$/src/Hris/UserBundle/Admin/UserAdmin.php" />
       </list>
     </option>
   </component>
   <component name="PhpWorkspaceProjectConfiguration" backward_compatibility_performed="true" interpreter_name="php5.3" />
   <component name="ProjectFrameBounds">
-    <option name="x" value="68" />
-    <option name="y" value="66" />
-    <option name="width" value="1484" />
+    <option name="x" value="34" />
+    <option name="y" value="63" />
+    <option name="width" value="1771" />
     <option name="height" value="912" />
   </component>
   <component name="ProjectInspectionProfilesVisibleTreeState">
@@ -296,7 +268,181 @@
               <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
             </PATH_ELEMENT>
             <PATH_ELEMENT>
+              <option name="myItemId" value="src" />
+              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
+            </PATH_ELEMENT>
+            <PATH_ELEMENT>
+              <option name="myItemId" value="Hris" />
+              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
+            </PATH_ELEMENT>
+            <PATH_ELEMENT>
+              <option name="myItemId" value="UserBundle" />
+              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
+            </PATH_ELEMENT>
+          </PATH>
+          <PATH>
+            <PATH_ELEMENT>
+              <option name="myItemId" value="symfony2" />
+              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.ProjectViewProjectNode" />
+            </PATH_ELEMENT>
+            <PATH_ELEMENT>
+              <option name="myItemId" value="symfony2" />
+              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
+            </PATH_ELEMENT>
+            <PATH_ELEMENT>
+              <option name="myItemId" value="src" />
+              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
+            </PATH_ELEMENT>
+            <PATH_ELEMENT>
+              <option name="myItemId" value="Hris" />
+              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
+            </PATH_ELEMENT>
+            <PATH_ELEMENT>
+              <option name="myItemId" value="UserBundle" />
+              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
+            </PATH_ELEMENT>
+            <PATH_ELEMENT>
+              <option name="myItemId" value="DataFixtures" />
+              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
+            </PATH_ELEMENT>
+            <PATH_ELEMENT>
+              <option name="myItemId" value="ORM" />
+              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
+            </PATH_ELEMENT>
+          </PATH>
+          <PATH>
+            <PATH_ELEMENT>
+              <option name="myItemId" value="symfony2" />
+              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.ProjectViewProjectNode" />
+            </PATH_ELEMENT>
+            <PATH_ELEMENT>
+              <option name="myItemId" value="symfony2" />
+              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
+            </PATH_ELEMENT>
+            <PATH_ELEMENT>
+              <option name="myItemId" value="src" />
+              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
+            </PATH_ELEMENT>
+            <PATH_ELEMENT>
+              <option name="myItemId" value="Hris" />
+              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
+            </PATH_ELEMENT>
+            <PATH_ELEMENT>
+              <option name="myItemId" value="UserBundle" />
+              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
+            </PATH_ELEMENT>
+            <PATH_ELEMENT>
+              <option name="myItemId" value="Admin" />
+              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
+            </PATH_ELEMENT>
+          </PATH>
+          <PATH>
+            <PATH_ELEMENT>
+              <option name="myItemId" value="symfony2" />
+              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.ProjectViewProjectNode" />
+            </PATH_ELEMENT>
+            <PATH_ELEMENT>
+              <option name="myItemId" value="symfony2" />
+              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
+            </PATH_ELEMENT>
+            <PATH_ELEMENT>
+              <option name="myItemId" value="src" />
+              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
+            </PATH_ELEMENT>
+            <PATH_ELEMENT>
+              <option name="myItemId" value="Hris" />
+              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
+            </PATH_ELEMENT>
+            <PATH_ELEMENT>
+              <option name="myItemId" value="FormBundle" />
+              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
+            </PATH_ELEMENT>
+          </PATH>
+          <PATH>
+            <PATH_ELEMENT>
+              <option name="myItemId" value="symfony2" />
+              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.ProjectViewProjectNode" />
+            </PATH_ELEMENT>
+            <PATH_ELEMENT>
+              <option name="myItemId" value="symfony2" />
+              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
+            </PATH_ELEMENT>
+            <PATH_ELEMENT>
+              <option name="myItemId" value="src" />
+              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
+            </PATH_ELEMENT>
+            <PATH_ELEMENT>
+              <option name="myItemId" value="Hris" />
+              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
+            </PATH_ELEMENT>
+            <PATH_ELEMENT>
+              <option name="myItemId" value="FormBundle" />
+              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
+            </PATH_ELEMENT>
+            <PATH_ELEMENT>
+              <option name="myItemId" value="Entity" />
+              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
+            </PATH_ELEMENT>
+          </PATH>
+          <PATH>
+            <PATH_ELEMENT>
+              <option name="myItemId" value="symfony2" />
+              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.ProjectViewProjectNode" />
+            </PATH_ELEMENT>
+            <PATH_ELEMENT>
+              <option name="myItemId" value="symfony2" />
+              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
+            </PATH_ELEMENT>
+            <PATH_ELEMENT>
+              <option name="myItemId" value="src" />
+              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
+            </PATH_ELEMENT>
+            <PATH_ELEMENT>
+              <option name="myItemId" value="Hris" />
+              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
+            </PATH_ELEMENT>
+            <PATH_ELEMENT>
+              <option name="myItemId" value="FormBundle" />
+              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
+            </PATH_ELEMENT>
+            <PATH_ELEMENT>
+              <option name="myItemId" value="DataFixtures" />
+              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
+            </PATH_ELEMENT>
+            <PATH_ELEMENT>
+              <option name="myItemId" value="ORM" />
+              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
+            </PATH_ELEMENT>
+          </PATH>
+          <PATH>
+            <PATH_ELEMENT>
+              <option name="myItemId" value="symfony2" />
+              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.ProjectViewProjectNode" />
+            </PATH_ELEMENT>
+            <PATH_ELEMENT>
+              <option name="myItemId" value="symfony2" />
+              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
+            </PATH_ELEMENT>
+            <PATH_ELEMENT>
               <option name="myItemId" value="app" />
+              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
+            </PATH_ELEMENT>
+          </PATH>
+          <PATH>
+            <PATH_ELEMENT>
+              <option name="myItemId" value="symfony2" />
+              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.ProjectViewProjectNode" />
+            </PATH_ELEMENT>
+            <PATH_ELEMENT>
+              <option name="myItemId" value="symfony2" />
+              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
+            </PATH_ELEMENT>
+            <PATH_ELEMENT>
+              <option name="myItemId" value="app" />
+              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
+            </PATH_ELEMENT>
+            <PATH_ELEMENT>
+              <option name="myItemId" value="config" />
               <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
             </PATH_ELEMENT>
           </PATH>
@@ -310,6 +456,11 @@
     <property name="recentsLimit" value="5" />
     <property name="dynamic.classpath" value="false" />
   </component>
+  <component name="RecentsManager">
+    <key name="CopyFile.RECENT_KEYS">
+      <recent name="$PROJECT_DIR$/src/Hris/FormBundle/Admin" />
+    </key>
+  </component>
   <component name="RunManager" selected="PHPUnit.symfony2">
     <configuration default="false" name="symfony2" type="PHPUnitRunConfigurationType" factoryName="PHPUnit" editBeforeRun="true" temporary="true">
       <TestRunner directory="$PROJECT_DIR$" />
@@ -321,6 +472,9 @@
     </configuration>
     <configuration default="true" type="PHPUnitRunConfigurationType" factoryName="PHPUnit">
       <TestRunner />
+      <method />
+    </configuration>
+    <configuration default="true" type="PhpLocalRunConfigurationType" factoryName="PHP Console">
       <method />
     </configuration>
     <configuration default="true" type="com.intellij.persistence.run.ConsoleRunConfigurationType" factoryName="Query Language Console">
@@ -386,17 +540,17 @@
     </todo-panel>
   </component>
   <component name="ToolWindowManager">
-    <frame x="68" y="66" width="1484" height="912" extended-state="0" />
-    <editor active="false" />
+    <frame x="34" y="63" width="1771" height="912" extended-state="0" />
+    <editor active="true" />
     <layout>
       <window_info id="Changes" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.33" sideWeight="0.5" order="7" side_tool="false" content_ui="tabs" />
       <window_info id="TODO" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.32943144" sideWeight="0.5" order="6" side_tool="false" content_ui="tabs" />
-      <window_info id="Find" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.33" sideWeight="0.5" order="1" side_tool="false" content_ui="tabs" />
+      <window_info id="Find" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="true" weight="0.32911393" sideWeight="0.5" order="1" side_tool="false" content_ui="tabs" />
       <window_info id="Database" active="false" anchor="right" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.32911393" sideWeight="0.5" order="3" side_tool="false" content_ui="tabs" />
       <window_info id="Structure" active="false" anchor="left" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.25" sideWeight="0.5" order="1" side_tool="true" content_ui="tabs" />
-      <window_info id="Project" active="true" anchor="left" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="true" weight="0.2579972" sideWeight="0.6544304" order="0" side_tool="false" content_ui="combo" />
+      <window_info id="Project" active="false" anchor="left" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="true" weight="0.21507247" sideWeight="0.6708861" order="0" side_tool="false" content_ui="combo" />
       <window_info id="Debug" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.39966556" sideWeight="0.5" order="3" side_tool="false" content_ui="tabs" />
-      <window_info id="Inspection" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="true" weight="0.3455696" sideWeight="0.5" order="5" side_tool="false" content_ui="tabs" />
+      <window_info id="Inspection" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.3455696" sideWeight="0.5" order="5" side_tool="false" content_ui="tabs" />
       <window_info id="Favorites" active="false" anchor="left" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.33" sideWeight="0.5" order="2" side_tool="true" content_ui="tabs" />
       <window_info id="Event Log" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.33" sideWeight="0.5" order="7" side_tool="true" content_ui="tabs" />
       <window_info id="Run" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.32943144" sideWeight="0.5" order="2" side_tool="false" content_ui="tabs" />
@@ -461,142 +615,124 @@
     <breakpoint-manager />
   </component>
   <component name="editorHistoryManager">
-    <entry file="file://$PROJECT_DIR$/src/Hris/OrganisationunitBundle/Entity/OrganisationunitStructureRepository.php">
+    <entry file="file://$PROJECT_DIR$/src/Hris/UserBundle/Entity/User.php">
       <provider selected="true" editor-type-id="text-editor">
-        <state line="23" column="3" selection-start="869" selection-end="869" vertical-scroll-proportion="-6.2083335">
+        <state line="23" column="3" selection-start="869" selection-end="869" vertical-scroll-proportion="0.751634">
           <folding>
             <element signature="e#6#869#0" expanded="true" />
           </folding>
         </state>
       </provider>
     </entry>
-    <entry file="file://$PROJECT_DIR$/src/Hris/OrganisationunitBundle/HrisOrganisationunitBundle.php">
+    <entry file="file://$PROJECT_DIR$/src/Hris/UserBundle/HrisUserBundle.php">
       <provider selected="true" editor-type-id="text-editor">
-        <state line="23" column="3" selection-start="869" selection-end="869" vertical-scroll-proportion="-9.958333">
+        <state line="23" column="3" selection-start="869" selection-end="869" vertical-scroll-proportion="0.71875">
           <folding>
             <element signature="e#6#869#0" expanded="true" />
           </folding>
         </state>
       </provider>
     </entry>
-    <entry file="file://$PROJECT_DIR$/src/Hris/RecordsBundle/Entity/History.php">
+    <entry file="file://$PROJECT_DIR$/src/Hris/AssetsBundle/HrisAssetsBundle.php">
       <provider selected="true" editor-type-id="text-editor">
-        <state line="332" column="16" selection-start="6465" selection-end="6465" vertical-scroll-proportion="-207.5">
+        <state line="23" column="3" selection-start="869" selection-end="869" vertical-scroll-proportion="-11.25">
           <folding>
             <element signature="e#6#869#0" expanded="true" />
           </folding>
         </state>
       </provider>
     </entry>
-    <entry file="file://$PROJECT_DIR$/src/Hris/RecordsBundle/Entity/HistoryRepository.php">
+    <entry file="file://$PROJECT_DIR$/src/Hris/FormBundle/Entity/InputType.php">
       <provider selected="true" editor-type-id="text-editor">
-        <state line="1" column="0" selection-start="6" selection-end="869" vertical-scroll-proportion="-0.625">
-          <folding>
-            <element signature="e#6#869#0" expanded="true" />
-          </folding>
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/src/Hris/RecordsBundle/Entity/Record.php">
-      <provider selected="true" editor-type-id="text-editor">
-        <state line="23" column="3" selection-start="869" selection-end="869" vertical-scroll-proportion="-14.375">
-          <folding>
-            <element signature="e#6#869#0" expanded="true" />
-          </folding>
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/src/Hris/RecordsBundle/Entity/RecordRepository.php">
-      <provider selected="true" editor-type-id="text-editor">
-        <state line="23" column="3" selection-start="869" selection-end="869" vertical-scroll-proportion="-5.2083335">
-          <folding>
-            <element signature="e#6#869#0" expanded="true" />
-          </folding>
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/src/Hris/RecordsBundle/Entity/RecordStats.php">
-      <provider selected="true" editor-type-id="text-editor">
-        <state line="23" column="3" selection-start="869" selection-end="869" vertical-scroll-proportion="40.0">
-          <folding>
-            <element signature="e#6#869#0" expanded="true" />
-          </folding>
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/src/Hris/RecordsBundle/Entity/RecordStatsRepository.php">
-      <provider selected="true" editor-type-id="text-editor">
-        <state line="23" column="3" selection-start="869" selection-end="869" vertical-scroll-proportion="-6.0833335">
-          <folding>
-            <element signature="e#6#869#0" expanded="true" />
-          </folding>
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/src/Hris/RecordsBundle/Entity/RecordValue.php">
-      <provider selected="true" editor-type-id="text-editor">
-        <state line="266" column="15" selection-start="5275" selection-end="5275" vertical-scroll-proportion="-13.041667">
-          <folding>
-            <element signature="e#6#869#0" expanded="true" />
-          </folding>
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/src/Hris/RecordsBundle/Entity/RecordValueRepository.php">
-      <provider selected="true" editor-type-id="text-editor">
-        <state line="23" column="3" selection-start="869" selection-end="869" vertical-scroll-proportion="-14.375">
-          <folding>
-            <element signature="e#6#869#0" expanded="true" />
-          </folding>
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/src/Hris/RecordsBundle/Entity/Training.php">
-      <provider selected="true" editor-type-id="text-editor">
-        <state line="384" column="16" selection-start="7202" selection-end="7202" vertical-scroll-proportion="-240.0">
-          <folding>
-            <element signature="e#6#869#0" expanded="true" />
-          </folding>
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/src/Hris/RecordsBundle/Entity/TrainingRepository.php">
-      <provider selected="true" editor-type-id="text-editor">
-        <state line="23" column="3" selection-start="869" selection-end="869" vertical-scroll-proportion="-6.0833335">
-          <folding>
-            <element signature="e#6#869#0" expanded="true" />
-          </folding>
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/src/Hris/RecordsBundle/HrisRecordsBundle.php">
-      <provider selected="true" editor-type-id="text-editor">
-        <state line="23" column="3" selection-start="869" selection-end="869" vertical-scroll-proportion="0.5503212">
-          <folding>
-            <element signature="e#6#869#0" expanded="true" />
-          </folding>
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/vendor/symfony/assetic-bundle/Symfony/Bundle/AsseticBundle/AsseticBundle.php">
-      <provider selected="true" editor-type-id="text-editor">
-        <state line="2" column="0" selection-start="7" selection-end="7" vertical-scroll-proportion="4.375">
-          <folding>
-            <element signature="e#7#223#0" expanded="true" />
-          </folding>
+        <state line="0" column="0" selection-start="0" selection-end="0" vertical-scroll-proportion="16.875">
+          <folding />
         </state>
       </provider>
     </entry>
     <entry file="file://$PROJECT_DIR$/app/AppKernel.php">
       <provider selected="true" editor-type-id="text-editor">
-        <state line="15" column="45" selection-start="568" selection-end="568" vertical-scroll-proportion="-9.375">
+        <state line="24" column="57" selection-start="1165" selection-end="1165" vertical-scroll-proportion="-13.75">
           <folding />
         </state>
       </provider>
     </entry>
-    <entry file="file://$PROJECT_DIR$/src/Hris/DashboardBundle/Entity/DashboardChart.php">
+    <entry file="file://$PROJECT_DIR$/src/Hris/FormBundle/DataFixtures/ORM/LoadDataTypeData.php">
       <provider selected="true" editor-type-id="text-editor">
-        <state line="49" column="7" selection-start="1625" selection-end="1625" vertical-scroll-proportion="0.6130536">
+        <state line="0" column="0" selection-start="0" selection-end="0" vertical-scroll-proportion="0.0">
+          <folding />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/src/Hris/FormBundle/DataFixtures/ORM/LoadInputTypeData.php">
+      <provider selected="true" editor-type-id="text-editor">
+        <state line="31" column="51" selection-start="1160" selection-end="1160" vertical-scroll-proportion="-0.09803922">
+          <folding />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/src/Hris/FormBundle/DataFixtures/ORM/LoadFormData.php">
+      <provider selected="true" editor-type-id="text-editor">
+        <state line="0" column="0" selection-start="0" selection-end="0" vertical-scroll-proportion="0.0">
+          <folding />
+        </state>
+      </provider>
+    </entry>
+    <entry file="jar://$APPLICATION_HOME_DIR$/plugins/php/lib/php.jar!/com/jetbrains/php/lang/psi/stubs/data/Core_d.php">
+      <provider selected="true" editor-type-id="text-editor">
+        <state line="298" column="8" selection-start="7618" selection-end="7618" vertical-scroll-proportion="1.2729167">
+          <folding />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/vendor/sonata-project/jquery-bundle/Sonata/jQueryBundle/SonatajQueryBundle.php">
+      <provider selected="true" editor-type-id="text-editor">
+        <state line="14" column="24" selection-start="334" selection-end="352" vertical-scroll-proportion="0.21875">
+          <folding />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/src/Hris/FormBundle/Entity/Field.php">
+      <provider selected="true" editor-type-id="text-editor">
+        <state line="856" column="15" selection-start="20693" selection-end="20693" vertical-scroll-proportion="-13.541667">
+          <folding />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/src/Hris/FormBundle/DataFixtures/ORM/LoadFieldData.php">
+      <provider selected="true" editor-type-id="text-editor">
+        <state line="84" column="14" selection-start="2867" selection-end="2867" vertical-scroll-proportion="-9.75">
+          <folding />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/src/Hris/FormBundle/Admin/InputTypeAdmin.php">
+      <provider selected="true" editor-type-id="text-editor">
+        <state line="62" column="26" selection-start="1827" selection-end="1827" vertical-scroll-proportion="-16.875">
+          <folding>
+            <element signature="e#6#869#0" expanded="true" />
+          </folding>
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/src/Hris/FormBundle/Resources/config/services.yml">
+      <provider selected="true" editor-type-id="text-editor">
+        <state line="8" column="85" selection-start="334" selection-end="334" vertical-scroll-proportion="0.0">
+          <folding />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/src/Hris/UserBundle/DataFixtures/ORM/LoadUserData.php">
+      <provider selected="true" editor-type-id="text-editor">
+        <state line="42" column="36" selection-start="1404" selection-end="1417" vertical-scroll-proportion="-6.0416665">
+          <folding>
+            <element signature="e#6#869#0" expanded="true" />
+          </folding>
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/src/Hris/UserBundle/Admin/UserAdmin.php">
+      <provider selected="true" editor-type-id="text-editor">
+        <state line="39" column="27" selection-start="1321" selection-end="1329" vertical-scroll-proportion="0.34375">
           <folding>
             <element signature="e#6#869#0" expanded="true" />
           </folding>

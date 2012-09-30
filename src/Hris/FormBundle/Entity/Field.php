@@ -852,6 +852,9 @@ class Field
         $this->resourceTableFieldMember = new \Doctrine\Common\Collections\ArrayCollection();
         $this->uid = uniqid();
         $this->datecreated = new \DateTime('now');
+        $this->hashistory = false;
+        $this->unique = false;
+        $this->compulsory = True;
     }
     
     /**

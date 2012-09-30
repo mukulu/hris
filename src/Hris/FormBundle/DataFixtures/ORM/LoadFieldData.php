@@ -44,37 +44,37 @@ class LoadFieldData extends AbstractFixture implements OrderedFixtureInterface
 						'inputType'=>'Text',
 						'name'=>'Firstname',
 						'caption'=>'First name',
-						'compulsory'=>True,
-						'unique'=>False,
+						'compulsory'=>true,
+						'unique'=>false,
 						'description'=>"Employee's firstname (Compulsory)",
-						'history'=>False),
+						'history'=>false),
 				1=>Array(
 						'dataType'=>'String',
 						'inputType'=>'Text',
 						'name'=>'Middlename',
 						'caption'=>'Middle name',
-						'compulsory'=>False,
-						'unique'=>False,
+						'compulsory'=>false,
+						'unique'=>false,
 						'description'=>"Employee's middlename (Optional)",
-						'history'=>False),
+						'history'=>false),
 				2=>Array(
 						'dataType'=>'String',
 						'inputType'=>'Text',
 						'name'=>'Surname',
 						'caption'=>'Surname',
-						'compulsory'=>True,
-						'unique'=>False,
+						'compulsory'=>true,
+						'unique'=>false,
 						'description'=>"Employee's Surname/Lastname(Compulsory)",
-						'history'=>True),
+						'history'=>true),
 				3=>Array(
 						'dataType'=>'Date',
 						'inputType'=>'Date',
 						'name'=>'Birthdate',
 						'caption'=>'Date of Birth',
-						'compulsory'=>True,
-						'unique'=>False,
+						'compulsory'=>true,
+						'unique'=>false,
 						'description'=>"Employee's Date of Birth(Compulsory)",
-						'history'=>False),
+						'history'=>false),
 		);
 		foreach($humanResourceFields as $key=>$humanResourceField) {
 			$field = new Field();
@@ -82,9 +82,10 @@ class LoadFieldData extends AbstractFixture implements OrderedFixtureInterface
 			$field->setInputType($manager->merge($this->getReference(strtolower($humanResourceField['inputType']).'-inputtype')));
 			$field->setName($humanResourceField['name']);
 			$field->setCaption($humanResourceField['caption']);
-			$field->setDescription($humanResourceField['description']);
+			//$field->setDescription($humanResourceField['description']);
 			$field->setHashistory($humanResourceField['history']);
 			$field->setCompulsory($humanResourceField['compulsory']);
+            $field->setUnique($humanResourceField['unique']);
 			$field->setDatecreated(new \DateTime('now'));
 			$this->addReference(strtolower($humanResourceField['name']).'-field', $field);
 			$manager->persist($field);

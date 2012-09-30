@@ -70,38 +70,45 @@ monolog:
         file:
             type: stream
             level: debug
-
+#FOSUser Bundle configuration
 fos_user:
     db_driver: orm # other valid values are 'mongodb', 'couchdb' and 'propel'
     firewall_name: main_firewall
     user_class: Hris\UserBundle\Entity\User
+#KnpMenuBundle Configurations
+knp_menu:
+    twig:  # use "twig: false" to disable the Twig extension and the TwigRenderer
+        template: knp_menu.html.twig
+    templating: false # if true, enables the helper for PHP templates
+    default_renderer: twig # The renderer to use, list is also available by default
 
-# Sonata Configurations
-#sonata_admin:
+#SonataAdminBundle Configurations
+sonata_admin:
 #    security_handler: sonata.admin.security.handler.noop
-#
-#    title:      Sonata Project
-#    title_logo: /bundles/sonataadmin/logo_title.png
-#    templates:
-#        # default global templates
-#        layout:  SonataAdminBundle::standard_layout.html.twig
-#        ajax:    SonataAdminBundle::ajax_layout.html.twig
-#        dashboard: SonataAdminBundle:Core:dashboard.html.twig
-#
-#        # default actions templates, should extend a global templates
-#        list:    SonataAdminBundle:CRUD:list.html.twig
-#        show:    SonataAdminBundle:CRUD:show.html.twig
-#        edit:    SonataAdminBundle:CRUD:edit.html.twig
-#
-#    dashboard:
-#        blocks:
-#            # display a dashboard block
-#            - { position: left, type: sonata.admin.block.admin_list }
-#
-#            # Customize this part to add new block configuration
-#            - { position: right, type: sonata.block.service.text, settings: { content: "<h2>Welcome to the Sonata Admin</h2> <p>This is a <code>sonata.block.service.text</code> from the Block Bundle, you can create and add new block in these area by configuring the <code>sonata_admin</code> section.</p> <br /> For instance, here a RSS feed parser (<code>sonata.block.service.rss</code>):"} }
-#            - { position: right, type: sonata.block.service.rss, settings: { title: "Sonata Project's Feeds", url: "http://sonata-project.org/blog/archive.rss" }}
-#
+
+    title:      Sonata Project
+    title_logo: /bundles/sonataadmin/logo_title.png
+    templates:
+        # default global templates
+        layout:  SonataAdminBundle::standard_layout.html.twig
+        ajax:    SonataAdminBundle::ajax_layout.html.twig
+        dashboard: SonataAdminBundle:Core:dashboard.html.twig
+
+        # default actions templates, should extend a global templates
+        list:    SonataAdminBundle:CRUD:list.html.twig
+        show:    SonataAdminBundle:CRUD:show.html.twig
+        edit:    SonataAdminBundle:CRUD:edit.html.twig
+
+    dashboard:
+        blocks:
+            # display a dashboard block
+            - { position: left, type: sonata.admin.block.admin_list }
+
+            # Customize this part to add new block configuration
+            - { position: right, type: sonata.block.service.text, settings: { content: "<h2>Welcome to the Sonata Admin</h2> <p>This is a <code>sonata.block.service.text</code> from the Block Bundle, you can create and add new block in these area by configuring the <code>sonata_admin</code> section.</p> <br /> For instance, here a RSS feed parser (<code>sonata.block.service.rss</code>):"} }
+            - { position: right, type: sonata.block.service.rss, settings: { title: Sonata Project's Feeds, url: http://sonata-project.org/blog/archive.rss }}
+        groups:
+            default: ~
 #sonata_block:
 #    default_contexts: [cms]
 #    blocks:

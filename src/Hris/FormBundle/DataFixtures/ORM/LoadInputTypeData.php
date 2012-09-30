@@ -39,8 +39,8 @@ class LoadInputTypeData extends AbstractFixture implements OrderedFixtureInterfa
 	{
 		// Load Public Data
 		$inputTypeNames = Array('Text','Password','Radio','Checkbox','TextArea','Date','Select');
-		$inputType = new InputType();
 		foreach($inputTypeNames as $key=>$inputTypeName) {
+            $inputType = new InputType();
 			$inputType->setName($inputTypeName);
 			$manager->persist($inputType);
 			$this->addReference(strtolower($inputTypeName).'-inputtype', $inputType);

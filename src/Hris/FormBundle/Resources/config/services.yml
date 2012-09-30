@@ -2,6 +2,11 @@ parameters:
 #    hris_form.example.class: Hris\FormBundle\Example
 
 services:
+    admin.input_type:
+        class: Hris\FormBundle\Admin\InputTypeAdmin
+        tags:
+            - { name: sonata.admin, manager_type: orm, group: Forms, label: Forms }
+        arguments: [ null, Hris\FormBundle\Entity\InputType, SonataAdminBundle:CRUD ]
 #    hris_form.example:
 #        class: %hris_form.example.class%
 #        arguments: [@service_id, "plain_value", %parameter%]

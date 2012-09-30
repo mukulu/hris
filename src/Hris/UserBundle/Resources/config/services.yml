@@ -2,6 +2,13 @@ parameters:
 #    hris_user.example.class: Hris\UserBundle\Example
 
 services:
-#    hris_user.example:
+    admin.user:
+        class: Hris\UserBundle\Admin\UserAdmin
+        tags:
+            - { name: sonata.admin, manager_type: orm, group: Users, label: Users }
+        arguments: [ null, Hris\UserBundle\Entity\User, SonataAdminBundle:CRUD ]
+
+
+##    hris_user.example:
 #        class: %hris_user.example.class%
 #        arguments: [@service_id, "plain_value", %parameter%]
