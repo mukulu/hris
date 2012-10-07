@@ -182,6 +182,13 @@ class Organisationunit
     private $phonenumber;
 
     /**
+     * @var string $contactperson
+     *
+     * @ORM\Column(name="contactperson", type="string", length=150, nullable=true)
+     */
+    private $contactperson;
+
+    /**
      * @var string $description
      *
      * @ORM\Column(name="description", type="text", nullable=true)
@@ -610,6 +617,29 @@ class Organisationunit
     public function getPhonenumber()
     {
         return $this->phonenumber;
+    }
+
+    /**
+     * Set contactperson
+     *
+     * @param string $contactperson
+     * @return Organisationunit
+     */
+    public function setContactperson($contactperson)
+    {
+        $this->contactperson = $contactperson;
+
+        return $this;
+    }
+
+    /**
+     * Get contactperson
+     *
+     * @return string
+     */
+    public function getContactperson()
+    {
+        return $this->contactperson;
     }
 
     /**
