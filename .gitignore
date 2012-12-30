@@ -6,6 +6,7 @@ app/logs/*
 build/
 bin
 app/config/parameters.yml
+.idea
 .project
 .buildpath
 .settings/

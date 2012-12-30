@@ -112,8 +112,8 @@ Eclipse is the favoured IDE for HRIS development, the following are development 
 ## Installing Hris Software
 ----------------------------
 
-#### Download system source codes from our [github repository](https://github.com/mukulu/hris) - https://github.com/mukulu/hris
-	git clone git@github.com:mukulu/hris.git
+#### Download system source codes from our [github repository](https://github.com/hrisproject/hris) - https://github.com/hrisproject/hris
+	git clone git@github.com:hrisproject/hris.git
 	
 Install composer
 
@@ -158,7 +158,7 @@ On Systems that don't support chmod +a, you can give readwrite permission via
 
 ## Database Setup
 -----------------
-[System source code can be downloaded from github](https://github.com/mukulu/hris)
+[System source code can be downloaded from github](https://github.com/hrisproject/hris)
 * Configuration file can be found from hris/app/config/parameters.yml
 
 ### Parameters.yml:
