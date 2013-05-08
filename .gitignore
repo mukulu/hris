@@ -4,7 +4,9 @@ app/bootstrap.php.cache
 app/cache/*
 app/logs/*
 build/
-bin
+/vendor/
+/bin/
+/composer.phar
 app/config/parameters.yml
 .idea
 .project
@@ -12,4 +14,3 @@ app/config/parameters.yml
 .settings/
 phpunit.xml
 autoload.php
-/vendor/
