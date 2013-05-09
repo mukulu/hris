@@ -3,7 +3,7 @@
         "This file locks the dependencies of your project to a known state",
         "Read more about it at http://getcomposer.org/doc/01-basic-usage.md#composer-lock-the-lock-file"
     ],
-    "hash": "fab579c09883920c34681c42ddc5a991",
+    "hash": "c7cde0c6a3e078870cebfc672e54a34c",
     "packages": [
         {
             "name": "doctrine/annotations",
@@ -2062,6 +2062,64 @@
             "time": "2013-03-01 17:24:02"
         },
         {
+            "name": "stfalcon/tinymce-bundle",
+            "version": "dev-master",
+            "target-dir": "Stfalcon/Bundle/TinymceBundle",
+            "source": {
+                "type": "git",
+                "url": "https://github.com/stfalcon/TinymceBundle.git",
+                "reference": "8fe6ae5f6c03525e4b03fb6e3ea49c69a66fb64b"
+            },
+            "dist": {
+                "type": "zip",
+                "url": "https://api.github.com/repos/stfalcon/TinymceBundle/zipball/8fe6ae5f6c03525e4b03fb6e3ea49c69a66fb64b",
+                "reference": "8fe6ae5f6c03525e4b03fb6e3ea49c69a66fb64b",
+                "shasum": ""
+            },
+            "require": {
+                "php": ">=5.3.0",
+                "symfony/symfony": ">=2.1"
+            },
+            "type": "symfony-bundle",
+            "extra": {
+                "branch-alias": {
+                    "dev-master": "0.3.x-dev"
+                }
+            },
+            "autoload": {
+                "psr-0": {
+                    "Stfalcon\\Bundle\\TinymceBundle": ""
+                }
+            },
+            "notification-url": "https://packagist.org/downloads/",
+            "license": [
+                "MIT"
+            ],
+            "authors": [
+                {
+                    "name": "Stepan Tanasiychuk",
+                    "email": "ceo@stfalcon.com",
+                    "homepage": "http://blog.stfalcon.com"
+                },
+                {
+                    "name": "Igor Negrutsa",
+                    "email": "progi2007@gmail.com",
+                    "homepage": "http://igor-negrutsa.info"
+                },
+                {
+                    "name": "Symfony Community",
+                    "homepage": "https://github.com/stfalcon/TinymceBundle/contributors"
+                }
+            ],
+            "description": "This Bundle integrates TinyMCE WYSIWYG editor into a Symfony2 project.",
+            "keywords": [
+                "editor",
+                "tinymce",
+                "wysiwyg"
+            ],
+            "time": "2013-04-18 08:00:55"
+        },
+        {
             "name": "swiftmailer/swiftmailer",
             "version": "v4.3.1",
             "source": {
@@ -2494,7 +2552,8 @@
         "doctrine/doctrine-migrations-bundle": 20,
         "sonata-project/cache-bundle": 20,
         "sonata-project/doctrine-orm-admin-bundle": 20,
-        "sonata-project/admin-bundle": 20
+        "sonata-project/admin-bundle": 20,
+        "stfalcon/tinymce-bundle": 20
     },
     "platform": {
         "php": ">=5.3.3"
