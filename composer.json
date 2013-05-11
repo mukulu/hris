@@ -25,7 +25,8 @@
         "sonata-project/cache-bundle": "master-dev",
         "sonata-project/doctrine-orm-admin-bundle": "master-dev",
         "sonata-project/admin-bundle": "dev-master",
-        "stfalcon/tinymce-bundle": "dev-master"
+        "stfalcon/tinymce-bundle": "dev-master",
+        "twitter/bootstrap": "2.3.*"
     },
     "scripts": {
         "post-install-cmd": [
