@@ -57,7 +57,7 @@ class OrganisationunitCompleteness
      *
      * @ORM\ManyToOne(targetEntity="Hris\OrganisationunitBundle\Entity\Organisationunit")
      * @ORM\JoinColumns({
-     *   @ORM\JoinColumn(name="organisationunit_id", referencedColumnName="id", nullable=true)
+     *   @ORM\JoinColumn(name="organisationunit_id", referencedColumnName="id", nullable=true, onDelete="CASCADE")
      * })
      */
     private $organisationunit;

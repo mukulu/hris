@@ -149,7 +149,7 @@ class Field
      *
      * @ORM\ManyToOne(targetEntity="Hris\FormBundle\Entity\DataType",inversedBy="field")
      * @ORM\JoinColumns({
-     *   @ORM\JoinColumn(name="datatype_id", referencedColumnName="id")
+     *   @ORM\JoinColumn(name="datatype_id", referencedColumnName="id", onDelete="CASCADE")
      * })
      */
     private $dataType;
@@ -159,7 +159,7 @@ class Field
      *
      * @ORM\ManyToOne(targetEntity="Hris\FormBundle\Entity\InputType",inversedBy="field")
      * @ORM\JoinColumns({
-     *   @ORM\JoinColumn(name="inputtype_id", referencedColumnName="id")
+     *   @ORM\JoinColumn(name="inputtype_id", referencedColumnName="id", onDelete="CASCADE")
      * })
      */
     private $inputType;
@@ -431,7 +431,7 @@ class Field
      */
     public function addFieldGroup(\Hris\FormBundle\Entity\FieldGroup $fieldGroup)
     {
-        $this->fieldGroup[] = $fieldGroup;
+        $this->fieldGroup[$fieldGroup->getId()] = $fieldGroup;
     
         return $this;
     }
@@ -464,7 +464,7 @@ class Field
      */
     public function addParentField(\Hris\FormBundle\Entity\Field $parentField)
     {
-        $this->parentField[] = $parentField;
+        $this->parentField[$parentField->getId()] = $parentField;
     
         return $this;
     }
@@ -497,7 +497,7 @@ class Field
      */
     public function addChildField(\Hris\FormBundle\Entity\Field $childField)
     {
-        $this->childField[] = $childField;
+        $this->childField[$childField->getId()] = $childField;
     
         return $this;
     }
@@ -576,7 +576,7 @@ class Field
      */
     public function addFieldOption(\Hris\FormBundle\Entity\FieldOption $fieldOption)
     {
-        $this->fieldOption[] = $fieldOption;
+        $this->fieldOption[$fieldOption->getId()] = $fieldOption;
     
         return $this;
     }
@@ -678,7 +678,7 @@ class Field
      */
     public function addFieldOptionMerge(\Hris\FormBundle\Entity\FieldOptionMerge $fieldOptionMerge)
     {
-        $this->fieldOptionMerge[] = $fieldOptionMerge;
+        $this->fieldOptionMerge[$fieldOptionMerge->getId()] = $fieldOptionMerge;
     
         return $this;
     }
@@ -811,7 +811,7 @@ class Field
      */
     public function addUniqueRecordForm(\Hris\FormBundle\Entity\Form $uniqueRecordForms)
     {
-        $this->uniqueRecordForms[] = $uniqueRecordForms;
+        $this->uniqueRecordForms[$uniqueRecordForms->getId()] = $uniqueRecordForms;
     
         return $this;
     }
@@ -898,7 +898,7 @@ class Field
      */
     public function addRecordValue(\Hris\RecordsBundle\Entity\RecordValue $recordValue)
     {
-        $this->recordValue[] = $recordValue;
+        $this->recordValue[$recordValue->getId()] = $recordValue;
     
         return $this;
     }
@@ -931,7 +931,7 @@ class Field
      */
     public function addRecordStat(\Hris\RecordsBundle\Entity\RecordStats $recordStats)
     {
-        $this->recordStats[] = $recordStats;
+        $this->recordStats[$recordStats->getId()] = $recordStats;
     
         return $this;
     }

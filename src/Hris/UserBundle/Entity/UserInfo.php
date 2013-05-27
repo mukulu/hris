@@ -309,7 +309,7 @@ class UserInfo
      */
     public function addOrganisationunit(\Hris\OrganisationunitBundle\Entity\Organisationunit $organisationunit)
     {
-        $this->organisationunit[] = $organisationunit;
+        $this->organisationunit[$organisationunit->getId()] = $organisationunit;
     
         return $this;
     }
@@ -342,7 +342,7 @@ class UserInfo
      */
     public function addDashboardChart(\Hris\DashboardBundle\Entity\DashboardChart $dashboardChart)
     {
-        $this->dashboardChart[] = $dashboardChart;
+        $this->dashboardChart[$dashboardChart->getId()] = $dashboardChart;
     
         return $this;
     }

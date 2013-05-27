@@ -74,14 +74,14 @@ class Validation
     /**
      * @var string $leftExpression
      *
-     * @ORM\Column(name="leftExpression", type="text")
+     * @ORM\Column(name="leftExpression", type="string", length=255)
      */
     private $leftExpression;
 
     /**
      * @var string $rightExpression
      *
-     * @ORM\Column(name="rightExpression", type="text")
+     * @ORM\Column(name="rightExpression", type="string", length=255)
      */
     private $rightExpression;
     

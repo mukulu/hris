@@ -95,7 +95,7 @@ class OrganisationunitGroup
      *
      * @ORM\ManyToOne(targetEntity="Hris\OrganisationunitBundle\Entity\OrganisationunitGroupset",inversedBy="organisationunitGroup")
      * @ORM\JoinColumns({
-     *   @ORM\JoinColumn(name="organisationunitgroupset_id", referencedColumnName="id")
+     *   @ORM\JoinColumn(name="organisationunitgroupset_id", referencedColumnName="id", onDelete="CASCADE")
      * })
      */
     private $organisationunitGroupset;
@@ -248,7 +248,7 @@ class OrganisationunitGroup
      */
     public function addOrganisationunit(\Hris\OrganisationunitBundle\Entity\Organisationunit $organisationunit)
     {
-        $this->organisationunit[] = $organisationunit;
+        $this->organisationunit[$organisationunit->getId()] = $organisationunit;
     
         return $this;
     }

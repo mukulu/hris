@@ -300,7 +300,7 @@ class OrganisationunitGroupset
      */
     public function addOrganisationunitGroup(\Hris\OrganisationunitBundle\Entity\OrganisationunitGroup $organisationunitGroup)
     {
-        $this->organisationunitGroup[] = $organisationunitGroup;
+        $this->organisationunitGroup[$organisationunitGroup->getId()] = $organisationunitGroup;
     
         return $this;
     }

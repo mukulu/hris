@@ -88,7 +88,7 @@ class RelationalFilter
      *
      * @ORM\ManyToOne(targetEntity="Hris\FormBundle\Entity\Field")
      * @ORM\JoinColumns({
-     *   @ORM\JoinColumn(name="field_id", referencedColumnName="id")
+     *   @ORM\JoinColumn(name="field_id", referencedColumnName="id", onDelete="CASCADE")
      * })
      */
     private $field;
@@ -249,7 +249,7 @@ class RelationalFilter
      */
     public function addFieldOption(\Hris\FormBundle\Entity\FieldOption $fieldOption)
     {
-        $this->fieldOption[] = $fieldOption;
+        $this->fieldOption[$fieldOption->getId()] = $fieldOption;
     
         return $this;
     }
@@ -305,7 +305,7 @@ class RelationalFilter
      */
     public function addFriendlyReport(\Hris\FormBundle\Entity\FriendlyReport $friendlyReport)
     {
-        $this->friendlyReport[] = $friendlyReport;
+        $this->friendlyReport[$friendlyReport->getId()] = $friendlyReport;
     
         return $this;
     }

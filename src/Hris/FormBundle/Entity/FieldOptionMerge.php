@@ -58,7 +58,7 @@ class FieldOptionMerge
      *
      * @ORM\ManyToOne(targetEntity="Hris\FormBundle\Entity\FieldOption", inversedBy="fieldOptionMerge")
      * @ORM\JoinColumns({
-     *   @ORM\JoinColumn(name="mergedfieldoption_id", referencedColumnName="id")
+     *   @ORM\JoinColumn(name="mergedfieldoption_id", referencedColumnName="id", onDelete="CASCADE")
      * })
      */
     private $mergedFieldOption;
@@ -68,7 +68,7 @@ class FieldOptionMerge
      *
      * @ORM\ManyToOne(targetEntity="Hris\FormBundle\Entity\Field", inversedBy="fieldOptionMerge")
      * @ORM\JoinColumns({
-     *   @ORM\JoinColumn(name="removedoptionfield_id", referencedColumnName="id")
+     *   @ORM\JoinColumn(name="removedoptionfield_id", referencedColumnName="id", onDelete="CASCADE")
      * })
      */
     private $removedOptionField;

@@ -238,7 +238,7 @@ class FieldGroupset
      */
     public function addFieldGroup(\Hris\FormBundle\Entity\FieldGroup $fieldGroup)
     {
-        $this->fieldGroup[] = $fieldGroup;
+        $this->fieldGroup[$fieldGroup->getId()] = $fieldGroup;
     
         return $this;
     }

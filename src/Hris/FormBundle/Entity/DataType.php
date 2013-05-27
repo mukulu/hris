@@ -32,7 +32,7 @@ use \DateTime;
 /**
  * Hris\FormBundle\Entity\DataType
  *
- * @ORM\Table(name="hris_datatype")
+ * @ORM\Table(name="hris_field_datatype")
  * @ORM\Entity(repositoryClass="Hris\FormBundle\Entity\DataTypeRepository")
  */
 class DataType
@@ -232,7 +232,7 @@ class DataType
      */
     public function addField(\Hris\FormBundle\Entity\Field $field)
     {
-        $this->field[] = $field;
+        $this->field[$field->getId()] = $field;
     
         return $this;
     }

@@ -57,7 +57,7 @@ class Training
      *
      * @ORM\ManyToOne(targetEntity="Hris\RecordsBundle\Entity\Record")
      * @ORM\JoinColumns({
-     *   @ORM\JoinColumn(name="record_id", referencedColumnName="id")
+     *   @ORM\JoinColumn(name="record_id", referencedColumnName="id", onDelete="CASCADE")
      * })
      */
     private $record;

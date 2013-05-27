@@ -42,7 +42,7 @@ class FriendlyReportCategory
      *
      * @ORM\ManyToOne(targetEntity="Hris\FormBundle\Entity\FriendlyReport",inversedBy="friendlyReportCategory")
      * @ORM\JoinColumns({
-     *   @ORM\JoinColumn(name="friendlyreport_id", referencedColumnName="id",nullable=false)
+     *   @ORM\JoinColumn(name="friendlyreport_id", referencedColumnName="id",nullable=false, onDelete="CASCADE")
      * })
      * @ORM\Id
      * @ORM\GeneratedValue(strategy="NONE")
@@ -54,7 +54,7 @@ class FriendlyReportCategory
      *
      * @ORM\ManyToOne(targetEntity="Hris\FormBundle\Entity\FieldOptionGroup",inversedBy="friendlyReportCategory")
      * @ORM\JoinColumns({
-     *   @ORM\JoinColumn(name="fieldoption_id", referencedColumnName="id",nullable=false)
+     *   @ORM\JoinColumn(name="fieldoption_id", referencedColumnName="id",nullable=false, onDelete="CASCADE")
      * })
      * @ORM\Id
      * @ORM\GeneratedValue(strategy="NONE")

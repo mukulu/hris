@@ -43,7 +43,7 @@ class FormVisibleFields
      *
      * @ORM\ManyToOne(targetEntity="Hris\FormBundle\Entity\Form",inversedBy="formVisibleFields")
      * @ORM\JoinColumns({
-     *   @ORM\JoinColumn(name="form_id", referencedColumnName="id",nullable=false)
+     *   @ORM\JoinColumn(name="form_id", referencedColumnName="id",nullable=false, onDelete="CASCADE")
      * })
      * @ORM\Id
      * @ORM\GeneratedValue(strategy="NONE")
@@ -55,7 +55,7 @@ class FormVisibleFields
      *
      * @ORM\ManyToOne(targetEntity="Hris\FormBundle\Entity\Field",inversedBy="formVisibleFields")
      * @ORM\JoinColumns({
-     *   @ORM\JoinColumn(name="field_id", referencedColumnName="id",nullable=false)
+     *   @ORM\JoinColumn(name="field_id", referencedColumnName="id",nullable=false, onDelete="CASCADE")
      * })
      * @ORM\Id
      * @ORM\GeneratedValue(strategy="NONE")

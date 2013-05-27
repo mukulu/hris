@@ -65,7 +65,7 @@ class Record
      *
      * @ORM\ManyToOne(targetEntity="Hris\OrganisationunitBundle\Entity\Organisationunit")
      * @ORM\JoinColumns({
-     *   @ORM\JoinColumn(name="organisationunit_id", referencedColumnName="id", nullable=true)
+     *   @ORM\JoinColumn(name="organisationunit_id", referencedColumnName="id", nullable=true, onDelete="CASCADE")
      * })
      */
     private $organisationunit;
@@ -75,7 +75,7 @@ class Record
      *
      * @ORM\ManyToOne(targetEntity="Hris\FormBundle\Entity\Form",inversedBy="record")
      * @ORM\JoinColumns({
-     *   @ORM\JoinColumn(name="form_id", referencedColumnName="id",nullable=false)
+     *   @ORM\JoinColumn(name="form_id", referencedColumnName="id",nullable=false, onDelete="CASCADE")
      * })
      */
     private $form;

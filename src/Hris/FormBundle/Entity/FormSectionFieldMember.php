@@ -42,7 +42,7 @@ class FormSectionFieldMember
      *
      * @ORM\ManyToOne(targetEntity="Hris\FormBundle\Entity\FormSection",inversedBy="formSectionFieldMember")
      * @ORM\JoinColumns({
-     *   @ORM\JoinColumn(name="formsection_id", referencedColumnName="id",nullable=false)
+     *   @ORM\JoinColumn(name="formsection_id", referencedColumnName="id",nullable=false, onDelete="CASCADE")
      * })
      * @ORM\Id
      * @ORM\GeneratedValue(strategy="NONE")
@@ -54,7 +54,7 @@ class FormSectionFieldMember
      *
      * @ORM\ManyToOne(targetEntity="Hris\FormBundle\Entity\Field",inversedBy="formSectionFieldMember")
      * @ORM\JoinColumns({
-     *   @ORM\JoinColumn(name="field_id", referencedColumnName="id",nullable=false)
+     *   @ORM\JoinColumn(name="field_id", referencedColumnName="id",nullable=false, onDelete="CASCADE")
      * })
      * @ORM\Id
      * @ORM\GeneratedValue(strategy="NONE")

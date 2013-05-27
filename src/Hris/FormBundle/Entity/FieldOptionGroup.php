@@ -91,7 +91,7 @@ class FieldOptionGroup
      *
      * @ORM\ManyToOne(targetEntity="Hris\FormBundle\Entity\Field")
      * @ORM\JoinColumns({
-     *   @ORM\JoinColumn(name="field_id", referencedColumnName="id")
+     *   @ORM\JoinColumn(name="field_id", referencedColumnName="id", onDelete="CASCADE")
      * })
      */
     private $field;
@@ -281,7 +281,7 @@ class FieldOptionGroup
      */
     public function addFieldOption(\Hris\FormBundle\Entity\FieldOption $fieldOption)
     {
-        $this->fieldOption[] = $fieldOption;
+        $this->fieldOption[$fieldOption->getId()] = $fieldOption;
     
         return $this;
     }
@@ -337,7 +337,7 @@ class FieldOptionGroup
      */
     public function addFieldOptionGroupset(\Hris\FormBundle\Entity\FieldOptionGroupset $fieldOptionGroupset)
     {
-        $this->fieldOptionGroupset[] = $fieldOptionGroupset;
+        $this->fieldOptionGroupset[$fieldOptionGroupset->getId()] = $fieldOptionGroupset;
     
         return $this;
     }

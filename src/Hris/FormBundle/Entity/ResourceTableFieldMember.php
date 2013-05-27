@@ -42,7 +42,7 @@ class ResourceTableFieldMember
 	 *
 	 * @ORM\ManyToOne(targetEntity="Hris\FormBundle\Entity\ResourceTable",inversedBy="resourceTableFieldMember")
 	 * @ORM\JoinColumns({
-	 *   @ORM\JoinColumn(name="resourcetable_id", referencedColumnName="id",nullable=false)
+	 *   @ORM\JoinColumn(name="resourcetable_id", referencedColumnName="id",nullable=false, onDelete="CASCADE")
 	 * })
 	 * @ORM\Id
 	 * @ORM\GeneratedValue(strategy="NONE")
@@ -54,7 +54,7 @@ class ResourceTableFieldMember
 	 *
 	 * @ORM\ManyToOne(targetEntity="Hris\FormBundle\Entity\Field",inversedBy="resourceTableFieldMember")
 	 * @ORM\JoinColumns({
-	 *   @ORM\JoinColumn(name="field_id", referencedColumnName="id",nullable=false)
+	 *   @ORM\JoinColumn(name="field_id", referencedColumnName="id",nullable=false, onDelete="CASCADE")
 	 * })
 	 * @ORM\Id
 	 * @ORM\GeneratedValue(strategy="NONE")

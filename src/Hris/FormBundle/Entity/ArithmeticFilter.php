@@ -76,14 +76,14 @@ class ArithmeticFilter
     /**
      * @var string $leftExpression
      *
-     * @ORM\Column(name="leftExpression", type="text")
+     * @ORM\Column(name="leftExpression", type="string", length=255)
      */
     private $leftExpression;
 
     /**
      * @var string $rightExpression
      *
-     * @ORM\Column(name="rightExpression", type="text")
+     * @ORM\Column(name="rightExpression", type="string", length=255)
      */
     private $rightExpression;
     
@@ -320,7 +320,7 @@ class ArithmeticFilter
      */
     public function addFriendlyReport(\Hris\FormBundle\Entity\FriendlyReport $friendlyReport)
     {
-        $this->friendlyReport[] = $friendlyReport;
+        $this->friendlyReport[$friendlyReport->getId()] = $friendlyReport;
     
         return $this;
     }

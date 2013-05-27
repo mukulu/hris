@@ -81,7 +81,7 @@ class FriendlyReport
      *
      * @ORM\ManyToOne(targetEntity="Hris\FormBundle\Entity\FieldOptionGroup")
      * @ORM\JoinColumns({
-     *   @ORM\JoinColumn(name="series_id", referencedColumnName="id")
+     *   @ORM\JoinColumn(name="series_id", referencedColumnName="id", onDelete="CASCADE")
      * })
      */
     private $serie;
@@ -342,7 +342,7 @@ class FriendlyReport
      */
     public function addArithmeticFilter(\Hris\FormBundle\Entity\ArithmeticFilter $arithmeticFilter)
     {
-        $this->arithmeticFilter[] = $arithmeticFilter;
+        $this->arithmeticFilter[$arithmeticFilter->getId()] = $arithmeticFilter;
     
         return $this;
     }
@@ -375,7 +375,7 @@ class FriendlyReport
      */
     public function addRelationalFilter(\Hris\FormBundle\Entity\RelationalFilter $relationalFilter)
     {
-        $this->relationalFilter[] = $relationalFilter;
+        $this->relationalFilter[$relationalFilter->getId()] = $relationalFilter;
     
         return $this;
     }

@@ -59,7 +59,7 @@ class OrganisationunitStructure
      *
      * @ORM\ManyToOne(targetEntity="Hris\OrganisationunitBundle\Entity\OrganisationunitLevel",inversedBy="organisationunitStructure")
      * @ORM\JoinColumns({
-     *   @ORM\JoinColumn(name="level", referencedColumnName="id", nullable=true)
+     *   @ORM\JoinColumn(name="level", referencedColumnName="id", nullable=true, onDelete="CASCADE")
      * })
      */
     private $level;
@@ -69,7 +69,7 @@ class OrganisationunitStructure
      *
      * @ORM\ManyToOne(targetEntity="Hris\OrganisationunitBundle\Entity\Organisationunit",inversedBy="level1OrganisationunitStructure")
      * @ORM\JoinColumns({
-     *   @ORM\JoinColumn(name="level1_id", referencedColumnName="id", nullable=true)
+     *   @ORM\JoinColumn(name="level1_id", referencedColumnName="id", nullable=true, onDelete="CASCADE")
      * })
      */
     private $level1Organisationunit;
@@ -79,7 +79,7 @@ class OrganisationunitStructure
      *
      * @ORM\ManyToOne(targetEntity="Hris\OrganisationunitBundle\Entity\Organisationunit",inversedBy="level2OrganisationunitStructure")
      * @ORM\JoinColumns({
-     *   @ORM\JoinColumn(name="level2_id", referencedColumnName="id", nullable=true)
+     *   @ORM\JoinColumn(name="level2_id", referencedColumnName="id", nullable=true, onDelete="CASCADE")
      * })
      */
     private $level2Organisationunit;
@@ -89,7 +89,7 @@ class OrganisationunitStructure
      *
      * @ORM\ManyToOne(targetEntity="Hris\OrganisationunitBundle\Entity\Organisationunit",inversedBy="level3OrganisationunitStructure")
      * @ORM\JoinColumns({
-     *   @ORM\JoinColumn(name="level3_id", referencedColumnName="id", nullable=true)
+     *   @ORM\JoinColumn(name="level3_id", referencedColumnName="id", nullable=true, onDelete="CASCADE")
      * })
      */
     private $level3Organisationunit;
@@ -99,7 +99,7 @@ class OrganisationunitStructure
      *
      * @ORM\ManyToOne(targetEntity="Hris\OrganisationunitBundle\Entity\Organisationunit",inversedBy="level4OrganisationunitStructure")
      * @ORM\JoinColumns({
-     *   @ORM\JoinColumn(name="level4_id", referencedColumnName="id", nullable=true)
+     *   @ORM\JoinColumn(name="level4_id", referencedColumnName="id", nullable=true, onDelete="CASCADE")
      * })
      */
     private $level4Organisationunit;
@@ -109,7 +109,7 @@ class OrganisationunitStructure
      *
      * @ORM\ManyToOne(targetEntity="Hris\OrganisationunitBundle\Entity\Organisationunit",inversedBy="level5OrganisationunitStructure")
      * @ORM\JoinColumns({
-     *   @ORM\JoinColumn(name="level5_id", referencedColumnName="id", nullable=true)
+     *   @ORM\JoinColumn(name="level5_id", referencedColumnName="id", nullable=true, onDelete="CASCADE")
      * })
      */
     private $level5Organisationunit;
@@ -119,7 +119,7 @@ class OrganisationunitStructure
      *
      * @ORM\ManyToOne(targetEntity="Hris\OrganisationunitBundle\Entity\Organisationunit",inversedBy="level6OrganisationunitStructure")
      * @ORM\JoinColumns({
-     *   @ORM\JoinColumn(name="level6_id", referencedColumnName="id", nullable=true)
+     *   @ORM\JoinColumn(name="level6_id", referencedColumnName="id", nullable=true, onDelete="CASCADE")
      * })
      */
     private $level6Organisationunit;
@@ -129,7 +129,7 @@ class OrganisationunitStructure
      *
      * @ORM\ManyToOne(targetEntity="Hris\OrganisationunitBundle\Entity\Organisationunit",inversedBy="level7OrganisationunitStructure")
      * @ORM\JoinColumns({
-     *   @ORM\JoinColumn(name="level7_id", referencedColumnName="id", nullable=true)
+     *   @ORM\JoinColumn(name="level7_id", referencedColumnName="id", nullable=true, onDelete="CASCADE")
      * })
      */
     private $level7Organisationunit;
@@ -139,7 +139,7 @@ class OrganisationunitStructure
      *
      * @ORM\ManyToOne(targetEntity="Hris\OrganisationunitBundle\Entity\Organisationunit",inversedBy="level8OrganisationunitStructure")
      * @ORM\JoinColumns({
-     *   @ORM\JoinColumn(name="level8_id", referencedColumnName="id", nullable=true)
+     *   @ORM\JoinColumn(name="level8_id", referencedColumnName="id", nullable=true, onDelete="CASCADE")
      * })
      */
     private $level8Organisationunit;
@@ -149,7 +149,7 @@ class OrganisationunitStructure
      *
      * @ORM\ManyToOne(targetEntity="Hris\OrganisationunitBundle\Entity\Organisationunit",inversedBy="level9OrganisationunitStructure")
      * @ORM\JoinColumns({
-     *   @ORM\JoinColumn(name="level9_id", referencedColumnName="id", nullable=true)
+     *   @ORM\JoinColumn(name="level9_id", referencedColumnName="id", nullable=true, onDelete="CASCADE")
      * })
      */
     private $level9Organisationunit;
@@ -159,7 +159,7 @@ class OrganisationunitStructure
      *
      * @ORM\ManyToOne(targetEntity="Hris\OrganisationunitBundle\Entity\Organisationunit",inversedBy="level10OrganisationunitStructure")
      * @ORM\JoinColumns({
-     *   @ORM\JoinColumn(name="level10_id", referencedColumnName="id", nullable=true)
+     *   @ORM\JoinColumn(name="level10_id", referencedColumnName="id", nullable=true, onDelete="CASCADE")
      * })
      */
     private $level10Organisationunit;

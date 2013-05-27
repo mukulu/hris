@@ -99,7 +99,7 @@ class Organisationunit
      *
      * @ORM\ManyToOne(targetEntity="Hris\OrganisationunitBundle\Entity\Organisationunit")
      * @ORM\JoinColumns({
-     *   @ORM\JoinColumn(name="parent_id", referencedColumnName="id", nullable=true)
+     *   @ORM\JoinColumn(name="parent_id", referencedColumnName="id", nullable=true, onDelete="CASCADE")
      * })
      */
     private $parent;
@@ -198,7 +198,7 @@ class Organisationunit
     /**
      * @var \Hris\OrganisationunitBundle\Entity\OrganisationunitStructure $organisationunitStructure
      *
-     * @ORM\OneToOne(targetEntity="Hris\OrganisationunitBundle\Entity\OrganisationunitStructure", inversedBy="organisationunit")
+     * @ORM\OneToOne(targetEntity="Hris\OrganisationunitBundle\Entity\OrganisationunitStructure", inversedBy="organisationunit", orphanRemoval=true)
      */
     private $organisationunitStructure;
     
@@ -673,7 +673,7 @@ class Organisationunit
      */
     public function addOrganisationunitGroup(\Hris\OrganisationunitBundle\Entity\OrganisationunitGroup $organisationunitGroup)
     {
-        $this->organisationunitGroup[] = $organisationunitGroup;
+        $this->organisationunitGroup[$organisationunitGroup->getId()] = $organisationunitGroup;
     
         return $this;
     }
@@ -752,7 +752,7 @@ class Organisationunit
      */
     public function addDashboardChart(\Hris\DashboardBundle\Entity\DashboardChart $dashboardChart)
     {
-        $this->dashboardChart[] = $dashboardChart;
+        $this->dashboardChart[$dashboardChart->getId()] = $dashboardChart;
     
         return $this;
     }
@@ -831,7 +831,7 @@ class Organisationunit
      */
     public function addUserInfo(\Hris\UserBundle\Entity\UserInfo $userInfo)
     {
-        $this->userInfo[] = $userInfo;
+        $this->userInfo[$userInfo->getId()] = $userInfo;
     
         return $this;
     }
@@ -864,7 +864,7 @@ class Organisationunit
      */
     public function addLevel1OrganisationunitStructure(\Hris\OrganisationunitBundle\Entity\OrganisationunitStructure $level1OrganisationunitStructure)
     {
-        $this->level1OrganisationunitStructure[] = $level1OrganisationunitStructure;
+        $this->level1OrganisationunitStructure[$level1OrganisationunitStructure->getId()] = $level1OrganisationunitStructure;
     
         return $this;
     }
@@ -897,7 +897,7 @@ class Organisationunit
      */
     public function addLevel2OrganisationunitStructure(\Hris\OrganisationunitBundle\Entity\OrganisationunitStructure $level2OrganisationunitStructure)
     {
-        $this->level2OrganisationunitStructure[] = $level2OrganisationunitStructure;
+        $this->level2OrganisationunitStructure[$level2OrganisationunitStructure->getId()] = $level2OrganisationunitStructure;
     
         return $this;
     }
@@ -930,7 +930,7 @@ class Organisationunit
      */
     public function addLevel3OrganisationunitStructure(\Hris\OrganisationunitBundle\Entity\OrganisationunitStructure $level3OrganisationunitStructure)
     {
-        $this->level3OrganisationunitStructure[] = $level3OrganisationunitStructure;
+        $this->level3OrganisationunitStructure[$level3OrganisationunitStructure->getId()] = $level3OrganisationunitStructure;
     
         return $this;
     }
@@ -963,7 +963,7 @@ class Organisationunit
      */
     public function addLevel4OrganisationunitStructure(\Hris\OrganisationunitBundle\Entity\OrganisationunitStructure $level4OrganisationunitStructure)
     {
-        $this->level4OrganisationunitStructure[] = $level4OrganisationunitStructure;
+        $this->level4OrganisationunitStructure[$level4OrganisationunitStructure->getId()] = $level4OrganisationunitStructure;
     
         return $this;
     }
@@ -996,7 +996,7 @@ class Organisationunit
      */
     public function addLevel5OrganisationunitStructure(\Hris\OrganisationunitBundle\Entity\OrganisationunitStructure $level5OrganisationunitStructure)
     {
-        $this->level5OrganisationunitStructure[] = $level5OrganisationunitStructure;
+        $this->level5OrganisationunitStructure[$level5OrganisationunitStructure->getId()] = $level5OrganisationunitStructure;
     
         return $this;
     }
@@ -1029,7 +1029,7 @@ class Organisationunit
      */
     public function addLevel6OrganisationunitStructure(\Hris\OrganisationunitBundle\Entity\OrganisationunitStructure $level6OrganisationunitStructure)
     {
-        $this->level6OrganisationunitStructure[] = $level6OrganisationunitStructure;
+        $this->level6OrganisationunitStructure[$level6OrganisationunitStructure->getId()] = $level6OrganisationunitStructure;
     
         return $this;
     }
@@ -1062,7 +1062,7 @@ class Organisationunit
      */
     public function addLevel7OrganisationunitStructure(\Hris\OrganisationunitBundle\Entity\OrganisationunitStructure $level7OrganisationunitStructure)
     {
-        $this->level7OrganisationunitStructure[] = $level7OrganisationunitStructure;
+        $this->level7OrganisationunitStructure[$level7OrganisationunitStructure->getId()] = $level7OrganisationunitStructure;
     
         return $this;
     }
@@ -1095,7 +1095,7 @@ class Organisationunit
      */
     public function addLevel8OrganisationunitStructure(\Hris\OrganisationunitBundle\Entity\OrganisationunitStructure $level8OrganisationunitStructure)
     {
-        $this->level8OrganisationunitStructure[] = $level8OrganisationunitStructure;
+        $this->level8OrganisationunitStructure[$level8OrganisationunitStructure->getId()] = $level8OrganisationunitStructure;
     
         return $this;
     }
@@ -1128,7 +1128,7 @@ class Organisationunit
      */
     public function addLevel9OrganisationunitStructure(\Hris\OrganisationunitBundle\Entity\OrganisationunitStructure $level9OrganisationunitStructure)
     {
-        $this->level9OrganisationunitStructure[] = $level9OrganisationunitStructure;
+        $this->level9OrganisationunitStructure[$level9OrganisationunitStructure->getId()] = $level9OrganisationunitStructure;
     
         return $this;
     }
@@ -1161,7 +1161,7 @@ class Organisationunit
      */
     public function addLevel10OrganisationunitStructure(\Hris\OrganisationunitBundle\Entity\OrganisationunitStructure $level10OrganisationunitStructure)
     {
-        $this->level10OrganisationunitStructure[] = $level10OrganisationunitStructure;
+        $this->level10OrganisationunitStructure[$level10OrganisationunitStructure->getId()] = $level10OrganisationunitStructure;
     
         return $this;
     }

@@ -124,7 +124,7 @@ class DashboardChart
      *
      * @ORM\ManyToOne(targetEntity="Hris\UserBundle\Entity\UserInfo",inversedBy="dashboardChart")
      * @ORM\JoinColumns({
-     *   @ORM\JoinColumn(name="userinfo_id", referencedColumnName="id")
+     *   @ORM\JoinColumn(name="userinfo_id", referencedColumnName="id", onDelete="CASCADE")
      * })
      */
     private $userInfo;
@@ -362,7 +362,7 @@ class DashboardChart
      */
     public function addForm(\Hris\FormBundle\Entity\Form $form)
     {
-        $this->form[] = $form;
+        $this->form[$form->getId()] = $form;
     
         return $this;
     }
@@ -418,7 +418,7 @@ class DashboardChart
      */
     public function addOrganisationunit(\Hris\OrganisationunitBundle\Entity\Organisationunit $organisationunit)
     {
-        $this->organisationunit[] = $organisationunit;
+        $this->organisationunit[$organisationunit->getId()] = $organisationunit;
     
         return $this;
     }

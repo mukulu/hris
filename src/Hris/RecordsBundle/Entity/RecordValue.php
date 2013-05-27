@@ -58,7 +58,7 @@ class RecordValue
      *
      * @ORM\ManyToOne(targetEntity="Hris\RecordsBundle\Entity\Record")
      * @ORM\JoinColumns({
-     *   @ORM\JoinColumn(name="record_id", referencedColumnName="id")
+     *   @ORM\JoinColumn(name="record_id", referencedColumnName="id", onDelete="CASCADE")
      * })
      */
     private $record;
@@ -68,7 +68,7 @@ class RecordValue
      *
      * @ORM\ManyToOne(targetEntity="Hris\FormBundle\Entity\Field", inversedBy="recordValue")
      * @ORM\JoinColumns({
-     *   @ORM\JoinColumn(name="field_id", referencedColumnName="id")
+     *   @ORM\JoinColumn(name="field_id", referencedColumnName="id", onDelete="CASCADE")
      * })
      */
     private $field;

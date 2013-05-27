@@ -57,7 +57,7 @@ class History
      *
      * @ORM\ManyToOne(targetEntity="Hris\RecordsBundle\Entity\Record")
      * @ORM\JoinColumns({
-     *   @ORM\JoinColumn(name="record_id", referencedColumnName="id", nullable=true)
+     *   @ORM\JoinColumn(name="record_id", referencedColumnName="id", nullable=true, onDelete="CASCADE")
      * })
      */
     private $record;

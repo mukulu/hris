@@ -105,7 +105,7 @@ class FieldOption
      *
      * @ORM\ManyToOne(targetEntity="Hris\FormBundle\Entity\Field", inversedBy="fieldOption")
      * @ORM\JoinColumns({
-     *   @ORM\JoinColumn(name="field_id", referencedColumnName="id")
+     *   @ORM\JoinColumn(name="field_id", referencedColumnName="id", onDelete="CASCADE")
      * })
      */
     private $field;
@@ -251,7 +251,7 @@ class FieldOption
      */
     public function addParentFieldOption(\Hris\FormBundle\Entity\FieldOption $parentFieldOption)
     {
-        $this->parentFieldOption[] = $parentFieldOption;
+        $this->parentFieldOption[$parentFieldOption->getId()] = $parentFieldOption;
     
         return $this;
     }
@@ -284,7 +284,7 @@ class FieldOption
      */
     public function addChildFieldOption(\Hris\FormBundle\Entity\FieldOption $childFieldOption)
     {
-        $this->childFieldOption[] = $childFieldOption;
+        $this->childFieldOption[$childFieldOption->getId()] = $childFieldOption;
     
         return $this;
     }
@@ -317,7 +317,7 @@ class FieldOption
      */
     public function addFieldOptionGroup(\Hris\FormBundle\Entity\FieldOptionGroup $fieldOptionGroup)
     {
-        $this->fieldOptionGroup[] = $fieldOptionGroup;
+        $this->fieldOptionGroup[$fieldOptionGroup->getId()] = $fieldOptionGroup;
     
         return $this;
     }
@@ -396,7 +396,7 @@ class FieldOption
      */
     public function addRelationalFilter(\Hris\FormBundle\Entity\RelationalFilter $relationalFilter)
     {
-        $this->relationalFilter[] = $relationalFilter;
+        $this->relationalFilter[$relationalFilter->getId()] = $relationalFilter;
     
         return $this;
     }
@@ -429,7 +429,7 @@ class FieldOption
      */
     public function addFieldOptionMerge(\Hris\FormBundle\Entity\FieldOptionMerge $fieldOptionMerge)
     {
-        $this->fieldOptionMerge[] = $fieldOptionMerge;
+        $this->fieldOptionMerge[$fieldOptionMerge->getId()] = $fieldOptionMerge;
     
         return $this;
     }

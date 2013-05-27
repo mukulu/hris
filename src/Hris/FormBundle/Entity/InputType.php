@@ -32,7 +32,7 @@ use \DateTime;
 /**
  * Hris\FormBundle\Entity\InputType
  *
- * @ORM\Table(name="hris_inputtype")
+ * @ORM\Table(name="hris_field_inputtype")
  * @ORM\Entity(repositoryClass="Hris\FormBundle\Entity\InputTypeRepository")
  */
 class InputType
@@ -70,7 +70,7 @@ class InputType
     /**
      * @var string $htmltag
      *
-     * @ORM\Column(name="htmltag", type="text", nullable=true, unique=true )
+     * @ORM\Column(name="htmltag", type="string", length=255, nullable=true, unique=true )
      */
     private $htmltag;
     
@@ -261,7 +261,7 @@ class InputType
      */
     public function addField(\Hris\FormBundle\Entity\Field $field)
     {
-        $this->field[] = $field;
+        $this->field[$field->getId()] = $field;
     
         return $this;
     }

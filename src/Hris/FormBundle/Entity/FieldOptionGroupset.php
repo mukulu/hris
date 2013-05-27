@@ -237,7 +237,7 @@ class FieldOptionGroupset
      */
     public function addFieldOptionGroup(\Hris\FormBundle\Entity\FieldOptionGroup $fieldOptionGroup)
     {
-        $this->fieldOptionGroup[] = $fieldOptionGroup;
+        $this->fieldOptionGroup[$fieldOptionGroup->getId()] = $fieldOptionGroup;
     
         return $this;
     }

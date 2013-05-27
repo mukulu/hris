@@ -310,7 +310,7 @@ class OrganisationunitLevel
      */
     public function addOrganisationunitStructure(\Hris\OrganisationunitBundle\Entity\OrganisationunitStructure $organisationunitStructure)
     {
-        $this->organisationunitStructure[] = $organisationunitStructure;
+        $this->organisationunitStructure[$organisationunitStructure->getId()] = $organisationunitStructure;
     
         return $this;
     }

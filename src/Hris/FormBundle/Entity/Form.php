@@ -209,7 +209,7 @@ class Form
      */
     public function addUniqueRecordField(\Hris\FormBundle\Entity\Field $uniqueRecordFields)
     {
-        $this->uniqueRecordFields[] = $uniqueRecordFields;
+        $this->uniqueRecordFields[$uniqueRecordFields->getId()] = $uniqueRecordFields;
     
         return $this;
     }
@@ -406,7 +406,7 @@ class Form
      */
     public function addDashboardChart(\Hris\DashboardBundle\Entity\DashboardChart $dashboardChart)
     {
-        $this->dashboardChart[] = $dashboardChart;
+        $this->dashboardChart[$dashboardChart->getId()] = $dashboardChart;
     
         return $this;
     }
@@ -440,7 +440,7 @@ class Form
      */
     public function addRecord(\Hris\RecordsBundle\Entity\Record $record)
     {
-        $this->record[] = $record;
+        $this->record[$record->getId()] = $record;
     
         return $this;
     }
