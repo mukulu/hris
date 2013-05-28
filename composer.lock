@@ -3,7 +3,7 @@
         "This file locks the dependencies of your project to a known state",
         "Read more about it at http://getcomposer.org/doc/01-basic-usage.md#composer-lock-the-lock-file"
     ],
-    "hash": "893120504e9c9d40454d0e682286c889",
+    "hash": "325ef62e92760e5a63a7a0205264b907",
     "packages": [
         {
             "name": "doctrine/annotations",
@@ -876,6 +876,17 @@
                 "sql"
             ],
             "time": "2013-04-26 18:42:52"
+        },
+        {
+            "name": "jquery/jquery",
+            "version": "1.10.0",
+            "dist": {
+                "type": "file",
+                "url": "http://code.jquery.com/jquery-1.10.0.js",
+                "reference": null,
+                "shasum": null
+            },
+            "type": "library"
         },
         {
             "name": "knplabs/knp-menu",

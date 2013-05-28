@@ -26,7 +26,8 @@
         "sonata-project/doctrine-orm-admin-bundle": "master-dev",
         "sonata-project/admin-bundle": "dev-master",
         "stfalcon/tinymce-bundle": "dev-master",
-        "twitter/bootstrap": "2.3.*"
+        "twitter/bootstrap": "2.3.*",
+        "jquery/jquery":"1.10.*"
     },
     "scripts": {
         "post-install-cmd": [
@@ -65,5 +66,48 @@
         "branch-alias": {
             "dev-master": "2.4-dev"
         }
-    }
+    },
+    "repositories":[
+        {
+            "type":"package",
+            "package":{
+                "name":"jquery/jquery",
+                "version":"1.10.0",
+                "dist":{
+                    "url":"http://code.jquery.com/jquery-1.10.0.js",
+                    "type":"file"
+                }
+            }
+        }
+    ],
+    "license":[
+        "LGPL-2.1",
+        "GPL-3.0+"
+    ],
+    "authors":[
+        {
+            "name":"Ismail Yusuph Koleleni",
+            "email":"ismailkoleleni@gmail.com",
+            "homepage":"http://hrhis.moh.go.tz",
+            "role":"Developer"
+        },
+        {
+            "name":"John Fransis Mukulu",
+            "email":"john.f.mukulu@gmail.com",
+            "homepage":"http://hrhis.moh.go.tz",
+            "role":"Developer"
+        },
+        {
+            "name":"Wilfred Senyoni",
+            "email":"senyoni@gmail.com",
+            "homepage":"http://hrhis.moh.go.tz",
+            "role":"Developer"
+        },
+        {
+            "name":"Yusuph Kassim Kulindwa",
+            "email":"yusuphk@gmail.com",
+            "homepage":"http://hrhis.moh.go.tz",
+            "role":"Developer"
+        }
+    ]
 }
