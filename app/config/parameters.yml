@@ -1,3 +1,4 @@
+# This file is auto-generated during the composer install
 parameters:
     database_driver: pdo_pgsql
     database_host: localhost
@@ -11,6 +12,3 @@ parameters:
     mailer_password: null
     locale: en
     secret: 39057bef4fc167ce3b7103e487939ba41
-    database_path: null
-    router.options.matcher.cache_class: null
-    router.options.matcher_class: Symfony\Component\Routing\Matcher\ApacheUrlMatcher
