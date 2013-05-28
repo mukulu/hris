@@ -44,8 +44,16 @@
             "Sensio\\Bundle\\DistributionBundle\\Composer\\ScriptHandler::installRequirementsFile"
         ]
     },
-    "config": {
-        "bin-dir": "bin"
+    "config":{
+        "bin-dir":"bin"
+    },
+    "minimum-stability":"alpha",
+    "extra":{
+        "symfony-app-dir":"app",
+        "symfony-web-dir":"web",
+        "branch-alias":{
+            "dev-master":"2.2-dev"
+        }
     },
     "minimum-stability": "RC",
     "extra": {
@@ -57,5 +65,5 @@
         "branch-alias": {
             "dev-master": "2.4-dev"
         }
-    }
+    ]
 }
