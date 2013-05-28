@@ -112,6 +112,16 @@ Eclipse is the favoured IDE for HRIS development, the following are development 
 ## Installing Hris Software
 ----------------------------
 
+## PHP5-INTL Dependency
+
+On Systems running Linux Operating systems run
+
+	sudo aptitude install php5-intl
+	
+On Systems running 
+
+	brew install icu4c
+
 #### Download system source codes from our [github repository](https://github.com/hrisproject/hris) - https://github.com/hrisproject/hris
 	git clone git@github.com:hrisproject/hris.git
 	
@@ -145,12 +155,12 @@ To enjoy both user and web read-write access in linux use the following commands
 	rm -rf app/cache/*
 	rm -rf app/logs/*
 	
-On Systems supporting chmod +a, you can give readwrite permission via
+On Systems supporting chmod +a(e.g. Mac), you can give readwrite permission via
 
 	sudo chmod +a "www-data allow delete,write,append,file_inherit,directory_inherit" app/cache app/logs
 	sudo chmod +a "`whoami` allow delete,write,append,file_inherit,directory_inherit" app/cache app/logs
 	
-On Systems that don't support chmod +a, you can give readwrite permission via
+On Systems that don't support chmod +a(e.g. Linux), you can give readwrite permission via
 
 	sudo setfacl -R -m u:www-data:rwx -m u:`whoami`:rwx app/cache app/logs
 	sudo setfacl -dR -m u:www-data:rwx -m u:`whoami`:rwx app/cache app/logs
