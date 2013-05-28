@@ -112,7 +112,7 @@ Eclipse is the favoured IDE for HRIS development, the following are development 
 ## Installing Hris Software
 ----------------------------
 
-## PHP5-INTL Dependency
+#### PHP5-INTL Dependency
 
 On Systems running Linux Operating systems run
 
@@ -192,6 +192,14 @@ On Systems that don't support chmod +a(e.g. Linux), you can give readwrite permi
 	app/console doctrine:schema:update --force		#Updates Database schema
 	app/console list								#List all commands offered
 	
+### Creating, Activating,Changing password, deactivate, demote & promote login-user from commandline
+	app/console fos:user:create						#Create User account
+	app/console fos:user:activate					#Activate a user
+	app/console fos:user:change-password			#Change the password of a user.
+	app/console fos:user:create						#Create a user.
+	app/console fos:user:deactivate					#Deactivate a user
+	app/console fos:user:demote						#Demote a user by removing a role
+	app/console fos:user:promote					#Promotes a user by adding a role
 
 ## Performance tuning
 	File php.ini can be used to tweak performance of the system 
