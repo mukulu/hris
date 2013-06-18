@@ -116,16 +116,16 @@ Eclipse is the favoured IDE for HRIS development, the following are development 
 
 On Systems running Linux Operating systems run
 
-	sudo aptitude install php5-intl
+	sudo apt-get install php5-intl
 	
-On Systems running 
+On Systems running Mac OSX Operating systems run
 
 	brew install icu4c
 
 #### Download system source codes from our [github repository](https://github.com/hrisproject/hris) - https://github.com/hrisproject/hris
 	git clone git@github.com:hrisproject/hris.git
 	
-Install composer
+Install composer inside project directory - hris Note: hris now comes with composer pre-installed
 
 	curl -s https://getcomposer.org/installer | php
 	
