@@ -22,11 +22,43 @@ framework:
 
 # Twig Configuration
 twig:
+    form:
+        resources:
+            - "AcmeBundle:Form:form_div_layout.html.twig"
     debug:            %kernel.debug%
     strict_variables: %kernel.debug%
 
 # Assetic Configuration
 assetic:
+    assets:
+        bootstrap_css:
+            inputs:
+                - %kernel.root_dir%/../vendor/twitter/bootstrap/less/bootstrap.less
+                - %kernel.root_dir%/../vendor/twitter/bootstrap/less/responsive.less
+            filters:
+                - less
+                - cssrewrite
+            output: css/bootstrap.css
+        bootstrap_js:
+            inputs:
+                - %kernel.root_dir%/../vendor/twitter/bootstrap/js/bootstrap-transition.js
+                - %kernel.root_dir%/../vendor/twitter/bootstrap/js/bootstrap-alert.js
+                - %kernel.root_dir%/../vendor/twitter/bootstrap/js/bootstrap-button.js
+                - %kernel.root_dir%/../vendor/twitter/bootstrap/js/bootstrap-carousel.js
+                - %kernel.root_dir%/../vendor/twitter/bootstrap/js/bootstrap-collapse.js
+                - %kernel.root_dir%/../vendor/twitter/bootstrap/js/bootstrap-dropdown.js
+                - %kernel.root_dir%/../vendor/twitter/bootstrap/js/bootstrap-modal.js
+                - %kernel.root_dir%/../vendor/twitter/bootstrap/js/bootstrap-tooltip.js
+                - %kernel.root_dir%/../vendor/twitter/bootstrap/js/bootstrap-popover.js
+                - %kernel.root_dir%/../vendor/twitter/bootstrap/js/bootstrap-scrollspy.js
+                - %kernel.root_dir%/../vendor/twitter/bootstrap/js/bootstrap-tab.js
+                - %kernel.root_dir%/../vendor/twitter/bootstrap/js/bootstrap-typeahead.js
+                - %kernel.root_dir%/../vendor/twitter/bootstrap/js/bootstrap-affix.js
+            output: js/bootstrap.js
+        jquery:
+            inputs:
+                - %kernel.root_dir%/../vendor/jquery/jquery/jquery-1.10.0.js
+            output: js/jquery.js
     debug:          %kernel.debug%
     use_controller: false
     bundles:        [ ]
@@ -85,11 +117,14 @@ fos_user:
     user_class: Hris\UserBundle\Entity\User
 #KnpMenuBundle Configurations
 knp_menu:
-    twig:  # use "twig: false" to disable the Twig extension and the TwigRenderer
-        template: knp_menu.html.twig
+   twig:
+       template: "AcmeBundle:Menu:menu.html.twig"
     templating: false # if true, enables the helper for PHP templates
     default_renderer: twig # The renderer to use, list is also available by default
-
+knp_paginator:
+    template:
+        pagination: AcmeBundle:Pagination:pagination.html.twig
+        
 #SonataAdminBundle Configurations
 sonata_admin:
 #    security_handler: sonata.admin.security.handler.noop
@@ -126,3 +161,6 @@ sonata_block:
         sonata.block.service.text:
         sonata.block.service.action:
         sonata.block.service.rss:
+bc_bootstrap:
+    assets_dir:  %kernel.root_dir%/../vendor/twitter/bootstrap
+    jquery_path: %kernel.root_dir%/../vendor/jquery/jquery/jquery-1.10.0.js

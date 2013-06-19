@@ -26,6 +26,7 @@
         "sonata-project/doctrine-orm-admin-bundle": "master-dev",
         "sonata-project/admin-bundle": "dev-master",
         "stfalcon/tinymce-bundle": "dev-master",
+        "braincrafted/bootstrap-bundle": "dev-master",
         "twitter/bootstrap": "2.3.*",
         "jquery/jquery":"1.10.*"
     },

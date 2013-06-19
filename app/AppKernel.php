@@ -25,6 +25,7 @@ class AppKernel extends Kernel
             new Sonata\DoctrineORMAdminBundle\SonataDoctrineORMAdminBundle(),
             new Knp\Bundle\MenuBundle\KnpMenuBundle(),
         	new FOS\UserBundle\FOSUserBundle(),
+        	new Bc\Bundle\BootstrapBundle\BcBootstrapBundle(),
             new Hris\UserBundle\HrisUserBundle(),
             new Hris\DashboardBundle\HrisDashboardBundle(),
             new Hris\AssetsBundle\HrisAssetsBundle(),
