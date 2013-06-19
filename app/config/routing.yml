@@ -1,3 +1,11 @@
+HrisUserBundle:
+    resource: "@HrisUserBundle/Resources/config/routing.yml"
+    prefix:   /
+
+hris_dashboard:
+    resource: "@HrisDashboardBundle/Resources/config/routing.yml"
+    prefix:   /
+
 hris_data_quality:
     resource: "@HrisDataQualityBundle/Resources/config/routing.yml"
     prefix:   /
@@ -12,14 +20,6 @@ hris_form:
 
 hris_organisationunit:
     resource: "@HrisOrganisationunitBundle/Resources/config/routing.yml"
-    prefix:   /
-
-hris_dashboard:
-    resource: "@HrisDashboardBundle/Resources/config/routing.yml"
-    prefix:   /
-
-HrisUserBundle:
-    resource: "@HrisUserBundle/Resources/config/routing.yml"
     prefix:   /
 
 admin:
