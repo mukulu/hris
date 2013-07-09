@@ -12,3 +12,4 @@ parameters:
     mailer_password: null
     locale: en
     secret: 39057bef4fc167ce3b7103e487939ba41
+    project: Human Resource for Health Information System (HRHIS)

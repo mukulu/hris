@@ -22,12 +22,23 @@ framework:
 
 # Twig Configuration
 twig:
+    exception_controller:  twig.controller.exception:showAction
     form:
         resources:
-            - "AcmeBundle:Form:form_div_layout.html.twig"
-    debug:            "%kernel.debug%"
-    strict_variables: "%kernel.debug%"
+            - "AcmeBundle:Form:form_div_layout.html.twig"    
 
+    globals:
+        # Place Global Variables here, and they will be available in all Twig Templetes.
+            project: "%project%"
+            version: "3.0"
+            system_name: "HRHIS"
+            copyright: "Ministry of Health and Social Welfare"
+    
+    cache:                     "%kernel.cache_dir%/twig"
+    charset:                   "%kernel.charset%"
+    debug:                     "%kernel.debug%"
+    strict_variables:          "%kernel.debug%"
+ 
 # Assetic Configuration
 assetic:
     assets:
