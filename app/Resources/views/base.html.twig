@@ -2,6 +2,10 @@
 <html>
     <head>
         <meta charset="UTF-8" />
+        {% stylesheets '%kernel.root_dir%/../vendor/twitter/bootstrap/less/bootstrap.less' %}
+            <link rel="stylesheet" href="{{ asset_url }}" />
+        {% endstylesheets %}
+
         <title>{% block title %}Welcome!{% endblock %}</title>
         {% block stylesheets %}{% endblock %}
         {% block favicon %}

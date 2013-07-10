@@ -28,7 +28,7 @@
         "stfalcon/tinymce-bundle": "dev-master",
         "braincrafted/bootstrap-bundle": "dev-master",
         "twitter/bootstrap": "2.3.*",
-        "leafo/lessphp": "0.3.9",
+        "leafo/lessphp": "dev-master",
         "jquery/jquery":"1.10.*"
     },
     "scripts": {
