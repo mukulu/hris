@@ -23,56 +23,32 @@ framework:
 # Twig Configuration
 twig:
     exception_controller:  twig.controller.exception:showAction
-    form:
-        resources:
-            - "AcmeBundle:Form:form_div_layout.html.twig"    
 
     globals:
         # Place Global Variables here, and they will be available in all Twig Templetes.
-            project: "%project%"
+            project: "Human Resource for Health Information System (HRHIS)"
             version: "3.0"
             system_name: "HRHIS"
-            copyright: "Ministry of Health and Social Welfare"
+            copyright: "Human Resource Information System 2012"
     
     cache:                     "%kernel.cache_dir%/twig"
     charset:                   "%kernel.charset%"
     debug:                     "%kernel.debug%"
     strict_variables:          "%kernel.debug%"
- 
+
+bc_bootstrap:
+    less_filter: lessphp
+    
 # Assetic Configuration
 assetic:
-    assets:
-        bootstrap_css:
-            inputs:
-                - "%kernel.root_dir%/../vendor/twitter/bootstrap/less/bootstrap.less"
-                - "%kernel.root_dir%/../vendor/twitter/bootstrap/less/responsive.less"
-            filters:
-                - less
-                - cssrewrite
-            output: css/bootstrap.css
-        bootstrap_js:
-            inputs:
-                - "%kernel.root_dir%/../vendor/twitter/bootstrap/js/bootstrap-transition.js"
-                - "%kernel.root_dir%/../vendor/twitter/bootstrap/js/bootstrap-alert.js"
-                - "%kernel.root_dir%/../vendor/twitter/bootstrap/js/bootstrap-button.js"
-                - "%kernel.root_dir%/../vendor/twitter/bootstrap/js/bootstrap-carousel.js"
-                - "%kernel.root_dir%/../vendor/twitter/bootstrap/js/bootstrap-collapse.js"
-                - "%kernel.root_dir%/../vendor/twitter/bootstrap/js/bootstrap-dropdown.js"
-                - "%kernel.root_dir%/../vendor/twitter/bootstrap/js/bootstrap-modal.js"
-                - "%kernel.root_dir%/../vendor/twitter/bootstrap/js/bootstrap-tooltip.js"
-                - "%kernel.root_dir%/../vendor/twitter/bootstrap/js/bootstrap-popover.js"
-                - "%kernel.root_dir%/../vendor/twitter/bootstrap/js/bootstrap-scrollspy.js"
-                - "%kernel.root_dir%/../vendor/twitter/bootstrap/js/bootstrap-tab.js"
-                - "%kernel.root_dir%/../vendor/twitter/bootstrap/js/bootstrap-typeahead.js"
-                - "%kernel.root_dir%/../vendor/twitter/bootstrap/js/bootstrap-affix.js"
-            output: js/bootstrap.js
-        jquery:
-            inputs:
-                - "%kernel.root_dir%/../vendor/jquery/jquery/jquery-1.10.0.js"
-            output: js/jquery.js
+    filters:
+        cssrewrite: ~
+        lessphp:
+            file: "%kernel.root_dir%/../vendor/leafo/lessphp/lessc.inc.php"
+            apply_to: "\.less$"
     debug:          "%kernel.debug%"
-    use_controller: false
-    bundles:        [ ]
+    use_controller: true
+    bundles:        [  ]
     #java: /usr/bin/java
     filters:
         cssrewrite: ~
@@ -128,8 +104,6 @@ fos_user:
     user_class: Hris\UserBundle\Entity\User
 #KnpMenuBundle Configurations
 knp_menu:
-   twig:
-       template: "AcmeBundle:Menu:menu.html.twig"
    templating: false # if true, enables the helper for PHP templates
    default_renderer: twig # The renderer to use, list is also available by default
         
@@ -169,6 +143,3 @@ sonata_block:
         sonata.block.service.text:
         sonata.block.service.action:
         sonata.block.service.rss:
-bc_bootstrap:
-    assets_dir:  "%kernel.root_dir%/../vendor/twitter/bootstrap"
-    jquery_path: "%kernel.root_dir%/../vendor/jquery/jquery/jquery-1.10.0.js"
