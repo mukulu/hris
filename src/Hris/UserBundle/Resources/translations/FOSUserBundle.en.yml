@@ -12,15 +12,18 @@ group:
         deleted: The group has been deleted
 
 # Security
-"Bad credentials": "Login Failed: Please Contact your system Administrator!"
-
 security:
     login:
+        login: "Login"
+        create_account: "Create Account"
         username: "Username:"
         password: "Password:"
-        remember_me: Remember me
-        submit: Login
-        reset: Reset
+        remember_me: "Keep me signed in"
+        bad_credentials: "Login Failed: Please Contact your system Administrator!"
+        help: "Help"
+        submit: "Login"
+        reset: "Reset"
+        access_denied: "Access Denied"
 
 # Profile
 profile:

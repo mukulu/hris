@@ -1,45 +1,24 @@
-#login-status{  position:absolute;  top: 0;  right: 0;  color: #FFFFFF;  font-size: 1em;}
-#login-status a{  color: #FFF;  font-weight: bold;  text-decoration: none;}
-#login-status a:hover{  text-decoration: underline;}
-#login-form {float: left;padding: 30px 0px 30px 10%;margin:2% 0px;}
-#login-form label{color: #3b5998;font-size: 12px;}
-#login-form #id_username, #login-form #id_password{border: 2px solid #3b5998;}
-#login-form #id_username:hover, #login-form #id_password:hover{   border: 2px solid #255df8;}
-#login-form .title{	color:#4366ad;    font-size:14px;    text-align:left;}
-#login-form form{background:#ebf1ff;padding:1em;border:1px solid #eee;margin:1em;width:32em;-webkit-border-radius:5px 5px 5px 5px;-moz-border-radius:15px 15px 15px 15px;}
-#login-form .login {background:#eceff8;border:1px solid #999;-moz-border-radius:3px 3px 3px 3px;}
-#login-form input {padding:0.15em;width:16em;border:1px solid #ddd;background:#fafafa;font:bold 0.95em arial, sans-serif;-moz-border-radius:2px 2px 2px 2px;}
-#login-form input:hover, input:focus {border-color:#677798;-moz-border-radius:3px 3px 3px 3px;background:#f6f6f6;} 
-#login-form fieldset {border:1px solid #ddd;padding:0 0.5em 0.5em;}
-#login-form fieldset div {margin:0.3em 0;clear:both;}
-#login-form label {float:left;width:10em;text-align:right;margin-right:1em;}
-#login-form .form_errors {text-align: center;font-weight:bold;font-size:12px;color: red;}
-#login-form div#_submit-buttons {padding:0px 0px 0px 130px;}
-#login-form input#_submit:hover,#login-form input#_reset:hover {background-position:0 -26px;  background-color: #5079cf; border-color:#677798; -moz-border-radius:4px 4px 4px 4px; -webkit-border-radius:4px 4px 4px 4px;}
-#login-form input#_submit,#login-form input#_reset {height:30px; text-align: center; color: #fff; overflow:hidden; background-color: #3b5998; display:inline; cursor:pointer !important; font-family:"Helvetica Neue",Helvetica,Arial,sans-serif; line-height:125%; padding:0.15em; width:8em; border:1px solid #ddd; -moz-border-radius:3px 3px 3px 3px; -webkit-border-radius:3px 3px 3px 3px;}
-#bottomFooter {height: 60px;margin: 0 auto;padding: 0px 0px 15px 0px;background: #3b5998;border-top: 1px solid #1885B0;font-family: Arial, Helvetica, sans-serif;bottom:0;width:100%;position:absolute;}
-#bottomFooter p {margin: 0;padding-top: 20px;line-height: normal;font-size: 9px;text-transform: uppercase;text-align: center;color: #FFFFFF;}
-#bottomFooter a {color: #FFFFFF;}
-div.form-container { margin-left:30%;background: #EBF1FF;padding: 1em;border: 1px solid #EEE;width:500px;margin:2% 30% 0px; }
-div.form-container form p { margin: 0;float: left;padding: 30px 0px 30px 10%;margin: 2% 0px; }
-div.form-container form p.note { margin-left: 170px; font-size: 90%; color: #333; }
-div.form-container form fieldset { margin: 10px 0; padding: 10px; border: #DDD 1px solid; }
-div.form-container form legend { font-weight: bold; color: #666; }
-div.form-container form fieldset div { padding: 0.25em 0; }
-div.form-container label, 
-div.form-container span.label { margin-right: 10px; padding-right: 10px; width: 150px; display: block; float: left; text-align: right; position: relative; }
-div.form-container label.error, 
-div.form-container span.error { color: #C00; }
-div.form-container label em, 
-div.form-container span.label em { position: absolute; right: 0; font-size: 120%; font-style: normal; color: #C00; }
-div.form-container input.error { border-color: #C00; background-color: #FEF; }
-div.form-container input:focus,
-div.form-container input.error:focus, 
-div.form-container textarea:focus {	background-color: #FFC; border-color: #FC6; }
-div.form-container div.controlset label, 
-div.form-container div.controlset input { display: inline; float: none; }
-div.form-container div.controlset div { margin-left: 170px; }
-div.form-container div.buttonrow { margin-left: 180px; }
-div.form-container input#_submit:hover,div.form-container input#_reset:hover {background-position:0 -26px;  background-color: #5079cf; border-color:#677798; -moz-border-radius:4px 4px 4px 4px; -webkit-border-radius:4px 4px 4px 4px;}
-div.form-container input#_submit,div.form-container input#_reset {height:30px; text-align: center; color: #fff; overflow:hidden; background-color: #3b5998; display:inline; cursor:pointer !important; font-family:"Helvetica Neue",Helvetica,Arial,sans-serif; line-height:125%;padding:0.15em; width:8em; border:1px solid #ddd; -moz-border-radius:3px 3px 3px 3px; -webkit-border-radius:3px 3px 3px 3px;}
-div.form-container div#_submit-buttons {padding:0px 0px 0px 170px;}
+.form-signin {
+    max-width: 350px;
+    padding: 19px 29px 29px;
+    margin: 0 auto 20px;
+    background-color: #fff;
+    border: 1px solid #e5e5e5;
+    -webkit-border-radius: 5px;
+    -moz-border-radius: 5px;
+    border-radius: 5px;
+    -webkit-box-shadow: 0 1px 2px rgba(0,0,0,.05);
+    -moz-box-shadow: 0 1px 2px rgba(0,0,0,.05);
+    box-shadow: 0 1px 2px rgba(0,0,0,.05);
+}
+.form-signin .form-signin-heading,
+.form-signin .checkbox {
+    margin-bottom: 10px;
+}
+.form-signin input[type="text"],
+.form-signin input[type="password"] {
+    font-size: 16px;
+    height: auto;
+    margin-bottom: 15px;
+    padding: 7px 9px;
+}

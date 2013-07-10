@@ -51,8 +51,8 @@ assetic:
             file: "%kernel.root_dir%/../vendor/leafo/lessphp/lessc.inc.php"
             apply_to: "\.less$"
     debug:          "%kernel.debug%"
-    use_controller: true
-    bundles:        [  ]
+    use_controller: false
+    bundles:        [ FOSUserBundle  ]
     #java: /usr/bin/java
 
 # Doctrine Configuration

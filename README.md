@@ -90,11 +90,12 @@ HRIS Version 3 Consist of Several modules designed to collect, validate, report 
 * [PHPUnit](http://www.phpunit.de/manual/3.7/en/index.html)
 * [Doctrine](http://www.doctrine-project.org/)
 * [Twig](http://twig.sensiolabs.org/)
+* [{less} - The dynamic stylesheet language](http://lesscss.org/)
 * [Internationalization](http://symfony.com/doc/current/book/translation.html)
 
 ## Eclipse Tricks
 -----------------
-Eclipse is the favoured IDE for HRIS development, the following are development plugins
+Eclipse is the favoured IDE for HRIS development, followed by PHPStorm, the following are development plugins for eclipse.
 
 1. [Yedit - Eclipse plugin for YAML Files](http://code.google.com/p/yedit/) from Update site: http://dadacoalition.org/yedit
 2. [Symfony Eclipse Plugin](https://github.com/pulse00/Symfony-2-Eclipse-Plugin) from Update site: http://p2.dubture.com or [MarketPlace](http://marketplace.eclipse.org/marketplace-client-intro?mpc_install=220368)
@@ -107,6 +108,7 @@ Eclipse is the favoured IDE for HRIS development, the following are development 
 	Twig
 	YEdit
 4. [Install PHP Tool Integration for testing](http://www.phpsrc.org/) offers PHPUnit test and Copy/Paste Detector, update site: http://www.phpsrc.org/eclipse/pti/
+5. [Less - Eclipse plugin](http://www.normalesup.org/~simonet/soft/ow/eclipse-less.fr.html) offers support for less syntax, update site: http://download.eclipse.org/modeling/tmf/xtext/updates/composite/releases/
 	
 	
 ## Installing Hris Software
@@ -200,6 +202,9 @@ On Systems that don't support chmod +a(e.g. Linux), you can give readwrite permi
 	app/console fos:user:deactivate					#Deactivate a user
 	app/console fos:user:demote						#Demote a user by removing a role
 	app/console fos:user:promote					#Promotes a user by adding a role
+
+### Regenerating assets
+	app/console assetic:dump
 
 ## Performance tuning
 	File php.ini can be used to tweak performance of the system 
