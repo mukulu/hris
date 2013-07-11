@@ -23,6 +23,7 @@
 {% block stylesheets %}
     {{ parent() }}
     <link rel="stylesheet" href="{{ asset('bundles/hrisassets/css/login.css') }}" />
+    <link rel="stylesheet" href="{{ asset('bundles/hrisassets/css/style.css') }}" />
     {#{% stylesheets '@HrisUserBundle/Resources/public/login.css' filter='cssrewrite' output="css/login.css" %}#}
         {#<link rel="stylesheet" type="text/css" media="screen" href="{{ asset_url }}" />#}
     {#{% endstylesheets %}#}
@@ -31,7 +32,7 @@
 
 {% block title %}Human Resource Information System{% endblock %}
     {% block banner %}
-        <div id="banner">
+        <div id="banner" class="hidden-phone text-center">
             {% block banner_logo %}
                 <div id="logo">
                     <h1>Ministry of Health And Social Welfare(MoHSW)</h1>
@@ -39,13 +40,16 @@
                 </div>
             {% endblock banner_logo %}
         </div>
+        <div class="visible-phone text-center">
+            	<h2 style="color:#000000;">HRHIS 3</h2>
+        </div>
     {% endblock banner %}
 		{% block content %}
 			{{  block('fos_user_content') }}
 		{% endblock content %}
 
 		{% block footer %}
-			<div class="container" id="footer">
+			<div id="footer" class="hidden-phone text-center">
 			    <p>Copyright © 2010  Ministry of Health and Social welfare - Human resource for Health Information System</p>
             </div>
 		{% endblock footer %}

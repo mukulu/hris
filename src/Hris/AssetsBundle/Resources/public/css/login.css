@@ -1,5 +1,6 @@
 .form-signin {
-    max-width: 350px;
+    max-width: 300px;
+    min-width:220px;
     padding: 19px 29px 29px;
     margin: 0 auto 20px;
     background-color: #fff;

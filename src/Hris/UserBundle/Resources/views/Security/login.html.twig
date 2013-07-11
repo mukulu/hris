@@ -19,7 +19,6 @@
 #}
 {% extends "FOSUserBundle::layout.html.twig" %}
 {% block fos_user_content %}
-
 	<div class="form-signin">
 		<div class="well">
 		  <ul class="nav nav-tabs">
@@ -28,35 +27,21 @@
 		  </ul>
 		  <div id="myTabContent" class="tab-content">
 			<div class="tab-pane active in" id="login">
-			  <form class="form-horizontal" action='{{ path("fos_user_security_check") }}' method="POST">
+			  <form action='{{ path("fos_user_security_check") }}' method="POST">
 			    <input type="hidden" name="_csrf_token" value="{{ csrf_token }}" />
-				<fieldset>
-				  <div id="legend">
-					<legend class="">{{ 'security.login.login'|trans({}, 'FOSUserBundle') }}</legend>
-				  </div>    
-				  <div class="control-group">
-					<!-- Username -->
-					<label class="control-label"  for="username">{{ 'security.login.username'|trans({}, 'FOSUserBundle') }}</label>
-					<div class="controls">
-					  <input type="text" placeholder="{{ 'security.login.username'|trans({}, 'FOSUserBundle') }}" id="username" name="_username" placeholder="" class="input-xlarge" value="{{ last_username }}">
-					</div>
-				  </div>
-
-				  <div class="control-group">
-					<!-- Password-->
-					<label class="control-label" for="password">{{ 'security.login.password'|trans({}, 'FOSUserBundle') }}</label>
-					<div class="controls">
-					  <input type="password" placeholder="{{ 'security.login.password'|trans({}, 'FOSUserBundle') }}" id="password" name="_password" placeholder="" class="input-xlarge">
-					</div>
-				  </div>
+			    <label for="username">{{ 'security.login.username'|trans({}, 'FOSUserBundle') }}</label>
+			    <input type="text" placeholder="{{ 'security.login.username'|trans({}, 'FOSUserBundle') }}" id="username" name="_username" placeholder="" class="input-medium" value="{{ last_username }}">
+			    <label for="password">{{ 'security.login.password'|trans({}, 'FOSUserBundle') }}</label>
+			    <input type="password" placeholder="{{ 'security.login.password'|trans({}, 'FOSUserBundle') }}" id="password" name="_password" placeholder="" class="input-medium">
+			    <label class="checkbox">
+					<input type="checkbox" id="remember_me" name="_remember_me" value="on"> {{ 'security.login.remember_me'|trans({}, 'FOSUserBundle') }}
+					<a href="#" class="btn btn-link">Forgot my password</a>
+				</label>
 				  <div class="control-group">
 						<div class="controls">
-							<label class="checkbox">
-								<input type="checkbox" id="remember_me" name="_remember_me" value="on"> {{ 'security.login.remember_me'|trans({}, 'FOSUserBundle') }}   ¦
-								<a href="#" class="btn btn-link">Forgot my password</a>
-							</label>
+							
 							<button type="submit" name="_submit" class="btn btn-success">{{ 'security.login.submit'|trans({}, 'FOSUserBundle') }}</button>
-                            <button type="reset" name="_reset" class="btn btn-inverse">{{ 'resetting.request.submit'|trans({}, 'FOSUserBundle') }}</button>
+                            <button type="reset" name="_reset" class="btn btn-primary">{{ 'security.login.reset'|trans({}, 'FOSUserBundle') }}</button>
 							<button type="button" class="btn">{{ 'security.login.help'|trans({}, 'FOSUserBundle') }}</button>
 						</div>
 				 </div>
@@ -71,16 +56,14 @@
 			</div>
 			<div class="tab-pane fade" id="create">
 			  <form id="tab">
-				<label>Username</label>
-				<input type="text" value="" class="input-xlarge">
+				<label>{{ 'security.login.create_account'|trans({}, 'FOSUserBundle') }}</label>
+				<input type="text" value="" class="input-medium">
 				<label>First Name</label>
-				<input type="text" value="" class="input-xlarge">
+				<input type="text" value="" class="input-medium">
 				<label>Last Name</label>
-				<input type="text" value="" class="input-xlarge">
+				<input type="text" value="" class="input-medium">
 				<label>Email</label>
-				<input type="text" value="" class="input-xlarge">
-				<label>Address</label>
-				<textarea value="Smith" rows="3" class="input-xlarge">
+				<input type="text" value="" class="input-medium">
 				</textarea>
 
 				<div>
@@ -90,5 +73,9 @@
 			</div>
 		</div>
 	  </div>
+	  
+	   <div class="visible-phone text-center">
+            <p>© MoHSW - HRHIS</p>
+        </div>
     </div>
 {% endblock fos_user_content %}
