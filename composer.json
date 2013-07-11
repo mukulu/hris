@@ -21,6 +21,7 @@
         "incenteev/composer-parameter-handler": "~2.0",
         "doctrine/data-fixtures": "dev-master",
         "doctrine/doctrine-fixtures-bundle": "dev-master",
+        "gedmo/doctrine-extensions": "dev-master",
         "friendsofsymfony/user-bundle": "*",
         "sonata-project/cache-bundle": "master-dev",
         "sonata-project/doctrine-orm-admin-bundle": "master-dev",

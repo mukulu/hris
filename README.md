@@ -206,5 +206,8 @@ On Systems that don't support chmod +a(e.g. Linux), you can give readwrite permi
 ### Regenerating assets
 	app/console assetic:dump
 
+### Shell Console
+	app/console --shell
+
 ## Performance tuning
 	File php.ini can be used to tweak performance of the system 

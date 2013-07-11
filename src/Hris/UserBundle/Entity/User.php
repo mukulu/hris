@@ -24,6 +24,7 @@
  */
 namespace Hris\UserBundle\Entity;
 
+use Gedmo\Mapping\Annotation as Gedmo;
 use FOS\UserBundle\Entity\User as BaseUser;
 use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\ORM\Mapping as ORM;
@@ -35,6 +36,8 @@ use Hris\UserBundle\Entity\UserInfo;
  *
  * @ORM\Table(name="hris_user")
  * @ORM\Entity(repositoryClass="Hris\UserBundle\Entity\UserRepository")
+ * @Gedmo\Loggable
+ * @Gedmo\SoftDeleteable(fieldName="deletedAt")
  */
 class User extends BaseUser
 {
@@ -56,17 +59,22 @@ class User extends BaseUser
     
     /**
      * @var \DateTime $datecreated
-     *
+     * @Gedmo\Timestampable(on="create")
      * @ORM\Column(name="datecreated", type="datetime")
      */
     private $datecreated;
     
     /**
      * @var \DateTime $lastupdated
-     *
+     * @Gedmo\Timestampable(on="update")
      * @ORM\Column(name="lastupdated", type="datetime", nullable=true)
      */
     private $lastupdated;
+    
+    /**
+     * @ORM\Column(name="deletedAt", type="datetime", nullable=true)
+     */
+    private $deletedAt;
     
     
     /**
@@ -155,5 +163,25 @@ class User extends BaseUser
     public function getUserInfo()
     {
         return $this->userInfo;
+    }
+    
+    /**
+     * Get deletedAt
+     *
+     * @return \DateTime $deletedAt
+     */
+    public function getDeletedAt()
+    {
+    	return $this->deletedAt;
+    }
+    
+    /**
+     * Set deletedAt
+     *
+     * @param \DateTime $deletedAt
+     */
+    public function setDeletedAt($deletedAt)
+    {
+    	$this->deletedAt = $deletedAt;
     }
 }
