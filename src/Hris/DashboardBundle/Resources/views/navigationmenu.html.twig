@@ -1,95 +1,52 @@
 {# src/Hris/DashboardBundle/Resources/views/navigationmenu.html.twig #}
-<ul id="navigationmenu" class="accordion">
-	<li>
-		<h3>Form Management</h3>
-		<ul class="dropdown">
-			<li><a href="">Fields</a></li>
-			<li><a href="">Field Groups</a></li>
-			<li><a href="">Forms</a></li>
-		</ul>
-	</li>
-	<li>
-		<h3>Resource Tables</h3>
-		<ul class="dropdown">
-			<li><a href="">Resource Tables</a></li>
-		</ul>
-	</li>
-	<li>
-		<h3>Indicators</h3>
-		<ul class="dropdown dropdown">
-			<li><a href="">Population Indicators</a></li>
-			<li><a href="">M&and;E Indicators</a></li>
-		</ul>
-	</li>
-	<li>
-		<h3>Organisation units</h3>
-		<ul class="dropdown">
-			<li><a href="">Fields</a></li>
-			<li><a href="">Field Groups</a></li>
-			<li><a href="">Training Types</a></li>
-			<li><a href="">Forms</a></li>
-		</ul>
-	</li>
-	<li>
-		<h3>Data Quality</h3>
-		<ul class="dropdown">
-			<li><a href="">Fields</a></li>
-			<li><a href="">Field Groups</a></li>
-			<li><a href="">Field Option Groups</a></li>
-		</ul>
-	</li>
-	<li>
-		<h3>Users Administration</h3>
-		<ul class="dropdown">
-			<li><a href="">Fields</a></li>
-			<li><a href="">Field Groups</a></li>
-			<li><a href="">Forms</a></li>
-		</ul>
-	</li>
-	<li>
-		<h3>Configurations</h3>
-		<ul class="dropdown">
-			<li><a href="">Fields</a></li>
-			<li><a href="">Field Groups</a></li>
-			<li><a href="">Training Types</a></li>
-			<li><a href="">Forms</a></li>
-		</ul>
-	</li>
-	<li class="active">
-		<h3>Data Management</h3>
-		<ul class="dropdown">
-			<li><a href="">Fields</a></li>
-			<li><a href="">Field Groups</a></li>
-			<li><a href="">Field Option Groups</a></li>
-		</ul>
-	</li>
-	<li>
-		<h3>Reports</h3>
-		<ul class="dropdown">
-			<li><a href="">Fields</a></li>
-			<li><a href="">Field Groups</a></li>
-			<li><a href="">Field Option Groupset</a></li>
-			<li><a href="">Relational Filters</a></li>
-		</ul>
-	</li>
-	<li>
-		<h3>Import/Export</h3>
-		<ul class="dropdown">
-			<li><a href="">Relational Filters</a></li>
-			<li><a href="">Arithmetic Filters</a></li>
-			<li><a href="">Generic Filters</a></li>
-			<li><a href="">Training Types</a></li>
-			<li><a href="">Forms</a></li>
-		</ul>
-	</li>
-	<li>
-		<h3>Change Password</h3>
-		<ul class="dropdown">
-			<li><a href="">Fields</a></li>
-			<li><a href="">Field Groups</a></li>
-			<li><a href="">Field Option Groups</a></li>
-			<li><a href="">Training Types</a></li>
-			<li><a href="">Forms</a></li>
-		</ul>
-	</li>
-</ul>
+
+<div class="accordion" id="accordion2">
+     <div class="accordion-group">
+       <div class="accordion-heading btn-primary">
+         <a class="accordion-toggle text-white" data-toggle="collapse" data-parent="#accordion2" href="#collapseOne">
+           Form Management
+         </a>
+       </div>
+       <div id="collapseOne" class="accordion-body in collapse" style="height: auto;">
+         <div class="accordion-inner">
+             <ul class="dropdown">
+				<li><a href="">Fields</a></li>
+				<li><a href="">Field Groups</a></li>
+				<li><a href="">Forms</a></li>
+			</ul>
+         </div>
+       </div>
+     </div>
+     <div class="accordion-group">
+       <div class="accordion-heading btn-primary">
+         <a class="accordion-toggle text-white" data-toggle="collapse" data-parent="#accordion2" href="#collapseTwo">
+           Indicators
+         </a>
+       </div>
+       <div id="collapseTwo" class="accordion-body collapse" style="height: 0px;">
+         <div class="accordion-inner">
+             <ul class="dropdown dropdown">
+				<li><a href="">Population Indicators</a></li>
+				<li><a href="">M&and;E Indicators</a></li>
+			</ul>
+         </div>
+       </div>
+     </div>
+     <div class="accordion-group">
+       <div class="accordion-heading btn-primary">
+         <a class="accordion-toggle text-white" data-toggle="collapse" data-parent="#accordion2" href="#collapseThree">
+           Organisation units
+         </a>
+       </div>
+       <div id="collapseThree" class="accordion-body collapse" style="height: 0px;">
+         <div class="accordion-inner">
+             <ul class="dropdown">
+				<li><a href="">Fields</a></li>
+				<li><a href="">Field Groups</a></li>
+				<li><a href="">Training Types</a></li>
+				<li><a href="">Forms</a></li>
+			</ul>
+         </div>
+       </div>
+     </div>
+ </div>

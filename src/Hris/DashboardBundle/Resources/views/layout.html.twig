@@ -2,73 +2,37 @@
 {% extends '::base.html.twig' %}
 
 
-{% block title %}HRHIS{% endblock %}
+{% block title %} {{ parent() }} - Dashboard {% endblock %}
 
 {% block stylesheets %}
 	{{ parent() }}
-	<style type="text/css">
-	#logo {float: left;width: 100%;height: 100%;margin: 0;padding:30px 0px 0px 0px;color: #000000;background: url("{{ asset('bundles/hrisassets/images/coat_of_arms_of_Tz.svg') }}");background-repeat:no-repeat;background-position:30px 0px;background-size:112px 117px;}
-	</style>
-	<link rel="stylesheet" href="{{ asset('bundles/hrisassets/css/style.css') }}" />
-	<link rel="stylesheet" href="{{ asset('bundles/hrisassets/css/accordion.core.css') }}" type="text/css" charset="utf-8">
 {% endblock stylesheets %}
+
 {% block javascripts %}
 	{{ parent() }}
-	<script type="text/javascript" src="{{ asset('bundles/hrisassets/js/jquery.min.js') }}" charset="utf-8"></script>
-	<script type="text/javascript" src="{{ asset('bundles/hrisassets/js/jquery.accordion.2.0.min.js') }}" charset="utf-8"></script>
-	<script type="text/javascript">
-		$('#navigationmenu').accordion({canToggle: true});
-		function SideBar() {
-		    this.showAnimated = function () {setMenuVisible();setMainPageNormal("270px");$("div#sidebar").show("fast");$("span#showSideBar").hide("fast");};
-		    this.hideAnimated = function () {if ($("#sidebar").is(":visible")) {$("#content").css({"min-height":"350px","width": "100%"});$("div#sidebar").hide("fast");$("#hideSideBarLink").html('<img height="16"width="16" alt="Show menu" title="Show Menu" src="{{ asset('bundles/hrisassets/images/show_menu.png') }}"/>');} else { $("#content").css({"width":"76%"});$("div#sidebar").show("fast");$("#hideSideBarLink").html('<img height="16" width="16" alt="Hide menu" title="Hide menu" src="{{ asset('bundles/hrisassets/images/hide_menu.png') }}"/>');}};
-		}
-		var sideBar = new SideBar
-		$(document).ready(function() {$("#open").click(function(){$("div#panel").slideDown("slow");});$("#close").click(function(){$("div#panel").slideUp("slow");});$("#toggle a").click(function () {$("#toggle a").toggle();});});
-	</script>
 {% endblock %}
 
-{% block favicon %}
-	<link rel="icon" sizes="16x16" href="{{ asset('bundles/hrisassets/images/favicon.ico') }}" />
-{% endblock favicon %}
+{% block banner %}
+	{{ parent() }}
+{% endblock %}
 
-{% block body %}
-	{% include 'HrisDashboardBundle::infopanel.html.twig' %}
-	<div id="wrapper">
-		{% block banner %}
-			<div id="banner">
-			{% block banner_logo %}
-				<div id="logo">
-					<h1>Ministry of Health And Social Welfare(MoHSW)</h1>
-					<h2>Human Resource for Health Information System (HRHIS)</h2>
-				</div>
-				<!-- end #logo -->
-			{% endblock banner_logo %}
-			</div>
-		{% endblock banner %}
-		
-		{% block content %}
-			<div id="page">
-				<span id="showSideBar">
-					<a id="hideSideBarLink" title="Hide menu" href="javascript:sideBar.hideAnimated();" data-bitly-type="bitly_hover_card">
-						<img width="16" height="16" title="Hide menu" src="{{ asset('bundles/hrisassets/images/hide_menu.png') }}">
-					</a>
-				</span>
-				<div id="sidebar">
-					{% include 'HrisDashboardBundle::navigationmenu.html.twig' %}
-				</div>
-				<div id="content">
-				{% block page_content %}{% endblock page_content %}
-				</div>
-			</div>
-		{% endblock content %}
-		
-		<div style="clear: both;">&nbsp;</div>
-		
-		{% block footer %}
-			<div id="footer">
-				<p>Copyright © 2010  Ministry of Health and Social welfare - Human resource for Health Information System</p>
-			</div>
-		{% endblock footer %}
-		
+{% block content %}
+	<div class="container-fluid">
+	  <div class="row-fluid">
+	    <div class="span2" style="padding:20px 0px;>
+	      <!--Sidebar content-->
+	      {% include 'HrisDashboardBundle::navigationmenu.html.twig' %}
+	    </div>
+	    <div class="span10">
+	      <!--Body content-->
+	      
+      		
+	      
+	    </div>
+	  </div>
 	</div>
-{% endblock body %}
+{% endblock %}
+
+{% block footer %}
+	{{ parent() }}
+{% endblock %}
