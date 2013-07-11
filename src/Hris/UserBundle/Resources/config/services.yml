@@ -9,6 +9,15 @@ services:
         arguments: [ null, Hris\UserBundle\Entity\User, SonataAdminBundle:CRUD ]
 
 
-##    hris_user.example:
-#        class: %hris_user.example.class%
-#        arguments: [@service_id, "plain_value", %parameter%]
+    hris_user.menu_builder:
+        class: Hris\UserBundle\Menu\MenuBuilder
+        arguments: ["@knp_menu.factory"]
+
+    hris_user.menu.main:
+        class: Knp\Menu\MenuItem #the service definition requires setting the class
+        factory_service: hris_user.menu_builder
+        factory_method: createMainMenu
+        arguments: ["@request"]
+        scope: request # needed as we have the request as a dependency here
+        tags:
+            - { name: knp_menu.menu, alias: user } #The alias is what is used to retrieve menu

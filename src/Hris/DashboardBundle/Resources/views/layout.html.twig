@@ -18,18 +18,17 @@
 
 {% block content %}
 	<div class="container-fluid">
-	  <div class="row-fluid">
-	    <div class="span2" style="padding:20px 0px;>
-	      <!--Sidebar content-->
-	      {% include 'HrisDashboardBundle::navigationmenu.html.twig' %}
-	    </div>
-	    <div class="span10">
-	      <!--Body content-->
-	      
-      		
-	      
-	    </div>
-	  </div>
+        <div class="row-fluid">
+            <div class="span2">
+                <!--Sidebar content-->
+                {% include 'HrisDashboardBundle::navigationmenu.html.twig' %}
+            </div>
+            <div class="span10">
+                <!--Body content-->
+                <h1>AUTO GENERATED MENU -WORK IN PROGRESS</h1>
+                {{ knp_menu_render('user') }}
+            </div>
+        </div>
 	</div>
 {% endblock %}
 
