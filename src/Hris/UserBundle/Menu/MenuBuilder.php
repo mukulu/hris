@@ -45,9 +45,17 @@ class MenuBuilder
     {
         $menu = $this->factory->createItem('root');
 
-        $menu->addChild('Users', array('route' => 'admin_user_list'))
-             ->addChild('InputTypes', array('route' => 'admin_hris_form_inputtype_list'));
-        // ... add more children
+        $menu->addChild('UserManagement', array(
+            'uri'=>'#usermanagement','attributes'=>
+            array('class'=>'nav nav-list')
+            )
+        );
+        $userManagement = $menu['UserManagement'];
+
+        $userManagement->addChild('Users',array('route'=>'user_list'));
+        $userManagement->addChild('Roles', array('uri'=>'#roles'));
+        $userManagement->addChild('Groups',array('uri'=>'#groups'));
+
 
         return $menu;
     }

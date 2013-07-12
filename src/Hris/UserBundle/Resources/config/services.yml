@@ -20,4 +20,4 @@ services:
         arguments: ["@request"]
         scope: request # needed as we have the request as a dependency here
         tags:
-            - { name: knp_menu.menu, alias: user } #The alias is what is used to retrieve menu
+            - { name: knp_menu.menu, alias: hris_menu } #The alias is what is used to retrieve menu
