@@ -28,7 +28,6 @@ class AppKernel extends Kernel
         	new Bc\Bundle\BootstrapBundle\BcBootstrapBundle(),
             new Hris\UserBundle\HrisUserBundle(),
             new Hris\DashboardBundle\HrisDashboardBundle(),
-            new Hris\AssetsBundle\HrisAssetsBundle(),
             new Hris\OrganisationunitBundle\HrisOrganisationunitBundle(),
             new Hris\FormBundle\HrisFormBundle(),
             new Hris\RecordsBundle\HrisRecordsBundle(),

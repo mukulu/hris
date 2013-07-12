@@ -1,3 +1,1 @@
-hris_form_homepage:
-    pattern:  /hello/{name}
-    defaults: { _controller: HrisFormBundle:Default:index }
+

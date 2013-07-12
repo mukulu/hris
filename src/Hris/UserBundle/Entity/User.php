@@ -184,4 +184,24 @@ class User extends BaseUser
     {
     	$this->deletedAt = $deletedAt;
     }
+
+    /**
+     * Get expiresAt
+     *
+     * @return \DateTime $expiresAt
+     */
+    public function getExpiresAt()
+    {
+    	return $this->expiresAt;
+    }
+
+    /**
+     * Get credentialsExpireAt
+     *
+     * @return \DateTime $credentialsExpireAt
+     */
+    public function getCredentialsExpireAt()
+    {
+    	return $this->credentialsExpireAt;
+    }
 }

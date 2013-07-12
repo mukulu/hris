@@ -205,6 +205,8 @@ On Systems that don't support chmod +a(e.g. Linux), you can give readwrite permi
 
 ### Regenerating assets
 	app/console assetic:dump
+	php app/console assets:install web
+
 
 ### Shell Console
 	app/console --shell

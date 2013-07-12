@@ -25,14 +25,14 @@
     <link rel="stylesheet" href="{{ asset('bundles/hrisassets/css/login.css') }}" />
 {% endblock stylesheets %}
 
-{% block title %}Human Resource Information System{% endblock %}
-    {% block banner %}
-        {{ parent() }}
-    {% endblock banner %}
-		{% block content %}
-			{{  block('fos_user_content') }}
-		{% endblock content %}
+{% block title %} {{ parent() }} - Login {% endblock %}
+{% block banner %}
+    {{ parent() }}
+{% endblock banner %}
+{% block content %}
+    {{  block('fos_user_content') }}
+{% endblock content %}
 
-		{% block footer %}
-			{{ parent() }}
-		{% endblock footer %}
+{% block footer %}
+    {{ parent() }}
+{% endblock footer %}

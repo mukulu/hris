@@ -45,7 +45,7 @@ class MenuBuilder
     {
         $menu = $this->factory->createItem('root');
 
-        $menu->addChild('Users', array('route' => 'admin_hris_user_user_list'))
+        $menu->addChild('Users', array('route' => 'admin_user_list'))
              ->addChild('InputTypes', array('route' => 'admin_hris_form_inputtype_list'));
         // ... add more children
 

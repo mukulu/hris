@@ -3,11 +3,11 @@
 <html lang="en">
     <head>
         <meta name="viewport" content="width=device-width, initial-scale=1.0">
-        <title>{% block title %}Welcome!{% endblock %}</title>
+        <title>{% block title %} HRHIS {% endblock %}</title>
         {% block stylesheets %}
             <link rel="stylesheet" href="{{ asset('css/bootstrap.css') }}" />
             <link rel="stylesheet" href="{{ asset('css/bootstrap-responsive.css') }}" rel="stylesheet">
-            <link rel="stylesheet" href="{{ asset('bundles/hrisassets/css/style.css') }}" />
+            <link rel="stylesheet" href="{{ asset('commons/css/style.css') }}" />
         {% endblock %}
         {% block favicon %}
             <link rel="icon" type="image/x-icon" href="{{  asset('favicon.ico') }}" />
@@ -28,7 +28,27 @@
 			            	<h2 style="color:#000000;">HRHIS 3</h2>
 			        </div>
 			{% endblock banner %}
-            {% block content %}{% endblock %}
+            {% block content %}
+
+                <div class="container-fluid">
+                    <div class="row-fluid">
+                        <div class="span2">
+                            {% block left_content %}
+                                <!--Sidebar content-->
+                                {% include '::navigationmenu.html.twig' %}
+                            {% endblock left_content %}
+                        </div>
+                        <div class="span10">
+                            {% block right_content %}
+                                <!--Body content-->
+                                <h1>AUTO GENERATED MENU -WORK IN PROGRESS</h1>
+                                {{ knp_menu_render('user') }}
+                            {% endblock right_content %}
+                        </div>
+                    </div>
+                </div>
+
+            {% endblock %}
 			{% block footer %}
 					<div id="footer" class="hidden-phone text-center">
 					    <p>Copyright © 2010  Ministry of Health and Social welfare - Human resource for Health Information System</p>

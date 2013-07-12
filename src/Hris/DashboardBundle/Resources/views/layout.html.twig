@@ -4,34 +4,8 @@
 
 {% block title %} {{ parent() }} - Dashboard {% endblock %}
 
-{% block stylesheets %}
-	{{ parent() }}
-{% endblock stylesheets %}
-
-{% block javascripts %}
-	{{ parent() }}
-{% endblock %}
-
-{% block banner %}
-	{{ parent() }}
-{% endblock %}
-
-{% block content %}
-	<div class="container-fluid">
-        <div class="row-fluid">
-            <div class="span2">
-                <!--Sidebar content-->
-                {% include '::navigationmenu.html.twig' %}
-            </div>
-            <div class="span10">
-                <!--Body content-->
-                <h1>AUTO GENERATED MENU -WORK IN PROGRESS</h1>
-                {{ knp_menu_render('user') }}
-            </div>
-        </div>
-	</div>
-{% endblock %}
-
-{% block footer %}
-	{{ parent() }}
-{% endblock %}
+{% block right_content %}
+    <!--Body content-->
+    <h1>AUTO GENERATED MENU -WORK IN PROGRESS</h1>
+    {{ knp_menu_render('user') }}
+{% endblock right_content %}

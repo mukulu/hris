@@ -1,3 +1,1 @@
-hris_data_quality_homepage:
-    pattern:  /hello/{name}
-    defaults: { _controller: HrisDataQualityBundle:Default:index }
+

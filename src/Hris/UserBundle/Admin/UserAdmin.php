@@ -32,6 +32,10 @@ use Sonata\AdminBundle\Form\FormMapper;
 
 class UserAdmin extends Admin
 {
+	protected $baseRouteName = 'admin_user';
+	
+	protected $baseRoutePattern = '/user';
+	
     protected function configureFormFields(FormMapper $formMapper)
     {
         $formMapper
