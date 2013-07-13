@@ -1,52 +1,66 @@
 {% extends '::base.html.twig' %}
+{% block javascripts %}
+    {{ parent() }}
+    <script type="text/javascript" src="{{ asset('commons/js/jquery.dataTables.js') }}"></script>
+    <script type="text/javascript" src="{{ asset('commons/js/dt_settings.js') }}"></script>
+    <script>window["_GOOG_TRANS_EXT_VER"] = "1";</script>
+{% endblock javascripts %}
+
+{% block stylesheets %}
+    {{ parent() }}
+    <link rel="stylesheet" href="{{ asset('commons/css/dt_bootstrap.css') }}" />
+{% endblock stylesheets %}
 
 {% block right_content %}
     <h1>User list</h1>
+    <div>
+        <table class="records_list tb_datatable">
+            <thead>
+                <tr>
+                    <th>Username</th>
+                    <th>Email</th>
+                    <th>Enabled</th>
+                    <th>Lastlogin</th>
+                    <th>Locked</th>
+                    <th>Roles</th>
+                    <th>Id</th>
+                    <th>Datecreated</th>
+                    <th>Lastupdated</th>
+                    <th>Actions</th>
+                </tr>
+            </thead>
+            <tbody>
+            {% for entity in entities %}
+                <tr>
+                    <td><a href="{{ path('user_show', { 'id': entity.id }) }}">{{ entity.username }}</a></td>
+                    <td>{{ entity.email }}</td>
+                    <td>{{ entity.enabled }}</td>
+                    <td>{% if entity.lastLogin %}{{ entity.lastLogin|date('Y-m-d H:i:s') }}{% endif %}</td>
+                    <td>{{ entity.locked }}</td>
+                    <td>{% for role in entity.roles %}
+                            {{ role }},
+                        {% endfor %}
+                    </td>
+                    <td>{{ entity.id }}</td>
+                    <td>{% if entity.datecreated %}{{ entity.datecreated|date('Y-m-d') }}{% endif %}</td>
+                    <td>{% if entity.lastupdated %}{{ entity.lastupdated|date('Y-m-d') }}{% endif %}</td>
+                    <td>
+                    <ul>
+                        <li>
+                            <a href="{{ path('user_show', { 'id': entity.id }) }}">show</a>
+                        </li>
+                        <li>
+                            <a href="{{ path('user_edit', { 'id': entity.id }) }}">edit</a>
+                        </li>
+                    </ul>
+                    </td>
+                </tr>
+            {% endfor %}
+            </tbody>
+        </table>
+    </div>
 
-    <table class="records_list">
-        <thead>
-            <tr>
-                <th>Username</th>
-                <th>Email</th>
-                <th>Enabled</th>
-                <th>Lastlogin</th>
-                <th>Locked</th>
-                <th>Roles</th>
-                <th>Id</th>
-                <th>Datecreated</th>
-                <th>Lastupdated</th>
-                <th>Actions</th>
-            </tr>
-        </thead>
-        <tbody>
-        {% for entity in entities %}
-            <tr>
-                <td><a href="{{ path('user_show', { 'id': entity.id }) }}">{{ entity.username }}</a></td>
-                <td>{{ entity.email }}</td>
-                <td>{{ entity.enabled }}</td>
-                <td>{% if entity.lastLogin %}{{ entity.lastLogin|date('Y-m-d H:i:s') }}{% endif %}</td>
-                <td>{{ entity.locked }}</td>
-                <td>{% for role in entity.roles %}
-                        {{ role }},
-                    {% endfor %}
-                </td>
-                <td>{{ entity.id }}</td>
-                <td>{% if entity.datecreated %}{{ entity.datecreated|date('Y-m-d') }}{% endif %}</td>
-                <td>{% if entity.lastupdated %}{{ entity.lastupdated|date('Y-m-d') }}{% endif %}</td>
-                <td>
-                <ul>
-                    <li>
-                        <a href="{{ path('user_show', { 'id': entity.id }) }}">show</a>
-                    </li>
-                    <li>
-                        <a href="{{ path('user_edit', { 'id': entity.id }) }}">edit</a>
-                    </li>
-                </ul>
-                </td>
-            </tr>
-        {% endfor %}
-        </tbody>
-    </table>
+
 
         <ul>
         <li>
