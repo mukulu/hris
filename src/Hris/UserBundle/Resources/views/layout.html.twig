@@ -26,13 +26,6 @@
 {% endblock stylesheets %}
 
 {% block title %} {{ parent() }} - Login {% endblock %}
-{% block banner %}
-    {{ parent() }}
-{% endblock banner %}
 {% block content %}
     {{  block('fos_user_content') }}
 {% endblock content %}
-
-{% block footer %}
-    {{ parent() }}
-{% endblock footer %}
