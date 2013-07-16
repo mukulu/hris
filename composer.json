@@ -1,8 +1,8 @@
 {
-    "name": "symfony/framework-standard-edition",
+    "name": "hrisproject/hris",
     "license": "MIT",
     "type": "project",
-    "description": "The \"Symfony Standard Edition\" distribution",
+    "description": "Human Resource Information system",
     "autoload": {
         "psr-0": { "": "src/" }
     },
