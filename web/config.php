@@ -25,7 +25,7 @@ $minorProblems = $symfonyRequirements->getFailedRecommendations();
     <head>
         <meta http-equiv="Content-Type" content="text/html; charset=UTF-8"/>
         <meta name="robots" content="noindex,nofollow" />
-        <title>Symfony Configuration</title>
+        <title>Hris Configuration</title>
         <link rel="stylesheet" href="bundles/framework/css/structure.css" media="all" />
         <link rel="stylesheet" href="bundles/framework/css/body.css" media="all" />
         <link rel="stylesheet" href="bundles/sensiodistribution/webconfigurator/css/install.css" media="all" />
@@ -34,7 +34,7 @@ $minorProblems = $symfonyRequirements->getFailedRecommendations();
         <div id="content">
             <div class="header clear-fix">
                 <div class="header-logo">
-                    <img src="bundles/framework/images/logo_symfony.png" alt="Symfony" />
+                    <img src="commons/images/coat_of_arms_of_Tz.svg" width="182" height="156" alt="Symfony" />
                 </div>
 
                 <div class="search">
@@ -63,7 +63,7 @@ $minorProblems = $symfonyRequirements->getFailedRecommendations();
                 <div class="block">
                     <div class="symfony-block-content">
                         <h1 class="title">Welcome!</h1>
-                        <p>Welcome to your new Symfony project.</p>
+                        <p>Welcome to your Human Resource Information System.</p>
                         <p>
                             This script will guide you through the basic configuration of your project.
                             You can also do the same by editing the ‘<strong>app/config/parameters.yml</strong>’ file directly.
@@ -82,7 +82,7 @@ $minorProblems = $symfonyRequirements->getFailedRecommendations();
                         <?php if (count($minorProblems)): ?>
                             <h2>Recommendations</h2>
                             <p>
-                                <?php if (count($majorProblems)): ?>Additionally, to<?php else: ?>To<?php endif; ?> enhance your Symfony experience,
+                                <?php if (count($majorProblems)): ?>Additionally, to<?php else: ?>To<?php endif; ?> enhance your HRIS experience,
                                 it’s recommended that you fix the following:
                             </p>
                             <ol>
@@ -103,12 +103,12 @@ $minorProblems = $symfonyRequirements->getFailedRecommendations();
                         <?php endif; ?>
 
                         <?php if (!count($majorProblems) && !count($minorProblems)): ?>
-                            <p class="ok">Your configuration looks good to run Symfony.</p>
+                            <p class="ok">Your configuration looks good to run Human Resource Information system.</p>
                         <?php endif; ?>
 
                         <ul class="symfony-install-continue">
                             <?php if (!count($majorProblems)): ?>
-                                <li><a href="app_dev.php/_configurator/">Configure your Symfony Application online</a></li>
+                                <li><a href="app_dev.php/_configurator/">Configure your HRIS Application through Symfony</a></li>
                                 <li><a href="app_dev.php/">Bypass configuration and go to the Welcome page</a></li>
                             <?php endif; ?>
                             <?php if (count($majorProblems) || count($minorProblems)): ?>
@@ -118,7 +118,7 @@ $minorProblems = $symfonyRequirements->getFailedRecommendations();
                     </div>
                 </div>
             </div>
-            <div class="version">Symfony Standard Edition</div>
+            <div class="version">Human resource Information System</div>
         </div>
     </body>
 </html>
