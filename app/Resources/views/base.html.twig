@@ -3,7 +3,7 @@
 <html lang="en">
     <head>
         <meta name="viewport" content="width=device-width, initial-scale=1.0">
-        <title>{% block title %} HRHIS {% endblock %}</title>
+        <title>{% block title %} {{ system_name }} {% endblock %}</title>
         {% block stylesheets %}
             <link rel="stylesheet" href="{{ asset('css/bootstrap.css') }}" />
             <link rel="stylesheet" href="{{ asset('commons/css/style.css') }}" />
@@ -18,8 +18,8 @@
 			        <div id="banner" class="hidden-phone text-center">
 			            {% block banner_logo %}
 			                <div id="logo">
-			                    <h1>Ministry of Health And Social Welfare(MoHSW)</h1>
-			                    <h2>Human Resource for Health Information System (HRHIS)</h2>
+			                    <h1>{{ client_name }}</h1>
+			                    <h2>{{ project }}</h2>
 			                </div>
 			            {% endblock banner_logo %}
 			        </div>
@@ -29,12 +29,24 @@
 			{% endblock banner %}
             {% block content %}
 
-                <div class="container-fluid">
+                <div class="container-fluid" style="margin-top:10px;">
                     <div class="row-fluid">
                         <div class="span2">
                             {% block left_content %}
                                 <!--Sidebar content-->
-
+                                <div class="well" style="max-width: 340px; padding: 8px 0;">
+                                    <ul class="nav nav-list">
+                                        <li class="nav-header">List header</li>
+                                        <li class="active"><a href="#">Home</a></li>
+                                        <li><a href="#">Library</a></li>
+                                        <li><a href="#">Applications</a></li>
+                                        <li class="nav-header">Another list header</li>
+                                        <li><a href="#">Profile</a></li>
+                                        <li><a href="#">Settings</a></li>
+                                        <li class="divider"></li>
+                                        <li><a href="#">Help</a></li>
+                                    </ul>
+                                </div>
                                 {{ knp_menu_render('hris_menu',{'template':':Menu:knp_menu.html.twig'}) }}
                             {% endblock left_content %}
                         </div>

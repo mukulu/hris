@@ -45,16 +45,15 @@ class MenuBuilder
     {
         $menu = $this->factory->createItem('root');
 
-        $menu->addChild('UserManagement', array(
-            'uri'=>'#usermanagement','attributes'=>
+        $menu->addChild('UserAdministration', array(
+            'uri'=>'#useradministration','attributes'=>
             array('class'=>'nav nav-list')
             )
         );
-        $userManagement = $menu['UserManagement'];
+        $userManagement = $menu['UserAdministration'];
 
-        $userManagement->addChild('Users',array('route'=>'user_list'));
-        $userManagement->addChild('Roles', array('uri'=>'#roles'));
-        $userManagement->addChild('Groups',array('uri'=>'#groups'));
+        $userManagement->addChild('System Users',array('route'=>'user_list'));
+        $userManagement->addChild('System Roles', array('uri'=>'#roles'));
 
 
         return $menu;

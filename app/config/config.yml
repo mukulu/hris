@@ -31,6 +31,7 @@ twig:
             version: "3.0"
             system_name: "HRHIS"
             copyright: "Human Resource Information System 2012"
+            client_name: "Ministry of Health And Social Welfare(MoHSW)"
 
     cache:                     "%kernel.cache_dir%/twig"
     charset:                   "%kernel.charset%"

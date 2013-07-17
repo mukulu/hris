@@ -26,6 +26,7 @@ class AppKernel extends Kernel
             new Knp\Bundle\MenuBundle\KnpMenuBundle(),
         	new FOS\UserBundle\FOSUserBundle(),
         	new Bc\Bundle\BootstrapBundle\BcBootstrapBundle(),
+            new Ob\HighchartsBundle\ObHighchartsBundle(),
             new Hris\UserBundle\HrisUserBundle(),
             new Hris\DashboardBundle\HrisDashboardBundle(),
             new Hris\OrganisationunitBundle\HrisOrganisationunitBundle(),
