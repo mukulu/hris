@@ -40,3 +40,4 @@ Available Options
   Doctrine EntityRepository class::
 
     php app/console generate:doctrine:entity --with-repository
+

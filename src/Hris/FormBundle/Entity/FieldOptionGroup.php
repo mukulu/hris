@@ -30,6 +30,7 @@ use Hris\FormBundle\Entity\FriendlyReportCategory;
 use Hris\FormBundle\Entity\FieldOptionGroupset;
 use Hris\FormBundle\Entity\FieldOption;
 use Hris\FormBundle\Entity\Field;
+use Hris\IndicatorBundle\Entity\Indicator;
 
 /**
  * Hris\FormBundle\Entity\FieldOptionGroup
@@ -125,6 +126,14 @@ class FieldOptionGroup
      * @ORM\Column(name="lastmodified", type="datetime", nullable=true)
      */
     private $lastmodified;
+
+    /**
+     * @var \Hris\IndicatorBundle\Entity\Indicator $indicator
+     *
+     * @ORM\OneToMany(targetEntity="Hris\IndicatorBundle\Entity\Indicator", mappedBy="indicator",cascade={"ALL"})
+     * @ORM\OrderBy({"name" = "ASC"})
+     */
+    private $indicator;
     
     /**
      * @todo Support filter to further constraint criteria for items fitting in the field group
@@ -201,6 +210,7 @@ class FieldOptionGroup
     public function __construct()
     {
         $this->fieldOption = new \Doctrine\Common\Collections\ArrayCollection();
+        $this->indicator = new \Doctrine\Common\Collections\ArrayCollection();
         $this->uid = uniqid();
     }
     
@@ -393,5 +403,38 @@ class FieldOptionGroup
     public function getFriendlyReportCategory()
     {
         return $this->friendlyReportCategory;
+    }
+
+    /**
+     * Add indicator
+     *
+     * @param \Hris\IndicatorBundle\Entity\Indicator $indicator
+     * @return FieldOptionGroup
+     */
+    public function addIndicator(\Hris\IndicatorBundle\Entity\Indicator $indicator)
+    {
+        $this->indicator[$indicator->getId()] = $indicator;
+
+        return $this;
+    }
+
+    /**
+     * Remove indicator
+     *
+     * @param \Hris\IndicatorBundle\Entity\Indicator $indicator
+     */
+    public function removeIndicator(\Hris\IndicatorBundle\Entity\Indicator $indicator)
+    {
+        $this->indicator->removeElement($indicator);
+    }
+
+    /**
+     * Get indicator
+     *
+     * @return \Doctrine\Common\Collections\Collection
+     */
+    public function getIndicator()
+    {
+        return $this->indicator;
     }
 }
