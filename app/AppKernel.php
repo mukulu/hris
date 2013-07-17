@@ -32,6 +32,7 @@ class AppKernel extends Kernel
             new Hris\FormBundle\HrisFormBundle(),
             new Hris\RecordsBundle\HrisRecordsBundle(),
             new Hris\DataQualityBundle\HrisDataQualityBundle(),
+            new Hris\IndicatorBundle\HrisIndicatorBundle(),
         );
 
         if (in_array($this->getEnvironment(), array('dev', 'test'))) {

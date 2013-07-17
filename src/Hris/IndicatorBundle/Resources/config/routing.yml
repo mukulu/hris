@@ -1,0 +1,3 @@
+hris_indicator_homepage:
+    pattern:  /hello/{name}
+    defaults: { _controller: HrisIndicatorBundle:Default:index }
