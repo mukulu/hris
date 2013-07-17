@@ -44,16 +44,17 @@ class MenuBuilder
     public function createMainMenu(Request $request)
     {
         $menu = $this->factory->createItem('root');
+        $menu->setCurrentUri($request->getRequestUri());
 
-        $menu->addChild('UserAdministration', array(
+        $menu->addChild('User Administration', array(
             'uri'=>'#useradministration','attributes'=>
-            array('class'=>'nav nav-list')
+            array('class'=>'nav-header')
             )
         );
-        $userManagement = $menu['UserAdministration'];
 
-        $userManagement->addChild('System Users',array('route'=>'user_list'));
-        $userManagement->addChild('System Roles', array('uri'=>'#roles'));
+        $menu->addChild('System Users',array('route'=>'user_list'));
+        $menu->addChild('System Roles', array('uri'=>'#roles'));
+        $menu->addChild('',array('attributes'=>array('class'=>'divider')));
 
 
         return $menu;

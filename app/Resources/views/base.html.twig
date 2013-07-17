@@ -34,23 +34,10 @@
                         <div class="span2">
                             {% block left_content %}
                                 <!--Sidebar content-->
-                                <div class="well" style="max-width: 340px; padding: 8px 0;">
-                                    <ul class="nav nav-list">
-                                        <li class="nav-header">List header</li>
-                                        <li class="active"><a href="#">Home</a></li>
-                                        <li><a href="#">Library</a></li>
-                                        <li><a href="#">Applications</a></li>
-                                        <li class="nav-header">Another list header</li>
-                                        <li><a href="#">Profile</a></li>
-                                        <li><a href="#">Settings</a></li>
-                                        <li class="divider"></li>
-                                        <li><a href="#">Help</a></li>
-                                    </ul>
-                                </div>
                                 {{ knp_menu_render('hris_menu',{'template':':Menu:knp_menu.html.twig'}) }}
                             {% endblock left_content %}
                         </div>
-                        <div class="span10">
+                        <div class="span10" style="padding-left:15px;">
                             {% block right_content %}
                             {% endblock right_content %}
                         </div>
