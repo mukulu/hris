@@ -1,3 +1,3 @@
-hris_indicator_homepage:
-    pattern:  /hello/{name}
-    defaults: { _controller: HrisIndicatorBundle:Default:index }
+indicator:
+    resource: "@HrisIndicatorBundle/Controller/IndicatorController.php"
+    type: annotation
