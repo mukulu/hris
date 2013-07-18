@@ -1,0 +1,106 @@
+{% extends '::base.html.twig' %}
+
+{% block right_content -%}
+    <h1>Organisationunit</h1>
+
+    <table class="record_properties">
+        <tbody>
+            <tr>
+                <th>Id</th>
+                <td>{{ entity.id }}</td>
+            </tr>
+            <tr>
+                <th>Uid</th>
+                <td>{{ entity.uid }}</td>
+            </tr>
+            <tr>
+                <th>Dhisuid</th>
+                <td>{{ entity.dhisUid }}</td>
+            </tr>
+            <tr>
+                <th>Code</th>
+                <td>{{ entity.code }}</td>
+            </tr>
+            <tr>
+                <th>Shortname</th>
+                <td>{{ entity.shortname }}</td>
+            </tr>
+            <tr>
+                <th>Longname</th>
+                <td>{{ entity.longname }}</td>
+            </tr>
+            <tr>
+                <th>Active</th>
+                <td>{{ entity.active }}</td>
+            </tr>
+            <tr>
+                <th>Openingdate</th>
+                <td>{{ entity.openingdate|date('Y-m-d H:i:s') }}</td>
+            </tr>
+            <tr>
+                <th>Closingdate</th>
+                <td>{{ entity.closingdate|date('Y-m-d H:i:s') }}</td>
+            </tr>
+            <tr>
+                <th>Geocode</th>
+                <td>{{ entity.geocode }}</td>
+            </tr>
+            <tr>
+                <th>Coordinates</th>
+                <td>{{ entity.coordinates }}</td>
+            </tr>
+            <tr>
+                <th>Featuretype</th>
+                <td>{{ entity.featuretype }}</td>
+            </tr>
+            <tr>
+                <th>Address</th>
+                <td>{{ entity.address }}</td>
+            </tr>
+            <tr>
+                <th>Email</th>
+                <td>{{ entity.email }}</td>
+            </tr>
+            <tr>
+                <th>Phonenumber</th>
+                <td>{{ entity.phonenumber }}</td>
+            </tr>
+            <tr>
+                <th>Contactperson</th>
+                <td>{{ entity.contactperson }}</td>
+            </tr>
+            <tr>
+                <th>Description</th>
+                <td>{{ entity.description }}</td>
+            </tr>
+            <tr>
+                <th>Datecreated</th>
+                <td>{{ entity.datecreated|date('Y-m-d H:i:s') }}</td>
+            </tr>
+            <tr>
+                <th>Lastupdated</th>
+                <td>{{ entity.lastupdated|date('Y-m-d H:i:s') }}</td>
+            </tr>
+        </tbody>
+    </table>
+
+        <ul class="record_actions">
+    <li>
+        <a href="{{ path('organisationunit') }}">
+            Back to the list
+        </a>
+    </li>
+    <li>
+        <a href="{{ path('organisationunit_edit', { 'id': entity.id }) }}">
+            Edit
+        </a>
+    </li>
+    <li>
+        <form action="{{ path('organisationunit_delete', { 'id': entity.id }) }}" method="post">
+            <input type="hidden" name="_method" value="DELETE" />
+            {{ form_widget(delete_form) }}
+            <button type="submit">Delete</button>
+        </form>
+    </li>
+</ul>
+{% endblock %}

@@ -1,0 +1,23 @@
+organisationunit:
+    resource: "@HrisOrganisationunitBundle/Controller/OrganisationunitController.php"
+    type: annotation
+
+organisationunitcompleteness:
+    resource: "@HrisOrganisationunitBundle/Controller/OrganisationunitCompletenessController.php"
+    type: annotation
+
+organisationunitgroup:
+    resource: "@HrisOrganisationunitBundle/Controller/OrganisationunitGroupController.php"
+    type: annotation
+
+organisationunitgroupset:
+    resource: "@HrisOrganisationunitBundle/Controller/OrganisationunitGroupsetController.php"
+    type: annotation
+
+organisationunitlevel:
+    resource: "@HrisOrganisationunitBundle/Controller/OrganisationunitLevelController.php"
+    type: annotation
+
+organisationunitstructure:
+    resource: "@HrisOrganisationunitBundle/Controller/OrganisationunitStructureController.php"
+    type: annotation

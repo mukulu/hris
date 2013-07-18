@@ -47,3 +47,16 @@ Available Options
 
     php app/console generate:doctrine:crud --format=annotation
 
+
+Register Annotated Routes on Controller
+----------------------------------------
+
+After generation of the cruds register their urls( annotated on the controller classes )
+on the route system in your bundle under `Resources/config/routing.yml` e.g.
+for route to User Controller class inside `UserBundle`, registration will look similar to this::
+
+    user:
+        resource: "@HrisUserBundle/Controller/UserController.php"
+        type: annotation
+
+

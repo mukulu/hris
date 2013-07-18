@@ -1,0 +1,75 @@
+{% extends '::base.html.twig' %}
+
+{% block right_content -%}
+    <h1>Organisationunit list</h1>
+
+    <table class="records_list">
+        <thead>
+            <tr>
+                <th>Id</th>
+                <th>Uid</th>
+                <th>Dhisuid</th>
+                <th>Code</th>
+                <th>Shortname</th>
+                <th>Longname</th>
+                <th>Active</th>
+                <th>Openingdate</th>
+                <th>Closingdate</th>
+                <th>Geocode</th>
+                <th>Coordinates</th>
+                <th>Featuretype</th>
+                <th>Address</th>
+                <th>Email</th>
+                <th>Phonenumber</th>
+                <th>Contactperson</th>
+                <th>Description</th>
+                <th>Datecreated</th>
+                <th>Lastupdated</th>
+                <th>Actions</th>
+            </tr>
+        </thead>
+        <tbody>
+        {% for entity in entities %}
+            <tr>
+                <td><a href="{{ path('organisationunit_show', { 'id': entity.id }) }}">{{ entity.id }}</a></td>
+                <td>{{ entity.uid }}</td>
+                <td>{{ entity.dhisUid }}</td>
+                <td>{{ entity.code }}</td>
+                <td>{{ entity.shortname }}</td>
+                <td>{{ entity.longname }}</td>
+                <td>{{ entity.active }}</td>
+                <td>{% if entity.openingdate %}{{ entity.openingdate|date('Y-m-d H:i:s') }}{% endif %}</td>
+                <td>{% if entity.closingdate %}{{ entity.closingdate|date('Y-m-d H:i:s') }}{% endif %}</td>
+                <td>{{ entity.geocode }}</td>
+                <td>{{ entity.coordinates }}</td>
+                <td>{{ entity.featuretype }}</td>
+                <td>{{ entity.address }}</td>
+                <td>{{ entity.email }}</td>
+                <td>{{ entity.phonenumber }}</td>
+                <td>{{ entity.contactperson }}</td>
+                <td>{{ entity.description }}</td>
+                <td>{% if entity.datecreated %}{{ entity.datecreated|date('Y-m-d H:i:s') }}{% endif %}</td>
+                <td>{% if entity.lastupdated %}{{ entity.lastupdated|date('Y-m-d H:i:s') }}{% endif %}</td>
+                <td>
+                <ul>
+                    <li>
+                        <a href="{{ path('organisationunit_show', { 'id': entity.id }) }}">show</a>
+                    </li>
+                    <li>
+                        <a href="{{ path('organisationunit_edit', { 'id': entity.id }) }}">edit</a>
+                    </li>
+                </ul>
+                </td>
+            </tr>
+        {% endfor %}
+        </tbody>
+    </table>
+
+        <ul>
+        <li>
+            <a href="{{ path('organisationunit_new') }}">
+                Create a new entry
+            </a>
+        </li>
+    </ul>
+    {% endblock %}

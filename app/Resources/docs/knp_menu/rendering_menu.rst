@@ -32,3 +32,4 @@ of the knp_menu_get function::
     {% set menuItem = knp_menu_get('AcmeDemoBundle:Builder:mainMenu', [], {'some_option': 'my_value'}) %}
 
     {{ knp_menu_render(menuItem) }}
+
