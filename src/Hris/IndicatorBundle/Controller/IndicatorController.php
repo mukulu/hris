@@ -22,6 +22,7 @@ class IndicatorController extends Controller
      * Lists all Indicator entities.
      *
      * @Route("/", name="indicator")
+     * @Route("/list", name="indicator_list")
      * @Method("GET")
      * @Template()
      */

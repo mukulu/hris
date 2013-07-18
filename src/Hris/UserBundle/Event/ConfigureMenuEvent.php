@@ -23,40 +23,42 @@
  *
  */
 
-namespace Hris\UserBundle\Menu;
+namespace Hris\UserBundle\Event;
 
-use Knp\Menu\MenuItemInterface;
 use Knp\Menu\FactoryInterface;
-use Symfony\Component\HttpFoundation\Request;
+use Knp\Menu\ItemInterface;
+use Symfony\Component\EventDispatcher\Event;
 
-class MenuBuilder
+class ConfigureMenuEvent extends Event
 {
+    const CONFIGURE = 'hris_user.menu_configure';
+
     private $factory;
+    private $menu;
 
     /**
-     * @param FactoryInterface $factory
+     * @param \Knp\Menu\FactoryInterface $factory
+     * @param \Knp\Menu\ItemInterface $menu
      */
-    public function __construct(FactoryInterface $factory)
+    public function __construct(FactoryInterface $factory, ItemInterface $menu)
     {
         $this->factory = $factory;
+        $this->menu = $menu;
     }
 
-    public function createMainMenu(Request $request)
+    /**
+     * @return \Knp\Menu\FactoryInterface
+     */
+    public function getFactory()
     {
-        $menu = $this->factory->createItem('root');
-        $menu->setCurrentUri($request->getRequestUri());
+        return $this->factory;
+    }
 
-        $menu->addChild('User Administration', array(
-            'uri'=>'#useradministration','attributes'=>
-            array('class'=>'nav-header')
-            )
-        );
-
-        $menu->addChild('System Users',array('route'=>'user_list'));
-        $menu->addChild('System Roles', array('uri'=>'#roles'));
-        $menu->addChild('',array('attributes'=>array('class'=>'divider')));
-
-
-        return $menu;
+    /**
+     * @return \Knp\Menu\ItemInterface
+     */
+    public function getMenu()
+    {
+        return $this->menu;
     }
 }
