@@ -32,6 +32,7 @@ use Hris\OrganisationunitBundle\Event\ConfigureMenuEvent as OrganisationunitConf
 use Hris\DataQualityBundle\Event\ConfigureMenuEvent as DataQualityConfigureMenuEvent;
 use Hris\FormBundle\Event\ConfigureMenuEvent as FormConfigureMenuEvent;
 use Hris\RecordsBundle\Event\ConfigureMenuEvent as RecordsConfigureMenuEvent;
+use Hris\ReportsBundle\Event\ConfigureMenuEvent as ReportsConfigureMenuEvent;
 
 use Knp\Menu\FactoryInterface;
 use Symfony\Component\DependencyInjection\ContainerAware;
@@ -51,6 +52,7 @@ class MainBuilder extends ContainerAware
         $this->container->get('event_dispatcher')->dispatch(DataQualityConfigureMenuEvent::CONFIGURE, new DataQualityConfigureMenuEvent($factory, $menu));
         $this->container->get('event_dispatcher')->dispatch(FormConfigureMenuEvent::CONFIGURE, new FormConfigureMenuEvent($factory, $menu));
         $this->container->get('event_dispatcher')->dispatch(RecordsConfigureMenuEvent::CONFIGURE, new RecordsConfigureMenuEvent($factory, $menu));
+        $this->container->get('event_dispatcher')->dispatch(ReportsConfigureMenuEvent::CONFIGURE, new ReportsConfigureMenuEvent($factory, $menu));
 
         return $menu;
     }

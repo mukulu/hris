@@ -2,3 +2,7 @@ parameters:
 #    hris_data_quality.example.class: Hris\DataQualityBundle\Example
 
 services:
+    hris_reports.configure_menu_listener:
+                    class: Hris\ReportsBundle\EventListener\ConfigureMenuListener
+                    tags:
+                        - { name: kernel.event_listener, event: hris_reports.menu_configure, method: onMenuConfigure }
