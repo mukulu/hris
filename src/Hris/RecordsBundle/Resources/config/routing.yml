@@ -1,1 +1,11 @@
+history:
+    resource: "@HrisRecordsBundle/Controller/HistoryController.php"
+    type: annotation
 
+record:
+    resource: "@HrisRecordsBundle/Controller/RecordController.php"
+    type: annotation
+
+training:
+    resource: "@HrisRecordsBundle/Controller/TrainingController.php"
+    type: annotation

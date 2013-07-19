@@ -1,0 +1,57 @@
+{% extends '::base.html.twig' %}
+
+{% block right_content -%}
+    <h1>Record list</h1>
+
+    <table class="records_list">
+        <thead>
+            <tr>
+                <th>Id</th>
+                <th>Uid</th>
+                <th>Instance</th>
+                <th>Complete</th>
+                <th>Correct</th>
+                <th>Hashistory</th>
+                <th>Hastraining</th>
+                <th>Datecreated</th>
+                <th>Lastupdated</th>
+                <th>Username</th>
+                <th>Actions</th>
+            </tr>
+        </thead>
+        <tbody>
+        {% for entity in entities %}
+            <tr>
+                <td><a href="{{ path('record_show', { 'id': entity.id }) }}">{{ entity.id }}</a></td>
+                <td>{{ entity.uid }}</td>
+                <td>{{ entity.instance }}</td>
+                <td>{{ entity.complete }}</td>
+                <td>{{ entity.correct }}</td>
+                <td>{{ entity.hashistory }}</td>
+                <td>{{ entity.hastraining }}</td>
+                <td>{% if entity.datecreated %}{{ entity.datecreated|date('Y-m-d H:i:s') }}{% endif %}</td>
+                <td>{% if entity.lastupdated %}{{ entity.lastupdated|date('Y-m-d H:i:s') }}{% endif %}</td>
+                <td>{{ entity.username }}</td>
+                <td>
+                <ul>
+                    <li>
+                        <a href="{{ path('record_show', { 'id': entity.id }) }}">show</a>
+                    </li>
+                    <li>
+                        <a href="{{ path('record_edit', { 'id': entity.id }) }}">edit</a>
+                    </li>
+                </ul>
+                </td>
+            </tr>
+        {% endfor %}
+        </tbody>
+    </table>
+
+        <ul>
+        <li>
+            <a href="{{ path('record_new') }}">
+                Create a new entry
+            </a>
+        </li>
+    </ul>
+    {% endblock %}
