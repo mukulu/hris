@@ -41,3 +41,26 @@ Available Options
 
     php app/console generate:doctrine:entity --with-repository
 
+
+Updating database tables
+-------------------------
+
+After generation of doctrine entity classes, the database schemas can be
+updated with the following commands.
+
+Seeing SQL queries generated from schema changes::
+
+    app/console doctrine:schema:update --dump-sql
+
+Applying changes of SQL queries on the database::
+
+    app/console doctrine:schema:update --force
+
+Dropping existing database so you can start with clean slate::
+
+    app/console doctrine:database:drop --force
+
+Creating fresh blank new database from existing doctrine entities::
+
+    app/console doctrine:database:create
+

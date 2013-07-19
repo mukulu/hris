@@ -7,7 +7,7 @@ use Doctrine\ORM\Mapping as ORM;
 /**
  * Report
  *
- * @ORM\Table()
+ * @ORM\Table(name="hris_report")
  * @ORM\Entity(repositoryClass="Hris\ReportsBundle\Entity\ReportRepository")
  */
 class Report
