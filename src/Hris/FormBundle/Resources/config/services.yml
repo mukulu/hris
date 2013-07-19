@@ -8,15 +8,7 @@ services:
             - { name: sonata.admin, manager_type: orm, group: Forms, label: Forms }
         arguments: [ null, Hris\FormBundle\Entity\InputType, SonataAdminBundle:CRUD ]
 
-#    hris_form.menu_builder:
-#        class: Hris\FormBundle\Menu\MenuBuilder
-#            arguments: ["@knp_menu.factory"]
-#
-#    hris_form.menu.main:
-#            class: Knp\Menu\MenuItem # the service definition requires setting the class
-#            factory_service: hris_form.menu_builder
-#            factory_method: createMainMenu
-#            arguments: ["@request"]
-#            scope: request # needed as we have the request as a dependency here
-#            tags:
-#                - { name: knp_menu.menu, alias: main } # The alias is what is used to retrieve the menu
+    hris_form.configure_menu_listener:
+                class: Hris\FormBundle\EventListener\ConfigureMenuListener
+                tags:
+                    - { name: kernel.event_listener, event: hris_form.menu_configure, method: onMenuConfigure }
