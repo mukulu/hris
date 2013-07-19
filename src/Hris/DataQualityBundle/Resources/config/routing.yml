@@ -1,1 +1,3 @@
-
+validation:
+    resource: "@HrisDataQualityBundle/Controller/ValidationController.php"
+    type: annotation

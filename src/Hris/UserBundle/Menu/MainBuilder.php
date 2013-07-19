@@ -29,6 +29,7 @@ use Hris\UserBundle\MenuEvents;
 use Hris\UserBundle\Event\ConfigureMenuEvent as UserConfigureMenuEvent;
 use Hris\IndicatorBundle\Event\ConfigureMenuEvent as IndicatorConfigureMenuEvent;
 use Hris\OrganisationunitBundle\Event\ConfigureMenuEvent as OrganisationunitConfigureMenuEvent;
+use Hris\DataQualityBundle\Event\ConfigureMenuEvent as DataQualityConfigureMenuEvent;
 use Knp\Menu\FactoryInterface;
 use Symfony\Component\DependencyInjection\ContainerAware;
 
@@ -44,6 +45,7 @@ class MainBuilder extends ContainerAware
         $this->container->get('event_dispatcher')->dispatch(UserConfigureMenuEvent::CONFIGURE, new UserConfigureMenuEvent($factory, $menu));
         $this->container->get('event_dispatcher')->dispatch(IndicatorConfigureMenuEvent::CONFIGURE, new IndicatorConfigureMenuEvent($factory, $menu));
         $this->container->get('event_dispatcher')->dispatch(OrganisationunitConfigureMenuEvent::CONFIGURE, new OrganisationunitConfigureMenuEvent($factory, $menu));
+        $this->container->get('event_dispatcher')->dispatch(DataQualityConfigureMenuEvent::CONFIGURE, new DataQualityConfigureMenuEvent($factory, $menu));
 
         return $menu;
     }
