@@ -2,6 +2,7 @@ parameters:
 #    hris_organisationunit.example.class: Hris\OrganisationunitBundle\Example
 
 services:
-#    hris_organisationunit.example:
-#        class: %hris_organisationunit.example.class%
-#        arguments: [@service_id, "plain_value", %parameter%]
+    hris_organisationunit.configure_menu_listener:
+                class: Hris\OrganisationunitBundle\EventListener\ConfigureMenuListener
+                tags:
+                  - { name: kernel.event_listener, event: hris_organisationunit.menu_configure, method: onMenuConfigure }
