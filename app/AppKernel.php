@@ -35,6 +35,7 @@ class AppKernel extends Kernel
             new Hris\DataQualityBundle\HrisDataQualityBundle(),
             new Hris\IndicatorBundle\HrisIndicatorBundle(),
             new Hris\ReportsBundle\HrisReportsBundle(),
+            new Hris\ImportExportBundle\HrisImportExportBundle(),
         );
 
         if (in_array($this->getEnvironment(), array('dev', 'test'))) {

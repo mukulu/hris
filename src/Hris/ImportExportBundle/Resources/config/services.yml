@@ -1,0 +1,7 @@
+parameters:
+#    hris_import_export.example.class: Hris\ImportExportBundle\Example
+
+services:
+#    hris_import_export.example:
+#        class: %hris_import_export.example.class%
+#        arguments: [@service_id, "plain_value", %parameter%]
