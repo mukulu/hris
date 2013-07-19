@@ -2,6 +2,7 @@ parameters:
 #    hris_records.example.class: Hris\RecordsBundle\Example
 
 services:
-#    hris_records.example:
-#        class: %hris_records.example.class%
-#        arguments: [@service_id, "plain_value", %parameter%]
+    hris_records.configure_menu_listener:
+            class: Hris\RecordsBundle\EventListener\ConfigureMenuListener
+            tags:
+                - { name: kernel.event_listener, event: hris_records.menu_configure, method: onMenuConfigure }
