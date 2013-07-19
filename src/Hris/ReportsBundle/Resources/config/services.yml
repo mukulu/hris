@@ -1,0 +1,4 @@
+parameters:
+#    hris_data_quality.example.class: Hris\DataQualityBundle\Example
+
+services:

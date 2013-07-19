@@ -1,0 +1,3 @@
+reports:
+    resource: "@HrisReportsBundle/Controller/ReportController.php"
+    type: annotation
