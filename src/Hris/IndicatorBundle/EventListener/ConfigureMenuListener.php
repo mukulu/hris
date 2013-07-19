@@ -43,6 +43,6 @@ class ConfigureMenuListener
         );
 
         $menu->addChild('Indicators',array('route'=>'indicator_list'));
-        $menu->addChild('',array('attributes'=>array('class'=>'divider')));
+        $menu->addChild('indicatorssplit',array('attributes'=>array('class'=>'divider')));
     }
 }

@@ -44,6 +44,6 @@ class ConfigureMenuListener
 
         $menu->addChild('System Users',array('route'=>'user_list'));
         $menu->addChild('System Roles', array('uri'=>'#roles'));
-        $menu->addChild('',array('attributes'=>array('class'=>'divider')));
+        $menu->addChild('usersplit',array('attributes'=>array('class'=>'divider')));
     }
 }

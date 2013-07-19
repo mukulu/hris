@@ -47,6 +47,6 @@ class ConfigureMenuListener
         $menu->addChild('Organisationunit Groupsets', array('route'=>'organisationunitgroupset_list'));
         $menu->addChild('Organisationunit Levels', array('uri'=>'#organisationunitlevels'));
 
-        $menu->addChild('',array('attributes'=>array('class'=>'divider')));
+        $menu->addChild('organisationunitssplit',array('attributes'=>array('class'=>'divider')));
     }
 }
