@@ -17,8 +17,6 @@ class FormType extends AbstractType
             ->add('title')
             ->add('datecreated')
             ->add('lastupdated')
-            ->add('uniqueRecordFields')
-            ->add('dashboardChart')
         ;
     }
 

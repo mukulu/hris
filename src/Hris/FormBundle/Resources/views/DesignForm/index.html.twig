@@ -1,0 +1,9 @@
+{% extends '::base.html.twig' %}
+
+{% block right_content -%}
+    <h1>Form design</h1>
+
+    {{ tinymce_init() }}    
+    <textarea class="tinymce"> {{ entity.hypertext }}</textarea>
+    
+{% endblock %}
