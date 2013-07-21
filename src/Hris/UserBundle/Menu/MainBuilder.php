@@ -44,6 +44,8 @@ class MainBuilder extends ContainerAware
     public function build(FactoryInterface $factory)
     {
         $menu = $factory->createItem('root');
+        $menu->setExtra('tag','div');
+        $menu->setExtra('menulevel','rootmenu');
 
         $menu->setCurrentUri($this->container->get('request')->getRequestUri());
 
@@ -52,9 +54,9 @@ class MainBuilder extends ContainerAware
         $this->container->get('event_dispatcher')->dispatch(OrganisationunitConfigureMenuEvent::CONFIGURE, new OrganisationunitConfigureMenuEvent($factory, $menu));
         $this->container->get('event_dispatcher')->dispatch(DataQualityConfigureMenuEvent::CONFIGURE, new DataQualityConfigureMenuEvent($factory, $menu));
         $this->container->get('event_dispatcher')->dispatch(FormConfigureMenuEvent::CONFIGURE, new FormConfigureMenuEvent($factory, $menu));
-        $this->container->get('event_dispatcher')->dispatch(RecordsConfigureMenuEvent::CONFIGURE, new RecordsConfigureMenuEvent($factory, $menu));
-        $this->container->get('event_dispatcher')->dispatch(ReportsConfigureMenuEvent::CONFIGURE, new ReportsConfigureMenuEvent($factory, $menu));
-        $this->container->get('event_dispatcher')->dispatch(ImportExportConfigureMenuEvent::CONFIGURE, new ImportExportConfigureMenuEvent($factory, $menu));
+//        $this->container->get('event_dispatcher')->dispatch(RecordsConfigureMenuEvent::CONFIGURE, new RecordsConfigureMenuEvent($factory, $menu));
+//        $this->container->get('event_dispatcher')->dispatch(ReportsConfigureMenuEvent::CONFIGURE, new ReportsConfigureMenuEvent($factory, $menu));
+//        $this->container->get('event_dispatcher')->dispatch(ImportExportConfigureMenuEvent::CONFIGURE, new ImportExportConfigureMenuEvent($factory, $menu));
 
         return $menu;
     }

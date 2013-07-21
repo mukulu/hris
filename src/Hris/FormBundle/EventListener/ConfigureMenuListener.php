@@ -36,28 +36,83 @@ class ConfigureMenuListener
     {
         $menu = $event->getMenu();
 
-        $menu->addChild('Form Module', array(
-                'uri'=>'#forms','attributes'=>
-                array('class'=>'nav-header')
+        $menu->addChild('Form Module',
+            array(
+                'uri'=>'#formmodule',
+                'extras'=>array('tag'=>'div'),
+                'name'=>'Form Module',
+                'attributes'=> array('class'=>'accordion-group'),
+            )
+        );
+        $formModule = $menu->getChild('Form Module');
+
+        $formModule->addChild('Fields',
+            array('route'=>'field_list',
+                'extras'=>array('tag'=>'li'),
+                'name' =>'Fields',
+                'attributes'=> array('class'=>'nav nav-list','id'=>'fields')
+            )
+        );
+        $formModule->addChild('FieldGroups',
+            array('route'=>'fieldgroup_list',
+                'extras'=>array('tag'=>'li'),
+                'name' =>'Field Groups',
+                'attributes'=> array('class'=>'nav nav-list','id'=>'fieldgroups')
+            )
+        );
+        $formModule->addChild('FieldOptionGroupsets',
+            array('route'=>'fieldoptiongroupset_list',
+                  'extras'=>array('tag'=>'li'),
+                  'name' =>'Field Option Groupsets',
+                  'attributes'=> array('class'=>'nav nav-list','id'=>'fieldoptiongroupsets')
+            )
+        );
+        $formModule->addChild('RelationalFilters',
+            array('route'=>'relationalfilter_list',
+                  'extras'=>array('tag'=>'li'),
+                  'name' =>'Relational Filters',
+                  'attributes'=> array('class'=>'nav nav-list','id'=>'relationalfilters')
+            )
+        );
+        $formModule->addChild('ArithmeticFilters',
+            array('route'=>'arithmeticfilter_list',
+                  'extras'=>array('tag'=>'li'),
+                  'name' =>'Arithmetic Filters',
+                  'attributes'=> array('class'=>'nav nav-list','id'=>'arithmeticfilters')
+            )
+        );
+        $formModule->addChild('FriendlyReports',
+            array('route'=>'friendlyreport_list',
+                  'extras'=>array('tag'=>'li'),
+                  'name' =>'Friendly Reports',
+                  'attributes'=> array('class'=>'nav nav-list','id'=>'friendlyreports')
+            )
+        );
+        $formModule->addChild('Forms',
+            array('route'=>'form_list',
+                  'extras'=>array('tag'=>'li'),
+                  'name' =>'Forms',
+                  'attributes'=> array('class'=>'nav nav-list','id'=>'forms')
             )
         );
 
-        $menu->addChild('Fields',array('route'=>'field_list'));
-        $menu->addChild('Field Groups',array('route'=>'fieldgroup_list'));
-        $menu->addChild('Field Option Groups',array('route'=>'fieldoptiongroup_list'));
-        $menu->addChild('Field Option Groupsets',array('route'=>'fieldoptiongroupset_list'));
-        $menu->addChild('Relational Filters',array('route'=>'relationalfilter_list'));
-        $menu->addChild('Arithmetic Filters',array('route'=>'arithmeticfilter_list'));
-        $menu->addChild('Friendly Reports',array('route'=>'friendlyreport_list'));
-        $menu->addChild('Forms',array('route'=>'form_list'));
-        $menu->addChild('formssplit',array('attributes'=>array('class'=>'divider')));
-
-        $menu->addChild('Resource Tables', array(
-                'uri'=>'#resourcetables','attributes'=>
-                array('class'=>'nav-header')
+        $menu->addChild('Resource Tables',
+            array(
+                'uri'=>'#resourcetablemodule',
+                'extras'=>array('tag'=>'div'),
+                'name'=>'Resource Tables',
+                'attributes'=> array('class'=>'accordion-group'),
             )
         );
-        $menu->addChild('Resource Table',array('route'=>'resourcetable_list'));
-        $menu->addChild('resourcetablessplit',array('attributes'=>array('class'=>'divider')));
+        $resourceTableModule = $menu->getChild('Resource Tables');
+
+        $resourceTableModule->addChild('Resource Table',
+            array('route'=>'resourcetable_list',
+                'extras'=>array('tag'=>'li'),
+                'name' =>'Resource Table',
+                'attributes'=> array('class'=>'nav nav-list','id'=>'resourcetables')
+            )
+        );
+
     }
 }

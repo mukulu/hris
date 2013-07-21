@@ -36,17 +36,44 @@ class ConfigureMenuListener
     {
         $menu = $event->getMenu();
 
-        $menu->addChild('Orgunit Module', array(
-                'uri'=>'#organisationunis','attributes'=>
-                array('class'=>'nav-header')
+        $menu->addChild('Orgunit Module',
+            array(
+                'uri'=>'#orgunitmodule',
+                'extras'=>array('tag'=>'div'),
+                'name'=>'Orgunit Module',
+                'attributes'=> array('class'=>'accordion-group'),
             )
         );
+        $orgunitModule = $menu->getChild('Orgunit Module');
 
-        $menu->addChild('Organisationunits',array('route'=>'organisationunit_list'));
-        $menu->addChild('Organisationunit Groups', array('route'=>'organisationunitgroup_list'));
-        $menu->addChild('Organisationunit Groupsets', array('route'=>'organisationunitgroupset_list'));
-        $menu->addChild('Organisationunit Levels', array('uri'=>'#organisationunitlevels'));
 
-        $menu->addChild('organisationunitssplit',array('attributes'=>array('class'=>'divider')));
+        $orgunitModule->addChild('Organisationunits',
+            array('route'=>'organisationunit_list',
+                'extras'=>array('tag'=>'li'),
+                'name'=>'Organisationunits',
+                'attributes'=> array('class'=>'nav nav-list','id'=>'organisationunits'),
+            )
+        );
+        $orgunitModule->addChild('Organisationunit Groups',
+            array('route'=>'organisationunitgroup_list',
+                'extras'=>array('tag'=>'li'),
+                'name'=>'Organisationunit Groups',
+                'attributes'=> array('class'=>'nav nav-list','id'=>'organisationunitgroups'),
+            )
+        );
+        $orgunitModule->addChild('Organisationunit Groupsets',
+            array('route'=>'organisationunitgroupset_list',
+                'extras'=>array('tag'=>'li'),
+                'name'=>'Organisationunit Groupsets',
+                'attributes'=> array('class'=>'nav nav-list','id'=>'organisationunitgroupsets'),
+            )
+        );
+        $orgunitModule->addChild('Organisationunit Levels',
+            array('uri'=>'#organisationunitlevel',
+                'extras'=>array('tag'=>'li'),
+                'name'=>'Organisationunit Levels',
+                'attributes'=> array('class'=>'nav nav-list','id'=>'organisationunitlevels'),
+            )
+        );
     }
 }

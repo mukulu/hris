@@ -36,14 +36,30 @@ class ConfigureMenuListener
     {
         $menu = $event->getMenu();
 
-        $menu->addChild('User Module', array(
-                'uri'=>'#useradministration','attributes'=>
-                array('class'=>'nav-header')
+        $menu->addChild('User Module',
+            array(
+                'uri'=>'#usermodule',
+                'extras'=>array('tag'=>'div'),
+                'name'=>'User Module',
+                'attributes'=> array('class'=>'accordion-group'),
             )
         );
+        $userModule = $menu->getChild('User Module');
 
-        $menu->addChild('System Users',array('route'=>'user_list'));
-        $menu->addChild('System Roles', array('uri'=>'#roles'));
-        $menu->addChild('usersplit',array('attributes'=>array('class'=>'divider')));
+
+        $userModule->addChild('SystemUsers',
+            array('route'=>'user_list',
+                  'extras'=>array('tag'=>'li'),
+                  'name'=>'System Users',
+                  'attributes'=> array('class'=>'nav nav-list','id'=>'systemusers'),
+            )
+        );
+        $userModule->addChild('SystemRoles',
+            array('uri'=>'#systemroles',
+                  'extras'=>array('tag'=>'li'),
+                  'name'=>'System Roles',
+                  'attributes'=> array('class'=>'nav nav-list','id'=>'systemroles'),
+            )
+        );
     }
 }

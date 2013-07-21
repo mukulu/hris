@@ -15,18 +15,37 @@
 {% endblock %}
 
 {% block root %}
-    <div class="well" style="max-width: 340px; padding: 8px 0;">
+    <div class="well">
         {% set listAttributes = item.childrenAttributes %}
+        {% set listExtras = item.extras %}
         {{ block('list') -}}
     </div>
 {% endblock %}
 
 {% block list %}
     {% if item.hasChildren and options.depth is not sameas(0) and item.displayChildren %}
-        {%- set listAttributes = listAttributes|merge({'class': 'nav nav-list' }) %}
-        <ul{{ _self.attributes(listAttributes) }}>
-            {{ block('children') }}
-        </ul>
+        {%- set listAttributes = listAttributes %}
+        {%- if 'div' in listExtras  %}
+            {% if 'menu_level_1' not in listAttributes and 'menu_level_2' not in listAttributes %}
+                <div class="accordion" id="mainmenu">
+                    {{ block('children') }}
+                </div>
+            {% else %}
+                {% if item.currentAncestor %}
+                    <div{{ _self.attributes(listAttributes|merge({'class':'collapse in','id':'collapse'~item.getAttribute('id')})) }}>
+                        {{ block('children') }}
+                    </div>
+                {% else %}
+                    <div{{ _self.attributes(listAttributes|merge({'class':'collapse','id':'collapse'~item.getName()|replace({' ':''}) })) }}>
+                        {{ block('children') }}
+                    </div>
+                {% endif %}
+            {% endif %}
+        {%- else %}
+            <ul{{ _self.attributes(listAttributes) }}>
+                {{ block('children') }}
+            </ul>
+        {%- endif %}
     {% endif %}
 {% endblock %}
 
@@ -38,9 +57,18 @@
     {% if options.depth is not none %}
         {% set options = currentOptions|merge({'depth': currentOptions.depth - 1}) %}
     {% endif %}
-    {% for item in currentItem.children %}
-        {{ block('item') }}
-    {% endfor %}
+
+    {% if currentItem.name != 'root' %}
+        <div class="accordion-inner">
+        {% for item in currentItem.children %}
+            {{ block('item') }}
+        {% endfor %}
+        </div>
+    {% else %}
+        {% for item in currentItem.children %}
+            {{ block('item') }}
+        {% endfor %}
+    {% endif %}
     {# restore current variables #}
     {% set item = currentItem %}
     {% set options = currentOptions %}
@@ -51,9 +79,9 @@
         {# building the class of the item #}
         {%- set classes = item.attribute('class') is not empty ? [item.attribute('class')] : [] %}
         {%- if item.current %}
-            {%- set classes = classes|merge([options.currentClass]) %}
+            {# {%- set classes = classes|merge([options.currentClass]) %} #}
             {%- set classes = classes|merge({'class': 'active' }) %}
-            {%- elseif item.currentAncestor %}
+        {%- elseif item.currentAncestor %}
             {%- set classes = classes|merge([options.ancestorClass]) %}
         {%- endif %}
         {%- if item.actsLikeFirst %}
@@ -67,22 +95,58 @@
             {%- set attributes = attributes|merge({'class': classes|join(' ')}) %}
         {%- endif %}
         {# displaying the item #}
-        <li{{ _self.attributes(attributes) }}>
-            {%- if item.uri is not empty and (not item.current or options.currentAsLink) %}
-                {{ block('linkElement') }}
-            {%- else %}
-                {{ block('spanElement') }}
-            {%- endif %}
-            {# render the list of children#}
-            {%- set childrenClasses = item.childrenAttribute('class') is not empty ? [item.childrenAttribute('class')] : [] %}
-            {%- set childrenClasses = childrenClasses|merge(['menu_level_' ~ item.level]) %}
-            {%- set listAttributes = item.childrenAttributes|merge({'class': childrenClasses|join(' ') }) %}
-            {{ block('list') }}
-        </li>
+        {%- if item.extras['tag'] == 'li' %}
+            <li{{ _self.attributes(attributes) }}>
+                {%- if item.uri is not empty and (not item.current or options.currentAsLink) %}
+                    {{ block('linkElement') }}
+                {%- else %}
+                    {{ block('spanElement') }}
+                {%- endif %}
+                {# render the list of children#}
+                {%- set childrenClasses = item.childrenAttribute('class') is not empty ? [item.childrenAttribute('class')] : [] %}
+                {%- set childrenClasses = childrenClasses|merge(['menu_level_' ~ item.level]) %}
+                {%- set listAttributes = item.childrenAttributes|merge({'class': childrenClasses|join(' ') }) %}
+                {{ block('list') }}
+            </li>
+        {%- elseif item.extras['tag'] == 'div' %}
+            <div{{ _self.attributes(attributes) }}>
+                {%- if item.uri is not empty and (not item.current or options.currentAsLink) %}
+                    {{ block('linkElement') }}
+                {%- else %}
+                    {{ block('spanElement') }}
+                {%- endif %}
+                {# render the list of children#}
+                {%- set childrenClasses = item.childrenAttribute('class') is not empty ? [item.childrenAttribute('class')] : [] %}
+                {%- set childrenClasses = childrenClasses|merge(['menu_level_' ~ item.level]) %}
+                {%- set listAttributes = item.childrenAttributes|merge({'class': childrenClasses|join(' ') }) %}
+                {{ block('list') }}
+            </div>
+        {%- else %}
+            <div{{ _self.attributes(attributes) }}>
+                {%- if item.uri is not empty and (not item.current or options.currentAsLink) %}
+                    {{ block('linkElement') }}
+                {%- else %}
+                    {{ block('spanElement') }}
+                {%- endif %}
+                {# render the list of children#}
+                {%- set childrenClasses = item.childrenAttribute('class') is not empty ? [item.childrenAttribute('class')] : [] %}
+                {%- set childrenClasses = childrenClasses|merge(['menu_level_' ~ item.level]) %}
+                {%- set listAttributes = item.childrenAttributes|merge({'class': childrenClasses|join(' ') }) %}
+                {{ block('list') }}
+            </div>
+        {%- endif %}
     {% endif %}
 {% endblock %}
 
-{% block linkElement %}<a href="{{ item.uri }}"{{ _self.attributes(item.linkAttributes) }}>{{ block('label') }}</a>{% endblock %}
+{% block linkElement %}
+    {% if item.extras['tag'] =='div' %}
+        <div class="accordion-heading">
+            <a class="accordion-toggle" data-toggle="collapse"  data-parent="#mainmenu" data-target="#collapse{{ item.getName()|replace({' ':''}) }}" href="{{ item.uri }}"{{ _self.attributes(item.linkAttributes) }}>{{ block('label') }}</a>
+        </div>
+    {% else %}
+        <a href="{{ item.uri }}"{{ _self.attributes(item.linkAttributes) }}>{{ block('label') }}</a>
+    {% endif %}
+{% endblock %}
 
 {% block spanElement %}<span{{ _self.attributes(item.labelAttributes) }}>{{ block('label') }}</span>{% endblock %}
 
