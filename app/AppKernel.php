@@ -36,6 +36,7 @@ class AppKernel extends Kernel
             new Hris\IndicatorBundle\HrisIndicatorBundle(),
             new Hris\ReportsBundle\HrisReportsBundle(),
             new Hris\ImportExportBundle\HrisImportExportBundle(),
+        	new Stfalcon\Bundle\TinymceBundle\StfalconTinymceBundle(),
         );
 
         if (in_array($this->getEnvironment(), array('dev', 'test'))) {

@@ -33,3 +33,7 @@ relationalfilter:
 resourcetable:
     resource: "@HrisFormBundle/Controller/ResourceTableController.php"
     type: annotation
+    
+designdataentryform:
+    resource: "@HrisFormBundle/Controller/DesignFormController.php"
+    type: annotation
