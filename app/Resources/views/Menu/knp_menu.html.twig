@@ -59,7 +59,7 @@
     {% endif %}
 
     {% if currentItem.name != 'root' %}
-        <div class="accordion-inner">
+        <div class="accordion-inner ">
         {% for item in currentItem.children %}
             {{ block('item') }}
         {% endfor %}
