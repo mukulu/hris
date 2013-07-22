@@ -36,13 +36,23 @@ class ConfigureMenuListener
     {
         $menu = $event->getMenu();
 
-        $menu->addChild('DataQuality Module', array(
-                'uri'=>'#dataquality','attributes'=>
-                array('class'=>'nav-header')
+        $menu->addChild('DataQuality Module',
+            array(
+                'uri'=>'#dataqualitymodule',
+                'extras'=>array('tag'=>'div'),
+                'name'=>'DataQuality Module',
+                'attributes'=> array('class'=>'accordion-group'),
             )
         );
+        $dataQualityModule = $menu->getChild('DataQuality Module');
 
-        $menu->addChild('Validations',array('route'=>'validation_list'));
-        $menu->addChild('validationssplit',array('attributes'=>array('class'=>'divider')));
+
+        $dataQualityModule->addChild('Validations',
+            array('route'=>'validation_list',
+                'extras'=>array('tag'=>'li'),
+                'name'=>'Validations',
+                'attributes'=> array('class'=>'nav nav-list','id'=>'validations'),
+            )
+        );
     }
 }
