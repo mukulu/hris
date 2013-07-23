@@ -49,30 +49,30 @@ class ConfigureMenuListener
 
         $orgunitModule->addChild('Organisationunits',
             array('route'=>'organisationunit_list',
-                'extras'=>array('tag'=>'li'),
+                'extras'=>array('tag'=>'div'),
                 'name'=>'Organisationunits',
-                'attributes'=> array('class'=>'nav nav-list','id'=>'organisationunits'),
+                'attributes'=> array('class'=>'accordion-group'),
             )
         );
         $orgunitModule->addChild('Organisationunit Groups',
             array('route'=>'organisationunitgroup_list',
-                'extras'=>array('tag'=>'li'),
+                'extras'=>array('tag'=>'div'),
                 'name'=>'Organisationunit Groups',
-                'attributes'=> array('class'=>'nav nav-list','id'=>'organisationunitgroups'),
+                'attributes'=> array('class'=>'accordion-group'),
             )
         );
         $orgunitModule->addChild('Organisationunit Groupsets',
             array('route'=>'organisationunitgroupset_list',
-                'extras'=>array('tag'=>'li'),
+                'extras'=>array('tag'=>'div'),
                 'name'=>'Organisationunit Groupsets',
-                'attributes'=> array('class'=>'nav nav-list','id'=>'organisationunitgroupsets'),
+                'attributes'=> array('class'=>'accordion-group'),
             )
         );
         $orgunitModule->addChild('Organisationunit Levels',
             array('uri'=>'#organisationunitlevel',
-                'extras'=>array('tag'=>'li'),
+                'extras'=>array('tag'=>'div'),
                 'name'=>'Organisationunit Levels',
-                'attributes'=> array('class'=>'nav nav-list','id'=>'organisationunitlevels'),
+                'attributes'=> array('class'=>'accordion-group'),
             )
         );
     }

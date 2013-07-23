@@ -49,9 +49,9 @@ class ConfigureMenuListener
 
         $dataQualityModule->addChild('Validations',
             array('route'=>'validation_list',
-                'extras'=>array('tag'=>'li'),
+                'extras'=>array('tag'=>'div'),
                 'name'=>'Validations',
-                'attributes'=> array('class'=>'nav nav-list','id'=>'validations'),
+                'attributes'=> array('class'=>'accordion-group'),
             )
         );
     }

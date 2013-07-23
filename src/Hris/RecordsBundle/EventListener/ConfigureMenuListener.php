@@ -62,9 +62,9 @@ class ConfigureMenuListener
         );
         $recordsModule->addChild('Update Records',
             array('uri'=>'#datavalidation',
-                  'extras'=>array('tag'=>'div'),
-                  'name'=>'Update Records',
-                  'attributes'=> array('class'=>'accordion-group'),
+                'extras'=>array('tag'=>'div'),
+                'name'=>'Update Records',
+                'attributes'=> array('class'=>'accordion-group'),
             )
         );
     }
