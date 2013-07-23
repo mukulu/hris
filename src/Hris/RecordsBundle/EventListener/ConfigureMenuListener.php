@@ -37,15 +37,35 @@ class ConfigureMenuListener
         $menu = $event->getMenu();
 
         $menu->addChild('Data Management', array(
-                'uri'=>'#datamanagement','attributes'=>
-                array('class'=>'nav-header')
+                'uri'=>'#datamanagement',
+                'extras'=>array('tag'=>'div'),
+                'name'=>'Data Management',
+                'attributes'=> array('class'=>'accordion-group'),
             )
         );
 
-        $menu->addChild('Data Entry',array('uri'=>'#dataentry'));
-        $menu->addChild('Update Records', array('uri'=>'updaterecords'));
-        $menu->addChild('Data Validation', array('uri'=>'datavalidation'));
+        $recordsModule = $menu->getChild('Data Management');
 
-        $menu->addChild('datamanagementsplit',array('attributes'=>array('class'=>'divider')));
+        $recordsModule->addChild('Data Entry',
+            array('uri'=>'#dataentry',
+                  'extras'=>array('tag'=>'div'),
+                  'name'=>'Data Entry',
+                  'attributes'=> array('class'=>'accordion-group'),
+            )
+        );
+        $recordsModule->addChild('Update Records',
+            array('uri'=>'#updaterecords',
+                  'extras'=>array('tag'=>'div'),
+                  'name'=>'Reports Module',
+                  'attributes'=> array('class'=>'accordion-group'),
+            )
+        );
+        $recordsModule->addChild('Update Records',
+            array('uri'=>'#datavalidation',
+                  'extras'=>array('tag'=>'div'),
+                  'name'=>'Update Records',
+                  'attributes'=> array('class'=>'accordion-group'),
+            )
+        );
     }
 }

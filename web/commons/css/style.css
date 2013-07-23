@@ -27,3 +27,28 @@ p {margin-top: 0;line-height: 180%;}
 #footer p {margin: 0;padding-top: 20px;line-height: normal;font-size: 9px;text-transform: uppercase;text-align: center;color: #FFFFFF;}
 #footer a {color: #FFFFFF;}
 .text-white { color:#FFFFFF;}
+.hr_menuitem > li > a:hover, .hr_menuitem > li > a:focus, .hr_submenuitem:hover > a, .hr_submenuitem:focus > a {
+    color: white;
+    text-decoration: none;
+    background-color: #0081C2;
+    background-image: -moz-linear-gradient(top, #08C, #0077B3);
+    background-image: -webkit-gradient(linear, 0 0, 0 100%, from(#08C), to(#0077B3));
+    background-image: -webkit-linear-gradient(top, #08C, #0077B3);
+    background-image: -o-linear-gradient(top, #08C, #0077B3);
+    background-image: linear-gradient(to bottom, #08C, #0077B3);
+    background-repeat: repeat-x;
+    filter: progid:DXImageTransform.Microsoft.gradient(startColorstr='#ff0088cc', endColorstr='#ff0077b3', GradientType=0);
+}
+
+.hr_menuitem > li > a {
+    display: block;
+    padding: 3px 20px;
+    clear: both;
+    font-weight: normal;
+    line-height: 20px;
+    color: #333;
+    white-space: nowrap;
+}
+.hr_menuitem {
+    list-style: none;
+}
