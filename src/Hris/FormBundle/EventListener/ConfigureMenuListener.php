@@ -48,51 +48,51 @@ class ConfigureMenuListener
 
         $formModule->addChild('Fields',
             array('route'=>'field_list',
-                'extras'=>array('tag'=>'li'),
+                'extras'=>array('tag'=>'div'),
                 'name' =>'Fields',
-                'attributes'=> array('class'=>'nav nav-list','id'=>'fields')
+                'attributes'=> array('class'=>'accordion-group')
             )
         );
         $formModule->addChild('FieldGroups',
             array('route'=>'fieldgroup_list',
-                'extras'=>array('tag'=>'li'),
+                'extras'=>array('tag'=>'div'),
                 'name' =>'Field Groups',
-                'attributes'=> array('class'=>'nav nav-list','id'=>'fieldgroups')
+                'attributes'=> array('class'=>'accordion-group')
             )
         );
         $formModule->addChild('FieldOptionGroupsets',
             array('route'=>'fieldoptiongroupset_list',
-                  'extras'=>array('tag'=>'li'),
+                  'extras'=>array('tag'=>'div'),
                   'name' =>'Field Option Groupsets',
-                  'attributes'=> array('class'=>'nav nav-list','id'=>'fieldoptiongroupsets')
+                  'attributes'=> array('class'=>'accordion-group')
             )
         );
         $formModule->addChild('RelationalFilters',
             array('route'=>'relationalfilter_list',
-                  'extras'=>array('tag'=>'li'),
+                  'extras'=>array('tag'=>'div'),
                   'name' =>'Relational Filters',
-                  'attributes'=> array('class'=>'nav nav-list','id'=>'relationalfilters')
+                  'attributes'=> array('class'=>'accordion-group')
             )
         );
         $formModule->addChild('ArithmeticFilters',
             array('route'=>'arithmeticfilter_list',
-                  'extras'=>array('tag'=>'li'),
+                  'extras'=>array('tag'=>'div'),
                   'name' =>'Arithmetic Filters',
-                  'attributes'=> array('class'=>'nav nav-list','id'=>'arithmeticfilters')
+                  'attributes'=> array('class'=>'accordion-group')
             )
         );
         $formModule->addChild('FriendlyReports',
             array('route'=>'friendlyreport_list',
-                  'extras'=>array('tag'=>'li'),
+                  'extras'=>array('tag'=>'div'),
                   'name' =>'Friendly Reports',
-                  'attributes'=> array('class'=>'nav nav-list','id'=>'friendlyreports')
+                  'attributes'=> array('class'=>'accordion-group')
             )
         );
         $formModule->addChild('Forms',
             array('route'=>'form_list',
-                  'extras'=>array('tag'=>'li'),
+                  'extras'=>array('tag'=>'div'),
                   'name' =>'Forms',
-                  'attributes'=> array('class'=>'nav nav-list','id'=>'forms')
+                  'attributes'=> array('class'=>'accordion-group')
             )
         );
 
@@ -108,9 +108,9 @@ class ConfigureMenuListener
 
         $resourceTableModule->addChild('Resource Table',
             array('route'=>'resourcetable_list',
-                'extras'=>array('tag'=>'li'),
+                'extras'=>array('tag'=>'div'),
                 'name' =>'Resource Table',
-                'attributes'=> array('class'=>'nav nav-list','id'=>'resourcetables')
+                'attributes'=> array('class'=>'accordion-group')
             )
         );
 

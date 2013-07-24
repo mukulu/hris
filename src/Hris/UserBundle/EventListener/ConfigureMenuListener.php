@@ -49,16 +49,16 @@ class ConfigureMenuListener
 
         $userModule->addChild('SystemUsers',
             array('route'=>'user_list',
-                  'extras'=>array('tag'=>'li'),
+                  'extras'=>array('tag'=>'div'),
                   'name'=>'System Users',
-                  'attributes'=> array('class'=>'nav nav-list','id'=>'systemusers'),
+                  'attributes'=> array('class'=>'accordion-group'),
             )
         );
         $userModule->addChild('SystemRoles',
             array('uri'=>'#systemroles',
-                  'extras'=>array('tag'=>'li'),
+                  'extras'=>array('tag'=>'div'),
                   'name'=>'System Roles',
-                  'attributes'=> array('class'=>'nav nav-list','id'=>'systemroles'),
+                  'attributes'=> array('class'=>'accordion-group'),
             )
         );
     }

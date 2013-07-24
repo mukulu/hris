@@ -48,9 +48,9 @@ class ConfigureMenuListener
 
         $indicatorModule->addChild('Indicators',
             array('route'=>'indicator_list',
-                  'extras'=>array('tag'=>'li'),
+                  'extras'=>array('tag'=>'div'),
                   'name' =>'Indicators',
-                  'attributes'=> array('class'=>'nav nav-list','id'=>'indicators')
+                  'attributes'=> array('class'=>'accordion-group')
             )
         );
     }

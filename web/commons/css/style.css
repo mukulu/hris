@@ -27,3 +27,20 @@ p {margin-top: 0;line-height: 180%;}
 #footer p {margin: 0;padding-top: 20px;line-height: normal;font-size: 9px;text-transform: uppercase;text-align: center;color: #FFFFFF;}
 #footer a {color: #FFFFFF;}
 .text-white { color:#FFFFFF;}
+
+.accordion-group .active > .accordion-heading > a,
+.accordion-group .active > .accordion-heading > a:hover,
+.accordion-group .active > .accordion-heading > a:focus {
+    color: #ffffff;
+    text-shadow: 0 -1px 0 rgba(0, 0, 0, 0.2);
+    background-color: #0088cc;
+}
+
+.current_ancestor,
+.current_ancestor:hover,
+.current_ancestor:focus {
+    background-color: whitesmoke;
+}
+.well {
+    background-color:#ffffff;
+}

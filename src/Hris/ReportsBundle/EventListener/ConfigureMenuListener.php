@@ -36,20 +36,73 @@ class ConfigureMenuListener
     {
         $menu = $event->getMenu();
 
-        $menu->addChild('Reports Module', array(
-                'uri'=>'#reportsmodule','attributes'=>
-                array('class'=>'nav-header')
+        $menu->addChild('Reports Module',
+            array(
+                'uri'=>'#reportsmodule',
+                'extras'=>array('tag'=>'div'),
+                'name'=>'Reports Module',
+                'attributes'=> array('class'=>'accordion-group'),
             )
         );
 
-        $menu->addChild('Records Report',array('uri'=>'#recordsreport'));
-        $menu->addChild('Aggregated Report',array('uri'=>'#aggregatedreport'));
-        $menu->addChild('Generic Report',array('uri'=>'#genericreport'));
-        $menu->addChild('Completeness Report',array('uri'=>'#completenessreport'));
-        $menu->addChild('History&Training Report',array('uri'=>'#historyandtrainingreport'));
-        $menu->addChild('Orgunit By Levels Report',array('uri'=>'#orgunitbylevelreport'));
-        $menu->addChild('Orgunit By Groupset Report',array('uri'=>'#orgunitgroupsetreport'));
-        $menu->addChild('Shared Reports',array('route'=>'report_list'));
-        $menu->addChild('reportssplit',array('attributes'=>array('class'=>'divider')));
+        $reportsModule = $menu->getChild('Reports Module');
+
+
+        $reportsModule->addChild('Records Report',
+            array('uri'=>'#recordsreport',
+                'extras'=>array('tag'=>'div'),
+                'name'=>'Records Report',
+                'attributes'=> array('class'=>'accordion-group'),
+            )
+        );
+        $reportsModule->addChild('Aggregated Report',
+            array('uri'=>'#aggregatedreport',
+                'extras'=>array('tag'=>'div'),
+                'name'=>'Aggregated Report',
+                'attributes'=> array('class'=>'accordion-group'),
+            )
+        );
+        $reportsModule->addChild('Generic Report',
+            array('uri'=>'#genericreport',
+                'extras'=>array('tag'=>'div'),
+                'name'=>'Generic Report',
+                'attributes'=> array('class'=>'accordion-group'),
+            )
+        );
+        $reportsModule->addChild('Completeness Report',
+            array('uri'=>'#completenessreport',
+                'extras'=>array('tag'=>'div'),
+                'name'=>'Completeness Report',
+                'attributes'=> array('class'=>'accordion-group'),
+            )
+        );
+        $reportsModule->addChild('History&Training Report',
+            array('uri'=>'#historyandtrainingreport',
+                'extras'=>array('tag'=>'div'),
+                'name'=>'History&Training Report',
+                'attributes'=> array('class'=>'accordion-group'),
+            )
+        );
+        $reportsModule->addChild('Orgunit By Levels Report',
+            array('uri'=>'#orgunitbylevelreport',
+                'extras'=>array('tag'=>'div'),
+                'name'=>'Orgunit By Levels Report',
+                'attributes'=> array('class'=>'accordion-group'),
+            )
+        );
+        $reportsModule->addChild('Orgunit By Groupset Report',
+            array('uri'=>'#orgunitgroupsetreport',
+                'extras'=>array('tag'=>'div'),
+                'name'=>'Orgunit By Groupset Report',
+                'attributes'=> array('class'=>'accordion-group'),
+            )
+        );
+        $reportsModule->addChild('Shared Reports',
+            array('route'=>'report_list',
+                'extras'=>array('tag'=>'div'),
+                'name'=>'Shared Reports',
+                'attributes'=> array('class'=>'accordion-group'),
+            )
+        );
     }
 }

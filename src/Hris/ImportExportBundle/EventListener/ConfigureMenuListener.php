@@ -36,18 +36,43 @@ class ConfigureMenuListener
     {
         $menu = $event->getMenu();
 
-        $menu->addChild('Import/Export Management', array(
-                'uri'=>'#importexportmanagement','attributes'=>
-                array('class'=>'nav-header')
+        $menu->addChild('Import-Export Management', array(
+                'uri'=>'#importexportmanagement',
+                'extras'=>array('tag'=>'div'),
+                'name'=>'Import-Export Management',
+                'attributes'=> array('class'=>'accordion-group'),
             )
         );
 
-        $menu->addChild('Import Data',array('uri'=>'#importdata'));
-        $menu->addChild('Export Data', array('uri'=>'#exportdata'));
-        $menu->addChild('Export Metadata', array('uri'=>'#metadata'));
-        $menu->addChild('Import History', array('route'=>'importexport_history_list'));
+        $importexportModule = $menu->getChild('Import-Export Management');
 
-
-        $menu->addChild('datamanagementsplit',array('attributes'=>array('class'=>'divider')));
+        $importexportModule->addChild('Import Data',
+            array('uri'=>'#importdata',
+                'extras'=>array('tag'=>'div'),
+                'name'=>'Import Data',
+                'attributes'=> array('class'=>'accordion-group'),
+            )
+        );
+        $importexportModule->addChild('Export Data',
+            array('uri'=>'#exportdata',
+                'extras'=>array('tag'=>'div'),
+                'name'=>'Export Data',
+                'attributes'=> array('class'=>'accordion-group'),
+            )
+        );
+        $importexportModule->addChild('Export Metadata',
+            array('uri'=>'#metadata',
+                'extras'=>array('tag'=>'div'),
+                'name'=>'Export Metadata',
+                'attributes'=> array('class'=>'accordion-group'),
+            )
+        );
+        $importexportModule->addChild('Import History',
+            array('route'=>'importexport_history_list',
+                'extras'=>array('tag'=>'div'),
+                'name'=>'Import History',
+                'attributes'=> array('class'=>'accordion-group'),
+            )
+        );
     }
 }
