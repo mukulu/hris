@@ -38,7 +38,7 @@
 
 
         {% if 'menu_level_1' not in listAttributes and 'menu_level_2' not in listAttributes %}
-            <ul {{ _self.attributes(listAttributes|merge({'class':'nav pull-right'})) }}>
+            <ul {{ _self.attributes(listAttributes|merge({'class':'nav secondary-nav pull-right'})) }}>
                 {{ block('children') }}
             </ul>
         {% else %}
