@@ -1,6 +1,6 @@
-{% extends "HrisUserBundle::layout.html.twig" %}
+{% extends "::base.html.twig" %}
 
-{% block content %}
+{% block right_content %}
 
     <form action="{{ path('fos_user_profile_edit') }}" {{ form_enctype(form) }} method="POST" class="fos_user_profile_edit">
         {{ form_widget(form) }}
@@ -9,4 +9,4 @@
         </div>
     </form>
 
-{% endblock content %}
+{% endblock right_content %}
