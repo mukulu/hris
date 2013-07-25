@@ -25,10 +25,10 @@
                                 <span class="icon-bar"></span>
                                 <span class="icon-bar"></span>
                             </a>
-                            <a class="brand visible-desktop" href="#">HRHIS</a>
+                            <a class="brand visible-desktop" href="{{ path('hris_dashboard_homepage') }}">HRHIS</a>
 
                             <ul class="nav pull-right">
-                                <li><a class="pull-right visible-desktop" href="#"><i class="icon-time"></i>&nbsp;{{ "now"|date("jS F Y") }}</a></li>
+                                <li><a class="pull-right visible-desktop" href="{{ path('hris_dashboard_homepage') }}"><i class="icon-time"></i>&nbsp;{{ "now"|date("jS F Y") }}</a></li>
                                 <li><a class="pull-right visible-desktop" href="#"><i class="icon-info-sign"></i>&nbsp;Help</a></li>
                                 <li class="dropdown">
                                     <a href="#" class="dropdown-toggle" data-toggle="dropdown"><i class="icon-user"></i>&nbsp;{{ app.user }} <b class="caret"></b></a>
