@@ -36,15 +36,15 @@ class ConfigureMenuListener
     {
         $menu = $event->getMenu();
 
-        $menu->addChild('Data Management', array(
-                'uri'=>'#datamanagement',
+        $menu->addChild('Data Module', array(
+                'uri'=>'#datamodule',
                 'extras'=>array('tag'=>'div'),
-                'name'=>'Data Management',
+                'name'=>'Data Module',
                 'attributes'=> array('class'=>'accordion-group'),
             )
         );
 
-        $recordsModule = $menu->getChild('Data Management');
+        $recordsModule = $menu->getChild('Data Module');
 
         $recordsModule->addChild('Data Entry',
             array('uri'=>'#dataentry',
@@ -60,7 +60,7 @@ class ConfigureMenuListener
                   'attributes'=> array('class'=>'accordion-group'),
             )
         );
-        $recordsModule->addChild('Update Records',
+        $recordsModule->addChild('Data Validation',
             array('uri'=>'#datavalidation',
                 'extras'=>array('tag'=>'div'),
                 'name'=>'Update Records',

@@ -1,6 +1,6 @@
-{% extends "FOSUserBundle::layout.html.twig" %}
+{% extends "HrisUserBundle::layout.html.twig" %}
 
-{% block fos_user_content %}
+{% block content %}
     <p>{{ 'registration.confirmed'|trans({'%username%': user.username}, 'FOSUserBundle') }}</p>
     {% if app.session is not empty %}
         {% set targetUrl = app.session.get('_security.target_path') %}
@@ -10,4 +10,4 @@
         	<p><a href="{{ path('HrisUserBundle_homepage',{'name':user.username}) }}">{{ 'registration.back'|trans({}, 'FOSUserBundle') }}</a></p>
         {% endif %}
     {% endif %}
-{% endblock fos_user_content %}
+{% endblock content %}

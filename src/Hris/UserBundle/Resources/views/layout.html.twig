@@ -22,10 +22,15 @@
 
 {% block stylesheets %}
     {{ parent() }}
-    <link rel="stylesheet" href="{{ asset('bundles/hrisuser/css/login.css') }}" />
+    <link rel="stylesheet" href="{{ asset('bundles/hrisuser/css/login.css') }}" /></style>
 {% endblock stylesheets %}
 
 {% block title %} {{ parent() }} - Login {% endblock %}
+
+{% block navigation_bar %}
+
+{% endblock navigation_bar %}
+
 {% block content %}
     {{  block('fos_user_content') }}
 {% endblock content %}
