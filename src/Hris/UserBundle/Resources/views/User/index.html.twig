@@ -12,18 +12,26 @@
 {% endblock stylesheets %}
 
 {% block right_content %}
-    <h1>User list</h1>
-    <div>
-        <table class="records_list tb_datatable">
+
+
+    <div class="container">
+        <h1><small>User list</small></h1>
+
+        <ul class="inline">
+            <li>
+                <a class="btn" href="{{ path('user_new') }}">
+                    Create a new entry
+                </a>
+            </li>
+        </ul>
+        <table class="records_list dataTable table table-striped table-bordered zebra-stripped table-hover" cellpadding="0" cellspacing="0" border="0">
             <thead>
                 <tr>
                     <th>Username</th>
                     <th>Email</th>
                     <th>Enabled</th>
                     <th>Lastlogin</th>
-                    <th>Locked</th>
                     <th>Roles</th>
-                    <th>Id</th>
                     <th>Datecreated</th>
                     <th>Lastupdated</th>
                     <th>Actions</th>
@@ -31,26 +39,35 @@
             </thead>
             <tbody>
             {% for entity in entities %}
-                <tr>
+                <tr {% if entity.enabled!=1 %}class="error"{% endif %}>
                     <td><a href="{{ path('user_show', { 'id': entity.id }) }}">{{ entity.username }}</a></td>
                     <td>{{ entity.email }}</td>
-                    <td>{{ entity.enabled }}</td>
-                    <td>{% if entity.lastLogin %}{{ entity.lastLogin|date('Y-m-d H:i:s') }}{% endif %}</td>
-                    <td>{{ entity.locked }}</td>
+                    <td>{% if entity.enabled == 1 %} Enabled {% else %} Disabled {% endif %}</td>
+                    <td>{% if entity.lastLogin %}{{ entity.lastLogin|date('H:i:s d/m/Y') }}{% endif %}</td>
                     <td>{% for role in entity.roles %}
                             {{ role }},
                         {% endfor %}
                     </td>
-                    <td>{{ entity.id }}</td>
-                    <td>{% if entity.datecreated %}{{ entity.datecreated|date('Y-m-d') }}{% endif %}</td>
-                    <td>{% if entity.lastupdated %}{{ entity.lastupdated|date('Y-m-d') }}{% endif %}</td>
+                    <td>{% if entity.datecreated %}{{ entity.datecreated|date('d/m/Y') }}{% endif %}</td>
+                    <td>{% if entity.lastupdated %}{{ entity.lastupdated|date('d/m/Y') }}{% endif %}</td>
                     <td>
-                    <ul>
+                    <ul class="inline">
                         <li>
-                            <a href="{{ path('user_show', { 'id': entity.id }) }}">show</a>
+                            <a href="{{ path('user_show', { 'id': entity.id }) }}"><i class="icon-info-sign" title="Show"></i></a>
                         </li>
                         <li>
-                            <a href="{{ path('user_edit', { 'id': entity.id }) }}">edit</a>
+                            <a href="{{ path('user_edit', { 'id': entity.id }) }}"><i class="icon-edit" title="Edit"></i></a>
+                        </li>
+                        <li>
+                            {#<form action="{{ path('user_delete', { 'id': entity.id }) }}" method="post">#}
+                                {#<input type="hidden" name="_method" value="DELETE" />#}
+                                {#{{ form_widget(delete_form) }}#}
+                                {#<div id="form">#}
+                                    {#<input type="hidden" id="form_id" name="form[id]" value="{{ entity.id }}">#}
+                                    {#<input type="hidden" id="form__token" name="form[_token]" value="0b0875769536195de65044befaf8c2a1e6f0ad25">#}
+                                {#</div>#}
+                                {#<button type="submit"><i class="icon-remove-sing"</button>#}
+                            {#</form>#}
                         </li>
                     </ul>
                     </td>
@@ -60,13 +77,4 @@
         </table>
     </div>
 
-
-
-        <ul>
-        <li>
-            <a href="{{ path('user_new') }}">
-                Create a new entry
-            </a>
-        </li>
-    </ul>
 {% endblock right_content %}

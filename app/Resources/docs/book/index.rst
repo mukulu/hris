@@ -24,5 +24,6 @@ The Book
     internals
     stable_api
     templating
+    forms
 
 .. include:: /book/map.rst.inc

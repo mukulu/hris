@@ -53,35 +53,35 @@ class ConfigureMenuListener
                 'attributes'=> array('class'=>'accordion-group')
             )
         );
-        $formModule->addChild('FieldGroups',
+        $formModule->addChild('Field Groups',
             array('route'=>'fieldgroup_list',
                 'extras'=>array('tag'=>'div'),
                 'name' =>'Field Groups',
                 'attributes'=> array('class'=>'accordion-group')
             )
         );
-        $formModule->addChild('FieldOptionGroupsets',
+        $formModule->addChild('Field Option Groupsets',
             array('route'=>'fieldoptiongroupset_list',
                   'extras'=>array('tag'=>'div'),
                   'name' =>'Field Option Groupsets',
                   'attributes'=> array('class'=>'accordion-group')
             )
         );
-        $formModule->addChild('RelationalFilters',
+        $formModule->addChild('Relational Filters',
             array('route'=>'relationalfilter_list',
                   'extras'=>array('tag'=>'div'),
                   'name' =>'Relational Filters',
                   'attributes'=> array('class'=>'accordion-group')
             )
         );
-        $formModule->addChild('ArithmeticFilters',
+        $formModule->addChild('Arithmetic Filters',
             array('route'=>'arithmeticfilter_list',
                   'extras'=>array('tag'=>'div'),
                   'name' =>'Arithmetic Filters',
                   'attributes'=> array('class'=>'accordion-group')
             )
         );
-        $formModule->addChild('FriendlyReports',
+        $formModule->addChild('Friendly Reports',
             array('route'=>'friendlyreport_list',
                   'extras'=>array('tag'=>'div'),
                   'name' =>'Friendly Reports',
