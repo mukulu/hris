@@ -26,7 +26,6 @@ namespace Hris\UserBundle\Entity;
 
 use Doctrine\ORM\Mapping as ORM;
 
-use Hris\OrganisationunitBundle\Entity\Organisationunit;
 use Hris\DashboardBundle\Entity\DashboardChart;
 use Hris\UserBundle\Entity\User;
 
@@ -53,14 +52,6 @@ class UserInfo
      * @ORM\Column(name="uid", type="string", length=13, nullable=false, unique=true)
      */
     private $uid;
-    
-    /**
-     * @var \Hris\UserBundle\Entity\User $user
-     *
-     * @ORM\OneToOne(targetEntity="Hris\UserBundle\Entity\User", mappedBy="userInfo")
-     * @ORM\JoinColumn(name="user_id", referencedColumnName="id", nullable=false,unique=true)
-     */
-    private $user;
 
     /**
      * @var string $phonenumber
@@ -96,22 +87,6 @@ class UserInfo
      * @ORM\Column(name="surname", type="string", length=64)
      */
     private $surname;
-    
-    /**
-     * @var \Hris\OrganisationunitBundle\Entity\Organisationunit $organisationunit
-     *
-     * @ORM\ManyToMany(targetEntity="Hris\OrganisationunitBundle\Entity\Organisationunit", inversedBy="userInfo")
-     * @ORM\JoinTable(name="hris_userinfo_organisationunits",
-     *   joinColumns={
-     *     @ORM\JoinColumn(name="userinfo_id", referencedColumnName="id", onDelete="CASCADE")
-     *   },
-     *   inverseJoinColumns={
-     *     @ORM\JoinColumn(name="organisationunit_id", referencedColumnName="id", onDelete="CASCADE")
-     *   }
-     * )
-     * @ORM\OrderBy({"longname" = "ASC"})
-     */
-    private $organisationunit;
     
     /**
      * @var \Hris\DashboardBundle\Entity\DashboardChart $dashboardChart
@@ -246,12 +221,12 @@ class UserInfo
     {
         return $this->surname;
     }
+
     /**
      * Constructor
      */
     public function __construct()
     {
-        $this->organisationunit = new \Doctrine\Common\Collections\ArrayCollection();
         $this->dashboardChart = new \Doctrine\Common\Collections\ArrayCollection();
     }
     
@@ -276,62 +251,6 @@ class UserInfo
     public function getUid()
     {
         return $this->uid;
-    }
-
-    /**
-     * Set user
-     *
-     * @param \Hris\UserBundle\Entity\User $user
-     * @return UserInfo
-     */
-    public function setUser(\Hris\UserBundle\Entity\User $user)
-    {
-        $this->user = $user;
-    
-        return $this;
-    }
-
-    /**
-     * Get user
-     *
-     * @return \Hris\UserBundle\Entity\User
-     */
-    public function getUser()
-    {
-        return $this->user;
-    }
-
-    /**
-     * Add organisationunit
-     *
-     * @param \Hris\OrganisationunitBundle\Entity\Organisationunit $organisationunit
-     * @return UserInfo
-     */
-    public function addOrganisationunit(\Hris\OrganisationunitBundle\Entity\Organisationunit $organisationunit)
-    {
-        $this->organisationunit[$organisationunit->getId()] = $organisationunit;
-    
-        return $this;
-    }
-
-    /**
-     * Remove organisationunit
-     *
-     * @param \Hris\OrganisationunitBundle\Entity\Organisationunit $organisationunit
-     */
-    public function removeOrganisationunit(\Hris\OrganisationunitBundle\Entity\Organisationunit $organisationunit)
-    {
-        $this->organisationunit->removeElement($organisationunit);
-    }
-
-    /**
-     * Get organisationunit
-     *
-     * @return \Doctrine\Common\Collections\Collection
-     */
-    public function getOrganisationunit()
-    {
-        return $this->organisationunit;
     }
 
     /**

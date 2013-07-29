@@ -23,5 +23,7 @@ The Book
     performance
     internals
     stable_api
+    templating
+    forms
 
 .. include:: /book/map.rst.inc

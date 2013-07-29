@@ -29,6 +29,7 @@ use FOS\UserBundle\Entity\User as BaseUser;
 use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\ORM\Mapping as ORM;
 
+use Hris\OrganisationunitBundle\Entity\Organisationunit;
 use Hris\UserBundle\Entity\UserInfo;
 
 /**
@@ -56,7 +57,23 @@ class User extends BaseUser
      * @ORM\OneToOne(targetEntity="Hris\UserBundle\Entity\UserInfo", inversedBy="user")
      */
     private $userInfo;
-    
+
+    /**
+     * @var \Hris\OrganisationunitBundle\Entity\Organisationunit $organisationunit
+     *
+     * @ORM\ManyToMany(targetEntity="Hris\OrganisationunitBundle\Entity\Organisationunit", inversedBy="user")
+     * @ORM\JoinTable(name="hris_user_organisationunits",
+     *   joinColumns={
+     *     @ORM\JoinColumn(name="user_id", referencedColumnName="id", onDelete="CASCADE")
+     *   },
+     *   inverseJoinColumns={
+     *     @ORM\JoinColumn(name="organisationunit_id", referencedColumnName="id", onDelete="CASCADE")
+     *   }
+     * )
+     * @ORM\OrderBy({"longname" = "ASC"})
+     */
+    private $organisationunit;
+
     /**
      * @var \DateTime $datecreated
      * @Gedmo\Timestampable(on="create")
@@ -75,7 +92,19 @@ class User extends BaseUser
      * @ORM\Column(name="deletedAt", type="datetime", nullable=true)
      */
     private $deletedAt;
-    
+
+    /**
+     * Constructor
+     */
+    public function __construct()
+    {
+        parent::__construct();
+        if(empty($this->datecreated))
+        {
+            $this->datecreated = new \DateTime('now');
+        }
+        $this->organisationunit = new \Doctrine\Common\Collections\ArrayCollection();
+    }
     
     /**
      * Get id
@@ -86,14 +115,39 @@ class User extends BaseUser
     {
         return $this->id;
     }
-    
-    public function __construct()
+
+
+    /**
+     * Add organisationunit
+     *
+     * @param \Hris\OrganisationunitBundle\Entity\Organisationunit $organisationunit
+     * @return User
+     */
+    public function addOrganisationunit(\Hris\OrganisationunitBundle\Entity\Organisationunit $organisationunit)
     {
-    	parent::__construct();
-    	if(empty($this->datecreated))
-    	{
-    		$this->datecreated = new \DateTime('now');
-    	}
+        $this->organisationunit[$organisationunit->getId()] = $organisationunit;
+
+        return $this;
+    }
+
+    /**
+     * Remove organisationunit
+     *
+     * @param \Hris\OrganisationunitBundle\Entity\Organisationunit $organisationunit
+     */
+    public function removeOrganisationunit(\Hris\OrganisationunitBundle\Entity\Organisationunit $organisationunit)
+    {
+        $this->organisationunit->removeElement($organisationunit);
+    }
+
+    /**
+     * Get organisationunit
+     *
+     * @return \Doctrine\Common\Collections\Collection
+     */
+    public function getOrganisationunit()
+    {
+        return $this->organisationunit;
     }
 
     /**

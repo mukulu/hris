@@ -15,7 +15,7 @@
 {% endblock %}
 
 {% block root %}
-    <div class="well">
+    <div class="well visible-desktop">
         {% set listAttributes = item.childrenAttributes %}
         {% set listExtras = item.extras %}
         {{ block('list') -}}

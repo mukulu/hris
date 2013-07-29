@@ -76,21 +76,21 @@ class ConfigureMenuListener
                 'attributes'=> array('class'=>'accordion-group'),
             )
         );
-        $reportsModule->addChild('History&Training Report',
+        $reportsModule->addChild('History & Training',
             array('uri'=>'#historyandtrainingreport',
                 'extras'=>array('tag'=>'div'),
-                'name'=>'History&Training Report',
+                'name'=>'History & Training',
                 'attributes'=> array('class'=>'accordion-group'),
             )
         );
-        $reportsModule->addChild('Orgunit By Levels Report',
+        $reportsModule->addChild('Orgunit By Levels',
             array('uri'=>'#orgunitbylevelreport',
                 'extras'=>array('tag'=>'div'),
                 'name'=>'Orgunit By Levels Report',
                 'attributes'=> array('class'=>'accordion-group'),
             )
         );
-        $reportsModule->addChild('Orgunit By Groupset Report',
+        $reportsModule->addChild('Orgunit By Groupset',
             array('uri'=>'#orgunitgroupsetreport',
                 'extras'=>array('tag'=>'div'),
                 'name'=>'Orgunit By Groupset Report',

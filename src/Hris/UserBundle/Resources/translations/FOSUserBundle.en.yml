@@ -30,6 +30,7 @@ profile:
     show:
         username: Username
         email: Email
+        last_updated: "Last Updated"
     edit:
         submit: Update
     flash:

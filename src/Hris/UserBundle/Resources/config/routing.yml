@@ -14,10 +14,9 @@ fos_user_resetting:
     prefix: /resetting
 
 fos_user_change_password:
-    resource: "@FOSUserBundle/Resources/config/routing/change_password.xml"
+    resource: "@HrisUserBundle/Resources/config/change_password.xml"
     prefix: /profile
     
 user:
     resource: "@HrisUserBundle/Controller/UserController.php"
     type: annotation
-    
