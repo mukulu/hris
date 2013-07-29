@@ -28,10 +28,11 @@
         "sonata-project/admin-bundle": "dev-master",
         "stfalcon/tinymce-bundle": "dev-master",
         "braincrafted/bootstrap-bundle": "dev-master",
-        "twitter/bootstrap": "2.3.*",
+        "twitter/bootstrap": "2.3.2.0",
         "leafo/lessphp": "dev-master",
         "jquery/jquery":"1.10.*",
-        "ob/highcharts-bundle": "dev-master"
+        "ob/highcharts-bundle": "dev-master",
+        "jms/security-extra-bundle": "dev-master"
     },
     "scripts": {
         "post-install-cmd": [
