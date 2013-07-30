@@ -66,7 +66,7 @@ class DesignFormController extends Controller
     		$em->persist($entity);
     		$em->flush();
     
-    		return $this->redirect($this->generateUrl('form_edit', array('id' => $id)));
+    		return $this->redirect($this->generateUrl('form_design', array('id' => $id)));
     	}
     
     	return array(
