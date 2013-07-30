@@ -9,6 +9,7 @@ use Sensio\Bundle\FrameworkExtraBundle\Configuration\Route;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Template;
 use Hris\FormBundle\Entity\Field;
 use Hris\FormBundle\Form\FieldType;
+use Hris\FormBundle\Form\DesignFormType;
 
 /**
  * Design Form controller.
@@ -29,13 +30,15 @@ class DesignFormController extends Controller
         $em = $this->getDoctrine()->getManager();
 
         $entity = $em->getRepository('HrisFormBundle:Form')->find($id);
+        $editForm = $this->createForm(new DesignFormType(), $entity);
 
         if (!$entity) {
             throw $this->createNotFoundException('Unable to find Form entity.');
         }
 
         return array(
-            'entity'      => $entity,
+            'entity'    => $entity,
+        	'form'   	=> $editForm->createView(),
         );
     }
 
