@@ -1,7 +1,7 @@
 {% extends '::base.html.twig' %}
 {% block right_content -%}
     <h1>Form design</h1>
-    {{ form_start(form) }}
+    {{ form_start(form, { 'action': path('design_update', { 'id': entity.id }), 'method' : 'PUT' } ) }}
 	    {{ tinymce_init() }}
 
 	    {{ form_widget(form.hypertext, { 'attr': { 'class': 'tinymce' } } ) }}
