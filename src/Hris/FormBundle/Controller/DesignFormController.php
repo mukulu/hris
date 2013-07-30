@@ -41,5 +41,38 @@ class DesignFormController extends Controller
         	'form'   	=> $editForm->createView(),
         );
     }
+    
+    /**
+     * Edits an existing Form entity.
+     *
+     * @Route("/{id}", name="design_update")
+     * @Method("PUT")
+     * @Template("HrisFormBundle:Form:index.html.twig")
+     */
+    public function updateAction(Request $request, $id)
+    {
+    	$em = $this->getDoctrine()->getManager();
+    
+    	$entity = $em->getRepository('HrisFormBundle:Form')->find($id);
+    
+    	if (!$entity) {
+    		throw $this->createNotFoundException('Unable to find Form entity.');
+    	}
+    
+    	$editForm = $this->createForm(new DesignFormType(), $entity);
+    	$editForm->bind($request);
+    
+    	if ($editForm->isValid()) {
+    		$em->persist($entity);
+    		$em->flush();
+    
+    		return $this->redirect($this->generateUrl('form_edit', array('id' => $id)));
+    	}
+    
+    	return array(
+    			'entity'      => $entity,
+    			'form'   => $editForm->createView(),
+    	);
+    }
 
 }
