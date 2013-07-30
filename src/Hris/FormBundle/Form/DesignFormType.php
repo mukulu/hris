@@ -6,16 +6,12 @@ use Symfony\Component\Form\AbstractType;
 use Symfony\Component\Form\FormBuilderInterface;
 use Symfony\Component\OptionsResolver\OptionsResolverInterface;
 
-class FormType extends AbstractType
+class DesignFormType extends AbstractType
 {
     public function buildForm(FormBuilderInterface $builder, array $options)
     {
         $builder
-            ->add('uid')
-            ->add('name')
-            ->add('title')
-            ->add('datecreated')
-            ->add('lastupdated')
+            ->add('hypertext')
         ;
     }
 
@@ -28,6 +24,6 @@ class FormType extends AbstractType
 
     public function getName()
     {
-        return 'hris_formbundle_formtype';
+        return 'hris_formbundle_designformtype';
     }
 }

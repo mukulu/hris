@@ -18,10 +18,6 @@
                 <td>{{ entity.name }}</td>
             </tr>
             <tr>
-                <th>Hypertext</th>
-                <td>{{ entity.hypertext }}</td>
-            </tr>
-            <tr>
                 <th>Title</th>
                 <td>{{ entity.title }}</td>
             </tr>
@@ -45,6 +41,11 @@
     <li>
         <a href="{{ path('form_edit', { 'id': entity.id }) }}">
             Edit
+        </a>
+    </li>
+    <li>
+        <a href="{{ path('form_design', { 'id': entity.id }) }}">
+            design Form
         </a>
     </li>
     <li>
