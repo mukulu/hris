@@ -162,13 +162,24 @@ sonata_block:
 
 # Tiny MCE configuration Bundle       
 stfalcon_tinymce:
-    include_jquery: true
+    include_jquery: false
+    tinymce_jquery: false
+    selector: ".tinymce"
     textarea_class: "tinymce"
     
+    external_plugins:
+        filemanager:
+            url: "asset[js/external_plugin.js]"
+    
     tinymce_buttons:
-        stfalcon: # Id of the first button
-            title: "Stfalcon"
-            image: "asset[img/favicon.ico]"
+        mybutton1:
+            title: "Insert snippet A"
+            image: "asset[favicon.ico]"
+            
+        mybutton2:                                      
+            title: "Insert snippet B"                   
+            image: "http://google.com/favicon.ico"
+          
     theme:
         simple:
             mode: "textareas"

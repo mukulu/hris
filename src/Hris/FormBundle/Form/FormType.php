@@ -13,7 +13,6 @@ class FormType extends AbstractType
         $builder
             ->add('uid')
             ->add('name')
-            ->add('hypertext')
             ->add('title')
             ->add('datecreated')
             ->add('lastupdated')
