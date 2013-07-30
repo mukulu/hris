@@ -14,7 +14,7 @@ use Hris\FormBundle\Form\DesignFormType;
 /**
  * Design Form controller.
  *
- * @Route("/form")
+ * @Route("/designform")
  */
 class DesignFormController extends Controller
 {
