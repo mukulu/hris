@@ -1,17 +1,17 @@
 {% extends '::base.html.twig' %}
 
 {% block right_content -%}
-    <h1>New Record</h1>
 
+    <h1>{{ entity.title | raw }}</h1>
 
+    <form action="{{ path('record_list') }}" method="post">
 
-    {% autoescape false %}
-        {{ dump( entity.hypertext ) }}
-    {% endautoescape %}
+        {{ entity.hypertext | raw}}
 
-    <p>
-        <button type="submit">Edit</button>
-    </p>
+        <p>
+            <button type="submit">Edit</button>
+        </p>
 
+    </form>
 
 {% endblock %}
