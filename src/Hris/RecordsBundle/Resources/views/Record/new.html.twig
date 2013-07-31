@@ -1,20 +1,17 @@
 {% extends '::base.html.twig' %}
 
 {% block right_content -%}
-    <h1>Record creation</h1>
+    <h1>New Record</h1>
 
-    <form action="{{ path('record_create') }}" method="post" {{ form_enctype(form) }}>
-        {{ form_widget(form) }}
-        <p>
-            <button type="submit">Create</button>
-        </p>
-    </form>
 
-        <ul class="record_actions">
-    <li>
-        <a href="{{ path('record') }}">
-            Back to the list
-        </a>
-    </li>
-</ul>
+
+    {% autoescape false %}
+        {{ dump( entity.hypertext ) }}
+    {% endautoescape %}
+
+    <p>
+        <button type="submit">Edit</button>
+    </p>
+
+
 {% endblock %}

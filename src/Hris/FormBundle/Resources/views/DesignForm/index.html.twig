@@ -4,7 +4,7 @@
     {{ form_start(form, { 'action': path('design_update', { 'id': entity.id }), 'method' : 'PUT' } ) }}
 	    {{ tinymce_init() }}
 
-	    {{ form_widget(form.hypertext, { 'attr': { 'class': 'tinymce' } } ) }}
+	    {{ form_widget(form.hypertext, { 'attr': { 'class': 'tinymce', 'data-theme' : 'advanced' } } ) }}
 	    <p>
     		<button type="submit">Edit</button>
     	</p>
