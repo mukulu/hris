@@ -47,7 +47,7 @@ class ConfigureMenuListener
         $recordsModule = $menu->getChild('Data Module');
 
         $recordsModule->addChild('Data Entry',
-            array('uri'=>'#dataentry',
+            array('route'=>'record_form_list',
                   'extras'=>array('tag'=>'div'),
                   'name'=>'Data Entry',
                   'attributes'=> array('class'=>'accordion-group'),

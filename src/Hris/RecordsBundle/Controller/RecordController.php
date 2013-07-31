@@ -9,6 +9,8 @@ use Sensio\Bundle\FrameworkExtraBundle\Configuration\Route;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Template;
 use Hris\RecordsBundle\Entity\Record;
 use Hris\RecordsBundle\Form\RecordType;
+use Hris\FormBundle\Entity\Form;
+use Hris\FormBundle\Form\FormType;
 
 /**
  * Record controller.
@@ -35,6 +37,29 @@ class RecordController extends Controller
         return array(
             'entities' => $entities,
         );
+    }
+    
+    /**
+     * List Forms Available for Record entry.
+     *
+     * @Route("/formlist", name="record_form_list")
+     * @Method("GET")
+     * @Template()
+     */
+    public function formlistAction(Request $request)
+    {
+    	$em = $this->getDoctrine()->getManager();
+
+        $entities = $em->getRepository('HrisFormBundle:Form')->findAll();
+
+        return array(
+            'entities' => $entities,
+        );
+    
+    	/*return array(
+    			'entity' => $entity,
+    			'form'   => $form->createView(),
+    	);*/
     }
     /**
      * Creates a new Record entity.
