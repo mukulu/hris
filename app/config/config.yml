@@ -162,33 +162,34 @@ sonata_block:
 
 # Tiny MCE configuration Bundle       
 stfalcon_tinymce:
-    include_jquery: false
-    tinymce_jquery: false
-    selector: ".tinymce"
-    textarea_class: "tinymce"
-    
-    external_plugins:
-        filemanager:
-            url: "asset[js/external_plugin.js]"
-    
-    tinymce_buttons:
-        mybutton1:
-            title: "Insert snippet A"
-            image: "asset[favicon.ico]"
-            
-        mybutton2:                                      
-            title: "Insert snippet B"                   
-            image: "http://google.com/favicon.ico"
-          
-    theme:
-        simple:
-            mode: "textareas"
-            theme: "advanced"
-            width: '728' #firefox on windows made it too wide for some reason
-            theme_advanced_buttons1: "save,newdocument,|,bold,italic,underline,strikethrough,|,justifyleft,justifycenter,justifyright,justifyfull,styleselect,formatselect,fontselect,fontsizeselect"
-            theme_advanced_buttons2: "cut,copy,paste,pastetext,pasteword,|,search,replace,|,bullist,numlist,|,outdent,indent,blockquote,|,undo,redo,|,link,unlink,anchor,image,cleanup,help,code,|,insertdate,inserttime,preview,|,forecolor,backcolor"
-            theme_advanced_toolbar_location: "top"
-            theme_advanced_toolbar_align: "left"
-            theme_advanced_statusbar_location: "bottom"
-            plugins: "fullscreen"
-            theme_advanced_buttons1_add: "fullscreen"
+        include_jquery: true
+        tinymce_jquery: true
+        selector: ".tinymce"
+        # Get current language from the parameters.ini
+        language: %locale%
+        # Custom buttons
+        tinymce_buttons:
+            stfalcon: # Id of the first button
+                title: "Stfalcon"
+                image: "http://stfalcon.com/favicon.ico"
+        theme:
+            # Simple theme: same as default theme
+            simple: ~
+            # Advanced theme with almost all enabled plugins
+            advanced:
+                 plugins:
+                     - "advlist autolink lists link image charmap print preview hr anchor pagebreak"
+                     - "searchreplace wordcount visualblocks visualchars code fullscreen"
+                     - "insertdatetime media nonbreaking save table contextmenu directionality"
+                     - "emoticons template paste textcolor"
+                 toolbar1: "insertfile undo redo | styleselect | bold italic | alignleft aligncenter alignright alignjustify | bullist numlist outdent indent | link image"
+                 toolbar2: "print preview media | forecolor backcolor emoticons | stfalcon | example"
+                 image_advtab: true
+                 templates:
+                     - {title: 'Test template 1', content: 'Test 1'}
+                     - {title: 'Test template 2', content: 'Test 2'}
+            # BBCode tag compatible theme (see http://www.bbcode.org/reference.php)
+            bbcode:
+                 plugins: ["bbcode, code, link, preview"]
+                 menubar: false
+                 toolbar1: "bold,italic,underline,undo,redo,link,unlink,removeformat,cleanup,code,preview"

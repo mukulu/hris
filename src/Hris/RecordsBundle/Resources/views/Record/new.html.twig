@@ -3,7 +3,7 @@
 {% block right_content -%}
     <h1>New Record</h1>
 
-    {{ form_start( form, { 'method' : 'PUT' } ) }}
+
 
     {% autoescape false %}
         {{ dump( entity.hypertext ) }}
@@ -12,6 +12,6 @@
     <p>
         <button type="submit">Edit</button>
     </p>
-    {{ form_end(form) }}
+
 
 {% endblock %}
