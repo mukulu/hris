@@ -27,13 +27,7 @@
                 <td>
                 <ul>
                     <li>
-                        <a href="{{ path('form_show', { 'id': entity.id }) }}">show</a>
-                    </li>
-                    <li>
-                        <a href="{{ path('form_design', { 'id': entity.id }) }}">design</a>
-                    </li>
-                    <li>
-                        <a href="{{ path('form_edit', { 'id': entity.id }) }}">edit</a>
+                        <a href="{{ path('record_new', { 'id': entity.id }) }}">New Record</a>
                     </li>
                 </ul>
                 </td>
@@ -42,11 +36,4 @@
         </tbody>
     </table>
 
-        <ul>
-        <li>
-            <a href="{{ path('form_new') }}">
-                Create a new entry
-            </a>
-        </li>
-    </ul>
     {% endblock %}
