@@ -46,21 +46,17 @@ class RecordController extends Controller
      * @Method("GET")
      * @Template()
      */
-    public function formlistAction(Request $request)
+    public function formlistAction()
     {
-    	$em = $this->getDoctrine()->getManager();
+        $em = $this->getDoctrine()->getManager();
 
         $entities = $em->getRepository('HrisFormBundle:Form')->findAll();
 
         return array(
             'entities' => $entities,
         );
-    
-    	/*return array(
-    			'entity' => $entity,
-    			'form'   => $form->createView(),
-    	);*/
     }
+    
     /**
      * Creates a new Record entity.
      *
