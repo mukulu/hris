@@ -59,15 +59,11 @@
                             <a href="{{ path('user_edit', { 'id': entity.id }) }}"><i class="icon-edit" title="Edit"></i></a>
                         </li>
                         <li>
-                            {#<form action="{{ path('user_delete', { 'id': entity.id }) }}" method="post">#}
-                                {#<input type="hidden" name="_method" value="DELETE" />#}
-                                {#{{ form_widget(delete_form) }}#}
-                                {#<div id="form">#}
-                                    {#<input type="hidden" id="form_id" name="form[id]" value="{{ entity.id }}">#}
-                                    {#<input type="hidden" id="form__token" name="form[_token]" value="0b0875769536195de65044befaf8c2a1e6f0ad25">#}
-                                {#</div>#}
-                                {#<button type="submit"><i class="icon-remove-sing"</button>#}
-                            {#</form>#}
+                            <form action="{{ path('user_delete', { 'id': entity.id }) }}" method="post">
+                                <input type="hidden" name="_method" value="DELETE" />
+                                {{ form_widget(delete_forms[entity.id] ) }}
+                                <button class="icon-remove-sign" type="submit"></button>
+                            </form>
                         </li>
                     </ul>
                     </td>
