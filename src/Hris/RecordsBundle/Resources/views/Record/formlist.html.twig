@@ -1,4 +1,21 @@
 {% extends '::base.html.twig' %}
+{% block javascripts %}
+    {{ parent() }}
+    <script type="text/javascript" src="{{ asset('bundles/hrisrecords/js/indexedb.js') }}"></script>
+
+    <script type="text/javascript">
+        /*
+        Creating the Database if not Existing
+         */
+        createDatabase('hris', '{{ table_name | raw }}', '{{ column_names | raw }}');
+
+        /*
+        Adding Records to the Database for Offline usage
+         */
+        addRecords( '{{ table_name | raw }}', '{{ data_values | raw }}');
+
+    </script>
+{% endblock %}
 
 {% block right_content -%}
     <h1>Form list</h1>
