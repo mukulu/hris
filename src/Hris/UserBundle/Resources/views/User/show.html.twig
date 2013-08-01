@@ -1,9 +1,9 @@
 {% extends '::base.html.twig' %}
 
 {% block right_content -%}
-    <h1>User</h1>
+    <h1><small>User Details</small></h1>
 
-    <table class="record_properties">
+    <table class="record_properties table table-striped table-bordered table-hover">
         <tbody>
             <tr>
                 <th>Username</th>
@@ -88,23 +88,23 @@
         </tbody>
     </table>
 
-        <ul class="record_actions">
-    <li>
-        <a href="{{ path('user') }}">
-            Back to the list
-        </a>
-    </li>
-    <li>
-        <a href="{{ path('user_edit', { 'id': entity.id }) }}">
-            Edit
-        </a>
-    </li>
-    <li>
-        <form action="{{ path('user_delete', { 'id': entity.id }) }}" method="post">
-            <input type="hidden" name="_method" value="DELETE" />
-            {{ form_widget(delete_form) }}
-            <button type="submit">Delete</button>
-        </form>
-    </li>
-</ul>
+    <ul class="record_actions inline">
+        <li>
+            <a href="{{ path('user') }}" class="btn">
+                Back to the list
+            </a>
+        </li>
+        <li>
+            <a href="{{ path('user_edit', { 'id': entity.id }) }}" class="btn">
+                Edit
+            </a>
+        </li>
+        <li>
+            <form action="{{ path('user_delete', { 'id': entity.id }) }}" method="post">
+                <input type="hidden" name="_method" value="DELETE" />
+                {{ form_widget(delete_form) }}
+                <button type="submit" class="btn btn-danger">Delete</button>
+            </form>
+        </li>
+    </ul>
 {% endblock %}
