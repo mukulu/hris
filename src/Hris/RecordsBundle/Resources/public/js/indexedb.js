@@ -165,13 +165,28 @@ function populateDatabase() {
 }
 
 function addRecords(tableName, dataValues) {
+    /*
+    Parsing the object to Json format for further use.
+     */
     tableName = JSON.parse(tableName);
     dataValues = JSON.parse(dataValues);
-    alert(dataValues.name);
-    console.log(dataValues);
+
+
+    for(var i = 0; i < dataValues.length; i++)
+    {
+        console.log( dataValues[i] );
+
+        Object.getOwnPropertyNames(dataValues[i]).forEach(function(val, idx, array) {
+            console.log('"' + val + '":"' + dataValues[i][val] + '"');
+        });
+    }
+
     try {
+        alert(tableName);
+
         var result = document.getElementById("result");
         result.innerHTML = "";
+
 
         var transaction = localDatabase.db.transaction(tableName, "readwrite");
         var store = transaction.objectStore(tableName);
@@ -188,12 +203,12 @@ function addRecords(tableName, dataValues) {
                 "zip_code" : "20500",
             });
             request.onsuccess = function(e) {
-                result.innerHTML = tbName + " record was added successfully.";;
+                result.innerHTML = "Employee record was added successfully.";;
             };
 
             request.onerror = function(e) {
                 console.log(e.value);
-                result.innerHTML = tbName + " record was not added.";
+                result.innerHTML = "Employee record was not added.";
             };
         }
     }

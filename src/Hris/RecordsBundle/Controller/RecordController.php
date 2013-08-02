@@ -2,6 +2,7 @@
 
 namespace Hris\RecordsBundle\Controller;
 
+use Doctrine\ORM\EntityManager;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Bundle\FrameworkBundle\Controller\Controller;
 use Doctrine\ORM\QueryBuilder as QueryBuilder;
@@ -57,16 +58,12 @@ class RecordController extends Controller
     public function formlistAction()
     {
         $em = $this->getDoctrine()->getManager();
-        $qb = new QueryBuilder($em);
 
-        $entities = $em->getRepository( 'HrisFormBundle:Form' )->findAll();
+        $entities = $em->getRepository( 'HrisFormBundle:Form' )->createQueryBuilder('p')->getQuery()->getArrayResult();
 
         $columnNames = json_encode($em->getClassMetadata('HrisFormBundle:Form')->getFieldNames());
         $tableName = json_encode($em->getClassMetadata('HrisFormBundle:Form')->getTableName());
         $dataValues = json_encode($entities);
-
-        var_dump($entities);
-
 
         return array(
             'entities' => $entities,
