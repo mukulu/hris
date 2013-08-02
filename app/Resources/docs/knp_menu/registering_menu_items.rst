@@ -91,19 +91,39 @@ with submenu from your bundle, this function shall be executed on menuGeneration
         {
             $menu = $event->getMenu();
 
-            // Module header
-            $menu->addChild('Sample Module', array(
-                    'uri'=>'#samplemodule','attributes'=>
-                    array('class'=>'nav-header')
+            $menu->addChild('Data Module', array(
+                    'uri'=>'#datamodule',
+                    'extras'=>array('tag'=>'div'),
+                    'name'=>'Data Module',
+                    'attributes'=> array('class'=>'accordion-group'),
                 )
             );
-            // Module menu list
-            $menu->addChild('Functionality1',array('route'=>'functionality_route_alis'));
-            $menu->addChild('Functionality2', array('uri'=>'#functionality_uri'));
-            // Separater of sample module menu and the next.
-            $menu->addChild('',array('attributes'=>array('class'=>'divider')));
+
+            $recordsModule = $menu->getChild('Data Module');
+
+            // Add children menu to Data module
+            $recordsModule->addChild('Data Entry',
+                array('uri'=>'#dataentry',
+                      'extras'=>array('tag'=>'div'),
+                      'name'=>'Data Entry',
+                      'attributes'=> array('class'=>'accordion-group'),
+                )
+            );
+
+            $dataQualityModule->addChild('Validations',
+                array('route'=>'validation_list',
+                    'extras'=>array('tag'=>'div'),
+                    'name'=>'Validations',
+                    'attributes'=> array('class'=>'accordion-group'),
+                )
+            );
         }
     }
+
+.. tip::
+
+    Use 'uri' for url to resource e.g. http://github.com/hrisproject/hris for referring
+    to resources with route names use 'route'.
 
 Now you can register the event listener to services list of services. Services configuration
 can be found under `Resources/config` folder of the bundle, inside `services.yml` file.

@@ -6,7 +6,9 @@
         <title>{% block title %} {{ system_name }} {% endblock %}</title>
         {% block stylesheets %}
             <link rel="stylesheet" href="{{ asset('css/bootstrap.css') }}" />
+            <link rel="stylesheet" href="{{ asset('css/bootstrap.icon-large.min.css') }}" />
             <link rel="stylesheet" href="{{ asset('commons/css/style.css') }}" />
+
         {% endblock %}
         {% block favicon %}
             <link rel="icon" type="image/x-icon" href="{{  asset('favicon.ico') }}" />

@@ -64,3 +64,15 @@ Creating fresh blank new database from existing doctrine entities::
 
     app/console doctrine:database:create
 
+
+Generating Getters and Setters
+-------------------------------
+
+Even though Doctrine now knows how to persist a Product object to the database, the class itself isn't
+really useful yet. Since Product is just a regular PHP class, you need to create getter and setter methods
+(e.g. getName(), setName()) in order to access its properties (since the properties are protected).
+Fortunately, Doctrine can do this for you by running::
+
+    $ php app/console doctrine:generate:entities Hris/UserBundle/Entity/User
+
+

@@ -24,7 +24,7 @@
                 </a>
             </li>
         </ul>
-        <table class="records_list dataTable table table-striped table-bordered zebra-stripped table-hover" cellpadding="0" cellspacing="0" border="0">
+        <table class="records_list dataTable table table-striped table-bordered table-hover" cellpadding="0" cellspacing="0" border="0">
             <thead>
                 <tr>
                     <th>Username</th>
@@ -53,21 +53,42 @@
                     <td>
                     <ul class="inline">
                         <li>
-                            <a href="{{ path('user_show', { 'id': entity.id }) }}"><i class="icon-info-sign" title="Show"></i></a>
+                            <a href="{{ path('user_show', { 'id': entity.id }) }}"><i class="icon-info-sign icon-large" title="Show"></i></a>
                         </li>
                         <li>
-                            <a href="{{ path('user_edit', { 'id': entity.id }) }}"><i class="icon-edit" title="Edit"></i></a>
+                            <a href="{{ path('user_edit', { 'id': entity.id }) }}"><i class="icon-edit icon-large" title="Edit"></i></a>
                         </li>
                         <li>
-                            {#<form action="{{ path('user_delete', { 'id': entity.id }) }}" method="post">#}
-                                {#<input type="hidden" name="_method" value="DELETE" />#}
-                                {#{{ form_widget(delete_form) }}#}
-                                {#<div id="form">#}
-                                    {#<input type="hidden" id="form_id" name="form[id]" value="{{ entity.id }}">#}
-                                    {#<input type="hidden" id="form__token" name="form[_token]" value="0b0875769536195de65044befaf8c2a1e6f0ad25">#}
-                                {#</div>#}
-                                {#<button type="submit"><i class="icon-remove-sing"</button>#}
-                            {#</form>#}
+                            <a data-toggle="modal" href="#deleteModalFor{{ entity.username }}"><i class="icon-remove-sign icon-large" title="Edit"></i></a>
+                            <!-- Modal -->
+                            <div class="modal fade" id="deleteModalFor{{ entity.username }}">
+                                <div class="modal-dialog">
+                                    <div class="modal-content">
+                                        <div class="modal-header">
+                                            <button type="button" class="close" data-dismiss="modal" aria-hidden="true">×</button>
+                                            <h4 class="modal-title">Deleting {{ entity.username }}</h4>
+                                        </div>
+                                        <div class="modal-body">
+                                            Are you sure you want to delete {{ entity.username }} who's account was created on {{ entity.datecreated|date('d/m/Y') }}
+                                            {% if entity.lastLogin %}
+                                                and last logged in on {{ entity.lastLogin|date('H:i:s d/m/Y') }}
+                                            {% else %}
+                                                and
+                                                {% if entity.enabled == 1 %} activated but never used ?? {% else %} never activated ?? {% endif %}
+                                            {% endif %}
+                                        </div>
+                                        <div class="modal-footer">
+                                            <form action="{{ path('user_delete', { 'id': entity.id }) }}" method="post">
+                                                <input type="hidden" name="_method" value="DELETE" />
+                                                {{ form_widget(delete_forms[entity.id] ) }}
+                                                <button type="button" class="btn btn-default" data-dismiss="modal">Close</button>
+                                                <button type="submit" class="btn btn-danger">Delete</button>
+                                            </form>
+                                        </div>
+                                    </div><!-- /.modal-content -->
+                                </div><!-- /.modal-dialog -->
+                            </div><!-- /.modal -->
+
                         </li>
                     </ul>
                     </td>

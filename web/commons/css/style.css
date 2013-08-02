@@ -65,5 +65,5 @@ a.menu:after, .dropdown-toggle:after {
 }
 
 tbody > tr > td > ul.inline {
-    margin: 0px 0px 0px 25px;
+    margin: 0px 0px -25px 25px;
 }

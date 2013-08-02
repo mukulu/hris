@@ -61,7 +61,7 @@ class Record
     private $instance;
     
     /**
-     * @var Hris\OrganisationunitBundle\Entity\Organisationunit $organisationunit
+     * @var \Hris\OrganisationunitBundle\Entity\Organisationunit $organisationunit
      *
      * @ORM\ManyToOne(targetEntity="Hris\OrganisationunitBundle\Entity\Organisationunit")
      * @ORM\JoinColumns({
@@ -71,7 +71,7 @@ class Record
     private $organisationunit;
     
     /**
-     * @var Hris\FormBundle\Entity\Form $form
+     * @var \Hris\FormBundle\Entity\Form $form
      *
      * @ORM\ManyToOne(targetEntity="Hris\FormBundle\Entity\Form",inversedBy="record")
      * @ORM\JoinColumns({
@@ -79,6 +79,14 @@ class Record
      * })
      */
     private $form;
+
+    /**
+     *
+     * @var json_array $value
+     *
+     * @ORM\Column(name="value", type="json_array", nullable=false)
+     */
+    private $value;
 
     /**
      * @var boolean $complete
@@ -398,10 +406,33 @@ class Record
     /**
      * Get form
      *
-     * @return Hris\FormBundle\Entity\Form 
+     * @return \Hris\FormBundle\Entity\Form
      */
     public function getForm()
     {
         return $this->form;
+    }
+
+    /**
+     * Set value
+     *
+     * @param array $value
+     * @return Record
+     */
+    public function setValue($value)
+    {
+        $this->value = $value;
+    
+        return $this;
+    }
+
+    /**
+     * Get value
+     *
+     * @return array 
+     */
+    public function getValue()
+    {
+        return $this->value;
     }
 }
