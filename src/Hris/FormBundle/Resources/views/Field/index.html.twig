@@ -1,9 +1,17 @@
 {% extends '::base.html.twig' %}
 
 {% block right_content -%}
-    <h1>Field list</h1>
+    <h1><small>Field list</small></h1>
 
-    <table class="records_list">
+    <ul class="inline">
+        <li>
+            <a class="btn" href="{{ path('field_new') }}">
+                Create a new entry
+            </a>
+        </li>
+    </ul>
+
+    <table class="records_list dataTable table table-striped table-bordered table-hover">
         <thead>
             <tr>
                 <th>Id</th>
@@ -49,11 +57,4 @@
         </tbody>
     </table>
 
-        <ul>
-        <li>
-            <a href="{{ path('field_new') }}">
-                Create a new entry
-            </a>
-        </li>
-    </ul>
     {% endblock %}
