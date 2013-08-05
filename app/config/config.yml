@@ -25,13 +25,19 @@ framework:
 twig:
     exception_controller:  twig.controller.exception:showAction
 
+    form:
+        resources:
+#            - ':Form:fields.html.twig'
+
     globals:
         # Place Global Variables here, and they will be available in all Twig Templetes.
-            project: "Human Resource for Health Information System (HRHIS)"
+            project: "Human Resource for Health Information System"
+            project_code: "HRHIS"
+            project_site: "https://github.com/hrisproject/hris"
             version: "3.0"
-            system_name: "HRHIS"
             copyright: "Human Resource Information System 2012"
-            client_name: "Ministry of Health And Social Welfare(MoHSW)"
+            client_name: "Ministry of Health And Social Welfare"
+            client_code: "MOHSW"
 
     cache:                     "%kernel.cache_dir%/twig"
     charset:                   "%kernel.charset%"
