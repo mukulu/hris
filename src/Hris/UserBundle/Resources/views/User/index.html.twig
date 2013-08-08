@@ -17,13 +17,7 @@
     <div class="container">
         <h1><small>User list</small></h1>
 
-        <ul class="inline">
-            <li>
-                <a class="btn" href="{{ path('user_new') }}">
-                    Create a new entry
-                </a>
-            </li>
-        </ul>
+
         <table class="records_list dataTable table table-striped table-bordered table-hover" cellpadding="0" cellspacing="0" border="0">
             <thead>
                 <tr>
@@ -59,7 +53,7 @@
                             <a href="{{ path('user_edit', { 'id': entity.id }) }}"><i class="icon-edit icon-large" title="Edit"></i></a>
                         </li>
                         <li>
-                            <a data-toggle="modal" href="#deleteModalFor{{ entity.username }}"><i class="icon-remove-sign icon-large" title="Edit"></i></a>
+                            <a data-toggle="modal" href="#deleteModalFor{{ entity.username }}"><i class="icon-remove-sign icon-large" title="Delete"></i></a>
                             <!-- Modal -->
                             <div class="modal fade" id="deleteModalFor{{ entity.username }}">
                                 <div class="modal-dialog">

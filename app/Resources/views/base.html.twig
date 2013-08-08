@@ -3,7 +3,7 @@
 <html lang="en">
     <head>
         <meta name="viewport" content="width=device-width, initial-scale=1.0">
-        <title>{% block title %} {{ system_name }} {% endblock %}</title>
+        <title>{% block title %} {{ project_code }} {% endblock %}</title>
         {% block stylesheets %}
             <link rel="stylesheet" href="{{ asset('css/bootstrap.css') }}" />
             <link rel="stylesheet" href="{{ asset('css/bootstrap.icon-large.min.css') }}" />
@@ -16,83 +16,91 @@
     </head>
     <body>
         {% block body %}
+            <div id="wrap">
+                {% block navigation_bar %}
+                    <div class="navbar" style="position: static;">
+                        <div class="navbar-inner">
+                            <div class="container">
 
-            {% block navigation_bar %}
-                <div class="navbar" style="position: static;">
-                    <div class="navbar-inner">
-                        <div class="container">
+                                <a class="btn btn-navbar" data-toggle="collapse" data-target=".nav-collapse">
+                                    <span class="icon-bar"></span>
+                                    <span class="icon-bar"></span>
+                                    <span class="icon-bar"></span>
+                                </a>
+                                <a class="brand visible-desktop" href="{{ path('hris_dashboard_homepage') }}"><i class="icon-home"></i>&nbsp;HRHIS</a>
 
-                            <a class="btn btn-navbar" data-toggle="collapse" data-target=".nav-collapse">
-                                <span class="icon-bar"></span>
-                                <span class="icon-bar"></span>
-                                <span class="icon-bar"></span>
-                            </a>
-                            <a class="brand visible-desktop" href="{{ path('hris_dashboard_homepage') }}"><i class="icon-home"></i>&nbsp;HRHIS</a>
+                                <ul class="nav pull-right">
+                                    <li><a class="pull-right visible-desktop" href="{{ path('hris_dashboard_homepage') }}"><i class="icon-time"></i>&nbsp;{{ "now"|date("jS F Y") }}</a></li>
+                                    <li><a class="pull-right visible-desktop" href="#"><i class="icon-info-sign"></i>&nbsp;Help</a></li>
+                                    <li class="dropdown">
+                                        <a href="#" class="dropdown-toggle" data-toggle="dropdown"><i class="icon-user"></i>&nbsp;{{ app.user }} <b class="caret"></b></a>
+                                        <ul class="dropdown-menu">
+                                            <li><a class="pull-right visible-phone" href="#"><i class="icon-info-sign"></i>&nbsp;Help</a></li>
+                                            <li><a href="{{ path('fos_user_profile_show') }}"><i class="icon-picture"></i>&nbsp;Profile</a></li>
+                                            <li><a href="#"><i class="icon-cog"></i>&nbsp;Settings</a></li>
+                                            <li><a href="{{ path('fos_user_change_password') }}"><i class="icon-lock"></i>&nbsp;Change Password</a></li>
+                                            <li class="divider"></li>
+                                            <li><a href="{{ path('fos_user_security_logout') }}"><i class="icon-off"></i>&nbsp;Logout</a></li>
+                                        </ul>
+                                    </li>
+                                </ul>
 
-                            <ul class="nav pull-right">
-                                <li><a class="pull-right visible-desktop" href="{{ path('hris_dashboard_homepage') }}"><i class="icon-time"></i>&nbsp;{{ "now"|date("jS F Y") }}</a></li>
-                                <li><a class="pull-right visible-desktop" href="#"><i class="icon-info-sign"></i>&nbsp;Help</a></li>
-                                <li class="dropdown">
-                                    <a href="#" class="dropdown-toggle" data-toggle="dropdown"><i class="icon-user"></i>&nbsp;{{ app.user }} <b class="caret"></b></a>
-                                    <ul class="dropdown-menu">
-                                        <li><a class="pull-right visible-phone" href="#"><i class="icon-info-sign"></i>&nbsp;Help</a></li>
-                                        <li><a href="{{ path('fos_user_profile_show') }}"><i class="icon-picture"></i>&nbsp;Profile</a></li>
-                                        <li><a href="#"><i class="icon-cog"></i>&nbsp;Settings</a></li>
-                                        <li><a href="{{ path('fos_user_change_password') }}"><i class="icon-lock"></i>&nbsp;Change Password</a></li>
-                                        <li class="divider"></li>
-                                        <li><a href="{{ path('fos_user_security_logout') }}"><i class="icon-off"></i>&nbsp;Logout</a></li>
-                                    </ul>
-                                </li>
-                            </ul>
+                                <form class="navbar-search pull-left" action="">
+                                    <input type="text" class="search-query span2" placeholder="Search" x-webkit-speech="">
+                                </form>
+                                <div class="visible-phone nav-collapse collapse navbar-inverse-collapse">
+                                    {{ knp_menu_render('HrisUserBundle:MainBuilder:build',{'template':':Menu:navbar_menu.html.twig'}) }}
+                                </div>
 
-                            <form class="navbar-search pull-left" action="">
-                                <input type="text" class="search-query span2" placeholder="Search" x-webkit-speech="">
-                            </form>
-                            <div class="visible-phone nav-collapse collapse navbar-inverse-collapse">
-                                {{ knp_menu_render('HrisUserBundle:MainBuilder:build',{'template':':Menu:navbar_menu.html.twig'}) }}
                             </div>
-
                         </div>
                     </div>
-                </div>
-            {% endblock navigation_bar %}
+                {% endblock navigation_bar %}
 
-			{% block banner %}
-			        <div id="banner" class="hidden-phone text-center">
-			            {% block banner_logo %}
-			                <div id="logo">
-			                    <h2>{{ client_name }}</h2>
-			                    <h3>{{ project }}</h3>
-			                </div>
-			            {% endblock banner_logo %}
-			        </div>
-			        <div class="visible-phone text-center">
-			            	<h2 style="color:#000000;">HRHIS 3</h2>
-			        </div>
-			{% endblock banner %}
-            {% block content %}
-
-                <div class="container-fluid" style="margin-top:10px;">
-                    <div class="row-fluid">
-                        <div class="span2">
-                            {% block left_content %}
-                                <!--Sidebar content-->
-                                {{ knp_menu_render('HrisUserBundle:MainBuilder:build',{'template':':Menu:knp_menu.html.twig'}) }}
-                            {% endblock left_content %}
+                {% block banner %}
+                        <div id="banner" class="hidden-phone text-center">
+                            {% block banner_logo %}
+                                <div id="logo">
+                                    <h2>{{ client_name }}({{ client_code }})</h2>
+                                    <h3>{{ project }}({{ project_code }})</h3>
+                                </div>
+                            {% endblock banner_logo %}
                         </div>
-                        <div class="span9" style="padding-left:15px;">
-                            {% block right_content %}
-                            {% endblock right_content %}
+                        <div class="visible-phone text-center">
+                                <h2 style="color:#000000;">{{ project_code }} {{ version }}</h2>
+                        </div>
+                {% endblock banner %}
+
+                {% block content %}
+
+                    <div class="container-fluid" style="margin-top:10px;">
+                        <div class="row-fluid">
+                            <div class="span2">
+                                {% block left_content %}
+                                    <!--Sidebar content-->
+                                    {{ knp_menu_render('HrisUserBundle:MainBuilder:build',{'template':':Menu:knp_menu.html.twig'}) }}
+                                {% endblock left_content %}
+                            </div>
+                            <div class="span9" style="padding-left:15px;">
+                                {% block right_content %}
+                                {% endblock right_content %}
+                            </div>
                         </div>
                     </div>
+
+                {% endblock %}
+            </div>
+            {% block footer %}
+
+                <div id="footer" class="hidden-phone text-center">
+                    <div class="container">
+                        <p class="muted credit">Copyright © 2013  {{ client_name }} - <a href="{{ project_site }}">{{ project }}</a></p>
+                    </div>
+
                 </div>
 
-            {% endblock %}
-			{% block footer %}
-					<div id="footer" class="hidden-phone text-center">
-					    <p>Copyright © 2010  Ministry of Health and Social welfare - Human resource for Health Information System</p>
-		            </div>
-			{% endblock footer %}
+            {% endblock footer %}
+
         {% endblock %}
 
         {% block javascripts %}

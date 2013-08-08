@@ -11,11 +11,11 @@ class FormType extends AbstractType
     public function buildForm(FormBuilderInterface $builder, array $options)
     {
         $builder
-            ->add('uid')
+            ->add('uid','hidden')
             ->add('name')
             ->add('title')
-            ->add('datecreated')
-            ->add('lastupdated')
+            ->add('datecreated','hidden')
+            ->add('lastupdated','hidden')
         ;
     }
 

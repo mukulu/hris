@@ -1,0 +1,36 @@
+{# app/Resources/views/Form/fields.html.twig #}
+{% block form_row %}
+    {% spaceless %}
+        <div class="form_row control-group">
+            {{ form_label(form, null, {'label_attr':{'class':'control-label'}}) }}
+            {% if form_errors(form) %}
+                <div class="alert alert-error">
+                    {{ form_errors(form) }}
+                </div>
+            {% endif %}
+            <div class="controls">
+                {{ form_widget(form) }}
+            </div>
+        </div>
+    {% endspaceless %}
+{% endblock form_row %}
+
+{% block checkbox_widget %}
+
+    {% spaceless %}
+        <div class="control-group">
+            <label  for="{{ id }}">
+                <input type="checkbox"
+                        {{ block('widget_attributes') }}
+                        {% if value is defined %}
+                            value="{{ value }}"
+                        {% endif %}
+                        {% if checked %}
+                            checked="checked"
+                        {% endif %} />
+            {{ label|trans }}</label>
+        </div>
+    {% endspaceless %}
+
+
+{% endblock checkbox_widget %}

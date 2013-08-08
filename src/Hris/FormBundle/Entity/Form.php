@@ -475,6 +475,11 @@ class Form
         $this->formVisibleFields = new \Doctrine\Common\Collections\ArrayCollection();
         $this->dashboardChart = new \Doctrine\Common\Collections\ArrayCollection();
         $this->uid = uniqid();
+
+        if(empty($this->datecreated))
+        {
+            $this->datecreated = new \DateTime('now');
+        }
     }
     
     /**
