@@ -12,7 +12,7 @@
         /*
         Adding Records to the Database for Offline usage
          */
-        addRecords( '{{ table_name | raw }}', '{{ data_values | raw }}');
+        //addRecords( '{{ table_name | raw }}', '{{ data_values | raw }}');
 
     </script>
 {% endblock %}
@@ -52,6 +52,7 @@
         {% endfor %}
         </tbody>
     </table>
+    <button onclick="populateDatabase()">Populate Database</button>
 
     <div id="result" />
     {% endblock %}
