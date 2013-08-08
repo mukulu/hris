@@ -15,188 +15,61 @@ localDatabase.indexedDB.onerror = function (e) {
     console.log("Database error: " + e.target.errorCode);
 };
 
-function openDatabase(databaseName) {
-    var openRequest = localDatabase.indexedDB.open(databaseName);
-    openRequest.onerror = function(e) {
-        console.log("Database error: " + e.target.errorCode);
-    };
-    openRequest.onsuccess = function(event) {
-        localDatabase.db = openRequest.result;
-    };
-}
-
-function createDatabase(databaseName, tableName, columnNames) {
+function createDatabase(databaseName, tableName, columnNames, dataValues) {
     /*
     Parsing the names of columns form strin to Json Format
      */
     columnNames = JSON.parse(columnNames);
     tableName = JSON.parse(tableName);
+    dataValues = JSON.parse(dataValues);
 
-    console.log('Deleting local database');
-    var deleteDbRequest = localDatabase.indexedDB.deleteDatabase(databaseName);
-    deleteDbRequest.onsuccess = function (event) {
-        console.log('Database deleted');
-        var openRequest = localDatabase.indexedDB.open(databaseName,1);
+    var openRequest = indexedDB.open(databaseName);
 
-        openRequest.onerror = function(e) {
-            console.log("Database error: " + e.target.errorCode);
-        };
-        openRequest.onsuccess = function(event) {
-            console.log("Database created");
-            localDatabase.db = openRequest.result;
-        };
-        openRequest.onupgradeneeded = function (evt) {
-            console.log('Creating object stores');
-            var dataStore = evt.currentTarget.result.createObjectStore
-            (tableName, {keyPath: "id"});
+    openRequest.onupgradeneeded = function() {
+        // The database did not previously exist, so create object stores and indexes.
+        var db = openRequest.result;
+        var dataStore = db.createObjectStore(tableName, {keyPath: "uid"});
+        console.log("data Store " + tableName + " Created");
 
-            /*
-            Creating the Columns for data Storage
-             */
-            for (var key in columnNames){
-                var column_name = columnNames[key];
+        /*
+         Creating the Columns for data Storage
+         */
+        for (var key in columnNames){
+            var column_name = columnNames[key];
 
-                dataStore.createIndex(column_name, "state", { unique: false });
-            }
-        };
-        deleteDbRequest.onerror = function (e) {
-            console.log("Database error: " + e.target.errorCode);
+            dataStore.createIndex(column_name, column_name, { unique: false });
+            console.log("data Store Column '" + column_name + "' Added");
+        }
+    };
+
+    openRequest.onsuccess = function() {
+        db = openRequest.result;
+        console.log("this is done deal");
+
+        var transaction = db.transaction("hris_form", "readwrite");
+        var store = transaction.objectStore("hris_form");
+
+        var results = '{';
+
+        for (var key in dataValues){
+            Object.getOwnPropertyNames(dataValues[key]).forEach(function(val, idx, array) {
+                results += '"'+ val + '" : "' + dataValues[key][val] +'", ';
+            });
+
+            console.log("this is the name " + results.name);
+            results = results.slice(0,-2);
+            results += '}';
+            console.log(results);
+            store.put( JSON.parse(results) );
+            console.log("Results has been update");
+            var results = '{';
+        }
+
+        transaction.oncomplete = function() {
+            // All requests have succeeded and the transaction has committed.
+            console.log("All transaction done");
         };
 
     };
-}
 
-function addRecords(tableName, dataValues) {
-    console.log("populating database");
-
-    var tx = localDatabase.db.transaction("hris_form", "readwrite");
-    var store = tx.objectStore("hris_form");
-
-    if (localDatabase != null && localDatabase.db != null) {
-        /*
-        Start of store function to send data to database
-         */
-        console.log("populating database with unknown data for testing");
-        var request = store.put({
-            "id": "E1",
-            "first_name" : "Joe",
-            "last_name" : "Smith",
-            "email" : "joe.smith@somedomain.com",
-            "street" : "123 Main Street",
-            "city" : "New York",
-            "state" : "New York",
-            "zip_code" : "10016",
-        });
-        request.onsuccess = function(e) {
-            console.log("Added E1");
-        };
-
-        request.onerror = function(e) {
-            console.log(e.value);
-        };
-
-        tx.oncomplete = function() {
-            console.log("All data is entered into the system");
-        };
-        // end of transactions
-
-    }
-}
-
-function populateDatabase() {
-    console.log("populating database");
-    var transaction = localDatabase.db.transaction("employees", "readwrite");
-    var store = transaction.objectStore("employees");
-
-    if (localDatabase != null && localDatabase.db != null) {
-        var request = store.put({
-            "id": "E1",
-            "first_name" : "Joe",
-            "last_name" : "Smith",
-            "email" : "joe.smith@somedomain.com",
-            "street" : "123 Main Street",
-            "city" : "New York",
-            "state" : "New York",
-            "zip_code" : "10016",
-        });
-        request.onsuccess = function(e) {
-            console.log("Added E1");
-        };
-
-        request.onerror = function(e) {
-            console.log(e.value);
-        };
-
-        request = store.put({
-            "id": "E2",
-            "first_name" : "John",
-            "last_name" : "Jones",
-            "email" : "john.jones@somedomain.com",
-            "street" : "999 Main Street",
-            "city" : "New York",
-            "state" : "New York",
-            "zip_code" : "10016",
-        });
-        request.onsuccess = function(e) {
-            console.log("Added E2");
-        };
-
-        request.onerror = function(e) {
-            console.log(e.value);
-        };
-        request = store.put({
-            "id": "E3",
-            "first_name" : "John",
-            "last_name" : "Adams",
-            "email" : "john.adams@somedomain.com",
-            "street" : "1 First Street",
-            "city" : "San Franciso",
-            "state" : "California",
-            "zip_code" : "94118",
-        });
-        request.onsuccess = function(e) {
-            console.log("Added E3");
-        };
-
-        request.onerror = function(e) {
-            console.log(e.value);
-        };
-        request = store.put({
-            "id": "E4",
-            "first_name" : "Jane",
-            "last_name" : "Adams",
-            "email" : "jane.adams@somedomain.com",
-            "street" : "2 Second Street",
-            "city" : "San Franciso",
-            "state" : "California",
-            "zip_code" : "92101",
-        });
-
-        request.onsuccess = function(e) {
-            console.log("Added E4");
-        };
-
-        request.onerror = function(e) {
-            console.log(e.value);
-        };
-
-        request = store.put({
-            "id": "E5",
-            "first_name" : "Jane",
-            "last_name" : "Davis",
-            "email" : "jane.davis@somedomain.com",
-            "street" : "3 Third Street",
-            "city" : "San Franciso",
-            "state" : "California",
-            "zip_code" : "92100",
-        });
-
-        request.onsuccess = function(e) {
-            console.log("Added E5");
-        };
-
-        request.onerror = function(e) {
-            console.log(e.value);
-        };
-    }
 }

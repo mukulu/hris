@@ -4,17 +4,17 @@
     <script type="text/javascript" src="{{ asset('bundles/hrisrecords/js/indexedb.js') }}"></script>
 
     <script type="text/javascript">
+
         /*
         Creating the Database if not Existing
          */
-        createDatabase('hris', '{{ table_name | raw }}', '{{ column_names | raw }}');
+        createDatabase('hris2', '{{ table_name | raw }}', '{{ column_names | raw }}', '{{ data_values | raw }}');
 
-        /*
-        Adding Records to the Database for Offline usage
-         */
-        //addRecords( '{{ table_name | raw }}', '{{ data_values | raw }}');
+        //populateDatabase();
+
 
     </script>
+
 {% endblock %}
 
 {% block right_content -%}
