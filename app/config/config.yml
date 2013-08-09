@@ -122,6 +122,9 @@ fos_user:
     db_driver: orm # other valid values are 'mongodb', 'couchdb' and 'propel'
     firewall_name: secured_area
     user_class: Hris\UserBundle\Entity\User
+    registration:
+        confirmation:
+            enabled: true
 #KnpMenuBundle Configurations
 knp_menu:
    templating: false # if true, enables the helper for PHP templates
