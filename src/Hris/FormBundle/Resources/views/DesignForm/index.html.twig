@@ -5,10 +5,14 @@
 	    {{ tinymce_init() }}
 
 	    {{ form_widget(form.hypertext, { 'attr': { 'class': 'tinymce', 'data-theme' : 'advanced' } } ) }}
-	    <p>
-    		<button type="submit">Edit</button>
-    	</p>
+        <p style="margin-top:10px;float: left;">
+                <button type="submit" class="btn">Edit</button>
+	    </p>
     {{ form_end(form) }}
+        <a href="{{ path('form') }}" class="btn" style="float:right; margin-top:-10px;">
+            Back to the list
+        </a>
+
     
 {% endblock %}
  

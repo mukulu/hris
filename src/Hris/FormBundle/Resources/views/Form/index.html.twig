@@ -12,6 +12,7 @@
 {% endblock stylesheets %}
 
 {% block right_content -%}
+<div class="container">
     <h1><small>Form list</small></h1>
     <ul class="inline">
         <li>
@@ -59,10 +60,10 @@
                                     <div class="modal-content">
                                         <div class="modal-header">
                                             <button type="button" class="close" data-dismiss="modal" aria-hidden="true">×</button>
-                                            <h4 class="modal-title">Deleting {{ entity.name }}</h4>
+                                            <h4 class="modal-title"><i class="icon-circle-remove icon-largest" title="Delete"></i>Deleting <strong>{{ entity.name | capitalize }}</strong></h4>
                                         </div>
                                         <div class="modal-body">
-                                            Are you sure you want to delete {{ entity.name }} who's account was created on {{ entity.datecreated|date('d/m/Y') }}
+                                            Are you sure you want to delete <strong>{{ entity.name | capitalize }}</strong> who's account was created on <em>{{ entity.datecreated|date('d/m/Y') }}</em>
                                             {% if entity.lastUpdated %}
                                                 and last updated on {{ entity.lastUpdated|date('H:i:s d/m/Y') }} ??
                                             {% else %}
@@ -88,6 +89,6 @@
         {% endfor %}
         </tbody>
     </table>
-
+    </div>
 
     {% endblock %}

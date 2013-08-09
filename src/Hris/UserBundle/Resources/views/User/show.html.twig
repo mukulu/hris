@@ -1,7 +1,7 @@
 {% extends '::base.html.twig' %}
 
 {% block right_content -%}
-    <h1><small>{{ entity.username | capitalize }}'s Account Details</small></h1>
+    <h1><i class="icon-circle-info icon-largest" title="Show"></i> <small>{{ entity.username | capitalize }}'s Account Details</small></h1>
 
     <table class="record_properties table table-striped table-bordered table-hover">
         <tbody>
@@ -108,7 +108,7 @@
                     <div class="modal-content">
                         <div class="modal-header">
                             <button type="button" class="close" data-dismiss="modal" aria-hidden="true">×</button>
-                            <h4 class="modal-title">Deleting {{ entity.username | capitalize }}</h4>
+                            <h4 class="modal-title"><i class="icon-circle-remove icon-largest" title="Delete"></i>Deleting {{ entity.username | capitalize }}</h4>
                         </div>
                         <div class="modal-body">
                             Are you sure you want to delete <strong>{{ entity.username | capitalize }}</strong> who's account was created on <em>{{ entity.datecreated|date('d/m/Y') }}</em>

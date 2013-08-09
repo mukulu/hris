@@ -60,10 +60,10 @@
                                     <div class="modal-content">
                                         <div class="modal-header">
                                             <button type="button" class="close" data-dismiss="modal" aria-hidden="true">×</button>
-                                            <h4 class="modal-title">Deleting {{ entity.username }}</h4>
+                                            <h4 class="modal-title"><i class="icon-circle-remove icon-largest" title="Delete"></i>Deleting <strong>{{ entity.username | capitalize }}</strong></h4>
                                         </div>
                                         <div class="modal-body">
-                                            Are you sure you want to delete {{ entity.username }} who's account was created on {{ entity.datecreated|date('d/m/Y') }}
+                                            Are you sure you want to delete <strong>{{ entity.username | capitalize }}</strong> who's account was created on <em>{{ entity.datecreated|date('d/m/Y') }}</em>
                                             {% if entity.lastLogin %}
                                                 and last logged in on {{ entity.lastLogin|date('H:i:s d/m/Y') }}
                                             {% else %}
