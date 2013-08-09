@@ -2,8 +2,12 @@
 
 namespace Hris\RecordsBundle\Controller;
 
+use Doctrine\ORM\EntityManager;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Bundle\FrameworkBundle\Controller\Controller;
+use Doctrine\ORM\QueryBuilder as QueryBuilder;
+use FOS\UserBundle\Doctrine;
+use Doctrine\ORM\Internal\Hydration\ObjectHydrator  as DoctrineHydrator;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Method;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Route;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Template;
@@ -12,6 +16,10 @@ use Hris\RecordsBundle\Form\RecordType;
 use Hris\FormBundle\Entity\Form;
 use Hris\FormBundle\Form\FormType;
 use Hris\FormBundle\Form\DesignFormType;
+
+use Symfony\Component\Serializer\Serializer;
+use Symfony\Component\Serializer\Normalizer\GetSetMethodNormalizer;
+use Symfony\Component\Serializer\Encoder\JsonEncoder;
 
 /**
  * Record controller.
@@ -51,10 +59,17 @@ class RecordController extends Controller
     {
         $em = $this->getDoctrine()->getManager();
 
-        $entities = $em->getRepository('HrisFormBundle:Form')->findAll();
+        $entities = $em->getRepository( 'HrisFormBundle:Form' )->createQueryBuilder('p')->getQuery()->getArrayResult();
+
+        $columnNames = json_encode($em->getClassMetadata('HrisFormBundle:Form')->getFieldNames());
+        $tableName = json_encode($em->getClassMetadata('HrisFormBundle:Form')->getTableName());
+        $dataValues = json_encode($entities);
 
         return array(
             'entities' => $entities,
+            'column_names' => $columnNames,
+            'table_name' => $tableName,
+            'data_values' => $dataValues,
         );
     }
     

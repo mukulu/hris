@@ -176,8 +176,8 @@ stfalcon_tinymce:
         # Custom buttons
         tinymce_buttons:
             stfalcon: # Id of the first button
-                title: "Stfalcon"
-                image: "http://stfalcon.com/favicon.ico"
+                title: "Fields list"
+                image: "asset[bundles/hrisform/img/list.ico]"
         theme:
             # Simple theme: same as default theme
             simple: ~
