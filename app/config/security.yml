@@ -16,6 +16,10 @@ security:
 
     access_control:
         - { path: ^/login, roles: IS_AUTHENTICATED_ANONYMOUSLY }
+        - { path: ^/register, roles: IS_AUTHENTICATED_ANONYMOUSLY }
+        - { path: ^/resetting/request, roles: IS_AUTHENTICATED_ANONYMOUSLY }
+        - { path: ^/resetting/send-email, roles: IS_AUTHENTICATED_ANONYMOUSLY }
+        - { path: ^/resetting/check-email, roles: IS_AUTHENTICATED_ANONYMOUSLY }
         - { path: ^/, roles: ROLE_USER }
         
         #- { path: ^/login, roles: IS_AUTHENTICATED_ANONYMOUSLY}

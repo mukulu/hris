@@ -1,0 +1,5 @@
+{% extends "HrisUserBundle::layout.html.twig" %}
+
+{% block right_content %}
+    <p>{{ 'registration.check_email'|trans({'%email%': user.email}, 'FOSUserBundle') }}</p>
+{% endblock right_content %}

@@ -1,0 +1,9 @@
+{% extends "FOSUserBundle::layout.html.twig" %}
+
+{% block fos_user_content %}
+<div class="form-signin">
+    <div class="well">
+        {% include "HrisUserBundle:Resetting:request_content.html.twig" %}
+    </div>
+</div>
+{% endblock fos_user_content %}

@@ -35,7 +35,7 @@
 			    <input type="password" placeholder="{{ 'security.login.password'|trans({}, 'FOSUserBundle') }}" id="password" name="_password" placeholder="" class="input-medium">
 			    <label class="checkbox">
 					<input type="checkbox" id="remember_me" name="_remember_me" value="on"> {{ 'security.login.remember_me'|trans({}, 'FOSUserBundle') }}
-					<a href="#" class="btn btn-link">Forgot my password</a>
+					<a href="{{ path('fos_user_resetting_request') }}" class="btn btn-link">Forgot my password</a>
 				</label>
 				  <div class="control-group">
 						<div class="controls">
@@ -55,21 +55,19 @@
 			  </form>                
 			</div>
 			<div class="tab-pane fade" id="create">
-			  <form id="tab">
-				<label>{{ 'security.login.create_account'|trans({}, 'FOSUserBundle') }}</label>
-				<input type="text" value="" class="input-medium">
-				<label>First Name</label>
-				<input type="text" value="" class="input-medium">
-				<label>Last Name</label>
-				<input type="text" value="" class="input-medium">
-				<label>Email</label>
-				<input type="text" value="" class="input-medium">
-				</textarea>
+                <form action="{{ path('fos_user_registration_register') }}" {{ form_enctype(form) }}id="tab" method="POST" class="fos_user_registration_register">
+                    {{ form_widget(form) }}
+                    {% if error %}
+                        <div class="alert alert-error">
+                            <button type="button" class="close" data-dismiss="alert">×</button>
+                            <strong>{{ 'security.login.access_denied'|trans({}, 'FOSUserBundle') }}</strong> {{ error|trans({}, 'FOSUserBundle') }}
+                        </div>
+                    {% endif %}
+                    <div>
+                        <input class="btn btn-primary" type="submit" value="{{ 'registration.submit'|trans({}, 'FOSUserBundle') }}" />
+                    </div>
+                </form>
 
-				<div>
-				  <button class="btn btn-primary">Create Account</button>
-				</div>
-			  </form>
 			</div>
 		</div>
 	  </div>
