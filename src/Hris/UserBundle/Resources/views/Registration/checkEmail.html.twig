@@ -1,5 +1,5 @@
 {% extends "HrisUserBundle::layout.html.twig" %}
 
 {% block right_content %}
-    <p>{{ 'registration.check_email'|trans({'%email%': user.email}, 'FOSUserBundle') }}</p>
+    <h1><small>{{ 'registration.check_email'|trans({'%email%': user.email}, 'FOSUserBundle') }}</small></h1>
 {% endblock right_content %}
