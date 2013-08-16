@@ -26,6 +26,7 @@ namespace Hris\OrganisationunitBundle\Entity;
 
 use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\ORM\Mapping as ORM;
+use Gedmo\Mapping\Annotation as Gedmo;
 
 use Hris\DashboardBundle\Entity\DashboardChart;
 use Hris\OrganisationunitBundle\Entity\OrganisationunitStructure;
@@ -37,6 +38,8 @@ use Hris\OrganisationunitBundle\Entity\OrganisationunitGroup;
  *
  * @ORM\Table(name="hris_organisationunit",uniqueConstraints={@ORM\UniqueConstraint(name="organisationunits_with_one_parent_idx",columns={"longname", "parent_id"})})
  * @ORM\Entity(repositoryClass="Hris\OrganisationunitBundle\Entity\OrganisationunitRepository")
+ * @Gedmo\Loggable
+ * @Gedmo\SoftDeleteable(fieldName="deletedAt")
  */
 class Organisationunit
 {
@@ -59,6 +62,7 @@ class Organisationunit
     /**
      * @var string $dhisUid
      *
+     * @Gedmo\Versioned
      * @ORM\Column(name="dhisUid", type="string", length=11, unique=true, nullable=true)
      */
     private $dhisUid;
@@ -90,6 +94,7 @@ class Organisationunit
     /**
      * @var string $code
      *
+     * @Gedmo\Versioned
      * @ORM\Column(name="code", type="string", length=25, nullable=true, unique=true)
      */
     private $code;
@@ -97,6 +102,7 @@ class Organisationunit
     /**
      * @var \Hris\OrganisationunitBundle\Entity\Organisationunit $parent
      *
+     * @Gedmo\Versioned
      * @ORM\ManyToOne(targetEntity="Hris\OrganisationunitBundle\Entity\Organisationunit")
      * @ORM\JoinColumns({
      *   @ORM\JoinColumn(name="parent_id", referencedColumnName="id", nullable=true, onDelete="CASCADE")
@@ -107,6 +113,7 @@ class Organisationunit
     /**
      * @var string $shortname
      *
+     * @Gedmo\Versioned
      * @ORM\Column(name="shortname", type="string", length=20, unique=true)
      */
     private $shortname;
@@ -114,6 +121,7 @@ class Organisationunit
     /**
      * @var string $longname
      *
+     * @Gedmo\Versioned
      * @ORM\Column(name="longname", type="string", length=64)
      */
     private $longname;
@@ -121,6 +129,7 @@ class Organisationunit
     /**
      * @var boolean $active
      *
+     * @Gedmo\Versioned
      * @ORM\Column(name="active", type="boolean", nullable=false)
      */
     private $active;
@@ -128,6 +137,7 @@ class Organisationunit
     /**
      * @var \DateTime $openingdate
      *
+     * @Gedmo\Versioned
      * @ORM\Column(name="openingdate", type="date", nullable=true)
      */
     private $openingdate;
@@ -135,6 +145,7 @@ class Organisationunit
     /**
      * @var \DateTime $closingdate
      *
+     * @Gedmo\Versioned
      * @ORM\Column(name="closingdate", type="date", nullable=true)
      */
     private $closingdate;
@@ -142,6 +153,7 @@ class Organisationunit
     /**
      * @var string $geocode
      *
+     * @Gedmo\Versioned
      * @ORM\Column(name="geocode", type="string", length=255, nullable=true)
      */
     private $geocode;
@@ -149,6 +161,7 @@ class Organisationunit
     /**
      * @var string $coordinates
      *
+     * @Gedmo\Versioned
      * @ORM\Column(name="coordinates", type="text", nullable=true)
      */
     private $coordinates;
@@ -156,6 +169,7 @@ class Organisationunit
     /**
      * @var string $featuretype
      *
+     * @Gedmo\Versioned
      * @ORM\Column(name="featuretype", type="string", length=20, nullable=true)
      */
     private $featuretype;
@@ -163,6 +177,7 @@ class Organisationunit
     /**
      * @var string $address
      *
+     * @Gedmo\Versioned
      * @ORM\Column(name="address", type="text", nullable=true)
      */
     private $address;
@@ -170,6 +185,7 @@ class Organisationunit
     /**
      * @var string $email
      *
+     * @Gedmo\Versioned
      * @ORM\Column(name="email", type="string", length=150, nullable=true)
      */
     private $email;
@@ -177,6 +193,7 @@ class Organisationunit
     /**
      * @var string $phonenumber
      *
+     * @Gedmo\Versioned
      * @ORM\Column(name="phonenumber", type="string", length=150, nullable=true)
      */
     private $phonenumber;
@@ -184,6 +201,7 @@ class Organisationunit
     /**
      * @var string $contactperson
      *
+     * @Gedmo\Versioned
      * @ORM\Column(name="contactperson", type="string", length=150, nullable=true)
      */
     private $contactperson;
@@ -191,6 +209,7 @@ class Organisationunit
     /**
      * @var string $description
      *
+     * @Gedmo\Versioned
      * @ORM\Column(name="description", type="text", nullable=true)
      */
     private $description;
@@ -275,6 +294,7 @@ class Organisationunit
     /**
      * @var \DateTime $datecreated
      *
+     * @Gedmo\Timestampable(on="create")
      * @ORM\Column(name="datecreated", type="datetime")
      */
     private $datecreated;
@@ -282,6 +302,7 @@ class Organisationunit
     /**
      * @var \DateTime $lastupdated
      *
+     * @Gedmo\Timestampable(on="update")
      * @ORM\Column(name="lastupdated", type="datetime", nullable=true)
      */
     private $lastupdated;
@@ -882,7 +903,7 @@ class Organisationunit
     /**
      * Get level1OrganisationunitStructure
      *
-     * @return Doctrine\Common\Collections\Collection 
+     * @return \Doctrine\Common\Collections\Collection
      */
     public function getLevel1OrganisationunitStructure()
     {
@@ -915,7 +936,7 @@ class Organisationunit
     /**
      * Get level2OrganisationunitStructure
      *
-     * @return Doctrine\Common\Collections\Collection 
+     * @return \Doctrine\Common\Collections\Collection
      */
     public function getLevel2OrganisationunitStructure()
     {
@@ -948,7 +969,7 @@ class Organisationunit
     /**
      * Get level3OrganisationunitStructure
      *
-     * @return Doctrine\Common\Collections\Collection 
+     * @return \Doctrine\Common\Collections\Collection
      */
     public function getLevel3OrganisationunitStructure()
     {
@@ -981,7 +1002,7 @@ class Organisationunit
     /**
      * Get level4OrganisationunitStructure
      *
-     * @return Doctrine\Common\Collections\Collection 
+     * @return \Doctrine\Common\Collections\Collection
      */
     public function getLevel4OrganisationunitStructure()
     {
@@ -1014,7 +1035,7 @@ class Organisationunit
     /**
      * Get level5OrganisationunitStructure
      *
-     * @return Doctrine\Common\Collections\Collection 
+     * @return \Doctrine\Common\Collections\Collection
      */
     public function getLevel5OrganisationunitStructure()
     {
@@ -1047,7 +1068,7 @@ class Organisationunit
     /**
      * Get level6OrganisationunitStructure
      *
-     * @return Doctrine\Common\Collections\Collection 
+     * @return \Doctrine\Common\Collections\Collection
      */
     public function getLevel6OrganisationunitStructure()
     {
@@ -1080,7 +1101,7 @@ class Organisationunit
     /**
      * Get level7OrganisationunitStructure
      *
-     * @return Doctrine\Common\Collections\Collection 
+     * @return \Doctrine\Common\Collections\Collection
      */
     public function getLevel7OrganisationunitStructure()
     {
@@ -1113,7 +1134,7 @@ class Organisationunit
     /**
      * Get level8OrganisationunitStructure
      *
-     * @return Doctrine\Common\Collections\Collection 
+     * @return \Doctrine\Common\Collections\Collection
      */
     public function getLevel8OrganisationunitStructure()
     {
@@ -1179,7 +1200,7 @@ class Organisationunit
     /**
      * Get level10OrganisationunitStructure
      *
-     * @return Doctrine\Common\Collections\Collection 
+     * @return \Doctrine\Common\Collections\Collection
      */
     public function getLevel10OrganisationunitStructure()
     {

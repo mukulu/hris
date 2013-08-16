@@ -52,6 +52,13 @@ class User extends BaseUser
     protected $id;
 
     /**
+     * @var string $uid
+     *
+     * @ORM\Column(name="uid", type="string", length=13, unique=true)
+     */
+    private $uid;
+
+    /**
      * @var string $username
      * @Gedmo\Versioned
      */
@@ -153,6 +160,7 @@ class User extends BaseUser
     public function __construct()
     {
         parent::__construct();
+        $this->uid = uniqid();
         if(empty($this->datecreated))
         {
             $this->datecreated = new \DateTime('now');
@@ -168,6 +176,29 @@ class User extends BaseUser
     public function getId()
     {
         return $this->id;
+    }
+
+    /**
+     * Set uid
+     *
+     * @param string $uid
+     * @return Organisationunit
+     */
+    public function setUid($uid)
+    {
+        $this->uid = $uid;
+
+        return $this;
+    }
+
+    /**
+     * Get uid
+     *
+     * @return string
+     */
+    public function getUid()
+    {
+        return $this->uid;
     }
 
 

@@ -65,7 +65,20 @@ In order to set the username, when adding the loggeable listener you need to set
         private $id;
 
         /**
+         * @Gedmo\Timestampable(on="create")
+         * @ORM\Column(name="created", type="datetime")
+         */
+        private $created;
+
+        /**
+         * @ORM\Column(name="updated", type="datetime")
+         * @Gedmo\Timestampable(on="update")
+         */
+        private $updated;
+
+        /**
          * @Gedmo\Versioned
+         * @Gedmo\Translatable
          * @ORM\Column(name="title", type="string", length=8)
          */
         private $title;

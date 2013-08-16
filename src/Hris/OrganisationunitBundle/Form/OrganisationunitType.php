@@ -11,29 +11,15 @@ class OrganisationunitType extends AbstractType
     public function buildForm(FormBuilderInterface $builder, array $options)
     {
         $builder
-            ->add('uid')
-            ->add('dhisUid')
             ->add('code')
             ->add('shortname')
             ->add('longname')
             ->add('active')
-            ->add('openingdate')
-            ->add('closingdate')
-            ->add('geocode')
-            ->add('coordinates')
-            ->add('featuretype')
             ->add('address')
             ->add('email')
             ->add('phonenumber')
             ->add('contactperson')
             ->add('description')
-            ->add('datecreated')
-            ->add('lastupdated')
-            ->add('userInfo')
-            ->add('organisationunitGroup')
-            ->add('dashboardChart')
-            ->add('parent')
-            ->add('organisationunitStructure')
         ;
     }
 
