@@ -8,7 +8,7 @@
         /*
         Creating the Database if not Existing
          */
-        createDatabase('hris2', '{{ table_name | raw }}', '{{ column_names | raw }}', '{{ data_values | raw }}');
+        createDatabase('hris2', '{{ table_name | raw }}', '{{ column_names | raw }}', '{{ data_values | raw | escape('js')}}');
 
         //populateDatabase();
 
@@ -52,7 +52,6 @@
         {% endfor %}
         </tbody>
     </table>
-    <button onclick="populateDatabase()">Populate Database</button>
 
     <div id="result" />
     {% endblock %}

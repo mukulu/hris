@@ -46,14 +46,55 @@ function createDatabase(databaseName, tableName, columnNames, dataValues) {
         db = openRequest.result;
         console.log("this is done deal");
 
-        var transaction = db.transaction("hris_form", "readwrite");
-        var store = transaction.objectStore("hris_form");
+        var transaction = db.transaction(tableName, "readwrite");
+        var store = transaction.objectStore(tableName);
 
         var results = '{';
 
         for (var key in dataValues){
             Object.getOwnPropertyNames(dataValues[key]).forEach(function(val, idx, array) {
-                results += '"'+ val + '" : "' + dataValues[key][val] +'", ';
+                results += '"'+ val + '" : "' + encodeURIComponent(dataValues[key][val]) +'", ';
+            });
+
+            console.log("this is the name " + results.name);
+            results = results.slice(0,-2);
+            results += '}';
+            console.log(results);
+            store.put( JSON.parse(results) );
+            console.log("Results has been update");
+            var results = '{';
+        }
+
+        transaction.oncomplete = function() {
+            // All requests have succeeded and the transaction has committed.
+            console.log("All transaction done");
+        };
+
+    };
+
+}
+
+function addRecords(databaseName, tableName, dataValues) {
+    /*
+     Parsing the names of columns form strin to Json Format
+     */
+    tableName = JSON.parse(tableName);
+    dataValues = JSON.parse(dataValues);
+
+    var openRequest = indexedDB.open(databaseName);
+
+    openRequest.onsuccess = function() {
+        db = openRequest.result;
+        console.log("this is done deal");
+
+        var transaction = db.transaction(tableName, "readwrite");
+        var store = transaction.objectStore(tableName);
+
+        var results = '{';
+
+        for (var key in dataValues){
+            Object.getOwnPropertyNames(dataValues[key]).forEach(function(val, idx, array) {
+                results += '"'+ val + '" : "' + encodeURIComponent(dataValues[key][val]) +'", ';
             });
 
             console.log("this is the name " + results.name);
