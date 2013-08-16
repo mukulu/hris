@@ -4,26 +4,10 @@ The Book
 .. toctree::
     :hidden:
 
-    http_fundamentals
+    templating
+    map
     from_flat_php_to_symfony2
-    installation
-    page_creation
-    controller
-    routing
-    templating
-    doctrine
-    propel
-    testing
-    validation
     forms
-    security
-    http_cache
-    translation
-    service_container
-    performance
-    internals
-    stable_api
-    templating
-    forms
+    database_logging
 
 .. include:: /book/map.rst.inc

@@ -50,6 +50,60 @@ class User extends BaseUser
      * @ORM\GeneratedValue(strategy="AUTO")
      */
     protected $id;
+
+    /**
+     * @var string $username
+     * @Gedmo\Versioned
+     */
+    protected $username;
+
+    /**
+     * @var string
+     * @Gedmo\Versioned
+     */
+    protected $usernameCanonical;
+
+    /**
+     * @var string
+     * @Gedmo\Versioned
+     */
+    protected $email;
+
+    /**
+     * @var string
+     * @Gedmo\Versioned
+     */
+    protected $emailCanonical;
+
+    /**
+     * @var boolean
+     * @Gedmo\Versioned
+     */
+    protected $enabled;
+
+    /**
+     * The salt to use for hashing
+     *
+     * @var string
+     * @Gedmo\Versioned
+     */
+    protected $salt;
+
+    /**
+     * Encrypted password. Must be persisted.
+     *
+     * @var string
+     * @Gedmo\Versioned
+     */
+    protected $password;
+
+    /**
+     * Plain password. Used for model validation. Must not be persisted.
+     *
+     * @var string
+     * @Gedmo\Versioned
+     */
+    protected $plainPassword;
     
     /**
      * @var \Hris\UserBundle\Entity\UserInfo $userInfo

@@ -14,8 +14,8 @@ class FormType extends AbstractType
             ->add('uid','hidden')
             ->add('name')
             ->add('title')
-            ->add('datecreated','hidden')
-            ->add('lastupdated','hidden')
+            ->add('datecreated')
+            ->add('lastupdated')
         ;
     }
 
