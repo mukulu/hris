@@ -1,14 +1,22 @@
 {% extends '::base.html.twig' %}
 
 {% block right_content -%}
-    <h1><small>FieldGroup list</small></h1>
+    <h1><small>FieldOption list</small></h1>
+
+    <ul class="inline">
+        <li>
+            <a class="btn" href="{{ path('fieldoption_new') }}">
+                Create a new entry
+            </a>
+        </li>
+    </ul>
 
     <table class="records_list dataTable table table-striped table-bordered table-hover">
         <thead>
             <tr>
                 <th>Id</th>
                 <th>Uid</th>
-                <th>Name</th>
+                <th>Value</th>
                 <th>Description</th>
                 <th>Datecreated</th>
                 <th>Lastupdated</th>
@@ -18,19 +26,19 @@
         <tbody>
         {% for entity in entities %}
             <tr>
-                <td><a href="{{ path('fieldgroup_show', { 'id': entity.id }) }}">{{ entity.id }}</a></td>
+                <td><a href="{{ path('fieldoption_show', { 'id': entity.id }) }}">{{ entity.id }}</a></td>
                 <td>{{ entity.uid }}</td>
-                <td>{{ entity.name }}</td>
+                <td>{{ entity.value }}</td>
                 <td>{{ entity.description }}</td>
                 <td>{% if entity.datecreated %}{{ entity.datecreated|date('Y-m-d H:i:s') }}{% endif %}</td>
                 <td>{% if entity.lastupdated %}{{ entity.lastupdated|date('Y-m-d H:i:s') }}{% endif %}</td>
                 <td>
                 <ul>
                     <li>
-                        <a href="{{ path('fieldgroup_show', { 'id': entity.id }) }}">show</a>
+                        <a href="{{ path('fieldoption_show', { 'id': entity.id }) }}">show</a>
                     </li>
                     <li>
-                        <a href="{{ path('fieldgroup_edit', { 'id': entity.id }) }}">edit</a>
+                        <a href="{{ path('fieldoption_edit', { 'id': entity.id }) }}">edit</a>
                     </li>
                 </ul>
                 </td>
@@ -38,12 +46,4 @@
         {% endfor %}
         </tbody>
     </table>
-
-        <ul>
-        <li>
-            <a href="{{ path('fieldgroup_new') }}">
-                Create a new entry
-            </a>
-        </li>
-    </ul>
     {% endblock %}

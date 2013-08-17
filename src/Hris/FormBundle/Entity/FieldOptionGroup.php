@@ -25,6 +25,7 @@
 namespace Hris\FormBundle\Entity;
 
 use Doctrine\ORM\Mapping as ORM;
+use Gedmo\Mapping\Annotation as Gedmo;
 
 use Hris\FormBundle\Entity\FriendlyReportCategory;
 use Hris\FormBundle\Entity\FieldOptionGroupset;
@@ -35,6 +36,7 @@ use Hris\IndicatorBundle\Entity\Indicator;
 /**
  * Hris\FormBundle\Entity\FieldOptionGroup
  *
+ * @Gedmo\Loggable
  * @ORM\Table(name="hris_fieldoptiongroup")
  * @ORM\Entity(repositoryClass="Hris\FormBundle\Entity\FieldOptionGroupRepository")
  */
@@ -59,6 +61,7 @@ class FieldOptionGroup
     /**
      * @var string $name
      *
+     * @Gedmo\Versioned
      * @ORM\Column(name="name", type="string", length=64,unique=true)
      */
     private $name;
@@ -66,6 +69,7 @@ class FieldOptionGroup
     /**
      * @var string $description
      *
+     * @Gedmo\Versioned
      * @ORM\Column(name="description", type="text", nullable=true)
      */
     private $description;
@@ -116,6 +120,7 @@ class FieldOptionGroup
     /**
      * @var \DateTime $datecreated
      *
+     * @Gedmo\Timestampable(on="create")
      * @ORM\Column(name="datecreated", type="datetime")
      */
     private $datecreated;
@@ -123,6 +128,7 @@ class FieldOptionGroup
     /**
      * @var \DateTime $lastmodified
      *
+     * @Gedmo\Timestampable(on="update")
      * @ORM\Column(name="lastmodified", type="datetime", nullable=true)
      */
     private $lastmodified;
@@ -173,13 +179,7 @@ class FieldOptionGroup
      */
     public function getName()
     {
-    	$fieldCaption = $this->field->getCaption();
-    	if( empty($fieldCaption) ) {
-        	$descriptiveName = $this->name;
-    	}else {
-    		$descriptiveName = $this->name ." - ". $this->field->getCaption();
-    	}
-    	return $descriptiveName;
+    	return $this->name;
     }
 
     /**
@@ -436,5 +436,15 @@ class FieldOptionGroup
     public function getIndicator()
     {
         return $this->indicator;
+    }
+
+    /**
+     * Get Entity verbose name
+     *
+     * @return string
+     */
+    public function __toString()
+    {
+        return $this->name;
     }
 }

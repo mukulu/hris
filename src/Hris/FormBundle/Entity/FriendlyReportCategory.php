@@ -136,4 +136,15 @@ class FriendlyReportCategory
     {
         return $this->fieldOptionGroup;
     }
+
+    /**
+     * Get Entity verbose name
+     *
+     * @return string
+     */
+    public function __toString()
+    {
+        $friendlyReport = 'FriendlyReport:'.$this->getFriendlyReport()->__toString().' OptionGroup:'.$this->getFieldOptionGroup()->__toString();
+        return $friendlyReport;
+    }
 }

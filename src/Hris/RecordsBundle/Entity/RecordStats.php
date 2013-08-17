@@ -403,4 +403,15 @@ class RecordStats
     {
         return $this->field;
     }
+
+    /**
+     * Get Entity verbose name
+     *
+     * @return string
+     */
+    public function __toString()
+    {
+        $recordDetail = 'Organisationunit:'.$this->getOrganisationunit()->__toString().' Form:'.$this->getForm()->__toString().' Field:'.$this->getField()->__toString().' Value:'.$this->getValue().' Count:'.$this->getCount();
+        return $recordDetail;
+    }
 }

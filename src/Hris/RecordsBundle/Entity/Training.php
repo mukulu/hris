@@ -388,4 +388,15 @@ class Training
     {
         return $this->record;
     }
+
+    /**
+     * Get Entity verbose name
+     *
+     * @return string
+     */
+    public function __toString()
+    {
+        $trainingDetail = 'Record:'.$this->getRecord()->__toString().' Course location:'.$this->getCourselocation()->__toString().' Course name:'.$this->getCoursename();
+        return $trainingDetail;
+    }
 }

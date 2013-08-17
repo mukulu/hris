@@ -302,4 +302,14 @@ class Validation
     {
         return $this->uid;
     }
+
+    /**
+     * Get Entity verbose name
+     *
+     * @return string
+     */
+    public function __toString()
+    {
+        return $this->name;
+    }
 }

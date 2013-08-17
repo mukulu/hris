@@ -242,4 +242,15 @@ class FieldOptionMerge
     {
         return $this->lastmodified;
     }
+
+    /**
+     * Get Entity verbose name
+     *
+     * @return string
+     */
+    public function __toString()
+    {
+        $fieldOptionMergeName = 'Merged Option:'.$this->getMergedFieldOption()->__toString().' Removed Option:'.$this->getRemovedOptionField()->__toString();
+        return $fieldOptionMergeName;
+    }
 }

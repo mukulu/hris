@@ -143,4 +143,15 @@ class FormFieldMember
     {
         return $this->field;
     }
+
+    /**
+     * Get Entity verbose name
+     *
+     * @return string
+     */
+    public function __toString()
+    {
+        $formMember = 'Form:'.$this->getForm()->__toString().' Field:'.$this->getField()->__toString();
+        return $formMember;
+    }
 }

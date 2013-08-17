@@ -11,22 +11,14 @@ class FieldType extends AbstractType
     public function buildForm(FormBuilderInterface $builder, array $options)
     {
         $builder
-            ->add('uid')
             ->add('name')
             ->add('caption')
-            ->add('compulsory')
-            ->add('unique')
             ->add('description')
+            ->add('compulsory')
+            ->add('isUnique')
             ->add('hashistory')
-            ->add('fieldrelation')
-            ->add('datecreated')
-            ->add('lastupdated')
-            ->add('fieldGroup')
-            ->add('parentField')
-            ->add('childField')
             ->add('dataType')
             ->add('inputType')
-            ->add('uniqueRecordForms')
         ;
     }
 

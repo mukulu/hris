@@ -1,6 +1,7 @@
 {% extends "::base.html.twig" %}
 
 {% block right_content %}
+    <h1><small>User creation</small></h1>
     <form action="{{ path('fos_user_registration_register') }}" {{ form_enctype(form) }} method="POST" class="fos_user_registration_register">
         {{ form_widget(form) }}
         <div>

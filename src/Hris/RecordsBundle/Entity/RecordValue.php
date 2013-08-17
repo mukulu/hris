@@ -283,4 +283,15 @@ class RecordValue
     {
         return $this->field;
     }
+
+    /**
+     * Get Entity verbose name
+     *
+     * @return string
+     */
+    public function __toString()
+    {
+        $recordValue = 'Record:'.$this->getRecord()->__toString().' Field:'.$this->getField()->__toString().' Value:'.$this->getValue();
+        return $recordValue;
+    }
 }

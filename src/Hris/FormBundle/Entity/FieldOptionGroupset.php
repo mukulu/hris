@@ -25,12 +25,14 @@
 namespace Hris\FormBundle\Entity;
 
 use Doctrine\ORM\Mapping as ORM;
+use Gedmo\Mapping\Annotation as Gedmo;
 
 use Hris\FormBundle\Entity\FieldOptionGroup;
 
 /**
  * Hris\FormBundle\Entity\FieldOptionGroupset
  *
+ * @Gedmo\Loggable
  * @ORM\Table(name="hris_fieldoptiongroupset")
  * @ORM\Entity(repositoryClass="Hris\FormBundle\Entity\FieldOptionGroupsetRepository")
  */
@@ -55,6 +57,7 @@ class FieldOptionGroupset
     /**
      * @var string $name
      *
+     * @Gedmo\Versioned
      * @ORM\Column(name="name", type="string", length=64, unique=true)
      */
     private $name;
@@ -62,6 +65,7 @@ class FieldOptionGroupset
     /**
      * @var string $description
      *
+     * @Gedmo\Versioned
      * @ORM\Column(name="description", type="text", nullable=true)
      */
     private $description;
@@ -85,6 +89,7 @@ class FieldOptionGroupset
     /**
      * @var \DateTime $datecreated
      *
+     * @Gedmo\Timestampable(on="create")
      * @ORM\Column(name="datecreated", type="datetime")
      */
     private $datecreated;
@@ -92,6 +97,7 @@ class FieldOptionGroupset
     /**
      * @var \DateTime $lastmodified
      *
+     * @Gedmo\Timestampable(on="update")
      * @ORM\Column(name="lastmodified", type="datetime", nullable=true)
      */
     private $lastmodified;
@@ -260,5 +266,15 @@ class FieldOptionGroupset
     public function getFieldOptionGroup()
     {
         return $this->fieldOptionGroup;
+    }
+
+    /**
+     * Get Entity verbose name
+     *
+     * @return string
+     */
+    public function __toString()
+    {
+        return $this->name;
     }
 }

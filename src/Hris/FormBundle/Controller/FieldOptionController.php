@@ -1,28 +1,28 @@
 <?php
 
-namespace Hris\OrganisationunitBundle\Controller;
+namespace Hris\FormBundle\Controller;
 
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Bundle\FrameworkBundle\Controller\Controller;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Method;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Route;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Template;
-use Hris\OrganisationunitBundle\Entity\Organisationunit;
-use Hris\OrganisationunitBundle\Form\OrganisationunitType;
+use Hris\FormBundle\Entity\FieldOption;
+use Hris\FormBundle\Form\FieldOptionType;
 
 /**
- * Organisationunit controller.
+ * FieldOption controller.
  *
- * @Route("/organisationunit")
+ * @Route("/fieldoption")
  */
-class OrganisationunitController extends Controller
+class FieldOptionController extends Controller
 {
 
     /**
-     * Lists all Organisationunit entities.
+     * Lists all FieldOption entities.
      *
-     * @Route("/", name="organisationunit")
-     * @Route("/list", name="organisationunit_list")
+     * @Route("/", name="fieldoption")
+     * @Route("/list", name="fieldoption_list")
      * @Method("GET")
      * @Template()
      */
@@ -30,36 +30,31 @@ class OrganisationunitController extends Controller
     {
         $em = $this->getDoctrine()->getManager();
 
-        $entities = $em->getRepository('HrisOrganisationunitBundle:Organisationunit')->findAll();
-        foreach($entities as $entity) {
-            $delete_form= $this->createDeleteForm($entity->getId());
-            $delete_forms[$entity->getId()] = $delete_form->createView();
-        }
+        $entities = $em->getRepository('HrisFormBundle:FieldOption')->findAll();
 
         return array(
             'entities' => $entities,
-            'delete_forms' => $delete_forms,
         );
     }
     /**
-     * Creates a new Organisationunit entity.
+     * Creates a new FieldOption entity.
      *
-     * @Route("/", name="organisationunit_create")
+     * @Route("/", name="fieldoption_create")
      * @Method("POST")
-     * @Template("HrisOrganisationunitBundle:Organisationunit:new.html.twig")
+     * @Template("HrisFormBundle:FieldOption:new.html.twig")
      */
     public function createAction(Request $request)
     {
-        $entity  = new Organisationunit();
-        $form = $this->createForm(new OrganisationunitType(), $entity);
-        $form->bind($request);
+        $entity  = new FieldOption();
+        $form = $this->createForm(new FieldOptionType(), $entity);
+        $form->submit($request);
 
         if ($form->isValid()) {
             $em = $this->getDoctrine()->getManager();
             $em->persist($entity);
             $em->flush();
 
-            return $this->redirect($this->generateUrl('organisationunit_show', array('id' => $entity->getId())));
+            return $this->redirect($this->generateUrl('fieldoption_show', array('id' => $entity->getId())));
         }
 
         return array(
@@ -69,16 +64,16 @@ class OrganisationunitController extends Controller
     }
 
     /**
-     * Displays a form to create a new Organisationunit entity.
+     * Displays a form to create a new FieldOption entity.
      *
-     * @Route("/new", name="organisationunit_new")
+     * @Route("/new", name="fieldoption_new")
      * @Method("GET")
      * @Template()
      */
     public function newAction()
     {
-        $entity = new Organisationunit();
-        $form   = $this->createForm(new OrganisationunitType(), $entity);
+        $entity = new FieldOption();
+        $form   = $this->createForm(new FieldOptionType(), $entity);
 
         return array(
             'entity' => $entity,
@@ -87,9 +82,9 @@ class OrganisationunitController extends Controller
     }
 
     /**
-     * Finds and displays a Organisationunit entity.
+     * Finds and displays a FieldOption entity.
      *
-     * @Route("/{id}", name="organisationunit_show")
+     * @Route("/{id}", name="fieldoption_show")
      * @Method("GET")
      * @Template()
      */
@@ -97,10 +92,10 @@ class OrganisationunitController extends Controller
     {
         $em = $this->getDoctrine()->getManager();
 
-        $entity = $em->getRepository('HrisOrganisationunitBundle:Organisationunit')->find($id);
+        $entity = $em->getRepository('HrisFormBundle:FieldOption')->find($id);
 
         if (!$entity) {
-            throw $this->createNotFoundException('Unable to find Organisationunit entity.');
+            throw $this->createNotFoundException('Unable to find FieldOption entity.');
         }
 
         $deleteForm = $this->createDeleteForm($id);
@@ -112,9 +107,9 @@ class OrganisationunitController extends Controller
     }
 
     /**
-     * Displays a form to edit an existing Organisationunit entity.
+     * Displays a form to edit an existing FieldOption entity.
      *
-     * @Route("/{id}/edit", name="organisationunit_edit")
+     * @Route("/{id}/edit", name="fieldoption_edit")
      * @Method("GET")
      * @Template()
      */
@@ -122,13 +117,13 @@ class OrganisationunitController extends Controller
     {
         $em = $this->getDoctrine()->getManager();
 
-        $entity = $em->getRepository('HrisOrganisationunitBundle:Organisationunit')->find($id);
+        $entity = $em->getRepository('HrisFormBundle:FieldOption')->find($id);
 
         if (!$entity) {
-            throw $this->createNotFoundException('Unable to find Organisationunit entity.');
+            throw $this->createNotFoundException('Unable to find FieldOption entity.');
         }
 
-        $editForm = $this->createForm(new OrganisationunitType(), $entity);
+        $editForm = $this->createForm(new FieldOptionType(), $entity);
         $deleteForm = $this->createDeleteForm($id);
 
         return array(
@@ -139,31 +134,31 @@ class OrganisationunitController extends Controller
     }
 
     /**
-     * Edits an existing Organisationunit entity.
+     * Edits an existing FieldOption entity.
      *
-     * @Route("/{id}", name="organisationunit_update")
+     * @Route("/{id}", name="fieldoption_update")
      * @Method("PUT")
-     * @Template("HrisOrganisationunitBundle:Organisationunit:edit.html.twig")
+     * @Template("HrisFormBundle:FieldOption:edit.html.twig")
      */
     public function updateAction(Request $request, $id)
     {
         $em = $this->getDoctrine()->getManager();
 
-        $entity = $em->getRepository('HrisOrganisationunitBundle:Organisationunit')->find($id);
+        $entity = $em->getRepository('HrisFormBundle:FieldOption')->find($id);
 
         if (!$entity) {
-            throw $this->createNotFoundException('Unable to find Organisationunit entity.');
+            throw $this->createNotFoundException('Unable to find FieldOption entity.');
         }
 
         $deleteForm = $this->createDeleteForm($id);
-        $editForm = $this->createForm(new OrganisationunitType(), $entity);
-        $editForm->bind($request);
+        $editForm = $this->createForm(new FieldOptionType(), $entity);
+        $editForm->submit($request);
 
         if ($editForm->isValid()) {
             $em->persist($entity);
             $em->flush();
 
-            return $this->redirect($this->generateUrl('organisationunit_edit', array('id' => $id)));
+            return $this->redirect($this->generateUrl('fieldoption_edit', array('id' => $id)));
         }
 
         return array(
@@ -173,33 +168,33 @@ class OrganisationunitController extends Controller
         );
     }
     /**
-     * Deletes a Organisationunit entity.
+     * Deletes a FieldOption entity.
      *
-     * @Route("/{id}", name="organisationunit_delete")
+     * @Route("/{id}", name="fieldoption_delete")
      * @Method("DELETE")
      */
     public function deleteAction(Request $request, $id)
     {
         $form = $this->createDeleteForm($id);
-        $form->bind($request);
+        $form->submit($request);
 
         if ($form->isValid()) {
             $em = $this->getDoctrine()->getManager();
-            $entity = $em->getRepository('HrisOrganisationunitBundle:Organisationunit')->find($id);
+            $entity = $em->getRepository('HrisFormBundle:FieldOption')->find($id);
 
             if (!$entity) {
-                throw $this->createNotFoundException('Unable to find Organisationunit entity.');
+                throw $this->createNotFoundException('Unable to find FieldOption entity.');
             }
 
             $em->remove($entity);
             $em->flush();
         }
 
-        return $this->redirect($this->generateUrl('organisationunit'));
+        return $this->redirect($this->generateUrl('fieldoption'));
     }
 
     /**
-     * Creates a form to delete a Organisationunit entity by id.
+     * Creates a form to delete a FieldOption entity by id.
      *
      * @param mixed $id The entity id
      *

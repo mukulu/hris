@@ -25,6 +25,7 @@
 namespace Hris\FormBundle\Entity;
 
 use Doctrine\ORM\Mapping as ORM;
+use Gedmo\Mapping\Annotation as Gedmo;
 
 use Hris\FormBundle\Entity\FieldOptionMerge;
 use Hris\FormBundle\Entity\RelationalFilter;
@@ -33,6 +34,7 @@ use Hris\FormBundle\Entity\FieldOptionGroup;
 /**
  * Hris\FormBundle\Entity\FieldOption
  *
+ * @Gedmo\Loggable
  * @ORM\Table(name="hris_fieldoption",uniqueConstraints={@ORM\UniqueConstraint(name="unique_fieldoption_idx",columns={"value", "field_id"})})
  * @ORM\Entity(repositoryClass="Hris\FormBundle\Entity\FieldOptionRepository")
  */
@@ -57,6 +59,7 @@ class FieldOption
     /**
      * @var string $value
      *
+     * @Gedmo\Versioned
      * @ORM\Column(name="value", type="string", length=64)
      */
     private $value;
@@ -64,6 +67,7 @@ class FieldOption
     /**
      * @var string $description
      *
+     * @Gedmo\Versioned
      * @ORM\Column(name="description", type="text", nullable=true)
      */
     private $description;
@@ -103,6 +107,7 @@ class FieldOption
     /**
      * @var \Hris\FormBundle\Entity\Field $field
      *
+     * @Gedmo\Versioned
      * @ORM\ManyToOne(targetEntity="Hris\FormBundle\Entity\Field", inversedBy="fieldOption")
      * @ORM\JoinColumns({
      *   @ORM\JoinColumn(name="field_id", referencedColumnName="id", onDelete="CASCADE")
@@ -129,6 +134,7 @@ class FieldOption
     /**
      * @var \DateTime $datecreated
      *
+     * @Gedmo\Timestampable(on="create")
      * @ORM\Column(name="datecreated", type="datetime")
      */
     private $datecreated;
@@ -136,6 +142,7 @@ class FieldOption
     /**
      * @var \DateTime $lastupdated
      *
+     * @Gedmo\Timestampable(on="update")
      * @ORM\Column(name="lastupdated", type="datetime", nullable=true)
      */
     private $lastupdated;
@@ -464,6 +471,16 @@ class FieldOption
         $this->relationalFilter = new \Doctrine\Common\Collections\ArrayCollection();
         $this->fieldOptionMerge = new \Doctrine\Common\Collections\ArrayCollection();
         $this->uid = uniqid();
+    }
+
+    /**
+     * Get Entity verbose name
+     *
+     * @return string
+     */
+    public function __toString()
+    {
+        return $this->value;
     }
     
 }

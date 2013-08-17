@@ -144,4 +144,15 @@ class FormVisibleFields
     {
         return $this->field;
     }
+
+    /**
+     * Get Entity verbose name
+     *
+     * @return string
+     */
+    public function __toString()
+    {
+        $formSectionMember = 'Form:'.$this->getForm()->__toString().' Field:'.$this->getField()->__toString();
+        return $formSectionMember;
+    }
 }

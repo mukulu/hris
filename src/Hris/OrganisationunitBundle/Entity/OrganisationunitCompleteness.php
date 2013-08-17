@@ -217,4 +217,15 @@ class OrganisationunitCompleteness
     {
         return $this->datecreated;
     }
+
+    /**
+     * Get Entity verbose name
+     *
+     * @return string
+     */
+    public function __toString()
+    {
+        $completeness = 'Organisationunit:'.$this->getOrganisationunit().' Expectation:'.$this->getExpectation();
+        return $completeness;
+    }
 }

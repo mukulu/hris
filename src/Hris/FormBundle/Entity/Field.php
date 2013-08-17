@@ -25,6 +25,7 @@
 namespace Hris\FormBundle\Entity;
 
 use Doctrine\ORM\Mapping as ORM;
+use Gedmo\Mapping\Annotation as Gedmo;
 
 use Hris\FormBundle\Entity\ResourceTableFieldMember;
 use Hris\FormBundle\Entity\FormSectionFieldMember;
@@ -42,6 +43,7 @@ use \DateTime;
 /**
  * Hris\FormBundle\Entity\Field
  *
+ * @Gedmo\Loggable
  * @ORM\Table(name="hris_field")
  * @ORM\Entity(repositoryClass="Hris\FormBundle\Entity\FieldRepository")
  */
@@ -66,6 +68,7 @@ class Field
     /**
      * @var string $name
      *
+     * @Gedmo\Versioned
      * @ORM\Column(name="name", type="string", length=64, unique=true)
      */
     private $name;
@@ -73,6 +76,7 @@ class Field
     /**
      * @var string $caption
      *
+     * @Gedmo\Versioned
      * @ORM\Column(name="caption", type="string", length=64)
      */
     private $caption;
@@ -80,20 +84,23 @@ class Field
     /**
      * @var boolean $compulsory
      *
+     * @Gedmo\Versioned
      * @ORM\Column(name="compulsory", type="boolean")
      */
     private $compulsory;
 
     /**
-     * @var boolean $unique
+     * @var boolean isUnique
      *
-     * @ORM\Column(name="unique", type="boolean")
+     * @Gedmo\Versioned
+     * @ORM\Column(name="isUnique", type="boolean")
      */
-    private $unique;
+    private $isUnique;
 
     /**
      * @var string $description
      *
+     * @Gedmo\Versioned
      * @ORM\Column(name="description", type="text", nullable=true)
      */
     private $description;
@@ -101,6 +108,7 @@ class Field
     /**
      * @var boolean $hashistory
      *
+     * @Gedmo\Versioned
      * @ORM\Column(name="hashistory", type="boolean")
      */
     private $hashistory;
@@ -147,6 +155,7 @@ class Field
     /**
      * @var \Hris\FormBundle\Entity\DataType $dataType
      *
+     * @Gedmo\Versioned
      * @ORM\ManyToOne(targetEntity="Hris\FormBundle\Entity\DataType",inversedBy="field")
      * @ORM\JoinColumns({
      *   @ORM\JoinColumn(name="datatype_id", referencedColumnName="id", onDelete="CASCADE")
@@ -157,6 +166,7 @@ class Field
     /**
      * @var \Hris\FormBundle\Entity\InputType $inputType
      *
+     * @Gedmo\Versioned
      * @ORM\ManyToOne(targetEntity="Hris\FormBundle\Entity\InputType",inversedBy="field")
      * @ORM\JoinColumns({
      *   @ORM\JoinColumn(name="inputtype_id", referencedColumnName="id", onDelete="CASCADE")
@@ -240,6 +250,7 @@ class Field
     /**
      * @var \DateTime $datecreated
      *
+     * @Gedmo\Timestampable(on="create")
      * @ORM\Column(name="datecreated", type="datetime")
      */
     private $datecreated;
@@ -247,6 +258,7 @@ class Field
     /**
      * @var \DateTime $lastupdated
      *
+     * @Gedmo\Timestampable(on="update")
      * @ORM\Column(name="lastupdated", type="datetime", nullable=true)
      */
     private $lastupdated;
@@ -332,26 +344,26 @@ class Field
     }
 
     /**
-     * Set unique
+     * Set isUnique
      *
-     * @param boolean $unique
+     * @param boolean $isUnique
      * @return Field
      */
-    public function setUnique($unique)
+    public function setIsUnique($isUnique)
     {
-        $this->unique = $unique;
+        $this->$isUnique = $isUnique;
     
         return $this;
     }
 
     /**
-     * Get unique
+     * Get isUnique
      *
      * @return boolean 
      */
-    public function getUnique()
+    public function getIsUnique()
     {
-        return $this->unique;
+        return $this->isUnique;
     }
 
     /**
@@ -853,7 +865,7 @@ class Field
         $this->uid = uniqid();
         $this->datecreated = new \DateTime('now');
         $this->hashistory = false;
-        $this->unique = false;
+        $this->isUnique = false;
         $this->compulsory = True;
     }
     
@@ -954,5 +966,15 @@ class Field
     public function getRecordStats()
     {
         return $this->recordStats;
+    }
+
+    /**
+     * Get Entity verbose name
+     *
+     * @return string
+     */
+    public function __toString()
+    {
+        return $this->name;
     }
 }

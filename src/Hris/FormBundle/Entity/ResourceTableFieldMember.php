@@ -137,4 +137,15 @@ class ResourceTableFieldMember
     {
         return $this->field;
     }
+
+    /**
+     * Get Entity verbose name
+     *
+     * @return string
+     */
+    public function __toString()
+    {
+        $resourceTableMember = 'Resourcetable:'.$this->getResourceTable()->__toString().' Field:'.$this->getField()->__toString();
+        return $resourceTableMember;
+    }
 }

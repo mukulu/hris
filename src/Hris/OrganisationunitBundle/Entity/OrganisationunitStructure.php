@@ -510,4 +510,15 @@ class OrganisationunitStructure
     {
         return $this->level10Organisationunit;
     }
+
+    /**
+     * Get Entity verbose name
+     *
+     * @return string
+     */
+    public function __toString()
+    {
+        $organisationunitStructure = 'Organisationunit:'.$this->getOrganisationunit().' Level:'.$this->getLevel();
+        return $organisationunitStructure;
+    }
 }

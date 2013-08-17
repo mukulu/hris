@@ -60,6 +60,20 @@ class ConfigureMenuListener
                 'attributes'=> array('class'=>'accordion-group')
             )
         );
+        $formModule->addChild('Field Options',
+            array('route'=>'fieldoption_list',
+                'extras'=>array('tag'=>'div'),
+                'name' =>'Field Options',
+                'attributes'=> array('class'=>'accordion-group')
+            )
+        );
+        $formModule->addChild('Field Option Groups',
+            array('route'=>'fieldoptiongroup_list',
+                'extras'=>array('tag'=>'div'),
+                'name' =>'Field Option Groups',
+                'attributes'=> array('class'=>'accordion-group')
+            )
+        );
         $formModule->addChild('Field Option Groupsets',
             array('route'=>'fieldoptiongroupset_list',
                   'extras'=>array('tag'=>'div'),
