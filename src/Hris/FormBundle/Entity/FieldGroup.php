@@ -25,6 +25,7 @@
 namespace Hris\FormBundle\Entity;
 
 use Doctrine\ORM\Mapping as ORM;
+use Gedmo\Mapping\Annotation as Gedmo;
 
 use Hris\FormBundle\Entity\Field;
 use Hris\FormBundle\Entity\FieldGroupset;
@@ -32,6 +33,7 @@ use Hris\FormBundle\Entity\FieldGroupset;
 /**
  * Hris\FormBundle\Entity\FieldGroup
  *
+ * @Gedmo\Loggable
  * @ORM\Table(name="hris_fieldgroup")
  * @ORM\Entity(repositoryClass="Hris\FormBundle\Entity\FieldGroupRepository")
  */
@@ -56,6 +58,7 @@ class FieldGroup
     /**
      * @var string $name
      *
+     * @Gedmo\Versioned
      * @ORM\Column(name="name", type="string", length=64, unique=true)
      */
     private $name;
@@ -63,6 +66,7 @@ class FieldGroup
     /**
      * @var string $description
      *
+     * @Gedmo\Versioned
      * @ORM\Column(name="description", type="text", nullable=true)
      */
     private $description;
@@ -94,6 +98,7 @@ class FieldGroup
     /**
      * @var \DateTime $datecreated
      *
+     * @Gedmo\Timestampable(on="create")
      * @ORM\Column(name="datecreated", type="datetime")
      */
     private $datecreated;
@@ -101,6 +106,7 @@ class FieldGroup
     /**
      * @var \DateTime $lastupdated
      *
+     * @Gedmo\Timestampable(on="update")
      * @ORM\Column(name="lastupdated", type="datetime", nullable=true)
      */
     private $lastupdated;

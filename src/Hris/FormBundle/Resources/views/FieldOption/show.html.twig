@@ -1,7 +1,7 @@
 {% extends '::base.html.twig' %}
 
 {% block right_content -%}
-    <h1>Field</h1>
+    <h1>FieldOption</h1>
 
     <table class="record_properties">
         <tbody>
@@ -14,32 +14,12 @@
                 <td>{{ entity.uid }}</td>
             </tr>
             <tr>
-                <th>Name</th>
-                <td>{{ entity.name }}</td>
-            </tr>
-            <tr>
-                <th>Caption</th>
-                <td>{{ entity.caption }}</td>
-            </tr>
-            <tr>
-                <th>Compulsory</th>
-                <td>{{ entity.compulsory }}</td>
-            </tr>
-            <tr>
-                <th>Unique</th>
-                <td>{{ entity.isUnique }}</td>
+                <th>Value</th>
+                <td>{{ entity.value }}</td>
             </tr>
             <tr>
                 <th>Description</th>
                 <td>{{ entity.description }}</td>
-            </tr>
-            <tr>
-                <th>Hashistory</th>
-                <td>{{ entity.hashistory }}</td>
-            </tr>
-            <tr>
-                <th>Fieldrelation</th>
-                <td>{{ entity.fieldrelation }}</td>
             </tr>
             <tr>
                 <th>Datecreated</th>
@@ -54,17 +34,17 @@
 
         <ul class="record_actions">
     <li>
-        <a href="{{ path('field') }}">
+        <a href="{{ path('fieldoption') }}">
             Back to the list
         </a>
     </li>
     <li>
-        <a href="{{ path('field_edit', { 'id': entity.id }) }}">
+        <a href="{{ path('fieldoption_edit', { 'id': entity.id }) }}">
             Edit
         </a>
     </li>
     <li>
-        <form action="{{ path('field_delete', { 'id': entity.id }) }}" method="post">
+        <form action="{{ path('fieldoption_delete', { 'id': entity.id }) }}" method="post">
             <input type="hidden" name="_method" value="DELETE" />
             {{ form_widget(delete_form) }}
             <button type="submit">Delete</button>

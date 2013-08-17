@@ -11,13 +11,9 @@ class FieldGroupType extends AbstractType
     public function buildForm(FormBuilderInterface $builder, array $options)
     {
         $builder
-            ->add('uid')
             ->add('name')
             ->add('description')
-            ->add('datecreated')
-            ->add('lastupdated')
             ->add('field')
-            ->add('fieldGroupset')
         ;
     }
 

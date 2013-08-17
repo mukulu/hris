@@ -14,6 +14,10 @@ fieldoptiongroup:
     resource: "@HrisFormBundle/Controller/FieldOptionGroupController.php"
     type: annotation
 
+fieldoption:
+    resource: "@HrisFormBundle/Controller/FieldOptionController.php"
+    type: annotation
+
 fieldoptiongroupset:
     resource: "@HrisFormBundle/Controller/FieldOptionGroupsetController.php"
     type: annotation
