@@ -141,7 +141,7 @@ function addRecords(databaseName, tableName, dataValues) {
 function getSingleRecord(databaseName, path) {
 
     //tableName = JSON.parse(tableName);
-    var uid = '51fa595da8b84';
+    var uid = '51f699672adcf';
     /*
      Parsing the names of columns form strin to Json Format
      */
@@ -173,16 +173,18 @@ function getSingleRecord(databaseName, path) {
                 // A match was found.
                 //report(matching.hypertext);
 
-                var jsonStr = JSON.stringify(decodeURIComponent(matching));
-                result.innerHTML = jsonStr;
-                console.log(jsonStr);
+                var jsonStr = JSON.stringify(decodeURIComponent(matching.hypertext));
+                result.innerHTML = decodeURIComponent(matching.hypertext);
+                console.log(decodeURIComponent(matching.hypertext));
 
+                //return matching.hypertext;
+/*
                 $.ajax({
                     type: "POST",
                     url: "http://localhost/hris/web/app_dev.php/record/new/3",
                     data: { variable: matching }
                 }).success( console.log ("the event completed successful") );
-
+*/
 
             } else {
                 // No match was found.

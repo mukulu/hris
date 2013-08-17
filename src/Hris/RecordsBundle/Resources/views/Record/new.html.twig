@@ -1,12 +1,23 @@
 {% extends '::base.html.twig' %}
+{% block javascripts %}
+    {{ parent() }}
+    <script type="text/javascript" src="{{ asset('bundles/hrisrecords/js/indexedb.js') }}"></script>
+
+    <script type="text/javascript">
+
+        getSingleRecord( "hris2", "new" );
+
+    </script>
+
+{% endblock %}
 
 {% block right_content -%}
 
-    <h1>{{ variable['title'] | raw }}</h1>
+    <h1>{{ title | raw }}</h1>
 
     <form action="{{ path('record_list') }}" method="post">
 
-        {{ variable['hypertext'] | raw}}
+        <div id="result" />
 
         <p>
             <button type="submit">Save</button>
