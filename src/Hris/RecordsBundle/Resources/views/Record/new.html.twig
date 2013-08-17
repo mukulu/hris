@@ -2,11 +2,11 @@
 
 {% block right_content -%}
 
-    <h1>{{ entity.title | raw }}</h1>
+    <h1>{{ variable['title'] | raw }}</h1>
 
     <form action="{{ path('record_list') }}" method="post">
 
-        {{ entity.hypertext | raw}}
+        {{ variable['hypertext'] | raw}}
 
         <p>
             <button type="submit">Save</button>

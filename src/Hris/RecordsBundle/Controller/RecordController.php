@@ -104,21 +104,23 @@ class RecordController extends Controller
      * Displays a form to create a new Record entity.
      *
      * @Route("/new/{id}", name="record_new")
-     * @Method("GET")
+     * @Method("POST")
      * @Template()
      */
-    public function newAction($id)
+    public function newAction( $id )
     {
+        //$em = $this->getDoctrine()->getManager();
+        $variable = $this->getRequest()->get("variable");
+        var_dump($variable);
 
-        $em = $this->getDoctrine()->getManager();
-
-        $formEntity = $em->getRepository('HrisFormBundle:Form')->find($id);
-        $form = $this->createForm(new DesignFormType(), $formEntity);
+        //$formEntity = $em->getRepository('HrisFormBundle:Form')->find(3);
+        //$form = $this->createForm(new DesignFormType(), $formEntity);
 
         return array(
 
-            'entity'   => $formEntity,
-            'form'     => $form->createView(),
+            //'entity'   => $formEntity,
+            //'form'     => $form->createView(),
+            'variable' => $variable,
         );
     }
 

@@ -44,7 +44,9 @@
                 <td>
                 <ul>
                     <li>
-                        <a href="{{ path('record_new', { 'id': entity.id }) }}">New Record</a>
+                        <!--<a href="" onclick='getSingleRecord( "hris2", {{ table_name | raw }}, "{{ entity.uid | raw }}", "records_new" )'>New Record</a> -->
+                        <!--<a href="" onclick='getSingleRecord( "hris2", "records_new" )'>New Record</a> -->
+                        <button onclick='getSingleRecord( "hris2", "new" )'>New Record</button>
                     </li>
                 </ul>
                 </td>
@@ -52,6 +54,8 @@
         {% endfor %}
         </tbody>
     </table>
+    <button onclick="getSingleRecord()">Populate Database</button>
+
 
     <div id="result" />
     {% endblock %}

@@ -74,6 +74,30 @@ function createDatabase(databaseName, tableName, columnNames, dataValues) {
 
 }
 
+function deleteDatabase(databaseName) {
+    /*
+     Parsing the names of columns form strin to Json Format
+     */
+
+    var deleteRequest = indexedDB.deleteDatabase(databaseName);
+    console.log("deleting " + databaseName + " database");
+
+    deleteRequest.onsuccess = function() {
+
+        console.log("database " + databaseName + "deleted");
+
+        var transaction = db.transaction(tableName, "readwrite");
+        var store = transaction.objectStore(tableName);
+
+    };
+
+    deleteRequest.onerror = function (e) {
+        console.log("Database error: " + e.target.errorCode);
+    };
+
+}
+
+
 function addRecords(databaseName, tableName, dataValues) {
     /*
      Parsing the names of columns form strin to Json Format
@@ -97,7 +121,6 @@ function addRecords(databaseName, tableName, dataValues) {
                 results += '"'+ val + '" : "' + encodeURIComponent(dataValues[key][val]) +'", ';
             });
 
-            console.log("this is the name " + results.name);
             results = results.slice(0,-2);
             results += '}';
             console.log(results);
@@ -114,3 +137,60 @@ function addRecords(databaseName, tableName, dataValues) {
     };
 
 }
+
+function getSingleRecord(databaseName, path) {
+
+    //tableName = JSON.parse(tableName);
+    var uid = '51fa595da8b84';
+    /*
+     Parsing the names of columns form strin to Json Format
+     */
+    //tableName = JSON.parse(tableName);
+    //uid = JSON.parse(uid);
+
+    console.log(uid);
+
+    var result = document.getElementById("result");
+    result.innerHTML = "";
+
+    var openRequest = indexedDB.open(databaseName);
+
+    openRequest.onsuccess = function() {
+        db = openRequest.result;
+        console.log("this is done deal");
+
+        //var transaction = db.transaction(tableName, "readwrite");
+        //var store = transaction.objectStore(tableName);
+
+        var transaction = db.transaction("hris_form", "readonly");
+        var store = transaction.objectStore("hris_form");
+        var index = store.index("uid");
+
+        var request = index.get(uid);
+        request.onsuccess = function() {
+            var matching = request.result;
+            if (matching !== undefined) {
+                // A match was found.
+                //report(matching.hypertext);
+
+                var jsonStr = JSON.stringify(decodeURIComponent(matching));
+                result.innerHTML = jsonStr;
+                console.log(jsonStr);
+
+                $.ajax({
+                    type: "POST",
+                    url: "http://localhost/hris/web/app_dev.php/record/new/3",
+                    data: { variable: matching }
+                }).success( console.log ("the event completed successful") );
+
+
+            } else {
+                // No match was found.
+                report(null);
+            }
+        };
+
+    };
+
+}
+
