@@ -41,7 +41,7 @@ class ValidationController extends Controller
      *
      * @Route("/", name="validation_create")
      * @Method("POST")
-     * @Template("HrisDataQualityBundle:Validation:new.html.twig")
+     * @Template()
      */
     public function createAction(Request $request)
     {
@@ -138,7 +138,7 @@ class ValidationController extends Controller
      *
      * @Route("/{id}", name="validation_update")
      * @Method("PUT")
-     * @Template("HrisDataQualityBundle:Validation:edit.html.twig")
+     * @Template()
      */
     public function updateAction(Request $request, $id)
     {

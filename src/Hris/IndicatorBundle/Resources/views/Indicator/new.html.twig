@@ -1,7 +1,7 @@
 {% extends '::base.html.twig' %}
 
 {% block right_content -%}
-    <h1>Indicator creation</h1>
+    <h1><small>Indicator creation</small></h1>
 
     <form action="{{ path('indicator_create') }}" method="post" {{ form_enctype(form) }}>
         {{ form_widget(form) }}
@@ -10,11 +10,11 @@
         </p>
     </form>
 
-        <ul class="record_actions">
-    <li>
-        <a href="{{ path('indicator') }}">
-            Back to the list
-        </a>
-    </li>
-</ul>
+        <ul class="record_actions inline">
+            <li>
+                <a href="{{ path('indicator') }}" class="btn">
+                    Back to the list
+                </a>
+            </li>
+        </ul>
 {% endblock %}

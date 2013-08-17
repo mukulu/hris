@@ -8,6 +8,10 @@ use Symfony\Component\OptionsResolver\OptionsResolverInterface;
 
 class IndicatorType extends AbstractType
 {
+    /**
+     * @param FormBuilderInterface $builder
+     * @param array $options
+     */
     public function buildForm(FormBuilderInterface $builder, array $options)
     {
         $builder
@@ -15,10 +19,12 @@ class IndicatorType extends AbstractType
             ->add('value')
             ->add('year')
             ->add('fieldOptionGroup')
-            ->add('organisationunitGroup')
-        ;
+            ->add('organisationunitGroup');
     }
 
+    /**
+     * @param OptionsResolverInterface $resolver
+     */
     public function setDefaultOptions(OptionsResolverInterface $resolver)
     {
         $resolver->setDefaults(array(
@@ -26,6 +32,9 @@ class IndicatorType extends AbstractType
         ));
     }
 
+    /**
+     * @return string
+     */
     public function getName()
     {
         return 'hris_indicatorbundle_indicatortype';

@@ -25,6 +25,7 @@
 namespace Hris\OrganisationunitBundle\Entity;
 
 use Doctrine\ORM\Mapping as ORM;
+use Gedmo\Mapping\Annotation as Gedmo;
 
 use Hris\OrganisationunitBundle\Entity\Organisationunit;
 use Hris\OrganisationunitBundle\Entity\OrganisationunitGroupset;
@@ -33,6 +34,7 @@ use Hris\OrganisationunitBundle\Entity\OrganisationunitGroupset;
  * Hris\OrganisationunitBundle\Entity\OrganisationunitGroup
  *
  * @ORM\Table(name="hris_organisationunitgroup")
+ * @Gedmo\Loggable
  * @ORM\Entity(repositoryClass="Hris\OrganisationunitBundle\Entity\OrganisationunitGroupRepository")
  */
 class OrganisationunitGroup
@@ -49,6 +51,7 @@ class OrganisationunitGroup
     /**
      * @var string $uid
      *
+     * @Gedmo\Versioned
      * @ORM\Column(name="uid", type="string", length=13, unique=true)
      */
     private $uid;
@@ -56,6 +59,7 @@ class OrganisationunitGroup
     /**
      * @var string $name
      *
+     * @Gedmo\Versioned
      * @ORM\Column(name="name", type="string", length=64, unique=true)
      */
     private $name;
@@ -63,6 +67,7 @@ class OrganisationunitGroup
     /**
      * @var string $dhisUid
      *
+     * @Gedmo\Versioned
      * @ORM\Column(name="dhisUid", type="string", length=11, unique=true, nullable=true)
      */
     private $dhisUid;
@@ -70,6 +75,7 @@ class OrganisationunitGroup
     /**
      * @var string $code
      *
+     * @Gedmo\Versioned
      * @ORM\Column(name="code", type="string", length=50, nullable=true, unique=true)
      */
     private $code;
@@ -103,6 +109,7 @@ class OrganisationunitGroup
     /**
      * @var \DateTime $datecreated
      *
+     * @Gedmo\Timestampable(on="create")
      * @ORM\Column(name="datecreated", type="datetime")
      */
     private $datecreated;
@@ -110,6 +117,7 @@ class OrganisationunitGroup
     /**
      * @var \DateTime $lastupdated
      *
+     * @Gedmo\Timestampable(on="update")
      * @ORM\Column(name="lastupdated", type="datetime", nullable=true)
      */
     private $lastupdated;

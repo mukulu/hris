@@ -25,6 +25,7 @@
 namespace Hris\IndicatorBundle\Entity;
 
 use Doctrine\ORM\Mapping as ORM;
+use Gedmo\Mapping\Annotation as Gedmo;
 
 use Hris\FormBundle\Entity\FieldOptionGroup;
 use Hris\OrganisationunitBundle\Entity\OrganisationunitGroup;
@@ -33,6 +34,7 @@ use Hris\OrganisationunitBundle\Entity\OrganisationunitGroup;
  * Indicator
  *
  * @ORM\Table(name="hris_indicator")
+ * @Gedmo\Loggable
  * @ORM\Entity(repositoryClass="Hris\IndicatorBundle\Entity\IndicatorRepository")
  */
 class Indicator
@@ -47,8 +49,17 @@ class Indicator
     private $id;
 
     /**
+     * @var string $uid
+     *
+     * @Gedmo\Versioned
+     * @ORM\Column(name="uid", type="string", length=13, unique=true)
+     */
+    private $uid;
+
+    /**
      * @var string
      *
+     * @Gedmo\Versioned
      * @ORM\Column(name="name", type="string", length=64)
      */
     private $name;
@@ -56,6 +67,7 @@ class Indicator
     /**
      * @var float
      *
+     * @Gedmo\Versioned
      * @ORM\Column(name="value", type="float")
      */
     private $value;
@@ -63,6 +75,7 @@ class Indicator
     /**
      * @var integer
      *
+     * @Gedmo\Versioned
      * @ORM\Column(name="year", type="integer")
      */
     private $year;
@@ -80,10 +93,26 @@ class Indicator
     /**
      * @var \Hris\OrganisationunitBundle\Entity\OrganisationunitGroup $organisationunitGroup
      *
-     * @ORM\ManyToMany(targetEntity="Hris\OrganisationunitBundle\Entity\OrganisationunitGroup", mappedBy="organisationunit")
-     * @ORM\OrderBy({"name" = "ASC"})
+     * @ORM\ManyToOne(targetEntity="\Hris\OrganisationunitBundle\Entity\OrganisationunitGroup",inversedBy="indicator")
+     * @ORM\JoinColumns({
+     *   @ORM\JoinColumn(name="organisationunit_id", referencedColumnName="id", onDelete="CASCADE")
+     * })
      */
     private $organisationunitGroup;
+
+    /**
+     * @var \DateTime $datecreated
+     * @Gedmo\Timestampable(on="create")
+     * @ORM\Column(name="datecreated", type="datetime")
+     */
+    private $datecreated;
+
+    /**
+     * @var \DateTime $lastupdated
+     * @Gedmo\Timestampable(on="update")
+     * @ORM\Column(name="lastupdated", type="datetime", nullable=true)
+     */
+    private $lastupdated;
 
     /**
      * Get id
@@ -93,6 +122,29 @@ class Indicator
     public function getId()
     {
         return $this->id;
+    }
+
+    /**
+     * Set uid
+     *
+     * @param string $uid
+     * @return Indicator
+     */
+    public function setUid($uid)
+    {
+        $this->uid = $uid;
+
+        return $this;
+    }
+
+    /**
+     * Get uid
+     *
+     * @return string
+     */
+    public function getUid()
+    {
+        return $this->uid;
     }
 
     /**
@@ -187,37 +239,76 @@ class Indicator
         return $this->fieldOptionGroup;
     }
 
+
+
+
     /**
-     * Add organisationunitGroup
+     * Set organisationunitGroup
      *
      * @param \Hris\OrganisationunitBundle\Entity\OrganisationunitGroup $organisationunitGroup
      * @return Indicator
      */
-    public function addOrganisationunitGroup(\Hris\OrganisationunitBundle\Entity\OrganisationunitGroup $organisationunitGroup)
+    public function setOrganisationunitGroup(\Hris\OrganisationunitBundle\Entity\OrganisationunitGroup $organisationunitGroup = null)
     {
-        $this->organisationunitGroup[$organisationunitGroup->getId()] = $organisationunitGroup;
+        $this->organisationunitGroup = $organisationunitGroup;
 
         return $this;
     }
 
     /**
-     * Remove organisationunitGroup
-     *
-     * @param \Hris\OrganisationunitBundle\Entity\OrganisationunitGroup $organisationunitGroup
-     */
-    public function removeOrganisationunitGroup(\Hris\OrganisationunitBundle\Entity\OrganisationunitGroup $organisationunitGroup)
-    {
-        $this->organisationunitGroup->removeElement($organisationunitGroup);
-    }
-
-    /**
      * Get organisationunitGroup
      *
-     * @return \Doctrine\Common\Collections\Collection
+     * @return \Hris\OrganisationunitBundle\Entity\OrganisationunitGroup
      */
     public function getOrganisationunitGroup()
     {
         return $this->organisationunitGroup;
+    }
+
+    /**
+     * Set lastupdated
+     *
+     * @param \DateTime $lastupdated
+     * @return Indicator
+     */
+    public function setLastupdated($lastupdated)
+    {
+        $this->lastupdated = $lastupdated;
+
+        return $this;
+    }
+
+    /**
+     * Get lastupdated
+     *
+     * @return \DateTime
+     */
+    public function getLastupdated()
+    {
+        return $this->lastupdated;
+    }
+
+    /**
+     * Set datecreated
+     *
+     * @param \DateTime $datecreated
+     * @return Indicator
+     */
+    public function setDatecreated($datecreated)
+    {
+        $this->datecreated = $datecreated;
+
+        return $this;
+    }
+
+    /**
+     * Get datecreated
+     *
+     * @return \DateTime
+     */
+    public function getDatecreated()
+    {
+        return $this->datecreated;
     }
 
     /**
@@ -228,5 +319,13 @@ class Indicator
     public function __toString()
     {
         return $this->name;
+    }
+
+    /**
+     * Constructor
+     */
+    public function __construct()
+    {
+        $this->uid = uniqid();
     }
 }
