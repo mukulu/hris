@@ -319,4 +319,14 @@ class FormSection
     {
         return $this->formSectionFieldMember;
     }
+
+    /**
+     * Get Entity verbose name
+     *
+     * @return string
+     */
+    public function __toString()
+    {
+        return $this->name;
+    }
 }

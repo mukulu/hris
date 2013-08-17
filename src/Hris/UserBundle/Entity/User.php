@@ -343,4 +343,14 @@ class User extends BaseUser
     {
     	return $this->credentialsExpireAt;
     }
+
+    /**
+     * Get Entity verbose name
+     *
+     * @return string
+     */
+    public function __toString()
+    {
+        return $this->username;
+    }
 }

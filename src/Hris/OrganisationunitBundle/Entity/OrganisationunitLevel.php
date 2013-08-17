@@ -343,5 +343,15 @@ class OrganisationunitLevel
         $this->organisationunitStructure = new \Doctrine\Common\Collections\ArrayCollection();
         $this->dataentrylevel = FALSE;
     }
+
+    /**
+     * Get Entity verbose name
+     *
+     * @return string
+     */
+    public function __toString()
+    {
+        return $this->name;
+    }
     
 }

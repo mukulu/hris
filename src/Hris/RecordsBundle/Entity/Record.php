@@ -435,4 +435,15 @@ class Record
     {
         return $this->value;
     }
+
+    /**
+     * Get Entity verbose name
+     *
+     * @return string
+     */
+    public function __toString()
+    {
+        $recordDetail = 'Organisationunit:'.$this->getOrganisationunit()->__toString().' Form:'.$this->getForm()->__toString().' instance:'.$this->getInstance();
+        return $recordDetail;
+    }
 }

@@ -1227,5 +1227,15 @@ class Organisationunit
         $this->level9OrganisationunitStructure = new \Doctrine\Common\Collections\ArrayCollection();
         $this->level10OrganisationunitStructure = new \Doctrine\Common\Collections\ArrayCollection();
     }
+
+    /**
+     * Get Entity verbose name
+     *
+     * @return string
+     */
+    public function __toString()
+    {
+        return $this->longname;
+    }
     
 }

@@ -53,7 +53,7 @@ class History
     private $uid;
     
     /**
-     * @var Hris\RecordsBundle\Entity\Record $record
+     * @var \Hris\RecordsBundle\Entity\Record $record
      *
      * @ORM\ManyToOne(targetEntity="Hris\RecordsBundle\Entity\Record")
      * @ORM\JoinColumns({
@@ -336,4 +336,16 @@ class History
     {
         return $this->record;
     }
+
+    /**
+     * Get Entity verbose name
+     *
+     * @return string
+     */
+    public function __toString()
+    {
+        $recordHistory = 'Record:'.$this->getRecord()->__toString().' History:'.$this->getHistory();
+        return $recordHistory;
+    }
+
 }

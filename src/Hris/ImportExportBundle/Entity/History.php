@@ -271,4 +271,15 @@ class History
     {
         return $this->finishtime;
     }
+
+    /**
+     * Get Entity verbose name
+     *
+     * @return string
+     */
+    public function __toString()
+    {
+        $importHistory = 'Object:'.$this->getObject().' Status:'.$this->getStatus().' Count:'.$this->getCount();
+        return $importHistory;
+    }
 }

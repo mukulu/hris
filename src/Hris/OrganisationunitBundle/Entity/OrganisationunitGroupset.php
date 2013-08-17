@@ -347,4 +347,14 @@ class OrganisationunitGroupset
     {
         return $this->dhisUid;
     }
+
+    /**
+     * Get Entity verbose name
+     *
+     * @return string
+     */
+    public function __toString()
+    {
+        return $this->name;
+    }
 }

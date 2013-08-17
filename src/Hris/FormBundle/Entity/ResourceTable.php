@@ -224,5 +224,15 @@ class ResourceTable
         $this->resourceTableFieldMember = new \Doctrine\Common\Collections\ArrayCollection();
         $this->uid = uniqid();
     }
+
+    /**
+     * Get Entity verbose name
+     *
+     * @return string
+     */
+    public function __toString()
+    {
+        return $this->name;
+    }
     
 }

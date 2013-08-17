@@ -465,5 +465,15 @@ class FieldOption
         $this->fieldOptionMerge = new \Doctrine\Common\Collections\ArrayCollection();
         $this->uid = uniqid();
     }
+
+    /**
+     * Get Entity verbose name
+     *
+     * @return string
+     */
+    public function __toString()
+    {
+        return $this->value;
+    }
     
 }

@@ -241,4 +241,14 @@ class Report
     {
         return $this->parameters;
     }
+
+    /**
+     * Get Entity verbose name
+     *
+     * @return string
+     */
+    public function __toString()
+    {
+        return $this->name;
+    }
 }

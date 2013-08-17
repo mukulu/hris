@@ -537,4 +537,14 @@ class Form
     {
         return $this->title;
     }
+
+    /**
+     * Get Entity verbose name
+     *
+     * @return string
+     */
+    public function __toString()
+    {
+        return $this->name;
+    }
 }
