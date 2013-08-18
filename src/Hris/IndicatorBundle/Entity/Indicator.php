@@ -85,6 +85,7 @@ class Indicator
     /**
      * @var FieldOptionGroup $fieldOptionGroup
      *
+     * @Gedmo\Versioned
      * @ORM\ManyToOne(targetEntity="\Hris\FormBundle\Entity\FieldOptionGroup",inversedBy="indicator")
      * @ORM\JoinColumns({
      *   @ORM\JoinColumn(name="fieldoptiongroup_id", referencedColumnName="id", onDelete="CASCADE")
@@ -95,6 +96,7 @@ class Indicator
     /**
      * @var OrganisationunitGroup $organisationunitGroup
      *
+     * @Gedmo\Versioned
      * @ORM\ManyToOne(targetEntity="\Hris\OrganisationunitBundle\Entity\OrganisationunitGroup",inversedBy="indicator")
      * @ORM\JoinColumns({
      *   @ORM\JoinColumn(name="organisationunit_id", referencedColumnName="id", onDelete="CASCADE")

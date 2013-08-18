@@ -55,6 +55,7 @@ class User extends BaseUser
     /**
      * @var string $uid
      *
+     * @Gedmo\Versioned
      * @ORM\Column(name="uid", type="string", length=13, unique=true)
      */
     private $uid;
@@ -116,6 +117,7 @@ class User extends BaseUser
     /**
      * @var UserInfo $userInfo
      *
+     * @Gedmo\Versioned
      * @ORM\OneToOne(targetEntity="Hris\UserBundle\Entity\UserInfo", inversedBy="user")
      */
     private $userInfo;

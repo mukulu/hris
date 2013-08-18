@@ -10,8 +10,6 @@
                 <th>Uid</th>
                 <th>Name</th>
                 <th>Description</th>
-                <th>Datecreated</th>
-                <th>Lastmodified</th>
                 <th>Actions</th>
             </tr>
         </thead>
@@ -22,8 +20,6 @@
                 <td>{{ entity.uid }}</td>
                 <td>{{ entity.name }}</td>
                 <td>{{ entity.description }}</td>
-                <td>{% if entity.datecreated %}{{ entity.datecreated|date('Y-m-d H:i:s') }}{% endif %}</td>
-                <td>{% if entity.lastmodified %}{{ entity.lastmodified|date('Y-m-d H:i:s') }}{% endif %}</td>
                 <td>
                 <ul>
                     <li>

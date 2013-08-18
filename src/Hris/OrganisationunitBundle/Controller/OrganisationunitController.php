@@ -7,6 +7,7 @@ use Symfony\Bundle\FrameworkBundle\Controller\Controller;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Method;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Route;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Template;
+use JMS\SecurityExtraBundle\Annotation\Secure;
 use Hris\OrganisationunitBundle\Entity\Organisationunit;
 use Hris\OrganisationunitBundle\Form\OrganisationunitType;
 
@@ -20,6 +21,8 @@ class OrganisationunitController extends Controller
 
     /**
      * Lists all Organisationunit entities.
+     *
+     * @Secure(roles="ROLE_ORGANISATIONUNIT_ORGANISATIONUNIT_LIST,ROLE_USER")
      *
      * @Route("/", name="organisationunit")
      * @Route("/list", name="organisationunit_list")
@@ -44,6 +47,8 @@ class OrganisationunitController extends Controller
     }
     /**
      * Creates a new Organisationunit entity.
+     *
+     * @Secure(roles="ROLE_ORGANISATIONUNIT_ORGANISATIONUNIT_CREATE")
      *
      * @Route("/", name="organisationunit_create")
      * @Method("POST")
@@ -72,6 +77,8 @@ class OrganisationunitController extends Controller
     /**
      * Displays a form to create a new Organisationunit entity.
      *
+     * @Secure(roles="ROLE_ORGANISATIONUNIT_ORGANISATIONUNIT_CREATE")
+     *
      * @Route("/new", name="organisationunit_new")
      * @Method("GET")
      * @Template()
@@ -89,6 +96,8 @@ class OrganisationunitController extends Controller
 
     /**
      * Finds and displays a Organisationunit entity.
+     *
+     * @Secure(roles="ROLE_ORGANISATIONUNIT_ORGANISATIONUNIT_SHOW")
      *
      * @Route("/{id}", name="organisationunit_show")
      * @Method("GET")
@@ -114,6 +123,8 @@ class OrganisationunitController extends Controller
 
     /**
      * Displays a form to edit an existing Organisationunit entity.
+     *
+     * @Secure(roles="ROLE_ORGANISATIONUNIT_ORGANISATIONUNIT_EDIT")
      *
      * @Route("/{id}/edit", name="organisationunit_edit")
      * @Method("GET")
@@ -141,6 +152,8 @@ class OrganisationunitController extends Controller
 
     /**
      * Edits an existing Organisationunit entity.
+     *
+     * @Secure(roles="ROLE_ORGANISATIONUNIT_ORGANISATIONUNIT_EDIT")
      *
      * @Route("/{id}", name="organisationunit_update")
      * @Method("PUT")
@@ -175,6 +188,8 @@ class OrganisationunitController extends Controller
     }
     /**
      * Deletes a Organisationunit entity.
+     *
+     * @Secure(roles="ROLE_ORGANISATIONUNIT_ORGANISATIONUNIT_DELETE")
      *
      * @Route("/{id}", name="organisationunit_delete")
      * @Method("DELETE")

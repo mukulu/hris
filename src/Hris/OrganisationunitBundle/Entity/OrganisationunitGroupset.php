@@ -26,6 +26,7 @@ namespace Hris\OrganisationunitBundle\Entity;
 
 use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\ORM\Mapping as ORM;
+use Gedmo\Mapping\Annotation as Gedmo;
 
 use Hris\OrganisationunitBundle\Entity\OrganisationunitGroup;
 use Symfony\Component\Validator\Constraints as Assert;
@@ -33,6 +34,7 @@ use Symfony\Component\Validator\Constraints as Assert;
 /**
  * Hris\OrganisationunitBundle\Entity\OrganisationunitGroupset
  *
+ * @Gedmo\Loggable
  * @ORM\Table(name="hris_organisationunitgroupset")
  * @ORM\Entity(repositoryClass="Hris\OrganisationunitBundle\Entity\OrganisationunitGroupsetRepository")
  */
@@ -50,6 +52,7 @@ class OrganisationunitGroupset
     /**
      * @var string $uid
      *
+     * @Gedmo\Versioned
      * @ORM\Column(name="uid", type="string", length=13, unique=true)
      */
     private $uid;
@@ -57,6 +60,7 @@ class OrganisationunitGroupset
     /**
      * @var string $dhisUid
      *
+     * @Gedmo\Versioned
      * @ORM\Column(name="dhisUid", type="string", length=11, nullable=true, unique=true)
      */
     private $dhisUid;
@@ -64,6 +68,7 @@ class OrganisationunitGroupset
     /**
      * @var string $name
      *
+     * @Gedmo\Versioned
      * @ORM\Column(name="name", type="string", length=64, unique=true)
      */
     private $name;
@@ -71,6 +76,7 @@ class OrganisationunitGroupset
     /**
      * @var string $description
      *
+     * @Gedmo\Versioned
      * @ORM\Column(name="description", type="string", length=255, nullable=true)
      */
     private $description;
@@ -79,7 +85,8 @@ class OrganisationunitGroupset
      * @var boolean $compulsory
      * 
      * Compulsory means that ALL Organisationunits must be member of a group in this groupset.
-     * 
+     *
+     * @Gedmo\Versioned
      * @ORM\Column(name="compulsory", type="boolean")
      */
     private $compulsory;
@@ -87,23 +94,26 @@ class OrganisationunitGroupset
     /**
      * @var string $code
      *
+     * @Gedmo\Versioned
      * @ORM\Column(name="code", type="string", length=50, nullable=true,unique=true)
      */
     private $code;
 
     /**
+     * @var \DateTime $datecreated
+     *
+     * @Gedmo\Timestampable(on="create")
+     * @ORM\Column(name="datecreated", type="datetime")
+     */
+    private $datecreated;
+
+    /**
      * @var \DateTime $lastupdated
      *
+     * @Gedmo\Timestampable(on="update")
      * @ORM\Column(name="lastupdated", type="datetime", nullable=true)
      */
     private $lastupdated;
-
-    /**
-     * @var \DateTime $datecreated
-     *
-     * @ORM\Column(name="datecreated", type="datetime", nullable=false)
-     */
-    private $datecreated;
     
     /**
      * @var OrganisationunitGroup $organisationunitGroup

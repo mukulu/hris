@@ -25,11 +25,13 @@
 namespace Hris\DataQualityBundle\Entity;
 
 use Doctrine\ORM\Mapping as ORM;
+use Gedmo\Mapping\Annotation as Gedmo;
 use Symfony\Component\Validator\Constraints as Assert;
 
 /**
  * Hris\DataQualityBundle\Entity\Validation
  *
+ * @Gedmo\Loggable
  * @ORM\Table(name="hris_validation", uniqueConstraints={@ORM\UniqueConstraint(name="validation_equation_idx",columns={"operator", "leftExpression","rightExpression"})})
  * @ORM\Entity(repositoryClass="Hris\DataQualityBundle\Entity\ValidationRepository")
  */
@@ -47,6 +49,7 @@ class Validation
     /**
      * @var string $uid
      *
+     * @Gedmo\Versioned
      * @ORM\Column(name="uid", type="string", length=13, unique=true)
      */
     private $uid;
@@ -54,6 +57,7 @@ class Validation
     /**
      * @var string $name
      *
+     * @Gedmo\Versioned
      * @ORM\Column(name="name", type="string", length=64, unique=true)
      */
     private $name;
@@ -61,6 +65,7 @@ class Validation
     /**
      * @var string $description
      *
+     * @Gedmo\Versioned
      * @ORM\Column(name="description", type="text",nullable=true)
      */
     private $description;
@@ -68,13 +73,15 @@ class Validation
     /**
      * @var string $operator
      *
-     * @ORM\Column(name="operator", type="string", length=10)
+     * @Gedmo\Versioned
+     * @ORM\Column(name="operator", type="string", length=20)
      */
     private $operator;
 
     /**
      * @var string $leftExpression
      *
+     * @Gedmo\Versioned
      * @ORM\Column(name="leftExpression", type="string", length=255)
      */
     private $leftExpression;
@@ -82,6 +89,7 @@ class Validation
     /**
      * @var string $rightExpression
      *
+     * @Gedmo\Versioned
      * @ORM\Column(name="rightExpression", type="string", length=255)
      */
     private $rightExpression;
@@ -89,6 +97,7 @@ class Validation
     /**
      * @var \DateTime $datecreated
      *
+     * @Gedmo\Timestampable(on="create")
      * @ORM\Column(name="datecreated", type="datetime")
      */
     private $datecreated;
@@ -96,6 +105,7 @@ class Validation
     /**
      * @var \DateTime $lastupdated
      *
+     * @Gedmo\Timestampable(on="update")
      * @ORM\Column(name="lastupdated", type="datetime", nullable=true)
      */
     private $lastupdated;

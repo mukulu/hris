@@ -26,6 +26,7 @@ namespace Hris\FormBundle\Entity;
 
 use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\ORM\Mapping as ORM;
+use Gedmo\Mapping\Annotation as Gedmo;
 
 use Hris\FormBundle\Entity\FieldGroup;
 use Symfony\Component\Validator\Constraints as Assert;
@@ -33,6 +34,7 @@ use Symfony\Component\Validator\Constraints as Assert;
 /**
  * Hris\FormBundle\Entity\FieldGroupset
  *
+ * @Gedmo\Loggable
  * @ORM\Table(name="hris_fieldgroupset")
  * @ORM\Entity(repositoryClass="Hris\FormBundle\Entity\FieldGroupsetRepository")
  */
@@ -50,6 +52,7 @@ class FieldGroupset
     /**
      * @var string $uid
      *
+     * @Gedmo\Versioned
      * @ORM\Column(name="uid", type="string", length=13, unique=true)
      */
     private $uid;
@@ -57,6 +60,7 @@ class FieldGroupset
     /**
      * @var string $name
      *
+     * @Gedmo\Versioned
      * @ORM\Column(name="name", type="string", length=64, unique=true)
      */
     private $name;
@@ -64,6 +68,7 @@ class FieldGroupset
     /**
      * @var string $description
      *
+     * @Gedmo\Versioned
      * @ORM\Column(name="description", type="text", nullable=true)
      */
     private $description;
@@ -87,6 +92,7 @@ class FieldGroupset
     /**
      * @var \DateTime $datecreated
      *
+     * @Gedmo\Timestampable(on="create")
      * @ORM\Column(name="datecreated", type="datetime")
      */
     private $datecreated;
@@ -94,6 +100,7 @@ class FieldGroupset
     /**
      * @var \DateTime $lastupdated
      *
+     * @Gedmo\Timestampable(on="update")
      * @ORM\Column(name="lastupdated", type="datetime", nullable=true)
      */
     private $lastupdated;

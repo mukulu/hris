@@ -25,6 +25,7 @@
 namespace Hris\RecordsBundle\Entity;
 
 use Doctrine\ORM\Mapping as ORM;
+use Gedmo\Mapping\Annotation as Gedmo;
 
 use Hris\OrganisationunitBundle\Entity\Organisationunit;
 use Hris\FormBundle\Entity\Form;
@@ -34,6 +35,7 @@ use Symfony\Component\Validator\Constraints as Assert;
 /**
  * Hris\RecordsBundle\Entity\RecordStats
  *
+ * @Gedmo\Loggable
  * @ORM\Table(name="hris_record_stats")
  * @ORM\Entity(repositoryClass="Hris\RecordsBundle\Entity\RecordStatsRepository")
  */
@@ -51,6 +53,7 @@ class RecordStats
     /**
      * @var string $uid
      *
+     * @Gedmo\Versioned
      * @ORM\Column(name="uid", type="string", length=13, unique=true)
      */
     private $uid;
@@ -58,6 +61,7 @@ class RecordStats
     /**
      * @var Organisationunit $organisationunit
      *
+     * @Gedmo\Versioned
      * @ORM\ManyToOne(targetEntity="Hris\OrganisationunitBundle\Entity\Organisationunit")
      * @ORM\JoinColumns({
      *   @ORM\JoinColumn(name="organisationunit_id", referencedColumnName="id", nullable=true, onDelete="CASCADE")
@@ -68,6 +72,7 @@ class RecordStats
     /**
      * @var Form $form
      *
+     * @Gedmo\Versioned
      * @ORM\ManyToOne(targetEntity="Hris\FormBundle\Entity\Form",inversedBy="record")
      * @ORM\JoinColumns({
      *   @ORM\JoinColumn(name="form_id", referencedColumnName="id",nullable=false, onDelete="CASCADE")
@@ -78,6 +83,7 @@ class RecordStats
     /**
      * @var boolean $complete
      *
+     * @Gedmo\Versioned
      * @ORM\Column(name="complete", type="boolean")
      */
     private $complete;
@@ -85,6 +91,7 @@ class RecordStats
     /**
      * @var boolean $correct
      *
+     * @Gedmo\Versioned
      * @ORM\Column(name="correct", type="boolean")
      */
     private $correct;
@@ -92,6 +99,7 @@ class RecordStats
     /**
      * @var Field $field
      *
+     * @Gedmo\Versioned
      * @ORM\ManyToOne(targetEntity="Hris\FormBundle\Entity\Field", inversedBy="recordStats")
      * @ORM\JoinColumns({
      *   @ORM\JoinColumn(name="field_id", referencedColumnName="id", onDelete="CASCADE")
@@ -102,6 +110,7 @@ class RecordStats
     /**
      * @var string $value
      *
+     * @Gedmo\Versioned
      * @ORM\Column(name="value", type="string", length=255)
      */
     private $value;
@@ -109,6 +118,7 @@ class RecordStats
     /**
      * @var integer $count
      *
+     * @Gedmo\Versioned
      * @ORM\Column(name="count", type="integer")
      */
     private $count;
@@ -116,13 +126,15 @@ class RecordStats
     /**
      * @var \DateTime $datecreated
      *
-     * @ORM\Column(name="datecreated", type="datetime")
+     * @Gedmo\Timestampable(on="create")
+     * @ORM\Column(name="datecreated", type="datetime", nullable=false)
      */
     private $datecreated;
 
     /**
      * @var \DateTime $lastupdated
      *
+     * @Gedmo\Timestampable(on="update")
      * @ORM\Column(name="lastupdated", type="datetime", nullable=true)
      */
     private $lastupdated;

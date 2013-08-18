@@ -26,6 +26,7 @@ namespace Hris\FormBundle\Entity;
 
 use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\ORM\Mapping as ORM;
+use Gedmo\Mapping\Annotation as Gedmo;
 
 use Hris\FormBundle\Entity\RelationalFilter;
 use Hris\FormBundle\Entity\ArithmeticFilter;
@@ -36,6 +37,7 @@ use Symfony\Component\Validator\Constraints as Assert;
 /**
  * Hris\FormBundle\Entity\FriendlyReport
  *
+ * @Gedmo\Loggable
  * @ORM\Table(name="hris_friendlyreport")
  * @ORM\Entity(repositoryClass="Hris\FormBundle\Entity\FriendlyReportRepository")
  */
@@ -53,6 +55,7 @@ class FriendlyReport
     /**
      * @var string $uid
      *
+     * @Gedmo\Versioned
      * @ORM\Column(name="uid", type="string", length=13, unique=true)
      */
     private $uid;
@@ -60,6 +63,7 @@ class FriendlyReport
     /**
      * @var string $name
      *
+     * @Gedmo\Versioned
      * @ORM\Column(name="name", type="string", length=64, unique=true)
      */
     private $name;
@@ -67,6 +71,7 @@ class FriendlyReport
     /**
      * @var string $description
      *
+     * @Gedmo\Versioned
      * @ORM\Column(name="description", type="text", nullable=true)
      */
     private $description;
@@ -74,6 +79,7 @@ class FriendlyReport
     /**
      * @var integer $sort
      *
+     * @Gedmo\Versioned
      * @ORM\Column(name="sort", type="integer")
      */
     private $sort;
@@ -81,6 +87,7 @@ class FriendlyReport
     /**
      * @var FieldOptionGroup $serie
      *
+     * @Gedmo\Versioned
      * @ORM\ManyToOne(targetEntity="Hris\FormBundle\Entity\FieldOptionGroup")
      * @ORM\JoinColumns({
      *   @ORM\JoinColumn(name="series_id", referencedColumnName="id", onDelete="CASCADE")
@@ -127,17 +134,19 @@ class FriendlyReport
      * @ORM\OrderBy({"name" = "ASC"})
      */
     private $relationalFilter;
-    
+
     /**
      * @var \DateTime $datecreated
      *
+     * @Gedmo\Timestampable(on="create")
      * @ORM\Column(name="datecreated", type="datetime")
      */
     private $datecreated;
-    
+
     /**
      * @var \DateTime $lastupdated
      *
+     * @Gedmo\Timestampable(on="update")
      * @ORM\Column(name="lastupdated", type="datetime", nullable=true)
      */
     private $lastupdated;

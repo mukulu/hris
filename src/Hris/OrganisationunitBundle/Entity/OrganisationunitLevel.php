@@ -26,6 +26,7 @@ namespace Hris\OrganisationunitBundle\Entity;
 
 use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\ORM\Mapping as ORM;
+use Gedmo\Mapping\Annotation as Gedmo;
 
 use Hris\OrganisationunitBundle\Entity\OrganisationunitStructure;
 use Symfony\Component\Validator\Constraints as Assert;
@@ -33,6 +34,7 @@ use Symfony\Component\Validator\Constraints as Assert;
 /**
  * Hris\OrganisationunitBundle\Entity\OrganisationunitLevel
  *
+ * @Gedmo\Loggable
  * @ORM\Table(name="hris_organisationunitlevel")
  * @ORM\Entity(repositoryClass="Hris\OrganisationunitBundle\Entity\OrganisationunitLevelRepository")
  */
@@ -50,6 +52,7 @@ class OrganisationunitLevel
     /**
      * @var string $uid
      *
+     * @Gedmo\Versioned
      * @ORM\Column(name="uid", type="string", length=13, unique=true)
      */
     private $uid;
@@ -57,6 +60,7 @@ class OrganisationunitLevel
     /**
      * @var string $dhisUid
      *
+     * @Gedmo\Versioned
      * @ORM\Column(name="dhisUid", type="string", length=11, nullable=true, unique=true)
      */
     private $dhisUid;
@@ -64,6 +68,7 @@ class OrganisationunitLevel
     /**
      * @var integer $level
      *
+     * @Gedmo\Versioned
      * @ORM\Column(name="level", type="integer", unique=true)
      */
     private $level;
@@ -71,6 +76,7 @@ class OrganisationunitLevel
     /**
      * @var string $name
      *
+     * @Gedmo\Versioned
      * @ORM\Column(name="name", type="string", length=128, unique=true)
      */
     private $name;
@@ -78,6 +84,7 @@ class OrganisationunitLevel
     /**
      * @var string $description
      *
+     * @Gedmo\Versioned
      * @ORM\Column(name="description", type="text", nullable=true)
      */
     private $description;
@@ -85,6 +92,7 @@ class OrganisationunitLevel
     /**
      * @var boolean $dataentrylevel
      *
+     * @Gedmo\Versioned
      * @ORM\Column(name="dataentrylevel", type="boolean")
      */
     private $dataentrylevel;
@@ -99,6 +107,7 @@ class OrganisationunitLevel
     /**
      * @var \DateTime $datecreated
      *
+     * @Gedmo\Timestampable(on="create")
      * @ORM\Column(name="datecreated", type="datetime")
      */
     private $datecreated;
@@ -106,6 +115,7 @@ class OrganisationunitLevel
     /**
      * @var \DateTime $lastupdated
      *
+     * @Gedmo\Timestampable(on="update")
      * @ORM\Column(name="lastupdated", type="datetime", nullable=true)
      */
     private $lastupdated;

@@ -25,6 +25,7 @@
 namespace Hris\FormBundle\Entity;
 
 use Doctrine\ORM\Mapping as ORM;
+use Gedmo\Mapping\Annotation as Gedmo;
 
 use Hris\FormBundle\Entity\Field;
 use Hris\FormBundle\Entity\FormSection;
@@ -33,6 +34,7 @@ use Symfony\Component\Validator\Constraints as Assert;
 /**
  * Hris\FormBundle\Entity\FormSectionFieldMember
  *
+ * @Gedmo\Loggable
  * @ORM\Table(name="hris_formsection_fieldmembers")
  * @ORM\Entity(repositoryClass="Hris\FormBundle\Entity\FormSectionFieldMemberRepository")
  */
@@ -41,6 +43,7 @@ class FormSectionFieldMember
     /**
      * @var FormSection $formSection
      *
+     * @Gedmo\Versioned
      * @ORM\ManyToOne(targetEntity="Hris\FormBundle\Entity\FormSection",inversedBy="formSectionFieldMember")
      * @ORM\JoinColumns({
      *   @ORM\JoinColumn(name="formsection_id", referencedColumnName="id",nullable=false, onDelete="CASCADE")
@@ -53,6 +56,7 @@ class FormSectionFieldMember
     /**
      * @var Field $field
      *
+     * @Gedmo\Versioned
      * @ORM\ManyToOne(targetEntity="Hris\FormBundle\Entity\Field",inversedBy="formSectionFieldMember")
      * @ORM\JoinColumns({
      *   @ORM\JoinColumn(name="field_id", referencedColumnName="id",nullable=false, onDelete="CASCADE")
@@ -65,6 +69,7 @@ class FormSectionFieldMember
     /**
      * @var integer $sort
      *
+     * @Gedmo\Versioned
      * @ORM\Column(name="sort", type="integer")
      */
     private $sort;

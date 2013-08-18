@@ -56,6 +56,7 @@ class FieldOptionGroup
     /**
      * @var string $uid
      *
+     * @Gedmo\Versioned
      * @ORM\Column(name="uid", type="string", length=13, unique=true)
      */
     private $uid;
@@ -96,6 +97,7 @@ class FieldOptionGroup
     /**
      * @var Field $field
      *
+     * @Gedmo\Versioned
      * @ORM\ManyToOne(targetEntity="Hris\FormBundle\Entity\Field")
      * @ORM\JoinColumns({
      *   @ORM\JoinColumn(name="field_id", referencedColumnName="id", onDelete="CASCADE")
@@ -118,7 +120,7 @@ class FieldOptionGroup
      * @ORM\OrderBy({"sort" = "ASC"})
      */
     private $friendlyReportCategory;
-    
+
     /**
      * @var \DateTime $datecreated
      *
@@ -126,14 +128,14 @@ class FieldOptionGroup
      * @ORM\Column(name="datecreated", type="datetime")
      */
     private $datecreated;
-    
+
     /**
-     * @var \DateTime $lastmodified
+     * @var \DateTime $lastupdated
      *
      * @Gedmo\Timestampable(on="update")
-     * @ORM\Column(name="lastmodified", type="datetime", nullable=true)
+     * @ORM\Column(name="lastupdated", type="datetime", nullable=true)
      */
-    private $lastmodified;
+    private $lastupdated;
 
     /**
      * @var Indicator $indicator
@@ -243,19 +245,19 @@ class FieldOptionGroup
      * Set datecreated
      *
      * @param \DateTime $datecreated
-     * @return FieldOptionGroup
+     * @return Field
      */
     public function setDatecreated($datecreated)
     {
         $this->datecreated = $datecreated;
-    
+
         return $this;
     }
 
     /**
      * Get datecreated
      *
-     * @return \DateTime 
+     * @return \DateTime
      */
     public function getDatecreated()
     {
@@ -263,26 +265,26 @@ class FieldOptionGroup
     }
 
     /**
-     * Set lastmodified
+     * Set lastupdated
      *
-     * @param \DateTime $lastmodified
-     * @return FieldOptionGroup
+     * @param \DateTime $lastupdated
+     * @return Field
      */
-    public function setLastmodified($lastmodified)
+    public function setLastupdated($lastupdated)
     {
-        $this->lastmodified = $lastmodified;
-    
+        $this->lastupdated = $lastupdated;
+
         return $this;
     }
 
     /**
-     * Get lastmodified
+     * Get lastupdated
      *
-     * @return \DateTime 
+     * @return \DateTime
      */
-    public function getLastmodified()
+    public function getLastupdated()
     {
-        return $this->lastmodified;
+        return $this->lastupdated;
     }
 
     /**

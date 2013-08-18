@@ -25,6 +25,7 @@
 namespace Hris\RecordsBundle\Entity;
 
 use Doctrine\ORM\Mapping as ORM;
+use Gedmo\Mapping\Annotation as Gedmo;
 
 use Hris\OrganisationunitBundle\Entity\Organisationunit;
 use Hris\FormBundle\Entity\Form;
@@ -33,6 +34,7 @@ use Symfony\Component\Validator\Constraints as Assert;
 /**
  * Hris\RecordsBundle\Entity\Record
  *
+ * @Gedmo\Loggable
  * @ORM\Table(name="hris_record")
  * @ORM\Entity(repositoryClass="Hris\RecordsBundle\Entity\RecordRepository")
  */
@@ -50,6 +52,7 @@ class Record
     /**
      * @var string $uid
      *
+     * @Gedmo\Versioned
      * @ORM\Column(name="uid", type="string", length=13, unique=true)
      */
     private $uid;
@@ -57,6 +60,7 @@ class Record
     /**
      * @var string $instance
      *
+     * @Gedmo\Versioned
      * @ORM\Column(name="instance", type="string", length=64, unique=true)
      */
     private $instance;
@@ -64,6 +68,7 @@ class Record
     /**
      * @var Organisationunit $organisationunit
      *
+     * @Gedmo\Versioned
      * @ORM\ManyToOne(targetEntity="Hris\OrganisationunitBundle\Entity\Organisationunit")
      * @ORM\JoinColumns({
      *   @ORM\JoinColumn(name="organisationunit_id", referencedColumnName="id", nullable=true, onDelete="CASCADE")
@@ -74,6 +79,7 @@ class Record
     /**
      * @var Form $form
      *
+     * @Gedmo\Versioned
      * @ORM\ManyToOne(targetEntity="Hris\FormBundle\Entity\Form",inversedBy="record")
      * @ORM\JoinColumns({
      *   @ORM\JoinColumn(name="form_id", referencedColumnName="id",nullable=false, onDelete="CASCADE")
@@ -85,6 +91,7 @@ class Record
      *
      * @var json_array $value
      *
+     * @Gedmo\Versioned
      * @ORM\Column(name="value", type="json_array", nullable=false)
      */
     private $value;
@@ -92,6 +99,7 @@ class Record
     /**
      * @var boolean $complete
      *
+     * @Gedmo\Versioned
      * @ORM\Column(name="complete", type="boolean")
      */
     private $complete;
@@ -99,6 +107,7 @@ class Record
     /**
      * @var boolean $correct
      *
+     * @Gedmo\Versioned
      * @ORM\Column(name="correct", type="boolean")
      */
     private $correct;
@@ -106,6 +115,7 @@ class Record
     /**
      * @var boolean $hashistory
      *
+     * @Gedmo\Versioned
      * @ORM\Column(name="hashistory", type="boolean")
      */
     private $hashistory;
@@ -113,6 +123,7 @@ class Record
     /**
      * @var boolean $hastraining
      *
+     * @Gedmo\Versioned
      * @ORM\Column(name="hastraining", type="boolean")
      */
     private $hastraining;
@@ -120,13 +131,15 @@ class Record
     /**
      * @var \DateTime $datecreated
      *
-     * @ORM\Column(name="datecreated", type="datetime")
+     * @Gedmo\Timestampable(on="create")
+     * @ORM\Column(name="datecreated", type="datetime", nullable=false)
      */
     private $datecreated;
 
     /**
      * @var \DateTime $lastupdated
      *
+     * @Gedmo\Timestampable(on="update")
      * @ORM\Column(name="lastupdated", type="datetime", nullable=true)
      */
     private $lastupdated;

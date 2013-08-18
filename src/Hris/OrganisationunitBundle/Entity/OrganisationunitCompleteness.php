@@ -25,6 +25,7 @@
 namespace Hris\OrganisationunitBundle\Entity;
 
 use Doctrine\ORM\Mapping as ORM;
+use Gedmo\Mapping\Annotation as Gedmo;
 
 use Hris\OrganisationunitBundle\Entity\Organisationunit;
 use Symfony\Component\Validator\Constraints as Assert;
@@ -32,6 +33,7 @@ use Symfony\Component\Validator\Constraints as Assert;
 /**
  * Hris\OrganisationunitBundle\Entity\OrganisationunitCompleteness
  *
+ * @Gedmo\Loggable
  * @ORM\Table(name="hris_organisationunitcompleteness")
  * @ORM\Entity(repositoryClass="Hris\OrganisationunitBundle\Entity\OrganisationunitCompletenessRepository")
  */
@@ -49,6 +51,7 @@ class OrganisationunitCompleteness
     /**
      * @var string $uid
      *
+     * @Gedmo\Versioned
      * @ORM\Column(name="uid", type="string", length=13, unique=true)
      */
     private $uid;
@@ -56,6 +59,7 @@ class OrganisationunitCompleteness
     /**
      * @var \Hris\OrganisationunitBundle\Entity\Organisationunit $organisationunit
      *
+     * @Gedmo\Versioned
      * @ORM\ManyToOne(targetEntity="Hris\OrganisationunitBundle\Entity\Organisationunit")
      * @ORM\JoinColumns({
      *   @ORM\JoinColumn(name="organisationunit_id", referencedColumnName="id", nullable=true, onDelete="CASCADE")
@@ -66,23 +70,26 @@ class OrganisationunitCompleteness
     /**
      * @var integer $expectation
      *
+     * @Gedmo\Versioned
      * @ORM\Column(name="expectation", type="integer", nullable=true)
      */
     private $expectation;
-    
-    /**
-     * @var \DateTime $lastupdated
-     *
-     * @ORM\Column(name="lastupdated", type="datetime", nullable=true)
-     */
-    private $lastupdated;
-    
+
     /**
      * @var \DateTime $datecreated
      *
-     * @ORM\Column(name="datecreated", type="datetime", nullable=false)
+     * @Gedmo\Timestampable(on="create")
+     * @ORM\Column(name="datecreated", type="datetime")
      */
     private $datecreated;
+
+    /**
+     * @var \DateTime $lastupdated
+     *
+     * @Gedmo\Timestampable(on="update")
+     * @ORM\Column(name="lastupdated", type="datetime", nullable=true)
+     */
+    private $lastupdated;
     
     
     /**
