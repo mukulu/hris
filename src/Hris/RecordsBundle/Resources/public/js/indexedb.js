@@ -127,6 +127,8 @@ function addRecords(databaseName, tableName, dataValues) {
 
                 if( val == "dataType" || val == "inputType" ){
                     results += '"'+ val + '" : "' + encodeURIComponent(dataValues[key][val]['name']) +'", ';
+                }else if( val == "datecreated" || val == "lastupdated" ){
+                    results += '"'+ val + '" : "' + encodeURIComponent(dataValues[key][val]['date']) +'", ';
                 }else{
                     results += '"'+ val + '" : "' + encodeURIComponent(dataValues[key][val]) +'", ';
                 }
