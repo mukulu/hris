@@ -24,9 +24,11 @@
  */
 namespace Hris\OrganisationunitBundle\Entity;
 
+use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\ORM\Mapping as ORM;
 
 use Hris\OrganisationunitBundle\Entity\OrganisationunitStructure;
+use Symfony\Component\Validator\Constraints as Assert;
 
 /**
  * Hris\OrganisationunitBundle\Entity\OrganisationunitLevel
@@ -88,7 +90,7 @@ class OrganisationunitLevel
     private $dataentrylevel;
     
     /**
-     * @var \Hris\OrganisationunitBundle\Entity\OrganisationunitStructure $organisationunitStructure
+     * @var OrganisationunitStructure $organisationunitStructure
      *
      * @ORM\OneToMany(targetEntity="Hris\OrganisationunitBundle\Entity\OrganisationunitStructure", mappedBy="level",cascade={"ALL"})
      */
@@ -305,10 +307,10 @@ class OrganisationunitLevel
     /**
      * Add organisationunitStructure
      *
-     * @param \Hris\OrganisationunitBundle\Entity\OrganisationunitStructure $organisationunitStructure
+     * @param OrganisationunitStructure $organisationunitStructure
      * @return OrganisationunitLevel
      */
-    public function addOrganisationunitStructure(\Hris\OrganisationunitBundle\Entity\OrganisationunitStructure $organisationunitStructure)
+    public function addOrganisationunitStructure(OrganisationunitStructure $organisationunitStructure)
     {
         $this->organisationunitStructure[$organisationunitStructure->getId()] = $organisationunitStructure;
     
@@ -318,9 +320,9 @@ class OrganisationunitLevel
     /**
      * Remove organisationunitStructure
      *
-     * @param \Hris\OrganisationunitBundle\Entity\OrganisationunitStructure $organisationunitStructure
+     * @param OrganisationunitStructure $organisationunitStructure
      */
-    public function removeOrganisationunitStructure(\Hris\OrganisationunitBundle\Entity\OrganisationunitStructure $organisationunitStructure)
+    public function removeOrganisationunitStructure(OrganisationunitStructure $organisationunitStructure)
     {
         $this->organisationunitStructure->removeElement($organisationunitStructure);
     }
@@ -340,7 +342,7 @@ class OrganisationunitLevel
     public function __construct()
     {
     	$this->uid = uniqid();
-        $this->organisationunitStructure = new \Doctrine\Common\Collections\ArrayCollection();
+        $this->organisationunitStructure = new ArrayCollection();
         $this->dataentrylevel = FALSE;
     }
 

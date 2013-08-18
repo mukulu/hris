@@ -31,9 +31,14 @@ class IndicatorController extends Controller
         $em = $this->getDoctrine()->getManager();
 
         $entities = $em->getRepository('HrisIndicatorBundle:Indicator')->findAll();
+        foreach($entities as $entity) {
+            $delete_form= $this->createDeleteForm($entity->getId());
+            $delete_forms[$entity->getId()] = $delete_form->createView();
+        }
 
         return array(
             'entities' => $entities,
+            'delete_forms' => $delete_forms,
         );
     }
     /**
@@ -47,7 +52,7 @@ class IndicatorController extends Controller
     {
         $entity  = new Indicator();
         $form = $this->createForm(new IndicatorType(), $entity);
-        $form->bind($request);
+        $form->submit($request);
 
         if ($form->isValid()) {
             $em = $this->getDoctrine()->getManager();
@@ -152,7 +157,7 @@ class IndicatorController extends Controller
 
         $deleteForm = $this->createDeleteForm($id);
         $editForm = $this->createForm(new IndicatorType(), $entity);
-        $editForm->bind($request);
+        $editForm->submit($request);
 
         if ($editForm->isValid()) {
             $em->persist($entity);
@@ -176,7 +181,7 @@ class IndicatorController extends Controller
     public function deleteAction(Request $request, $id)
     {
         $form = $this->createDeleteForm($id);
-        $form->bind($request);
+        $form->submit($request);
 
         if ($form->isValid()) {
             $em = $this->getDoctrine()->getManager();

@@ -24,10 +24,11 @@
  */
 namespace Hris\UserBundle\Entity;
 
+use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\ORM\Mapping as ORM;
+use Symfony\Component\Validator\Constraints as Assert;
 
 use Hris\DashboardBundle\Entity\DashboardChart;
-use Hris\UserBundle\Entity\User;
 
 /**
  * Hris\UserBundle\Entity\UserInfo
@@ -89,7 +90,7 @@ class UserInfo
     private $surname;
     
     /**
-     * @var \Hris\DashboardBundle\Entity\DashboardChart $dashboardChart
+     * @var DashboardChart $dashboardChart
      *
      * @ORM\OneToMany(targetEntity="Hris\DashboardBundle\Entity\DashboardChart", mappedBy="userInfo",cascade={"ALL"})
      * @ORM\OrderBy({"name" = "ASC"})
@@ -227,7 +228,7 @@ class UserInfo
      */
     public function __construct()
     {
-        $this->dashboardChart = new \Doctrine\Common\Collections\ArrayCollection();
+        $this->dashboardChart = new ArrayCollection();
     }
     
     /**
@@ -256,10 +257,10 @@ class UserInfo
     /**
      * Add dashboardChart
      *
-     * @param \Hris\DashboardBundle\Entity\DashboardChart $dashboardChart
+     * @param DashboardChart $dashboardChart
      * @return UserInfo
      */
-    public function addDashboardChart(\Hris\DashboardBundle\Entity\DashboardChart $dashboardChart)
+    public function addDashboardChart(DashboardChart $dashboardChart)
     {
         $this->dashboardChart[$dashboardChart->getId()] = $dashboardChart;
     
@@ -269,9 +270,9 @@ class UserInfo
     /**
      * Remove dashboardChart
      *
-     * @param \Hris\DashboardBundle\Entity\DashboardChart $dashboardChart
+     * @param DashboardChart $dashboardChart
      */
-    public function removeDashboardChart(\Hris\DashboardBundle\Entity\DashboardChart $dashboardChart)
+    public function removeDashboardChart(DashboardChart $dashboardChart)
     {
         $this->dashboardChart->removeElement($dashboardChart);
     }

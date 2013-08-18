@@ -24,7 +24,9 @@
  */
 namespace Hris\FormBundle\Entity;
 
+use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\ORM\Mapping as ORM;
+use Symfony\Component\Validator\Constraints as Assert;
 
 use Hris\FormBundle\Entity\Field;
 use \DateTime;
@@ -75,7 +77,7 @@ class InputType
     private $htmltag;
     
     /**
-     * @var \Hris\FormBundle\Entity\Field $field
+     * @var Field $field
      *
      * @ORM\OneToMany(targetEntity="Hris\FormBundle\Entity\Field", mappedBy="inputType",cascade={"ALL"})
      * @ORM\OrderBy({"name" = "ASC"})
@@ -248,7 +250,7 @@ class InputType
      */
     public function __construct()
     {
-        $this->field = new \Doctrine\Common\Collections\ArrayCollection();
+        $this->field = new ArrayCollection();
         $this->uid = uniqid();
         $this->datecreated = new \DateTime('now');
     }
@@ -256,10 +258,10 @@ class InputType
     /**
      * Add field
      *
-     * @param \Hris\FormBundle\Entity\Field $field
+     * @param Field $field
      * @return InputType
      */
-    public function addField(\Hris\FormBundle\Entity\Field $field)
+    public function addField(Field $field)
     {
         $this->field[$field->getId()] = $field;
     
@@ -269,9 +271,9 @@ class InputType
     /**
      * Remove field
      *
-     * @param \Hris\FormBundle\Entity\Field $field
+     * @param Field $field
      */
-    public function removeField(\Hris\FormBundle\Entity\Field $field)
+    public function removeField(Field $field)
     {
         $this->field->removeElement($field);
     }

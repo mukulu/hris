@@ -24,9 +24,11 @@
  */
 namespace Hris\FormBundle\Entity;
 
+use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\ORM\Mapping as ORM;
 
 use Hris\FormBundle\Entity\FieldGroup;
+use Symfony\Component\Validator\Constraints as Assert;
 
 /**
  * Hris\FormBundle\Entity\FieldGroupset
@@ -67,7 +69,7 @@ class FieldGroupset
     private $description;
     
     /**
-     * @var \Hris\FormBundle\Entity\FieldGroup $fieldGroup
+     * @var FieldGroup $fieldGroup
      *
      * @ORM\ManyToMany(targetEntity="Hris\FormBundle\Entity\FieldGroup", inversedBy="fieldGroupset")
      * @ORM\JoinTable(name="hris_fieldgroupset_members",
@@ -226,17 +228,17 @@ class FieldGroupset
      */
     public function __construct()
     {
-        $this->fieldGroup = new \Doctrine\Common\Collections\ArrayCollection();
+        $this->fieldGroup = new ArrayCollection();
         $this->uid = uniqid();
     }
     
     /**
      * Add fieldGroup
      *
-     * @param \Hris\FormBundle\Entity\FieldGroup $fieldGroup
+     * @param FieldGroup $fieldGroup
      * @return FieldGroupset
      */
-    public function addFieldGroup(\Hris\FormBundle\Entity\FieldGroup $fieldGroup)
+    public function addFieldGroup(FieldGroup $fieldGroup)
     {
         $this->fieldGroup[$fieldGroup->getId()] = $fieldGroup;
     
@@ -246,9 +248,9 @@ class FieldGroupset
     /**
      * Remove fieldGroup
      *
-     * @param \Hris\FormBundle\Entity\FieldGroup $fieldGroup
+     * @param FieldGroup $fieldGroup
      */
-    public function removeFieldGroup(\Hris\FormBundle\Entity\FieldGroup $fieldGroup)
+    public function removeFieldGroup(FieldGroup $fieldGroup)
     {
         $this->fieldGroup->removeElement($fieldGroup);
     }

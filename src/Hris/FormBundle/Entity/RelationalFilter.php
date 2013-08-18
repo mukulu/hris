@@ -24,10 +24,12 @@
  */
 namespace Hris\FormBundle\Entity;
 
+use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\ORM\Mapping as ORM;
 
 use Hris\FormBundle\Entity\FriendlyReport;
 use Hris\FormBundle\Entity\FieldOption;
+use Symfony\Component\Validator\Constraints as Assert;
 
 /**
  * Hris\FormBundle\Entity\RelationalFilter
@@ -68,7 +70,7 @@ class RelationalFilter
     private $excludeFieldOptions;
     
     /**
-     * @var \Hris\FormBundle\Entity\FieldOption $fieldOption
+     * @var FieldOption $fieldOption
      *
      * @ORM\ManyToMany(targetEntity="Hris\FormBundle\Entity\FieldOption", inversedBy="relationalFilter")
      * @ORM\JoinTable(name="hris_relationalfilter_member",
@@ -84,7 +86,7 @@ class RelationalFilter
     private $fieldOption;
     
     /**
-     * @var \Hris\FormBundle\Entity\Field $field
+     * @var Field $field
      *
      * @ORM\ManyToOne(targetEntity="Hris\FormBundle\Entity\Field")
      * @ORM\JoinColumns({
@@ -94,7 +96,7 @@ class RelationalFilter
     private $field;
     
     /**
-     * @var \Hris\FormBundle\Entity\FriendlyReport $friendlyReport
+     * @var FriendlyReport $friendlyReport
      *
      * @ORM\ManyToMany(targetEntity="Hris\FormBundle\Entity\FriendlyReport", mappedBy="relationalFilter")
      * @ORM\OrderBy({"name" = "ASC"})
@@ -244,10 +246,10 @@ class RelationalFilter
     /**
      * Add fieldOption
      *
-     * @param \Hris\FormBundle\Entity\FieldOption $fieldOption
+     * @param FieldOption $fieldOption
      * @return RelationalFilter
      */
-    public function addFieldOption(\Hris\FormBundle\Entity\FieldOption $fieldOption)
+    public function addFieldOption(FieldOption $fieldOption)
     {
         $this->fieldOption[$fieldOption->getId()] = $fieldOption;
     
@@ -257,9 +259,9 @@ class RelationalFilter
     /**
      * Remove fieldOption
      *
-     * @param \Hris\FormBundle\Entity\FieldOption $fieldOption
+     * @param FieldOption $fieldOption
      */
-    public function removeFieldOption(\Hris\FormBundle\Entity\FieldOption $fieldOption)
+    public function removeFieldOption(FieldOption $fieldOption)
     {
         $this->fieldOption->removeElement($fieldOption);
     }
@@ -277,10 +279,10 @@ class RelationalFilter
     /**
      * Set field
      *
-     * @param \Hris\FormBundle\Entity\Field $field
+     * @param Field $field
      * @return RelationalFilter
      */
-    public function setField(\Hris\FormBundle\Entity\Field $field = null)
+    public function setField(Field $field = null)
     {
         $this->field = $field;
     
@@ -290,7 +292,7 @@ class RelationalFilter
     /**
      * Get field
      *
-     * @return \Hris\FormBundle\Entity\Field
+     * @return Field
      */
     public function getField()
     {
@@ -300,10 +302,10 @@ class RelationalFilter
     /**
      * Add friendlyReport
      *
-     * @param \Hris\FormBundle\Entity\FriendlyReport $friendlyReport
+     * @param FriendlyReport $friendlyReport
      * @return RelationalFilter
      */
-    public function addFriendlyReport(\Hris\FormBundle\Entity\FriendlyReport $friendlyReport)
+    public function addFriendlyReport(FriendlyReport $friendlyReport)
     {
         $this->friendlyReport[$friendlyReport->getId()] = $friendlyReport;
     
@@ -313,9 +315,9 @@ class RelationalFilter
     /**
      * Remove friendlyReport
      *
-     * @param \Hris\FormBundle\Entity\FriendlyReport $friendlyReport
+     * @param FriendlyReport $friendlyReport
      */
-    public function removeFriendlyReport(\Hris\FormBundle\Entity\FriendlyReport $friendlyReport)
+    public function removeFriendlyReport(FriendlyReport $friendlyReport)
     {
         $this->friendlyReport->removeElement($friendlyReport);
     }
@@ -334,8 +336,8 @@ class RelationalFilter
      */
     public function __construct()
     {
-        $this->fieldOption = new \Doctrine\Common\Collections\ArrayCollection();
-        $this->friendlyReport = new \Doctrine\Common\Collections\ArrayCollection();
+        $this->fieldOption = new ArrayCollection();
+        $this->friendlyReport = new ArrayCollection();
         $this->uid = uniqid();
         $this->excludeFieldOptions = FALSE;
     }

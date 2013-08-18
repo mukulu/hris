@@ -28,6 +28,7 @@ use Doctrine\ORM\Mapping as ORM;
 
 use Hris\OrganisationunitBundle\Entity\Organisationunit;
 use Hris\FormBundle\Entity\Form;
+use Symfony\Component\Validator\Constraints as Assert;
 
 /**
  * Hris\RecordsBundle\Entity\Record
@@ -61,7 +62,7 @@ class Record
     private $instance;
     
     /**
-     * @var \Hris\OrganisationunitBundle\Entity\Organisationunit $organisationunit
+     * @var Organisationunit $organisationunit
      *
      * @ORM\ManyToOne(targetEntity="Hris\OrganisationunitBundle\Entity\Organisationunit")
      * @ORM\JoinColumns({
@@ -71,7 +72,7 @@ class Record
     private $organisationunit;
     
     /**
-     * @var \Hris\FormBundle\Entity\Form $form
+     * @var Form $form
      *
      * @ORM\ManyToOne(targetEntity="Hris\FormBundle\Entity\Form",inversedBy="record")
      * @ORM\JoinColumns({
@@ -370,10 +371,10 @@ class Record
     /**
      * Set organisationunit
      *
-     * @param \Hris\OrganisationunitBundle\Entity\Organisationunit $organisationunit
+     * @param Organisationunit $organisationunit
      * @return Record
      */
-    public function setOrganisationunit(\Hris\OrganisationunitBundle\Entity\Organisationunit $organisationunit = null)
+    public function setOrganisationunit(Organisationunit $organisationunit = null)
     {
         $this->organisationunit = $organisationunit;
     
@@ -383,7 +384,7 @@ class Record
     /**
      * Get organisationunit
      *
-     * @return \Hris\OrganisationunitBundle\Entity\Organisationunit
+     * @return Organisationunit
      */
     public function getOrganisationunit()
     {
@@ -393,10 +394,10 @@ class Record
     /**
      * Set form
      *
-     * @param \Hris\FormBundle\Entity\Form $form
+     * @param Form $form
      * @return Record
      */
-    public function setForm(\Hris\FormBundle\Entity\Form $form)
+    public function setForm(Form $form)
     {
         $this->form = $form;
     
@@ -406,7 +407,7 @@ class Record
     /**
      * Get form
      *
-     * @return \Hris\FormBundle\Entity\Form
+     * @return Form
      */
     public function getForm()
     {

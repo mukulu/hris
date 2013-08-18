@@ -13,7 +13,7 @@ use Sensio\Bundle\FrameworkExtraBundle\Configuration\Route;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Template;
 use Hris\RecordsBundle\Entity\Record;
 use Hris\RecordsBundle\Form\RecordType;
-use Hris\FormBundle\Entity\Form;
+use Hris\FormBundle\Entity\Field;
 use Hris\FormBundle\Form\FormType;
 use Hris\FormBundle\Form\DesignFormType;
 
@@ -59,17 +59,44 @@ class RecordController extends Controller
     {
         $em = $this->getDoctrine()->getManager();
 
+        /*
+         * Getting the Form Metadata and Values
+         */
         $entities = $em->getRepository( 'HrisFormBundle:Form' )->createQueryBuilder('p')->getQuery()->getArrayResult();
 
-        $columnNames = json_encode($em->getClassMetadata('HrisFormBundle:Form')->getFieldNames());
-        $tableName = json_encode($em->getClassMetadata('HrisFormBundle:Form')->getTableName());
+        $form_Column_Names = json_encode($em->getClassMetadata('HrisFormBundle:Form')->getFieldNames());
+        $form_Table_Name = json_encode($em->getClassMetadata('HrisFormBundle:Form')->getTableName());
         $dataValues = json_encode($entities);
+
+        $tables = $em->getMetadataFactory()->getAllMetadata();
+        foreach($tables as $classMetadata) {
+            $tableArray[] = $classMetadata->table['name'];
+        }
+
+        /*
+        * Getting the Field Metadata and Values
+        */
+        $field_entities = $em->getRepository( 'HrisFormBundle:Field' )
+            ->createQueryBuilder('f')
+            ->select('f', 'd', 'i')
+            ->join('f.dataType', 'd')
+            ->join('f.inputType', 'i')
+            ->getQuery()
+            ->getArrayResult();
+
+        $field_Column_Names = json_encode($em->getClassMetadata('HrisFormBundle:Field')->getFieldNames());
+        $filed_Table_Name = json_encode($em->getClassMetadata('HrisFormBundle:Field')->getTableName());
+        $filed_Values = json_encode($field_entities);
 
         return array(
             'entities' => $entities,
-            'column_names' => $columnNames,
-            'table_name' => $tableName,
+            'column_names' => $form_Column_Names,
+            'table_names' => json_encode($tableArray),
+            'table_name' => $form_Table_Name,
             'data_values' => $dataValues,
+            'field_column_names' => $field_Column_Names,
+            'field_table_name' => $filed_Table_Name,
+            'field_values' => $filed_Values,
         );
     }
     
@@ -107,18 +134,20 @@ class RecordController extends Controller
      * @Method("GET")
      * @Template()
      */
-    public function newAction($id)
+    public function newAction( $id )
     {
-
         $em = $this->getDoctrine()->getManager();
 
         $formEntity = $em->getRepository('HrisFormBundle:Form')->find($id);
-        $form = $this->createForm(new DesignFormType(), $formEntity);
+        $tableName = json_encode($em->getClassMetadata('HrisFormBundle:Form')->getTableName());
+
 
         return array(
 
-            'entity'   => $formEntity,
-            'form'     => $form->createView(),
+            'uid' => $formEntity->getUid(),
+            'title' => $formEntity->getTitle(),
+            'id' => $formEntity->getId(),
+            'table_name' => $tableName,
         );
     }
 
