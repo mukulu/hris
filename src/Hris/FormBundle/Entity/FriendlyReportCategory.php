@@ -28,6 +28,7 @@ use Doctrine\ORM\Mapping as ORM;
 
 use Hris\FormBundle\Entity\FieldOptionGroup;
 use Hris\FormBundle\Entity\FriendlyReport;
+use Symfony\Component\Validator\Constraints as Assert;
 
 /**
  * Hris\FormBundle\Entity\FriendlyReportCategory
@@ -38,7 +39,7 @@ use Hris\FormBundle\Entity\FriendlyReport;
 class FriendlyReportCategory
 {
     /**
-     * @var \Hris\FormBundle\Entity\FriendlyReport $friendlyReport
+     * @var FriendlyReport $friendlyReport
      *
      * @ORM\ManyToOne(targetEntity="Hris\FormBundle\Entity\FriendlyReport",inversedBy="friendlyReportCategory")
      * @ORM\JoinColumns({
@@ -50,7 +51,7 @@ class FriendlyReportCategory
     private $friendlyReport;
     
     /**
-     * @var \Hris\FormBundle\Entity\FieldOptionGroup $fieldOptionGroup
+     * @var FieldOptionGroup $fieldOptionGroup
      *
      * @ORM\ManyToOne(targetEntity="Hris\FormBundle\Entity\FieldOptionGroup",inversedBy="friendlyReportCategory")
      * @ORM\JoinColumns({
@@ -94,10 +95,10 @@ class FriendlyReportCategory
     /**
      * Set friendlyReport
      *
-     * @param \Hris\FormBundle\Entity\FriendlyReport $friendlyReport
+     * @param FriendlyReport $friendlyReport
      * @return FriendlyReportCategory
      */
-    public function setFriendlyReport(\Hris\FormBundle\Entity\FriendlyReport $friendlyReport)
+    public function setFriendlyReport(FriendlyReport $friendlyReport)
     {
         $this->friendlyReport = $friendlyReport;
     
@@ -107,7 +108,7 @@ class FriendlyReportCategory
     /**
      * Get friendlyReport
      *
-     * @return \Hris\FormBundle\Entity\FriendlyReport
+     * @return FriendlyReport
      */
     public function getFriendlyReport()
     {
@@ -117,10 +118,10 @@ class FriendlyReportCategory
     /**
      * Set fieldOptionGroup
      *
-     * @param \Hris\FormBundle\Entity\FieldOptionGroup $fieldOptionGroup
+     * @param FieldOptionGroup $fieldOptionGroup
      * @return FriendlyReportCategory
      */
-    public function setFieldOptionGroup(\Hris\FormBundle\Entity\FieldOptionGroup $fieldOptionGroup)
+    public function setFieldOptionGroup(FieldOptionGroup $fieldOptionGroup)
     {
         $this->fieldOptionGroup = $fieldOptionGroup;
     
@@ -130,7 +131,7 @@ class FriendlyReportCategory
     /**
      * Get fieldOptionGroup
      *
-     * @return \Hris\FormBundle\Entity\FieldOptionGroup
+     * @return FieldOptionGroup
      */
     public function getFieldOptionGroup()
     {

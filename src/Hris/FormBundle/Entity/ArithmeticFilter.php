@@ -24,9 +24,11 @@
  */
 namespace Hris\FormBundle\Entity;
 
+use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\ORM\Mapping as ORM;
 
 use Hris\FormBundle\Entity\FriendlyReport;
+use Symfony\Component\Validator\Constraints as Assert;
 
 /**
  * Hris\FormBundle\Entity\ArithmeticFilter
@@ -88,7 +90,7 @@ class ArithmeticFilter
     private $rightExpression;
     
     /**
-     * @var \Hris\FormBundle\Entity\FriendlyReport $friendlyReport
+     * @var FriendlyReport $friendlyReport
      *
      * @ORM\ManyToMany(targetEntity="Hris\FormBundle\Entity\FriendlyReport", mappedBy="arithmeticFilter")
      * @ORM\OrderBy({"name" = "ASC"})
@@ -308,17 +310,17 @@ class ArithmeticFilter
      */
     public function __construct()
     {
-        $this->friendlyReport = new \Doctrine\Common\Collections\ArrayCollection();
+        $this->friendlyReport = new ArrayCollection();
         $this->uid = uniqid();
     }
     
     /**
      * Add friendlyReport
      *
-     * @param \Hris\FormBundle\Entity\FriendlyReport $friendlyReport
+     * @param FriendlyReport $friendlyReport
      * @return ArithmeticFilter
      */
-    public function addFriendlyReport(\Hris\FormBundle\Entity\FriendlyReport $friendlyReport)
+    public function addFriendlyReport(FriendlyReport $friendlyReport)
     {
         $this->friendlyReport[$friendlyReport->getId()] = $friendlyReport;
     
@@ -328,9 +330,9 @@ class ArithmeticFilter
     /**
      * Remove friendlyReport
      *
-     * @param \Hris\FormBundle\Entity\FriendlyReport $friendlyReport
+     * @param FriendlyReport $friendlyReport
      */
-    public function removeFriendlyReport(\Hris\FormBundle\Entity\FriendlyReport $friendlyReport)
+    public function removeFriendlyReport(FriendlyReport $friendlyReport)
     {
         $this->friendlyReport->removeElement($friendlyReport);
     }

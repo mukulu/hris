@@ -29,6 +29,7 @@ use Gedmo\Mapping\Annotation as Gedmo;
 
 use Hris\FormBundle\Entity\FieldOptionGroup;
 use Hris\OrganisationunitBundle\Entity\OrganisationunitGroup;
+use Symfony\Component\Validator\Constraints as Assert;
 
 /**
  * Indicator
@@ -59,6 +60,7 @@ class Indicator
     /**
      * @var string
      *
+     * @Assert\NotBlank()
      * @Gedmo\Versioned
      * @ORM\Column(name="name", type="string", length=64)
      */
@@ -81,7 +83,7 @@ class Indicator
     private $year;
 
     /**
-     * @var \Hris\FormBundle\Entity\FieldOptionGroup $fieldOptionGroup
+     * @var FieldOptionGroup $fieldOptionGroup
      *
      * @ORM\ManyToOne(targetEntity="\Hris\FormBundle\Entity\FieldOptionGroup",inversedBy="indicator")
      * @ORM\JoinColumns({
@@ -91,7 +93,7 @@ class Indicator
     private $fieldOptionGroup;
 
     /**
-     * @var \Hris\OrganisationunitBundle\Entity\OrganisationunitGroup $organisationunitGroup
+     * @var OrganisationunitGroup $organisationunitGroup
      *
      * @ORM\ManyToOne(targetEntity="\Hris\OrganisationunitBundle\Entity\OrganisationunitGroup",inversedBy="indicator")
      * @ORM\JoinColumns({
@@ -219,10 +221,10 @@ class Indicator
     /**
      * Set fieldOptionGroup
      *
-     * @param \Hris\FormBundle\Entity\FieldOptionGroup $fieldOptionGroup
+     * @param FieldOptionGroup $fieldOptionGroup
      * @return Indicator
      */
-    public function setFieldOptionGroup(\Hris\FormBundle\Entity\FieldOptionGroup $fieldOptionGroup = null)
+    public function setFieldOptionGroup(FieldOptionGroup $fieldOptionGroup = null)
     {
         $this->fieldOptionGroup = $fieldOptionGroup;
 
@@ -232,7 +234,7 @@ class Indicator
     /**
      * Get fieldOptionGroup
      *
-     * @return \Hris\FormBundle\Entity\FieldOptionGroup
+     * @return FieldOptionGroup
      */
     public function getFieldOptionGroup()
     {
@@ -245,10 +247,10 @@ class Indicator
     /**
      * Set organisationunitGroup
      *
-     * @param \Hris\OrganisationunitBundle\Entity\OrganisationunitGroup $organisationunitGroup
+     * @param OrganisationunitGroup $organisationunitGroup
      * @return Indicator
      */
-    public function setOrganisationunitGroup(\Hris\OrganisationunitBundle\Entity\OrganisationunitGroup $organisationunitGroup = null)
+    public function setOrganisationunitGroup(OrganisationunitGroup $organisationunitGroup = null)
     {
         $this->organisationunitGroup = $organisationunitGroup;
 
@@ -258,7 +260,7 @@ class Indicator
     /**
      * Get organisationunitGroup
      *
-     * @return \Hris\OrganisationunitBundle\Entity\OrganisationunitGroup
+     * @return OrganisationunitGroup
      */
     public function getOrganisationunitGroup()
     {

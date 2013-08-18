@@ -24,12 +24,14 @@
  */
 namespace Hris\FormBundle\Entity;
 
+use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\ORM\Mapping as ORM;
 
 use Hris\FormBundle\Entity\RelationalFilter;
 use Hris\FormBundle\Entity\ArithmeticFilter;
 use Hris\FormBundle\Entity\FriendlyReportCategory;
 use Hris\FormBundle\Entity\FieldOptionGroup;
+use Symfony\Component\Validator\Constraints as Assert;
 
 /**
  * Hris\FormBundle\Entity\FriendlyReport
@@ -77,7 +79,7 @@ class FriendlyReport
     private $sort;
     
     /**
-     * @var \Hris\FormBundle\Entity\FieldOptionGroup $serie
+     * @var FieldOptionGroup $serie
      *
      * @ORM\ManyToOne(targetEntity="Hris\FormBundle\Entity\FieldOptionGroup")
      * @ORM\JoinColumns({
@@ -87,7 +89,7 @@ class FriendlyReport
     private $serie;
     
     /**
-     * @var \Hris\FormBundle\Entity\FriendlyReportCategory $friendlyReportCategory
+     * @var FriendlyReportCategory $friendlyReportCategory
      *
      * @ORM\OneToMany(targetEntity="Hris\FormBundle\Entity\FriendlyReportCategory", mappedBy="friendlyReport",cascade={"ALL"})
      * @ORM\OrderBy({"sort" = "ASC"})
@@ -95,7 +97,7 @@ class FriendlyReport
     private $friendlyReportCategory;
     
     /**
-     * @var \Hris\FormBundle\Entity\ArithmeticFilter $arithmeticFilter
+     * @var ArithmeticFilter $arithmeticFilter
      *
      * @ORM\ManyToMany(targetEntity="Hris\FormBundle\Entity\ArithmeticFilter", inversedBy="friendlyReport")
      * @ORM\JoinTable(name="hris_friendlyreport_arithmeticfilter",
@@ -111,7 +113,7 @@ class FriendlyReport
     private $arithmeticFilter;
     
     /**
-     * @var \Hris\FormBundle\Entity\RelationalFilter $relationalFilter
+     * @var RelationalFilter $relationalFilter
      *
      * @ORM\ManyToMany(targetEntity="Hris\FormBundle\Entity\RelationalFilter", inversedBy="friendlyReport")
      * @ORM\JoinTable(name="hris_friendlyreport_relationalfilter",
@@ -225,9 +227,9 @@ class FriendlyReport
      */
     public function __construct()
     {
-        $this->friendlyReportCategory = new \Doctrine\Common\Collections\ArrayCollection();
-        $this->arithmeticFilter = new \Doctrine\Common\Collections\ArrayCollection();
-        $this->relationalFilter = new \Doctrine\Common\Collections\ArrayCollection();
+        $this->friendlyReportCategory = new ArrayCollection();
+        $this->arithmeticFilter = new ArrayCollection();
+        $this->relationalFilter = new ArrayCollection();
         $this->sort = 0;
         $this->uid = uniqid();
     }
@@ -304,10 +306,10 @@ class FriendlyReport
     /**
      * Add friendlyReportCategory
      *
-     * @param \Hris\FormBundle\Entity\FriendlyReportCategory $friendlyReportCategory
+     * @param FriendlyReportCategory $friendlyReportCategory
      * @return FriendlyReport
      */
-    public function addFriendlyReportCategory(\Hris\FormBundle\Entity\FriendlyReportCategory $friendlyReportCategory)
+    public function addFriendlyReportCategory(FriendlyReportCategory $friendlyReportCategory)
     {
         $this->friendlyReportCategory[] = $friendlyReportCategory;
     
@@ -317,9 +319,9 @@ class FriendlyReport
     /**
      * Remove friendlyReportCategory
      *
-     * @param \Hris\FormBundle\Entity\FriendlyReportCategory $friendlyReportCategory
+     * @param FriendlyReportCategory $friendlyReportCategory
      */
-    public function removeFriendlyReportCategory(\Hris\FormBundle\Entity\FriendlyReportCategory $friendlyReportCategory)
+    public function removeFriendlyReportCategory(FriendlyReportCategory $friendlyReportCategory)
     {
         $this->friendlyReportCategory->removeElement($friendlyReportCategory);
     }
@@ -337,10 +339,10 @@ class FriendlyReport
     /**
      * Add arithmeticFilter
      *
-     * @param \Hris\FormBundle\Entity\ArithmeticFilter $arithmeticFilter
+     * @param ArithmeticFilter $arithmeticFilter
      * @return FriendlyReport
      */
-    public function addArithmeticFilter(\Hris\FormBundle\Entity\ArithmeticFilter $arithmeticFilter)
+    public function addArithmeticFilter(ArithmeticFilter $arithmeticFilter)
     {
         $this->arithmeticFilter[$arithmeticFilter->getId()] = $arithmeticFilter;
     
@@ -350,9 +352,9 @@ class FriendlyReport
     /**
      * Remove arithmeticFilter
      *
-     * @param \Hris\FormBundle\Entity\ArithmeticFilter $arithmeticFilter
+     * @param ArithmeticFilter $arithmeticFilter
      */
-    public function removeArithmeticFilter(\Hris\FormBundle\Entity\ArithmeticFilter $arithmeticFilter)
+    public function removeArithmeticFilter(ArithmeticFilter $arithmeticFilter)
     {
         $this->arithmeticFilter->removeElement($arithmeticFilter);
     }
@@ -370,10 +372,10 @@ class FriendlyReport
     /**
      * Add relationalFilter
      *
-     * @param \Hris\FormBundle\Entity\RelationalFilter $relationalFilter
+     * @param RelationalFilter $relationalFilter
      * @return FriendlyReport
      */
-    public function addRelationalFilter(\Hris\FormBundle\Entity\RelationalFilter $relationalFilter)
+    public function addRelationalFilter(RelationalFilter $relationalFilter)
     {
         $this->relationalFilter[$relationalFilter->getId()] = $relationalFilter;
     
@@ -383,9 +385,9 @@ class FriendlyReport
     /**
      * Remove relationalFilter
      *
-     * @param \Hris\FormBundle\Entity\RelationalFilter $relationalFilter
+     * @param RelationalFilter $relationalFilter
      */
-    public function removeRelationalFilter(\Hris\FormBundle\Entity\RelationalFilter $relationalFilter)
+    public function removeRelationalFilter(RelationalFilter $relationalFilter)
     {
         $this->relationalFilter->removeElement($relationalFilter);
     }
@@ -403,10 +405,10 @@ class FriendlyReport
     /**
      * Set serie
      *
-     * @param \Hris\FormBundle\Entity\FieldOptionGroup  $serie
+     * @param FieldOptionGroup $serie
      * @return FriendlyReport
      */
-    public function setSerie(\Hris\FormBundle\Entity\FieldOptionGroup  $serie = null)
+    public function setSerie(FieldOptionGroup $serie = null)
     {
         $this->serie = $serie;
     
@@ -416,7 +418,7 @@ class FriendlyReport
     /**
      * Get serie
      *
-     * @return \Hris\FormBundle\Entity\FieldOptionGroup
+     * @return FieldOptionGroup
      */
     public function getSerie()
     {

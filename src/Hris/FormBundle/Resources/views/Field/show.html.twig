@@ -23,11 +23,11 @@
             </tr>
             <tr>
                 <th>Compulsory</th>
-                <td>{{ entity.compulsory }}</td>
+                <td>{% if entity.compulsory %} True {% else %} False {% endif %}</td>
             </tr>
             <tr>
                 <th>Unique</th>
-                <td>{{ entity.isUnique }}</td>
+                <td>{% if entity.isUnique %} True {% else %} False {% endif %}</td>
             </tr>
             <tr>
                 <th>Description</th>
@@ -35,7 +35,7 @@
             </tr>
             <tr>
                 <th>Hashistory</th>
-                <td>{{ entity.hashistory }}</td>
+                <td>{% if entity.hashistory %} True {% else %} False {% endif %}</td>
             </tr>
             <tr>
                 <th>Fieldrelation</th>

@@ -28,6 +28,7 @@ use Gedmo\Mapping\Annotation as Gedmo;
 use FOS\UserBundle\Entity\User as BaseUser;
 use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\ORM\Mapping as ORM;
+use Symfony\Component\Validator\Constraints as Assert;
 
 use Hris\OrganisationunitBundle\Entity\Organisationunit;
 use Hris\UserBundle\Entity\UserInfo;
@@ -113,14 +114,14 @@ class User extends BaseUser
     protected $plainPassword;
     
     /**
-     * @var \Hris\UserBundle\Entity\UserInfo $userInfo
+     * @var UserInfo $userInfo
      *
      * @ORM\OneToOne(targetEntity="Hris\UserBundle\Entity\UserInfo", inversedBy="user")
      */
     private $userInfo;
 
     /**
-     * @var \Hris\OrganisationunitBundle\Entity\Organisationunit $organisationunit
+     * @var Organisationunit $organisationunit
      *
      * @ORM\ManyToMany(targetEntity="Hris\OrganisationunitBundle\Entity\Organisationunit", inversedBy="user")
      * @ORM\JoinTable(name="hris_user_organisationunits",
@@ -165,7 +166,7 @@ class User extends BaseUser
         {
             $this->datecreated = new \DateTime('now');
         }
-        $this->organisationunit = new \Doctrine\Common\Collections\ArrayCollection();
+        $this->organisationunit = new ArrayCollection();
     }
     
     /**
@@ -205,10 +206,10 @@ class User extends BaseUser
     /**
      * Add organisationunit
      *
-     * @param \Hris\OrganisationunitBundle\Entity\Organisationunit $organisationunit
+     * @param Organisationunit $organisationunit
      * @return User
      */
-    public function addOrganisationunit(\Hris\OrganisationunitBundle\Entity\Organisationunit $organisationunit)
+    public function addOrganisationunit(Organisationunit $organisationunit)
     {
         $this->organisationunit[$organisationunit->getId()] = $organisationunit;
 
@@ -218,9 +219,9 @@ class User extends BaseUser
     /**
      * Remove organisationunit
      *
-     * @param \Hris\OrganisationunitBundle\Entity\Organisationunit $organisationunit
+     * @param Organisationunit $organisationunit
      */
-    public function removeOrganisationunit(\Hris\OrganisationunitBundle\Entity\Organisationunit $organisationunit)
+    public function removeOrganisationunit(Organisationunit $organisationunit)
     {
         $this->organisationunit->removeElement($organisationunit);
     }
@@ -284,10 +285,10 @@ class User extends BaseUser
     /**
      * Set userInfo
      *
-     * @param \Hris\UserBundle\Entity\UserInfo $userInfo
+     * @param UserInfo $userInfo
      * @return User
      */
-    public function setUserInfo(\Hris\UserBundle\Entity\UserInfo $userInfo = null)
+    public function setUserInfo(UserInfo $userInfo = null)
     {
         $this->userInfo = $userInfo;
     
@@ -297,7 +298,7 @@ class User extends BaseUser
     /**
      * Get userInfo
      *
-     * @return \Hris\UserBundle\Entity\UserInfo
+     * @return UserInfo
      */
     public function getUserInfo()
     {

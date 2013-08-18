@@ -30,6 +30,10 @@
                 <td>{{ entity.longname }}</td>
             </tr>
             <tr>
+                <th>Parent</th>
+                <td>{{ entity.parent }}</td>
+            </tr>
+            <tr>
                 <th>Active</th>
                 <td>{{ entity.active }}</td>
             </tr>
@@ -93,6 +97,11 @@
             <li>
                 <a href="{{ path('organisationunit_edit', { 'id': entity.id }) }}" class="btn">
                     Edit
+                </a>
+            </li>
+            <li>
+                <a class="btn" href="{{ path('organisationunit_new') }}">
+                    Create a another
                 </a>
             </li>
             <li>

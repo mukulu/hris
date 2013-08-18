@@ -24,11 +24,13 @@
  */
 namespace Hris\OrganisationunitBundle\Entity;
 
+use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\ORM\Mapping as ORM;
 use Gedmo\Mapping\Annotation as Gedmo;
 
 use Hris\OrganisationunitBundle\Entity\Organisationunit;
 use Hris\OrganisationunitBundle\Entity\OrganisationunitGroupset;
+use Symfony\Component\Validator\Constraints as Assert;
 
 /**
  * Hris\OrganisationunitBundle\Entity\OrganisationunitGroup
@@ -81,7 +83,7 @@ class OrganisationunitGroup
     private $code;
     
     /**
-     * @var \Hris\OrganisationunitBundle\Entity\Organisationunit $organisationunit
+     * @var Organisationunit $organisationunit
      *
      * @ORM\ManyToMany(targetEntity="Hris\OrganisationunitBundle\Entity\Organisationunit", inversedBy="organisationunitGroup")
      * @ORM\JoinTable(name="hris_organisationunitgroup_members",
@@ -97,7 +99,7 @@ class OrganisationunitGroup
     private $organisationunit;
     
     /**
-     * @var \Hris\OrganisationunitBundle\Entity\OrganisationunitGroupset $organisationunitGroupset
+     * @var OrganisationunitGroupset $organisationunitGroupset
      *
      * @ORM\ManyToOne(targetEntity="Hris\OrganisationunitBundle\Entity\OrganisationunitGroupset",inversedBy="organisationunitGroup")
      * @ORM\JoinColumns({
@@ -251,10 +253,10 @@ class OrganisationunitGroup
     /**
      * Add organisationunit
      *
-     * @param \Hris\OrganisationunitBundle\Entity\Organisationunit $organisationunit
+     * @param Organisationunit $organisationunit
      * @return OrganisationunitGroup
      */
-    public function addOrganisationunit(\Hris\OrganisationunitBundle\Entity\Organisationunit $organisationunit)
+    public function addOrganisationunit(Organisationunit $organisationunit)
     {
         $this->organisationunit[$organisationunit->getId()] = $organisationunit;
     
@@ -264,9 +266,9 @@ class OrganisationunitGroup
     /**
      * Remove organisationunit
      *
-     * @param \Hris\OrganisationunitBundle\Entity\Organisationunit $organisationunit
+     * @param Organisationunit $organisationunit
      */
-    public function removeOrganisationunit(\Hris\OrganisationunitBundle\Entity\Organisationunit $organisationunit)
+    public function removeOrganisationunit(Organisationunit $organisationunit)
     {
         $this->organisationunit->removeElement($organisationunit);
     }
@@ -285,7 +287,7 @@ class OrganisationunitGroup
      */
     public function __construct()
     {
-        $this->organisationunit = new \Doctrine\Common\Collections\ArrayCollection();
+        $this->organisationunit = new ArrayCollection();
         $this->uid = uniqid();
     }
     
@@ -315,10 +317,10 @@ class OrganisationunitGroup
     /**
      * Set organisationunitGroupset
      *
-     * @param \Hris\OrganisationunitBundle\Entity\OrganisationunitGroupset $organisationunitGroupset
+     * @param OrganisationunitGroupset $organisationunitGroupset
      * @return OrganisationunitGroup
      */
-    public function setOrganisationunitGroupset(\Hris\OrganisationunitBundle\Entity\OrganisationunitGroupset $organisationunitGroupset = null)
+    public function setOrganisationunitGroupset(OrganisationunitGroupset $organisationunitGroupset = null)
     {
         $this->organisationunitGroupset = $organisationunitGroupset;
     
@@ -328,7 +330,7 @@ class OrganisationunitGroup
     /**
      * Get organisationunitGroupset
      *
-     * @return \Hris\OrganisationunitBundle\Entity\OrganisationunitGroupset
+     * @return OrganisationunitGroupset
      */
     public function getOrganisationunitGroupset()
     {

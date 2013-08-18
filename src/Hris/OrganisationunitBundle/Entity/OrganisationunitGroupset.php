@@ -24,9 +24,11 @@
  */
 namespace Hris\OrganisationunitBundle\Entity;
 
+use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\ORM\Mapping as ORM;
 
 use Hris\OrganisationunitBundle\Entity\OrganisationunitGroup;
+use Symfony\Component\Validator\Constraints as Assert;
 
 /**
  * Hris\OrganisationunitBundle\Entity\OrganisationunitGroupset
@@ -104,7 +106,7 @@ class OrganisationunitGroupset
     private $datecreated;
     
     /**
-     * @var \Hris\OrganisationunitBundle\Entity\OrganisationunitGroup $organisationunitGroup
+     * @var OrganisationunitGroup $organisationunitGroup
      *
      * @ORM\OneToMany(targetEntity="Hris\OrganisationunitBundle\Entity\OrganisationunitGroup", mappedBy="organisationunitGroupset",cascade={"ALL"})
      * @ORM\OrderBy({"name" = "ASC"})
@@ -289,16 +291,16 @@ class OrganisationunitGroupset
     {
     	$this->compulsory = FALSE;
     	$this->uid = uniqid();
-        $this->organisationunitGroup = new \Doctrine\Common\Collections\ArrayCollection();
+        $this->organisationunitGroup = new ArrayCollection();
     }
     
     /**
      * Add organisationunitGroup
      *
-     * @param \Hris\OrganisationunitBundle\Entity\OrganisationunitGroup $organisationunitGroup
+     * @param OrganisationunitGroup $organisationunitGroup
      * @return OrganisationunitGroupset
      */
-    public function addOrganisationunitGroup(\Hris\OrganisationunitBundle\Entity\OrganisationunitGroup $organisationunitGroup)
+    public function addOrganisationunitGroup(OrganisationunitGroup $organisationunitGroup)
     {
         $this->organisationunitGroup[$organisationunitGroup->getId()] = $organisationunitGroup;
     
@@ -308,9 +310,9 @@ class OrganisationunitGroupset
     /**
      * Remove organisationunitGroup
      *
-     * @param \Hris\OrganisationunitBundle\Entity\OrganisationunitGroup $organisationunitGroup
+     * @param OrganisationunitGroup $organisationunitGroup
      */
-    public function removeOrganisationunitGroup(\Hris\OrganisationunitBundle\Entity\OrganisationunitGroup $organisationunitGroup)
+    public function removeOrganisationunitGroup(OrganisationunitGroup $organisationunitGroup)
     {
         $this->organisationunitGroup->removeElement($organisationunitGroup);
     }
