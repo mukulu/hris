@@ -8,8 +8,9 @@
         /*
         Creating the Database if not Existing
          */
-        createDatabase('hris3','{{ table_name | raw | escape('js') }}', '{{ column_names | raw }}', '{{ data_values | raw | escape('js')}}');
+        createDatabase('hris3','{{ table_names | raw | escape('js') }}', '{{ column_names | raw }}', '{{ data_values | raw | escape('js')}}');
 
+        addRecords( 'hris3','{{ table_name | raw | escape('js') }}', '{{ data_values | raw | escape('js') }}' );
 
     </script>
 

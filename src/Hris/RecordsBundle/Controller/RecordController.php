@@ -85,7 +85,8 @@ class RecordController extends Controller
         return array(
             'entities' => $entities,
             'column_names' => $form_Column_Names,
-            'table_name' => json_encode($tableArray),
+            'table_names' => json_encode($tableArray),
+            'table_name' => $form_Table_Name,
             'data_values' => $dataValues,
             'field_column_names' => $field_Column_Names,
             'field_table_name' => $filed_Table_Name,
