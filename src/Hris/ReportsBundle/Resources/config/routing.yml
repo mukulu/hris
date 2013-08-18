@@ -1,3 +1,7 @@
 reports:
     resource: "@HrisReportsBundle/Controller/ReportController.php"
     type: annotation
+
+aggregation:
+    resource: "@HrisReportsBundle/Controller/ReportAggregationController.php"
+    type: annotation

@@ -56,7 +56,7 @@ class ConfigureMenuListener
             )
         );
         $reportsModule->addChild('Aggregated Report',
-            array('uri'=>'#aggregatedreport',
+            array('route'=>'report_aggregation',
                 'extras'=>array('tag'=>'div'),
                 'name'=>'Aggregated Report',
                 'attributes'=> array('class'=>'accordion-group'),

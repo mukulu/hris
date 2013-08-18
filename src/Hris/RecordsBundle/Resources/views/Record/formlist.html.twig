@@ -8,10 +8,11 @@
         /*
         Creating the Database if not Existing
          */
-        createDatabase('hris2', '{{ table_name | raw }}', '{{ column_names | raw }}', '{{ data_values | raw | escape('js')}}');
+        createDatabase('{{ project_code | lower | raw }}','{{ table_names | raw | escape('js') }}', '{{ column_names | raw }}', '{{ data_values | raw | escape('js')}}');
 
-        //populateDatabase();
+        addRecords( '{{ project_code | lower | raw }}','{{ table_name | raw | escape('js') }}', '{{ data_values | raw | escape('js') }}' );
 
+        addRecords( '{{ project_code | lower | raw }}','{{ field_table_name | raw | escape('js') }}', '{{ field_values | raw | escape('js') }}' );
 
     </script>
 
@@ -51,7 +52,7 @@
             </tr>
         {% endfor %}
         </tbody>
-    </table>
+    </table><button name='delete' onclick="deleteDatabase('{{ project_code | lower | raw }}')"
 
     <div id="result" />
     {% endblock %}
