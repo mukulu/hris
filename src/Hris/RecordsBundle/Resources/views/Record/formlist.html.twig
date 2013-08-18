@@ -8,9 +8,7 @@
         /*
         Creating the Database if not Existing
          */
-        createDatabase('hris2', '{{ table_name | raw }}', '{{ column_names | raw }}', '{{ data_values | raw | escape('js')}}');
-
-        //populateDatabase();
+        createDatabase('hris3','{{ table_name | raw | escape('js') }}', '{{ column_names | raw }}', '{{ data_values | raw | escape('js')}}');
 
 
     </script>

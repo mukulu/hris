@@ -28,24 +28,29 @@ function createDatabase(databaseName, tableName, columnNames, dataValues) {
     openRequest.onupgradeneeded = function() {
         // The database did not previously exist, so create object stores and indexes.
         var db = openRequest.result;
-        var dataStore = db.createObjectStore(tableName, {keyPath: "uid"});
-        console.log("data Store " + tableName + " Created");
+        //var tables = ["hris_form2", "hris_form3"];
+
+        for (var key in tableName){
+            var dataStore = db.createObjectStore(tableName[key], {keyPath: "uid"});
+            console.log("data Store " + tableName[key] + " Created");
+        }
 
         /*
          Creating the Columns for data Storage
-         */
+
         for (var key in columnNames){
             var column_name = columnNames[key];
 
             dataStore.createIndex(column_name, column_name, { unique: false });
             console.log("data Store Column '" + column_name + "' Added");
         }
+         */
     };
 
     openRequest.onsuccess = function() {
         db = openRequest.result;
         console.log("this is done deal");
-
+/*
         var transaction = db.transaction(tableName, "readwrite");
         var store = transaction.objectStore(tableName);
 
@@ -69,7 +74,7 @@ function createDatabase(databaseName, tableName, columnNames, dataValues) {
             // All requests have succeeded and the transaction has committed.
             console.log("All transaction done");
         };
-
+ */
     };
 
 }
