@@ -33,6 +33,9 @@ function createDatabase(databaseName, tableName, columnNames, dataValues) {
         for (var key in tableName){
             var dataStore = db.createObjectStore(tableName[key], {keyPath: "uid"});
             console.log("data Store " + tableName[key] + " Created");
+
+            dataStore.createIndex("userId", "uid", { unique: true });
+            console.log("data Store Column UID  Added for the datastore " + tableName[key] );
         }
 
         /*
@@ -143,10 +146,11 @@ function addRecords(databaseName, tableName, dataValues) {
 
 }
 
-function getSingleRecord(databaseName, path) {
+function getSingleRecord(databaseName, uid, tableName) {
 
-    //tableName = JSON.parse(tableName);
-    var uid = '51f699672adcf';
+    tableName = JSON.parse(tableName);
+    //uid = JSON.parse(uid);
+    alert(uid);
     /*
      Parsing the names of columns form strin to Json Format
      */
@@ -167,8 +171,8 @@ function getSingleRecord(databaseName, path) {
         //var transaction = db.transaction(tableName, "readwrite");
         //var store = transaction.objectStore(tableName);
 
-        var transaction = db.transaction("hris_form", "readonly");
-        var store = transaction.objectStore("hris_form");
+        var transaction = db.transaction(tableName, "readonly");
+        var store = transaction.objectStore(tableName);
         var index = store.index("uid");
 
         var request = index.get(uid);
