@@ -25,7 +25,6 @@
 namespace Hris\FormBundle\Entity;
 
 use Doctrine\ORM\Mapping as ORM;
-use Gedmo\Mapping\Annotation as Gedmo;
 
 use Hris\FormBundle\Entity\Field;
 use Hris\FormBundle\Entity\ResourceTable;
@@ -34,7 +33,6 @@ use Symfony\Component\Validator\Constraints as Assert;
 /**
  * Hris\FormBundle\Entity\ResourceTableFieldMember
  *
- * @Gedmo\Loggable
  * @ORM\Table(name="hris_resourcetable_fieldmembers")
  * @ORM\Entity(repositoryClass="Hris\FormBundle\Entity\ResourceTableFieldMemberRepository")
  */
@@ -43,7 +41,6 @@ class ResourceTableFieldMember
 	/**
 	 * @var ResourceTable $resourceTable
 	 *
-     * @Gedmo\Versioned
 	 * @ORM\ManyToOne(targetEntity="Hris\FormBundle\Entity\ResourceTable",inversedBy="resourceTableFieldMember")
 	 * @ORM\JoinColumns({
 	 *   @ORM\JoinColumn(name="resourcetable_id", referencedColumnName="id",nullable=false, onDelete="CASCADE")
@@ -56,7 +53,6 @@ class ResourceTableFieldMember
 	/**
 	 * @var Field $field
 	 *
-     * @Gedmo\Versioned
 	 * @ORM\ManyToOne(targetEntity="Hris\FormBundle\Entity\Field",inversedBy="resourceTableFieldMember")
 	 * @ORM\JoinColumns({
 	 *   @ORM\JoinColumn(name="field_id", referencedColumnName="id",nullable=false, onDelete="CASCADE")
@@ -69,7 +65,6 @@ class ResourceTableFieldMember
     /**
      * @var integer $sort
      *
-     * @Gedmo\Versioned
      * @ORM\Column(name="sort", type="integer")
      */
     private $sort;

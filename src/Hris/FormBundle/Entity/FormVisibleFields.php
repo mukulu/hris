@@ -25,7 +25,6 @@
 namespace Hris\FormBundle\Entity;
 
 use Doctrine\ORM\Mapping as ORM;
-use Gedmo\Mapping\Annotation as Gedmo;
 
 use Hris\FormBundle\Entity\Field;
 use Hris\FormBundle\Entity\Form;
@@ -33,7 +32,6 @@ use Hris\FormBundle\Entity\Form;
 /**
  * Hris\FormBundle\Entity\FormVisibleFields
  *
- * @Gedmo\Loggable
  * @ORM\Table(name="hris_form_visiblefields")
  * @ORM\Entity(repositoryClass="Hris\FormBundle\Entity\VisibleFormFieldsRepository")
  */
@@ -43,7 +41,6 @@ class FormVisibleFields
     /**
      * @var \Hris\FormBundle\Entity\Form $form
      *
-     * @Gedmo\Versioned
      * @ORM\ManyToOne(targetEntity="Hris\FormBundle\Entity\Form",inversedBy="formVisibleFields")
      * @ORM\JoinColumns({
      *   @ORM\JoinColumn(name="form_id", referencedColumnName="id",nullable=false, onDelete="CASCADE")
@@ -56,7 +53,6 @@ class FormVisibleFields
     /**
      * @var \Hris\FormBundle\Entity\Field $field
      *
-     * @Gedmo\Versioned
      * @ORM\ManyToOne(targetEntity="Hris\FormBundle\Entity\Field",inversedBy="formVisibleFields")
      * @ORM\JoinColumns({
      *   @ORM\JoinColumn(name="field_id", referencedColumnName="id",nullable=false, onDelete="CASCADE")
@@ -69,7 +65,6 @@ class FormVisibleFields
     /**
      * @var integer $sort
      *
-     * @Gedmo\Versioned
      * @ORM\Column(name="sort", type="integer")
      */
     private $sort;

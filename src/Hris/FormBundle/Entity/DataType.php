@@ -77,7 +77,6 @@ class DataType
     /**
      * @var Field $field
      *
-     * @Gedmo\Versioned
      * @ORM\OneToMany(targetEntity="Hris\FormBundle\Entity\Field", mappedBy="dataType",cascade={"ALL"})
      * @ORM\OrderBy({"name" = "ASC"})
      */
