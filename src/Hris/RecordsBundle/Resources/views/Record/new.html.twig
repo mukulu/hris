@@ -5,7 +5,7 @@
 
     <script type="text/javascript">
 
-        getSingleRecord( "hris3", '{{ uid | raw }}', '{{ table_name | raw }}' );
+        getSingleRecord( '{{ project_code | lower | raw }}', '{{ uid | raw }}', '{{ table_name | raw }}' );
 
     </script>
 

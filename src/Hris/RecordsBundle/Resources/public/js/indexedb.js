@@ -19,9 +19,7 @@ function createDatabase(databaseName, tableName, columnNames, dataValues) {
     /*
     Parsing the names of columns form strin to Json Format
      */
-    columnNames = JSON.parse(columnNames);
     tableName = JSON.parse(tableName);
-    dataValues = JSON.parse(dataValues);
 
     var openRequest = indexedDB.open(databaseName);
 
@@ -31,10 +29,10 @@ function createDatabase(databaseName, tableName, columnNames, dataValues) {
         //var tables = ["hris_form2", "hris_form3"];
 
         for (var key in tableName){
-            var dataStore = db.createObjectStore(tableName[key], {keyPath: "uid"});
+            var dataStore = db.createObjectStore(tableName[key], {keyPath: "id"});
             console.log("data Store " + tableName[key] + " Created");
 
-            dataStore.createIndex("userId", "uid", { unique: true });
+            dataStore.createIndex("uid", "uid", { unique: true });
             console.log("data Store Column UID  Added for the datastore " + tableName[key] );
         }
 
@@ -149,13 +147,6 @@ function addRecords(databaseName, tableName, dataValues) {
 function getSingleRecord(databaseName, uid, tableName) {
 
     tableName = JSON.parse(tableName);
-    //uid = JSON.parse(uid);
-    alert(uid);
-    /*
-     Parsing the names of columns form strin to Json Format
-     */
-    //tableName = JSON.parse(tableName);
-    //uid = JSON.parse(uid);
 
     console.log(uid);
 
