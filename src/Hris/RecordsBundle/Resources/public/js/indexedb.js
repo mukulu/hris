@@ -218,8 +218,6 @@ function getDataEntryForm(databaseName, uid, tableName) {
         db = openRequest.result;
         console.log("this is done deal");
 
-        //var transaction = db.transaction(tableName, "readwrite");
-        //var store = transaction.objectStore(tableName);
 
         var transaction = db.transaction(tableName, "readonly");
         var store = transaction.objectStore(tableName);
@@ -230,20 +228,46 @@ function getDataEntryForm(databaseName, uid, tableName) {
             var matching = request.result;
             if (matching !== undefined) {
                 // A match was found.
-                //report(matching.hypertext);
 
                 var jsonStr = JSON.stringify(decodeURIComponent(matching.hypertext));
+                //Formating the forms to be sent out as a complete form
+
+                if( fieldType = "combo" ){
+                    //replacing the field with Combo Box
+                }
+                else if( fieldType = "text" ){
+                    //replacing the field with Text Box
+                }
+                else if( fieldType = "textArea" ){
+                    //replacing the field with Text Area
+                }
+
                 result.innerHTML = decodeURIComponent(matching.hypertext);
                 console.log(decodeURIComponent(matching.hypertext));
 
-                //return matching.hypertext;
                 /*
-                 $.ajax({
-                 type: "POST",
-                 url: "http://localhost/hris/web/app_dev.php/record/new/3",
-                 data: { variable: matching }
-                 }).success( console.log ("the event completed successful") );
+                 /*
+                 Getting Field Data
                  */
+
+                var fieldTransaction = db.transaction("hris_field", "readonly");
+                var storeObject = fieldTransaction.objectStore("hris_field");
+
+                var fieldRequest = storeObject.openCursor();
+                fieldRequest.onsuccess = function(evt) {
+
+                    var cursor = fieldRequest.result;
+                    if (cursor) {
+                        // Called for each matching record.
+                        //report(cursor.value.isbn, cursor.value.title, cursor.value.author);
+                        console.log(decodeURIComponent(cursor.value.name));
+                        cursor.continue();
+                    } else {
+                        // No more matching records.
+                        console.log('No more Matching Fields');
+                    }
+
+                }
 
             } else {
                 // No match was found.
@@ -252,5 +276,36 @@ function getDataEntryForm(databaseName, uid, tableName) {
         };
 
     };
+
+}
+
+function fetchAllFields(databaseName, tableName) {
+
+        //tableName = JSON.parse(tableName);
+
+        var openRequest = indexedDB.open(databaseName);
+
+        openRequest.onsuccess = function() {
+            db = openRequest.result;
+            console.log("this is done deal");
+
+            var transaction = db.transaction(tableName, "readonly");
+            var store = transaction.objectStore(tableName);
+
+            var request = store.openCursor();
+            request.onsuccess = function(evt) {
+
+                var cursor = evt.target.result;
+
+                if (cursor) {
+                    var employee = cursor.value;
+                    var jsonStr = JSON.stringify(employee);
+                    console.log("Dumping all fields");
+                    console.log(jsonStr);
+                    cursor.continue();
+                }
+
+            }
+        }
 
 }
