@@ -24,10 +24,12 @@
  */
 namespace Hris\FormBundle\Entity;
 
+use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\ORM\Mapping as ORM;
 use Gedmo\Mapping\Annotation as Gedmo;
 
 use Hris\FormBundle\Entity\FieldOptionGroup;
+use Symfony\Component\Validator\Constraints as Assert;
 
 /**
  * Hris\FormBundle\Entity\FieldOptionGroupset
@@ -71,7 +73,7 @@ class FieldOptionGroupset
     private $description;
     
     /**
-     * @var \Hris\FormBundle\Entity\FieldOptionGroup $fieldOptionGroup
+     * @var FieldOptionGroup $fieldOptionGroup
      *
      * @ORM\ManyToMany(targetEntity="Hris\FormBundle\Entity\FieldOptionGroup", inversedBy="fieldOptionGroupset")
      * @ORM\JoinTable(name="hris_fieldoptiongroupset_members",
@@ -162,7 +164,7 @@ class FieldOptionGroupset
      */
     public function __construct()
     {
-        $this->fieldOptionGroup = new \Doctrine\Common\Collections\ArrayCollection();
+        $this->fieldOptionGroup = new ArrayCollection();
         $this->uid = uniqid();
     }
     
@@ -238,10 +240,10 @@ class FieldOptionGroupset
     /**
      * Add fieldOptionGroup
      *
-     * @param \Hris\FormBundle\Entity\FieldOptionGroup $fieldOptionGroup
+     * @param FieldOptionGroup $fieldOptionGroup
      * @return FieldOptionGroupset
      */
-    public function addFieldOptionGroup(\Hris\FormBundle\Entity\FieldOptionGroup $fieldOptionGroup)
+    public function addFieldOptionGroup(FieldOptionGroup $fieldOptionGroup)
     {
         $this->fieldOptionGroup[$fieldOptionGroup->getId()] = $fieldOptionGroup;
     
@@ -251,9 +253,9 @@ class FieldOptionGroupset
     /**
      * Remove fieldOptionGroup
      *
-     * @param \Hris\FormBundle\Entity\FieldOptionGroup $fieldOptionGroup
+     * @param FieldOptionGroup $fieldOptionGroup
      */
-    public function removeFieldOptionGroup(\Hris\FormBundle\Entity\FieldOptionGroup $fieldOptionGroup)
+    public function removeFieldOptionGroup(FieldOptionGroup $fieldOptionGroup)
     {
         $this->fieldOptionGroup->removeElement($fieldOptionGroup);
     }

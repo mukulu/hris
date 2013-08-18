@@ -24,9 +24,11 @@
  */
 namespace Hris\FormBundle\Entity;
 
+use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\ORM\Mapping as ORM;
 
 use Hris\FormBundle\Entity\ResourceTableFieldMember;
+use Symfony\Component\Validator\Constraints as Assert;
 
 /**
  * Hris\FormBundle\Entity\ResourceTable
@@ -60,7 +62,7 @@ class ResourceTable
     private $name;
     
     /**
-     * @var \Hris\FormBundle\Entity\ResourceTableFieldMember $resourceTableFieldMember
+     * @var ResourceTableFieldMember $resourceTableFieldMember
      *
      * @ORM\OneToMany(targetEntity="Hris\FormBundle\Entity\ResourceTableFieldMember", mappedBy="resourceTable",cascade={"ALL"})
      * @ORM\OrderBy({"sort" = "ASC"})
@@ -187,10 +189,10 @@ class ResourceTable
     /**
      * Add resourceTableFieldMember
      *
-     * @param \Hris\FormBundle\Entity\ResourceTableFieldMember $resourceTableFieldMember
+     * @param ResourceTableFieldMember $resourceTableFieldMember
      * @return ResourceTable
      */
-    public function addResourceTableFieldMember(\Hris\FormBundle\Entity\ResourceTableFieldMember $resourceTableFieldMember)
+    public function addResourceTableFieldMember(ResourceTableFieldMember $resourceTableFieldMember)
     {
         $this->resourceTableFieldMember[] = $resourceTableFieldMember;
     
@@ -200,9 +202,9 @@ class ResourceTable
     /**
      * Remove resourceTableFieldMember
      *
-     * @param \Hris\FormBundle\Entity\ResourceTableFieldMember $resourceTableFieldMember
+     * @param ResourceTableFieldMember $resourceTableFieldMember
      */
-    public function removeResourceTableFieldMember(\Hris\FormBundle\Entity\ResourceTableFieldMember $resourceTableFieldMember)
+    public function removeResourceTableFieldMember(ResourceTableFieldMember $resourceTableFieldMember)
     {
         $this->resourceTableFieldMember->removeElement($resourceTableFieldMember);
     }
@@ -221,7 +223,7 @@ class ResourceTable
      */
     public function __construct()
     {
-        $this->resourceTableFieldMember = new \Doctrine\Common\Collections\ArrayCollection();
+        $this->resourceTableFieldMember = new ArrayCollection();
         $this->uid = uniqid();
     }
 

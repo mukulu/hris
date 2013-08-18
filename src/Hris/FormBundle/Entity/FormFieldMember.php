@@ -28,6 +28,7 @@ use Doctrine\ORM\Mapping as ORM;
 
 use Hris\FormBundle\Entity\Field;
 use Hris\FormBundle\Entity\Form;
+use Symfony\Component\Validator\Constraints as Assert;
 
 /**
  * Hris\FormBundle\Entity\FormFieldMember
@@ -38,7 +39,7 @@ use Hris\FormBundle\Entity\Form;
 class FormFieldMember
 {
     /**
-     * @var \Hris\FormBundle\Entity\Form $form
+     * @var Form $form
      *
      * @ORM\ManyToOne(targetEntity="Hris\FormBundle\Entity\Form",inversedBy="formFieldMember")
      * @ORM\JoinColumns({
@@ -50,7 +51,7 @@ class FormFieldMember
     private $form;
     
     /**
-     * @var \Hris\FormBundle\Entity\Field $field
+     * @var Field $field
      *
      * @ORM\ManyToOne(targetEntity="Hris\FormBundle\Entity\Field",inversedBy="formFieldMember")
      * @ORM\JoinColumns({
@@ -101,10 +102,10 @@ class FormFieldMember
     /**
      * Set form
      *
-     * @param \Hris\FormBundle\Entity\Form $form
+     * @param Form $form
      * @return FormFieldMember
      */
-    public function setForm(\Hris\FormBundle\Entity\Form $form)
+    public function setForm(Form $form)
     {
         $this->form = $form;
     
@@ -114,7 +115,7 @@ class FormFieldMember
     /**
      * Get form
      *
-     * @return \Hris\FormBundle\Entity\Form
+     * @return Form
      */
     public function getForm()
     {
@@ -124,10 +125,10 @@ class FormFieldMember
     /**
      * Set field
      *
-     * @param \Hris\FormBundle\Entity\Field $field
+     * @param Field $field
      * @return FormFieldMember
      */
-    public function setField(\Hris\FormBundle\Entity\Field $field)
+    public function setField(Field $field)
     {
         $this->field = $field;
     
@@ -137,7 +138,7 @@ class FormFieldMember
     /**
      * Get field
      *
-     * @return \Hris\FormBundle\Entity\Field
+     * @return Field
      */
     public function getField()
     {

@@ -27,6 +27,7 @@ namespace Hris\RecordsBundle\Entity;
 use Doctrine\ORM\Mapping as ORM;
 
 use Hris\RecordsBundle\Entity\Record;
+use Symfony\Component\Validator\Constraints as Assert;
 
 /**
  * Hris\RecordsBundle\Entity\History
@@ -53,7 +54,7 @@ class History
     private $uid;
     
     /**
-     * @var \Hris\RecordsBundle\Entity\Record $record
+     * @var Record $record
      *
      * @ORM\ManyToOne(targetEntity="Hris\RecordsBundle\Entity\Record")
      * @ORM\JoinColumns({
@@ -317,10 +318,10 @@ class History
     /**
      * Set record
      *
-     * @param \Hris\RecordsBundle\Entity\Record $record
+     * @param Record $record
      * @return History
      */
-    public function setRecord(\Hris\RecordsBundle\Entity\Record $record = null)
+    public function setRecord(Record $record = null)
     {
         $this->record = $record;
     
@@ -330,7 +331,7 @@ class History
     /**
      * Get record
      *
-     * @return \Hris\RecordsBundle\Entity\Record
+     * @return Record
      */
     public function getRecord()
     {

@@ -24,11 +24,13 @@
  */
 namespace Hris\FormBundle\Entity;
 
+use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\ORM\Mapping as ORM;
 use Gedmo\Mapping\Annotation as Gedmo;
 
 use Hris\FormBundle\Entity\Field;
 use Hris\FormBundle\Entity\FieldGroupset;
+use Symfony\Component\Validator\Constraints as Assert;
 
 /**
  * Hris\FormBundle\Entity\FieldGroup
@@ -72,7 +74,7 @@ class FieldGroup
     private $description;
     
     /**
-     * @var \Hris\FormBundle\Entity\Field $field
+     * @var Field $field
      *
      * @ORM\ManyToMany(targetEntity="Hris\FormBundle\Entity\Field", inversedBy="fieldGroup")
      * @ORM\JoinTable(name="hris_fieldgroup_members",
@@ -88,7 +90,7 @@ class FieldGroup
     private $field;
     
     /**
-     * @var \Hris\FormBundle\Entity\FieldGroupset $fieldGroupset
+     * @var FieldGroupset $fieldGroupset
      *
      * @ORM\ManyToMany(targetEntity="Hris\FormBundle\Entity\FieldGroupset", mappedBy="fieldGroup")
      * @ORM\OrderBy({"name" = "ASC"})
@@ -240,10 +242,10 @@ class FieldGroup
     /**
      * Add field
      *
-     * @param \Hris\FormBundle\Entity\Field $field
+     * @param Field $field
      * @return FieldGroup
      */
-    public function addField(\Hris\FormBundle\Entity\Field $field)
+    public function addField(Field $field)
     {
         $this->field[$field->getId()] = $field;
     
@@ -253,9 +255,9 @@ class FieldGroup
     /**
      * Remove field
      *
-     * @param \Hris\FormBundle\Entity\Field $field
+     * @param Field $field
      */
-    public function removeField(\Hris\FormBundle\Entity\Field $field)
+    public function removeField(Field $field)
     {
         $this->field->removeElement($field);
     }
@@ -274,18 +276,18 @@ class FieldGroup
      */
     public function __construct()
     {
-        $this->field = new \Doctrine\Common\Collections\ArrayCollection();
-        $this->fieldGroupset = new \Doctrine\Common\Collections\ArrayCollection();
+        $this->field = new ArrayCollection();
+        $this->fieldGroupset = new ArrayCollection();
         $this->uid = uniqid();
     }
     
     /**
      * Add fieldGroupset
      *
-     * @param \Hris\FormBundle\Entity\FieldGroupset $fieldGroupset
+     * @param FieldGroupset $fieldGroupset
      * @return FieldGroup
      */
-    public function addFieldGroupset(\Hris\FormBundle\Entity\FieldGroupset $fieldGroupset)
+    public function addFieldGroupset(FieldGroupset $fieldGroupset)
     {
         $this->fieldGroupset[$fieldGroupset->getId()] = $fieldGroupset;
     
@@ -295,9 +297,9 @@ class FieldGroup
     /**
      * Remove fieldGroupset
      *
-     * @param \Hris\FormBundle\Entity\FieldGroupset $fieldGroupset
+     * @param FieldGroupset $fieldGroupset
      */
-    public function removeFieldGroupset(\Hris\FormBundle\Entity\FieldGroupset $fieldGroupset)
+    public function removeFieldGroupset(FieldGroupset $fieldGroupset)
     {
         $this->fieldGroupset->removeElement($fieldGroupset);
     }

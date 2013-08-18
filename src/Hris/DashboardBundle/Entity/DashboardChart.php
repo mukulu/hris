@@ -24,11 +24,13 @@
  */
 namespace Hris\DashboardBundle\Entity;
 
+use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\ORM\Mapping as ORM;
 
 use Hris\FormBundle\Entity\Form;
 use Hris\UserBundle\Entity\UserInfo;
 use Hris\OrganisationunitBundle\Entity\Organisationunit;
+use Symfony\Component\Validator\Constraints as Assert;
 
 /**
  * Hris\DashboardBundle\Entity\DashboardChart
@@ -104,7 +106,7 @@ class DashboardChart
     private $systemWide;
     
     /**
-     * @var \Hris\OrganisationunitBundle\Entity\Organisationunit $organisationunit
+     * @var Organisationunit $organisationunit
      *
      * @ORM\ManyToMany(targetEntity="Hris\OrganisationunitBundle\Entity\Organisationunit", inversedBy="dashboardChart")
      * @ORM\JoinTable(name="hris_dashboardchart_organisationunitmembers",
@@ -120,7 +122,7 @@ class DashboardChart
     private $organisationunit;
     
     /**
-     * @var \Hris\UserBundle\Entity\UserInfo $userInfo
+     * @var UserInfo $userInfo
      *
      * @ORM\ManyToOne(targetEntity="Hris\UserBundle\Entity\UserInfo",inversedBy="dashboardChart")
      * @ORM\JoinColumns({
@@ -130,7 +132,7 @@ class DashboardChart
     private $userInfo;
     
     /**
-     * @var \Hris\FormBundle\Entity\Form $form
+     * @var Form $form
      *
      * @ORM\ManyToMany(targetEntity="Hris\FormBundle\Entity\Form", inversedBy="dashboardChart")
      * @ORM\JoinTable(name="hris_dashboardchart_formmembers",
@@ -357,10 +359,10 @@ class DashboardChart
     /**
      * Add form
      *
-     * @param \Hris\FormBundle\Entity\Form $form
+     * @param Form $form
      * @return DashboardChart
      */
-    public function addForm(\Hris\FormBundle\Entity\Form $form)
+    public function addForm(Form $form)
     {
         $this->form[$form->getId()] = $form;
     
@@ -370,9 +372,9 @@ class DashboardChart
     /**
      * Remove form
      *
-     * @param \Hris\FormBundle\Entity\Form $form
+     * @param Form $form
      */
-    public function removeForm(\Hris\FormBundle\Entity\Form $form)
+    public function removeForm(Form $form)
     {
         $this->form->removeElement($form);
     }
@@ -413,10 +415,10 @@ class DashboardChart
     /**
      * Add organisationunit
      *
-     * @param \Hris\OrganisationunitBundle\Entity\Organisationunit $organisationunit
+     * @param Organisationunit $organisationunit
      * @return DashboardChart
      */
-    public function addOrganisationunit(\Hris\OrganisationunitBundle\Entity\Organisationunit $organisationunit)
+    public function addOrganisationunit(Organisationunit $organisationunit)
     {
         $this->organisationunit[$organisationunit->getId()] = $organisationunit;
     
@@ -426,9 +428,9 @@ class DashboardChart
     /**
      * Remove organisationunit
      *
-     * @param \Hris\OrganisationunitBundle\Entity\Organisationunit $organisationunit
+     * @param Organisationunit $organisationunit
      */
-    public function removeOrganisationunit(\Hris\OrganisationunitBundle\Entity\Organisationunit $organisationunit)
+    public function removeOrganisationunit(Organisationunit $organisationunit)
     {
         $this->organisationunit->removeElement($organisationunit);
     }
@@ -448,8 +450,8 @@ class DashboardChart
      */
     public function __construct()
     {
-        $this->organisationunit = new \Doctrine\Common\Collections\ArrayCollection();
-        $this->form = new \Doctrine\Common\Collections\ArrayCollection();
+        $this->organisationunit = new ArrayCollection();
+        $this->form = new ArrayCollection();
         $this->lowerLevels = True;
         $this->uid = uniqid();
     }
@@ -481,10 +483,10 @@ class DashboardChart
     /**
      * Set userInfo
      *
-     * @param \Hris\UserBundle\Entity\UserInfo $userInfo
+     * @param UserInfo $userInfo
      * @return DashboardChart
      */
-    public function setUserInfo(\Hris\UserBundle\Entity\UserInfo $userInfo = null)
+    public function setUserInfo(UserInfo $userInfo = null)
     {
         $this->userInfo = $userInfo;
     
@@ -494,7 +496,7 @@ class DashboardChart
     /**
      * Get userInfo
      *
-     * @return \Hris\UserBundle\Entity\UserInfo
+     * @return UserInfo
      */
     public function getUserInfo()
     {

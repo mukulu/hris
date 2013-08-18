@@ -28,6 +28,7 @@ use Doctrine\ORM\Mapping as ORM;
 
 use Hris\FormBundle\Entity\FieldOption;
 use Hris\FormBundle\Entity\Field;
+use Symfony\Component\Validator\Constraints as Assert;
 
 /**
  * Hris\FormBundle\Entity\FieldOptionMerge
@@ -54,7 +55,7 @@ class FieldOptionMerge
     private $uid;
 
     /**
-     * @var \Hris\FormBundle\Entity\FieldOption $mergedFieldOption
+     * @var FieldOption $mergedFieldOption
      *
      * @ORM\ManyToOne(targetEntity="Hris\FormBundle\Entity\FieldOption", inversedBy="fieldOptionMerge")
      * @ORM\JoinColumns({
@@ -64,7 +65,7 @@ class FieldOptionMerge
     private $mergedFieldOption;
 
     /**
-     * @var \Hris\FormBundle\Entity\Field $removedOptionField
+     * @var Field $removedOptionField
      *
      * @ORM\ManyToOne(targetEntity="Hris\FormBundle\Entity\Field", inversedBy="fieldOptionMerge")
      * @ORM\JoinColumns({
@@ -154,10 +155,10 @@ class FieldOptionMerge
     /**
      * Set mergedFieldOption
      *
-     * @param \Hris\FormBundle\Entity\FieldOption $mergedFieldOption
+     * @param FieldOption $mergedFieldOption
      * @return FieldOptionMerge
      */
-    public function setMergedFieldOption(\Hris\FormBundle\Entity\FieldOption $mergedFieldOption = null)
+    public function setMergedFieldOption(FieldOption $mergedFieldOption = null)
     {
         $this->mergedFieldOption = $mergedFieldOption;
     
@@ -167,7 +168,7 @@ class FieldOptionMerge
     /**
      * Get mergedFieldOption
      *
-     * @return \Hris\FormBundle\Entity\FieldOption
+     * @return FieldOption
      */
     public function getMergedFieldOption()
     {
@@ -177,10 +178,10 @@ class FieldOptionMerge
     /**
      * Set removedOptionField
      *
-     * @param \Hris\FormBundle\Entity\Field $removedOptionField
+     * @param Field $removedOptionField
      * @return FieldOptionMerge
      */
-    public function setRemovedOptionField(\Hris\FormBundle\Entity\Field $removedOptionField = null)
+    public function setRemovedOptionField(Field $removedOptionField = null)
     {
         $this->removedOptionField = $removedOptionField;
     
@@ -190,7 +191,7 @@ class FieldOptionMerge
     /**
      * Get removedOptionField
      *
-     * @return \Hris\FormBundle\Entity\Field
+     * @return Field
      */
     public function getRemovedOptionField()
     {

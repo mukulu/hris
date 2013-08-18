@@ -28,6 +28,7 @@ use Doctrine\ORM\Mapping as ORM;
 
 use Hris\FormBundle\Entity\Field;
 use Hris\RecordsBundle\Entity\Record;
+use Symfony\Component\Validator\Constraints as Assert;
 
 /**
  * Hris\RecordsBundle\Entity\RecordValue
@@ -54,7 +55,7 @@ class RecordValue
     private $uid;
     
     /**
-     * @var Hris\RecordsBundle\Entity\Record $record
+     * @var Record $record
      *
      * @ORM\ManyToOne(targetEntity="Hris\RecordsBundle\Entity\Record")
      * @ORM\JoinColumns({
@@ -64,7 +65,7 @@ class RecordValue
     private $record;
     
     /**
-     * @var Hris\FormBundle\Entity\Field $field
+     * @var Field $field
      *
      * @ORM\ManyToOne(targetEntity="Hris\FormBundle\Entity\Field", inversedBy="recordValue")
      * @ORM\JoinColumns({
@@ -241,10 +242,10 @@ class RecordValue
     /**
      * Set record
      *
-     * @param \Hris\RecordsBundle\Entity\Record $record
+     * @param Record $record
      * @return RecordValue
      */
-    public function setRecord(\Hris\RecordsBundle\Entity\Record $record = null)
+    public function setRecord(Record $record = null)
     {
         $this->record = $record;
     
@@ -254,7 +255,7 @@ class RecordValue
     /**
      * Get record
      *
-     * @return \Hris\RecordsBundle\Entity\Record
+     * @return Record
      */
     public function getRecord()
     {
@@ -264,10 +265,10 @@ class RecordValue
     /**
      * Set field
      *
-     * @param \Hris\FormBundle\Entity\Field $field
+     * @param Field $field
      * @return RecordValue
      */
-    public function setField(\Hris\FormBundle\Entity\Field $field = null)
+    public function setField(Field $field = null)
     {
         $this->field = $field;
     
@@ -277,7 +278,7 @@ class RecordValue
     /**
      * Get field
      *
-     * @return Hris\FormBundle\Entity\Field 
+     * @return Field
      */
     public function getField()
     {

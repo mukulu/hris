@@ -27,6 +27,7 @@ namespace Hris\OrganisationunitBundle\Entity;
 use Doctrine\ORM\Mapping as ORM;
 
 use Hris\OrganisationunitBundle\Entity\Organisationunit;
+use Symfony\Component\Validator\Constraints as Assert;
 
 /**
  * Hris\OrganisationunitBundle\Entity\OrganisationunitCompleteness

@@ -29,6 +29,7 @@ use Doctrine\ORM\Mapping as ORM;
 use Hris\OrganisationunitBundle\Entity\Organisationunit;
 use Hris\FormBundle\Entity\Form;
 use Hris\FormBundle\Entity\Field;
+use Symfony\Component\Validator\Constraints as Assert;
 
 /**
  * Hris\RecordsBundle\Entity\RecordStats
@@ -55,7 +56,7 @@ class RecordStats
     private $uid;
     
     /**
-     * @var \Hris\OrganisationunitBundle\Entity\Organisationunit $organisationunit
+     * @var Organisationunit $organisationunit
      *
      * @ORM\ManyToOne(targetEntity="Hris\OrganisationunitBundle\Entity\Organisationunit")
      * @ORM\JoinColumns({
@@ -65,7 +66,7 @@ class RecordStats
     private $organisationunit;
     
     /**
-     * @var \Hris\FormBundle\Entity\Form $form
+     * @var Form $form
      *
      * @ORM\ManyToOne(targetEntity="Hris\FormBundle\Entity\Form",inversedBy="record")
      * @ORM\JoinColumns({
@@ -89,7 +90,7 @@ class RecordStats
     private $correct;
     
     /**
-     * @var \Hris\FormBundle\Entity\Field $field
+     * @var Field $field
      *
      * @ORM\ManyToOne(targetEntity="Hris\FormBundle\Entity\Field", inversedBy="recordStats")
      * @ORM\JoinColumns({
@@ -266,10 +267,10 @@ class RecordStats
     /**
      * Set organisationunit
      *
-     * @param \Hris\OrganisationunitBundle\Entity\Organisationunit $organisationunit
+     * @param Organisationunit $organisationunit
      * @return Record
      */
-    public function setOrganisationunit(\Hris\OrganisationunitBundle\Entity\Organisationunit $organisationunit = null)
+    public function setOrganisationunit(Organisationunit $organisationunit = null)
     {
         $this->organisationunit = $organisationunit;
     
@@ -279,7 +280,7 @@ class RecordStats
     /**
      * Get organisationunit
      *
-     * @return \Hris\OrganisationunitBundle\Entity\Organisationunit
+     * @return Organisationunit
      */
     public function getOrganisationunit()
     {
@@ -289,10 +290,10 @@ class RecordStats
     /**
      * Set form
      *
-     * @param \Hris\FormBundle\Entity\Form $form
+     * @param Form $form
      * @return Record
      */
-    public function setForm(\Hris\FormBundle\Entity\Form $form)
+    public function setForm(Form $form)
     {
         $this->form = $form;
     
@@ -302,7 +303,7 @@ class RecordStats
     /**
      * Get form
      *
-     * @return \Hris\FormBundle\Entity\Form
+     * @return Form
      */
     public function getForm()
     {
@@ -384,10 +385,10 @@ class RecordStats
     /**
      * Set field
      *
-     * @param \Hris\FormBundle\Entity\Field $field
+     * @param Field $field
      * @return RecordStats
      */
-    public function setField(\Hris\FormBundle\Entity\Field $field = null)
+    public function setField(Field $field = null)
     {
         $this->field = $field;
     
@@ -397,7 +398,7 @@ class RecordStats
     /**
      * Get field
      *
-     * @return \Hris\FormBundle\Entity\Field
+     * @return Field
      */
     public function getField()
     {
