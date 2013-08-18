@@ -9,6 +9,17 @@ use Symfony\Component\OptionsResolver\OptionsResolverInterface;
 class IndicatorType extends AbstractType
 {
     /**
+     * @return array
+     */
+    private function generateYears(){
+        $today = getdate();
+        for($year = $today['year']-10; $year <= $today['year'] + 1; $year++){
+            $years[$year] = $year;
+        }
+        return $years;
+    }
+
+    /**
      * @param FormBuilderInterface $builder
      * @param array $options
      */
@@ -17,7 +28,9 @@ class IndicatorType extends AbstractType
         $builder
             ->add('name')
             ->add('value')
-            ->add('year')
+            ->add('year', 'choice', array(
+                'choices'   => $this->generateYears(),
+            ))
             ->add('fieldOptionGroup')
             ->add('organisationunitGroup');
     }

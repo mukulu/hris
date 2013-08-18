@@ -107,18 +107,23 @@ class RecordController extends Controller
      * @Method("GET")
      * @Template()
      */
-    public function newAction($id)
+    public function newAction( $id )
     {
-
         $em = $this->getDoctrine()->getManager();
+        //$variable = $this->getRequest()->get("variable");
+        //var_dump($variable);
 
         $formEntity = $em->getRepository('HrisFormBundle:Form')->find($id);
-        $form = $this->createForm(new DesignFormType(), $formEntity);
+
+        //$form = $this->createForm(new DesignFormType(), $formEntity);
 
         return array(
 
-            'entity'   => $formEntity,
-            'form'     => $form->createView(),
+            //'entity'   => $formEntity,
+            //'form'     => $form->createView(),
+            //'variable' => $variable,
+            'uid' => $formEntity->getUid(),
+            'title' => $formEntity->getTitle(),
         );
     }
 
