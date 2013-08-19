@@ -1,6 +1,7 @@
 <?php
 
 namespace Hris\DataQualityBundle\Form;
+use Doctrine\ORM\EntityRepository;
 
 use Symfony\Component\Form\AbstractType;
 use Symfony\Component\Form\FormBuilderInterface;
@@ -11,14 +12,34 @@ class ValidationType extends AbstractType
     public function buildForm(FormBuilderInterface $builder, array $options)
     {
         $builder
-            ->add('uid')
-            ->add('name')
+            ->add('name','text')
             ->add('description')
-            ->add('operator')
-            ->add('leftExpression')
-            ->add('rightExpression')
-            ->add('datecreated')
-            ->add('lastupdated')
+            ->add('operator','choice',array( 'choices' => array(
+                    'option1' => '==(Equal)',
+                    'option2' => '=!(Not Equal)',
+                    'option3' => '>(Greater Than)',
+                    'option4' => '>=(Greater Than or Equal)',
+                    'option5' => '<(Less Than)',
+                    'option6' => '<=(Less Than or Equal)',
+
+                  'required'  => false,
+                  'empty_data'  => null
+            ) ) )
+            ->add('leftExpression','entity', array(
+                        'class' => 'HrisFormBundle:Field',
+                        'query_builder' => function(EntityRepository $er) {
+                            return $er->createQueryBuilder('field')
+                                ->orderBy('field.name', 'ASC');
+                        },
+                    )
+            )
+            ->add('rightExpression','entity', array(
+                'class' => 'HrisFormBundle:Field',
+                'query_builder' => function(EntityRepository $er) {
+                    return $er->createQueryBuilder('field')
+                        ->orderBy('field.name', 'ASC');
+                },
+            ))
         ;
     }
 
