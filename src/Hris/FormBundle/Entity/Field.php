@@ -356,7 +356,7 @@ class Field
      */
     public function setIsUnique($isUnique)
     {
-        $this->$isUnique = $isUnique;
+        $this->isUnique = $isUnique;
     
         return $this;
     }

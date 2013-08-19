@@ -45,11 +45,12 @@ class LoadUserData extends AbstractFixture implements OrderedFixtureInterface
 		$userAdmin->addRole('ROLE_SUPERUSER');
 		$userAdmin->addRole('ROLE_USER');
 		$userAdmin->setEnabled(True);
+        $this->addReference('admin', $userAdmin);
 		
 		$manager->persist($userAdmin);
 		$manager->flush();
 		
-		$this->addReference('admin', $userAdmin);
+
 	}
 	
 	/**

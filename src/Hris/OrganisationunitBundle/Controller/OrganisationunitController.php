@@ -2,6 +2,7 @@
 
 namespace Hris\OrganisationunitBundle\Controller;
 
+use Doctrine\Tests\Common\Annotations\Null;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Bundle\FrameworkBundle\Controller\Controller;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Method;
@@ -25,15 +26,18 @@ class OrganisationunitController extends Controller
      * @Secure(roles="ROLE_ORGANISATIONUNIT_ORGANISATIONUNIT_LIST,ROLE_USER")
      *
      * @Route("/", name="organisationunit")
+     * @Route("/{parent}/parent", name="organisationunit_parent")
      * @Route("/list", name="organisationunit_list")
+     * @Route("/list/{parent}/parent", name="organisationunit_list_parent")
      * @Method("GET")
      * @Template()
      */
-    public function indexAction()
+    public function indexAction($parent=NULL)
     {
         $em = $this->getDoctrine()->getManager();
-
-        $entities = $em->getRepository('HrisOrganisationunitBundle:Organisationunit')->findAll();
+        if($parent == NULL) {
+            $entities = $em->getRepository('HrisOrganisationunitBundle:Organisationunit')->find;
+        }
         $delete_forms = NULL;
         foreach($entities as $entity) {
             $delete_form= $this->createDeleteForm($entity->getId());
@@ -48,7 +52,7 @@ class OrganisationunitController extends Controller
     /**
      * Creates a new Organisationunit entity.
      *
-     * @Secure(roles="ROLE_ORGANISATIONUNIT_ORGANISATIONUNIT_CREATE")
+     * @Secure(roles="ROLE_ORGANISATIONUNIT_ORGANISATIONUNIT_CREATE,ROLE_USER")
      *
      * @Route("/", name="organisationunit_create")
      * @Method("POST")
@@ -77,7 +81,7 @@ class OrganisationunitController extends Controller
     /**
      * Displays a form to create a new Organisationunit entity.
      *
-     * @Secure(roles="ROLE_ORGANISATIONUNIT_ORGANISATIONUNIT_CREATE")
+     * @Secure(roles="ROLE_ORGANISATIONUNIT_ORGANISATIONUNIT_CREATE,ROLE_USER")
      *
      * @Route("/new", name="organisationunit_new")
      * @Method("GET")
@@ -97,7 +101,7 @@ class OrganisationunitController extends Controller
     /**
      * Finds and displays a Organisationunit entity.
      *
-     * @Secure(roles="ROLE_ORGANISATIONUNIT_ORGANISATIONUNIT_SHOW")
+     * @Secure(roles="ROLE_ORGANISATIONUNIT_ORGANISATIONUNIT_SHOW,ROLE_USER")
      *
      * @Route("/{id}", name="organisationunit_show")
      * @Method("GET")
@@ -124,7 +128,7 @@ class OrganisationunitController extends Controller
     /**
      * Displays a form to edit an existing Organisationunit entity.
      *
-     * @Secure(roles="ROLE_ORGANISATIONUNIT_ORGANISATIONUNIT_EDIT")
+     * @Secure(roles="ROLE_ORGANISATIONUNIT_ORGANISATIONUNIT_EDIT,ROLE_USER")
      *
      * @Route("/{id}/edit", name="organisationunit_edit")
      * @Method("GET")
@@ -153,7 +157,7 @@ class OrganisationunitController extends Controller
     /**
      * Edits an existing Organisationunit entity.
      *
-     * @Secure(roles="ROLE_ORGANISATIONUNIT_ORGANISATIONUNIT_EDIT")
+     * @Secure(roles="ROLE_ORGANISATIONUNIT_ORGANISATIONUNIT_EDIT,ROLE_USER")
      *
      * @Route("/{id}", name="organisationunit_update")
      * @Method("PUT")
@@ -189,7 +193,7 @@ class OrganisationunitController extends Controller
     /**
      * Deletes a Organisationunit entity.
      *
-     * @Secure(roles="ROLE_ORGANISATIONUNIT_ORGANISATIONUNIT_DELETE")
+     * @Secure(roles="ROLE_ORGANISATIONUNIT_ORGANISATIONUNIT_DELETE,ROLE_USER")
      *
      * @Route("/{id}", name="organisationunit_delete")
      * @Method("DELETE")
