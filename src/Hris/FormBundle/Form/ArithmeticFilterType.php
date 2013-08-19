@@ -11,15 +11,11 @@ class ArithmeticFilterType extends AbstractType
     public function buildForm(FormBuilderInterface $builder, array $options)
     {
         $builder
-            ->add('uid')
             ->add('name')
             ->add('description')
-            ->add('operator')
             ->add('leftExpression')
+            ->add('operator')
             ->add('rightExpression')
-            ->add('datecreated')
-            ->add('lastupdated')
-            ->add('friendlyReport')
         ;
     }
 

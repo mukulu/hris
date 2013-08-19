@@ -11,14 +11,10 @@ class RelationalFilterType extends AbstractType
     public function buildForm(FormBuilderInterface $builder, array $options)
     {
         $builder
-            ->add('uid')
             ->add('name')
             ->add('excludeFieldOptions')
-            ->add('datecreated')
-            ->add('lastupdated')
-            ->add('fieldOption')
             ->add('field')
-            ->add('friendlyReport')
+            ->add('fieldOption')
         ;
     }
 
