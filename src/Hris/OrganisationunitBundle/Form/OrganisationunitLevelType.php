@@ -11,14 +11,10 @@ class OrganisationunitLevelType extends AbstractType
     public function buildForm(FormBuilderInterface $builder, array $options)
     {
         $builder
-            ->add('uid')
-            ->add('dhisUid')
             ->add('level')
             ->add('name')
             ->add('description')
             ->add('dataentrylevel')
-            ->add('datecreated')
-            ->add('lastupdated')
         ;
     }
 

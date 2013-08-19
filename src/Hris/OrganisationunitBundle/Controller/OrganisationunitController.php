@@ -36,7 +36,7 @@ class OrganisationunitController extends Controller
     {
         $em = $this->getDoctrine()->getManager();
         if($parent == NULL) {
-            $entities = $em->getRepository('HrisOrganisationunitBundle:Organisationunit')->find;
+            $entities = $em->getRepository('HrisOrganisationunitBundle:Organisationunit')->findAll();
         }
         $delete_forms = NULL;
         foreach($entities as $entity) {

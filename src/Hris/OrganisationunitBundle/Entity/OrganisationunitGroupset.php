@@ -82,9 +82,10 @@ class OrganisationunitGroupset
     private $description;
 
     /**
-     * @var boolean $compulsory
-     * 
      * Compulsory means that ALL Organisationunits must be member of a group in this groupset.
+     * used for enforcing membership of orgunits in one of the groups under groupset.
+     *
+     * @var boolean $compulsory
      *
      * @Gedmo\Versioned
      * @ORM\Column(name="compulsory", type="boolean")
