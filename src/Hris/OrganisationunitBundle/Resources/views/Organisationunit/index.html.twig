@@ -31,8 +31,6 @@
                     <th>Longname</th>
                     <th>Parent</th>
                     <th>Active</th>
-                    <th>Datecreated</th>
-                    <th>Lastupdated</th>
                     <th>Actions</th>
                 </tr>
             </thead>
@@ -43,8 +41,6 @@
                     <td><a href="{{ path('organisationunit_show', { 'id': entity.id }) }}">{{ entity.longname }}</a></td>
                     <td>{% if entity.parent %} {{ entity.parent.longname }} {% else %} - {% endif %}</td>
                     <td>{% if entity.active %} Active {% else %} Inactive {% endif %}</td>
-                    <td>{% if entity.datecreated %}{{ entity.datecreated|date('Y-m-d H:i:s') }}{% endif %}</td>
-                    <td>{% if entity.lastupdated %}{{ entity.lastupdated|date('Y-m-d H:i:s') }}{% endif %}</td>
                     <td>
                     <ul class="inline">
                         <li>
