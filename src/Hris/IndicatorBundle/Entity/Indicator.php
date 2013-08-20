@@ -90,6 +90,7 @@ class Indicator
      * @ORM\JoinColumns({
      *   @ORM\JoinColumn(name="fieldoptiongroup_id", referencedColumnName="id", onDelete="CASCADE")
      * })
+     *
      */
     private $fieldOptionGroup;
 
@@ -101,6 +102,7 @@ class Indicator
      * @ORM\JoinColumns({
      *   @ORM\JoinColumn(name="organisationunit_id", referencedColumnName="id", onDelete="CASCADE")
      * })
+     *
      */
     private $organisationunitGroup;
 
