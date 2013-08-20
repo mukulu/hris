@@ -28,6 +28,7 @@ use Doctrine\Common\DataFixtures\AbstractFixture;
 use Doctrine\Common\Persistence\ObjectManager;
 
 use Hris\OrganisationunitBundle\Entity\OrganisationunitGroup;
+use Hris\OrganisationunitBundle\Entity\OrganisationunitGroupset;
 
 class LoadOrganisationunitGroupData extends AbstractFixture implements OrderedFixtureInterface
 {
@@ -39,13 +40,30 @@ class LoadOrganisationunitGroupData extends AbstractFixture implements OrderedFi
     private $organisationunitGroups;
 
     /**
-     * Returns Array of organisationunit fixtures
+     * Returns Array of organisationunit Group fixtures
      *
      * @return mixed
      */
     public function getOrganisationunitGroups()
     {
         return $this->organisationunitGroups;
+    }
+
+    /**
+     * Dummy organisationunit Groupsets
+     *
+     * @var organisationunitGroupsets
+     */
+    private $organisationunitGroupsets;
+
+    /**
+     * Returns Array of organisationunit Groupset fixtures
+     *
+     * @return mixed
+     */
+    public function getOrganisationunitGroupsets()
+    {
+        return $this->organisationunitGroupsets;
     }
 
 
@@ -62,46 +80,60 @@ class LoadOrganisationunitGroupData extends AbstractFixture implements OrderedFi
                 'code'=>'dispensaries',
                 'name'=>'Dispensaries',
                 'groupset'=>'type',
-                'search'=>'dispensary',
                 'description'=>'Dispensaries'),
             1=>Array(
                 'code'=>'healthcentres',
                 'name'=>'Health Centres',
                 'groupset'=>'type',
-                'search'=>'health centre',
                 'description'=>'Health Centres'),
             2=>Array(
                 'code'=>'hospitals',
                 'name'=>'Hospitals',
-                'groupset'=>'hospital',
-                'search'=>'hospital',
+                'groupset'=>'type',
                 'description'=>'Hospitals'),
             4=>Array(
                 'code'=>'private',
                 'name'=>'Private Facilities',
                 'groupset'=>'ownership',
-                'search'=>'private',
                 'description'=>'Private Facilities'),
             5=>Array(
                 'code'=>'public',
                 'name'=>'Public Facilities',
                 'groupset'=>'ownership',
-                'search'=>'private',
                 'description'=>'Private Facilities'),
             6=>Array(
                 'code'=>'faithbased',
                 'name'=>'Faith Based Facilities',
                 'groupset'=>'ownership',
-                'search'=>'fbo',
                 'description'=>'Faith Based Facilities'),
             7=>Array(
                 'code'=>'army',
                 'name'=>'Army Facilities',
                 'groupset'=>'ownership',
-                'search'=>'fbo',
                 'description'=>'Faith Based Facilities'),
         );
         return $this->organisationunitGroups;
+    }
+
+    /**
+     * Returns Array of dummy organisationunitGroups
+     *
+     * @return array
+     */
+    public function addDummyOrganisationunitGroupsets()
+    {
+        // Load Public Data
+        $this->organisationunitGroupsets = Array(
+            0=>Array(
+                'code'=>'type',
+                'name'=>'Type',
+                'description'=>'Group of Health facilities by type services offered and human resource available'),
+            1=>Array(
+                'code'=>'ownership',
+                'name'=>'Ownership',
+                'description'=>'Group of Health facilities by ownership/administration managing the facility'),
+        );
+        return $this->organisationunitGroupsets;
     }
 
     /**
@@ -113,7 +145,19 @@ class LoadOrganisationunitGroupData extends AbstractFixture implements OrderedFi
     public function load(ObjectManager $manager)
 	{
         $this->addDummyOrganisationunitGroups();
+        $this->addDummyOrganisationunitGroupsets();
         $organiastionunits = $manager->getRepository('HrisOrganisationunitBundle:Organisationunit')->findAll();
+
+        // Populate dummy organisationunitGroupset
+        foreach($this->organisationunitGroupsets as $organisationunitGroupsetKey=>$humanResourceOrganisationunitGroupset) {
+            $organisationunitGroupset = new OrganisationunitGroupset();
+            $organisationunitGroupset->setCode($humanResourceOrganisationunitGroupset['code']);
+            $organisationunitGroupset->setName($humanResourceOrganisationunitGroupset['name']);
+            $organisationunitGroupset->setDescription($humanResourceOrganisationunitGroupset['description']);
+            $organisationunitGroupsetReference = strtolower(str_replace(' ','',$humanResourceOrganisationunitGroupset['code'])).'-organisationunitgroupset';
+            $this->addReference($organisationunitGroupsetReference, $organisationunitGroupset);
+            $manager->persist($organisationunitGroupset);
+        }
 
         // Populate dummy organisationunitGroups
 		foreach($this->organisationunitGroups as $organisationunitGroupKey=>$humanResourceOrganisationunitGroup) {
@@ -121,6 +165,8 @@ class LoadOrganisationunitGroupData extends AbstractFixture implements OrderedFi
             $organisationunitGroup->setCode($humanResourceOrganisationunitGroup['code']);
             $organisationunitGroup->setName($humanResourceOrganisationunitGroup['name']);
             $organisationunitGroup->setDescription($humanResourceOrganisationunitGroup['description']);
+            $organisationunitGroupsetByReference = $manager->merge($this->getReference( strtolower(str_replace(' ','',$humanResourceOrganisationunitGroup['groupset'])).'-organisationunitgroupset' ));
+            $organisationunitGroup->setOrganisationunitGroupset($organisationunitGroupsetByReference);
             $organisationunitGroupReference = strtolower(str_replace(' ','',$humanResourceOrganisationunitGroup['code'])).'-organisationunitgroup';
             $this->addReference($organisationunitGroupReference, $organisationunitGroup);
             $manager->persist($organisationunitGroup);
