@@ -65,6 +65,14 @@ class OrganisationunitGroup
      * @ORM\Column(name="name", type="string", length=64, unique=true)
      */
     private $name;
+
+    /**
+     * @var string $description
+     *
+     * @Gedmo\Versioned
+     * @ORM\Column(name="description", type="text", nullable=true)
+     */
+    private $description;
     
     /**
      * @var string $dhisUid
@@ -312,6 +320,29 @@ class OrganisationunitGroup
     public function getDhisUid()
     {
         return $this->dhisUid;
+    }
+
+    /**
+     * Set description
+     *
+     * @param string $description
+     * @return Organisationunit
+     */
+    public function setDescription($description)
+    {
+        $this->description = $description;
+
+        return $this;
+    }
+
+    /**
+     * Get description
+     *
+     * @return string
+     */
+    public function getDescription()
+    {
+        return $this->description;
     }
 
     /**

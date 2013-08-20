@@ -167,7 +167,7 @@ class LoadFieldData extends AbstractFixture implements OrderedFixtureInterface
             5=>Array(
                 'dataType'=>'String',
                 'inputType'=>'Select',
-                'name'=>'Marital Status',
+                'name'=>'MaritalStatus',
                 'caption'=>'Marital Status',
                 'compulsory'=>true,
                 'isUnique'=>false,
@@ -194,7 +194,7 @@ class LoadFieldData extends AbstractFixture implements OrderedFixtureInterface
             8=>Array(
                 'dataType'=>'String',
                 'inputType'=>'Select',
-                'name'=>'Basic Education Level',
+                'name'=>'BasicEducationLevel',
                 'caption'=>'Basic Education Level',
                 'compulsory'=>true,
                 'isUnique'=>false,
@@ -203,7 +203,7 @@ class LoadFieldData extends AbstractFixture implements OrderedFixtureInterface
             9=>Array(
                 'dataType'=>'String',
                 'inputType'=>'Select',
-                'name'=>'Profession Education Level',
+                'name'=>'ProfessionEducationLevel',
                 'caption'=>'Profession Education Level',
                 'compulsory'=>true,
                 'isUnique'=>false,
@@ -212,7 +212,7 @@ class LoadFieldData extends AbstractFixture implements OrderedFixtureInterface
             10=>Array(
                 'dataType'=>'String',
                 'inputType'=>'Text',
-                'name'=>'Number of Children/Dependants',
+                'name'=>'NumberofChildrenDependants',
                 'caption'=>'Number of Children/Dependants',
                 'compulsory'=>false,
                 'isUnique'=>false,
@@ -221,7 +221,7 @@ class LoadFieldData extends AbstractFixture implements OrderedFixtureInterface
             11=>Array(
                 'dataType'=>'String',
                 'inputType'=>'Text',
-                'name'=>'District of Domicile',
+                'name'=>'DistrictofDomicile',
                 'caption'=>'District of Domicile',
                 'compulsory'=>false,
                 'isUnique'=>false,
@@ -230,7 +230,7 @@ class LoadFieldData extends AbstractFixture implements OrderedFixtureInterface
             12=>Array(
                 'dataType'=>'String',
                 'inputType'=>'Text',
-                'name'=>'Check Number',
+                'name'=>'CheckNumber',
                 'caption'=>'Check Number',
                 'compulsory'=>true,
                 'isUnique'=>false,
@@ -239,7 +239,7 @@ class LoadFieldData extends AbstractFixture implements OrderedFixtureInterface
             13=>Array(
                 'dataType'=>'String',
                 'inputType'=>'Text',
-                'name'=>'Employer`s File Number',
+                'name'=>'EmployersFileNumber',
                 'caption'=>'Employer`s File Number',
                 'compulsory'=>true,
                 'isUnique'=>true,
@@ -248,7 +248,7 @@ class LoadFieldData extends AbstractFixture implements OrderedFixtureInterface
             14=>Array(
                 'dataType'=>'String',
                 'inputType'=>'Text',
-                'name'=>'Registration Number',
+                'name'=>'RegistrationNumber',
                 'caption'=>'Registration Number',
                 'compulsory'=>false,
                 'isUnique'=>false,
@@ -257,7 +257,7 @@ class LoadFieldData extends AbstractFixture implements OrderedFixtureInterface
             15=>Array(
                 'dataType'=>'String',
                 'inputType'=>'Select',
-                'name'=>'Terms of Employment',
+                'name'=>'TermsofEmployment',
                 'caption'=>'Terms of Employment',
                 'compulsory'=>true,
                 'isUnique'=>false,
@@ -275,7 +275,7 @@ class LoadFieldData extends AbstractFixture implements OrderedFixtureInterface
             17=>Array(
                 'dataType'=>'String',
                 'inputType'=>'Select',
-                'name'=>'Present Designation',
+                'name'=>'PresentDesignation',
                 'caption'=>'Present Designation',
                 'compulsory'=>true,
                 'isUnique'=>false,
@@ -284,7 +284,7 @@ class LoadFieldData extends AbstractFixture implements OrderedFixtureInterface
             18=>Array(
                 'dataType'=>'String',
                 'inputType'=>'Select',
-                'name'=>'Superlative Substantive Position',
+                'name'=>'SuperlativeSubstantivePosition',
                 'caption'=>'Superlative Substantive Position',
                 'compulsory'=>true,
                 'isUnique'=>false,
@@ -302,7 +302,7 @@ class LoadFieldData extends AbstractFixture implements OrderedFixtureInterface
             20=>Array(
                 'dataType'=>'String',
                 'inputType'=>'Select',
-                'name'=>'Salary Scale',
+                'name'=>'SalaryScale',
                 'caption'=>'Salary Scale',
                 'compulsory'=>true,
                 'isUnique'=>false,
@@ -311,7 +311,7 @@ class LoadFieldData extends AbstractFixture implements OrderedFixtureInterface
             21=>Array(
                 'dataType'=>'String',
                 'inputType'=>'Text',
-                'name'=>'Monthly Basic Salary',
+                'name'=>'MonthlyBasicSalary',
                 'caption'=>'Monthly Basic Salary',
                 'compulsory'=>false,
                 'isUnique'=>false,
@@ -320,7 +320,7 @@ class LoadFieldData extends AbstractFixture implements OrderedFixtureInterface
             22=>Array(
                 'dataType'=>'String',
                 'inputType'=>'Date',
-                'name'=>'Date of First Appointment',
+                'name'=>'DateofFirstAppointment',
                 'caption'=>'Date of First Appointment',
                 'compulsory'=>true,
                 'isUnique'=>false,
@@ -329,7 +329,7 @@ class LoadFieldData extends AbstractFixture implements OrderedFixtureInterface
             23=>Array(
                 'dataType'=>'String',
                 'inputType'=>'Date',
-                'name'=>'Date of Confirmation',
+                'name'=>'DateofConfirmation',
                 'caption'=>'Date of Confirmation',
                 'compulsory'=>false,
                 'isUnique'=>false,
@@ -338,7 +338,7 @@ class LoadFieldData extends AbstractFixture implements OrderedFixtureInterface
             24=>Array(
                 'dataType'=>'String',
                 'inputType'=>'Date',
-                'name'=>'Date of Last Promotion',
+                'name'=>'DateofLastPromotion',
                 'caption'=>'Date of Last Promotion',
                 'compulsory'=>false,
                 'isUnique'=>false,
@@ -356,7 +356,7 @@ class LoadFieldData extends AbstractFixture implements OrderedFixtureInterface
             26=>Array(
                 'dataType'=>'String',
                 'inputType'=>'Select',
-                'name'=>'Employment Status',
+                'name'=>'EmploymentStatus',
                 'caption'=>'Employment Status',
                 'compulsory'=>true,
                 'isUnique'=>false,
@@ -365,7 +365,7 @@ class LoadFieldData extends AbstractFixture implements OrderedFixtureInterface
             27=>Array(
                 'dataType'=>'String',
                 'inputType'=>'Select',
-                'name'=>'Registered Disability',
+                'name'=>'RegisteredDisability',
                 'caption'=>'Registered Disability',
                 'compulsory'=>false,
                 'isUnique'=>false,
@@ -374,7 +374,7 @@ class LoadFieldData extends AbstractFixture implements OrderedFixtureInterface
             28=>Array(
                 'dataType'=>'String',
                 'inputType'=>'TextArea',
-                'name'=>'Contacts of Employee',
+                'name'=>'ContactsofEmployee',
                 'caption'=>'Contacts of Employee',
                 'compulsory'=>true,
                 'isUnique'=>false,
@@ -383,7 +383,7 @@ class LoadFieldData extends AbstractFixture implements OrderedFixtureInterface
             29=>Array(
                 'dataType'=>'String',
                 'inputType'=>'Text',
-                'name'=>'Next of Kin',
+                'name'=>'NextofKin',
                 'caption'=>'Next of Kin',
                 'compulsory'=>false,
                 'isUnique'=>false,
@@ -392,7 +392,7 @@ class LoadFieldData extends AbstractFixture implements OrderedFixtureInterface
             30=>Array(
                 'dataType'=>'String',
                 'inputType'=>'Select',
-                'name'=>'Relationship to Next of Kin',
+                'name'=>'RelationshiptoNextofKin',
                 'caption'=>'Relationship to Next of Kin',
                 'compulsory'=>false,
                 'isUnique'=>false,
@@ -401,7 +401,7 @@ class LoadFieldData extends AbstractFixture implements OrderedFixtureInterface
             31=>Array(
                 'dataType'=>'String',
                 'inputType'=>'TextArea',
-                'name'=>'Contacts of Next of Kin',
+                'name'=>'ContactsofNextofKin',
                 'caption'=>'Contacts of Next of Kin',
                 'compulsory'=>false,
                 'isUnique'=>false,
