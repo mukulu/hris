@@ -71,7 +71,7 @@ class OrganisationunitStructure
      *
      * @ORM\ManyToOne(targetEntity="Hris\OrganisationunitBundle\Entity\OrganisationunitLevel",inversedBy="organisationunitStructure")
      * @ORM\JoinColumns({
-     *   @ORM\JoinColumn(name="level", referencedColumnName="id", nullable=true, onDelete="CASCADE")
+     *   @ORM\JoinColumn(name="level_id", referencedColumnName="id", nullable=true, onDelete="CASCADE")
      * })
      */
     private $level;

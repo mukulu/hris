@@ -201,7 +201,7 @@ class Organisationunit
     /**
      * @var OrganisationunitStructure $organisationunitStructure
      *
-     * @ORM\OneToOne(targetEntity="Hris\OrganisationunitBundle\Entity\OrganisationunitStructure", inversedBy="organisationunit", orphanRemoval=true)
+     * @ORM\OneToOne(targetEntity="Hris\OrganisationunitBundle\Entity\OrganisationunitStructure", inversedBy="organisationunit", onDelete="CASCADE")
      */
     private $organisationunitStructure;
 

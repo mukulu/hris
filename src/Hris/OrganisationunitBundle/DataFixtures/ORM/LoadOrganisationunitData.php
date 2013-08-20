@@ -20,6 +20,7 @@
  *
  * @since 2012
  * @author John Francis Mukulu <john.f.mukulu@gmail.com>
+ * @todo check reference of orgunit for a distinction with shortnames( multiple round trips).
  *
  */
 namespace Hris\FormBundle\DataFixtures\ORM;
@@ -6729,7 +6730,7 @@ class LoadOrganisationunitData extends AbstractFixture implements OrderedFixture
                 // Populate Dispensaries
                 for($dispensaryIncr=0;$dispensaryIncr<$dispensaryCount;$dispensaryIncr++){
                     $dispensary = new Organisationunit();
-                    $randomDispensaryName = $this->dispensaries[rand(0,sizeof($this->dispensaries))];
+                    $randomDispensaryName = $this->dispensaries[rand(0,sizeof($this->dispensaries)-1)];
                     $randomDispensaryName = str_replace('  ',' ',str_replace('\t',' ',$randomDispensaryName));
 
                     $dispensaryCode = substr(strtolower(str_replace(' Dispensary','',$randomDispensaryName)),0,19).'dsp';
