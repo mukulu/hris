@@ -199,13 +199,6 @@ class Organisationunit
     private $description;
 
     /**
-     * @var OrganisationunitStructure $organisationunitStructure
-     *
-     * @ORM\OneToOne(targetEntity="Hris\OrganisationunitBundle\Entity\OrganisationunitStructure", inversedBy="organisationunit", onDelete="CASCADE")
-     */
-    private $organisationunitStructure;
-
-    /**
      * @var OrganisationunitStructure $level1OrganisationunitStructure
      *
      * @ORM\OneToMany(targetEntity="Hris\OrganisationunitBundle\Entity\OrganisationunitStructure", mappedBy="level1Organisationunit",cascade={"ALL"})
@@ -673,29 +666,6 @@ class Organisationunit
     public function getOrganisationunitGroup()
     {
         return $this->organisationunitGroup;
-    }
-
-    /**
-     * Set organisationunitStructure
-     *
-     * @param OrganisationunitStructure $organisationunitStructure
-     * @return Organisationunit
-     */
-    public function setOrganisationunitStructure(OrganisationunitStructure $organisationunitStructure = null)
-    {
-        $this->organisationunitStructure = $organisationunitStructure;
-
-        return $this;
-    }
-
-    /**
-     * Get organisationunitStructure
-     *
-     * @return OrganisationunitStructure
-     */
-    public function getOrganisationunitStructure()
-    {
-        return $this->organisationunitStructure;
     }
 
     /**

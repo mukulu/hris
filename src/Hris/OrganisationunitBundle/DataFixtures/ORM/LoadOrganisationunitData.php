@@ -20,7 +20,6 @@
  *
  * @since 2012
  * @author John Francis Mukulu <john.f.mukulu@gmail.com>
- * @todo check reference of orgunit for a distinction with shortnames( multiple round trips).
  *
  */
 namespace Hris\FormBundle\DataFixtures\ORM;
@@ -6714,7 +6713,7 @@ class LoadOrganisationunitData extends AbstractFixture implements OrderedFixture
                 $manager->persist($organisationunit);
             }
 
-            // Randomly populate dispensaries, health centres & hospitals for municipal & district councils
+            // Randomly populate dispensaries, health centres & hospitals under municipal & district councils
 
             if(
                 strpos($humanResourceOrganisationunit['longname'],'District Council') > 0
@@ -6730,65 +6729,70 @@ class LoadOrganisationunitData extends AbstractFixture implements OrderedFixture
                 // Populate Dispensaries
                 for($dispensaryIncr=0;$dispensaryIncr<$dispensaryCount;$dispensaryIncr++){
                     $dispensary = new Organisationunit();
-                    $randomDispensaryName = $this->dispensaries[rand(0,sizeof($this->dispensaries)-1)];
-                    $randomDispensaryName = str_replace('  ',' ',str_replace('\t',' ',$randomDispensaryName));
+                    //Kip picking dispensaries randomly until unique reference is found
+                    do{
+                        $dispensaryKey = array_rand($this->dispensaries,1);
+                        $dispensaryName = $this->dispensaries[$dispensaryKey];
+                        $dispensaryName = str_replace(' 	',' ',str_replace('   ',' ',str_replace('  ',' ',str_replace('\t',' ',$dispensaryName))));
+                        $dispensaryShortname = substr(strtolower(str_replace(' ','',str_replace(' Dispensary','',$dispensaryName))),0,17).'dsp';
+                        $dispensaryReference = strtolower(str_replace(' ','',$dispensaryShortname)).'-organisationunit';
 
-                    $dispensaryCode = substr(strtolower(str_replace(' Dispensary','',$randomDispensaryName)),0,19).'dsp';
-                    $dispensary->setCode( uniqid() );
-                    $dispensary->setShortname(uniqid());
-                    $dispensary->setLongname($randomDispensaryName);
+                    }while( $this->hasReference($dispensaryReference) );
+
+                    $dispensary->setCode( $dispensaryShortname );
+                    $dispensary->setShortname($dispensaryShortname);
+                    $dispensary->setLongname($dispensaryName);
                     $dispensary->setParent($parentOrganisationunit);
                     $dispensary->setActive(true);
+                    $this->addReference($dispensaryReference, $dispensary);
 
-                    $dispensaryReference = str_replace(' ','',$dispensaryCode).strtolower(str_replace(' ','',$humanResourceOrganisationunit['shortname'])).'-organisationunit';
-                    $this->addReference($dispensaryReference.uniqid(), $dispensary);
                     $manager->persist($dispensary);
                     $dispensary = NULL;
-                    $randomDispensaryName = NULL;
-                    $dispensaryCode = NULL;
                     $dispensaryReference = NULL;
                 }
                 // Populate Health Centre
                 for($healthCentreIncr=0;$healthCentreIncr<$healthCentreCount;$healthCentreIncr++){
                     $healthCentre = new Organisationunit();
-                    $randomhealthCentreName = $this->healthCentres[rand(0,sizeof($this->healthCentres)-1)];
-                    $randomhealthCentreName = str_replace('  ',' ',str_replace('\t',' ',$randomhealthCentreName));
-                    $healthCentreCode = substr(strtolower(str_replace(' Health Centre','',$randomhealthCentreName)),0,19).'hc';
-                    $healthCentre->setCode( uniqid() );
-                    $healthCentre->setShortname(uniqid());
-                    $healthCentre->setLongname($randomhealthCentreName);
+                    //Kip picking health centres randomly until unique reference is found
+                    do{
+                        $healthCentreKey = array_rand($this->healthCentres,1);
+                        $healthCentreName = $this->healthCentres[$healthCentreKey];
+                        $healthCentreName = str_replace(' 	',' ',str_replace('   ',' ',str_replace('  ',' ',str_replace('\t',' ',$healthCentreName))));
+                        $healthCentreShortname = substr(strtolower(str_replace(' ','',str_replace(' Health Centre','',$healthCentreName))),0,17).'htc';
+                        $healthCentreReference = strtolower(str_replace(' ','',$healthCentreShortname)).'-organisationunit';
+
+                    }while( $this->hasReference($healthCentreReference) );
+
+                    $healthCentre->setCode( $healthCentreShortname );
+                    $healthCentre->setShortname($healthCentreShortname);
+                    $healthCentre->setLongname($healthCentreName);
                     $healthCentre->setParent($parentOrganisationunit);
                     $healthCentre->setActive(true);
-
-                    $healthCentreReference = str_replace(' ','',$healthCentreCode).strtolower(str_replace(' ','',$humanResourceOrganisationunit['shortname'])).'-organisationunit';
-                    $this->addReference($healthCentreReference.uniqid(), $healthCentre);
+                    $this->addReference($healthCentreReference, $healthCentre);
                     $manager->persist($healthCentre);
                     $healthCentre = NULL;
-                    $randomhealthCentreName = NULL;
-                    $healthCentreCode = NULL;
                     $healthCentreReference = NULL;
                 }
                 // Populate Hosptial
                 for($hospitalIncr=0;$hospitalIncr<$hospitalCount;$hospitalIncr++){
                     $hospital = new Organisationunit();
-                    $randomhospitalName = $this->hospitals[rand(0,sizeof($this->hospitals)-1)];
-                    $randomhospitalName = str_replace('  ',' ',str_replace('\t',' ',$randomhospitalName));
-                    $hospitalCode = substr(strtolower(str_replace(' Hospital','',$randomhospitalName)),0,19).'hsp';
-                    $hospital->setCode( uniqid() );
-                    $hospital->setShortname(uniqid());
-                    $hospital->setLongname($randomhospitalName);
-                    $hospital->setActive(true);
+                    //Kip picking health centres randomly until unique reference is found
+                    do{
+                        $hospitalKey = array_rand($this->hospitals,1);
+                        $hospitalName = $this->healthCentres[$hospitalKey];
+                        $hospitalName = str_replace(' 	',' ',str_replace('   ',' ',str_replace('  ',' ',str_replace('\t',' ',$hospitalName))));
+                        $hospitalShortname = substr(strtolower(str_replace(' ','',str_replace(' Hospital','',$hospitalName))),0,17).'hsp';
+                        $hospitalReference = strtolower(str_replace(' ','',$hospitalShortname)).'-organisationunit';
 
-                    $parentReference = strtolower(str_replace(' ','',$humanResourceOrganisationunit['shortname'])).'-organisationunit';
-                    $parentOrganisationunit = $manager->merge($this->getReference( $parentReference ));
+                    }while( $this->hasReference($hospitalReference) );
+                    $hospital->setCode( $hospitalShortname );
+                    $hospital->setShortname($hospitalShortname);
+                    $hospital->setLongname($hospitalName);
                     $hospital->setParent($parentOrganisationunit);
-
-                    $hospitalReference = str_replace(' ','',$hospitalCode).strtolower(str_replace(' ','',$humanResourceOrganisationunit['shortname'])).'-organisationunit';
-                    $this->addReference($hospitalReference.uniqid(), $hospital);
+                    $hospital->setActive(true);
+                    $this->addReference($hospitalReference, $hospital);
                     $manager->persist($hospital);
                     $hospital = NULL;
-                    $randomhospitalName = NULL;
-                    $hospitalCode = NULL;
                     $hospitalReference = NULL;
                 }
             }

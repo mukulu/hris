@@ -778,7 +778,7 @@ class LoadFormData extends AbstractFixture implements OrderedFixtureInterface
             $form->setName($humanResourceForm['name']);
             $form->setTitle($humanResourceForm['name']);
             $form->setHypertext($humanResourceForm['hypertext']);
-            $this->addReference(strtolower($humanResourceForm['name']).'-form', $form);
+            $this->addReference(strtolower(str_replace(' ','',$humanResourceForm['name'])).'-form', $form);
             $manager->persist($form);
             // Add Field Members for the form created
             $sort=1;
@@ -786,7 +786,7 @@ class LoadFormData extends AbstractFixture implements OrderedFixtureInterface
             {
                 $formMember = new FormFieldMember();
                 $formMember->setField($manager->merge($this->getReference( strtolower(str_replace(' ','',$dummyField['name'])).'-field' )));
-                $formMember->setForm( $manager->merge($this->getReference(strtolower($humanResourceForm['name']). '-form')) );
+                $formMember->setForm( $manager->merge($this->getReference(strtolower( str_replace(' ','',$humanResourceForm['name'])). '-form')) );
                 $formMember->setSort($sort++);
                 $referenceName = strtolower(str_replace(' ','',$humanResourceForm['name']).str_replace(' ','',$dummyField['name'])).'-form-field-member';
                 $this->addReference($referenceName, $formMember);
