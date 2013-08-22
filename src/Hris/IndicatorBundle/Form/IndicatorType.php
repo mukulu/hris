@@ -29,6 +29,7 @@ class IndicatorType extends AbstractType
     {
         $builder
             ->add('name')
+            ->add('description')
             ->add('organisationunitGroup')
             ->add('fieldOptionGroup')
             ->add('year', 'choice', array(

@@ -1443,6 +1443,29 @@ class LoadFieldData extends AbstractFixture implements OrderedFixtureInterface
     }
 
     /**
+     * Returns Array of dummy fieldOptionGroups
+     *
+     * @return array
+     */
+    public function addDummyFieldOptionGroups()
+    {
+        // Load dummy field option groups for indicators
+        $this->fieldOptionGroups = Array(
+            0=>Array(
+                'name'=>'Atleast Secondary Education',
+                'description'=>"Primary and Secondary Education",
+                'options'=> Array(0=>'Ordinary Secondary Education', 1=>'Primary Education'),
+            ),
+            1=>Array(
+                'name'=>'University Education',
+                'description'=>"Bachelor Degree, Masters and Phd",
+                'options'=> Array( 0=>'Postgraduate Diploma', 1=>'Bachelor Degree', 2=> 'Masters Degree', 3=> 'PhD'),
+            ),
+        );
+        return $this->fieldOptionGroups;
+    }
+
+    /**
      * Returns Array of dummy fieldGroups
      *
      * @return array
@@ -1462,7 +1485,7 @@ class LoadFieldData extends AbstractFixture implements OrderedFixtureInterface
                 'description'=>"Fields that must be displayed for any employee's reocrd"),
             3=>Array(
                 'name'=>'Combo Fields',
-                'description'=>"Fields with combo options")
+                'description'=>"Fields with combo options"),
         );
         return $this->fieldGroups;
     }
@@ -1496,6 +1519,7 @@ class LoadFieldData extends AbstractFixture implements OrderedFixtureInterface
 	{
         $this->addDummyFields();
         $this->addDummyFieldOptions();
+        $this->addDummyFieldOptionGroups();
         $this->addDummyFieldGroups();
         $this->addDummyFieldGroupsets();
 
@@ -1504,9 +1528,19 @@ class LoadFieldData extends AbstractFixture implements OrderedFixtureInterface
             $fieldOptionGroupset = new FieldOptionGroupset();
             $fieldOptionGroupset->setName($humanResourceFieldOptionGroupsets['name']);
             $fieldOptionGroupset->setDescription($humanResourceFieldOptionGroupsets['description']);
-            $fieldReference = strtolower(str_replace(' ','',$humanResourceFieldOptionGroupsets['name'])).'-fieldoptiongroupset';
-            $this->addReference($fieldReference, $fieldOptionGroupset);
+            $fieldOptionGroupsetReference = strtolower(str_replace(' ','',$humanResourceFieldOptionGroupsets['name'])).'-fieldoptiongroupset';
+            $this->addReference($fieldOptionGroupsetReference, $fieldOptionGroupset);
             $manager->persist($fieldOptionGroupset);
+        }
+
+        // Create FieldOptionGroups specific for indicators
+        foreach($this->fieldOptionGroups as $fieldOptionGroupKey=>$humanResourceFieldOptionGroup) {
+            $fieldOptionGroup = new FieldOptionGroup();
+            $fieldOptionGroup->setName($humanResourceFieldOptionGroup['name']);
+            $fieldOptionGroup->setDescription($humanResourceFieldOptionGroup['description']);
+            $fieldOptionGroupReference = strtolower(str_replace(' ','',$humanResourceFieldOptionGroup['name'])).'-fieldoptiongroup';
+            $this->addReference($fieldOptionGroupReference, $fieldOptionGroup);
+            $manager->persist($fieldOptionGroup);
         }
 
         // Populate dummy fields
@@ -1535,6 +1569,7 @@ class LoadFieldData extends AbstractFixture implements OrderedFixtureInterface
 
                 // Assign field options to their fields & field  option group
                 foreach($this->fieldOptions as $fieldOptionKey=> $humanResourceFieldOptions) {
+                    // Options are assigned to option groups according to field names(grouping of option by fields they belong to)
                     if(str_replace('-field','',$humanResourceFieldOptions['field']) == str_replace(' ','',$humanResourceField['name']) ) {
                         $fieldOption = new FieldOption();
                         $fieldOption->setField( $manager->merge($this->getReference($fieldReference)) );
@@ -1546,7 +1581,18 @@ class LoadFieldData extends AbstractFixture implements OrderedFixtureInterface
                         $manager->persist($fieldOption);
                         // Assign field option to it's field option group
                         $fieldOptionGroup->addFieldOption($fieldOption);
+
+                        // Go through dummy field option groups for indicators checking membership
+                        foreach($this->fieldOptionGroups as $dummyFieldOptionGroupKey=>$dummyFieldOptionGroup) {
+                            if( in_array($fieldOption->getValue(),$dummyFieldOptionGroup['options']) ) {
+                                $fieldOptionGroupReference = strtolower(str_replace(' ','',$dummyFieldOptionGroup['name'])).'-fieldoptiongroup';
+                                $fieldOptionGroupByReference = $manager->merge($this->getReference( $fieldOptionGroupReference ));
+                                $fieldOption->addFieldOptionGroup($fieldOptionGroupByReference);
+                            }
+                        }
                     }
+                    // Append options for Indicator groups of alteast secondary school and University education.
+
                 }
                 // Assign created field option groups to groupset by compulsory and hasHistory
                 // @Note: names are hard-coded same name as in addDummyFieldGroupsets
