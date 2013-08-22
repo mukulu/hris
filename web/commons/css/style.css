@@ -109,3 +109,14 @@ body {
 code {
     font-size: 80%;
 }
+/* Data Entry Form Css */
+
+table.dataentry {border-collapse: collapse;border-color:#0070C0;}
+table.dataentry > thead > tr {height:35.45pt;}
+table.dataentry > thead > tr > th {background:#d6dff7;}
+table.dataentry > thead > tr > th > p > span{font-size: 18pt; color: #0070c0;}
+table.dataentry > tbody > tr {height: 35.2pt; border: 1pt #2e468b;}
+table.dataentry > tbody > tr > td {background-color:#d6dff7;padding: 0in 5.4pt;height: 17.2pt;}
+table.dataentry > tbody > tr > td > span {font-size: 14.0pt;width: 216.3pt;color: #1f497d;}
+table.dataentry > tbody > tr > td > em {font-size: 14.0pt;font-style: normal;color: #1f497d;}
+table.dataentry > tbody > tr > td.whitebg {background-color:#ffffff;width:288px;}
