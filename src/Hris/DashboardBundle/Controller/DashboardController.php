@@ -23,73 +23,101 @@ class DashboardController extends Controller
      * @Secure(roles="ROLE_DASHBOARD_DASHBOARD_SHOW,ROLE_USER")
      *
      * @Route("/", name="hris_homepage")
-     * @Route("/dashboard/{name}", defaults={"name" = "Welcome"}, name="hris_dashboard_homepage")
+     * @Route("/dashboard/", name="hris_dashboard_homepage")
      * @Method("GET")
      * @Template()
      *
-     * @param $name
      * @return \Symfony\Component\HttpFoundation\Response
      */
-    public function indexAction($name)
+    public function indexAction()
     {
         $series = array(
             array(
-                'name'  => 'Rainfall',
+                'name'  => 'Employment',
                 'type'  => 'column',
-                'color' => '#4572A7',
+                'color' => '#0D0DC1',
                 'yAxis' => 1,
-                'data'  => array(49.9, 71.5, 106.4, 129.2, 144.0, 176.0, 135.6, 148.5, 216.4, 194.1, 95.6, 54.4),
+                'data'  => array(1952,1058,1805,2082,2964,4243,3251,4979,2991,3171,426),
             ),
             array(
-                'name'  => 'Temperature',
+                'name'  => 'Retirement',
                 'type'  => 'spline',
                 'color' => '#AA4643',
-                'data'  => array(7.0, 6.9, 9.5, 14.5, 18.2, 21.5, 25.2, 26.5, 23.3, 18.3, 13.9, 9.6),
+                'data'  => array(994,1503,1119,1380,1289,1840,1633,2048,1496,2045,1836),
+                'dashStyle'=>'longdash',
+            ),
+            array(
+                'name'  => 'Sex',
+                'type'  => 'pie',
+                'center'=> array(100,30),
+                'size'=> 100,
+                'showInLegend'=> false,
+                'dataLabels'=> array('enabled'=>true),
+                'data'  => array(
+                    array(
+                        'name'=>'Female',
+                        'y'=> 41848,
+                        'color'=>'#66ECA0'
+                    ),
+                    array(
+                        'name'=>'Male',
+                        'y'=>20315,
+                        'color'=>'#9494d4'
+                    ),
+                ),
             ),
         );
         $yData = array(
             array(
                 'labels' => array(
-                    'formatter' => new Expr('function () { return this.value + " degrees C" }'),
-                    'style'     => array('color' => '#AA4643')
+                    'formatter' => new Expr('function () { return this.value + "" }'),
+                    'style'     => array('color' => '#0D0DC1')
                 ),
                 'title' => array(
-                    'text'  => 'Temperature',
-                    'style' => array('color' => '#AA4643')
+                    'text'  => 'Employments',
+                    'style' => array('color' => '#0D0DC1')
                 ),
                 'opposite' => true,
             ),
             array(
                 'labels' => array(
-                    'formatter' => new Expr('function () { return this.value + " mm" }'),
-                    'style'     => array('color' => '#4572A7')
+                    'formatter' => new Expr('function () { return this.value + "" }'),
+                    'style'     => array('color' => '#AA4643')
                 ),
                 'gridLineWidth' => 0,
                 'title' => array(
-                    'text'  => 'Rainfall',
-                    'style' => array('color' => '#4572A7')
+                    'text'  => 'Retirements',
+                    'style' => array('color' => '#AA4643')
                 ),
             ),
         );
-        $categories = array('Jan', 'Feb', 'Mar', 'Apr', 'May', 'Jun', 'Jul', 'Aug', 'Sep', 'Oct', 'Nov', 'Dec');
+        $categories = array('2003', '2004', '2005', '2005', '2006', '2007', '2008', '2009', '2010', '2011', '2012', '2013');
 
-        $ob = new Highchart();
-        $ob->chart->renderTo('highchart'); // The #id of the div where to render the chart
-        $ob->chart->type('column');
-        $ob->title->text('Average Monthly Weather Data for Tokyo');
-        $ob->xAxis->categories($categories);
-        $ob->yAxis($yData);
-        $ob->legend->enabled(false);
+        $dashboardchart = new Highchart();
+        $dashboardchart->chart->renderTo('chart_placeholder'); // The #id of the div where to render the chart
+        $dashboardchart->chart->type('column');
+        $dashboardchart->title->text('Employment Distribution');
+        $dashboardchart->subtitle->text('Ministry of Health And Social Welfare with lower levels');
+        $dashboardchart->xAxis->categories($categories);
+        $dashboardchart->yAxis($yData);
+        $dashboardchart->legend->enabled(false);
         $formatter = new Expr('function () {
                  var unit = {
-                     "Rainfall": "mm",
-                     "Temperature": "degrees C"
+                     "Retirement": "retirements",
+                     "Employment": "employments",
+                     "Sex":"employees"
                  }[this.series.name];
-                 return this.x + ": <b>" + this.y + "</b> " + unit;
+                 if(this.point.name) {
+                    return ""+this.point.name+": <b>"+ this.y+"</b> "+ unit;
+                 }else {
+                    return this.x + ": <b>" + this.y + "</b> " + unit;
+                 }
              }');
-        $ob->tooltip->formatter($formatter);
-        $ob->series($series);
+        $dashboardchart->tooltip->formatter($formatter);
+        $dashboardchart->series($series);
 
-        return $this->render('HrisDashboardBundle:Dashboard:dashboard.html.twig', array('name' => $name,'chart'=>$ob));
+        return array(
+            'chart'=>$dashboardchart
+        );
     }
 }

@@ -6719,9 +6719,9 @@ class LoadOrganisationunitData extends AbstractFixture implements OrderedFixture
                 strpos($humanResourceOrganisationunit['longname'],'District Council') > 0
                 || strpos($humanResourceOrganisationunit['longname'],'Municipal Council') > 0
                 || strpos($humanResourceOrganisationunit['longname'],'Town Council') > 0 ) {
-                $dispensaryCount = rand(5,10);
-                $healthCentreCount = rand(1,3);
-                $hospitalCount = rand(1,2);
+                $dispensaryCount = rand(5,15);
+                $healthCentreCount = rand(1,5);
+                $hospitalCount = rand(1,3);
 
                 $parentReference = strtolower(str_replace(' ','',$humanResourceOrganisationunit['shortname'])).'-organisationunit';
                 $parentOrganisationunit = $manager->merge($this->getReference( $parentReference ));

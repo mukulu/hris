@@ -64,6 +64,14 @@ class ResourceTable
      * @ORM\Column(name="name", type="string", length=64, unique=true)
      */
     private $name;
+
+    /**
+     * @var string $description
+     *
+     * @Gedmo\Versioned
+     * @ORM\Column(name="description", type="text", nullable=true)
+     */
+    private $description;
     
     /**
      * @var ResourceTableFieldMember $resourceTableFieldMember
@@ -134,6 +142,29 @@ class ResourceTable
         $this->datecreated = $datecreated;
     
         return $this;
+    }
+
+    /**
+     * Set description
+     *
+     * @param string $description
+     * @return Field
+     */
+    public function setDescription($description)
+    {
+        $this->description = $description;
+
+        return $this;
+    }
+
+    /**
+     * Get description
+     *
+     * @return string
+     */
+    public function getDescription()
+    {
+        return $this->description;
     }
 
     /**

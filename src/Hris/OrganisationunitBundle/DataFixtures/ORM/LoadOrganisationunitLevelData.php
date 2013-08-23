@@ -113,7 +113,7 @@ class LoadOrganisationunitLevelData extends AbstractFixture implements OrderedFi
         }
 
         // Fetch organisation units from database order by parent and id
-        $organiastionunits = $manager->getRepository('HrisOrganisationunitBundle:Organisationunit')->findAll($orderBy=Array('parent','id'));
+        $organiastionunits = $manager->getRepository('HrisOrganisationunitBundle:Organisationunit')->findAll($orderBy=Array('uid'));
 
         if(!empty($organiastionunits)) {
             foreach($organiastionunits as $organiastionunitKey=>$organisationunit) {
@@ -121,8 +121,6 @@ class LoadOrganisationunitLevelData extends AbstractFixture implements OrderedFi
                 // Populate orgunit structure
                 $organisationunitStructure = new OrganisationunitStructure();
                 $organisationunitStructure->setOrganisationunit($organisationunit);
-                $organisationunitStructureReference = strtolower(str_replace(' ','',$organisationunit->getShortname())).'-organisationunitstructure';
-                $this->addReference($organisationunitStructureReference, $organisationunitStructure);
 
                 // Figureout level on the structure by parent
                 if($organisationunit->getParent() == NULL) {
@@ -188,6 +186,8 @@ class LoadOrganisationunitLevelData extends AbstractFixture implements OrderedFi
                         $organisationunitStructure->setLevel1Organisationunit($organisationunitStructure->getOrganisationunit()->getParent()->getParent()->getParent()->getParent()->getParent()->getParent());
                     }
                 }
+                $organisationunitStructureReference = strtolower(str_replace(' ','',$organisationunit->getShortname())).'-organisationunitstructure';
+                $this->addReference($organisationunitStructureReference, $organisationunitStructure);
                 $manager->persist($organisationunitStructure);
             }
         }
@@ -201,7 +201,7 @@ class LoadOrganisationunitLevelData extends AbstractFixture implements OrderedFi
 	 */
 	public function getOrder()
 	{
-		return 8;
+		return 7;
 	}
 
 }
