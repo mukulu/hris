@@ -32,9 +32,7 @@ class ReportAggregationController extends Controller
         );
 
         $aggregationForm = $this->createFormBuilder($defaultData)
-            ->add('organisationunit', 'entity',
-                array('class' => 'HrisOrganisationunitBundle:Organisationunit' )
-            )
+            ->add('organisationunit', 'hidden')
             ->add('forms', 'entity',
                 array('class' => 'HrisFormBundle:Form')
             )
