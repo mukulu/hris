@@ -15,13 +15,15 @@ localDatabase.indexedDB.onerror = function (e) {
     console.log("Database error: " + e.target.errorCode);
 };
 
+var replaceOptionString = "";
+
 function createDatabase(databaseName, tableName, columnNames, dataValues) {
     /*
     Parsing the names of columns form strin to Json Format
      */
     tableName = JSON.parse(tableName);
 
-    var openRequest = indexedDB.open(databaseName);
+    var openRequest = localDatabase.indexedDB.open(databaseName);
 
     openRequest.onupgradeneeded = function() {
         // The database did not previously exist, so create object stores and indexes.
@@ -85,7 +87,7 @@ function deleteDatabase(databaseName) {
      Parsing the names of columns form strin to Json Format
      */
 
-    var deleteRequest = indexedDB.deleteDatabase(databaseName);
+    var deleteRequest = localDatabase.indexedDB.deleteDatabase(databaseName);
     console.log("deleting " + databaseName + " database");
 
     deleteRequest.onsuccess = function() {
@@ -111,7 +113,7 @@ function addRecords(databaseName, tableName, dataValues) {
     tableName = JSON.parse(tableName);
     dataValues = JSON.parse(dataValues);
 
-    var openRequest = indexedDB.open(databaseName);
+    var openRequest = localDatabase.indexedDB.open(databaseName);
 
     openRequest.onsuccess = function() {
         db = openRequest.result;
@@ -129,6 +131,8 @@ function addRecords(databaseName, tableName, dataValues) {
                     results += '"'+ val + '" : "' + encodeURIComponent(dataValues[key][val]['name']) +'", ';
                 }else if( val == "datecreated" || val == "lastupdated" ){
                     results += '"'+ val + '" : "' + encodeURIComponent(dataValues[key][val]['date']) +'", ';
+                }else if( val == "field" ){
+                    results += '"'+ val + '" : "' + encodeURIComponent(dataValues[key][val]['uid']) +'", ';
                 }else{
                     results += '"'+ val + '" : "' + encodeURIComponent(dataValues[key][val]) +'", ';
                 }
@@ -160,7 +164,7 @@ function getSingleRecord(databaseName, uid, tableName) {
     var result = document.getElementById("result");
     result.innerHTML = "";
 
-    var openRequest = indexedDB.open(databaseName);
+    var openRequest = localDatabase.indexedDB.open(databaseName);
 
     openRequest.onsuccess = function() {
         db = openRequest.result;
@@ -203,6 +207,8 @@ function getSingleRecord(databaseName, uid, tableName) {
 
 }
 
+var testString = "";
+
 function getDataEntryForm(databaseName, uid, tableName) {
 
     tableName = JSON.parse(tableName);
@@ -212,7 +218,7 @@ function getDataEntryForm(databaseName, uid, tableName) {
     var result = document.getElementById("result");
     result.innerHTML = "";
 
-    var openRequest = indexedDB.open(databaseName);
+    var openRequest = localDatabase.indexedDB.open(databaseName);
 
     openRequest.onsuccess = function() {
         db = openRequest.result;
@@ -230,20 +236,9 @@ function getDataEntryForm(databaseName, uid, tableName) {
                 // A match was found.
 
                 var jsonStr = JSON.stringify(decodeURIComponent(matching.hypertext));
+
+                var hypertext = decodeURIComponent(matching.hypertext);
                 //Formating the forms to be sent out as a complete form
-
-                if( fieldType = "combo" ){
-                    //replacing the field with Combo Box
-                }
-                else if( fieldType = "text" ){
-                    //replacing the field with Text Box
-                }
-                else if( fieldType = "textArea" ){
-                    //replacing the field with Text Area
-                }
-
-                result.innerHTML = decodeURIComponent(matching.hypertext);
-                console.log(decodeURIComponent(matching.hypertext));
 
                 /*
                  /*
@@ -254,20 +249,95 @@ function getDataEntryForm(databaseName, uid, tableName) {
                 var storeObject = fieldTransaction.objectStore("hris_field");
 
                 var fieldRequest = storeObject.openCursor();
+
                 fieldRequest.onsuccess = function(evt) {
+
 
                     var cursor = fieldRequest.result;
                     if (cursor) {
                         // Called for each matching record.
-                        //report(cursor.value.isbn, cursor.value.title, cursor.value.author);
-                        console.log(decodeURIComponent(cursor.value.name));
+
+                        var inputType = cursor.value.inputType;
+                        var fieldName = cursor.value.name;
+
+                        console.log(decodeURIComponent(inputType));
+
+                        function foo(fn){
+
+
+                        if( inputType == "combo" ){
+                            //getting all the field Combos
+
+
+
+                            var fieldOptionTransaction = db.transaction("hris_fieldoption", "readonly");
+                            var fieldOptionStore = fieldOptionTransaction.objectStore("hris_fieldoption");
+
+                            var fielOptiondRequest = fieldOptionStore.openCursor();
+                            //replacing the field with Combo Box
+
+                            var replaceOptionString = "<select name='" + fieldName + "'>";
+
+
+
+                            fielOptiondRequest.onsuccess = function(callback) {
+
+                                var cursorOption = fielOptiondRequest.result;
+
+                                if (cursorOption) {
+
+                                    if ( cursorOption.value.field == cursor.value.uid ){
+                                        replaceOptionString += "<option value='" + cursorOption.value.id + "'>" + cursorOption.value.value + "</option>";
+
+                                        //console.log(" Inside Field UID from Option = "+ cursorOption.value.field + " and UID from Fields " + cursor.value.uid +" and option value " + cursorOption.value.value);
+                                    }
+                                    //console.log("Field UID from Option = "+ cursorOption.value.field + " and UID from Fields " + cursor.value.uid +" and option value " + cursorOption.value.value);
+                                    cursorOption.continue();
+                                }
+                                else {
+                                    // No more matching records.
+                                    console.log('No more Matching Fields Options');
+                                   replaceOptionString += "</select >";
+                                   fn(replaceOptionString);
+
+                                    //hypertext = hypertext.replace("~" + fieldName + "~", replaceOptionString);
+                                    //console.log(hypertext);
+
+                                }
+
+                            }
+
+                        }
+                        else if( inputType == "text_box" ){
+                            //replacing the field with Text Box
+                            var replaceString = "<input type='text' name='" + fieldName + "'>";
+                            hypertext = hypertext.replace("~" + fieldName + "~", replaceString);
+                        }
+                        else if( inputType == "textArea" ){
+                            //replacing the field with Text Area
+                        }
+
                         cursor.continue();
-                    } else {
-                        // No more matching records.
-                        console.log('No more Matching Fields');
                     }
 
+                        foo(function(location){
+                            alert(location); // this is where you get the return value
+                            console.log("replacement " + location);
+                            hypertext = hypertext.replace("~" + fieldName + "~", location);
+                            console.log(hypertext);
+
+                            result.innerHTML = hypertext;
+                        });
+                }else {
+                        // No more matching records.
+                        //console.log('No more Matching Fields');
+                        //console.log(hypertext);
+                        //result.innerHTML = hypertext;
+                        // console.log(hypertext);
+                    }
                 }
+
+
 
             } else {
                 // No match was found.
@@ -276,36 +346,5 @@ function getDataEntryForm(databaseName, uid, tableName) {
         };
 
     };
-
-}
-
-function fetchAllFields(databaseName, tableName) {
-
-        //tableName = JSON.parse(tableName);
-
-        var openRequest = indexedDB.open(databaseName);
-
-        openRequest.onsuccess = function() {
-            db = openRequest.result;
-            console.log("this is done deal");
-
-            var transaction = db.transaction(tableName, "readonly");
-            var store = transaction.objectStore(tableName);
-
-            var request = store.openCursor();
-            request.onsuccess = function(evt) {
-
-                var cursor = evt.target.result;
-
-                if (cursor) {
-                    var employee = cursor.value;
-                    var jsonStr = JSON.stringify(employee);
-                    console.log("Dumping all fields");
-                    console.log(jsonStr);
-                    cursor.continue();
-                }
-
-            }
-        }
 
 }
