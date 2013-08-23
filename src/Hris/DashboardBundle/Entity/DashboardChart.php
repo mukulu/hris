@@ -26,6 +26,7 @@ namespace Hris\DashboardBundle\Entity;
 
 use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\ORM\Mapping as ORM;
+use Gedmo\Mapping\Annotation as Gedmo;
 
 use Hris\FormBundle\Entity\Form;
 use Hris\UserBundle\Entity\UserInfo;
@@ -35,6 +36,7 @@ use Symfony\Component\Validator\Constraints as Assert;
 /**
  * Hris\DashboardBundle\Entity\DashboardChart
  *
+ * @Gedmo\Loggable
  * @ORM\Table(name="hris_dashboardchart", uniqueConstraints={@ORM\UniqueConstraint(name="userFieldOneTwoGraphTypeLowerLevel_idx",columns={"userinfo_id", "fieldOne","fieldTwo","graphType","lowerLevels"})})
  * @ORM\Entity(repositoryClass="Hris\DashboardBundle\Entity\DashboardChartRepository")
  */
@@ -52,6 +54,7 @@ class DashboardChart
     /**
      * @var string $uid
      *
+     * @Gedmo\Versioned
      * @ORM\Column(name="uid", type="string", length=13, unique=true)
      */
     private $uid;
@@ -59,6 +62,7 @@ class DashboardChart
     /**
      * @var string $name
      *
+     * @Gedmo\Versioned
      * @ORM\Column(name="name", type="string", length=64, unique=true)
      */
     private $name;
@@ -66,6 +70,7 @@ class DashboardChart
     /**
      * @var string $description
      *
+     * @Gedmo\Versioned
      * @ORM\Column(name="description", type="text", nullable=true)
      */
     private $description;
@@ -73,6 +78,7 @@ class DashboardChart
     /**
      * @var string $fieldOne
      *
+     * @Gedmo\Versioned
      * @ORM\Column(name="fieldOne", type="string", length=64)
      */
     private $fieldOne;
@@ -80,6 +86,7 @@ class DashboardChart
     /**
      * @var string $fieldTwo
      *
+     * @Gedmo\Versioned
      * @ORM\Column(name="fieldTwo", type="string", length=64)
      */
     private $fieldTwo;
@@ -87,6 +94,7 @@ class DashboardChart
     /**
      * @var string $graphType
      *
+     * @Gedmo\Versioned
      * @ORM\Column(name="graphType", type="string", length=64)
      */
     private $graphType;
@@ -94,6 +102,7 @@ class DashboardChart
     /**
      * @var boolean $lowerLevels
      *
+     * @Gedmo\Versioned
      * @ORM\Column(name="lowerLevels", type="boolean")
      */
     private $lowerLevels;
@@ -101,6 +110,7 @@ class DashboardChart
     /**
      * @var boolean $systemWide
      *
+     * @Gedmo\Versioned
      * @ORM\Column(name="systemWide", type="boolean")
      */
     private $systemWide;
@@ -124,6 +134,7 @@ class DashboardChart
     /**
      * @var UserInfo $userInfo
      *
+     * @Gedmo\Versioned
      * @ORM\ManyToOne(targetEntity="Hris\UserBundle\Entity\UserInfo",inversedBy="dashboardChart")
      * @ORM\JoinColumns({
      *   @ORM\JoinColumn(name="userinfo_id", referencedColumnName="id", onDelete="CASCADE")
@@ -146,17 +157,19 @@ class DashboardChart
      * @ORM\OrderBy({"name" = "ASC"})
      */
     private $form;
-    
+
     /**
      * @var \DateTime $datecreated
      *
+     * @Gedmo\Timestampable(on="create")
      * @ORM\Column(name="datecreated", type="datetime")
      */
     private $datecreated;
-    
+
     /**
      * @var \DateTime $lastupdated
      *
+     * @Gedmo\Timestampable(on="update")
      * @ORM\Column(name="lastupdated", type="datetime", nullable=true)
      */
     private $lastupdated;

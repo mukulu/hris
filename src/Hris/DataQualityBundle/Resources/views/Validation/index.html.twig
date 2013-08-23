@@ -1,55 +1,61 @@
 {% extends '::base.html.twig' %}
+{% block javascripts %}
+    {{ parent() }}
+    <script type="text/javascript" src="{{ asset('commons/js/jquery.dataTables.js') }}"></script>
+    <script type="text/javascript" src="{{ asset('commons/js/dt_settings.js') }}"></script>
+    <script>window["_GOOG_TRANS_EXT_VER"] = "1";</script>
+{% endblock javascripts %}
+
+{% block stylesheets %}
+    {{ parent() }}
+    <link rel="stylesheet" href="{{ asset('commons/css/dt_bootstrap.css') }}" />
+{% endblock stylesheets %}
 
 {% block right_content -%}
-    <h1>Validation list</h1>
+    <div class="container">
+        <h1><small>List of Available Validation Rules</small></h1>
+        <ul class="inline">
+            <li>
+                <a class="btn" href="{{ path('validation_new') }}">
+                    Create a new validation rule
+                </a>
+            </li>
+        </ul>
 
-    <table class="records_list">
-        <thead>
-            <tr>
-                <th>Id</th>
-                <th>Uid</th>
-                <th>Name</th>
-                <th>Description</th>
-                <th>Operator</th>
-                <th>Leftexpression</th>
-                <th>Rightexpression</th>
-                <th>Datecreated</th>
-                <th>Lastupdated</th>
-                <th>Actions</th>
-            </tr>
-        </thead>
-        <tbody>
-        {% for entity in entities %}
-            <tr>
-                <td><a href="{{ path('validation_show', { 'id': entity.id }) }}">{{ entity.id }}</a></td>
-                <td>{{ entity.uid }}</td>
-                <td>{{ entity.name }}</td>
-                <td>{{ entity.description }}</td>
-                <td>{{ entity.operator }}</td>
-                <td>{{ entity.leftExpression }}</td>
-                <td>{{ entity.rightExpression }}</td>
-                <td>{% if entity.datecreated %}{{ entity.datecreated|date('Y-m-d H:i:s') }}{% endif %}</td>
-                <td>{% if entity.lastupdated %}{{ entity.lastupdated|date('Y-m-d H:i:s') }}{% endif %}</td>
-                <td>
-                <ul>
-                    <li>
-                        <a href="{{ path('validation_show', { 'id': entity.id }) }}">show</a>
-                    </li>
-                    <li>
-                        <a href="{{ path('validation_edit', { 'id': entity.id }) }}">edit</a>
-                    </li>
-                </ul>
-                </td>
-            </tr>
-        {% endfor %}
-        </tbody>
-    </table>
 
-        <ul>
-        <li>
-            <a href="{{ path('validation_new') }}">
-                Create a new entry
-            </a>
-        </li>
-    </ul>
+        <table class="records_list dataTable table table-striped table-bordered table-hover" cellpadding="0" cellspacing="0" border="0">
+            <thead>
+                <tr>
+                    <th>Name</th>
+                    <th>Description</th>
+                    <th>Operator</th>
+                    <th>Leftexpression</th>
+                    <th>Rightexpression</th>
+                    <th>Actions</th>
+                </tr>
+            </thead>
+            <tbody>
+            {% for entity in entities %}
+                <tr>
+                    <td><a href="{{ path('validation_show', { 'id': entity.id }) }}">{{ entity.name }}</a></td>
+                    <td>{{ entity.description }}</td>
+                    <td>{{ entity.operator }}</td>
+                    <td>{{ entity.leftExpression }}</td>
+                    <td>{{ entity.rightExpression }}</td>
+                    <td>
+                    <ul class="inline">
+                        <li>
+                            <a href="{{ path('validation_show', { 'id': entity.id }) }}"><i class="icon-info-sign icon-large" title="Show"></i></a>
+                        </li>
+                        <li>
+                            <a href="{{ path('validation_edit', { 'id': entity.id }) }}"><i class="icon-edit icon-large" title="Edit"></i></a>
+                        </li>
+                    </ul>
+                    </td>
+                </tr>
+            {% endfor %}
+            </tbody>
+        </table>
+    </div>
+
     {% endblock %}

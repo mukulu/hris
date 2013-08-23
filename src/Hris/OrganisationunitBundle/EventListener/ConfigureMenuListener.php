@@ -69,7 +69,7 @@ class ConfigureMenuListener
             )
         );
         $orgunitModule->addChild('Organisationunit Levels',
-            array('uri'=>'#organisationunitlevel',
+            array('route'=>'organisationunitlevel_list',
                 'extras'=>array('tag'=>'div'),
                 'name'=>'Organisationunit Levels',
                 'attributes'=> array('class'=>'accordion-group'),

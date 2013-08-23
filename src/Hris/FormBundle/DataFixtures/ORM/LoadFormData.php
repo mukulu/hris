@@ -28,6 +28,8 @@ use Doctrine\Common\DataFixtures\AbstractFixture;
 use Doctrine\Common\Persistence\ObjectManager;
 
 use Hris\FormBundle\Entity\Form;
+use Hris\FormBundle\Entity\FormFieldMember;
+use Hris\FormBundle\DataFixtures\ORM\LoadFieldData;
 
 class LoadFormData extends AbstractFixture implements OrderedFixtureInterface
 {
@@ -35,18 +37,71 @@ class LoadFormData extends AbstractFixture implements OrderedFixtureInterface
 	 * {@inheritDoc}
 	 * @see Doctrine\Common\DataFixtures.FixtureInterface::load()
 	 */
+    private $forms;
+
+    /**
+     * Returns array of form fixtures.
+     *
+     * @return mixed
+     */
+    public function getForms()
+    {
+        return $this->forms;
+    }
+
+    /**
+     * Returns array of dummy forms
+     * @return array
+     */
+    public function addDummyForms()
+    {
+        // Load Public Data
+        $this->forms = Array(
+            0=>Array(
+                'name'=>'Public Employee Form',
+                'title'=>'Public Employee Form'),
+            1=>Array(
+                'name'=>'Private Employee Form',
+                'title'=>'Private Employee Form'),
+            2=>Array(
+                'name'=>'Hospital Employee Form',
+                'title'=>'Hospital Employee Form'),
+            3=>Array(
+                'name'=>'Training Institution Employee Form',
+                'title'=>'Training Institution Employee Form'),
+        );
+        return $this->forms;
+    }
 	public function load(ObjectManager $manager)
 	{
-		// Load Public Data
-		$publicForm = new Form();
-		$publicForm->setName('Public Employee Form');
-		$publicForm->setTitle('Public Employee Data Entry Form');
-		$publicForm->setDatecreated(new \DateTime('now'));
+        // Populate dummy forms
+        $this->addDummyForms();
+        // Seek dummy fields
+        $loadFieldData = new LoadFieldData();
+        $loadFieldData->addDummyFields();
+        $dummyFields = $loadFieldData->getFields();
 
-		$manager->persist($publicForm);
+        foreach($this->forms as $key=>$humanResourceForm) {
+            $form = new Form();
+            $form->setName($humanResourceForm['name']);
+            $form->setTitle($humanResourceForm['name']);
+            $form->setDatecreated(new \DateTime('now'));
+            $this->addReference(strtolower($humanResourceForm['name']).'-form', $form);
+            $manager->persist($form);
+            // Add Field Members for the form created
+            $sort=1;
+            foreach($dummyFields as $key => $dummyField)
+            {
+                $formMember = new FormFieldMember();
+                $formMember->setField($manager->merge($this->getReference( strtolower(str_replace(' ','',$dummyField['name'])).'-field' )));
+                $formMember->setForm( $manager->merge($this->getReference(strtolower($humanResourceForm['name']). '-form')) );
+                $formMember->setSort($sort++);
+                $referenceName = strtolower(str_replace(' ','',$humanResourceForm['name']).str_replace(' ','',$dummyField['name'])).'-form-field-member';
+                $this->addReference($referenceName, $formMember);
+                $manager->persist($formMember);
+            }
+        }
 		$manager->flush();
-		
-		$this->addReference('public-employee-form', $publicForm);
 	}
 	
 	/**

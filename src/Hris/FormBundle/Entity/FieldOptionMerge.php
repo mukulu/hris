@@ -25,6 +25,7 @@
 namespace Hris\FormBundle\Entity;
 
 use Doctrine\ORM\Mapping as ORM;
+use Gedmo\Mapping\Annotation as Gedmo;
 
 use Hris\FormBundle\Entity\FieldOption;
 use Hris\FormBundle\Entity\Field;
@@ -33,6 +34,7 @@ use Symfony\Component\Validator\Constraints as Assert;
 /**
  * Hris\FormBundle\Entity\FieldOptionMerge
  *
+ * @Gedmo\Loggable
  * @ORM\Table(name="hris_fieldoptionmerge")
  * @ORM\Entity(repositoryClass="Hris\FormBundle\Entity\FieldOptionMergeRepository")
  */
@@ -50,6 +52,7 @@ class FieldOptionMerge
     /**
      * @var string $uid
      *
+     * @Gedmo\Versioned
      * @ORM\Column(name="uid", type="string", length=13)
      */
     private $uid;
@@ -57,6 +60,7 @@ class FieldOptionMerge
     /**
      * @var FieldOption $mergedFieldOption
      *
+     * @Gedmo\Versioned
      * @ORM\ManyToOne(targetEntity="Hris\FormBundle\Entity\FieldOption", inversedBy="fieldOptionMerge")
      * @ORM\JoinColumns({
      *   @ORM\JoinColumn(name="mergedfieldoption_id", referencedColumnName="id", onDelete="CASCADE")
@@ -67,6 +71,7 @@ class FieldOptionMerge
     /**
      * @var Field $removedOptionField
      *
+     * @Gedmo\Versioned
      * @ORM\ManyToOne(targetEntity="Hris\FormBundle\Entity\Field", inversedBy="fieldOptionMerge")
      * @ORM\JoinColumns({
      *   @ORM\JoinColumn(name="removedoptionfield_id", referencedColumnName="id", onDelete="CASCADE")
@@ -77,23 +82,26 @@ class FieldOptionMerge
     /**
      * @var string $removedoptionvalue
      *
+     * @Gedmo\Versioned
      * @ORM\Column(name="removedoptionvalue", type="string", length=64)
      */
     private $removedoptionvalue;
-    
+
     /**
      * @var \DateTime $datecreated
      *
+     * @Gedmo\Timestampable(on="create")
      * @ORM\Column(name="datecreated", type="datetime")
      */
     private $datecreated;
-    
+
     /**
-     * @var \DateTime $lastmodified
+     * @var \DateTime $lastupdated
      *
-     * @ORM\Column(name="lastmodified", type="datetime", nullable=true)
+     * @Gedmo\Timestampable(on="update")
+     * @ORM\Column(name="lastupdated", type="datetime", nullable=true)
      */
-    private $lastmodified;
+    private $lastupdated;
 
 
     /**
@@ -202,19 +210,19 @@ class FieldOptionMerge
      * Set datecreated
      *
      * @param \DateTime $datecreated
-     * @return FieldOptionMerge
+     * @return Field
      */
     public function setDatecreated($datecreated)
     {
         $this->datecreated = $datecreated;
-    
+
         return $this;
     }
 
     /**
      * Get datecreated
      *
-     * @return \DateTime 
+     * @return \DateTime
      */
     public function getDatecreated()
     {
@@ -222,26 +230,26 @@ class FieldOptionMerge
     }
 
     /**
-     * Set lastmodified
+     * Set lastupdated
      *
-     * @param \DateTime $lastmodified
-     * @return FieldOptionMerge
+     * @param \DateTime $lastupdated
+     * @return Field
      */
-    public function setLastmodified($lastmodified)
+    public function setLastupdated($lastupdated)
     {
-        $this->lastmodified = $lastmodified;
-    
+        $this->lastupdated = $lastupdated;
+
         return $this;
     }
 
     /**
-     * Get lastmodified
+     * Get lastupdated
      *
-     * @return \DateTime 
+     * @return \DateTime
      */
-    public function getLastmodified()
+    public function getLastupdated()
     {
-        return $this->lastmodified;
+        return $this->lastupdated;
     }
 
     /**
@@ -253,5 +261,13 @@ class FieldOptionMerge
     {
         $fieldOptionMergeName = 'Merged Option:'.$this->getMergedFieldOption()->__toString().' Removed Option:'.$this->getRemovedOptionField()->__toString();
         return $fieldOptionMergeName;
+    }
+
+    /**
+     * Constructor
+     */
+    public function __construct()
+    {
+        $this->uid = uniqid();
     }
 }

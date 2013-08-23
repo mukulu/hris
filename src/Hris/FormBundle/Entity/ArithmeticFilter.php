@@ -26,6 +26,7 @@ namespace Hris\FormBundle\Entity;
 
 use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\ORM\Mapping as ORM;
+use Gedmo\Mapping\Annotation as Gedmo;
 
 use Hris\FormBundle\Entity\FriendlyReport;
 use Symfony\Component\Validator\Constraints as Assert;
@@ -33,6 +34,7 @@ use Symfony\Component\Validator\Constraints as Assert;
 /**
  * Hris\FormBundle\Entity\ArithmeticFilter
  *
+ * @Gedmo\Loggable
  * @ORM\Table(name="hris_arithmeticfilter", uniqueConstraints={@ORM\UniqueConstraint(name="arithmetic_filter_idx",columns={"operator", "leftExpression","rightExpression"})})
  * @ORM\Entity(repositoryClass="Hris\FormBundle\Entity\ArithmeticFilterRepository")
  */
@@ -50,6 +52,7 @@ class ArithmeticFilter
     /**
      * @var string $uid
      *
+     * @Gedmo\Versioned
      * @ORM\Column(name="uid", type="string", length=13, unique=true)
      */
     private $uid;
@@ -57,6 +60,7 @@ class ArithmeticFilter
     /**
      * @var string $name
      *
+     * @Gedmo\Versioned
      * @ORM\Column(name="name", type="string", length=64, unique=true)
      */
     private $name;
@@ -64,6 +68,7 @@ class ArithmeticFilter
     /**
      * @var string $description
      *
+     * @Gedmo\Versioned
      * @ORM\Column(name="description", type="text", nullable=true)
      */
     private $description;
@@ -71,6 +76,7 @@ class ArithmeticFilter
     /**
      * @var string $operator
      *
+     * @Gedmo\Versioned
      * @ORM\Column(name="operator", type="string",length=10)
      */
     private $operator;
@@ -78,6 +84,7 @@ class ArithmeticFilter
     /**
      * @var string $leftExpression
      *
+     * @Gedmo\Versioned
      * @ORM\Column(name="leftExpression", type="string", length=255)
      */
     private $leftExpression;
@@ -85,6 +92,7 @@ class ArithmeticFilter
     /**
      * @var string $rightExpression
      *
+     * @Gedmo\Versioned
      * @ORM\Column(name="rightExpression", type="string", length=255)
      */
     private $rightExpression;
@@ -96,17 +104,19 @@ class ArithmeticFilter
      * @ORM\OrderBy({"name" = "ASC"})
      */
     private $friendlyReport;
-    
+
     /**
      * @var \DateTime $datecreated
      *
+     * @Gedmo\Timestampable(on="create")
      * @ORM\Column(name="datecreated", type="datetime")
      */
     private $datecreated;
-    
+
     /**
      * @var \DateTime $lastupdated
      *
+     * @Gedmo\Timestampable(on="update")
      * @ORM\Column(name="lastupdated", type="datetime", nullable=true)
      */
     private $lastupdated;

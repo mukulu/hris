@@ -11,14 +11,10 @@ class OrganisationunitGroupsetType extends AbstractType
     public function buildForm(FormBuilderInterface $builder, array $options)
     {
         $builder
-            ->add('uid')
-            ->add('dhisUid')
             ->add('name')
             ->add('description')
-            ->add('compulsory')
+            ->add('dhisUid')
             ->add('code')
-            ->add('lastupdated')
-            ->add('datecreated')
         ;
     }
 

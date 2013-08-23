@@ -3,11 +3,13 @@
 namespace Hris\ReportsBundle\Entity;
 
 use Doctrine\ORM\Mapping as ORM;
+use Gedmo\Mapping\Annotation as Gedmo;
 use Symfony\Component\Validator\Constraints as Assert;
 
 /**
  * Report
  *
+ * @Gedmo\Loggable
  * @ORM\Table(name="hris_report")
  * @ORM\Entity(repositoryClass="Hris\ReportsBundle\Entity\ReportRepository")
  */
@@ -25,13 +27,7 @@ class Report
     /**
      * @var string
      *
-     * @ORM\Column(name="name", type="string", length=64)
-     */
-    private $name;
-
-    /**
-     * @var string
-     *
+     * @Gedmo\Versioned
      * @ORM\Column(name="uid", type="string", length=13)
      */
     private $uid;
@@ -39,27 +35,23 @@ class Report
     /**
      * @var string
      *
+     * @Gedmo\Versioned
+     * @ORM\Column(name="name", type="string", length=64)
+     */
+    private $name;
+
+    /**
+     * @var string
+     *
+     * @Gedmo\Versioned
      * @ORM\Column(name="createdby", type="string", length=64, nullable=True)
      */
     private $createdby;
 
     /**
-     * @var \DateTime
-     *
-     * @ORM\Column(name="datecreated", type="datetime")
-     */
-    private $datecreated;
-
-    /**
-     * @var \DateTime
-     *
-     * @ORM\Column(name="lastupdated", type="datetime", nullable=True)
-     */
-    private $lastupdated;
-
-    /**
      * @var string
      *
+     * @Gedmo\Versioned
      * @ORM\Column(name="uri", type="string", length=255)
      */
     private $uri;
@@ -67,9 +59,26 @@ class Report
     /**
      * @var string
      *
+     * @Gedmo\Versioned
      * @ORM\Column(name="parameters", type="text")
      */
     private $parameters;
+
+    /**
+     * @var \DateTime $datecreated
+     *
+     * @Gedmo\Timestampable(on="create")
+     * @ORM\Column(name="datecreated", type="datetime", nullable=false)
+     */
+    private $datecreated;
+
+    /**
+     * @var \DateTime $lastupdated
+     *
+     * @Gedmo\Timestampable(on="update")
+     * @ORM\Column(name="lastupdated", type="datetime", nullable=true)
+     */
+    private $lastupdated;
 
 
     /**

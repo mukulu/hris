@@ -28,8 +28,6 @@
                 <th>Id</th>
                 <th>Name</th>
                 <th>Title</th>
-                <th>Datecreated</th>
-                <th>Lastupdated</th>
                 <th>Actions</th>
             </tr>
         </thead>
@@ -39,8 +37,6 @@
                 <td><a href="{{ path('form_show', { 'id': entity.id }) }}">{{ entity.id }}</a></td>
                 <td>{{ entity.name }}</td>
                 <td>{{ entity.title }}</td>
-                <td>{% if entity.datecreated %}{{ entity.datecreated|date('Y-m-d H:i:s') }}{% endif %}</td>
-                <td>{% if entity.lastupdated %}{{ entity.lastupdated|date('Y-m-d H:i:s') }}{% endif %}</td>
                 <td>
                     <ul class="inline">
                         <li>

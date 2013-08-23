@@ -54,6 +54,7 @@ class FieldOption
     /**
      * @var string $uid
      *
+     * @Gedmo\Versioned
      * @ORM\Column(name="uid", type="string", length=13, unique=true)
      */
     private $uid;
@@ -73,6 +74,13 @@ class FieldOption
      * @ORM\Column(name="description", type="text", nullable=true)
      */
     private $description;
+
+    /**
+     * @var integer $sort
+     *
+     * @ORM\Column(name="sort", type="integer", nullable=true)
+     */
+    private $sort;
     
     /**
      * @var FieldOption $parentFieldOption
@@ -462,6 +470,30 @@ class FieldOption
     {
         return $this->fieldOptionMerge;
     }
+
+    /**
+     * Set sort
+     *
+     * @param integer $sort
+     * @return FormVisibleFields
+     */
+    public function setSort($sort)
+    {
+        $this->sort = $sort;
+
+        return $this;
+    }
+
+    /**
+     * Get sort
+     *
+     * @return integer
+     */
+    public function getSort()
+    {
+        return $this->sort;
+    }
+
     /**
      * Constructor
      */

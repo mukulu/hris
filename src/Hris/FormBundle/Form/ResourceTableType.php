@@ -11,10 +11,7 @@ class ResourceTableType extends AbstractType
     public function buildForm(FormBuilderInterface $builder, array $options)
     {
         $builder
-            ->add('uid')
             ->add('name')
-            ->add('datecreated')
-            ->add('lastupdated')
         ;
     }
 

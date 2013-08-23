@@ -13,7 +13,7 @@ use Hris\ReportsBundle\Form\ReportType;
 /**
  * Report controller.
  *
- * @Route("/report")
+ * @Route("/report/sharing")
  */
 class ReportController extends Controller
 {

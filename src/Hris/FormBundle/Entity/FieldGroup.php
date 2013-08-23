@@ -53,6 +53,7 @@ class FieldGroup
     /**
      * @var string $uid
      *
+     * @Gedmo\Versioned
      * @ORM\Column(name="uid", type="string", length=13, unique=true)
      */
     private $uid;
@@ -271,6 +272,7 @@ class FieldGroup
     {
         return $this->field;
     }
+
     /**
      * Constructor
      */

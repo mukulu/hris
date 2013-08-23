@@ -26,6 +26,7 @@ namespace Hris\FormBundle\Entity;
 
 use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\ORM\Mapping as ORM;
+use Gedmo\Mapping\Annotation as Gedmo;
 
 use Hris\FormBundle\Entity\FriendlyReport;
 use Hris\FormBundle\Entity\FieldOption;
@@ -34,6 +35,7 @@ use Symfony\Component\Validator\Constraints as Assert;
 /**
  * Hris\FormBundle\Entity\RelationalFilter
  *
+ * @Gedmo\Loggable
  * @ORM\Table(name="hris_relationalfilter")
  * @ORM\Entity(repositoryClass="Hris\FormBundle\Entity\RelationalFilterRepository")
  */
@@ -51,6 +53,7 @@ class RelationalFilter
     /**
      * @var string $uid
      *
+     * @Gedmo\Versioned
      * @ORM\Column(name="uid", type="string", length=13, unique=true)
      */
     private $uid;
@@ -58,6 +61,7 @@ class RelationalFilter
     /**
      * @var string $name
      *
+     * @Gedmo\Versioned
      * @ORM\Column(name="name", type="string", length=64, unique=true)
      */
     private $name;
@@ -65,6 +69,7 @@ class RelationalFilter
     /**
      * @var boolean $excludeFieldOptions
      *
+     * @Gedmo\Versioned
      * @ORM\Column(name="excludeFieldOptions", type="boolean")
      */
     private $excludeFieldOptions;
@@ -88,6 +93,7 @@ class RelationalFilter
     /**
      * @var Field $field
      *
+     * @Gedmo\Versioned
      * @ORM\ManyToOne(targetEntity="Hris\FormBundle\Entity\Field")
      * @ORM\JoinColumns({
      *   @ORM\JoinColumn(name="field_id", referencedColumnName="id", onDelete="CASCADE")
@@ -102,17 +108,19 @@ class RelationalFilter
      * @ORM\OrderBy({"name" = "ASC"})
      */
     private $friendlyReport;
-    
+
     /**
      * @var \DateTime $datecreated
      *
+     * @Gedmo\Timestampable(on="create")
      * @ORM\Column(name="datecreated", type="datetime")
      */
     private $datecreated;
-    
+
     /**
      * @var \DateTime $lastupdated
      *
+     * @Gedmo\Timestampable(on="update")
      * @ORM\Column(name="lastupdated", type="datetime", nullable=true)
      */
     private $lastupdated;

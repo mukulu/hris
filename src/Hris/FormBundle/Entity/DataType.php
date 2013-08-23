@@ -26,6 +26,7 @@ namespace Hris\FormBundle\Entity;
 
 use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\ORM\Mapping as ORM;
+use Gedmo\Mapping\Annotation as Gedmo;
 
 use Hris\FormBundle\Entity\Field;
 use \DateTime;
@@ -34,6 +35,7 @@ use Symfony\Component\Validator\Constraints as Assert;
 /**
  * Hris\FormBundle\Entity\DataType
  *
+ * @Gedmo\Loggable
  * @ORM\Table(name="hris_field_datatype")
  * @ORM\Entity(repositoryClass="Hris\FormBundle\Entity\DataTypeRepository")
  */
@@ -51,6 +53,7 @@ class DataType
     /**
      * @var string $uid
      *
+     * @Gedmo\Versioned
      * @ORM\Column(name="uid", type="string", length=13, unique=true)
      */
     private $uid;
@@ -58,6 +61,7 @@ class DataType
     /**
      * @var string $name
      *
+     * @Gedmo\Versioned
      * @ORM\Column(name="name", type="string", length=64, unique=true)
      */
     private $name;
@@ -65,6 +69,7 @@ class DataType
     /**
      * @var string $description
      *
+     * @Gedmo\Versioned
      * @ORM\Column(name="description", type="text", nullable=true)
      */
     private $description;
@@ -76,17 +81,19 @@ class DataType
      * @ORM\OrderBy({"name" = "ASC"})
      */
     private $field;
-    
+
     /**
      * @var \DateTime $datecreated
      *
+     * @Gedmo\Timestampable(on="create")
      * @ORM\Column(name="datecreated", type="datetime")
      */
     private $datecreated;
-    
+
     /**
      * @var \DateTime $lastupdated
      *
+     * @Gedmo\Timestampable(on="update")
      * @ORM\Column(name="lastupdated", type="datetime", nullable=true)
      */
     private $lastupdated;

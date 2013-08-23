@@ -1,20 +1,20 @@
 {% extends '::base.html.twig' %}
 
 {% block right_content -%}
-    <h1>FriendlyReport creation</h1>
+    <h1><small>FriendlyReport creation</small></h1>
 
     <form action="{{ path('friendlyreport_create') }}" method="post" {{ form_enctype(form) }}>
         {{ form_widget(form) }}
-        <p>
-            <button type="submit">Create</button>
-        </p>
+        <br/>
+        <ul class="record_actions inline" style="float:left;">
+            <li>
+                <button type="submit" class="btn">Create</button>
+            </li>
+            <li>
+                <a href="{{ path('friendlyreport') }}" class="btn">
+                    Back to the list
+                </a>
+            </li>
+        </ul>
     </form>
-
-        <ul class="record_actions">
-    <li>
-        <a href="{{ path('friendlyreport') }}">
-            Back to the list
-        </a>
-    </li>
-</ul>
 {% endblock %}

@@ -18,7 +18,7 @@
         <ul class="inline">
             <li>
                 <a class="btn" href="{{ path('organisationunit_new') }}">
-                    Create a new organisation unit
+                    Create a new entry
                 </a>
             </li>
         </ul>
@@ -31,8 +31,6 @@
                     <th>Longname</th>
                     <th>Parent</th>
                     <th>Active</th>
-                    <th>Datecreated</th>
-                    <th>Lastupdated</th>
                     <th>Actions</th>
                 </tr>
             </thead>
@@ -43,8 +41,6 @@
                     <td><a href="{{ path('organisationunit_show', { 'id': entity.id }) }}">{{ entity.longname }}</a></td>
                     <td>{% if entity.parent %} {{ entity.parent.longname }} {% else %} - {% endif %}</td>
                     <td>{% if entity.active %} Active {% else %} Inactive {% endif %}</td>
-                    <td>{% if entity.datecreated %}{{ entity.datecreated|date('Y-m-d H:i:s') }}{% endif %}</td>
-                    <td>{% if entity.lastupdated %}{{ entity.lastupdated|date('Y-m-d H:i:s') }}{% endif %}</td>
                     <td>
                     <ul class="inline">
                         <li>
@@ -52,6 +48,9 @@
                         </li>
                         <li>
                             <a href="{{ path('organisationunit_edit', { 'id': entity.id }) }}"><i class="icon-edit icon-large" title="Edit"></i></a>
+                        </li>
+                        <li>
+                            <a href="{{ path('organisationunit_edit', { 'id': entity.id }) }}"><i class="icon-circle-arrow-down icon-large" title="Edit"></i></a>
                         </li>
                         <li>
                             <a data-toggle="modal" href="#deleteModalFor{{ entity.uid }}"><i class="icon-remove-sign icon-large" title="Delete"></i></a>

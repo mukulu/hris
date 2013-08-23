@@ -25,6 +25,7 @@
 namespace Hris\RecordsBundle\Entity;
 
 use Doctrine\ORM\Mapping as ORM;
+use Gedmo\Mapping\Annotation as Gedmo;
 
 use Hris\FormBundle\Entity\Field;
 use Hris\RecordsBundle\Entity\Record;
@@ -33,6 +34,7 @@ use Symfony\Component\Validator\Constraints as Assert;
 /**
  * Hris\RecordsBundle\Entity\RecordValue
  *
+ * @Gedmo\Loggable
  * @ORM\Table(name="hris_record_value")
  * @ORM\Entity(repositoryClass="Hris\RecordsBundle\Entity\RecordValueRepository")
  */
@@ -50,6 +52,7 @@ class RecordValue
     /**
      * @var string $uid
      *
+     * @Gedmo\Versioned
      * @ORM\Column(name="uid", type="string", length=13, unique=true)
      */
     private $uid;
@@ -57,6 +60,7 @@ class RecordValue
     /**
      * @var Record $record
      *
+     * @Gedmo\Versioned
      * @ORM\ManyToOne(targetEntity="Hris\RecordsBundle\Entity\Record")
      * @ORM\JoinColumns({
      *   @ORM\JoinColumn(name="record_id", referencedColumnName="id", onDelete="CASCADE")
@@ -67,6 +71,7 @@ class RecordValue
     /**
      * @var Field $field
      *
+     * @Gedmo\Versioned
      * @ORM\ManyToOne(targetEntity="Hris\FormBundle\Entity\Field", inversedBy="recordValue")
      * @ORM\JoinColumns({
      *   @ORM\JoinColumn(name="field_id", referencedColumnName="id", onDelete="CASCADE")
@@ -77,6 +82,7 @@ class RecordValue
     /**
      * @var string $value
      *
+     * @Gedmo\Versioned
      * @ORM\Column(name="value", type="string", length=255)
      */
     private $value;
@@ -84,6 +90,7 @@ class RecordValue
     /**
      * @var string $username
      *
+     * @Gedmo\Versioned
      * @ORM\Column(name="username", type="string", length=64)
      */
     private $username;
@@ -91,14 +98,16 @@ class RecordValue
     /**
      * @var \DateTime $datecreated
      *
-     * @ORM\Column(name="datecreated", type="datetime")
+     * @Gedmo\Timestampable(on="create")
+     * @ORM\Column(name="datecreated", type="datetime", nullable=false)
      */
     private $datecreated;
 
     /**
      * @var \DateTime $lastupdated
      *
-     * @ORM\Column(name="lastupdated", type="datetime")
+     * @Gedmo\Timestampable(on="update")
+     * @ORM\Column(name="lastupdated", type="datetime", nullable=true)
      */
     private $lastupdated;
     

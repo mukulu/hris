@@ -25,6 +25,7 @@
 namespace Hris\RecordsBundle\Entity;
 
 use Doctrine\ORM\Mapping as ORM;
+use Gedmo\Mapping\Annotation as Gedmo;
 
 use Hris\RecordsBundle\Entity\Record;
 use Symfony\Component\Validator\Constraints as Assert;
@@ -32,6 +33,7 @@ use Symfony\Component\Validator\Constraints as Assert;
 /**
  * Hris\RecordsBundle\Entity\Training
  *
+ * @Gedmo\Loggable
  * @ORM\Table(name="hris_record_training")
  * @ORM\Entity(repositoryClass="Hris\RecordsBundle\Entity\TrainingRepository")
  */
@@ -49,6 +51,7 @@ class Training
     /**
      * @var string $uid
      *
+     * @Gedmo\Versioned
      * @ORM\Column(name="uid", type="string", length=13, unique=true)
      */
     private $uid;
@@ -56,6 +59,7 @@ class Training
     /**
      * @var Record $record
      *
+     * @Gedmo\Versioned
      * @ORM\ManyToOne(targetEntity="Hris\RecordsBundle\Entity\Record")
      * @ORM\JoinColumns({
      *   @ORM\JoinColumn(name="record_id", referencedColumnName="id", onDelete="CASCADE")
@@ -66,6 +70,7 @@ class Training
     /**
      * @var string $instance
      *
+     * @Gedmo\Versioned
      * @ORM\Column(name="instance", type="string", length=64)
      */
     private $instance;
@@ -73,6 +78,7 @@ class Training
     /**
      * @var string $coursename
      *
+     * @Gedmo\Versioned
      * @ORM\Column(name="coursename", type="string", length=255)
      */
     private $coursename;
@@ -80,6 +86,7 @@ class Training
     /**
      * @var string $courselocation
      *
+     * @Gedmo\Versioned
      * @ORM\Column(name="courselocation", type="string", length=255)
      */
     private $courselocation;
@@ -87,6 +94,7 @@ class Training
     /**
      * @var string $sponsor
      *
+     * @Gedmo\Versioned
      * @ORM\Column(name="sponsor", type="string", length=255)
      */
     private $sponsor;
@@ -94,6 +102,7 @@ class Training
     /**
      * @var string $startdate
      *
+     * @Gedmo\Versioned
      * @ORM\Column(name="startdate", type="string", length=255)
      */
     private $startdate;
@@ -101,6 +110,7 @@ class Training
     /**
      * @var string $enddate
      *
+     * @Gedmo\Versioned
      * @ORM\Column(name="enddate", type="string", length=255)
      */
     private $enddate;
@@ -108,21 +118,24 @@ class Training
     /**
      * @var string $username
      *
+     * @Gedmo\Versioned
      * @ORM\Column(name="username", type="string", length=64)
      */
     private $username;
-    
+
     /**
      * @var \DateTime $datecreated
      *
-     * @ORM\Column(name="datecreated", type="datetime")
+     * @Gedmo\Timestampable(on="create")
+     * @ORM\Column(name="datecreated", type="datetime", nullable=false)
      */
     private $datecreated;
-    
+
     /**
      * @var \DateTime $lastupdated
      *
-     * @ORM\Column(name="lastupdated", type="datetime")
+     * @Gedmo\Timestampable(on="update")
+     * @ORM\Column(name="lastupdated", type="datetime", nullable=true)
      */
     private $lastupdated;
 

@@ -25,7 +25,7 @@
 namespace Hris\OrganisationunitBundle\Entity;
 
 use Doctrine\ORM\Mapping as ORM;
-
+use Gedmo\Mapping\Annotation as Gedmo;
 use Hris\OrganisationunitBundle\Entity\OrganisationunitLevel;
 use Hris\OrganisationunitBundle\Entity\Organisationunit;
 use Symfony\Component\Validator\Constraints as Assert;
@@ -33,6 +33,7 @@ use Symfony\Component\Validator\Constraints as Assert;
 /**
  * Hris\OrganisationunitBundle\Entity\OrganisationunitStructure
  *
+ * @Gedmo\Loggable
  * @ORM\Table(name="hris_organisationunitstructure")
  * @ORM\Entity(repositoryClass="Hris\OrganisationunitBundle\Entity\OrganisationunitStructureRepository")
  */
@@ -46,8 +47,17 @@ class OrganisationunitStructure
      * @ORM\GeneratedValue(strategy="AUTO")
      */
     private $id;
+
+    /**
+     * @var string $uid
+     *
+     * @Gedmo\Versioned
+     * @ORM\Column(name="uid", type="string", length=13, unique=true)
+     */
+    private $uid;
     
     /**
+     * @Gedmo\Versioned
      * @var Organisationunit $organisationunit
      *
      * @ORM\OneToOne(targetEntity="Hris\OrganisationunitBundle\Entity\Organisationunit", mappedBy="organisationunitStructure")
@@ -56,6 +66,7 @@ class OrganisationunitStructure
     private $organisationunit;
 
     /**
+     * @Gedmo\Versioned
      * @var \Hris\OrganisationunitBundle\Entity\OrganisationunitLevel $level
      *
      * @ORM\ManyToOne(targetEntity="Hris\OrganisationunitBundle\Entity\OrganisationunitLevel",inversedBy="organisationunitStructure")
@@ -128,6 +139,7 @@ class OrganisationunitStructure
     /**
      * @var \DateTime $datecreated
      *
+     * @Gedmo\Timestampable(on="create")
      * @ORM\Column(name="datecreated", type="datetime", nullable=false)
      */
     private $datecreated;
@@ -135,6 +147,7 @@ class OrganisationunitStructure
     /**
      * @var \DateTime $lastupdated
      *
+     * @Gedmo\Timestampable(on="update")
      * @ORM\Column(name="lastupdated", type="datetime", nullable=true)
      */
     private $lastupdated;
@@ -148,6 +161,29 @@ class OrganisationunitStructure
     public function getId()
     {
         return $this->id;
+    }
+
+    /**
+     * Set uid
+     *
+     * @param string $uid
+     * @return Organisationunit
+     */
+    public function setUid($uid)
+    {
+        $this->uid = $uid;
+
+        return $this;
+    }
+
+    /**
+     * Get uid
+     *
+     * @return string
+     */
+    public function getUid()
+    {
+        return $this->uid;
     }
 
     /**
@@ -378,6 +414,14 @@ class OrganisationunitStructure
     public function getLevel6Organisationunit()
     {
         return $this->level6Organisationunit;
+    }
+
+    /**
+     * Constructor
+     */
+    public function __construct()
+    {
+        $this->uid = uniqid();
     }
 
     /**

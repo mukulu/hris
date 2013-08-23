@@ -2,12 +2,34 @@
 
 namespace Hris\DashboardBundle\Controller;
 
+use JMS\SecurityExtraBundle\Annotation\Secure;
+use Sensio\Bundle\FrameworkExtraBundle\Configuration\Method;
+use Sensio\Bundle\FrameworkExtraBundle\Configuration\Route;
+use Sensio\Bundle\FrameworkExtraBundle\Configuration\Template;
 use Symfony\Bundle\FrameworkBundle\Controller\Controller;
 use Ob\HighchartsBundle\Highcharts\Highchart;
 use Zend\Json\Expr;
 
+/**
+ * Dashboard controller.
+ *
+ * @Route("/", name="dashboard")
+ */
 class DashboardController extends Controller
 {
+    /**
+     * Displays dashboard page
+     *
+     * @Secure(roles="ROLE_DASHBOARD_DASHBOARD_SHOW,ROLE_USER")
+     *
+     * @Route("/", name="hris_homepage")
+     * @Route("/dashboard/{name}", defaults={"name" = "Welcome"}, name="hris_dashboard_homepage")
+     * @Method("GET")
+     * @Template()
+     *
+     * @param $name
+     * @return \Symfony\Component\HttpFoundation\Response
+     */
     public function indexAction($name)
     {
         $series = array(

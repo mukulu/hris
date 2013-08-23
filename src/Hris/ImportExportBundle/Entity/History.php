@@ -3,11 +3,13 @@
 namespace Hris\ImportExportBundle\Entity;
 
 use Doctrine\ORM\Mapping as ORM;
+use Gedmo\Mapping\Annotation as Gedmo;
 use Symfony\Component\Validator\Constraints as Assert;
 
 /**
  * History
  *
+ * @Gedmo\Loggable
  * @ORM\Table(name="hris_importexport_history")
  * @ORM\Entity(repositoryClass="Hris\ImportExportBundle\Entity\HistoryRepository")
  */
@@ -25,13 +27,7 @@ class History
     /**
      * @var string
      *
-     * @ORM\Column(name="session_type", type="string", length=64)
-     */
-    private $session_type;
-
-    /**
-     * @var string
-     *
+     * @Gedmo\Versioned
      * @ORM\Column(name="uid", type="string", length=13)
      */
     private $uid;
@@ -39,6 +35,15 @@ class History
     /**
      * @var string
      *
+     * @Gedmo\Versioned
+     * @ORM\Column(name="session_type", type="string", length=64)
+     */
+    private $session_type;
+
+    /**
+     * @var string
+     *
+     * @Gedmo\Versioned
      * @ORM\Column(name="object", type="string", length=64)
      */
     private $object;
@@ -46,6 +51,7 @@ class History
     /**
      * @var string
      *
+     * @Gedmo\Versioned
      * @ORM\Column(name="status", type="string", length=64)
      */
     private $status;
@@ -53,6 +59,7 @@ class History
     /**
      * @var integer
      *
+     * @Gedmo\Versioned
      * @ORM\Column(name="count", type="integer")
      */
     private $count;
@@ -60,6 +67,7 @@ class History
     /**
      * @var string
      *
+     * @Gedmo\Versioned
      * @ORM\Column(name="user", type="string", length=64)
      */
     private $user;
@@ -67,6 +75,7 @@ class History
     /**
      * @var \DateTime
      *
+     * @Gedmo\Versioned
      * @ORM\Column(name="starttime", type="datetime")
      */
     private $starttime;
@@ -74,6 +83,7 @@ class History
     /**
      * @var \DateTime
      *
+     * @Gedmo\Versioned
      * @ORM\Column(name="finishtime", type="datetime")
      */
     private $finishtime;

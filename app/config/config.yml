@@ -124,7 +124,7 @@ fos_user:
     user_class: Hris\UserBundle\Entity\User
     registration:
         confirmation:
-            enabled: true
+            enabled: false
 #KnpMenuBundle Configurations
 knp_menu:
    templating: false # if true, enables the helper for PHP templates
@@ -200,3 +200,25 @@ stfalcon_tinymce:
                  plugins: ["bbcode, code, link, preview"]
                  menubar: false
                  toolbar1: "bold,italic,underline,undo,redo,link,unlink,removeformat,cleanup,code,preview"
+
+jms_security_extra:
+    # Whether you want to secure all services (true), or only secure specific
+    # services (false); see also below
+    secure_all_services: false
+
+    # Enabling this setting will add an additional special attribute "ROLE_IDDQD".
+    # Anybody with this attribute will effectively bypass all security checks.
+    enable_iddqd_attribute: false
+
+    # Enables expression language
+    expressions: false
+
+    # Allows you to disable some, or all built-in voters
+    voters:
+        disable_authenticated: false
+        disable_role:          false
+        disable_acl:           false
+
+    # Allows you to specify access control rules for specific methods, such
+    # as controller actions
+    method_access_control: { }
