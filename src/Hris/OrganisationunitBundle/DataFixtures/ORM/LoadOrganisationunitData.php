@@ -6705,6 +6705,7 @@ class LoadOrganisationunitData extends AbstractFixture implements OrderedFixture
                 $parentReference = strtolower(str_replace(' ','',$humanResourceOrganisationunit['parent'])).'-organisationunit';
                 $parentOrganisationunit = $manager->merge($this->getReference( $parentReference ));
                 $organisationunit->setParent($parentOrganisationunit);
+                $distinctLongnameAndParent[] = array('longname'=>$humanResourceOrganisationunit['shortname'],'parent'=>$parentOrganisationunit->getId());
 
                 $organisationunitReference = strtolower(str_replace(' ','',$humanResourceOrganisationunit['shortname'])).'-organisationunit';
                 $this->addReference($organisationunitReference, $organisationunit);
@@ -6721,8 +6722,8 @@ class LoadOrganisationunitData extends AbstractFixture implements OrderedFixture
                 strpos($humanResourceOrganisationunit['longname'],'District Council') > 0
                 || strpos($humanResourceOrganisationunit['longname'],'Municipal Council') > 0
                 || strpos($humanResourceOrganisationunit['longname'],'Town Council') > 0 ) {
-                $dispensaryCount = rand(5,15);
-                $healthCentreCount = rand(1,5);
+                $dispensaryCount = rand(15,25);
+                $healthCentreCount = rand(5,10);
                 $hospitalCount = rand(1,3);
 
                 $parentReference = strtolower(str_replace(' ','',$humanResourceOrganisationunit['shortname'])).'-organisationunit';
@@ -6736,9 +6737,12 @@ class LoadOrganisationunitData extends AbstractFixture implements OrderedFixture
                         $dispensaryKey = array_rand($this->dispensaries,1);
                         $dispensaryName = $this->dispensaries[$dispensaryKey];
                         $dispensaryName = str_replace(' 	',' ',str_replace('   ',' ',str_replace('  ',' ',str_replace('\t',' ',$dispensaryName))));
-                        $dispensaryShortname = substr(strtolower(str_replace(' ','',str_replace(' Dispensary','',$dispensaryName))),0,17).'dsp';
-                        $dispensaryReference = strtolower(str_replace(' ','',$dispensaryShortname)).'-organisationunit';
-                    }while( $this->hasReference($dispensaryReference) );
+                        $dispensaryShortname = substr(strtolower(str_replace(' ','',str_replace(' Dispensary','',$dispensaryName))),0,12).substr($parentOrganisationunit->getShortname(),0,5).'dsp';
+                        $dispensaryReference = strtolower(str_replace(' ','',$dispensaryShortname.substr($parentOrganisationunit->getShortname(),0,5))).'-organisationunit';
+                        $parentorgunitreference=array('longname'=>$dispensaryName,'parent'=>$parentOrganisationunit->getId());
+                        //if(in_array($parentorgunitreference,$distinctLongnameAndParent)) echo $parentOrganisationunit->getLongname().":".$dispensaryName ." of ".$parentOrganisationunit->getLongname().':'.$parentOrganisationunit->getId()." exists!\n" ;
+                    }while( $this->hasReference($dispensaryReference) && in_array($parentorgunitreference,$distinctLongnameAndParent) );
+                    //echo $parentOrganisationunit->getLongname()."=>Pass with disp:".$dispensaryName." and ref:".$dispensaryReference."\n";
 
                     $dispensary->setCode( $dispensaryShortname );
                     $dispensary->setShortname($dispensaryShortname);
@@ -6746,6 +6750,7 @@ class LoadOrganisationunitData extends AbstractFixture implements OrderedFixture
                     $dispensary->setParent($parentOrganisationunit);
                     $dispensary->setActive(true);
                     $this->addReference($dispensaryReference, $dispensary);
+                    $distinctLongnameAndParent[] = array('longname'=>$dispensaryName,'parent'=>$parentOrganisationunit->getId());
 
                     $manager->persist($dispensary);
                     $dispensary = NULL;
@@ -6759,9 +6764,12 @@ class LoadOrganisationunitData extends AbstractFixture implements OrderedFixture
                         $healthCentreKey = array_rand($this->healthCentres,1);
                         $healthCentreName = $this->healthCentres[$healthCentreKey];
                         $healthCentreName = str_replace(' 	',' ',str_replace('   ',' ',str_replace('  ',' ',str_replace('\t',' ',$healthCentreName))));
-                        $healthCentreShortname = substr(strtolower(str_replace(' ','',str_replace(' Health Centre','',$healthCentreName))),0,17).'htc';
-                        $healthCentreReference = strtolower(str_replace(' ','',$healthCentreShortname)).'-organisationunit';
-                    }while( $this->hasReference($healthCentreReference) );
+                        $healthCentreShortname = substr(strtolower(str_replace(' ','',str_replace(' Health Centre','',$healthCentreName))),0,12).substr($parentOrganisationunit->getShortname(),0,5).'htc';
+                        $healthCentreReference = strtolower(str_replace(' ','',$healthCentreShortname.substr($parentOrganisationunit->getShortname(),0,5))).'-organisationunit';
+                        $parentorgunitreference=array('longname'=>$healthCentreName,'parent'=>$parentOrganisationunit->getId());
+                        //if(in_array($parentorgunitreference,$distinctLongnameAndParent)) echo $parentOrganisationunit->getLongname().":".$healthCentreName ." of ".$parentOrganisationunit->getLongname().':'.$parentOrganisationunit->getId()." exists!\n" ;
+                    }while( $this->hasReference($healthCentreReference) && in_array($parentorgunitreference,$distinctLongnameAndParent) );
+                    //echo $parentOrganisationunit->getLongname()."=>Pass with healthcentre:".$healthCentreName." and ref:".$healthCentreReference."\n";
 
                     $healthCentre->setCode( $healthCentreShortname );
                     $healthCentre->setShortname($healthCentreShortname);
@@ -6769,6 +6777,7 @@ class LoadOrganisationunitData extends AbstractFixture implements OrderedFixture
                     $healthCentre->setParent($parentOrganisationunit);
                     $healthCentre->setActive(true);
                     $this->addReference($healthCentreReference, $healthCentre);
+                    $distinctLongnameAndParent[] = array('longname'=>$healthCentreName,'parent'=>$parentOrganisationunit->getId());
                     $manager->persist($healthCentre);
                     $healthCentre = NULL;
                     $healthCentreReference = NULL;
@@ -6781,15 +6790,20 @@ class LoadOrganisationunitData extends AbstractFixture implements OrderedFixture
                         $hospitalKey = array_rand($this->hospitals,1);
                         $hospitalName = $this->healthCentres[$hospitalKey];
                         $hospitalName = str_replace(' 	',' ',str_replace('   ',' ',str_replace('  ',' ',str_replace('\t',' ',$hospitalName))));
-                        $hospitalShortname = substr(strtolower(str_replace(' ','',str_replace(' Hospital','',$hospitalName))),0,17).'hsp';
-                        $hospitalReference = strtolower(str_replace(' ','',$hospitalShortname)).'-organisationunit';
-                    }while( $this->hasReference($hospitalReference) );
+                        $hospitalShortname = substr(strtolower(str_replace(' ','',str_replace(' Hospital','',$hospitalName))),0,12).substr($parentOrganisationunit->getShortname(),0,5).'hsp';
+                        $hospitalReference = strtolower(str_replace(' ','',$hospitalShortname.substr($parentOrganisationunit->getShortname(),0,5))).'-organisationunit';
+                        $parentorgunitreference=array('longname'=>$hospitalName,'parent'=>$parentOrganisationunit->getId());
+                        //if(in_array($parentorgunitreference,$distinctLongnameAndParent)) echo $parentOrganisationunit->getLongname().":".$hospitalName ." of ".$parentOrganisationunit->getLongname().':'.$parentOrganisationunit->getId()." exists!\n" ;
+                    }while( $this->hasReference($hospitalReference) && in_array($parentorgunitreference,$distinctLongnameAndParent) );
+                    //echo $parentOrganisationunit->getLongname()."=>Pass with hospname:".$hospitalName." and ref:".$hospitalReference."\n";
+
                     $hospital->setCode( $hospitalShortname );
                     $hospital->setShortname($hospitalShortname);
                     $hospital->setLongname($hospitalName);
                     $hospital->setParent($parentOrganisationunit);
                     $hospital->setActive(true);
                     $this->addReference($hospitalReference, $hospital);
+                    $distinctLongnameAndParent[] = array('longname'=>$hospitalName,'parent'=>$parentOrganisationunit->getId());
                     $manager->persist($hospital);
                     $hospital = NULL;
                     $hospitalReference = NULL;

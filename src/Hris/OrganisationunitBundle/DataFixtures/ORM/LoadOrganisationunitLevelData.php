@@ -115,6 +115,7 @@ class LoadOrganisationunitLevelData extends AbstractFixture implements OrderedFi
         // Fetch organisation units from database order by parent and id
         $organiastionunits = $manager->getRepository('HrisOrganisationunitBundle:Organisationunit')->findAll($orderBy=Array('uid'));
 
+
         if(!empty($organiastionunits)) {
             foreach($organiastionunits as $organiastionunitKey=>$organisationunit) {
 
@@ -132,7 +133,6 @@ class LoadOrganisationunitLevelData extends AbstractFixture implements OrderedFi
 
                     //Refer to previously created orgunit structure.
                     $parentOrganisationunitStructureReferenceName=strtolower(str_replace(' ','',$organisationunit->getParent()->getShortname())).'-organisationunitstructure';
-                    file_put_contents('/tmp/references.txt', ">>>get ref:".$parentOrganisationunitStructureReferenceName,FILE_APPEND);
                     $parentOrganisationunitStructureByReference = $manager->merge($this->getReference( $parentOrganisationunitStructureReferenceName ));
 
                     // Cross check to see if level is already created for reusability.
@@ -188,7 +188,6 @@ class LoadOrganisationunitLevelData extends AbstractFixture implements OrderedFi
                     }
                 }
                 $organisationunitStructureReference = strtolower(str_replace(' ','',$organisationunit->getShortname())).'-organisationunitstructure';
-                file_put_contents('/tmp/references.txt', "Registered:".$organisationunitStructureReference,FILE_APPEND);
                 $this->addReference($organisationunitStructureReference, $organisationunitStructure);
                 $manager->persist($organisationunitStructure);
             }
