@@ -131,8 +131,9 @@ class LoadOrganisationunitLevelData extends AbstractFixture implements OrderedFi
                     // Create new orgunit structure based parent structure
 
                     //Refer to previously created orgunit structure.
-
-                    $parentOrganisationunitStructureByReference = $manager->merge($this->getReference( strtolower(str_replace(' ','',$organisationunit->getParent()->getShortname())).'-organisationunitstructure' ));
+                    $parentOrganisationunitStructureReferenceName=strtolower(str_replace(' ','',$organisationunit->getParent()->getShortname())).'-organisationunitstructure';
+                    file_put_contents('/tmp/references.txt', ">>>get ref:".$parentOrganisationunitStructureReferenceName,FILE_APPEND);
+                    $parentOrganisationunitStructureByReference = $manager->merge($this->getReference( $parentOrganisationunitStructureReferenceName ));
 
                     // Cross check to see if level is already created for reusability.
                     $currentOrganisationunitLevelname = 'Level '.($parentOrganisationunitStructureByReference->getLevel()->getLevel()+1);
@@ -187,6 +188,7 @@ class LoadOrganisationunitLevelData extends AbstractFixture implements OrderedFi
                     }
                 }
                 $organisationunitStructureReference = strtolower(str_replace(' ','',$organisationunit->getShortname())).'-organisationunitstructure';
+                file_put_contents('/tmp/references.txt', "Registered:".$organisationunitStructureReference,FILE_APPEND);
                 $this->addReference($organisationunitStructureReference, $organisationunitStructure);
                 $manager->persist($organisationunitStructure);
             }

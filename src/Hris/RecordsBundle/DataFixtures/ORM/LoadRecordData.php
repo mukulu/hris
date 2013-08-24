@@ -30,6 +30,9 @@ use Doctrine\Common\Persistence\ObjectManager;
 use Hris\FormBundle\DataFixtures\ORM\LoadFieldData;
 use Hris\FormBundle\DataFixtures\ORM\LoadFormData;
 use Hris\FormBundle\DataFixtures\ORM\LoadOrganisationunitData;
+use Hris\FormBundle\Entity\Field;
+use Hris\FormBundle\Entity\FieldOption;
+use Hris\FormBundle\Entity\FormFieldMember;
 use Hris\RecordsBundle\Entity\Record;
 use Hris\UserBundle\DataFixtures\ORM\LoadUserData;
 
@@ -64,6 +67,24 @@ class LoadRecordData extends AbstractFixture implements OrderedFixtureInterface
     public function getFemaleNames()
     {
         return $this->femaleNames;
+    }
+
+    /**
+     * Randomize outpudate between starting year and ending year.
+     * where start and end year range, are group of years, from which random start year
+     * will be picked.
+     * .e.g randDate(array(10,20),array(5,10))
+     *
+     * @param $yearStartRange
+     * @param $yearEndRange
+     * @return bool|string
+     */
+    public function getRandDate($yearStartRange,$yearEndRange){
+        $startDate= date('Y-m-d',strtotime('-'.mt_rand($yearStartRange[0],$yearStartRange[1]).' years'));
+        $endDate=date('Y-m-d',strtotime('-'.mt_rand($yearEndRange[0],$yearEndRange[1]).' years'));
+        $days = round((strtotime($endDate) - strtotime($startDate)) / (60 * 60 * 24));
+        $n = rand(10,$days);
+        return date("Y-m-d",strtotime("$startDate + $n days"));
     }
 
     /**
@@ -116,40 +137,128 @@ class LoadRecordData extends AbstractFixture implements OrderedFixtureInterface
          * Add data to facilities
          */
         if(!empty($organiastionunits)) {
-            $incr=1;
             foreach($organiastionunits as $organiastionunitKey=>$organisationunit) {
                 /*
                  * Assign data to dispensary, hospital and health centres only.
                  */
                 if( preg_match('/dispensary|hospital|health centre|council/i',$organisationunit->getLongname()) ) {
                     // Initiate record entering
-                    $record = new Record();
-                    $record->setOrganisationunit($organisationunit);
-                    // Enter record for public and private form
-                    $formName='Public Employee Form';
-                    $formReference = strtolower(str_replace(' ','',$formName)).'-form';
-                    $formByReference = $manager->merge($this->getReference( $formReference ));
-                    $record->setForm($formByReference);
-                    $record->setComplete(True);
-                    $record->setCorrect(True);
-                    $record->setHashistory(False);
-                    $record->setHastraining(False);
-                    $dummyUserKey = array_rand($dummyUsers,1);
-                    $dummyUsername = $dummyUsers[$dummyUserKey]['username'];
-                    $record->setUsername($dummyUsername);
-                    // Constructing a Value Array
-                    $value = Array();
-                    // Fetch all field members belonging to the form and add records
-                    $value['firstName'] = "John";
-                    $value['middlName'] = "Francis";
-                    $value['surname'] = "Mukulu";
-                    $value['birthDate'] = "1987-05-12";
-                    $instance=md5($value['firstName'].$value['middlName'].$value['surname'].$value['birthDate']);
-                    $record->setInstance($instance.$incr);
-                    $record->setValue($value);
-                    $recordReference = strtolower(str_replace(' ','',$record->getInstance().$incr++)).'-record';
-                    $this->addReference($recordReference, $record);
-                    $manager->persist($record);
+                    // Enter two records for each orgunit
+                    for($recordIncr=0;$recordIncr<3;$recordIncr++) {
+                        $record = new Record();
+                        $record->setOrganisationunit($organisationunit);
+                        // Enter record for public and private form
+                        $formName='Public Employee Form';
+                        $form = $manager->getRepository('HrisFormBundle:Form')->findOneBy(array('name'=>$formName));
+
+                        $record->setForm($form);
+                        $record->setComplete(True);
+                        $record->setCorrect(True);
+                        $record->setHashistory(False);
+                        $record->setHastraining(False);
+                        $dummyUserKey = array_rand($dummyUsers,1);
+                        $dummyUsername = $dummyUsers[$dummyUserKey]['username'];
+                        $record->setUsername($dummyUsername);
+                        // Constructing a Value Array
+                        $value = Array();
+                        // Fetch all field members belonging to the form and add records
+
+                        // Roll a dice with gender of employee to pick name
+                        $genders = Array('Male','Female');
+                        $gender_picked = array_rand($genders,1);
+
+                        $formFieldMembers = $manager->getRepository('HrisFormBundle:FormFieldMember')->findBy(array('form'=>$form));
+                        foreach($formFieldMembers as $formFieldMemberKey=>$formFieldMember) {
+                            if(
+                                $formFieldMember->getField()->getName()=="Firstname" ||
+                                $formFieldMember->getField()->getName()=="Middlename" ||
+                                $formFieldMember->getField()->getName()=="Surname" ||
+                                $formFieldMember->getField()->getName()=="NextofKin"
+                            ) {
+                                // Deal with names
+                                if($gender_picked=="Female" && ( $formFieldMember->getField()->getName()=="Firstname" || $formFieldMember->getField()->getName()=="NextofKin") ) {
+                                    $value[$formFieldMember->getField()->getName()] = $this->femaleNames[array_rand($this->femaleNames,1)];
+                                }else {
+                                    $value[$formFieldMember->getField()->getName()] = $this->maleNames[array_rand($this->maleNames,1)];
+                                }
+                                if($formFieldMember->getField()->getName()=="NextofKin" ) {
+                                    $value[$formFieldMember->getField()->getName()] .= ' '.$this->maleNames[array_rand($this->maleNames,1)];
+                                }
+                            }else if($formFieldMember->getField()->getInputType()->getName()=="Select") {
+                                // Deal with select
+                                $fieldOptions = $manager->getRepository('HrisFormBundle:FieldOption')->findBy(array('field'=>$formFieldMember->getField()));
+                                // For case of gender choose match name with gender
+                                if($formFieldMember->getField()->getName()=="Sex") {
+                                    if($fieldOptions[0]->getValue()==$gender_picked) $value[$formFieldMember->getField()->getName()] = $fieldOptions[0]->getValue();
+                                    else $value[$formFieldMember->getField()->getName()] = $fieldOptions[1]->getValue();
+                                }else {
+                                    $value[$formFieldMember->getField()->getName()] = $fieldOptions[array_rand($fieldOptions,1)]->getValue();
+                                }
+                            }else if($formFieldMember->getField()->getInputType()->getName()=="Date") {
+                                // Deal with dates
+                                // If birth date pick 20 - 55 date range
+                                // If employment data set it to birth date range+18
+                                // If confirmation date, set it to employment date+1
+                                // If promotion date, set it to confirmation+3
+                                $beginDateStart=30;
+                                $beginDateStop=55;
+                                $endDateStart=20;
+                                $endDateStop=30;
+                                if($formFieldMember->getField()->getName()=="Birthdate") {
+                                    $beginDateStart=30;
+                                    $beginDateStop=55;
+                                    $endDateStart=20;
+                                    $endDateStop=30;
+                                }elseif($formFieldMember->getField()->getName()=="DateofFirstAppointment") {
+                                    $beginDateStart-=18;
+                                    $beginDateStop-=18;
+                                    $endDateStart-=18;
+                                    $endDateStop-=18;
+                                }elseif($formFieldMember->getField()->getName()=="DateofConfirmation") {
+                                    $beginDateStart-=19;
+                                    $beginDateStop-=19;
+                                    $endDateStart-=19;
+                                    $endDateStop-=19;
+                                }elseif($formFieldMember->getField()->getName()=="DateofLastPromotion") {
+                                    $beginDateStart-=22;
+                                    $beginDateStop-=22;
+                                    $endDateStart-=20;//avoid negative 20-22 number(messes-up logic)
+                                    $endDateStop-=22;
+                                }
+                                $value[$formFieldMember->getField()->getName()] = $this->getRandDate(array($beginDateStart,$beginDateStop),array($endDateStart,$endDateStop));
+                            }else if($formFieldMember->getField()->getInputType()->getName()=="Text") {
+                                // Deal with numbers
+                                if($formFieldMember->getField()->getName()=="NumberofChildrenDependants" ) {
+                                    $value[$formFieldMember->getField()->getName()] = rand(0,10);
+                                }elseif($formFieldMember->getField()->getName()=="CheckNumber" ) {
+                                    $value[$formFieldMember->getField()->getName()] = rand(9999999,9999999999);
+                                }elseif($formFieldMember->getField()->getName()=="EmployersFileNumber") {
+                                    $value[$formFieldMember->getField()->getName()] = "FN/".rand(100,100000);
+                                }elseif($formFieldMember->getField()->getName()=="RegistrationNumber") {
+                                    $value[$formFieldMember->getField()->getName()] = "RB/".rand(10,10000);
+                                }elseif($formFieldMember->getField()->getName()=="MonthlyBasicSalary") {
+                                    $value[$formFieldMember->getField()->getName()] = rand(100,1500).'000';
+                                }else {
+                                    $value[$formFieldMember->getField()->getName()] = $this->maleNames[array_rand($this->maleNames,1)]." Street";
+                                }
+                            }else if($formFieldMember->getField()->getInputType()->getName()=="TextArea") {
+                                // Deal with domicile, contact
+                                if(
+                                    $formFieldMember->getField()->getName()=="ContactsofEmployee" ||
+                                    $formFieldMember->getField()->getName()=="ContactsofNextofKin"
+                                ) {
+                                    $value[$formFieldMember->getField()->getName()] = "+255".rand(6,7).rand(53,69).rand(001,998).rand(001,998);
+                                }
+                            }
+                        }
+                        $instance=md5($value['Firstname'].$value['Middlename'].$value['Surname'].$value['Birthdate']);
+                        $record->setInstance($instance);
+                        $record->setValue($value);
+                        //@todo check for uniqueness of instance and unique fields
+                        $recordReference = strtolower(str_replace(' ','',$record->getInstance())).'-record';
+                        $this->addReference($recordReference, $record);
+                        $manager->persist($record);
+                    }
                 }
 
 //                /*
