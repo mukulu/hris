@@ -6,6 +6,8 @@ use Doctrine\ORM\Mapping as ORM;
 use Gedmo\Mapping\Annotation as Gedmo;
 use Symfony\Component\Validator\Constraints as Assert;
 
+use Hris\FormBundle\Entity\Field;
+
 /**
  * HistoryDate
  *
@@ -41,20 +43,12 @@ class HistoryDate
     private $instance;
 
     /**
-     * @var integer
-     *
-     * @Gedmo\Versioned
-     * @ORM\Column(name="historyInteger", type="integer")
-     */
-    private $historyInteger;
-
-    /**
      * @var string
      *
      * @Gedmo\Versioned
-     * @ORM\Column(name="historyString", type="string", length=32)
+     * @ORM\Column(name="history", type="string", length=32)
      */
-    private $historyString;
+    private $history;
 
     /**
      * @var \DateTime
@@ -65,10 +59,13 @@ class HistoryDate
     private $previousdate;
 
     /**
-     * @var string
+     * @var Field $field
      *
      * @Gedmo\Versioned
-     * @ORM\Column(name="field", type="string", length=32)
+     * @ORM\ManyToOne(targetEntity="Hris\FormBundle\Entity\Field",inversedBy="historyDate")
+     * @ORM\JoinColumns({
+     *   @ORM\JoinColumn(name="field_id", referencedColumnName="id", onDelete="CASCADE")
+     * })
      */
     private $field;
 
@@ -111,7 +108,7 @@ class HistoryDate
      * Set uid
      *
      * @param string $uid
-     * @return History
+     * @return HistoryDate
      */
     public function setUid($uid)
     {
@@ -154,49 +151,26 @@ class HistoryDate
     }
 
     /**
-     * Set historyInteger
+     * Set history
      *
-     * @param integer $historyInteger
+     * @param string $history
      * @return HistoryDate
      */
-    public function setHistoryInteger($historyInteger)
+    public function setHistory($history)
     {
-        $this->historyInteger = $historyInteger;
+        $this->history = $history;
     
         return $this;
     }
 
     /**
-     * Get historyInteger
-     *
-     * @return integer 
-     */
-    public function getHistoryInteger()
-    {
-        return $this->historyInteger;
-    }
-
-    /**
-     * Set historyString
-     *
-     * @param string $historyString
-     * @return HistoryDate
-     */
-    public function setHistoryString($historyString)
-    {
-        $this->historyString = $historyString;
-    
-        return $this;
-    }
-
-    /**
-     * Get historyString
+     * Get history
      *
      * @return string 
      */
-    public function getHistoryString()
+    public function getHistory()
     {
-        return $this->historyString;
+        return $this->history;
     }
 
     /**
@@ -225,10 +199,10 @@ class HistoryDate
     /**
      * Set field
      *
-     * @param string $field
+     * @param Field $field
      * @return HistoryDate
      */
-    public function setField($field)
+    public function setField(Field $field)
     {
         $this->field = $field;
     
@@ -238,7 +212,7 @@ class HistoryDate
     /**
      * Get field
      *
-     * @return string 
+     * @return Field
      */
     public function getField()
     {
@@ -249,7 +223,7 @@ class HistoryDate
      * Set datecreated
      *
      * @param \DateTime $datecreated
-     * @return History
+     * @return HistoryDate
      */
     public function setDatecreated($datecreated)
     {
@@ -272,7 +246,7 @@ class HistoryDate
      * Set lastupdated
      *
      * @param \DateTime $lastupdated
-     * @return History
+     * @return HistoryDate
      */
     public function setLastupdated($lastupdated)
     {

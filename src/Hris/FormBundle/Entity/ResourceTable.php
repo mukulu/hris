@@ -596,15 +596,15 @@ class ResourceTable
 
                 }
                 // @todo implement after creation of history date class
-//                // Add History date field for fields with history
-//                if($field->getHashistory()== True) {
-//                    $resourceTable->addColumn($field->getName().'_last_updated', "datetime",array('notnull'=>false,'precision'=>0, 'scale'=>0));
-//                    //$resourceTable->addColumn($field->getName().'_last_updated_day', "string",array('length'=>64, 'notnull'=>false));
-//                    //$resourceTable->addColumn($field->getName().'_last_updated_month_number', "integer",array('notnull'=>false,'precision'=>0, 'scale'=>0));
-//                    $resourceTable->addColumn($field->getName().'_last_updated_month_text', "string",array('length'=>64, 'notnull'=>false));
-//                    $resourceTable->addColumn($field->getName().'_last_updated_year', "integer",array('notnull'=>false,'precision'=>0, 'scale'=>0));
-//                    //$resourceTable->addColumn($field->getName().'_last_updated_month_and_year', "string",array('length'=>64, 'notnull'=>false));
-//                }
+                // Add History date field for fields with history
+                if($field->getHashistory()== True) {
+                    $resourceTable->addColumn($field->getName().'_last_updated', "datetime",array('notnull'=>false,'precision'=>0, 'scale'=>0));
+                    //$resourceTable->addColumn($field->getName().'_last_updated_day', "string",array('length'=>64, 'notnull'=>false));
+                    //$resourceTable->addColumn($field->getName().'_last_updated_month_number', "integer",array('notnull'=>false,'precision'=>0, 'scale'=>0));
+                    $resourceTable->addColumn($field->getName().'_last_updated_month_text', "string",array('length'=>64, 'notnull'=>false));
+                    $resourceTable->addColumn($field->getName().'_last_updated_year', "integer",array('notnull'=>false,'precision'=>0, 'scale'=>0));
+                    //$resourceTable->addColumn($field->getName().'_last_updated_month_and_year', "string",array('length'=>64, 'notnull'=>false));
+                }
                 $totalResourceTableFields++;
             }
 
@@ -755,26 +755,26 @@ class ResourceTable
                         }
 
                         // @todo implement after creation of history date class
-//                        // Add history date data for fields  with history
-//                        if($field->getHasHistory()==True && $field->getInputType()->getName() == 'Select' && !empty($dataValue[$valueKey])) {
-//                            // Fetch history date with instance same as our current data
-//                            $historyDates = $entityManager->getRepository('HistoryDate')
-//                                ->findOneBy(
-//                                    array('instance'=>$record->getInstance(),
-//                                        'history'=>$dataValue[$valueKey],
-//                                        'historyType'=>$field->getName()
-//                                    )
-//                                );
-//                            //$lastHistoryDate = $historyDates[count($historyDates)-1];
-//                            if(!empty($historyDates)) {
-//                                $dataArray[$field->getName().'_last_updated'] = trim($historyDates->getPreviousdate()->format('Y-m-d H:i:s.u'));
-//                                $dataArray[$field->getName().'_last_updated_day'] = trim($historyDates->getPreviousdate()->format('l'));
-//                                $dataArray[$field->getName().'_last_updated_month_number'] = trim($historyDates->getPreviousdate()->format('m'));
-//                                $dataArray[$field->getName().'_last_updated_month_text'] = trim($historyDates->getPreviousdate()->format('F'));
-//                                $dataArray[$field->getName().'_last_updated_year'] = trim($historyDates->getPreviousdate()->format('Y'));
-//                                $dataArray[$field->getName().'_last_updated_month_and_year'] = trim($historyDates->getPreviousdate()->format('F Y'));
-//                            }
-//                        }
+                        // Add history date data for fields  with history
+                        if($field->getHasHistory()==True && $field->getInputType()->getName() == 'Select' && !empty($dataValue[$valueKey])) {
+                            // Fetch history date with instance same as our current data
+                            $historyDates = $entityManager->getRepository('HrisRecordsBundle:HistoryDate')
+                                ->findOneBy(
+                                    array('instance'=>$record->getInstance(),
+                                        'history'=>trim($fieldOptionMap[$dataValue[$valueKey]]),
+                                        'field'=>$field
+                                    )
+                                );
+                            //$lastHistoryDate = $historyDates[count($historyDates)-1];
+                            if(!empty($historyDates)) {
+                                $dataArray[$field->getName().'_last_updated'] = trim($historyDates->getPreviousdate()->format('Y-m-d H:i:s.u'));
+                                //$dataArray[$field->getName().'_last_updated_day'] = trim($historyDates->getPreviousdate()->format('l'));
+                                //$dataArray[$field->getName().'_last_updated_month_number'] = trim($historyDates->getPreviousdate()->format('m'));
+                                $dataArray[$field->getName().'_last_updated_month_text'] = trim($historyDates->getPreviousdate()->format('F'));
+                                $dataArray[$field->getName().'_last_updated_year'] = trim($historyDates->getPreviousdate()->format('Y'));
+                                //$dataArray[$field->getName().'_last_updated_month_and_year'] = trim($historyDates->getPreviousdate()->format('F Y'));
+                            }
+                        }
                     }
 
                     // @todo implement calculated fields feature and remove hard-coding
