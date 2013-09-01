@@ -180,30 +180,6 @@ class Field
     private $inputType;
     
     /**
-     *	@var FieldOption $fieldOption
-     *
-     * @ORM\OneToMany(targetEntity="Hris\FormBundle\Entity\FieldOption", mappedBy="field",cascade={"ALL"})
-     * @ORM\OrderBy({"value" = "ASC"})
-     */
-    private $fieldOption;
-    
-    /**
-     *	@var RecordValue $recordValue
-     *
-     * @ORM\OneToMany(targetEntity="Hris\RecordsBundle\Entity\RecordValue", mappedBy="field",cascade={"ALL"})
-     * @ORM\OrderBy({"value" = "ASC"})
-     */
-    private $recordValue;
-    
-    /**
-     *	@var \Hris\RecordsBundle\Entity\RecordStats $recordStats
-     *
-     * @ORM\OneToMany(targetEntity="Hris\RecordsBundle\Entity\RecordStats", mappedBy="field",cascade={"ALL"})
-     * @ORM\OrderBy({"count" = "ASC"})
-     */
-    private $recordStats;
-    
-    /**
      * @var FormVisibleFields $formVisibleFields
      *
      * @ORM\OneToMany(targetEntity="Hris\FormBundle\Entity\FormVisibleFields", mappedBy="field",cascade={"ALL"})
@@ -905,72 +881,6 @@ class Field
     public function getFormVisibleFields()
     {
         return $this->formVisibleFields;
-    }
-
-    /**
-     * Add recordValue
-     *
-     * @param RecordValue $recordValue
-     * @return Field
-     */
-    public function addRecordValue(RecordValue $recordValue)
-    {
-        $this->recordValue[$recordValue->getId()] = $recordValue;
-    
-        return $this;
-    }
-
-    /**
-     * Remove recordValue
-     *
-     * @param RecordValue $recordValue
-     */
-    public function removeRecordValue(RecordValue $recordValue)
-    {
-        $this->recordValue->removeElement($recordValue);
-    }
-
-    /**
-     * Get recordValue
-     *
-     * @return \Doctrine\Common\Collections\Collection
-     */
-    public function getRecordValue()
-    {
-        return $this->recordValue;
-    }
-
-    /**
-     * Add recordStats
-     *
-     * @param \Hris\RecordsBundle\Entity\RecordStats $recordStats
-     * @return Field
-     */
-    public function addRecordStat(\Hris\RecordsBundle\Entity\RecordStats $recordStats)
-    {
-        $this->recordStats[$recordStats->getId()] = $recordStats;
-    
-        return $this;
-    }
-
-    /**
-     * Remove recordStats
-     *
-     * @param \Hris\RecordsBundle\Entity\RecordStats $recordStats
-     */
-    public function removeRecordStat(\Hris\RecordsBundle\Entity\RecordStats $recordStats)
-    {
-        $this->recordStats->removeElement($recordStats);
-    }
-
-    /**
-     * Get recordStats
-     *
-     * @return \Doctrine\Common\Collections\Collection
-     */
-    public function getRecordStats()
-    {
-        return $this->recordStats;
     }
 
     /**
