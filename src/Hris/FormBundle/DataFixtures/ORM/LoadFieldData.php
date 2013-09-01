@@ -318,7 +318,7 @@ class LoadFieldData extends AbstractFixture implements OrderedFixtureInterface
                 'description'=>"Employee's Monthly Basic Salary(Optional)",
                 'history'=>true),
             22=>Array(
-                'dataType'=>'String',
+                'dataType'=>'Date',
                 'inputType'=>'Date',
                 'name'=>'DateofFirstAppointment',
                 'caption'=>'Date of First Appointment',
@@ -327,7 +327,7 @@ class LoadFieldData extends AbstractFixture implements OrderedFixtureInterface
                 'description'=>"Employee's Date of First Appointment(Compulsory)",
                 'history'=>false),
             23=>Array(
-                'dataType'=>'String',
+                'dataType'=>'Date',
                 'inputType'=>'Date',
                 'name'=>'DateofConfirmation',
                 'caption'=>'Date of Confirmation',
@@ -336,7 +336,7 @@ class LoadFieldData extends AbstractFixture implements OrderedFixtureInterface
                 'description'=>"Employee's Date of Confirmation(Optional)",
                 'history'=>false),
             24=>Array(
-                'dataType'=>'String',
+                'dataType'=>'Date',
                 'inputType'=>'Date',
                 'name'=>'DateofLastPromotion',
                 'caption'=>'Date of Last Promotion',

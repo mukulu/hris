@@ -61,7 +61,7 @@ class OrganisationunitStructure
      * @var Organisationunit $organisationunit
      *
      * @ORM\OneToOne(targetEntity="Hris\OrganisationunitBundle\Entity\Organisationunit", mappedBy="organisationunitStructure")
-     * @ORM\JoinColumn(name="organisationunit_id", referencedColumnName="id", nullable=false,unique=true)
+     * @ORM\JoinColumn(name="organisationunit_id", referencedColumnName="id", nullable=false,unique=true, onDelete="CASCADE")
      */
     private $organisationunit;
 
@@ -433,5 +433,39 @@ class OrganisationunitStructure
     {
         $organisationunitStructure = 'Organisationunit:'.$this->getOrganisationunit().' Level:'.$this->getLevel();
         return $organisationunitStructure;
+    }
+
+    /**
+     * Get ParentByNLevelsBack
+     * Translates into something like, say $level=2
+     * $organisationunit->getParent()->getParent();
+     *
+     * @param $organisationunit
+     * @param $level
+     * @throws Exception
+     * @return Organisationunit
+     */
+    public function getParentByNLevelsBack($organisationunit,$level) {
+        // Translates into something like, say $level=2
+        // $organisationunit->getParent()->getParent();
+        if($level>1) {
+            // Recursively Call persist upper most parent and call lower parent
+            $parentNLevelsBack = $this->getParentByNLevelsBack($organisationunit,$level-1);
+            if(method_exists($parentNLevelsBack,"getParent")) {
+                $parentNLevelsBack = call_user_func_array(array($parentNLevelsBack, "getParent"),$args=Array());
+                // Translates into something like $parentNLevelsBack = $parentNLevelsBack->getParent($args);
+            }else {
+                throw new Exception('Object or method doesn\'t exist');
+            }
+        }else {
+            // Return the parent
+            if(method_exists($organisationunit,"getParent")) {
+                $parentNLevelsBack = call_user_func_array(array($organisationunit, "getParent"),$args=Array());
+                // Translates into something like $parentNLevelsBack = $parentNLevelsBack->getParent($args);
+            }else {
+                throw new Exception('Object or method doesn\'t exist');
+            }
+        }
+        return $parentNLevelsBack;
     }
 }

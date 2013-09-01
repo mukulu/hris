@@ -50,6 +50,19 @@ class LoadRecordData extends AbstractFixture implements OrderedFixtureInterface
     private $femaleNames;
 
     /**
+     * @var $recordsPerOrganisationunit;
+     */
+    private $recordsPerOrganisationunit;
+
+    /**
+     * Constructor
+     */
+    public function __construct()
+    {
+        $this->recordsPerOrganisationunit=4;
+    }
+
+    /**
      * Returns array of male name fixtures.
      *
      * @return mixed
@@ -144,7 +157,7 @@ class LoadRecordData extends AbstractFixture implements OrderedFixtureInterface
                 if( preg_match('/dispensary|hospital|health centre|council/i',$organisationunit->getLongname()) ) {
                     // Initiate record entering
                     // Enter two records for each orgunit
-                    for($recordIncr=0;$recordIncr<3;$recordIncr++) {
+                    for($recordIncr=0; $recordIncr < $this->recordsPerOrganisationunit;$recordIncr++) {
                         $record = new Record();
                         $record->setOrganisationunit($organisationunit);
                         // Enter record for public and private form
@@ -160,6 +173,7 @@ class LoadRecordData extends AbstractFixture implements OrderedFixtureInterface
                         $dummyUsername = $dummyUsers[$dummyUserKey]['username'];
                         $record->setUsername($dummyUsername);
                         // Constructing a Value Array
+                        // @todo removing hard-coding of HrisRecordBundle:Record values
                         $value = Array();
                         // Fetch all field members belonging to the form and add records
 
@@ -169,6 +183,13 @@ class LoadRecordData extends AbstractFixture implements OrderedFixtureInterface
 
                         $formFieldMembers = $manager->getRepository('HrisFormBundle:FormFieldMember')->findBy(array('form'=>$form));
                         foreach($formFieldMembers as $formFieldMemberKey=>$formFieldMember) {
+                            /**
+                             * Made dynamic, on which field column is used as key, i.e. uid, name or id.
+                             */
+                            // Translates to $formFieldMember->getField()->getUid()
+                            // or $formFieldMember->getField()->getUid() depending on value of $recordKeyName
+                            $recordKeyName = ucfirst(Record::getFieldKey());
+                            $valueKey = call_user_func_array(array($formFieldMember->getField(), "get${recordKeyName}"),array());
                             if(
                                 $formFieldMember->getField()->getName()=="Firstname" ||
                                 $formFieldMember->getField()->getName()=="Middlename" ||
@@ -177,22 +198,40 @@ class LoadRecordData extends AbstractFixture implements OrderedFixtureInterface
                             ) {
                                 // Deal with names
                                 if($gender_picked=="Female" && ( $formFieldMember->getField()->getName()=="Firstname" || $formFieldMember->getField()->getName()=="NextofKin") ) {
-                                    $value[$formFieldMember->getField()->getName()] = $this->femaleNames[array_rand($this->femaleNames,1)];
+                                    $value[$valueKey] = $this->femaleNames[array_rand($this->femaleNames,1)];
                                 }else {
-                                    $value[$formFieldMember->getField()->getName()] = $this->maleNames[array_rand($this->maleNames,1)];
+                                    $value[$valueKey] = $this->maleNames[array_rand($this->maleNames,1)];
                                 }
                                 if($formFieldMember->getField()->getName()=="NextofKin" ) {
-                                    $value[$formFieldMember->getField()->getName()] .= ' '.$this->maleNames[array_rand($this->maleNames,1)];
+                                    $value[$valueKey] .= ' '.$this->maleNames[array_rand($this->maleNames,1)];
                                 }
+                                //@todo remove hard-coding of instance
+                                if($formFieldMember->getField()->getName()=="Firstname") $firstName =$value[$valueKey];
+                                if($formFieldMember->getField()->getName()=="Middlename") $middleName =$value[$valueKey];
+                                if($formFieldMember->getField()->getName()=="Surname") $surname =$value[$valueKey];
+
                             }else if($formFieldMember->getField()->getInputType()->getName()=="Select") {
                                 // Deal with select
+
+                                /**
+                                 * Made dynamic, on which field column is used as key, i.e. uid, name or id.
+                                 */
+                                // Translates to $fieldOptions[0]->getUid()
+                                // or $fieldOptions[0]->getValue() depending on value of $recordKeyName
+                                // $fieldOptionKey = ucfirst($record->getFieldOptionKey());
+                                //$valueKey = call_user_func_array(array($fieldOptions[0], "get${fieldOptionKey}"),array());
+
+
                                 $fieldOptions = $manager->getRepository('HrisFormBundle:FieldOption')->findBy(array('field'=>$formFieldMember->getField()));
                                 // For case of gender choose match name with gender
                                 if($formFieldMember->getField()->getName()=="Sex") {
-                                    if($fieldOptions[0]->getValue()==$gender_picked) $value[$formFieldMember->getField()->getName()] = $fieldOptions[0]->getValue();
-                                    else $value[$formFieldMember->getField()->getName()] = $fieldOptions[1]->getValue();
+                                    // Made FieldOption key to store in record value array dynamic.
+                                    $fieldOptionKey = ucfirst(Record::getFieldOptionKey());
+                                    if($fieldOptions[0]->getValue()==$gender_picked) $value[$valueKey] = call_user_func_array(array($fieldOptions[0], "get${fieldOptionKey}"),array());
+                                    else $value[$valueKey] = call_user_func_array(array($fieldOptions[1], "get${fieldOptionKey}"),array());
                                 }else {
-                                    $value[$formFieldMember->getField()->getName()] = $fieldOptions[array_rand($fieldOptions,1)]->getValue();
+                                    // Made fieldOption key to store in record value array dynamic
+                                    $value[$valueKey] = call_user_func_array(array($fieldOptions[array_rand($fieldOptions,1)], "get${fieldOptionKey}"),array());
                                 }
                             }else if($formFieldMember->getField()->getInputType()->getName()=="Date") {
                                 // Deal with dates
@@ -225,21 +264,23 @@ class LoadRecordData extends AbstractFixture implements OrderedFixtureInterface
                                     $endDateStart-=20;//avoid negative 20-22 number(messes-up logic)
                                     $endDateStop-=22;
                                 }
-                                $value[$formFieldMember->getField()->getName()] = $this->getRandDate(array($beginDateStart,$beginDateStop),array($endDateStart,$endDateStop));
+                                $value[$valueKey] = new \DateTime($this->getRandDate(array($beginDateStart,$beginDateStop),array($endDateStart,$endDateStop)));
+                                //@todo remove hard-coding of instance
+                                if($formFieldMember->getField()->getName()=="Birthdate") $birthDate =$value[$valueKey];
                             }else if($formFieldMember->getField()->getInputType()->getName()=="Text") {
                                 // Deal with numbers
                                 if($formFieldMember->getField()->getName()=="NumberofChildrenDependants" ) {
-                                    $value[$formFieldMember->getField()->getName()] = rand(0,10);
+                                    $value[$valueKey] = rand(0,10);
                                 }elseif($formFieldMember->getField()->getName()=="CheckNumber" ) {
-                                    $value[$formFieldMember->getField()->getName()] = rand(9999999,9999999999);
+                                    $value[$valueKey] = rand(9999999,9999999999);
                                 }elseif($formFieldMember->getField()->getName()=="EmployersFileNumber") {
-                                    $value[$formFieldMember->getField()->getName()] = "FN/".rand(100,100000);
+                                    $value[$valueKey] = "FN/".rand(100,100000);
                                 }elseif($formFieldMember->getField()->getName()=="RegistrationNumber") {
-                                    $value[$formFieldMember->getField()->getName()] = "RB/".rand(10,10000);
+                                    $value[$valueKey] = "RB/".rand(10,10000);
                                 }elseif($formFieldMember->getField()->getName()=="MonthlyBasicSalary") {
-                                    $value[$formFieldMember->getField()->getName()] = rand(100,1500).'000';
+                                    $value[$valueKey] = rand(100,1500).'000';
                                 }else {
-                                    $value[$formFieldMember->getField()->getName()] = $this->maleNames[array_rand($this->maleNames,1)]." Street";
+                                    $value[$valueKey] = $this->maleNames[array_rand($this->maleNames,1)]." Street";
                                 }
                             }else if($formFieldMember->getField()->getInputType()->getName()=="TextArea") {
                                 // Deal with domicile, contact
@@ -247,11 +288,11 @@ class LoadRecordData extends AbstractFixture implements OrderedFixtureInterface
                                     $formFieldMember->getField()->getName()=="ContactsofEmployee" ||
                                     $formFieldMember->getField()->getName()=="ContactsofNextofKin"
                                 ) {
-                                    $value[$formFieldMember->getField()->getName()] = "+255".rand(6,7).rand(53,69).rand(001,998).rand(001,998);
+                                    $value[$valueKey] = "+255".rand(6,7).rand(53,69).rand(001,998).rand(001,998);
                                 }
                             }
                         }
-                        $instance=md5($value['Firstname'].$value['Middlename'].$value['Surname'].$value['Birthdate']);
+                        $instance=md5($firstName.$middleName.$surname.$birthDate->format('Y-m-d'));
                         $record->setInstance($instance);
                         $record->setValue($value);
                         //@todo check for uniqueness of instance and unique fields
@@ -280,7 +321,7 @@ class LoadRecordData extends AbstractFixture implements OrderedFixtureInterface
 	 */
 	public function getOrder()
 	{
-		return 11;
+		return 10;
 	}
 
 }

@@ -28,6 +28,8 @@ use Doctrine\Common\DataFixtures\AbstractFixture;
 use Doctrine\Common\Persistence\ObjectManager;
 
 use Hris\OrganisationunitBundle\Entity\Organisationunit;
+use Hris\OrganisationunitBundle\Entity\OrganisationunitLevel;
+use Hris\OrganisationunitBundle\Entity\OrganisationunitStructure;
 
 class LoadOrganisationunitData extends AbstractFixture implements OrderedFixtureInterface
 {
@@ -37,6 +39,20 @@ class LoadOrganisationunitData extends AbstractFixture implements OrderedFixture
      * @var organisationunits
      */
     private $organisationunits;
+
+    /**
+     * Dummy indexedOrganisationunit tree
+     *
+     * @var indexedOrganisationunits
+     */
+    private $indexedOrganisationunits;
+
+    /**
+     * Dummy index
+     *
+     * @var index
+     */
+    private $index;
 
     /**
      * Dummy dispensaries
@@ -60,6 +76,67 @@ class LoadOrganisationunitData extends AbstractFixture implements OrderedFixture
     private $hospitals;
 
     /**
+     * Mininum number of dispensaries to generate
+     *
+     * @var minDispensaryCount
+     */
+    private $minDispensaryCount;
+
+    /**
+     * Mininum number of min. HealthCentreCount to generate
+     *
+     * @var minHealthCentreCount
+     */
+    private $minHealthCentreCount;
+
+    /**
+     * Mininum number of hospitals to generate
+     *
+     * @var minHospitalCount
+     */
+    private $minHospitalCount;
+
+    /**
+     * Maxinum number of dispensaries to generate
+     *
+     * @var maxDispensaryCount
+     */
+    private $maxDispensaryCount;
+
+    /**
+     * Maxinum number of max. HealthCentreCount to generate
+     *
+     * @var maxHealthCentreCount
+     */
+    private $maxHealthCentreCount;
+
+    /**
+     * Maxinum number of hospitals to generate
+     *
+     * @var maxHospitalCount
+     */
+    private $maxHospitalCount;
+
+    /**
+     * Constructor
+     */
+    public function __construct()
+    {
+        $this->index = 0;
+        // Dispensaries
+        $this->minDispensaryCount=1;
+        $this->maxDispensaryCount=2;
+        // Health centres
+        $this->minHealthCentreCount=1;
+        $this->maxHealthCentreCount=2;
+        // Hospitals
+        $this->minHospitalCount=0;
+        $this->maxHospitalCount=1;
+
+        $this->indexedOrganisationunits = Array();
+    }
+
+    /**
      * Returns Array of organisationunit fixtures
      *
      * @return mixed
@@ -67,6 +144,16 @@ class LoadOrganisationunitData extends AbstractFixture implements OrderedFixture
     public function getOrganisationunits()
     {
         return $this->organisationunits;
+    }
+
+    /**
+     * Returns Array of indexedOrganisationunits
+     *
+     * @return mixed
+     */
+    public function getIndexedOrganisationunits()
+    {
+        return $this->indexedOrganisationunits;
     }
     
     /**
@@ -6677,6 +6764,74 @@ class LoadOrganisationunitData extends AbstractFixture implements OrderedFixture
     }
 
     /**
+     * Returns Array of dummy organisationunits
+     *
+     * @param $organisationunitReference
+     * @return array
+     */
+    public function addToIndexedOrganisationunit($organisationunitReference)
+    {
+        // Load Public Data
+        $this->indexedOrganisationunits[$this->index++] = $organisationunitReference;
+        return $this->indexedOrganisationunits;
+    }
+
+    /**
+     * Dummy organisationunitLevels
+     *
+     * @var organisationunitLevels
+     */
+    private $organisationunitLevels;
+
+    /**
+     * Returns Array of organisationunitlevel fixtures
+     *
+     * @return mixed
+     */
+    public function getOrganisationunitLevels()
+    {
+        return $this->organisationunitLevels;
+    }
+
+    /**
+     * Returns Array of dummy organisationunits
+     *
+     * @return array
+     */
+    public function addDummyOrganisationunitLevels()
+    {
+        // Load Public Data
+        $this->organisationunitLevels = Array(
+            0=>Array(
+                'name'=>'Level 1',
+                'level'=>1,
+                'description'=>'Highest level of organisation unit tree',
+                'dataentrylevel'=>False),
+            1=>Array(
+                'name'=>'Level 2',
+                'level'=>2,
+                'description'=>'Divisions Level of Ministry',
+                'dataentrylevel'=>False),
+            2=>Array(
+                'name'=>'Level 3',
+                'level'=>3,
+                'description'=>'Third administrative level',
+                'dataentrylevel'=>False),
+            3=>Array(
+                'name'=>'Level 4',
+                'level'=>4,
+                'description'=>'Fourth administrative level',
+                'dataentrylevel'=>True),
+            4=>Array(
+                'name'=>'Level 5',
+                'level'=>5,
+                'description'=>'Lowest level of service provision',
+                'dataentrylevel'=>False),
+        );
+        return $this->organisationunitLevels;
+    }
+
+    /**
      * Loads metadata into the database
      *
      * @param ObjectManager $manager
@@ -6688,6 +6843,9 @@ class LoadOrganisationunitData extends AbstractFixture implements OrderedFixture
         $this->addDummyDispensaries();
         $this->addDummyHealthCentres();
         $this->addDummyHospitals();
+        // Dummy organisationunit levels
+        $this->addDummyOrganisationunitLevels();
+
         // Keep Array of distinct parent and lognames existing
         $distinctLongnameAndParent = Array();
 
@@ -6710,10 +6868,14 @@ class LoadOrganisationunitData extends AbstractFixture implements OrderedFixture
                 $organisationunitReference = strtolower(str_replace(' ','',$humanResourceOrganisationunit['shortname'])).'-organisationunit';
                 $this->addReference($organisationunitReference, $organisationunit);
                 $manager->persist($organisationunit);
+                // Keep reference index for senquential generation of organisation unit structure
+                $this->addToIndexedOrganisationunit($organisationunitReference);
             }else {
                 $organisationunitReference = strtolower(str_replace(' ','',$humanResourceOrganisationunit['shortname'])).'-organisationunit';
                 $this->addReference($organisationunitReference, $organisationunit);
                 $manager->persist($organisationunit);
+                // Keep reference index for senquential generation of organisation unit structure
+                $this->addToIndexedOrganisationunit($organisationunitReference);
             }
 
             // Randomly populate dispensaries, health centres & hospitals under municipal & district councils
@@ -6722,9 +6884,9 @@ class LoadOrganisationunitData extends AbstractFixture implements OrderedFixture
                 strpos($humanResourceOrganisationunit['longname'],'District Council') > 0
                 || strpos($humanResourceOrganisationunit['longname'],'Municipal Council') > 0
                 || strpos($humanResourceOrganisationunit['longname'],'Town Council') > 0 ) {
-                $dispensaryCount = rand(15,25);
-                $healthCentreCount = rand(5,10);
-                $hospitalCount = rand(1,3);
+                $dispensaryCount = rand($this->minDispensaryCount,$this->maxDispensaryCount);
+                $healthCentreCount = rand($this->minHealthCentreCount,$this->maxHealthCentreCount);
+                $hospitalCount = rand($this->minHospitalCount,$this->maxHospitalCount);
 
                 $parentReference = strtolower(str_replace(' ','',$humanResourceOrganisationunit['shortname'])).'-organisationunit';
                 $parentOrganisationunit = $manager->merge($this->getReference( $parentReference ));
@@ -6753,6 +6915,8 @@ class LoadOrganisationunitData extends AbstractFixture implements OrderedFixture
                     $distinctLongnameAndParent[] = array('longname'=>$dispensaryName,'parent'=>$parentOrganisationunit->getId());
 
                     $manager->persist($dispensary);
+                    // Keep reference index for senquential generation of organisation unit structure
+                    $this->addToIndexedOrganisationunit($dispensaryReference);
                     $dispensary = NULL;
                     $dispensaryReference = NULL;
                 }
@@ -6779,6 +6943,8 @@ class LoadOrganisationunitData extends AbstractFixture implements OrderedFixture
                     $this->addReference($healthCentreReference, $healthCentre);
                     $distinctLongnameAndParent[] = array('longname'=>$healthCentreName,'parent'=>$parentOrganisationunit->getId());
                     $manager->persist($healthCentre);
+                    // Keep reference index for senquential generation of organisation unit structure
+                    $this->addToIndexedOrganisationunit($healthCentreReference);
                     $healthCentre = NULL;
                     $healthCentreReference = NULL;
                 }
@@ -6805,11 +6971,111 @@ class LoadOrganisationunitData extends AbstractFixture implements OrderedFixture
                     $this->addReference($hospitalReference, $hospital);
                     $distinctLongnameAndParent[] = array('longname'=>$hospitalName,'parent'=>$parentOrganisationunit->getId());
                     $manager->persist($hospital);
+                    // Keep reference index for senquential generation of organisation unit structure
+                    $this->addToIndexedOrganisationunit($hospitalReference);
                     $hospital = NULL;
                     $hospitalReference = NULL;
                 }
             }
+            $parentOrganisationunit = NULL;
 		}
+
+        /**
+         * Generate organisation unit structure and
+         * organisationunit levels.
+         */
+        // Workound parent reference
+        $organisationunitLevelReference = strtolower(str_replace(' ','','Level 1')).'-organisationunitlevel';
+        if($this->hasReference($organisationunitLevelReference)) {
+            // Get orgunitlevel from reference
+            $organisationunitLevel = $this->getReference($organisationunitLevelReference);
+        }else {
+            // Persist and it's reference
+            $organisationunitLevel = new OrganisationunitLevel();
+            $organisationunitLevel->setLevel(1);
+            $organisationunitLevel->setName('Level '.$organisationunitLevel->getLevel());
+            $this->addReference($organisationunitLevelReference, $organisationunitLevel);
+            $manager->persist($organisationunitLevel);
+        }
+        // Generating organisationunit structure
+        if(!empty($this->indexedOrganisationunits)) {
+            foreach($this->getIndexedOrganisationunits() as $indexedOrganisationunitKey=>$indexedOrganisationunitReference) {
+                $organisationunit = $manager->merge($this->getReference( $indexedOrganisationunitReference ));
+
+                // Populate orgunit structure
+                $organisationunitStructure = new OrganisationunitStructure();
+                $organisationunitStructure->setOrganisationunit($organisationunit);
+
+                // Figureout level on the structure by parent
+                if($organisationunit->getParent() == NULL) {
+                    // Use created default first level for organisationunit structure
+                    $organisationunitStructure->setLevel( $organisationunitLevel );
+                    $organisationunitStructure->setLevel1Organisationunit($organisationunitStructure->getOrganisationunit());
+                }else {
+                    // Create new orgunit structure based parent structure
+
+                    //Refer to previously created orgunit structure.
+                    $parentOrganisationunitStructureReferenceName=strtolower(str_replace(' ','',$organisationunit->getParent()->getShortname())).'-organisationunitstructure';
+                    $parentOrganisationunitStructureByReference = $manager->merge($this->getReference( $parentOrganisationunitStructureReferenceName ));
+
+                    // Cross check to see if level is already created for reusability.
+                    $currentOrganisationunitLevelname = 'Level '.($parentOrganisationunitStructureByReference->getLevel()->getLevel()+1);
+
+                    if($this->hasReference(strtolower(str_replace(' ','',$currentOrganisationunitLevelname)).'-organisationunitlevel')) {
+                        // Reuse existing reference
+                        $currentOrganisationunitLevel = $this->getReference(strtolower(str_replace(' ','',$currentOrganisationunitLevelname)).'-organisationunitlevel');
+                        $organisationunitLevel = $manager->merge($currentOrganisationunitLevel);
+                    }else {
+                        // Create new Level and reference.
+                        $organisationunitLevel = new OrganisationunitLevel();
+                        $organisationunitLevel->setLevel($parentOrganisationunitStructureByReference->getLevel()->getLevel()+1);
+                        $organisationunitLevel->setName('Level '.$organisationunitLevel->getLevel());
+                        $organisationunitLevelReference = strtolower(str_replace(' ','',$organisationunitLevel->getName())).'-organisationunitlevel';
+                        $this->addReference($organisationunitLevelReference, $organisationunitLevel);
+                        $manager->persist($organisationunitLevel);
+                    };
+
+                    // Use reference of created/re-used level
+                    $organisationunitStructure->setLevel( $organisationunitLevel );
+
+                    /*
+                     * Append Level organisation units based on their parent level.
+                     */
+                    if($organisationunitStructure->getLevel()->getLevel() == 1) {
+                        $organisationunitStructure->setLevel1Organisationunit($organisationunitStructure->getOrganisationunit()->getParent());
+                    }elseif($organisationunitStructure->getLevel()->getLevel() == 2) {
+                        $organisationunitStructure->setLevel2Organisationunit($organisationunitStructure->getOrganisationunit());
+                        $organisationunitStructure->setLevel1Organisationunit($organisationunitStructure->getOrganisationunit()->getParent());
+                    }elseif($organisationunitStructure->getLevel()->getLevel() == 3) {
+                        $organisationunitStructure->setLevel3Organisationunit($organisationunitStructure->getOrganisationunit());
+                        $organisationunitStructure->setLevel2Organisationunit($organisationunitStructure->getOrganisationunit()->getParent());
+                        $organisationunitStructure->setLevel1Organisationunit($organisationunitStructure->getOrganisationunit()->getParent()->getParent());
+                    }elseif($organisationunitStructure->getLevel()->getLevel() == 4) {
+                        $organisationunitStructure->setLevel4Organisationunit($organisationunitStructure->getOrganisationunit());
+                        $organisationunitStructure->setLevel3Organisationunit($organisationunitStructure->getOrganisationunit()->getParent());
+                        $organisationunitStructure->setLevel2Organisationunit($organisationunitStructure->getOrganisationunit()->getParent()->getParent());
+                        $organisationunitStructure->setLevel1Organisationunit($organisationunitStructure->getOrganisationunit()->getParent()->getParent()->getParent());
+                    }elseif($organisationunitStructure->getLevel()->getLevel() == 5) {
+                        $organisationunitStructure->setLevel5Organisationunit($organisationunitStructure->getOrganisationunit());
+                        $organisationunitStructure->setLevel4Organisationunit($organisationunitStructure->getOrganisationunit()->getParent());
+                        $organisationunitStructure->setLevel3Organisationunit($organisationunitStructure->getOrganisationunit()->getParent()->getParent());
+                        $organisationunitStructure->setLevel2Organisationunit($organisationunitStructure->getOrganisationunit()->getParent()->getParent()->getParent());
+                        $organisationunitStructure->setLevel1Organisationunit($organisationunitStructure->getOrganisationunit()->getParent()->getParent()->getParent()->getParent());
+                    }elseif($organisationunitStructure->getLevel()->getLevel() == 6) {
+                        $organisationunitStructure->setLevel6Organisationunit($organisationunitStructure->getOrganisationunit());
+                        $organisationunitStructure->setLevel5Organisationunit($organisationunitStructure->getOrganisationunit()->getParent());
+                        $organisationunitStructure->setLevel4Organisationunit($organisationunitStructure->getOrganisationunit()->getParent()->getParent());
+                        $organisationunitStructure->setLevel3Organisationunit($organisationunitStructure->getOrganisationunit()->getParent()->getParent()->getParent());
+                        $organisationunitStructure->setLevel2Organisationunit($organisationunitStructure->getOrganisationunit()->getParent()->getParent()->getParent()->getParent()->getParent());
+                        $organisationunitStructure->setLevel1Organisationunit($organisationunitStructure->getOrganisationunit()->getParent()->getParent()->getParent()->getParent()->getParent()->getParent());
+                    }
+                }
+                $organisationunitStructureReference = strtolower(str_replace(' ','',$organisationunit->getShortname())).'-organisationunitstructure';
+                $this->addReference($organisationunitStructureReference, $organisationunitStructure);
+                $manager->persist($organisationunitStructure);
+            }
+        }
+
 		$manager->flush();
 	}
 	

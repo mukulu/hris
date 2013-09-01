@@ -41,6 +41,18 @@ use Symfony\Component\Validator\Constraints as Assert;
 class Record
 {
     /**
+     * Field column to be used in value array
+     * @var string $fieldKey
+     */
+    private static $fieldKey;
+
+    /**
+     * FieldOption column to be used in value array
+     * @var string $fieldOptionKey
+     */
+    private static $fieldOptionKey;
+
+    /**
      * @var integer $id
      *
      * @ORM\Column(name="id", type="integer")
@@ -161,6 +173,28 @@ class Record
     	$this->hastraining = FALSE;
     	$this->correct = FALSE;
     	$this->uid = uniqid();
+        self::$fieldKey = 'uid';
+        self::$fieldOptionKey = 'uid';
+    }
+
+    /**
+     * Returns Field column name to be used in value array
+     *
+     * @return string
+     */
+    public function getFieldKey()
+    {
+        return self::$fieldKey;
+    }
+
+    /**
+     * Returns FieldOption column name to be used in value array
+     *
+     * @return string
+     */
+    public function getFieldOptionKey()
+    {
+        return self::$fieldOptionKey;
     }
 
 

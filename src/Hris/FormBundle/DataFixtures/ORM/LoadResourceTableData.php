@@ -81,6 +81,7 @@ class LoadResourceTableData extends AbstractFixture implements OrderedFixtureInt
         );
         return $this->resourceTables;
     }
+
 	public function load(ObjectManager $manager)
 	{
         // Populate dummy forms
@@ -110,10 +111,21 @@ class LoadResourceTableData extends AbstractFixture implements OrderedFixtureInt
                     $referenceName = strtolower(str_replace(' ','',$humanResourceResourceTable['name']).str_replace(' ','',$dummyField['name'])).'-resourcetable-field-member';
                     $this->addReference($referenceName, $resourceTableMember);
                     $manager->persist($resourceTableMember);
+                    $resourceTable->addResourceTableFieldMember($resourceTableMember);
                 }
             }
+            $manager->persist($resourceTable);
         }
 		$manager->flush();
+
+        // Generate resource tables
+        $resourceTables = $manager->getRepository('HrisFormBundle:ResourceTable')->findAll();
+        foreach($resourceTables as $resourceTableKey=>$resourceTable) {
+            $success = $resourceTable->generateResourceTable($manager);
+            $messageLog = $resourceTable->getMessageLog();
+            if($success) echo $messageLog;
+            else echo "Failed with:".$messageLog;
+        }
 	}
 	
 	/**
@@ -122,7 +134,7 @@ class LoadResourceTableData extends AbstractFixture implements OrderedFixtureInt
 	 */
 	public function getOrder()
 	{
-		return 12;
+		return 11;
 	}
 
 }
