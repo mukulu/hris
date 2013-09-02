@@ -31,19 +31,78 @@ use Hris\FormBundle\Entity\InputType;
 
 class LoadInputTypeData extends AbstractFixture implements OrderedFixtureInterface
 {
+    /**
+     * @var inputTypes
+     */
+    private $inputTypes;
+
+    /**
+     * Returns Array of inputTypes fixtures
+     *
+     * @return mixed
+     */
+    public function getInputTypes()
+    {
+        return $this->inputTypes;
+    }
+
+    /**
+     * Returns Array of dummy fields
+     *
+     * @return array
+     */
+    public function addDummyInputTypes()
+    {
+        // Load Public Data
+        $this->inputTypes = Array(
+            0=>Array(
+                'name'=>'Text',
+                'description'=>'Textbox HTML Tag',
+                'htmltag'=>'<input type="text" name="fieldName" id="fieldId"/>'),
+            1=>Array(
+                'name'=>'Password',
+                'description'=>'Password HTML Input Tag',
+                'htmltag'=>'<input type="password" name="fieldName" id="fieldId"/>'),
+            2=>Array(
+                'name'=>'Radio',
+                'description'=>'Radio HTML Input Tag',
+                'htmltag'=>'<input type="radio" name="fieldName" id="fieldId"/>'),
+            3=>Array(
+                'name'=>'Checkbox',
+                'description'=>'Checkbox HTML Input Tag',
+                'htmltag'=>'<input type="checkbox" name="fieldName" id="fieldId"/>'),
+            4=>Array(
+                'name'=>'TextArea',
+                'description'=>'TextArea HTML Tag',
+                'htmltag'=>'<textarea name="fieldName" id="fieldId"></textarea>'),
+            5=>Array(
+                'name'=>'Date',
+                'description'=>'Date HTML Input Tag',
+                'htmltag'=>'<input type="date" name="fieldName" id="fieldId" />'),
+            6=>Array(
+                'name'=>'Select',
+                'description'=>'Select Options HTML Tag',
+                'htmltag'=>'<select name="fieldName" id="fieldId" onload="loadFieldOptions(fieldId)" onchange="changeRelatedFieldOptions(fieldId)"></select>'),
+        );
+        return $this->inputTypes;
+    }
+
 	/**
 	 * {@inheritDoc}
 	 * @see Doctrine\Common\DataFixtures.FixtureInterface::load()
 	 */
 	public function load(ObjectManager $manager)
 	{
+        $this->addDummyInputTypes();
 		// Load Public Data
 		$inputTypeNames = Array('Text','Password','Radio','Checkbox','TextArea','Date','Select');
-		foreach($inputTypeNames as $key=>$inputTypeName) {
+		foreach($this->inputTypes as $inputTypeKey=>$humanResourceInputType) {
             $inputType = new InputType();
-			$inputType->setName($inputTypeName);
+            $inputType->setName($humanResourceInputType['name']);
+            $inputType->setDescription($humanResourceInputType['description']);
+            $inputType->getHtmltag($humanResourceInputType['htmltag']);
 			$manager->persist($inputType);
-			$this->addReference(strtolower($inputTypeName).'-inputtype', $inputType);
+			$this->addReference(strtolower($humanResourceInputType['name']).'-inputtype', $inputType);
 		}
 		$manager->flush();
 	}

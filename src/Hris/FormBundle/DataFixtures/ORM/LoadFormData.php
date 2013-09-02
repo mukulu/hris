@@ -73,162 +73,162 @@ class LoadFormData extends AbstractFixture implements OrderedFixtureInterface
                             <tr>
                                 <td><em>1.</em></td>
                                 <td><span>First Name</span></td>
-                                <td class="whitebg">~Firstname~</td>
+                                <td class="whitebg"><input type="text" name="FirstName" id="FirstName"/></td>
                             </tr>
                             <tr>
                                 <td><span>2.</span></td>
                                 <td><span>Middle Name</span></td>
-                                <td>~Middlename~</td>
+                                <td><input type="text" name="MiddleName" id="MiddleName"/></td>
                             </tr>
                             <tr>
                                 <td><span>3.</span></td>
                                 <td><span>Surname</span></td>
-                                <td class="whitebg">~Surname~</td>
+                                <td class="whitebg"><input type="text" name="Surname" id="Surname"/></td>
                             </tr>
                             <tr>
                                 <td><span>4.</span></td>
                                 <td><span>Date of Birth</span></td>
-                                <td>~Birthdate~</td>
+                                <td><input type="date" name="DateofBirth" id="DateofBirth" /></td>
                             </tr>
                             <tr>
                                 <td><span>5.</span></td>
                                 <td><span>Sex</span></td>
-                                <td class="whitebg">~Sex~</td>
+                                <td class="whitebg"><select name="Sex" id="Sex" onload="loadFieldOptions(\'Sex\')" onchange="changeRelatedFieldOptions(\'Sex\')"></select></td>
                             </tr>
                             <tr>
                                 <td><span>6.</span></td>
                                 <td><span>Marital Status</span></td>
-                                <td>~MaritalStatus~</td>
+                                <td><select name="MaritalStatus" id="MaritalStatus" onload="loadFieldOptions(\'MaritalStatus\')" onchange="changeRelatedFieldOptions(\'MaritalStatus\')"></select></td>
                             </tr>
                             <tr>
                                 <td><span>7.</span></td>
                                 <td><span>Nationality</span></td>
-                                <td class="whitebg">~Nationality~</td>
+                                <td class="whitebg"><select name="Nationality" id="Nationality" onload="loadFieldOptions(\'Nationality\')" onchange="changeRelatedFieldOptions(\'Nationality\')"></select></td>
                             </tr>
                             <tr>
                                 <td><span>8.</span></td>
                                 <td><span>Religion</span></td>
-                                <td>~Religion~</td>
+                                <td><select name="Religion" id="Religion" onload="loadFieldOptions(\'Religion\')" onchange="changeRelatedFieldOptions(\'Religion\')"></select></td>
                             </tr>
                             <tr>
                                 <td><span>9.</span></td>
                                 <td><span>Basic Education Level</span></td>
-                                <td class="whitebg">~BasicEducationLevel~</td>
+                                <td class="whitebg"><select name="BasicEducationLevel" id="BasicEducationLevel" onload="loadFieldOptions(\'BasicEducationLevel\')" onchange="changeRelatedFieldOptions(\'BasicEducationLevel\')"></select></td>
                             </tr>
                             <tr>
                                 <td><span>10.</span></td>
                                 <td><span>Profession Education Level</span></td>
-                                <td>~ProfessionEducationLevel~</td>
+                                <td><select name="ProfessionEducationLevel" id="ProfessionEducationLevel" onload="loadFieldOptions(\'ProfessionEducationLevel\')" onchange="changeRelatedFieldOptions(\'ProfessionEducationLevel\')"></select></td>
                             </tr>
                             <tr>
                                 <td><span>11.</span></td>
                                 <td><span>Number of Children/Dependants</span></td>
-                                <td class="whitebg">~NumberofChildrenDependants~</td>
+                                <td class="whitebg"><input type="text" name="NumberofChildrenDependants" id="NumberofChildrenDependants"/></td>
                             </tr>
                             <tr>
                                 <td><span>12.</span></td>
                                 <td><span>District of Domicile</span></td>
-                                <td>~DistrictofDomicile~</td>
+                                <td><input type="text" name="DistrictofDomicile" id="DistrictofDomicile"/></td>
                             </tr>
                             <tr>
                                 <td><span>13.</span></td>
                                 <td><span>Check Number</span></td>
-                                <td class="whitebg">~CheckNumber~</td>
+                                <td class="whitebg"><input type="text" name="CheckNumber" id="CheckNumber"/></td>
                             </tr>
                             <tr>
                                 <td><span>14.</span></td>
                                 <td><span>Employer`s File Number</span></td>
-                                <td>~EmployersFileNumber~</td>
+                                <td><input type="text" name="EmployersFileNumber" id="EmployersFileNumber"/></td>
                             </tr>
                             <tr>
                                 <td><span>15.</span></td>
                                 <td><span>Registration Number</span></td>
-                                <td class="whitebg">~RegistrationNumber~</td>
+                                <td class="whitebg"><input type="text" name="RegistrationNumber" id="RegistrationNumber"/></td>
                             </tr>
                             <tr>
                                 <td><span>16.</span></td>
                                 <td><span>Terms of Employment</span></td>
-                                <td>~TermsofEmployment~</td>
+                                <td><select name="TermsofEmployment" id="TermsofEmployment" onload="loadFieldOptions(\'TermsofEmployment\')" onchange="changeRelatedFieldOptions(\'TermsofEmployment\')"></select></td>
                             </tr>
                             <tr>
                                 <td><span>17.</span></td>
                                 <td><span>Profession</span></td>
-                                <td class="whitebg">~Profession~</td>
+                                <td class="whitebg"><select name="Profession" id="Profession" onload="loadFieldOptions(\'Profession\')" onchange="changeRelatedFieldOptions(\'Profession\')"></select></td>
                             </tr>
                             <tr>
                                 <td><span>18.</span></td>
                                 <td><span>Present Designation</span></td>
-                                <td>~PresentDesignation~</td>
+                                <td><select name="PresentDesignation" id="PresentDesignation" onload="loadFieldOptions(\'PresentDesignation\')" onchange="changeRelatedFieldOptions(\'PresentDesignation\')"></select></td>
                             </tr>
                             <tr>
                                 <td><span>19.</span></td>
                                 <td><span>Superlative Substantive Position</span></td>
-                                <td class="whitebg">~SuperlativeSubstantivePosition~</td>
+                                <td class="whitebg"><select name="SuperlativeSubstantivePosition" id="SuperlativeSubstantivePosition" onload="loadFieldOptions(\'SuperlativeSubstantivePosition\')" onchange="changeRelatedFieldOptions(\'SuperlativeSubstantivePosition\')"></select></td>
                             </tr>
                             <tr>
                                 <td><span>20.</span></td>
                                 <td><span>Department</span></td>
-                                <td>~Department~</td>
+                                <td><select name="Department" id="Department" onload="loadFieldOptions(\'Department\')" onchange="changeRelatedFieldOptions(\'Department\')"></select></td>
                             </tr>
                             <tr>
                                 <td><span>21.</span></td>
                                 <td><span>Salary Scale</span></td>
-                                <td class="whitebg">~SalaryScale~</td>
+                                <td class="whitebg"><select name="SalaryScale" id="SalaryScale" onload="loadFieldOptions(\'SalaryScale\')" onchange="changeRelatedFieldOptions(\'SalaryScale\')"></select></td>
                             </tr>
                             <tr>
                                 <td><span>22.</span></td>
                                 <td><span>Monthly Basic Salary</span></td>
-                                <td>~MonthlyBasicSalary~</td>
+                                <td><input type="text" name="MonthlyBasicSalary" id="MonthlyBasicSalary"/></td>
                             </tr>
                             <tr>
                                 <td><span>23.</span></td>
                                 <td><span>Date of First Appointment</span></td>
-                                <td class="whitebg">~DateofFirstAppointment~</td>
+                                <td class="whitebg"><input type="date" name="DateofFirstAppointment" id="DateofFirstAppointment" /></td>
                             </tr>
                             <tr>
                                 <td><span>24.</span></td>
                                 <td><span>Date of Confirmation</span></td>
-                                <td>~DateofConfirmation~</td>
+                                <td><input type="date" name="DateofConfirmation" id="DateofConfirmation" /></td>
                             </tr>
                             <tr>
                                 <td><span>25.</span></td>
                                 <td><span>Date of Last Promotion</span></td>
-                                <td class="whitebg">~DateofLastPromotion~</td>
+                                <td class="whitebg"><input type="date" name="DateofLastPromotion" id="DateofLastPromotion" /></td>
                             </tr>
                             <tr>
                                 <td><span>26.</span></td>
                                 <td><span>Employer</span></td>
-                                <td>~Employer~</td>
+                                <td><select name="Employer" id="Employer" onload="loadFieldOptions(\'Employer\')" onchange="changeRelatedFieldOptions(\'Employer\')"></select></td>
                             </tr>
                             <tr>
                                 <td><span>27.</span></td>
                                 <td><span>Employment Status</span></td>
-                                <td class="whitebg">~EmploymentStatus~</td>
+                                <td class="whitebg"><select name="EmploymentStatus" id="EmploymentStatus" onload="loadFieldOptions(\'EmploymentStatus\')" onchange="changeRelatedFieldOptions(\'EmploymentStatus\')"></select></td>
                             </tr>
                             <tr>
                                 <td><span>28.</span></td>
                                 <td><span>Registered Disability</span></td>
-                                <td>~RegisteredDisability~</td>
+                                <td><select name="RegisteredDisability" id="RegisteredDisability" onload="loadFieldOptions(\'RegisteredDisability\')" onchange="changeRelatedFieldOptions(\'RegisteredDisability\')"></select></td>
                             </tr>
                             <tr>
                                 <td><span>29.</span></td>
                                 <td><span>Contacts of Employee</span></td>
-                                <td class="whitebg">~ContactsofEmployee~</td>
+                                <td class="whitebg"><textarea name="ContactsofEmployee" id="ContactsofEmployee"></textarea></td>
                             </tr>
                             <tr>
                                 <td><span>30.</span></td>
                                 <td><span>Next of Kin</span></td>
-                                <td>~NextofKin~</td>
+                                <td><input type="text" name="NextofKin" id="NextofKin"/></td>
                             </tr>
                             <tr>
                                 <td><span>31.</span></td>
                                 <td><span>Relationship to Next of Kin</span></td>
-                                <td class="whitebg">~RelationshiptoNextofKin~</td>
+                                <td class="whitebg"><select name="RelationshiptoNextofKin" id="RelationshiptoNextofKin" onload="loadFieldOptions(\'RelationshiptoNextofKin\')" onchange="changeRelatedFieldOptions(\'RelationshiptoNextofKin\')"></select></td>
                             </tr>
                             <tr>
                                 <td><span>32.</span></td>
                                 <td><span>Contacts of Next of Kin</span></td>
-                                <td>~ContactsofNextofKin~</td>
+                                <td><textarea name="ContactsofNextofKin" id="ContactsofNextofKin"></textarea></td>
                             </tr>
                         </tbody>
                 </table>
@@ -249,162 +249,162 @@ class LoadFormData extends AbstractFixture implements OrderedFixtureInterface
                             <tr>
                                 <td><em>1.</em></td>
                                 <td><span>First Name</span></td>
-                                <td class="whitebg">~Firstname~</td>
+                                <td class="whitebg"><input type="text" name="FirstName" id="FirstName"/></td>
                             </tr>
                             <tr>
                                 <td><span>2.</span></td>
                                 <td><span>Middle Name</span></td>
-                                <td>~Middlename~</td>
+                                <td><input type="text" name="MiddleName" id="MiddleName"/></td>
                             </tr>
                             <tr>
                                 <td><span>3.</span></td>
                                 <td><span>Surname</span></td>
-                                <td class="whitebg">~Surname~</td>
+                                <td class="whitebg"><input type="text" name="Surname" id="Surname"/></td>
                             </tr>
                             <tr>
                                 <td><span>4.</span></td>
                                 <td><span>Date of Birth</span></td>
-                                <td>~Birthdate~</td>
+                                <td><input type="date" name="DateofBirth" id="DateofBirth" /></td>
                             </tr>
                             <tr>
                                 <td><span>5.</span></td>
                                 <td><span>Sex</span></td>
-                                <td class="whitebg">~Sex~</td>
+                                <td class="whitebg"><select name="Sex" id="Sex" onload="loadFieldOptions(\'Sex\')" onchange="changeRelatedFieldOptions(\'Sex\')"></select></td>
                             </tr>
                             <tr>
                                 <td><span>6.</span></td>
                                 <td><span>Marital Status</span></td>
-                                <td>~MaritalStatus~</td>
+                                <td><select name="MaritalStatus" id="MaritalStatus" onload="loadFieldOptions(\'MaritalStatus\')" onchange="changeRelatedFieldOptions(\'MaritalStatus\')"></select></td>
                             </tr>
                             <tr>
                                 <td><span>7.</span></td>
                                 <td><span>Nationality</span></td>
-                                <td class="whitebg">~Nationality~</td>
+                                <td class="whitebg"><select name="Nationality" id="Nationality" onload="loadFieldOptions(\'Nationality\')" onchange="changeRelatedFieldOptions(\'Nationality\')"></select></td>
                             </tr>
                             <tr>
                                 <td><span>8.</span></td>
                                 <td><span>Religion</span></td>
-                                <td>~Religion~</td>
+                                <td><select name="Religion" id="Religion" onload="loadFieldOptions(\'Religion\')" onchange="changeRelatedFieldOptions(\'Religion\')"></select></td>
                             </tr>
                             <tr>
                                 <td><span>9.</span></td>
                                 <td><span>Basic Education Level</span></td>
-                                <td class="whitebg">~BasicEducationLevel~</td>
+                                <td class="whitebg"><select name="BasicEducationLevel" id="BasicEducationLevel" onload="loadFieldOptions(\'BasicEducationLevel\')" onchange="changeRelatedFieldOptions(\'BasicEducationLevel\')"></select></td>
                             </tr>
                             <tr>
                                 <td><span>10.</span></td>
                                 <td><span>Profession Education Level</span></td>
-                                <td>~ProfessionEducationLevel~</td>
+                                <td><select name="ProfessionEducationLevel" id="ProfessionEducationLevel" onload="loadFieldOptions(\'ProfessionEducationLevel\')" onchange="changeRelatedFieldOptions(\'ProfessionEducationLevel\')"></select></td>
                             </tr>
                             <tr>
                                 <td><span>11.</span></td>
                                 <td><span>Number of Children/Dependants</span></td>
-                                <td class="whitebg">~NumberofChildrenDependants~</td>
+                                <td class="whitebg"><input type="text" name="NumberofChildrenDependants" id="NumberofChildrenDependants"/></td>
                             </tr>
                             <tr>
                                 <td><span>12.</span></td>
                                 <td><span>District of Domicile</span></td>
-                                <td>~DistrictofDomicile~</td>
+                                <td><input type="text" name="DistrictofDomicile" id="DistrictofDomicile"/></td>
                             </tr>
                             <tr>
                                 <td><span>13.</span></td>
                                 <td><span>Check Number</span></td>
-                                <td class="whitebg">~CheckNumber~</td>
+                                <td class="whitebg"><input type="text" name="CheckNumber" id="CheckNumber"/></td>
                             </tr>
                             <tr>
                                 <td><span>14.</span></td>
                                 <td><span>Employer`s File Number</span></td>
-                                <td>~EmployersFileNumber~</td>
+                                <td><input type="text" name="EmployersFileNumber" id="EmployersFileNumber"/></td>
                             </tr>
                             <tr>
                                 <td><span>15.</span></td>
                                 <td><span>Registration Number</span></td>
-                                <td class="whitebg">~RegistrationNumber~</td>
+                                <td class="whitebg"><input type="text" name="RegistrationNumber" id="RegistrationNumber"/></td>
                             </tr>
                             <tr>
                                 <td><span>16.</span></td>
                                 <td><span>Terms of Employment</span></td>
-                                <td>~TermsofEmployment~</td>
+                                <td><select name="TermsofEmployment" id="TermsofEmployment" onload="loadFieldOptions(\'TermsofEmployment\')" onchange="changeRelatedFieldOptions(\'TermsofEmployment\')"></select></td>
                             </tr>
                             <tr>
                                 <td><span>17.</span></td>
                                 <td><span>Profession</span></td>
-                                <td class="whitebg">~Profession~</td>
+                                <td class="whitebg"><select name="Profession" id="Profession" onload="loadFieldOptions(\'Profession\')" onchange="changeRelatedFieldOptions(\'Profession\')"></select></td>
                             </tr>
                             <tr>
                                 <td><span>18.</span></td>
                                 <td><span>Present Designation</span></td>
-                                <td>~PresentDesignation~</td>
+                                <td><select name="PresentDesignation" id="PresentDesignation" onload="loadFieldOptions(\'PresentDesignation\')" onchange="changeRelatedFieldOptions(\'PresentDesignation\')"></select></td>
                             </tr>
                             <tr>
                                 <td><span>19.</span></td>
                                 <td><span>Superlative Substantive Position</span></td>
-                                <td class="whitebg">~SuperlativeSubstantivePosition~</td>
+                                <td class="whitebg"><select name="SuperlativeSubstantivePosition" id="SuperlativeSubstantivePosition" onload="loadFieldOptions(\'SuperlativeSubstantivePosition\')" onchange="changeRelatedFieldOptions(\'SuperlativeSubstantivePosition\')"></select></td>
                             </tr>
                             <tr>
                                 <td><span>20.</span></td>
                                 <td><span>Department</span></td>
-                                <td>~Department~</td>
+                                <td><select name="Department" id="Department" onload="loadFieldOptions(\'Department\')" onchange="changeRelatedFieldOptions(\'Department\')"></select></td>
                             </tr>
                             <tr>
                                 <td><span>21.</span></td>
                                 <td><span>Salary Scale</span></td>
-                                <td class="whitebg">~SalaryScale~</td>
+                                <td class="whitebg"><select name="SalaryScale" id="SalaryScale" onload="loadFieldOptions(\'SalaryScale\')" onchange="changeRelatedFieldOptions(\'SalaryScale\')"></select></td>
                             </tr>
                             <tr>
                                 <td><span>22.</span></td>
                                 <td><span>Monthly Basic Salary</span></td>
-                                <td>~MonthlyBasicSalary~</td>
+                                <td><input type="text" name="MonthlyBasicSalary" id="MonthlyBasicSalary"/></td>
                             </tr>
                             <tr>
                                 <td><span>23.</span></td>
                                 <td><span>Date of First Appointment</span></td>
-                                <td class="whitebg">~DateofFirstAppointment~</td>
+                                <td class="whitebg"><input type="date" name="DateofFirstAppointment" id="DateofFirstAppointment" /></td>
                             </tr>
                             <tr>
                                 <td><span>24.</span></td>
                                 <td><span>Date of Confirmation</span></td>
-                                <td>~DateofConfirmation~</td>
+                                <td><input type="date" name="DateofConfirmation" id="DateofConfirmation" /></td>
                             </tr>
                             <tr>
                                 <td><span>25.</span></td>
                                 <td><span>Date of Last Promotion</span></td>
-                                <td class="whitebg">~DateofLastPromotion~</td>
+                                <td class="whitebg"><input type="date" name="DateofLastPromotion" id="DateofLastPromotion" /></td>
                             </tr>
                             <tr>
                                 <td><span>26.</span></td>
                                 <td><span>Employer</span></td>
-                                <td>~Employer~</td>
+                                <td><select name="Employer" id="Employer" onload="loadFieldOptions(\'Employer\')" onchange="changeRelatedFieldOptions(\'Employer\')"></select></td>
                             </tr>
                             <tr>
                                 <td><span>27.</span></td>
                                 <td><span>Employment Status</span></td>
-                                <td class="whitebg">~EmploymentStatus~</td>
+                                <td class="whitebg"><select name="EmploymentStatus" id="EmploymentStatus" onload="loadFieldOptions(\'EmploymentStatus\')" onchange="changeRelatedFieldOptions(\'EmploymentStatus\')"></select></td>
                             </tr>
                             <tr>
                                 <td><span>28.</span></td>
                                 <td><span>Registered Disability</span></td>
-                                <td>~RegisteredDisability~</td>
+                                <td><select name="RegisteredDisability" id="RegisteredDisability" onload="loadFieldOptions(\'RegisteredDisability\')" onchange="changeRelatedFieldOptions(\'RegisteredDisability\')"></select></td>
                             </tr>
                             <tr>
                                 <td><span>29.</span></td>
                                 <td><span>Contacts of Employee</span></td>
-                                <td class="whitebg">~ContactsofEmployee~</td>
+                                <td class="whitebg"><textarea name="ContactsofEmployee" id="ContactsofEmployee"></textarea></td>
                             </tr>
                             <tr>
                                 <td><span>30.</span></td>
                                 <td><span>Next of Kin</span></td>
-                                <td>~NextofKin~</td>
+                                <td><input type="text" name="NextofKin" id="NextofKin"/></td>
                             </tr>
                             <tr>
                                 <td><span>31.</span></td>
                                 <td><span>Relationship to Next of Kin</span></td>
-                                <td class="whitebg">~RelationshiptoNextofKin~</td>
+                                <td class="whitebg"><select name="RelationshiptoNextofKin" id="RelationshiptoNextofKin" onload="loadFieldOptions(\'RelationshiptoNextofKin\')" onchange="changeRelatedFieldOptions(\'RelationshiptoNextofKin\')"></select></td>
                             </tr>
                             <tr>
                                 <td><span>32.</span></td>
                                 <td><span>Contacts of Next of Kin</span></td>
-                                <td>~ContactsofNextofKin~</td>
+                                <td><textarea name="ContactsofNextofKin" id="ContactsofNextofKin"></textarea></td>
                             </tr>
                         </tbody>
                 </table>
@@ -425,162 +425,162 @@ class LoadFormData extends AbstractFixture implements OrderedFixtureInterface
                             <tr>
                                 <td><em>1.</em></td>
                                 <td><span>First Name</span></td>
-                                <td class="whitebg">~Firstname~</td>
+                                <td class="whitebg"><input type="text" name="FirstName" id="FirstName"/></td>
                             </tr>
                             <tr>
                                 <td><span>2.</span></td>
                                 <td><span>Middle Name</span></td>
-                                <td>~Middlename~</td>
+                                <td><input type="text" name="MiddleName" id="MiddleName"/></td>
                             </tr>
                             <tr>
                                 <td><span>3.</span></td>
                                 <td><span>Surname</span></td>
-                                <td class="whitebg">~Surname~</td>
+                                <td class="whitebg"><input type="text" name="Surname" id="Surname"/></td>
                             </tr>
                             <tr>
                                 <td><span>4.</span></td>
                                 <td><span>Date of Birth</span></td>
-                                <td>~Birthdate~</td>
+                                <td><input type="date" name="DateofBirth" id="DateofBirth" /></td>
                             </tr>
                             <tr>
                                 <td><span>5.</span></td>
                                 <td><span>Sex</span></td>
-                                <td class="whitebg">~Sex~</td>
+                                <td class="whitebg"><select name="Sex" id="Sex" onload="loadFieldOptions(\'Sex\')" onchange="changeRelatedFieldOptions(\'Sex\')"></select></td>
                             </tr>
                             <tr>
                                 <td><span>6.</span></td>
                                 <td><span>Marital Status</span></td>
-                                <td>~MaritalStatus~</td>
+                                <td><select name="MaritalStatus" id="MaritalStatus" onload="loadFieldOptions(\'MaritalStatus\')" onchange="changeRelatedFieldOptions(\'MaritalStatus\')"></select></td>
                             </tr>
                             <tr>
                                 <td><span>7.</span></td>
                                 <td><span>Nationality</span></td>
-                                <td class="whitebg">~Nationality~</td>
+                                <td class="whitebg"><select name="Nationality" id="Nationality" onload="loadFieldOptions(\'Nationality\')" onchange="changeRelatedFieldOptions(\'Nationality\')"></select></td>
                             </tr>
                             <tr>
                                 <td><span>8.</span></td>
                                 <td><span>Religion</span></td>
-                                <td>~Religion~</td>
+                                <td><select name="Religion" id="Religion" onload="loadFieldOptions(\'Religion\')" onchange="changeRelatedFieldOptions(\'Religion\')"></select></td>
                             </tr>
                             <tr>
                                 <td><span>9.</span></td>
                                 <td><span>Basic Education Level</span></td>
-                                <td class="whitebg">~BasicEducationLevel~</td>
+                                <td class="whitebg"><select name="BasicEducationLevel" id="BasicEducationLevel" onload="loadFieldOptions(\'BasicEducationLevel\')" onchange="changeRelatedFieldOptions(\'BasicEducationLevel\')"></select></td>
                             </tr>
                             <tr>
                                 <td><span>10.</span></td>
                                 <td><span>Profession Education Level</span></td>
-                                <td>~ProfessionEducationLevel~</td>
+                                <td><select name="ProfessionEducationLevel" id="ProfessionEducationLevel" onload="loadFieldOptions(\'ProfessionEducationLevel\')" onchange="changeRelatedFieldOptions(\'ProfessionEducationLevel\')"></select></td>
                             </tr>
                             <tr>
                                 <td><span>11.</span></td>
                                 <td><span>Number of Children/Dependants</span></td>
-                                <td class="whitebg">~NumberofChildrenDependants~</td>
+                                <td class="whitebg"><input type="text" name="NumberofChildrenDependants" id="NumberofChildrenDependants"/></td>
                             </tr>
                             <tr>
                                 <td><span>12.</span></td>
                                 <td><span>District of Domicile</span></td>
-                                <td>~DistrictofDomicile~</td>
+                                <td><input type="text" name="DistrictofDomicile" id="DistrictofDomicile"/></td>
                             </tr>
                             <tr>
                                 <td><span>13.</span></td>
                                 <td><span>Check Number</span></td>
-                                <td class="whitebg">~CheckNumber~</td>
+                                <td class="whitebg"><input type="text" name="CheckNumber" id="CheckNumber"/></td>
                             </tr>
                             <tr>
                                 <td><span>14.</span></td>
                                 <td><span>Employer`s File Number</span></td>
-                                <td>~EmployersFileNumber~</td>
+                                <td><input type="text" name="EmployersFileNumber" id="EmployersFileNumber"/></td>
                             </tr>
                             <tr>
                                 <td><span>15.</span></td>
                                 <td><span>Registration Number</span></td>
-                                <td class="whitebg">~RegistrationNumber~</td>
+                                <td class="whitebg"><input type="text" name="RegistrationNumber" id="RegistrationNumber"/></td>
                             </tr>
                             <tr>
                                 <td><span>16.</span></td>
                                 <td><span>Terms of Employment</span></td>
-                                <td>~TermsofEmployment~</td>
+                                <td><select name="TermsofEmployment" id="TermsofEmployment" onload="loadFieldOptions(\'TermsofEmployment\')" onchange="changeRelatedFieldOptions(\'TermsofEmployment\')"></select></td>
                             </tr>
                             <tr>
                                 <td><span>17.</span></td>
                                 <td><span>Profession</span></td>
-                                <td class="whitebg">~Profession~</td>
+                                <td class="whitebg"><select name="Profession" id="Profession" onload="loadFieldOptions(\'Profession\')" onchange="changeRelatedFieldOptions(\'Profession\')"></select></td>
                             </tr>
                             <tr>
                                 <td><span>18.</span></td>
                                 <td><span>Present Designation</span></td>
-                                <td>~PresentDesignation~</td>
+                                <td><select name="PresentDesignation" id="PresentDesignation" onload="loadFieldOptions(\'PresentDesignation\')" onchange="changeRelatedFieldOptions(\'PresentDesignation\')"></select></td>
                             </tr>
                             <tr>
                                 <td><span>19.</span></td>
                                 <td><span>Superlative Substantive Position</span></td>
-                                <td class="whitebg">~SuperlativeSubstantivePosition~</td>
+                                <td class="whitebg"><select name="SuperlativeSubstantivePosition" id="SuperlativeSubstantivePosition" onload="loadFieldOptions(\'SuperlativeSubstantivePosition\')" onchange="changeRelatedFieldOptions(\'SuperlativeSubstantivePosition\')"></select></td>
                             </tr>
                             <tr>
                                 <td><span>20.</span></td>
                                 <td><span>Department</span></td>
-                                <td>~Department~</td>
+                                <td><select name="Department" id="Department" onload="loadFieldOptions(\'Department\')" onchange="changeRelatedFieldOptions(\'Department\')"></select></td>
                             </tr>
                             <tr>
                                 <td><span>21.</span></td>
                                 <td><span>Salary Scale</span></td>
-                                <td class="whitebg">~SalaryScale~</td>
+                                <td class="whitebg"><select name="SalaryScale" id="SalaryScale" onload="loadFieldOptions(\'SalaryScale\')" onchange="changeRelatedFieldOptions(\'SalaryScale\')"></select></td>
                             </tr>
                             <tr>
                                 <td><span>22.</span></td>
                                 <td><span>Monthly Basic Salary</span></td>
-                                <td>~MonthlyBasicSalary~</td>
+                                <td><input type="text" name="MonthlyBasicSalary" id="MonthlyBasicSalary"/></td>
                             </tr>
                             <tr>
                                 <td><span>23.</span></td>
                                 <td><span>Date of First Appointment</span></td>
-                                <td class="whitebg">~DateofFirstAppointment~</td>
+                                <td class="whitebg"><input type="date" name="DateofFirstAppointment" id="DateofFirstAppointment" /></td>
                             </tr>
                             <tr>
                                 <td><span>24.</span></td>
                                 <td><span>Date of Confirmation</span></td>
-                                <td>~DateofConfirmation~</td>
+                                <td><input type="date" name="DateofConfirmation" id="DateofConfirmation" /></td>
                             </tr>
                             <tr>
                                 <td><span>25.</span></td>
                                 <td><span>Date of Last Promotion</span></td>
-                                <td class="whitebg">~DateofLastPromotion~</td>
+                                <td class="whitebg"><input type="date" name="DateofLastPromotion" id="DateofLastPromotion" /></td>
                             </tr>
                             <tr>
                                 <td><span>26.</span></td>
                                 <td><span>Employer</span></td>
-                                <td>~Employer~</td>
+                                <td><select name="Employer" id="Employer" onload="loadFieldOptions(\'Employer\')" onchange="changeRelatedFieldOptions(\'Employer\')"></select></td>
                             </tr>
                             <tr>
                                 <td><span>27.</span></td>
                                 <td><span>Employment Status</span></td>
-                                <td class="whitebg">~EmploymentStatus~</td>
+                                <td class="whitebg"><select name="EmploymentStatus" id="EmploymentStatus" onload="loadFieldOptions(\'EmploymentStatus\')" onchange="changeRelatedFieldOptions(\'EmploymentStatus\')"></select></td>
                             </tr>
                             <tr>
                                 <td><span>28.</span></td>
                                 <td><span>Registered Disability</span></td>
-                                <td>~RegisteredDisability~</td>
+                                <td><select name="RegisteredDisability" id="RegisteredDisability" onload="loadFieldOptions(\'RegisteredDisability\')" onchange="changeRelatedFieldOptions(\'RegisteredDisability\')"></select></td>
                             </tr>
                             <tr>
                                 <td><span>29.</span></td>
                                 <td><span>Contacts of Employee</span></td>
-                                <td class="whitebg">~ContactsofEmployee~</td>
+                                <td class="whitebg"><textarea name="ContactsofEmployee" id="ContactsofEmployee"></textarea></td>
                             </tr>
                             <tr>
                                 <td><span>30.</span></td>
                                 <td><span>Next of Kin</span></td>
-                                <td>~NextofKin~</td>
+                                <td><input type="text" name="NextofKin" id="NextofKin"/></td>
                             </tr>
                             <tr>
                                 <td><span>31.</span></td>
                                 <td><span>Relationship to Next of Kin</span></td>
-                                <td class="whitebg">~RelationshiptoNextofKin~</td>
+                                <td class="whitebg"><select name="RelationshiptoNextofKin" id="RelationshiptoNextofKin" onload="loadFieldOptions(\'RelationshiptoNextofKin\')" onchange="changeRelatedFieldOptions(\'RelationshiptoNextofKin\')"></select></td>
                             </tr>
                             <tr>
                                 <td><span>32.</span></td>
                                 <td><span>Contacts of Next of Kin</span></td>
-                                <td>~ContactsofNextofKin~</td>
+                                <td><textarea name="ContactsofNextofKin" id="ContactsofNextofKin"></textarea></td>
                             </tr>
                         </tbody>
                 </table>
@@ -601,162 +601,162 @@ class LoadFormData extends AbstractFixture implements OrderedFixtureInterface
                             <tr>
                                 <td><em>1.</em></td>
                                 <td><span>First Name</span></td>
-                                <td class="whitebg">~Firstname~</td>
+                                <td class="whitebg"><input type="text" name="FirstName" id="FirstName"/></td>
                             </tr>
                             <tr>
                                 <td><span>2.</span></td>
                                 <td><span>Middle Name</span></td>
-                                <td>~Middlename~</td>
+                                <td><input type="text" name="MiddleName" id="MiddleName"/></td>
                             </tr>
                             <tr>
                                 <td><span>3.</span></td>
                                 <td><span>Surname</span></td>
-                                <td class="whitebg">~Surname~</td>
+                                <td class="whitebg"><input type="text" name="Surname" id="Surname"/></td>
                             </tr>
                             <tr>
                                 <td><span>4.</span></td>
                                 <td><span>Date of Birth</span></td>
-                                <td>~Birthdate~</td>
+                                <td><input type="date" name="DateofBirth" id="DateofBirth" /></td>
                             </tr>
                             <tr>
                                 <td><span>5.</span></td>
                                 <td><span>Sex</span></td>
-                                <td class="whitebg">~Sex~</td>
+                                <td class="whitebg"><select name="Sex" id="Sex" onload="loadFieldOptions(\'Sex\')" onchange="changeRelatedFieldOptions(\'Sex\')"></select></td>
                             </tr>
                             <tr>
                                 <td><span>6.</span></td>
                                 <td><span>Marital Status</span></td>
-                                <td>~MaritalStatus~</td>
+                                <td><select name="MaritalStatus" id="MaritalStatus" onload="loadFieldOptions(\'MaritalStatus\')" onchange="changeRelatedFieldOptions(\'MaritalStatus\')"></select></td>
                             </tr>
                             <tr>
                                 <td><span>7.</span></td>
                                 <td><span>Nationality</span></td>
-                                <td class="whitebg">~Nationality~</td>
+                                <td class="whitebg"><select name="Nationality" id="Nationality" onload="loadFieldOptions(\'Nationality\')" onchange="changeRelatedFieldOptions(\'Nationality\')"></select></td>
                             </tr>
                             <tr>
                                 <td><span>8.</span></td>
                                 <td><span>Religion</span></td>
-                                <td>~Religion~</td>
+                                <td><select name="Religion" id="Religion" onload="loadFieldOptions(\'Religion\')" onchange="changeRelatedFieldOptions(\'Religion\')"></select></td>
                             </tr>
                             <tr>
                                 <td><span>9.</span></td>
                                 <td><span>Basic Education Level</span></td>
-                                <td class="whitebg">~BasicEducationLevel~</td>
+                                <td class="whitebg"><select name="BasicEducationLevel" id="BasicEducationLevel" onload="loadFieldOptions(\'BasicEducationLevel\')" onchange="changeRelatedFieldOptions(\'BasicEducationLevel\')"></select></td>
                             </tr>
                             <tr>
                                 <td><span>10.</span></td>
                                 <td><span>Profession Education Level</span></td>
-                                <td>~ProfessionEducationLevel~</td>
+                                <td><select name="ProfessionEducationLevel" id="ProfessionEducationLevel" onload="loadFieldOptions(\'ProfessionEducationLevel\')" onchange="changeRelatedFieldOptions(\'ProfessionEducationLevel\')"></select></td>
                             </tr>
                             <tr>
                                 <td><span>11.</span></td>
                                 <td><span>Number of Children/Dependants</span></td>
-                                <td class="whitebg">~NumberofChildrenDependants~</td>
+                                <td class="whitebg"><input type="text" name="NumberofChildrenDependants" id="NumberofChildrenDependants"/></td>
                             </tr>
                             <tr>
                                 <td><span>12.</span></td>
                                 <td><span>District of Domicile</span></td>
-                                <td>~DistrictofDomicile~</td>
+                                <td><input type="text" name="DistrictofDomicile" id="DistrictofDomicile"/></td>
                             </tr>
                             <tr>
                                 <td><span>13.</span></td>
                                 <td><span>Check Number</span></td>
-                                <td class="whitebg">~CheckNumber~</td>
+                                <td class="whitebg"><input type="text" name="CheckNumber" id="CheckNumber"/></td>
                             </tr>
                             <tr>
                                 <td><span>14.</span></td>
                                 <td><span>Employer`s File Number</span></td>
-                                <td>~EmployersFileNumber~</td>
+                                <td><input type="text" name="EmployersFileNumber" id="EmployersFileNumber"/></td>
                             </tr>
                             <tr>
                                 <td><span>15.</span></td>
                                 <td><span>Registration Number</span></td>
-                                <td class="whitebg">~RegistrationNumber~</td>
+                                <td class="whitebg"><input type="text" name="RegistrationNumber" id="RegistrationNumber"/></td>
                             </tr>
                             <tr>
                                 <td><span>16.</span></td>
                                 <td><span>Terms of Employment</span></td>
-                                <td>~TermsofEmployment~</td>
+                                <td><select name="TermsofEmployment" id="TermsofEmployment" onload="loadFieldOptions(\'TermsofEmployment\')" onchange="changeRelatedFieldOptions(\'TermsofEmployment\')"></select></td>
                             </tr>
                             <tr>
                                 <td><span>17.</span></td>
                                 <td><span>Profession</span></td>
-                                <td class="whitebg">~Profession~</td>
+                                <td class="whitebg"><select name="Profession" id="Profession" onload="loadFieldOptions(\'Profession\')" onchange="changeRelatedFieldOptions(\'Profession\')"></select></td>
                             </tr>
                             <tr>
                                 <td><span>18.</span></td>
                                 <td><span>Present Designation</span></td>
-                                <td>~PresentDesignation~</td>
+                                <td><select name="PresentDesignation" id="PresentDesignation" onload="loadFieldOptions(\'PresentDesignation\')" onchange="changeRelatedFieldOptions(\'PresentDesignation\')"></select></td>
                             </tr>
                             <tr>
                                 <td><span>19.</span></td>
                                 <td><span>Superlative Substantive Position</span></td>
-                                <td class="whitebg">~SuperlativeSubstantivePosition~</td>
+                                <td class="whitebg"><select name="SuperlativeSubstantivePosition" id="SuperlativeSubstantivePosition" onload="loadFieldOptions(\'SuperlativeSubstantivePosition\')" onchange="changeRelatedFieldOptions(\'SuperlativeSubstantivePosition\')"></select></td>
                             </tr>
                             <tr>
                                 <td><span>20.</span></td>
                                 <td><span>Department</span></td>
-                                <td>~Department~</td>
+                                <td><select name="Department" id="Department" onload="loadFieldOptions(\'Department\')" onchange="changeRelatedFieldOptions(\'Department\')"></select></td>
                             </tr>
                             <tr>
                                 <td><span>21.</span></td>
                                 <td><span>Salary Scale</span></td>
-                                <td class="whitebg">~SalaryScale~</td>
+                                <td class="whitebg"><select name="SalaryScale" id="SalaryScale" onload="loadFieldOptions(\'SalaryScale\')" onchange="changeRelatedFieldOptions(\'SalaryScale\')"></select></td>
                             </tr>
                             <tr>
                                 <td><span>22.</span></td>
                                 <td><span>Monthly Basic Salary</span></td>
-                                <td>~MonthlyBasicSalary~</td>
+                                <td><input type="text" name="MonthlyBasicSalary" id="MonthlyBasicSalary"/></td>
                             </tr>
                             <tr>
                                 <td><span>23.</span></td>
                                 <td><span>Date of First Appointment</span></td>
-                                <td class="whitebg">~DateofFirstAppointment~</td>
+                                <td class="whitebg"><input type="date" name="DateofFirstAppointment" id="DateofFirstAppointment" /></td>
                             </tr>
                             <tr>
                                 <td><span>24.</span></td>
                                 <td><span>Date of Confirmation</span></td>
-                                <td>~DateofConfirmation~</td>
+                                <td><input type="date" name="DateofConfirmation" id="DateofConfirmation" /></td>
                             </tr>
                             <tr>
                                 <td><span>25.</span></td>
                                 <td><span>Date of Last Promotion</span></td>
-                                <td class="whitebg">~DateofLastPromotion~</td>
+                                <td class="whitebg"><input type="date" name="DateofLastPromotion" id="DateofLastPromotion" /></td>
                             </tr>
                             <tr>
                                 <td><span>26.</span></td>
                                 <td><span>Employer</span></td>
-                                <td>~Employer~</td>
+                                <td><select name="Employer" id="Employer" onload="loadFieldOptions(\'Employer\')" onchange="changeRelatedFieldOptions(\'Employer\')"></select></td>
                             </tr>
                             <tr>
                                 <td><span>27.</span></td>
                                 <td><span>Employment Status</span></td>
-                                <td class="whitebg">~EmploymentStatus~</td>
+                                <td class="whitebg"><select name="EmploymentStatus" id="EmploymentStatus" onload="loadFieldOptions(\'EmploymentStatus\')" onchange="changeRelatedFieldOptions(\'EmploymentStatus\')"></select></td>
                             </tr>
                             <tr>
                                 <td><span>28.</span></td>
                                 <td><span>Registered Disability</span></td>
-                                <td>~RegisteredDisability~</td>
+                                <td><select name="RegisteredDisability" id="RegisteredDisability" onload="loadFieldOptions(\'RegisteredDisability\')" onchange="changeRelatedFieldOptions(\'RegisteredDisability\')"></select></td>
                             </tr>
                             <tr>
                                 <td><span>29.</span></td>
                                 <td><span>Contacts of Employee</span></td>
-                                <td class="whitebg">~ContactsofEmployee~</td>
+                                <td class="whitebg"><textarea name="ContactsofEmployee" id="ContactsofEmployee"></textarea></td>
                             </tr>
                             <tr>
                                 <td><span>30.</span></td>
                                 <td><span>Next of Kin</span></td>
-                                <td>~NextofKin~</td>
+                                <td><input type="text" name="NextofKin" id="NextofKin"/></td>
                             </tr>
                             <tr>
                                 <td><span>31.</span></td>
                                 <td><span>Relationship to Next of Kin</span></td>
-                                <td class="whitebg">~RelationshiptoNextofKin~</td>
+                                <td class="whitebg"><select name="RelationshiptoNextofKin" id="RelationshiptoNextofKin" onload="loadFieldOptions(\'RelationshiptoNextofKin\')" onchange="changeRelatedFieldOptions(\'RelationshiptoNextofKin\')"></select></td>
                             </tr>
                             <tr>
                                 <td><span>32.</span></td>
                                 <td><span>Contacts of Next of Kin</span></td>
-                                <td>~ContactsofNextofKin~</td>
+                                <td><textarea name="ContactsofNextofKin" id="ContactsofNextofKin"></textarea></td>
                             </tr>
                         </tbody>
                 </table>
