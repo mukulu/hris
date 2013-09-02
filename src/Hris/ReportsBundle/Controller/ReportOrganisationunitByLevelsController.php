@@ -52,7 +52,7 @@ class ReportOrganisationunitByLevelsController extends Controller
     public function indexAction()
     {
 
-        $organisationunitByLevelsForm = $this->createForm(new ReportOrganisationunitByLevelsType());
+        $organisationunitByLevelsForm = $this->createForm(new ReportOrganisationunitByLevelsType(),null,array('em'=>$this->getDoctrine()->getManager()));
 
         return array(
             'organisationunitByLevelsForm'=>$organisationunitByLevelsForm->createView(),
@@ -60,7 +60,7 @@ class ReportOrganisationunitByLevelsController extends Controller
     }
 
     /**
-     * Creates a new Form entity.
+     * Generate Report for Organisationunit by Levels
      *
      * @Route("/", name="report_organisationunit_levels_generate")
      * @Method("PUT")
@@ -68,7 +68,7 @@ class ReportOrganisationunitByLevelsController extends Controller
      */
     public function generateAction(Request $request)
     {
-        $organisationunitByLevelsForm = $this->createForm(new ReportOrganisationunitByLevelsType());
+        $organisationunitByLevelsForm = $this->createForm(new ReportOrganisationunitByLevelsType(),null,array('em'=>$this->getDoctrine()->getManager()));
         $organisationunitByLevelsForm->bind($request);
 
         if ($organisationunitByLevelsForm->isValid()) {

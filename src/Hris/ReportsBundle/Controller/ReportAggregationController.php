@@ -52,10 +52,36 @@ class ReportAggregationController extends Controller
     public function indexAction()
     {
 
-        $aggregationForm = $this->createForm(new ReportAggregationType());
+        $aggregationForm = $this->createForm(new ReportAggregationType(),null,array('em'=>$this->getDoctrine()->getManager()));
 
         return array(
             'aggregationForm'=>$aggregationForm->createView(),
+        );
+    }
+
+    /**
+     * Generate aggregated reports
+     *
+     * @Route("/", name="report_aggregation_generate")
+     * @Method("PUT")
+     * @Template()
+     */
+    public function generateAction(Request $request)
+    {
+        $aggregationForm = $this->createForm(new ReportAggregationType(),null,array('em'=>$this->getDoctrine()->getManager()));
+        $aggregationForm->bind($request);
+
+        if ($aggregationForm->isValid()) {
+            $aggregationFormData = $aggregationForm->getData();
+            $organisationunit = $aggregationFormData['organisationunit'];
+            $forms = $aggregationFormData['forms'];
+            $fields = $aggregationFormData['fields'];
+        }
+
+        return array(
+            'organisationunit' => $organisationunit,
+            'forms'   => $forms,
+            'fields' => $fields,
         );
     }
 

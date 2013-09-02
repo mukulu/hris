@@ -24,7 +24,7 @@
  */
 namespace Hris\ReportsBundle\Form;
 
-use Doctrine\ORM\EntityRepository;
+use Hris\ReportsBundle\Form\OrganisationunitToIdTransformer;
 use Symfony\Component\Form\AbstractType;
 use Symfony\Component\Form\FormBuilderInterface;
 use Symfony\Component\OptionsResolver\OptionsResolverInterface;
@@ -34,12 +34,17 @@ class ReportOrganisationunitByLevelsType extends AbstractType
 {
     public function buildForm(FormBuilderInterface $builder, array $options)
     {
+        // assuming $entityManager is passed in options
+        $em = $options['em'];
+        $transformer = new OrganisationunitToIdTransformer($em);
+
         $builder
-            ->add('organisationunit','hidden',array(
+            ->add($builder->create('organisationunit','hidden',array(
                 'constraints'=> array(
                     new NotBlank(),
                 )
-            ))
+                ))->addModelTransformer($transformer)
+            )
             ->add('organisationunitLevel','entity', array(
                 'class'=>'HrisOrganisationunitBundle:OrganisationunitLevel',
                 'constraints'=>array(
@@ -52,7 +57,11 @@ class ReportOrganisationunitByLevelsType extends AbstractType
 
     public function setDefaultOptions(OptionsResolverInterface $resolver)
     {
-        $resolver->setDefaults(array(
+        $resolver->setRequired(
+            array('em')
+        );
+        $resolver->setAllowedTypes(array(
+            'em'=>'Doctrine\Common\Persistence\ObjectManager',
         ));
     }
 
