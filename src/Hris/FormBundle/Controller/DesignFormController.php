@@ -36,9 +36,12 @@ class DesignFormController extends Controller
             throw $this->createNotFoundException('Unable to find Form entity.');
         }
 
+        $fields = $entity->getSimpleField();
+
         return array(
             'entity'    => $entity,
         	'form'   	=> $editForm->createView(),
+            'fields'    => $fields,
         );
     }
     
@@ -73,6 +76,25 @@ class DesignFormController extends Controller
     			'entity'      => $entity,
     			'form'   => $editForm->createView(),
     	);
+    }
+
+    /**
+     * Design Popup entry for form related Fields.
+     *
+     * @Route("/{id}/list", name="form_fields_list")
+     * @Method("GET")
+     * @Template()
+     */
+    public function listAction($id)
+    {
+        $em = $this->getDoctrine()->getManager();
+
+        $entity = $em->getRepository('HrisFormBundle:Form')->find($id);
+        $fields = $entity->getSimpleField();
+
+        return array(
+            'entities'    => $fields,
+        );
     }
 
 }

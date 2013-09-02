@@ -88,6 +88,19 @@ class RecordController extends Controller
         $filed_Table_Name = json_encode($em->getClassMetadata('HrisFormBundle:Field')->getTableName());
         $filed_Values = json_encode($field_entities);
 
+        /*
+        * Getting the Field Options Metadata and Values
+        */
+        $field_Option_entities = $em->getRepository( 'HrisFormBundle:FieldOption' )
+            ->createQueryBuilder('o')
+            ->select('o', 'f')
+            ->join('o.field', 'f')
+            ->getQuery()
+            ->getArrayResult();
+
+        $field_Option_Values = json_encode($field_Option_entities);
+        $filed_Option_Table_Name = json_encode($em->getClassMetadata('HrisFormBundle:FieldOption')->getTableName());
+
         return array(
             'entities' => $entities,
             'column_names' => $form_Column_Names,
@@ -97,6 +110,8 @@ class RecordController extends Controller
             'field_column_names' => $field_Column_Names,
             'field_table_name' => $filed_Table_Name,
             'field_values' => $filed_Values,
+            'field_option_values' => $field_Option_Values,
+            'field_option_table_name' => $filed_Option_Table_Name,
         );
     }
     

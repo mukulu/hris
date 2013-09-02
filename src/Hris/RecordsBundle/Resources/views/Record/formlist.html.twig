@@ -14,6 +14,8 @@
 
         addRecords( '{{ project_code | lower | raw }}','{{ field_table_name | raw | escape('js') }}', '{{ field_values | raw | escape('js') }}' );
 
+        addRecords( '{{ project_code | lower | raw }}','{{ field_option_table_name | raw | escape('js') }}', '{{ field_option_values | raw | escape('js') }}' );
+
     </script>
 
 {% endblock %}
