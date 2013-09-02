@@ -2,6 +2,7 @@
 
 namespace Hris\ReportsBundle\Controller;
 
+use Hris\ReportsBundle\Form\ReportAggregationType;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Bundle\FrameworkBundle\Controller\Controller;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Method;
@@ -28,19 +29,7 @@ class ReportAggregationController extends Controller
     public function indexAction()
     {
 
-        $defaultData = array(
-        );
-
-        $aggregationForm = $this->createFormBuilder($defaultData)
-            ->add('organisationunit', 'hidden')
-            ->add('forms', 'entity',
-                array('class' => 'HrisFormBundle:Form')
-            )
-            ->add('fields', 'entity',
-                array( 'class' => 'HrisFormBundle:Field')
-            )
-            ->add('Generate', 'submit')
-            ->getForm();
+        $aggregationForm = $this->createForm(new ReportAggregationType());
 
         return array(
             'aggregationForm'=>$aggregationForm->createView(),

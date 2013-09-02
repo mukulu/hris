@@ -146,7 +146,7 @@ class ResourceTableFieldMember
      */
     public function __toString()
     {
-        $resourceTableMember = 'Resourcetable:'.$this->getResourceTable()->__toString().' Field:'.$this->getField()->__toString();
+        $resourceTableMember = $this->getResourceTable()->__toString().':'.$this->getField()->__toString();
         return $resourceTableMember;
     }
 }

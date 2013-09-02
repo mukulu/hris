@@ -34,6 +34,7 @@ use Gedmo\Mapping\Annotation as Gedmo;
 
 use Hris\FormBundle\Entity\ResourceTableFieldMember;
 use Hris\RecordsBundle\Entity\Record;
+use Symfony\Component\Stopwatch\Stopwatch;
 use Symfony\Component\Validator\Constraints as Assert;
 
 /**
@@ -437,16 +438,6 @@ class ResourceTable
     }
 
     /**
-     * Generate microtime
-     *
-     * @return float
-     */
-    public function microtime_float() {
-        list($usec, $sec) = explode(" ", microtime());
-        return ((float) $usec + (float) $sec);
-    }
-
-    /**
      * Conversion of strings to camel notation
      *
      * @param $str
@@ -528,7 +519,8 @@ class ResourceTable
 
         $totalInsertedRecords = NULL;
         $totalResourceTableFields = NULL;
-        $time_start = $this->microtime_float();
+        $stopwatch = new Stopwatch();
+        $stopwatch->start('resourceTableGeneration');
 
         $returnMessage = NULL;
         $schemaManager = $entityManager->getConnection()->getSchemaManager();
@@ -849,8 +841,8 @@ class ResourceTable
             /*
              * Check Clock for time spent
             */
-            $time_end = $this->microtime_float();
-            $duration = ($time_end - $time_start) / 60;
+            $resourceTableGenerationTime = $stopwatch->stop('resourceTableGeneration');
+            $duration = $resourceTableGenerationTime->getDuration()/60;
             $duration = round($duration, 2);
 
             if( $duration < 1 ) {
