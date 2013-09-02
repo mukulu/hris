@@ -84,7 +84,7 @@ class ConfigureMenuListener
             )
         );
         $reportsModule->addChild('Orgunit By Levels',
-            array('uri'=>'#orgunitbylevelreport',
+            array('route'=>'report_organisationunit_levels',
                 'extras'=>array('tag'=>'div'),
                 'name'=>'Orgunit By Levels Report',
                 'attributes'=> array('class'=>'accordion-group'),

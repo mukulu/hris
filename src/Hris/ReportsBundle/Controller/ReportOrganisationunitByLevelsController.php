@@ -20,12 +20,12 @@
  *
  * @since 2012
  * @author John Francis Mukulu <john.f.mukulu@gmail.com>
- * @author Wilfred Felix Senyoni <senyoni@gmail.com>
  *
  */
 namespace Hris\ReportsBundle\Controller;
 
 use Hris\ReportsBundle\Form\ReportAggregationType;
+use Hris\ReportsBundle\Form\ReportOrganisationunitByLevelsType;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Bundle\FrameworkBundle\Controller\Controller;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Method;
@@ -37,25 +37,49 @@ use Hris\ReportsBundle\Form\ReportType;
 /**
  * Report Aggregation controller.
  *
- * @Route("/reports/aggregation")
+ * @Route("/reports/organisationunit/levels")
  */
-class ReportAggregationController extends Controller
+class ReportOrganisationunitByLevelsController extends Controller
 {
 
     /**
-     * Show Report Aggregation
+     * Show Report Form for generation of Organisation unit by levels
      *
-     * @Route("/", name="report_aggregation")
+     * @Route("/", name="report_organisationunit_levels")
      * @Method("GET")
      * @Template()
      */
     public function indexAction()
     {
 
-        $aggregationForm = $this->createForm(new ReportAggregationType());
+        $organisationunitByLevelsForm = $this->createForm(new ReportOrganisationunitByLevelsType());
 
         return array(
-            'aggregationForm'=>$aggregationForm->createView(),
+            'organisationunitByLevelsForm'=>$organisationunitByLevelsForm->createView(),
+        );
+    }
+
+    /**
+     * Creates a new Form entity.
+     *
+     * @Route("/", name="report_organisationunit_levels_generate")
+     * @Method("PUT")
+     * @Template()
+     */
+    public function generateAction(Request $request)
+    {
+        $organisationunitByLevelsForm = $this->createForm(new ReportOrganisationunitByLevelsType());
+        $organisationunitByLevelsForm->bind($request);
+
+        if ($organisationunitByLevelsForm->isValid()) {
+            $organisationunitByLevelsFormData = $organisationunitByLevelsForm->getData();
+            $organisationunit = $organisationunitByLevelsFormData['organisationunit'];
+            $level = $organisationunitByLevelsFormData['organisationunitLevel'];
+        }
+
+        return array(
+            'organisationunit' => $organisationunit,
+            'organisationunitLevel'   => $level,
         );
     }
 

@@ -22,37 +22,42 @@
  * @author John Francis Mukulu <john.f.mukulu@gmail.com>
  *
  */
-namespace Hris\FormBundle\Form;
+namespace Hris\ReportsBundle\Form;
 
+use Doctrine\ORM\EntityRepository;
 use Symfony\Component\Form\AbstractType;
 use Symfony\Component\Form\FormBuilderInterface;
 use Symfony\Component\OptionsResolver\OptionsResolverInterface;
+use Symfony\Component\Validator\Constraints\NotBlank;
 
-class FieldType extends AbstractType
+class ReportOrganisationunitByLevelsType extends AbstractType
 {
     public function buildForm(FormBuilderInterface $builder, array $options)
     {
         $builder
-            ->add('name')
-            ->add('caption')
-            ->add('description')
-            ->add('compulsory')
-            ->add('isUnique')
-            ->add('hashistory')
-            ->add('dataType')
-            ->add('inputType')
+            ->add('organisationunit','hidden',array(
+                'constraints'=> array(
+                    new NotBlank(),
+                )
+            ))
+            ->add('organisationunitLevel','entity', array(
+                'class'=>'HrisOrganisationunitBundle:OrganisationunitLevel',
+                'constraints'=>array(
+                    new NotBlank(),
+                )
+            ))
+            ->add('submit','submit')
         ;
     }
 
     public function setDefaultOptions(OptionsResolverInterface $resolver)
     {
         $resolver->setDefaults(array(
-            'data_class' => 'Hris\FormBundle\Entity\Field'
         ));
     }
 
     public function getName()
     {
-        return 'hris_formbundle_fieldtype';
+        return 'hris_reportsbundle_reportorganisationunitlevelstype';
     }
 }

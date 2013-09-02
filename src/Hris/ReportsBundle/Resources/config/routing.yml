@@ -5,3 +5,7 @@ reports:
 aggregation:
     resource: "@HrisReportsBundle/Controller/ReportAggregationController.php"
     type: annotation
+
+organisationunitByLevels:
+    resource: "@HrisReportsBundle/Controller/ReportOrganisationunitByLevelsController.php"
+    type: annotation

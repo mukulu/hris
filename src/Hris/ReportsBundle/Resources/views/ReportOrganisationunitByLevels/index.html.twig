@@ -5,7 +5,7 @@
     <script type="text/javascript" language="javascript" src="{{ asset('commons/js/ext-all.js') }}"></script>
     <script type="text/javascript">
         var treeplaceholder="treeplaceholder";
-        var inputboxname="hris_reportsbundle_reportaggregationtype[organisationunit]";
+        var inputboxname="hris_reportsbundle_reportorganisationunitlevelstype[organisationunit]";
         var urlExtension="";
         var selectedNode="";
         Ext.define('OrganisationUnitTreeModel2', {
@@ -63,20 +63,19 @@
 {% endblock stylesheets %}
 
 {% block right_content -%}
-    <h1><small>Report Aggregation</small></h1>
+    <h1><small>Report Organisationunit By Levels</small></h1>
 
-    {{ form_start(aggregationForm, { 'method' : 'PUT' } ) }}
+    {{ form_start(organisationunitByLevelsForm, { 'method' : 'PUT' } ) }}
 
     <div>
         <div id="treeplaceholder"></div>
-        {{ form_errors( aggregationForm.organisationunit ) }}
-        {{ form_widget( aggregationForm.organisationunit ) }}
+        {{ form_errors( organisationunitByLevelsForm.organisationunit ) }}
+        {{ form_widget( organisationunitByLevelsForm.organisationunit ) }}
     </div>
     <br/>
-    {{ form_row( aggregationForm.forms ) }}
-    {{ form_row( aggregationForm.fields ) }}
+    {{ form_row( organisationunitByLevelsForm.organisationunitLevel ) }}
 
-    {{ form_end(aggregationForm) }}
+    {{ form_end(organisationunitByLevelsForm) }}
 
 
 {% endblock %}
