@@ -100,7 +100,7 @@ class LoadInputTypeData extends AbstractFixture implements OrderedFixtureInterfa
             $inputType = new InputType();
             $inputType->setName($humanResourceInputType['name']);
             $inputType->setDescription($humanResourceInputType['description']);
-            $inputType->getHtmltag($humanResourceInputType['htmltag']);
+            $inputType->setHtmltag($humanResourceInputType['htmltag']);
 			$manager->persist($inputType);
 			$this->addReference(strtolower($humanResourceInputType['name']).'-inputtype', $inputType);
 		}
