@@ -12,6 +12,7 @@ class ResourceTableType extends AbstractType
     {
         $builder
             ->add('name')
+            ->add('description')
         ;
     }
 

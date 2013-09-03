@@ -2,6 +2,7 @@
 
 namespace Hris\OrganisationunitBundle\Controller;
 
+use Doctrine\ORM\NoResultException;
 use Doctrine\Tests\Common\Annotations\Null;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Bundle\FrameworkBundle\Controller\Controller;
@@ -49,6 +50,43 @@ class OrganisationunitController extends Controller
             'delete_forms' => $delete_forms,
         );
     }
+
+    /**
+     * Returns Organisationunit tree json.
+     *
+     * @Secure(roles="ROLE_ORGANISATIONUNIT_ORGANISATIONUNIT_TREE,ROLE_USER")
+     *
+     * @Route("/tree", name="organisationunit_tree")
+     * @Route("/tree/{parent}/parent", name="organisationunit_tree_parent")
+     * @Method("GET")
+     * @Template()
+     */
+    public function treeAction($parent=NULL)
+    {
+        $em = $this->getDoctrine()->getManager();
+        $id = $this->getRequest()->query->get('id');
+        if($id == NULL || $id==0) {
+            $organisationunitQuery = $em->createQuery("SELECT organisationunit.id,organisationunit.longname FROM HrisOrganisationunitBundle:Organisationunit organisationunit WHERE organisationunit.parent IS NULL");
+            try {
+                $entities = $organisationunitQuery->getArrayResult();
+            } catch(NoResultException $e) {
+                $entities = NULL;
+            }
+            //$entities = $em->getRepository('HrisOrganisationunitBundle:Organisationunit')->findBy(array('parent'=>'NULL'));
+        }else {
+            $organisationunitQuery = $em->createQuery("SELECT organisationunit.id,organisationunit.longname FROM HrisOrganisationunitBundle:Organisationunit organisationunit WHERE organisationunit.parent=:parentid")->setParameter('parentid',$id);
+            try {
+                $entities = $organisationunitQuery->getArrayResult();
+            } catch(NoResultException $e) {
+                $entities = NULL;
+            }
+        }
+
+        return array(
+            'entities' => json_encode($entities),
+        );
+    }
+
     /**
      * Creates a new Organisationunit entity.
      *

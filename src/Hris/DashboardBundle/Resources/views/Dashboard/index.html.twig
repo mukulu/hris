@@ -1,0 +1,17 @@
+{# src/Hris/UDashboardBundle/Resources/views/Dashboard/dashboard.html.twig #}
+{% extends "HrisDashboardBundle::layout.html.twig" %}
+
+{% block javascripts %}
+    {{ parent() }}
+    <script src="{{ asset('bundles/obhighcharts/js/highcharts/highcharts.js') }}"></script>
+    <script src="{{ asset('bundles/obhighcharts/js/highcharts/modules/exporting.js') }}"></script>
+    <script type="text/javascript">
+        {{ chart(chart) }}
+    </script>
+{%  endblock %}
+{% block right_content %}
+    <h1 class="visible-phone"><small>Welcome! Please navigation on top panel,</small></h1>
+    <h1 class="hidden-phone"><small>Welcome! Please navigation on your left,</small></h1>
+
+    <div id="chart_placeholder" style="min-width: 400px; height: 400px; margin: 0 auto"></div>
+{% endblock %}

@@ -147,7 +147,7 @@ class Record
     /**
      * @var string $username
      *
-     * @ORM\Column(name="username", type="string", length=64, unique=true)
+     * @ORM\Column(name="username", type="string", length=64)
      */
     private $username;
     

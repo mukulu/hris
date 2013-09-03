@@ -27,8 +27,7 @@
         <thead>
             <tr>
                 <th>Name</th>
-                <th>Datecreated</th>
-                <th>Lastupdated</th>
+                <th>Description</th>
                 <th>Actions</th>
             </tr>
         </thead>
@@ -36,8 +35,7 @@
         {% for entity in entities %}
             <tr>
                 <td><a href="{{ path('resourcetable_show', { 'id': entity.id }) }}">{{ entity.name }}</a></td>
-                <td>{% if entity.datecreated %}{{ entity.datecreated|date('Y-m-d H:i:s') }}{% endif %}</td>
-                <td>{% if entity.lastupdated %}{{ entity.lastupdated|date('Y-m-d H:i:s') }}{% endif %}</td>
+                <td>{{ entity.description }}</td>
                 <td>
                 <ul class="inline">
                     <li>

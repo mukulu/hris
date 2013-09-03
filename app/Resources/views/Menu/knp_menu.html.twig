@@ -15,7 +15,7 @@
 {% endblock %}
 
 {% block root %}
-    <div class="well visible-desktop">
+    <div class="well visible-desktop" style="min-width:200px;">
         {% set listAttributes = item.childrenAttributes %}
         {% set listExtras = item.extras %}
         {{ block('list') -}}

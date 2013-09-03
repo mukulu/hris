@@ -33,7 +33,7 @@
                         </div>
                         <div class="modal-body">
                             Are you sure you want to delete <strong>{{ entity.name | capitalize }}</strong> who's account was created on {{ entity.datecreated|date('d/m/Y') }}
-                            {% if entity.lastLogin %}
+                            {% if entity.lastUpdated %}
                                 and last updated on {{ entity.lastUpdated|date('H:i:s d/m/Y') }} ??
                             {% else %}
                                 and never updated ??

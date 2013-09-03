@@ -32,22 +32,63 @@ use Hris\UserBundle\Entity\User;
 
 class LoadUserData extends AbstractFixture implements OrderedFixtureInterface 
 {
+    /**
+     * @var users
+     */
+    private $users;
+
+
+    public function getUsers()
+    {
+        return $this->users;
+    }
+
+    /**
+     * Returns Array of dummy Users
+     *
+     * @return array
+     */
+    public function addDummyUsers()
+    {
+        $this->users = Array(
+            0=> Array(
+                'username'=>'admin',
+                'password'=>'district',
+                'email'=>'admin@localhost.local',
+                'role'=>'ROLE_SUPERUSER',
+                'enabled'=>True,
+            ),
+            1=> Array(
+                'username'=>'district',
+                'password'=>'district',
+                'email'=>'district@localhost.local',
+                'role'=>'ROLE_USER',
+                'enabled'=>True,
+            )
+        );
+        return $this->users;
+    }
+
 	/**
 	 * {@inheritDoc}
 	 * @see Doctrine\Common\DataFixtures.FixtureInterface::load()
 	 */
 	public function load(ObjectManager $manager)
 	{
-		$userAdmin = new User;
-		$userAdmin->setUsername('admin');
-		$userAdmin->setPlainPassword('district');
-		$userAdmin->setEmail('admin@hris.info');
-		$userAdmin->addRole('ROLE_SUPERUSER');
-		$userAdmin->addRole('ROLE_USER');
-		$userAdmin->setEnabled(True);
-        $this->addReference('admin', $userAdmin);
-		
-		$manager->persist($userAdmin);
+        $this->addDummyUsers();
+        foreach($this->getUsers() as $userKey=>$humanResourceUser) {
+            $user = new User();
+            $user->setUsername($humanResourceUser['username']);
+            $user->setPlainPassword($humanResourceUser['password']);
+            $user->setEmail($humanResourceUser['email']);
+            $user->addRole($humanResourceUser['role']);
+            $user->setEnabled($humanResourceUser['enabled']);
+            $this->addReference($user->getUsername().'-user', $user);
+
+            $manager->persist($user);
+
+        }
+
 		$manager->flush();
 		
 
