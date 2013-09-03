@@ -91,7 +91,7 @@ class ConfigureMenuListener
             )
         );
         $reportsModule->addChild('Orgunit By Groupset',
-            array('uri'=>'#orgunitgroupsetreport',
+            array('route'=>'report_organisationunit_groupset',
                 'extras'=>array('tag'=>'div'),
                 'name'=>'Orgunit By Groupset Report',
                 'attributes'=> array('class'=>'accordion-group'),

@@ -9,3 +9,7 @@ aggregation:
 organisationunitByLevels:
     resource: "@HrisReportsBundle/Controller/ReportOrganisationunitByLevelsController.php"
     type: annotation
+
+organisationunitByGroupset:
+    resource: "@HrisReportsBundle/Controller/ReportOrganisationunitByGroupsetController.php"
+    type: annotation

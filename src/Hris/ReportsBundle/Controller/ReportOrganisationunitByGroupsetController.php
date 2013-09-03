@@ -24,6 +24,7 @@
  */
 namespace Hris\ReportsBundle\Controller;
 
+use Hris\ReportsBundle\Form\ReportOrganisationunitByGroupsetType;
 use Hris\ReportsBundle\Form\ReportOrganisationunitByLevelsType;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Bundle\FrameworkBundle\Controller\Controller;
@@ -32,51 +33,51 @@ use Sensio\Bundle\FrameworkExtraBundle\Configuration\Route;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Template;
 
 /**
- * Report Organisationunit By Levels controller.
+ * Report Organisationunit By Groupset controller.
  *
- * @Route("/reports/organisationunit/levels")
+ * @Route("/reports/organisationunit/groupset")
  */
-class ReportOrganisationunitByLevelsController extends Controller
+class ReportOrganisationunitByGroupsetController extends Controller
 {
 
     /**
-     * Show Report Form for generation of Organisation unit by levels
+     * Show Report Form for generation of Organisation unit by groupset
      *
-     * @Route("/", name="report_organisationunit_levels")
+     * @Route("/", name="report_organisationunit_groupset")
      * @Method("GET")
      * @Template()
      */
     public function indexAction()
     {
 
-        $organisationunitByLevelsForm = $this->createForm(new ReportOrganisationunitByLevelsType(),null,array('em'=>$this->getDoctrine()->getManager()));
+        $organisationunitByGroupsetForm = $this->createForm(new ReportOrganisationunitByGroupsetType(),null,array('em'=>$this->getDoctrine()->getManager()));
 
         return array(
-            'organisationunitByLevelsForm'=>$organisationunitByLevelsForm->createView(),
+            'organisationunitByGroupForm'=>$organisationunitByGroupsetForm->createView(),
         );
     }
 
     /**
-     * Generate Report for Organisationunit by Levels
+     * Generate Report for Organisationunit by Groupset
      *
-     * @Route("/", name="report_organisationunit_levels_generate")
+     * @Route("/", name="report_organisationunit_groupset_generate")
      * @Method("PUT")
      * @Template()
      */
     public function generateAction(Request $request)
     {
-        $organisationunitByLevelsForm = $this->createForm(new ReportOrganisationunitByLevelsType(),null,array('em'=>$this->getDoctrine()->getManager()));
-        $organisationunitByLevelsForm->bind($request);
+        $organisationunitByGroupsetForm = $this->createForm(new ReportOrganisationunitByGroupsetType(),null,array('em'=>$this->getDoctrine()->getManager()));
+        $organisationunitByGroupsetForm->bind($request);
 
-        if ($organisationunitByLevelsForm->isValid()) {
-            $organisationunitByLevelsFormData = $organisationunitByLevelsForm->getData();
-            $organisationunit = $organisationunitByLevelsFormData['organisationunit'];
-            $level = $organisationunitByLevelsFormData['organisationunitLevel'];
+        if ($organisationunitByGroupsetForm->isValid()) {
+            $organisationunitByGroupsetFormData = $organisationunitByGroupsetForm->getData();
+            $organisationunit = $organisationunitByGroupsetFormData['organisationunit'];
+            $organisationunitGroupset = $organisationunitByGroupsetFormData['organisationunitGroupset'];
         }
 
         return array(
             'organisationunit' => $organisationunit,
-            'organisationunitLevel'   => $level,
+            'organisationunitGroupset'   => $organisationunitGroupset,
         );
     }
 
