@@ -124,14 +124,14 @@ class LoadOrganisationunitData extends AbstractFixture implements OrderedFixture
     {
         $this->index = 0;
         // Dispensaries
-        $this->minDispensaryCount=1;
-        $this->maxDispensaryCount=2;
+        $this->minDispensaryCount=5;
+        $this->maxDispensaryCount=10;
         // Health centres
-        $this->minHealthCentreCount=1;
-        $this->maxHealthCentreCount=2;
+        $this->minHealthCentreCount=3;
+        $this->maxHealthCentreCount=5;
         // Hospitals
-        $this->minHospitalCount=0;
-        $this->maxHospitalCount=1;
+        $this->minHospitalCount=1;
+        $this->maxHospitalCount=2;
 
         $this->indexedOrganisationunits = Array();
     }
@@ -6109,7 +6109,6 @@ class LoadOrganisationunitData extends AbstractFixture implements OrderedFixture
             "Mugana Dd Hospital",
             "Tarime District Hospital",
             "Ruanda Hospital",
-            "Kagera Regional Hospital",
             "Liuli Hospital",
             "Hindu Union Hospital",
             "Kongwa District Hospital",
@@ -6117,7 +6116,6 @@ class LoadOrganisationunitData extends AbstractFixture implements OrderedFixture
             "Ithnaasher Hospital",
             "Lituhi Hospital",
             "Amana Hospital",
-            "Morogoro Regional Hospital",
             "Mawenzi Hospital",
             "Kyela District Hospital",
             "Namanyere Dd Hospital",
@@ -6133,7 +6131,6 @@ class LoadOrganisationunitData extends AbstractFixture implements OrderedFixture
             "Njombe Hospital",
             "Biharamulo Hospital",
             "Kibondo Hospital",
-            "Singida Regional Hospital",
             "Heri Mission Hospital",
             "Ikonda Hospital",
             "Mbozi Mission Hospital",
@@ -6147,18 +6144,15 @@ class LoadOrganisationunitData extends AbstractFixture implements OrderedFixture
             "St. Bernard Hospital",
             "Bugando Referral Hospital",
             "Liwale District Hospital",
-            "Manyara Regional Hospital",
             "Kiomboi Hospital",
             "Tpc Hospital",
             "Kishapu District Hospital",
             "Nyerere Ddh Hospital",
             "Magai Hospital",
             "Oltrument Hospital",
-            "Seko Toure Regional Hospital",
             "Mahenge Hospital",
             "Kasulu Council District Hospital",
             "Mbinga Hospital",
-            "Dodoma Regional Hospital",
             "Nyamiaga Hospital",
             "Milo Hospital",
             "St. Francis Kwamkono Hospital",
@@ -6183,18 +6177,15 @@ class LoadOrganisationunitData extends AbstractFixture implements OrderedFixture
             "Ksc Hospital",
             "Makete Hospital",
             "Bulongwa L. Hospital",
-            "Mbeya Regional Hospital",
             "Kibosho Hospital",
             "Maswa Hospital",
             "Arusha Lutheran Medical Hospital",
-            "Ligula Regional Hospital",
             "Tohs Hospital",
             "Kagondo Hospital",
             "Ngoyoni Hospital",
             "Kibara Hospital",
             "Ludewa Hospital",
             "Vijibweni Hospital",
-            "Iringa Regional Hospital",
             "Temeke Hospital",
             "Lugoda Hospital",
             "Mbalizi Mission Hospital",
@@ -6246,20 +6237,15 @@ class LoadOrganisationunitData extends AbstractFixture implements OrderedFixture
             "Dr. Attman Cd Hospital",
             "St. Joseph Hospital",
             "Igogwe Hospital",
-            "Sokoine Regional Hospital",
             "Matema Lutheran Hospital",
             "Handeni District Hospital",
             "Karatu Lutheran Dd Hospital",
             "Bunda Ddh Hospital",
-            "Mount Meru Regional Hospital",
             "St. Gemma Gilgan Hospital",
             "Isoko Hospital",
             "St. Gaspar Hospital",
             "Mkuranga Hospital",
-            "Ruvuma Regional Hospital",
-            "Maweni Regional Hospital",
             "Monduli Hospital",
-            "Sumbawanga Regional Hospital",
             "Women Mirongo Hospital",
             "St. Kizito Hospital",
             "St. Elizabeth Hospital",
@@ -6283,7 +6269,6 @@ class LoadOrganisationunitData extends AbstractFixture implements OrderedFixture
             "First Health Kil. Hospital",
             "Lugarawa Hospital",
             "Nachingwea District Hospital",
-            "Shinyanga Regional Hospital",
             "Shree Hindu Mandal Hospital",
             "Mtibwa Sugar Hospital",
             "Tanwat Hospital",
@@ -6297,7 +6282,6 @@ class LoadOrganisationunitData extends AbstractFixture implements OrderedFixture
             "Bagamoyo Hospital",
             "Mzinga Hospital",
             "Kilosa Hospital",
-            "Musoma Regional Hospital",
             "Marangu Hospital",
             "Mbeya Referral Hospital",
             "Sumve Hospital",
@@ -6314,7 +6298,6 @@ class LoadOrganisationunitData extends AbstractFixture implements OrderedFixture
             "Kabanga Mission Hospital",
             "Ngudu Hospital",
             "Mafia District Hospital",
-            "Tabora Regional(kitete) Hospital",
             "St. Walburgs Hospital",
             "Ndala Mission Hospital");
 
@@ -6759,6 +6742,710 @@ class LoadOrganisationunitData extends AbstractFixture implements OrderedFixture
                 'longname'=>'Mpwapwa District Council',
                 'active'=>false,
                 'parent'=>'dodoma'),
+            // Iringa Region districts
+            83=>Array(
+                'shortname'=>'iringadc',
+                'longname'=>'Iringa District Council',
+                'active'=>true,
+                'parent'=>'iringa'),
+            84=>Array(
+                'shortname'=>'iringamc',
+                'longname'=>'Iringa Municipal Council',
+                'active'=>true,
+                'parent'=>'iringa'),
+            85=>Array(
+                'shortname'=>'kilolodc',
+                'longname'=>'Kilolo District Council',
+                'active'=>true,
+                'parent'=>'iringa'),
+            86=>Array(
+                'shortname'=>'ludewadc',
+                'longname'=>'Ludewa District Council',
+                'active'=>true,
+                'parent'=>'iringa'),
+            87=>Array(
+                'shortname'=>'maketedc',
+                'longname'=>'Makete District Council',
+                'active'=>true,
+                'parent'=>'iringa'),
+            88=>Array(
+                'shortname'=>'mufindidc',
+                'longname'=>'Mufindi District Council',
+                'active'=>true,
+                'parent'=>'iringa'),
+            89=>Array(
+                'shortname'=>'njombedc',
+                'longname'=>'Njombe District Council',
+                'active'=>true,
+                'parent'=>'iringa'),
+            90=>Array(
+                'shortname'=>'njombetc',
+                'longname'=>'Njombe Town Council',
+                'active'=>true,
+                'parent'=>'iringa'),
+            91=>Array(
+                'shortname'=>'iringareghsp',
+                'longname'=>'Iringa Regional Hospital',
+                'active'=>true,
+                'parent'=>'iringa'),
+            // Kagera Region districts
+            92=>Array(
+                'shortname'=>'biharamulodc',
+                'longname'=>'Biharamulo District Council',
+                'active'=>true,
+                'parent'=>'kagera'),
+            93=>Array(
+                'shortname'=>'bukobadc',
+                'longname'=>'Bukoba District Council',
+                'active'=>true,
+                'parent'=>'kagera'),
+            94=>Array(
+                'shortname'=>'bukobamc',
+                'longname'=>'Bukoba Municipal Council',
+                'active'=>true,
+                'parent'=>'kagera'),
+            95=>Array(
+                'shortname'=>'chatodc',
+                'longname'=>'Chato District Council',
+                'active'=>true,
+                'parent'=>'kagera'),
+            96=>Array(
+                'shortname'=>'karagwedc',
+                'longname'=>'Karagwe District Council',
+                'active'=>true,
+                'parent'=>'kagera'),
+            97=>Array(
+                'shortname'=>'misenyidc',
+                'longname'=>'Misenyi District Council',
+                'active'=>true,
+                'parent'=>'kagera'),
+            98=>Array(
+                'shortname'=>'mulebadc',
+                'longname'=>'Muleba District Council',
+                'active'=>true,
+                'parent'=>'kagera'),
+            99=>Array(
+                'shortname'=>'ngaradc',
+                'longname'=>'Ngara District Council',
+                'active'=>true,
+                'parent'=>'kagera'),
+            100=>Array(
+                'shortname'=>'kagerareghsp',
+                'longname'=>'Kagera Regional Hospital',
+                'active'=>true,
+                'parent'=>'kagera'),
+            // Kigoma Region districts
+            101=>Array(
+                'shortname'=>'kasuludc',
+                'longname'=>'Kasulu District Council',
+                'active'=>true,
+                'parent'=>'kigoma'),
+            102=>Array(
+                'shortname'=>'kibondodc',
+                'longname'=>'Kibondo District Council',
+                'active'=>true,
+                'parent'=>'kigoma'),
+            103=>Array(
+                'shortname'=>'kigomadc',
+                'longname'=>'Kigoma District Council',
+                'active'=>true,
+                'parent'=>'kigoma'),
+            104=>Array(
+                'shortname'=>'kigomamc',
+                'longname'=>'Kigoma Municipal Council',
+                'active'=>true,
+                'parent'=>'kigoma'),
+            105=>Array(
+                'shortname'=>'mawenireghsp',
+                'longname'=>'Maweni Regional Hospital',
+                'active'=>true,
+                'parent'=>'kigoma'),
+            // Kilimanjaro Region districts
+            106=>Array(
+                'shortname'=>'haidc',
+                'longname'=>'Hai District Council',
+                'active'=>true,
+                'parent'=>'kilimanjaro'),
+            107=>Array(
+                'shortname'=>'moshidc',
+                'longname'=>'Moshi District Council',
+                'active'=>true,
+                'parent'=>'kilimanjaro'),
+            108=>Array(
+                'shortname'=>'moshimc',
+                'longname'=>'Moshi Municipal Council',
+                'active'=>true,
+                'parent'=>'kilimanjaro'),
+            109=>Array(
+                'shortname'=>'mwangadc',
+                'longname'=>'Mwanga District Council',
+                'active'=>true,
+                'parent'=>'kilimanjaro'),
+            110=>Array(
+                'shortname'=>'rombodc',
+                'longname'=>'Rombo District Council',
+                'active'=>true,
+                'parent'=>'kilimanjaro'),
+            111=>Array(
+                'shortname'=>'samedc',
+                'longname'=>'Same District Council',
+                'active'=>true,
+                'parent'=>'kilimanjaro'),
+            112=>Array(
+                'shortname'=>'sihadc',
+                'longname'=>'Siha District Council',
+                'active'=>true,
+                'parent'=>'kilimanjaro'),
+            113=>Array(
+                'shortname'=>'mawenzireghsp',
+                'longname'=>'Mawenzi Regional Hospital',
+                'active'=>true,
+                'parent'=>'kilimanjaro'),
+            // Lindi Region districts
+            114=>Array(
+                'shortname'=>'kilwadc',
+                'longname'=>'Kilwa District Council',
+                'active'=>true,
+                'parent'=>'lindi'),
+            1115=>Array(
+                'shortname'=>'lindidc',
+                'longname'=>'Lindi District Council',
+                'active'=>true,
+                'parent'=>'lindi'),
+            116=>Array(
+                'shortname'=>'lindimc',
+                'longname'=>'Lindi Municipal Council',
+                'active'=>true,
+                'parent'=>'lindi'),
+            117=>Array(
+                'shortname'=>'liwaledc',
+                'longname'=>'Liwale District Council',
+                'active'=>true,
+                'parent'=>'lindi'),
+            118=>Array(
+                'shortname'=>'nachingweadc',
+                'longname'=>'Nachingwea District Council',
+                'active'=>true,
+                'parent'=>'lindi'),
+            119=>Array(
+                'shortname'=>'raungwadc',
+                'longname'=>'Ruangwa District Council',
+                'active'=>true,
+                'parent'=>'lindi'),
+            120=>Array(
+                'shortname'=>'sokoinereghsp',
+                'longname'=>'Sokoine Regional Hospital',
+                'active'=>true,
+                'parent'=>'lindi'),
+            // Manyara Region districts
+            121=>Array(
+                'shortname'=>'babatidc',
+                'longname'=>'Babati District Council',
+                'active'=>true,
+                'parent'=>'manyara'),
+            122=>Array(
+                'shortname'=>'babatitc',
+                'longname'=>'Babati Town Council',
+                'active'=>true,
+                'parent'=>'manyara'),
+            123=>Array(
+                'shortname'=>'hanangdc',
+                'longname'=>'Hanang District Council',
+                'active'=>true,
+                'parent'=>'manyara'),
+            124=>Array(
+                'shortname'=>'kitetodc',
+                'longname'=>'Kiteto District Council',
+                'active'=>true,
+                'parent'=>'manyara'),
+            125=>Array(
+                'shortname'=>'mbuludc',
+                'longname'=>'Mbulu District Council',
+                'active'=>true,
+                'parent'=>'manyara'),
+            126=>Array(
+                'shortname'=>'simanjirodc',
+                'longname'=>'Simanjiro District Council',
+                'active'=>true,
+                'parent'=>'manyara'),
+            127=>Array(
+                'shortname'=>'manyarareghsp',
+                'longname'=>'Manyara Regional Hospital',
+                'active'=>true,
+                'parent'=>'manyara'),
+            // Mara Region districts
+            128=>Array(
+                'shortname'=>'bundadc',
+                'longname'=>'Bunda District Council',
+                'active'=>true,
+                'parent'=>'mara'),
+            129=>Array(
+                'shortname'=>'musomadc',
+                'longname'=>'Musoma District Council',
+                'active'=>true,
+                'parent'=>'mara'),
+            130=>Array(
+                'shortname'=>'musomamc',
+                'longname'=>'Musoma Municipal Council',
+                'active'=>true,
+                'parent'=>'mara'),
+            131=>Array(
+                'shortname'=>'roryadc',
+                'longname'=>'Rorya District Council',
+                'active'=>true,
+                'parent'=>'mara'),
+            132=>Array(
+                'shortname'=>'serengetidc',
+                'longname'=>'Serengeti District Council',
+                'active'=>true,
+                'parent'=>'mara'),
+            133=>Array(
+                'shortname'=>'tarimedc',
+                'longname'=>'Tarime District Council',
+                'active'=>true,
+                'parent'=>'mara'),
+            134=>Array(
+                'shortname'=>'musomareghsp',
+                'longname'=>'Musoma Regional Hospital',
+                'active'=>true,
+                'parent'=>'mara'),
+            // Mbeya Region districts
+            135=>Array(
+                'shortname'=>'chunyadc',
+                'longname'=>'Chunya District Council',
+                'active'=>true,
+                'parent'=>'mbeya'),
+            136=>Array(
+                'shortname'=>'ilejedc',
+                'longname'=>'Ileje District Council',
+                'active'=>true,
+                'parent'=>'mbeya'),
+            137=>Array(
+                'shortname'=>'kyeladc',
+                'longname'=>'Kyela District Council',
+                'active'=>true,
+                'parent'=>'mbeya'),
+            138=>Array(
+                'shortname'=>'mbaralidc',
+                'longname'=>'Mbarali District Council',
+                'active'=>true,
+                'parent'=>'mbeya'),
+            139=>Array(
+                'shortname'=>'mbeyacc',
+                'longname'=>'Mbeya City Council',
+                'active'=>true,
+                'parent'=>'mbeya'),
+            140=>Array(
+                'shortname'=>'mbeyadc',
+                'longname'=>'Mbeya District Council',
+                'active'=>true,
+                'parent'=>'mbeya'),
+            141=>Array(
+                'shortname'=>'mbozidc',
+                'longname'=>'Mbozi District Council',
+                'active'=>true,
+                'parent'=>'mbeya'),
+            142=>Array(
+                'shortname'=>'rungwedc',
+                'longname'=>'Rungwe District Council',
+                'active'=>true,
+                'parent'=>'mbeya'),
+            143=>Array(
+                'shortname'=>'mbeyareghsp',
+                'longname'=>'Mbeya Regional Hospital',
+                'active'=>true,
+                'parent'=>'mbeya'),
+            // Morogoro Region districts
+            144=>Array(
+                'shortname'=>'kilomberodc',
+                'longname'=>'Kilombero District Council',
+                'active'=>true,
+                'parent'=>'morogoro'),
+            145=>Array(
+                'shortname'=>'kilosadc',
+                'longname'=>'Kilosa District Council',
+                'active'=>true,
+                'parent'=>'morogoro'),
+            146=>Array(
+                'shortname'=>'morogorodc',
+                'longname'=>'Morogoro District Council',
+                'active'=>true,
+                'parent'=>'morogoro'),
+            147=>Array(
+                'shortname'=>'morogoromc',
+                'longname'=>'Morogoro Municipal Council',
+                'active'=>true,
+                'parent'=>'morogoro'),
+            148=>Array(
+                'shortname'=>'mvomerodc',
+                'longname'=>'Mvomero District Council',
+                'active'=>true,
+                'parent'=>'morogoro'),
+            149=>Array(
+                'shortname'=>'ulangadc',
+                'longname'=>'Ulanga District Council',
+                'active'=>true,
+                'parent'=>'morogoro'),
+            150=>Array(
+                'shortname'=>'morogororeghsp',
+                'longname'=>'Morogoro Regional Hospital',
+                'active'=>true,
+                'parent'=>'morogoro'),
+            // Mtwara Region districts
+            151=>Array(
+                'shortname'=>'masasidc',
+                'longname'=>'Masasi District Council',
+                'active'=>true,
+                'parent'=>'mtwara'),
+            152=>Array(
+                'shortname'=>'mtwaradc',
+                'longname'=>'Mtwara District Council',
+                'active'=>true,
+                'parent'=>'mtwara'),
+            153=>Array(
+                'shortname'=>'mtwaramc',
+                'longname'=>'Mtwara Municipal Council',
+                'active'=>true,
+                'parent'=>'mtwara'),
+            154=>Array(
+                'shortname'=>'nanyumbudc',
+                'longname'=>'Nanyumbu District Council',
+                'active'=>true,
+                'parent'=>'mtwara'),
+            155=>Array(
+                'shortname'=>'newaladc',
+                'longname'=>'Newala District Council',
+                'active'=>true,
+                'parent'=>'mtwara'),
+            156=>Array(
+                'shortname'=>'tandahimbadc',
+                'longname'=>'Tandahimba District Council',
+                'active'=>true,
+                'parent'=>'mtwara'),
+            157=>Array(
+                'shortname'=>'ligulareghsp',
+                'longname'=>'Ligula Regional Hospital',
+                'active'=>true,
+                'parent'=>'mtwara'),
+            // Mwanza Region districts
+            158=>Array(
+                'shortname'=>'geitadc',
+                'longname'=>'Geita District Council',
+                'active'=>true,
+                'parent'=>'mwanza'),
+            159=>Array(
+                'shortname'=>'ilemeladc',
+                'longname'=>'Ilemela District Council',
+                'active'=>true,
+                'parent'=>'mwanza'),
+            160=>Array(
+                'shortname'=>'kwimbadc',
+                'longname'=>'Kwimba District Council',
+                'active'=>true,
+                'parent'=>'mwanza'),
+            161=>Array(
+                'shortname'=>'magudc',
+                'longname'=>'Magu District Council',
+                'active'=>true,
+                'parent'=>'mwanza'),
+            162=>Array(
+                'shortname'=>'misungwidc',
+                'longname'=>'Misungwi District Council',
+                'active'=>true,
+                'parent'=>'mwanza'),
+            163=>Array(
+                'shortname'=>'nyamaganadc',
+                'longname'=>'Nyamagana District Council',
+                'active'=>true,
+                'parent'=>'mwanza'),
+            164=>Array(
+                'shortname'=>'sengeremadc',
+                'longname'=>'Sengerema District Council',
+                'active'=>true,
+                'parent'=>'mwanza'),
+            165=>Array(
+                'shortname'=>'ukerewedc',
+                'longname'=>'Ukerewe District Council',
+                'active'=>true,
+                'parent'=>'mwanza'),
+            166=>Array(
+                'shortname'=>'sekotourereghsp',
+                'longname'=>'Seko Toure Regional Hospital',
+                'active'=>true,
+                'parent'=>'mwanza'),
+            // Pwani Region districts
+            167=>Array(
+                'shortname'=>'bagamoyodc',
+                'longname'=>'Bagamoyo District Council',
+                'active'=>true,
+                'parent'=>'pwani'),
+            168=>Array(
+                'shortname'=>'kibahadc',
+                'longname'=>'Kibaha District Council',
+                'active'=>true,
+                'parent'=>'pwani'),
+            169=>Array(
+                'shortname'=>'kibahatc',
+                'longname'=>'Kibaha Town Council',
+                'active'=>true,
+                'parent'=>'pwani'),
+            170=>Array(
+                'shortname'=>'kisarawedc',
+                'longname'=>'Kisarawe District Council',
+                'active'=>true,
+                'parent'=>'pwani'),
+            171=>Array(
+                'shortname'=>'mafiadc',
+                'longname'=>'Mafia District Council',
+                'active'=>true,
+                'parent'=>'pwani'),
+            172=>Array(
+                'shortname'=>'mkurangadc',
+                'longname'=>'Mkuranga District Council',
+                'active'=>true,
+                'parent'=>'pwani'),
+            173=>Array(
+                'shortname'=>'rufijidc',
+                'longname'=>'Rufiji District Council',
+                'active'=>true,
+                'parent'=>'pwani'),
+            // Rukwa Region districts
+            174=>Array(
+                'shortname'=>'mpandadc',
+                'longname'=>'Mpanda District Council',
+                'active'=>true,
+                'parent'=>'rukwa'),
+            175=>Array(
+                'shortname'=>'mpandatc',
+                'longname'=>'Mpanda Town Council',
+                'active'=>true,
+                'parent'=>'rukwa'),
+            176=>Array(
+                'shortname'=>'nkasidc',
+                'longname'=>'Nkasi District Council',
+                'active'=>true,
+                'parent'=>'rukwa'),
+            177=>Array(
+                'shortname'=>'sumbawangadc',
+                'longname'=>'Sumbawanga District Council',
+                'active'=>true,
+                'parent'=>'rukwa'),
+            178=>Array(
+                'shortname'=>'sumbawangareghsp',
+                'longname'=>'Sumbawanga Regional Hospital',
+                'active'=>true,
+                'parent'=>'rukwa'),
+            // Ruvuma Region districts
+            179=>Array(
+                'shortname'=>'mbingadc',
+                'longname'=>'Mbinga District Council',
+                'active'=>true,
+                'parent'=>'ruvuma'),
+            180=>Array(
+                'shortname'=>'namtumbodc',
+                'longname'=>'Namtumbo District Council',
+                'active'=>true,
+                'parent'=>'ruvuma'),
+            181=>Array(
+                'shortname'=>'songeadc',
+                'longname'=>'Songea District Council',
+                'active'=>true,
+                'parent'=>'ruvuma'),
+            182=>Array(
+                'shortname'=>'songeamc',
+                'longname'=>'Songea Municipal Council',
+                'active'=>true,
+                'parent'=>'ruvuma'),
+            183=>Array(
+                'shortname'=>'tundurudc',
+                'longname'=>'Tunduru District Council',
+                'active'=>true,
+                'parent'=>'ruvuma'),
+            184=>Array(
+                'shortname'=>'ruvumareghsp',
+                'longname'=>'Ruvuma Regional Hospital',
+                'active'=>true,
+                'parent'=>'ruvuma'),
+            // Shinyanga Region districts
+            185=>Array(
+                'shortname'=>'bariadidc',
+                'longname'=>'Bariadi District Council',
+                'active'=>true,
+                'parent'=>'shinyanga'),
+            186=>Array(
+                'shortname'=>'bukombedc',
+                'longname'=>'Bukombe District Council',
+                'active'=>true,
+                'parent'=>'shinyanga'),
+            187=>Array(
+                'shortname'=>'kahamadc',
+                'longname'=>'Kahama District Council',
+                'active'=>true,
+                'parent'=>'shinyanga'),
+            188=>Array(
+                'shortname'=>'kishapudc',
+                'longname'=>'Kishapu District Council',
+                'active'=>true,
+                'parent'=>'shinyanga'),
+            189=>Array(
+                'shortname'=>'maswadc',
+                'longname'=>'Maswa District Council',
+                'active'=>true,
+                'parent'=>'shinyanga'),
+            190=>Array(
+                'shortname'=>'meatudc',
+                'longname'=>'Meatu District Council',
+                'active'=>true,
+                'parent'=>'shinyanga'),
+            191=>Array(
+                'shortname'=>'shinyangadc',
+                'longname'=>'Shinyanga District Council',
+                'active'=>true,
+                'parent'=>'shinyanga'),
+            192=>Array(
+                'shortname'=>'shinyangamc',
+                'longname'=>'Shinyanga Municipal Council',
+                'active'=>true,
+                'parent'=>'shinyanga'),
+            193=>Array(
+                'shortname'=>'shinyangareghsp',
+                'longname'=>'Shinyanga Regional Hospital',
+                'active'=>true,
+                'parent'=>'shinyanga'),
+            // Singida Region districts
+            194=>Array(
+                'shortname'=>'irambadc',
+                'longname'=>'Iramba District Council',
+                'active'=>true,
+                'parent'=>'singida'),
+            195=>Array(
+                'shortname'=>'manyonidc',
+                'longname'=>'Manyoni District Council',
+                'active'=>true,
+                'parent'=>'singida'),
+            196=>Array(
+                'shortname'=>'singidadc',
+                'longname'=>'Singida District Council',
+                'active'=>true,
+                'parent'=>'singida'),
+            197=>Array(
+                'shortname'=>'singidamc',
+                'longname'=>'Singida Municipal Council',
+                'active'=>true,
+                'parent'=>'singida'),
+            198=>Array(
+                'shortname'=>'singidareghsp',
+                'longname'=>'Singida Regional Hospital',
+                'active'=>true,
+                'parent'=>'singida'),
+            // Tabora Region districts
+            199=>Array(
+                'shortname'=>'igungadc',
+                'longname'=>'Igunga District Council',
+                'active'=>true,
+                'parent'=>'tabora'),
+            200=>Array(
+                'shortname'=>'nzegadc',
+                'longname'=>'Nzega District Council',
+                'active'=>true,
+                'parent'=>'tabora'),
+            201=>Array(
+                'shortname'=>'sikongedc',
+                'longname'=>'Sikonge District Council',
+                'active'=>true,
+                'parent'=>'tabora'),
+            202=>Array(
+                'shortname'=>'taboramc',
+                'longname'=>'Tabora Municipal Council',
+                'active'=>true,
+                'parent'=>'tabora'),
+            203=>Array(
+                'shortname'=>'urambodc',
+                'longname'=>'Urambo District Council',
+                'active'=>true,
+                'parent'=>'tabora'),
+            204=>Array(
+                'shortname'=>'uyuidc',
+                'longname'=>'Uyui District Council',
+                'active'=>true,
+                'parent'=>'tabora'),
+            205=>Array(
+                'shortname'=>'taborareghsp',
+                'longname'=>'Tabora Regional Hospital',
+                'active'=>true,
+                'parent'=>'tabora'),
+            // Tanga Region districts
+            206=>Array(
+                'shortname'=>'handenidc',
+                'longname'=>'Handeni District Council',
+                'active'=>true,
+                'parent'=>'tanga'),
+            207=>Array(
+                'shortname'=>'kilindidc',
+                'longname'=>'Kilindi District Council',
+                'active'=>true,
+                'parent'=>'tanga'),
+            208=>Array(
+                'shortname'=>'korogwedc',
+                'longname'=>'Korogwe District Council',
+                'active'=>true,
+                'parent'=>'tanga'),
+            209=>Array(
+                'shortname'=>'korogwetc',
+                'longname'=>'Korogowe Town Council',
+                'active'=>true,
+                'parent'=>'tanga'),
+            210=>Array(
+                'shortname'=>'lushotodc',
+                'longname'=>'Lushoto District Council',
+                'active'=>true,
+                'parent'=>'tanga'),
+            211=>Array(
+                'shortname'=>'mkingadc',
+                'longname'=>'Mkinga District Council',
+                'active'=>true,
+                'parent'=>'tanga'),
+            212=>Array(
+                'shortname'=>'muhezadc',
+                'longname'=>'Muheza District Council',
+                'active'=>true,
+                'parent'=>'tanga'),
+            213=>Array(
+                'shortname'=>'panganidc',
+                'longname'=>'Pangani District Council',
+                'active'=>true,
+                'parent'=>'tanga'),
+            214=>Array(
+                'shortname'=>'tangamc',
+                'longname'=>'Tanga Municipal Council',
+                'active'=>true,
+                'parent'=>'tanga'),
+            215=>Array(
+                'shortname'=>'bomboreghsp',
+                'longname'=>'Bombo Regional Hospital',
+                'active'=>true,
+                'parent'=>'tanga'),
+            // Chief Medical Office Divisions
+            216=>Array(
+                'shortname'=>'curativesrvdvn',
+                'longname'=>'Curative Services Division',
+                'active'=>false,
+                'parent'=>'cmo'),
+            217=>Array(
+                'shortname'=>'healthqadvn',
+                'longname'=>'Health Quality Assurance Division',
+                'active'=>false,
+                'parent'=>'cmo'),
+            218=>Array(
+                'shortname'=>'hrdvpdvn',
+                'longname'=>'Human resource Development Division',
+                'active'=>false,
+                'parent'=>'cmo'),
+            219=>Array(
+                'shortname'=>'prvntvsrvcdvn',
+                'longname'=>'Preventive Services Division',
+                'active'=>false,
+                'parent'=>'cmo'),
         );
         return $this->organisationunits;
     }
@@ -6883,6 +7570,7 @@ class LoadOrganisationunitData extends AbstractFixture implements OrderedFixture
             if(
                 strpos($humanResourceOrganisationunit['longname'],'District Council') > 0
                 || strpos($humanResourceOrganisationunit['longname'],'Municipal Council') > 0
+                || strpos($humanResourceOrganisationunit['longname'],'City Council') > 0
                 || strpos($humanResourceOrganisationunit['longname'],'Town Council') > 0 ) {
                 $dispensaryCount = rand($this->minDispensaryCount,$this->maxDispensaryCount);
                 $healthCentreCount = rand($this->minHealthCentreCount,$this->maxHealthCentreCount);
@@ -7030,6 +7718,12 @@ class LoadOrganisationunitData extends AbstractFixture implements OrderedFixture
                         $organisationunitLevel = new OrganisationunitLevel();
                         $organisationunitLevel->setLevel($parentOrganisationunitStructureByReference->getLevel()->getLevel()+1);
                         $organisationunitLevel->setName('Level '.$organisationunitLevel->getLevel());
+                        //Wild hack to set data entry level
+                        if($organisationunitLevel->getLevel() == 4) {
+                            $organisationunitLevel->setDataentrylevel(True);
+                            $organisationunitLevel->setDescription("Data Entry Level");
+                        }
+
                         $organisationunitLevelReference = strtolower(str_replace(' ','',$organisationunitLevel->getName())).'-organisationunitlevel';
                         $this->addReference($organisationunitLevelReference, $organisationunitLevel);
                         $manager->persist($organisationunitLevel);

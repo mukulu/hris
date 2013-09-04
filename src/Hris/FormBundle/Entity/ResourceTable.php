@@ -848,9 +848,9 @@ class ResourceTable
             if( $duration < 1 ) {
                 $durationMessage = ($duration*60).' seconds';
             }else if ( $duration >= 60 ) {
-                $durationMessage = ( $duration / 60 ) . " hours";
+                $durationMessage = ( $duration / 60 ) . " minutes";
             }else {
-                $durationMessage = $duration . " minutes";
+                $durationMessage = $duration . " hours";
             }
             $this->messagelog .= $totalInsertedRecords .' Records Inserted into '. $resourceTableName .".\n";
             $this->messagelog .= 'Resource Table generation completeted in '. $durationMessage .".\n\n";
