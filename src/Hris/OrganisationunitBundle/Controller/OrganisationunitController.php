@@ -87,25 +87,66 @@ class OrganisationunitController extends Controller
     {
         $em = $this->getDoctrine()->getManager();
         $id = $this->getRequest()->query->get('id');
+
         if($id == NULL || $id==0) {
-            $organisationunitQuery = $em->createQuery("SELECT organisationunit.id,organisationunit.longname FROM HrisOrganisationunitBundle:Organisationunit organisationunit WHERE organisationunit.parent IS NULL");
+            // Root organisationunits called
+            $organisationunitQuery = $em->createQuery("SELECT organisationunit.id,organisationunit.longname,
+                                                        (
+                                                            SELECT COUNT(lowerOrganisationunit.id)
+                                                            FROM HrisOrganisationunitBundle:Organisationunit lowerOrganisationunit
+                                                            WHERE lowerOrganisationunit.parent=organisationunit
+                                                        ) AS lowerChildrenCount
+                                                        FROM HrisOrganisationunitBundle:Organisationunit organisationunit
+                                                        WHERE organisationunit.parent IS NULL
+                                                        GROUP BY organisationunit.id");
             try {
                 $entities = $organisationunitQuery->getArrayResult();
             } catch(NoResultException $e) {
                 $entities = NULL;
             }
-            //$entities = $em->getRepository('HrisOrganisationunitBundle:Organisationunit')->findBy(array('parent'=>'NULL'));
         }else {
-            $organisationunitQuery = $em->createQuery("SELECT organisationunit.id,organisationunit.longname FROM HrisOrganisationunitBundle:Organisationunit organisationunit WHERE organisationunit.parent=:parentid")->setParameter('parentid',$id);
+            // Leaf organisationunits called
+            $organisationunitQuery = $em->createQuery("SELECT organisationunit.id,organisationunit.longname,
+                                                        (
+                                                            SELECT COUNT(lowerOrganisationunit.id)
+                                                            FROM HrisOrganisationunitBundle:Organisationunit lowerOrganisationunit
+                                                            WHERE lowerOrganisationunit.parent=organisationunit
+                                                        ) AS lowerChildrenCount
+                                                        FROM HrisOrganisationunitBundle:Organisationunit organisationunit
+                                                        WHERE organisationunit.parent=:parentid
+                                                        GROUP BY organisationunit.id")->setParameter('parentid',$id);
+
+
+
             try {
                 $entities = $organisationunitQuery->getArrayResult();
             } catch(NoResultException $e) {
                 $entities = NULL;
             }
         }
+        //print_r($entities);die();
+        $organisationunitTreeNodes = NULL;
+        foreach($entities as $key=>$entity) {
+            if($entity['lowerChildrenCount'] > 0 ) {
+                    // Entity has no children
+                    $organisationunitTreeNodes[] = Array(
+                        'id' => $entity['id'],
+                        'longname' => $entity['longname'],
+                        'cls' => 'folder'
+                    );
+            }else {
+                // Entity has children
+                $organisationunitTreeNodes[] = Array(
+                    'id' => $entity['id'],
+                    'longname' => $entity['longname'],
+                    'cls' => 'file',
+                    'leaf' => true,
+                );
+            }
+        }
 
         return array(
-            'entities' => json_encode($entities),
+            'entities' => json_encode($organisationunitTreeNodes),
         );
     }
 
