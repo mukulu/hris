@@ -29,6 +29,7 @@ use Symfony\Bundle\FrameworkBundle\Controller\Controller;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Method;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Route;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Template;
+use JMS\SecurityExtraBundle\Annotation\Secure;
 use Hris\OrganisationunitBundle\Entity\OrganisationunitLevel;
 use Hris\OrganisationunitBundle\Form\OrganisationunitLevelType;
 
@@ -228,5 +229,37 @@ class OrganisationunitLevelController extends Controller
             ->add('id', 'hidden')
             ->getForm()
         ;
+    }
+
+    /**
+     * Returns OrganisationunitLevel json.
+     *
+     * @Secure(roles="ROLE_ORGANISATIONUNIT_ORGANISATIONUNIT_LEVEL,ROLE_USER")
+     *
+     * @Route("/levels.{_format}", requirements={"_format"="yml|xml|json|"}, defaults={"format"="json","parent"=0}, name="organisationunit_levels")
+     * @Route("/levels/{parent}/parent",requirements={"parent"="\d+"},defaults={"parent"=0}, name="organisationunit_levels_parent")
+     * @Method("GET|POST")
+     * @Template()
+     */
+    public function levelsAction($parent,$_format)
+    {
+        $em = $this->getDoctrine()->getManager();
+        $organisationunitid = $this->getRequest()->get('organisationunitid');
+        $queryBuilder = $em->createQueryBuilder();
+        $organisationunitLevels = $queryBuilder->select('organisationunitLevel.level,organisationunitLevel.name')->from('HrisOrganisationunitBundle:OrganisationunitLevel', 'organisationunitLevel')
+                                    ->where('organisationunitLevel.level> (
+                                        SELECT selectedLevel.level
+                                        FROM HrisOrganisationunitBundle:OrganisationunitStructure organisationunitStructure
+                                        INNER JOIN organisationunitStructure.organisationunit organisationunit
+                                        INNER JOIN organisationunitStructure.level selectedLevel
+                                        WHERE organisationunit.id='.$organisationunitid.'
+                                        )
+                                    ')->getQuery()->getResult();
+
+        $serializer = $this->container->get('serializer');
+
+        return array(
+            'entities' => $serializer->serialize($organisationunitLevels,$_format)
+        );
     }
 }
