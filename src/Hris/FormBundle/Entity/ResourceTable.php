@@ -813,6 +813,7 @@ class ResourceTable
                                 if(empty($organisationunitGroupNames)) $organisationunitGroupNames=$organisationunitGroup->getName();else $organisationunitGroupNames.=','.$organisationunitGroupNames=$organisationunitGroup->getName();
                             }
                         }
+                        if(empty($organisationunitGroupNames)) $organisationunitGroupNames= NULL;
                         $dataArray[$organisationunitGroupset->getName()] = $organisationunitGroupNames;
                     }
 

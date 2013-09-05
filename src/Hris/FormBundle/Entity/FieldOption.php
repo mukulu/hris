@@ -66,6 +66,14 @@ class FieldOption
      * @ORM\Column(name="value", type="string", length=64)
      */
     private $value;
+
+    /**
+     * @var boolean $skipInReport
+     *
+     * @Gedmo\Versioned
+     * @ORM\Column(name="skipInReport", type="boolean", nullable=true)
+     */
+    private $skipInReport;
     
     /**
      * @var string $description
@@ -189,6 +197,29 @@ class FieldOption
     public function getValue()
     {
         return $this->value;
+    }
+
+    /**
+     * Set skipInReport
+     *
+     * @param boolean $skipInReport
+     * @return FieldOption
+     */
+    public function setSkipInReport($skipInReport)
+    {
+        $this->skipInReport = $skipInReport;
+
+        return $this;
+    }
+
+    /**
+     * Get skipInReport
+     *
+     * @return boolean
+     */
+    public function getSkipInReport()
+    {
+        return $this->skipInReport;
     }
 
     /**
