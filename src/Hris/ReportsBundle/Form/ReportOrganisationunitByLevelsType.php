@@ -26,6 +26,7 @@ namespace Hris\ReportsBundle\Form;
 
 use Hris\ReportsBundle\Form\OrganisationunitToIdTransformer;
 use Symfony\Component\Form\AbstractType;
+use Doctrine\ORM\EntityRepository;
 use Symfony\Component\Form\FormBuilderInterface;
 use Symfony\Component\OptionsResolver\OptionsResolverInterface;
 use Symfony\Component\Validator\Constraints\NotBlank;
@@ -47,6 +48,10 @@ class ReportOrganisationunitByLevelsType extends AbstractType
             )
             ->add('organisationunitLevel','entity', array(
                 'class'=>'HrisOrganisationunitBundle:OrganisationunitLevel',
+                'query_builder' => function(EntityRepository $er) {
+                    return $er->createQueryBuilder('organisationunitLevel')
+                        ->orderBy('organisationunitLevel.level', 'ASC');
+                },
                 'constraints'=>array(
                     new NotBlank(),
                 )

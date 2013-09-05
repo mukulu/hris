@@ -20,7 +20,7 @@
                 model: 'OrganisationUnitTreeModel2',
                 proxy: {
                     type: 'ajax',
-                    url: '{{ path('organisationunit_tree') }}'+urlExtension,
+                    url: '{{ path('organisationunit_tree',{'_format':'json'}) }}'+urlExtension,
                     reader: { type: 'json', root: 'organisationUnits'}
                 },
                 nodeParam: 'id',
@@ -42,7 +42,6 @@
                         var selectedOrgunits2 = selModel2.getSelection();
                         var selectedId2 = selectedOrgunits2[0].get('id');
                         $('input[name="'+inputboxname+'"]').val(selectedId2);
-
                     },
                     afterrender: function(treePanel,eOpts) {
                         if(selectedNode){

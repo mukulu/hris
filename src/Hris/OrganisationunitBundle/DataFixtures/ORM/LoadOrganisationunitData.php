@@ -124,11 +124,11 @@ class LoadOrganisationunitData extends AbstractFixture implements OrderedFixture
     {
         $this->index = 0;
         // Dispensaries
-        $this->minDispensaryCount=5;
-        $this->maxDispensaryCount=10;
+        $this->minDispensaryCount=1;
+        $this->maxDispensaryCount=5;
         // Health centres
-        $this->minHealthCentreCount=3;
-        $this->maxHealthCentreCount=5;
+        $this->minHealthCentreCount=1;
+        $this->maxHealthCentreCount=2;
         // Hospitals
         $this->minHospitalCount=1;
         $this->maxHospitalCount=2;

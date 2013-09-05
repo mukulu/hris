@@ -78,12 +78,12 @@ class OrganisationunitController extends Controller
      *
      * @Secure(roles="ROLE_ORGANISATIONUNIT_ORGANISATIONUNIT_TREE,ROLE_USER")
      *
-     * @Route("/tree", name="organisationunit_tree")
-     * @Route("/tree/{parent}/parent", name="organisationunit_tree_parent")
+     * @Route("/tree.{_format}", requirements={"_format"="yml|xml|json|"}, defaults={"format"="json","parent"=0}, name="organisationunit_tree")
+     * @Route("/tree/{parent}/parent",requirements={"parent"="\d+"},defaults={"parent"=0}, name="organisationunit_tree_parent")
      * @Method("GET")
      * @Template()
      */
-    public function treeAction($parent=NULL)
+    public function treeAction($parent,$_format)
     {
         $em = $this->getDoctrine()->getManager();
         $id = $this->getRequest()->query->get('id');
@@ -124,7 +124,7 @@ class OrganisationunitController extends Controller
                 $entities = NULL;
             }
         }
-        //print_r($entities);die();
+
         $organisationunitTreeNodes = NULL;
         foreach($entities as $key=>$entity) {
             if($entity['lowerChildrenCount'] > 0 ) {
@@ -144,9 +144,10 @@ class OrganisationunitController extends Controller
                 );
             }
         }
+        $serializer = $this->container->get('serializer');
 
         return array(
-            'entities' => json_encode($organisationunitTreeNodes),
+            'entities' => $serializer->serialize($organisationunitTreeNodes,$_format)
         );
     }
 

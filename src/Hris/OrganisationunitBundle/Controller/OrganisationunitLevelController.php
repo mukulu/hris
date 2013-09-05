@@ -246,15 +246,26 @@ class OrganisationunitLevelController extends Controller
         $em = $this->getDoctrine()->getManager();
         $organisationunitid = $this->getRequest()->get('organisationunitid');
         $queryBuilder = $em->createQueryBuilder();
-        $organisationunitLevels = $queryBuilder->select('organisationunitLevel.level,organisationunitLevel.name')->from('HrisOrganisationunitBundle:OrganisationunitLevel', 'organisationunitLevel')
-                                    ->where('organisationunitLevel.level> (
-                                        SELECT selectedLevel.level
-                                        FROM HrisOrganisationunitBundle:OrganisationunitStructure organisationunitStructure
-                                        INNER JOIN organisationunitStructure.organisationunit organisationunit
-                                        INNER JOIN organisationunitStructure.level selectedLevel
-                                        WHERE organisationunit.id='.$organisationunitid.'
-                                        )
-                                    ')->getQuery()->getResult();
+
+        $lowerOrganisationunitCount = $em->createQuery("SELECT COUNT(lowerOrganisationunit.id)
+                                                            FROM HrisOrganisationunitBundle:Organisationunit lowerOrganisationunit
+                                                            INNER JOIN lowerOrganisationunit.parent parentOrganisationunit
+                                                            WHERE parentOrganisationunit.id=".$organisationunitid)->getSingleScalarResult();
+        if(isset($lowerOrganisationunitCount) && !empty($lowerOrganisationunitCount)) {
+            $organisationunitLevels = $queryBuilder->select('organisationunitLevel.id,organisationunitLevel.name')->from('HrisOrganisationunitBundle:OrganisationunitLevel', 'organisationunitLevel')
+                                        ->where('organisationunitLevel.level> (
+                                            SELECT selectedLevel.level
+                                            FROM HrisOrganisationunitBundle:OrganisationunitStructure organisationunitStructure
+                                            INNER JOIN organisationunitStructure.organisationunit organisationunit
+                                            INNER JOIN organisationunitStructure.level selectedLevel
+                                            WHERE organisationunit.id='.$organisationunitid.'
+                                            )
+                                        ')
+                                        ->orderby('organisationunitLevel.level','ASC')->getQuery()->getResult();
+        }else {
+            // Lowest Level selected return NULL
+            $organisationunitLevels = NULL;
+        }
 
         $serializer = $this->container->get('serializer');
 
