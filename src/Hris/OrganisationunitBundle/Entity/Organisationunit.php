@@ -199,6 +199,14 @@ class Organisationunit
     private $description;
 
     /**
+     * @var OrganisationunitCompleteness
+     *
+     * @ORM\OneToMany(targetEntity="OrganisationunitCompleteness", mappedBy="organisationunit",cascade={"ALL"})
+     * @ORM\OrderBy({"expectation" = "ASC"})
+     */
+    private $organisationunitCompleteness;
+
+    /**
      * @var OrganisationunitStructure $organisationunitStructure
      *
      * @ORM\OneToOne(targetEntity="Hris\OrganisationunitBundle\Entity\OrganisationunitStructure", mappedBy="organisationunit",cascade={"ALL"})
