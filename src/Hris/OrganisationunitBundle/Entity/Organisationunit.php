@@ -201,7 +201,7 @@ class Organisationunit
     /**
      * @var OrganisationunitCompleteness
      *
-     * @ORM\OneToMany(targetEntity="OrganisationunitCompleteness", mappedBy="organisationunit",cascade={"ALL"})
+     * @ORM\OneToMany(targetEntity="Hris\OrganisationunitBundle\Entity\OrganisationunitCompleteness", mappedBy="organisationunit",cascade={"ALL"})
      * @ORM\OrderBy({"expectation" = "ASC"})
      */
     private $organisationunitCompleteness;
@@ -990,4 +990,37 @@ class Organisationunit
         return $this->longname;
     }
     
+
+    /**
+     * Add organisationunitCompleteness
+     *
+     * @param OrganisationunitCompleteness $organisationunitCompleteness
+     * @return Organisationunit
+     */
+    public function addOrganisationunitCompletenes(OrganisationunitCompleteness $organisationunitCompleteness)
+    {
+        $this->organisationunitCompleteness[] = $organisationunitCompleteness;
+    
+        return $this;
+    }
+
+    /**
+     * Remove organisationunitCompleteness
+     *
+     * @param OrganisationunitCompleteness $organisationunitCompleteness
+     */
+    public function removeOrganisationunitCompletenes(OrganisationunitCompleteness $organisationunitCompleteness)
+    {
+        $this->organisationunitCompleteness->removeElement($organisationunitCompleteness);
+    }
+
+    /**
+     * Get organisationunitCompleteness
+     *
+     * @return \Doctrine\Common\Collections\Collection 
+     */
+    public function getOrganisationunitCompleteness()
+    {
+        return $this->organisationunitCompleteness;
+    }
 }

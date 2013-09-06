@@ -61,6 +61,31 @@ class OrganisationunitRepository extends EntityRepository
     }
 
     /**
+     * Returns organisationunit count
+     * @param Organisationunit $organiastionunit
+     * @return \Doctrine\Common\Collections\Collection
+     */
+    public function getImmediateChildren( Organisationunit $organiastionunit)
+    {
+        $queryBuilder = $this->getEntityManager()-> $this->getEntityManager()->createQueryBuilder();
+        $query = $queryBuilder->select('organisationunit')
+            ->from('HrisOrganisationunitBundle:Organisationunit','organisationunit')
+            ->where('organisationunit.parent = :parent')
+            ->setParameters(array(
+                    'parent'=>$organiastionunit
+                )
+            )->getQuery();
+
+        try {
+            $immediateChildren = $query->getSingleResult();
+            $result = $immediateChildren[1];
+        } catch( NoResultException $e) {
+            $result = NULL;
+        }
+        return $result;
+    }
+
+    /**
      * Get all values from specific key in a multidimensional array
      *
      * @param $key string

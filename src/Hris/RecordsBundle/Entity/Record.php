@@ -44,13 +44,13 @@ class Record
      * Field column to be used in value array
      * @var string $fieldKey
      */
-    private static $fieldKey;
+    private static $fieldKey='uid';
 
     /**
      * FieldOption column to be used in value array
      * @var string $fieldOptionKey
      */
-    private static $fieldOptionKey;
+    private static $fieldOptionKey='uid';
 
     /**
      * @var integer $id
@@ -173,8 +173,6 @@ class Record
     	$this->hastraining = FALSE;
     	$this->correct = FALSE;
     	$this->uid = uniqid();
-        self::$fieldKey = 'uid';
-        self::$fieldOptionKey = 'uid';
     }
 
     /**
@@ -182,7 +180,7 @@ class Record
      *
      * @return string
      */
-    public function getFieldKey()
+    static public function getFieldKey()
     {
         return self::$fieldKey;
     }
@@ -192,7 +190,7 @@ class Record
      *
      * @return string
      */
-    public function getFieldOptionKey()
+    static public function getFieldOptionKey()
     {
         return self::$fieldOptionKey;
     }
