@@ -45,6 +45,12 @@ class ReportAggregationType extends AbstractType
                     )
                 ))->addModelTransformer($transformer)
             )
+            ->add('withLowerLevels','checkbox')
+            ->add('organisationunitGroup','entity',array(
+                'class'=>'HrisOrganisationunitBundle:OrganisationunitGroup',
+                    'multiple'=>true,
+                )
+            )
             ->add('forms','entity', array(
                 'class'=>'HrisFormBundle:Form',
                 'multiple'=>true,
@@ -62,6 +68,29 @@ class ReportAggregationType extends AbstractType
                         ->orderBy('field.name');
                 },
                 'constraints'=> array(
+                    new NotBlank(),
+                )
+            ))
+            ->add('fieldsTwo','entity',array(
+                'class'=>'HrisFormBundle:Field',
+                'query_builder'=>function(EntityRepository $er) {
+                    return $er->createQueryBuilder('field')
+                        ->innerJoin('field.inputType','inputType')
+                        ->where('inputType.name=:inputTypeName')
+                        ->setParameter('inputTypeName',"Select")
+                        ->orderBy('field.name');
+                },
+                'constraints'=> array(
+                    new NotBlank(),
+                )
+            ))
+            ->add('graphType','choice',array(
+                'choices'=>array(
+                    'bar'=>'Bar Chart',
+                    'line'=>'Line Chart',
+                    'pie'=>'Pie Chart'
+                ),
+                'constraints'=>array(
                     new NotBlank(),
                 )
             ))

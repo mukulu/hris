@@ -1,16 +1,16 @@
 {% extends '::base.html.twig' %}
 
 {% block right_content -%}
-    <h1><small>Report Aggregation - Results</small></h1>
 
-    <h1>Organisationunit: {{ organisationunit }}</h1>
-    <h2>Forms</h2>
-    <ul>
-        {% for form in forms %}
-        <li><h3>{{ form }}</h3></li>
-        {% endfor %}
-    </ul>
-    <h2>Fields:{{ fields }}</h2>
 
+    {% block javascripts %}
+        {{ parent() }}
+        <script src="{{ asset('bundles/obhighcharts/js/highcharts/highcharts.js') }}"></script>
+        <script src="{{ asset('bundles/obhighcharts/js/highcharts/modules/exporting.js') }}"></script>
+        <script type="text/javascript">
+            {{ chart(chart) }}
+        </script>
+    {%  endblock %}
+    <div id="chart_placeholder" style="min-width: 400px; height: 400px; margin: 0 auto"></div>
 
 {% endblock %}
