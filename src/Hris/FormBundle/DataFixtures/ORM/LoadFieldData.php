@@ -548,7 +548,7 @@ class LoadFieldData extends AbstractFixture implements OrderedFixtureInterface
                 'parentField'=>Null,
                 'description'=>"Employee's Contacts of Next of Kin(Optional)",
                 'history'=>true),
-            32=>Array(
+            33=>Array(
                 'dataType'=>'String',
                 'inputType'=>'TextArea',
                 'name'=>'RetirementDistribution',
@@ -561,7 +561,7 @@ class LoadFieldData extends AbstractFixture implements OrderedFixtureInterface
                 'parentField'=>Null,
                 'description'=>"Employee's Contacts of Next of Kin(Optional)",
                 'history'=>true),
-            32=>Array(
+            34=>Array(
                 'dataType'=>'String',
                 'inputType'=>'TextArea',
                 'name'=>'AgeDistribution',
