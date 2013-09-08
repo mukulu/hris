@@ -2,7 +2,7 @@
 {% block javascripts %}
     {{ parent() }}
     <script type="text/javascript" src="{{ asset('commons/js/jquery.dataTables.js') }}"></script>
-    <script type="text/javascript" src="{{ asset('commons/js/dt_settings.js') }}"></script>
+    <script type="text/javascript" src="{{ asset('commons/js/dt_settings.ajax.js') }}"></script>
     <script>window["_GOOG_TRANS_EXT_VER"] = "1";</script>
 {% endblock javascripts %}
 
@@ -38,19 +38,24 @@
         <thead>
         <tr>
             {% if organisationunitChildren %}
-                {% if organisationunitChildren and sameLevel %}
-                    <th>Sn</th>
-                    <th>Organisationunit</th>
+                {% if organisationunitChildren %}
+                    <th rowspan="2">Sn</th>
+                    <th rowspan="2">Organisationunit</th>
                 {% endif %}
+
                 {% for form in forms %}
 
                     {% if organisationunitChildren or sameLevel %}
-                        {% set colspan = visibleFields | length %}
+                        {% if visibleFields %}
+                            {% set colspan = visibleFields | length %}
+                        {% else %}
+                            {% set colspan = 3 %}
+                        {% endif %}
                     {% else %}
                         {% set colspan=3 %}
                     {% endif %}
 
-                    {% if organisationunitChildren and sameLevel %}
+                    {% if organisationunitChildren %}
                         <th colspan="{{ colspan }}">{{ form.name }}</th>
                     {% endif %}
 
@@ -64,6 +69,14 @@
                     <th>Expected Records</th>
                     <th>Percentage</th>
                 {% endfor %}
+            {% else %}
+                <th>Sn</th>
+                {% if visibleFields %}
+                    {% for visibleField in VisibleFields %}
+                        <th>visibleField.caption</th>
+                    {% endfor %}
+                    <th>Form Name</th>
+                {% endif %}
             {% endif %}
         </tr>
 
@@ -71,9 +84,38 @@
         </thead>
         <tbody>
             {% set counter = 0 %}
-                <tr>
-                    <td>{{ counter }}</td>
-                </tr>
+            {% if organisationunitChildren %}
+                {% for childOrganisationunit in organisationunitChildren %}
+                    {% set counter = counter + 1 %}
+                    <tr>
+                        <td>{{ counter }}</td>
+                        <td>{{ childOrganisationunit.longname }}</td>
+                        {% for form in forms %}
+                            {# Entered records #}
+                            <td>{{ completenessMatrix[childOrganisationunit.id][form.id] }}</td>
+                            {# Expected records and Percentage #}
+                            {% if expectedCompleteness[childOrganisationunit.id][form.id] %}
+                                {# Entered records #}
+                                <td>expectedCompleteness[childOrganisationunit.id][form.id]</td>
+                                {# Percentage #}
+                                {% if completenessMatrix[childOrganisationunit.id][form.id] > expectedCompleteness[childOrganisationunit.id][form.id] %}
+                                    <td>Above Expected</td>
+                                {% elseif expectedCompleteness[childOrganisationunit.id][form.id]<=0 %}
+                                    <td>-</td>
+                                {% else %}
+                                    <td>{{ ( completenessMatrix[childOrganisationunit.id][form.id] / expectedCompleteness[childOrganisationunit.id][form.id] )*100  }}</td>
+                                {% endif %}
+
+                            {% else %}
+                                {# Entered records #}
+                                <td>-</td>
+                                {# Percentage #}
+                                <td>-</td>
+                            {% endif %}
+                        {% endfor %}
+                    </tr>
+                {% endfor %}
+            {% endif %}
         </tbody>
     </table>
 </div>
