@@ -19,7 +19,6 @@
  * MA 02110-1301, USA.
  *
  * @since 2012
- * @author John Francis Mukulu <john.f.mukulu@gmail.com>
  * @author Wilfred Felix Senyoni <senyoni@gmail.com>
  *
  */
@@ -27,7 +26,7 @@ namespace Hris\ReportsBundle\Controller;
 
 use Hris\OrganisationunitBundle\Entity\Organisationunit;
 use Hris\FormBundle\Entity\Field;
-use Hris\ReportsBundle\Form\ReportAggregationType;
+use Hris\ReportsBundle\Form\ReportRecordsType;
 use Symfony\Component\HttpFoundation\Request;
 use Doctrine\Common\Collections\ArrayCollection;
 use Symfony\Bundle\FrameworkBundle\Controller\Controller;
@@ -40,161 +39,53 @@ use Ob\HighchartsBundle\Highcharts\Highchart;
 use Zend\Json\Expr;
 
 /**
- * Report Aggregation controller.
+ * Report Records controller.
  *
- * @Route("/reports/aggregation")
+ * @Route("/reports/records")
  */
-class ReportAggregationController extends Controller
+class ReportRecordsController extends Controller
 {
 
     /**
-     * Show Report Aggregation
+     * Show Report Records
      *
-     * @Route("/", name="report_aggregation")
+     * @Route("/", name="report_records")
      * @Method("GET")
      * @Template()
      */
     public function indexAction()
     {
 
-        $aggregationForm = $this->createForm(new ReportAggregationType(),null,array('em'=>$this->getDoctrine()->getManager()));
+        $recordsForm = $this->createForm(new ReportRecordsType(),null,array('em'=>$this->getDoctrine()->getManager()));
 
         return array(
-            'aggregationForm'=>$aggregationForm->createView(),
+            'recordsForm'=>$recordsForm->createView(),
         );
     }
 
     /**
-     * Generate aggregated reports
+     * Generate records reports
      *
-     * @Route("/", name="report_aggregation_generate")
+     * @Route("/", name="report_records_generate")
      * @Method("PUT")
      * @Template()
      */
     public function generateAction(Request $request)
     {
-        $aggregationForm = $this->createForm(new ReportAggregationType(),null,array('em'=>$this->getDoctrine()->getManager()));
-        $aggregationForm->bind($request);
+        $recordsForm = $this->createForm(new ReportRecordsType(),null,array('em'=>$this->getDoctrine()->getManager()));
+        $recordsForm->bind($request);
 
-        if ($aggregationForm->isValid()) {
-            $aggregationFormData = $aggregationForm->getData();
-            $organisationUnit = $aggregationFormData['organisationunit'];
-            $forms = $aggregationFormData['forms'];
-            $organisationunitGroup = $aggregationFormData['organisationunitGroup'];
-            $withLowerLevels = $aggregationFormData['withLowerLevels'];
-            $fields = $aggregationFormData['fields'];
-            $fieldsTwo = $aggregationFormData['fieldsTwo'];
-            $graphType = $aggregationFormData['graphType'];
+        if ($recordsForm->isValid()) {
+            $recordsFormData = $recordsForm->getData();
+            $organisationUnit = $recordsFormData['organisationunit'];
+            $forms = $recordsFormData['forms'];
+            $withLowerLevels = $recordsFormData['withLowerLevels'];
         }
 
-        $results = $this->aggregationEngine($organisationUnit, $forms, $fields, $organisationunitGroup, $withLowerLevels, $fieldsTwo);
-
-        //if only one field selected
-        if($fieldsTwo->getId() == $fields->getId()){
-            foreach($results as $result){
-                $categories[] = $result[strtolower($fields->getName())];
-                $data[] =  $result['total'];
-                if($graphType == "pie"){
-                    $piedata[] = array('name' => $result[strtolower($fields->getName())],'y' => $result['total']);
-                }
-            }
-            if($graphType == "pie") $data = $piedata;
-            $series = array(
-                array(
-                    'name'  => $fields->getName(),
-                    'data'  => $data,
-                ),
-            );
-            $formatterLabel = $fields->getCaption();
-
-        }else{
-            foreach($results as $result){
-                $keys[$result[strtolower($fieldsTwo->getName())]][] = $result['total'];
-                $categoryKeys[$result[strtolower($fields->getName())]] = $result['total'];
-            }
-            $series = array();
-            foreach($keys as $key => $values){
-                $series[] = array(
-                    'name'  => $key,
-                    'yAxis' => 1,
-                    'data'  => $values,
-                );
-            }
-            $formatterLabel = $fieldsTwo->getCaption();
-            $categories = array_keys($categoryKeys);
-        }
-        //var_dump($series);exit();
-        //check which type of chart to display
-        if($graphType == "bar"){
-            $graph = "column";
-        }elseif($graphType == "line"){
-            $graph = "spline";
-        }else{
-            $graph = "pie";
-        }
-        //set the title and sub title
-        $title = $fields->getCaption()." Distribution";
-        if($fieldsTwo->getId() != $fields->getId()) $title .= " with ".$fieldsTwo->getCaption()." cross Tabulation ";
-        /*
-        return array(
-            'organisationunit' => $organisationunit,
-            'forms'   => $forms,
-            'fields' => $fields,
-        );*/
-
-        $yData = array(
-            array(
-                'labels' => array(
-                    'formatter' => new Expr('function () { return this.value + "" }'),
-                    'style'     => array('color' => '#0D0DC1')
-                ),
-                'title' => array(
-                    'text'  => $fields->getCaption(),
-                    'style' => array('color' => '#0D0DC1')
-                ),
-                'opposite' => true,
-            ),
-            array(
-                'labels' => array(
-                'formatter' => new Expr('function () { return this.value + "" }'),
-                'style'     => array('color' => '#AA4643')
-            ),
-            'gridLineWidth' => 1,
-            'title' => array(
-                'text'  => $fields->getCaption(),
-                'style' => array('color' => '#AA4643')
-            ),
-        ),
-        );
 
 
-
-        $dashboardchart = new Highchart();
-        $dashboardchart->chart->renderTo('chart_placeholder'); // The #id of the div where to render the chart
-        $dashboardchart->chart->type($graph);
-        $dashboardchart->title->text($title);
-        $dashboardchart->subtitle->text($organisationUnit->getLongname().' with lower levels');
-        $dashboardchart->xAxis->categories($categories);
-        $dashboardchart->yAxis($yData);
-        if($fieldsTwo->getId() == $fields->getId())$dashboardchart->legend->enabled(false); else $dashboardchart->legend->enabled(true);
-
-        $formatter = new Expr('function () {
-                 var unit = {
-
-                     "'.$formatterLabel.'" : "'. strtolower($formatterLabel).'",
-
-                 }[this.series.name];
-                 if(this.point.name) {
-                    return ""+this.point.name+": <b>"+ this.y+"</b> "+ this.series.name;
-                 }else {
-                    return this.x + ": <b>" + this.y + "</b> " + this.series.name;
-                 }
-             }');
-        $dashboardchart->tooltip->formatter($formatter);
-        $dashboardchart->series($series);
 
         return array(
-            'chart'=>$dashboardchart
         );
     }
 
@@ -218,19 +109,19 @@ class ReportAggregationController extends Controller
         $selectedOrgunitStructure = $entityManager->getRepository('HrisOrganisationunitBundle:OrganisationunitStructure')->findOneBy(array('organisationunit' => $organisationUnit->getId()));
 
         //get the list of options to exclude from the reports
-        $fieldOptionsToExclude = $entityManager->getRepository('HrisFormBundle:FieldOption')->findBy (
-            array('skipInReport' => TRUE)
+        /*$fieldOptionsToExclude = $entityManager->getRepository('HrisFormBundle:FieldOption')->findBy (
+            array('excludeAggregate' => "YES")
         );
 
         //remove the value which have field option set to exclude in reports
         //but check to see if the first field is in the list of fields to remove.
         foreach($fieldOptionsToExclude as $key => $fieldOptionToExclude)
                 if($fieldOptionToExclude->getField()->getId() == $fields->getId())
-                        unset($fieldOptionsToExclude[$key]);
+                        unset($fieldOptionsToExclude[$key]);*/
 
         //create the query to aggregate the records from the static resource table
         $query = "SELECT ResourceTable.".$fields->getName();
-        if ($fieldsTwo->getId() != $fields->getId()) {
+        if ($fieldsTwo->getId() != 8) {
             $query .= " , ResourceTable.".$fieldsTwo->getName()." , count(ResourceTable.".$fieldsTwo->getName().") as total";
        }else{
             $query .= " , count(ResourceTable.".$fields->getName().") as total";
@@ -240,7 +131,7 @@ class ReportAggregationController extends Controller
         $query .= " FROM ".$resourceTableName." ResourceTable inner join hris_organisationunit as Orgunit ON Orgunit.id = ResourceTable.organisationunit_id INNER JOIN hris_organisationunitstructure AS Structure ON Structure.organisationunit_id = ResourceTable.organisationunit_id";
 
         $query .= " WHERE ResourceTable.".$fields->getName()." is not NULL ";
-        if ($fieldsTwo->getId() != $fields->getId()) {
+        if ($fieldsTwo->getId() != 8) {
             $query .= " AND ResourceTable.".$fieldsTwo->getName()." is not NULL";
         }
 
@@ -273,16 +164,16 @@ class ReportAggregationController extends Controller
         }*/
 
         //remove the record which have field option set to exclude in reports
-        foreach($fieldOptionsToExclude as $key => $fieldOptionToExclude)
-            $query .= " AND ResourceTable.".$fieldOptionToExclude->getField()->getName()." != '".$fieldOptionToExclude->getValue()."'";
+        //foreach($fieldOptionsToExclude as $key => $fieldOptionToExclude)
+        //    $query .= " AND ResourceTable.".$fieldOptionToExclude->getField()->getName()." != '".$fieldOptionToExclude->getValue()."'";
 
         $query .= " GROUP BY ResourceTable.".$fields->getName();
-        if ($fieldsTwo->getId() != $fields->getId()) {
+        if ($fieldsTwo->getId() != 8) {
             $query .= " , ResourceTable.".$fieldsTwo->getName();
         }
 
         $query .= " ORDER BY ResourceTable.".$fields->getName();
-        if ($fieldsTwo->getId() != $fields->getId()) {
+        if ($fieldsTwo->getId() != 8) {
             $query .= " , ResourceTable.".$fieldsTwo->getName();
         }
         //echo $query;exit();
