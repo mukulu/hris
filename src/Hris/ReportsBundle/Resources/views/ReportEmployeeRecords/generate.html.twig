@@ -1,0 +1,57 @@
+{% extends '::base.html.twig' %}
+{% block javascripts %}
+    {{ parent() }}
+    <script type="text/javascript" src="{{ asset('commons/js/jquery.dataTables.js') }}"></script>
+    <script type="text/javascript" src="{{ asset('commons/js/dt_settings.js') }}"></script>
+    <script type="text/javascript" language="javascript" src="{{ asset('commons/js/jquery.dataTables.columnFilter.js') }}"></script>
+    <script>window["_GOOG_TRANS_EXT_VER"] = "1";</script>
+    <script type="text/javascript">
+        // Ajax for records table.
+        var ajaxUrl = '{{- path('organisationunit_tree',{'_format':'json'}) -}}{{- urlExtension|raw -}}';
+        jQuery.fn.dataTableExt.oApi.fnSetFilteringDelay=function(a,b){var c=this,b=typeof b=="undefined"?500:b;this.each(function(a){$.fn.dataTableExt.iApiIndex=a;var d=this,e=null,f=null,g=$("input",c.fnSettings().aanFeatures.f);g.unbind("keyup").bind("keyup",function(){var h=d;if(f===null||f!=g.val()){window.clearTimeout(e);f=g.val();e=window.setTimeout(function(){$.fn.dataTableExt.iApiIndex=a;c.fnFilter(g.val())},b)}});return this});return this}
+        $(document).ready( function () {
+            oTable = $('.dataTable').dataTable( {
+                "bProcessing":true,
+                "bServerSide":true,
+                "sAjaxSource": ajaxUrl,
+                "fnServerData": function ( sSource, aoData, fnCallback ) {$.ajax( {"dataType": "json", "type": "POST", "url": sSource, "data": aoData, "success": fnCallback} );},
+                "bJQueryUI": true,
+                "aLengthMenu": [[10, 25, 50,100,200, -1], [10, 25, 50,100,200, "All"]], "sPaginationType": "full_numbers","sPdfOrientation": "landscape",
+                "sDom": '<"H"Tpilfr>t<"F"ip>',
+                "oTableTools": {"aButtons": [ {"sExtends":"copy","mColumns":"visible","sTitle": "{{ title }}" }, {"sExtends":"xls","mColumns":"visible"}, {"sExtends":"pdf","mColumns":"visible"} ] }
+            }).fnSetFilteringDelay().columnFilter({ aoColumns: {{ dataTableAjaxColumns|raw }} });
+        });
+    </script>
+{% endblock javascripts %}
+
+{% block stylesheets %}
+    {{ parent() }}
+    <link rel="stylesheet" href="{{ asset('commons/css/dt_bootstrap.css') }}" />
+{% endblock stylesheets %}
+
+{% block right_content -%}
+    <div class="container">
+        <h1><small>{{ title }}</small></h1>
+
+        <table class="records_list dataTable table table-striped table-bordered table-hover" cellpadding="0" cellspacing="0" border="0">
+            <thead>
+            <tr>
+                <th>No.</th>
+                {% if visibleFields %}
+                    {% for visibleField in visibleFields | slice(0,5) %}
+                        <th>{{ visibleField.name }}</th>
+                    {% endfor %}
+                {% else %}
+                    {% for formField in formFields | slice(0,5) %}
+                        <th>{{ formField.name }}</th>
+                    {% endfor %}
+                {% endif %}
+                <th>Last Updated</th>
+                <th>Duty Post</th>
+            </tr>
+            </thead>
+            <tbody>
+            </tbody>
+        </table>
+    </div>
+{% endblock %}
