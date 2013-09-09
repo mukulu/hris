@@ -80,16 +80,29 @@ class ReportAggregationController extends Controller
             $aggregationFormData = $aggregationForm->getData();
             $organisationUnit = $aggregationFormData['organisationunit'];
             $forms = $aggregationFormData['forms'];
+            $organisationunitGroup = $aggregationFormData['organisationunitGroup'];
+            $withLowerLevels = $aggregationFormData['withLowerLevels'];
             $fields = $aggregationFormData['fields'];
+            $fieldsTwo = $aggregationFormData['fieldsTwo'];
+            $graphType = $aggregationFormData['graphType'];
         }
 
-        $results = $this->aggregationEngine($organisationUnit, $forms, $fields);
 
-        foreach($results as $result){
-            $categories[] = $result[strtolower($fields->getName())];
-            $data[] =  $result['total'];
+        $results = $this->aggregationEngine($organisationUnit, $forms, $fields, $organisationunitGroup, $withLowerLevels, $fieldsTwo, $graphType);
+
+        //if only one field selected
+        if($fieldsTwo->getId() == 8){
+            foreach($results as $result){
+                $categories[] = $result[strtolower($fields->getName())];
+                $data[] =  $result['total'];
+            }
+        }else{
+            foreach($results as $result){
+                $keys[$result[strtolower($fieldsTwo->getName())]][] = $result['total'];
+                $categoryKeys[$result[strtolower($fields->getName())]] = $result['total'];
+            }
         }
-        //var_dump($categories);exit();
+        //var_dump($keys);exit();
 
         /*
         return array(
@@ -97,17 +110,19 @@ class ReportAggregationController extends Controller
             'forms'   => $forms,
             'fields' => $fields,
         );*/
-
-        $series = array(
-            array(
-                'name'  => $fields->getCaption(),
+        $series = array();
+        foreach($keys as $key => $values){
+            $series[] = array(
+                'name'  => $key,
                 'type'  => 'column',
-                'color' => '#0D0DC1',
                 'yAxis' => 1,
-                'data'  => $data,
-            ),
+                'data'  => $values,
+            );
+        }
 
-        );
+
+
+
         $yData = array(
             array(
                 'labels' => array(
@@ -122,32 +137,36 @@ class ReportAggregationController extends Controller
             ),
             array(
                 'labels' => array(
-                    'formatter' => new Expr('function () { return this.value + "" }'),
-                    'style'     => array('color' => '#AA4643')
-                ),
-                'gridLineWidth' => 0,
+                'formatter' => new Expr('function () { return this.value + "" }'),
+                'style'     => array('color' => '#AA4643')
             ),
+            'gridLineWidth' => 1,
+            'title' => array(
+                'text'  => $fields->getCaption(),
+                'style' => array('color' => '#AA4643')
+            ),
+        ),
         );
-        //$categories = array('2003', '2004', '2005', '2005', '2006', '2007', '2008', '2009', '2010', '2011', '2012', '2013');
+        $categories = array_keys($categoryKeys);
 
         $dashboardchart = new Highchart();
         $dashboardchart->chart->renderTo('chart_placeholder'); // The #id of the div where to render the chart
         $dashboardchart->chart->type('column');
         $dashboardchart->title->text($fields->getCaption().' Distribution');
-        $dashboardchart->subtitle->text('Ministry of Health And Social Welfare with lower levels');
+        $dashboardchart->subtitle->text($organisationUnit->getLongname().' with lower levels');
         $dashboardchart->xAxis->categories($categories);
         $dashboardchart->yAxis($yData);
         $dashboardchart->legend->enabled(false);
         $formatter = new Expr('function () {
                  var unit = {
 
-                     $fields->getCaption(): strtolower($fields->getCaption()),
+                     "'.$fieldsTwo->getCaption().'" : "'. strtolower($fieldsTwo->getCaption()).'",
 
                  }[this.series.name];
                  if(this.point.name) {
-                    return ""+this.point.name+": <b>"+ this.y+"</b> "+ unit;
+                    return ""+this.point.name+": <b>"+ this.y+"</b> "+ this.series.name;
                  }else {
-                    return this.x + ": <b>" + this.y + "</b> " + unit;
+                    return this.x + ": <b>" + this.y + "</b> " + this.series.name;
                  }
              }');
         $dashboardchart->tooltip->formatter($formatter);
@@ -160,59 +179,92 @@ class ReportAggregationController extends Controller
 
 
     /**
+     * Aggregation Engine
+     *
      * @param Organisationunit $organisationUnit
-     * @param Form $forms
+     * @param ArrayCollection $forms
      * @param Field $fields
+     * @param ArrayCollection $organisationunitGroup
+     * @param $withLowerLevels
+     * @param Field $fieldsTwo
+     * @param $graphType
+     * @return mixed
      */
-    private function aggregationEngine(Organisationunit $organisationUnit,  ArrayCollection $forms, Field $fields)
+    private function aggregationEngine(Organisationunit $organisationUnit,  ArrayCollection $forms, Field $fields, ArrayCollection $organisationunitGroup, $withLowerLevels, Field $fieldsTwo, $graphType)
     {
-        //var_dump($forms);exit();
+
         $entityManager = $this->getDoctrine()->getManager();
-        $query = "SELECT ResourceTable.".$fields->getName();
-       // if ($fieldTwoId != SystemProperties::$useonefieldID) {
-       //     $query .= " , ResourceTable.".$fieldTwo->getName()." , count(ResourceTable.".$fieldTwo->getName().") as total";
-       //}else{
-            $query .= " , count(ResourceTable.".$fields->getName().") as total";
-       // }
-        $resourceTableName = "_resource_all_fields";
         $selectedOrgunitStructure = $entityManager->getRepository('HrisOrganisationunitBundle:OrganisationunitStructure')->findOneBy(array('organisationunit' => $organisationUnit->getId()));
+
+        //get the list of options to exclude from the reports
+        /*$fieldOptionsToExclude = $entityManager->getRepository('HrisFormBundle:FieldOption')->findBy (
+            array('excludeAggregate' => "YES")
+        );
+
+        //remove the value which have field option set to exclude in reports
+        //but check to see if the first field is in the list of fields to remove.
+        foreach($fieldOptionsToExclude as $key => $fieldOptionToExclude)
+                if($fieldOptionToExclude->getField()->getId() == $fields->getId())
+                        unset($fieldOptionsToExclude[$key]);*/
+
+        //create the query to aggregate the records from the static resource table
+        $query = "SELECT ResourceTable.".$fields->getName();
+        if ($fieldsTwo->getId() != 8) {
+            $query .= " , ResourceTable.".$fieldsTwo->getName()." , count(ResourceTable.".$fieldsTwo->getName().") as total";
+       }else{
+            $query .= " , count(ResourceTable.".$fields->getName().") as total";
+       }
+        $resourceTableName = "_resource_all_fields";
+
         $query .= " FROM ".$resourceTableName." ResourceTable inner join hris_organisationunit as Orgunit ON Orgunit.id = ResourceTable.organisationunit_id INNER JOIN hris_organisationunitstructure AS Structure ON Structure.organisationunit_id = ResourceTable.organisationunit_id";
 
         $query .= " WHERE ResourceTable.".$fields->getName()." is not NULL ";
-        //if ($fieldTwoId != SystemProperties::$useonefieldID) {
-        //    $query .= " AND ResourceTable.".$fieldTwo->getName()." is not NULL";
-        //}
-
-        //filter the records by the selected form and facility
-        foreach($forms as $form){
-            $query .= " AND ResourceTable.form_id IN (".$form->getId().")";
+        if ($fieldsTwo->getId() != 8) {
+            $query .= " AND ResourceTable.".$fieldsTwo->getName()." is not NULL";
         }
 
-        //if($selectUnit == "Yes"){
+        //filter the records by the selected form and facility
+        $query .= " AND ResourceTable.form_id IN (";
+        foreach($forms as $form){
+            $query .= $form->getId()." ,";
+        }
+
+        //remove the last comma in the query
+        $query = rtrim($query,",").")";
+
+        if($withLowerLevels){
             $query .= " AND Structure.level".$selectedOrgunitStructure->getLevel()->getLevel()."_id=".$organisationUnit->getId();
             $query .= " AND  Structure.level_id >= ";
             $query .= "(SELECT hris_organisationunitstructure.level_id FROM hris_organisationunitstructure WHERE hris_organisationunitstructure.organisationunit_id=".$organisationUnit->getId()." )";
-        //}else{
-        //    $query .= " AND ResourceTable.orgunit_id=".$orgunitId;
-        //}
+        }else{
+            $query .= " AND ResourceTable.organisationunit_id=".$organisationUnit->getId();
+        }
 
         //filter the records if the organisation group was choosen
-        //if(!empty($orgunitGroupId))$subQuery .= " AND (type='".$orgunitGroup->getName()."' OR ownership='".$orgunitGroup->getName()."' OR administrative='".$orgunitGroup->getName()."')";
+        /*if(!empty($organisationunitGroup)){
+            foreach($organisationunitGroup as $organisationunitGroups){
+                $groups .= "'".$organisationunitGroups->getName()."',";
+            }
+            //remove the last comma in the query
+            $groups = rtrim($groups,",");
+
+            $query .= " AND (ResourceTable.type IN (".$groups.") OR ownership IN (".$groups.") )";//OR administrative IN (".$groups.")
+        }*/
 
         //remove the record which have field option set to exclude in reports
-        /*foreach($fieldOptionsToExclude as $key => $fieldOptionToExclude)
-            $query .= " AND ResourceTable.".$fieldOptionToExclude->getField()->getName()." != '".$fieldOptionToExclude->getValue()."'";
-        */
+        //foreach($fieldOptionsToExclude as $key => $fieldOptionToExclude)
+        //    $query .= " AND ResourceTable.".$fieldOptionToExclude->getField()->getName()." != '".$fieldOptionToExclude->getValue()."'";
+
         $query .= " GROUP BY ResourceTable.".$fields->getName();
-        //if ($fieldTwoId != SystemProperties::$useonefieldID) {
-        //    $query .= " , ResourceTable.".$fieldTwo->getName();
-        //}
+        if ($fieldsTwo->getId() != 8) {
+            $query .= " , ResourceTable.".$fieldsTwo->getName();
+        }
 
         $query .= " ORDER BY ResourceTable.".$fields->getName();
-        //if ($fieldTwoId != SystemProperties::$useonefieldID) {
-        //    $query .= " , ResourceTable.".$fieldTwo->getName();
-        //}
-        //echo $query;
+        if ($fieldsTwo->getId() != 8) {
+            $query .= " , ResourceTable.".$fieldsTwo->getName();
+        }
+        //echo $query;exit();
         //get the records
         $report = $entityManager -> getConnection() -> executeQuery($query) -> fetchAll();
         return $report;
