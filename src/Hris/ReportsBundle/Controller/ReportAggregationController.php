@@ -88,37 +88,61 @@ class ReportAggregationController extends Controller
         }
 
 
-        $results = $this->aggregationEngine($organisationUnit, $forms, $fields, $organisationunitGroup, $withLowerLevels, $fieldsTwo, $graphType);
+        $results = $this->aggregationEngine($organisationUnit, $forms, $fields, $organisationunitGroup, $withLowerLevels, $fieldsTwo);
 
         //if only one field selected
         if($fieldsTwo->getId() == 8){
             foreach($results as $result){
                 $categories[] = $result[strtolower($fields->getName())];
                 $data[] =  $result['total'];
+                if($graphType == "pie"){
+                    $piedata[] = array('name' => $result[strtolower($fields->getName())],'y' => $result['total']);
+                }
             }
+            if($graphType == "pie") $data = $piedata;
+            $series = array(
+                array(
+                    'name'  => $fields->getName(),
+                    'data'  => $data,
+                ),
+            );
+            $formatterLabel = $fields->getCaption();
+
         }else{
             foreach($results as $result){
                 $keys[$result[strtolower($fieldsTwo->getName())]][] = $result['total'];
                 $categoryKeys[$result[strtolower($fields->getName())]] = $result['total'];
             }
+            $series = array();
+            foreach($keys as $key => $values){
+                $series[] = array(
+                    'name'  => $key,
+                    'yAxis' => 1,
+                    'data'  => $values,
+                );
+            }
+            $formatterLabel = $fieldsTwo->getCaption();
+            $categories = array_keys($categoryKeys);
         }
-        //var_dump($keys);exit();
-
+        //var_dump($series);exit();
+        //check which type of chart to display
+        if($graphType == "bar"){
+            $graph = "column";
+        }elseif($graphType == "line"){
+            $graph = "spline";
+        }else{
+            $graph = "pie";
+        }
+        //set the title and sub title
+        $title = $fields->getCaption()." Distribution";
+        if($fieldsTwo->getId() != 8) $title .= " with ".$fieldsTwo->getCaption()." cross Tabulation ";
         /*
         return array(
             'organisationunit' => $organisationunit,
             'forms'   => $forms,
             'fields' => $fields,
         );*/
-        $series = array();
-        foreach($keys as $key => $values){
-            $series[] = array(
-                'name'  => $key,
-                'type'  => 'column',
-                'yAxis' => 1,
-                'data'  => $values,
-            );
-        }
+
 
 
 
@@ -147,20 +171,22 @@ class ReportAggregationController extends Controller
             ),
         ),
         );
-        $categories = array_keys($categoryKeys);
+
+
 
         $dashboardchart = new Highchart();
         $dashboardchart->chart->renderTo('chart_placeholder'); // The #id of the div where to render the chart
-        $dashboardchart->chart->type('column');
-        $dashboardchart->title->text($fields->getCaption().' Distribution');
+        $dashboardchart->chart->type($graph);
+        $dashboardchart->title->text($title);
         $dashboardchart->subtitle->text($organisationUnit->getLongname().' with lower levels');
         $dashboardchart->xAxis->categories($categories);
         $dashboardchart->yAxis($yData);
         $dashboardchart->legend->enabled(false);
+
         $formatter = new Expr('function () {
                  var unit = {
 
-                     "'.$fieldsTwo->getCaption().'" : "'. strtolower($fieldsTwo->getCaption()).'",
+                     "'.$formatterLabel.'" : "'. strtolower($formatterLabel).'",
 
                  }[this.series.name];
                  if(this.point.name) {
@@ -190,7 +216,7 @@ class ReportAggregationController extends Controller
      * @param $graphType
      * @return mixed
      */
-    private function aggregationEngine(Organisationunit $organisationUnit,  ArrayCollection $forms, Field $fields, ArrayCollection $organisationunitGroup, $withLowerLevels, Field $fieldsTwo, $graphType)
+    private function aggregationEngine(Organisationunit $organisationUnit,  ArrayCollection $forms, Field $fields, ArrayCollection $organisationunitGroup, $withLowerLevels, Field $fieldsTwo)
     {
 
         $entityManager = $this->getDoctrine()->getManager();
