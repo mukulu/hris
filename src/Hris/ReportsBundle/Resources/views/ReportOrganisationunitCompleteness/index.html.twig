@@ -16,10 +16,8 @@
                 $(organisationunitLevelsTagId).find('option').remove();
                 if (jQuery.isEmptyObject(organisationunitLevels)){
                     $(organisationunitLevelsTagId).attr('disabled', 'true');
-                    $(organisationunitLevelsSubmitTagId).attr('disabled', 'true');
                 }else {
                     $(organisationunitLevelsTagId).removeAttr('disabled');
-                    $(organisationunitLevelsSubmitTagId).removeAttr('disabled');
                     $.each(organisationunitLevels, function(organisationunitLevelIndex, organisationunitLevel) {
                         $(organisationunitLevelsTagId).append(new Option(organisationunitLevel['name'], organisationunitLevel['id']));
                     });
@@ -78,6 +76,16 @@
 {% block right_content -%}
     <h1><small>Report Organisationunit Completeness</small></h1>
 
+    {% if app.session.flashbag.get('warning') %}
+        <div class="alerts">
+        {% for flashMessage in app.session.flashbag.get('warning') %}
+            <div class="alert-message warning">
+                <a class="close" href="#">×</a>
+                <p><strong>Warning!</strong> {{ flashMessage }}.</p>
+            </div>
+        {% endfor %}
+        </div>
+    {% endif %}
     {{ form_start(organisationunitCompletenessForm, { 'method' : 'PUT' } ) }}
 
     <div>

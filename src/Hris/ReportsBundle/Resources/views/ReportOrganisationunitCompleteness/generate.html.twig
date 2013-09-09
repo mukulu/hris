@@ -2,7 +2,7 @@
 {% block javascripts %}
     {{ parent() }}
     <script type="text/javascript" src="{{ asset('commons/js/jquery.dataTables.js') }}"></script>
-    <script type="text/javascript" src="{{ asset('commons/js/dt_settings.ajax.js') }}"></script>
+    <script type="text/javascript" src="{{ asset('commons/js/dt_settings.js') }}"></script>
     <script>window["_GOOG_TRANS_EXT_VER"] = "1";</script>
 {% endblock javascripts %}
 
@@ -60,25 +60,26 @@
                     {% endif %}
 
                 {% endfor %}
-            {% endif %}
-        </tr>
-        <tr>
-            {% if organisationunitChildren or sameLevel %}
-                {% for form in forms %}
-                    <th>Entered Records</th>
-                    <th>Expected Records</th>
-                    <th>Percentage</th>
-                {% endfor %}
-            {% else %}
+            {% elseif visibleFields %}
+                {# Headers for records compeleteness #}
                 <th>Sn</th>
-                {% if visibleFields %}
-                    {% for visibleField in VisibleFields %}
-                        <th>visibleField.caption</th>
-                    {% endfor %}
-                    <th>Form Name</th>
-                {% endif %}
+                {% for visibleField in visibleFields %}
+                    <th>{{ visibleField.caption }}</th>
+                {% endfor %}
+                <th>Form name</th>
             {% endif %}
         </tr>
+
+        {% if organisationunitChildren or sameLevel %}
+            <tr>
+            {% for form in forms %}
+                <th>Entered Records</th>
+                <th>Expected Records</th>
+                <th>Percentage</th>
+            {% endfor %}
+            </tr>
+        {% endif %}
+
 
 
         </thead>
@@ -113,6 +114,17 @@
                                 <td>-</td>
                             {% endif %}
                         {% endfor %}
+                    </tr>
+                {% endfor %}
+            {% else %}
+                {% for recordInstance in recordInstances %}
+                    {% set counter = counter + 1 %}
+                    <tr>
+                        <td>{{ counter }}</td>
+                        {% for visibleField in visibleFields  %}
+                            <td>{{ recordsToDisplay[recordInstance][visibleField.getUid()] }}</td>
+                        {% endfor %}
+                        <td>{{ recordsToDisplay[recordInstance]['form'] }}</td>
                     </tr>
                 {% endfor %}
             {% endif %}
