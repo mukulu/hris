@@ -4,7 +4,66 @@
     <h1><small>Validation creation</small></h1>
 
     <form action="{{ path('validation_create') }}" method="post" {{ form_enctype(form) }}>
-        {{ form_widget(form) }}
+        <label for="hris_dataqualitybundle_validationtype_name" class="required">Name</label>
+        {{ form_widget(form.name) }}
+        <label for="hris_dataqualitybundle_validationtype_description" class="required">Description</label>
+        {{ form_widget(form.description) }}
+
+        <div>
+
+        <label for="hris_dataqualitybundle_leftexpression" class="required">Left Expression</label>
+        <select name="left_field" size="10" id="left_field" class="left_field" multiple="multiple" style="width:250px" ondblclick="document.addValidation.hris_dataqualitybundle_validationtype[leftExpression].value+='['+this.options[ this.selectedIndex ].value+']'">
+
+            {% for leftExpressionField in leftExpressionFields  %}
+                <option value="{{ leftExpressionField.id }}">{{ leftExpressionField.name }}</option>
+            {% endfor %}
+        </select>
+
+            <input type="button" value=" + " name="add" onclick="document.addValidation.hris_dataqualitybundle_validationtype[leftExpression].value+='+'">
+            <input type="button" value=" - " name="minus" onclick="document.addValidation.lefExpression.value+='-'">
+            <input type="button" value=" * " name="multiply" onclick="document.addValidation.lefExpression.value+='*'">
+            <input type="button" value=" / " name="devide" onclick="document.addValidation.leftExpression.value+='/'">
+            <input type="button" value=" % " name="reminder" onclick="document.addValidation.leftExpression.value+='%'">
+            <input type="button" value=" ( " name="brckt1" onclick="document.addValidation.leftExpression.value+='('">
+            <input type="button" value=" ) " name="brckt2" onclick="document.addValidation.leftExpression.value+=')'">
+
+            {{ form_widget(form.leftExpression) }}
+
+        <br/>
+
+
+        </div>
+
+
+        <div>
+
+        <label for="hris_dataqualitybundle_rightexpression" class="required">Right Expression</label>
+        <select name="right_field" size="10" multiple="multiple" style="width:250px">
+            {% for rightExpressionField in rightExpressionFields  %}
+                <option value="{{ rightExpressionField.id }}">{{ rightExpressionField.name }}</option>
+            {% endfor %}
+        </select>
+
+            <input type="button" value=" + " name="add" onclick="document.addValidation.right_expression.value+='+'">
+            <input type="button" value=" - " name="minus" onclick="document.addValidation.right_expression.value+='-'">
+            <input type="button" value=" * " name="multiply" onclick="document.addValidation.right_expression.value+='*'">
+            <input type="button" value=" / " name="devide" onclick="document.addValidation.right_expression.value+='/'">
+            <input type="button" value=" % " name="reminder" onclick="document.addValidation.left_expression.value+='%'">
+            <input type="button" value=" ( " name="brckt1" onclick="document.addValidation.right_expression.value+='('">
+            <input type="button" value=" ) " name="brckt2" onclick="document.addValidation.right_expression.value+=')'">
+
+            {{ form_widget(form.rightExpression) }}
+            <br/>
+        </div>
+
+        <div>
+            <label for="hris_dataqualitybundle_validationtype_operator" class="required">Operator</label>
+
+            {{ form_widget(form.operator) }}
+            </div>
+
+
+
         <br/>
         <ul class="record_actions inline" style="float:left;">
             <li>
