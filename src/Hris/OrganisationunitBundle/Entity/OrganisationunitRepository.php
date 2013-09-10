@@ -67,7 +67,7 @@ class OrganisationunitRepository extends EntityRepository
      */
     public function getImmediateChildren( Organisationunit $organiastionunit)
     {
-        $queryBuilder = $this->getEntityManager()-> $this->getEntityManager()->createQueryBuilder();
+        $queryBuilder = $this->getEntityManager()->createQueryBuilder();
         $query = $queryBuilder->select('organisationunit')
             ->from('HrisOrganisationunitBundle:Organisationunit','organisationunit')
             ->where('organisationunit.parent = :parent')
