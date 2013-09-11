@@ -35,6 +35,7 @@ use Sensio\Bundle\FrameworkExtraBundle\Configuration\Route;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Template;
 use Hris\RecordsBundle\Entity\Record;
 use Hris\RecordsBundle\Form\RecordType;
+use Doctrine\Common\Collections\ArrayCollection;
 use Hris\FormBundle\Entity\Field;
 use Hris\FormBundle\Form\FormType;
 use Hris\FormBundle\Form\DesignFormType;
@@ -178,6 +179,18 @@ class RecordController extends Controller
         $formEntity = $em->getRepository('HrisFormBundle:Form')->find($id);
         $tableName = json_encode($em->getClassMetadata('HrisFormBundle:Form')->getTableName());
 
+        $fields = $formEntity->getSimpleField();
+
+        $selectFields = array();
+        $key = NULL;
+
+        foreach ($fields as $key => $field){
+            if($field->getInputType()->getName() == 'Select'){
+                $selectFields[] = $field->getUid();
+            }
+        }
+
+        var_dump(json_encode($selectFields));
 
         return array(
 
@@ -185,6 +198,7 @@ class RecordController extends Controller
             'title' => $formEntity->getTitle(),
             'id' => $formEntity->getId(),
             'table_name' => $tableName,
+            'fields' => json_encode($selectFields),
         );
     }
 
