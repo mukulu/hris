@@ -11,7 +11,10 @@ class ValidationType extends AbstractType
 {
 
     public function buildForm(FormBuilderInterface $builder, array $options)
+<<<<<<< Updated upstream
 
+=======
+>>>>>>> Stashed changes
       {
           $builder
 
