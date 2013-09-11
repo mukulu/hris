@@ -9,7 +9,9 @@ use Symfony\Component\OptionsResolver\OptionsResolverInterface;
 
 class ValidationType extends AbstractType
 {
-    public function buildForm(FormBuilderInterface $builder,array $options)
+
+    public function buildForm(FormBuilderInterface $builder, array $options)
+
       {
           $builder
 
