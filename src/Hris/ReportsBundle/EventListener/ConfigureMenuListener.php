@@ -70,7 +70,7 @@ class ConfigureMenuListener
             )
         );
         $reportsModule->addChild('Completeness Report',
-            array('uri'=>'#completenessreport',
+            array('route'=>'report_organisationunit_completeness',
                 'extras'=>array('tag'=>'div'),
                 'name'=>'Completeness Report',
                 'attributes'=> array('class'=>'accordion-group'),

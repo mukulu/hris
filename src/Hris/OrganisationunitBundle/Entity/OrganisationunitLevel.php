@@ -56,14 +56,6 @@ class OrganisationunitLevel
      * @ORM\Column(name="uid", type="string", length=13, unique=true)
      */
     private $uid;
-    
-    /**
-     * @var string $dhisUid
-     *
-     * @Gedmo\Versioned
-     * @ORM\Column(name="dhisUid", type="string", length=11, nullable=true, unique=true)
-     */
-    private $dhisUid;
 
     /**
      * @var integer $level
@@ -289,29 +281,6 @@ class OrganisationunitLevel
     public function getDataentrylevel()
     {
         return $this->dataentrylevel;
-    }
-
-    /**
-     * Set dhisUid
-     *
-     * @param string $dhisUid
-     * @return OrganisationunitLevel
-     */
-    public function setDhisUid($dhisUid)
-    {
-        $this->dhisUid = $dhisUid;
-    
-        return $this;
-    }
-
-    /**
-     * Get dhisUid
-     *
-     * @return string 
-     */
-    public function getDhisUid()
-    {
-        return $this->dhisUid;
     }
 
     /**

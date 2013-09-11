@@ -121,10 +121,13 @@ class LoadResourceTableData extends AbstractFixture implements OrderedFixtureInt
         // Generate resource tables
         $resourceTables = $manager->getRepository('HrisFormBundle:ResourceTable')->findAll();
         foreach($resourceTables as $resourceTableKey=>$resourceTable) {
-            $success = $resourceTable->generateResourceTable($manager);
-            $messageLog = $resourceTable->getMessageLog();
-            if($success) echo $messageLog;
-            else echo "Failed with:".$messageLog;
+            // Ugly hack to generate resource table for "All Fields" only
+            if($resourceTable->getName() == "All Fields") {
+                $success = $resourceTable->generateResourceTable($manager);
+                $messageLog = $resourceTable->getMessageLog();
+                if($success) echo $messageLog;
+                else echo "Failed with:".$messageLog;
+            }
         }
 	}
 	

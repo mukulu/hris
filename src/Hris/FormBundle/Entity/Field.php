@@ -103,12 +103,28 @@ class Field
     private $isUnique;
 
     /**
+     * @var boolean isCalculated
+     *
+     * @Gedmo\Versioned
+     * @ORM\Column(name="isCalculated", type="boolean", nullable=True)
+     */
+    private $isCalculated;
+
+    /**
      * @var string $description
      *
      * @Gedmo\Versioned
      * @ORM\Column(name="description", type="text", nullable=true)
      */
     private $description;
+
+    /**
+     * @var string $calculatedExpression
+     *
+     * @Gedmo\Versioned
+     * @ORM\Column(name="calculatedExpression", type="text", nullable=true)
+     */
+    private $calculatedExpression;
 
     /**
      * @var boolean $hashistory
@@ -848,6 +864,7 @@ class Field
         $this->hashistory = false;
         $this->isUnique = false;
         $this->compulsory = True;
+        $this->isCalculated=False;
     }
     
     /**
@@ -891,5 +908,51 @@ class Field
     public function __toString()
     {
         return $this->caption;
+    }
+
+    /**
+     * Set isCalculated
+     *
+     * @param boolean $isCalculated
+     * @return Field
+     */
+    public function setIsCalculated($isCalculated)
+    {
+        $this->isCalculated = $isCalculated;
+    
+        return $this;
+    }
+
+    /**
+     * Get isCalculated
+     *
+     * @return boolean 
+     */
+    public function getIsCalculated()
+    {
+        return $this->isCalculated;
+    }
+
+    /**
+     * Set calculatedExpression
+     *
+     * @param string $calculatedExpression
+     * @return Field
+     */
+    public function setCalculatedExpression($calculatedExpression)
+    {
+        $this->calculatedExpression = $calculatedExpression;
+    
+        return $this;
+    }
+
+    /**
+     * Get calculatedExpression
+     *
+     * @return string 
+     */
+    public function getCalculatedExpression()
+    {
+        return $this->calculatedExpression;
     }
 }

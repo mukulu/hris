@@ -14,10 +14,6 @@
                 <td>{{ entity.uid }}</td>
             </tr>
             <tr>
-                <th>Dhisuid</th>
-                <td>{{ entity.dhisUid }}</td>
-            </tr>
-            <tr>
                 <th>Level</th>
                 <td>{{ entity.level }}</td>
             </tr>
@@ -31,7 +27,7 @@
             </tr>
             <tr>
                 <th>Dataentrylevel</th>
-                <td>{{ entity.dataentrylevel }}</td>
+                <td>{% if entity.dataentrylevel %} True {% else %} False {% endif %}</td>
             </tr>
             <tr>
                 <th>Datecreated</th>

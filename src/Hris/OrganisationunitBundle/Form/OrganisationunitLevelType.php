@@ -36,7 +36,9 @@ class OrganisationunitLevelType extends AbstractType
             ->add('level')
             ->add('name')
             ->add('description')
-            ->add('dataentrylevel')
+            ->add('dataentrylevel',null,array(
+                'required'=>false,
+            ))
         ;
     }
 

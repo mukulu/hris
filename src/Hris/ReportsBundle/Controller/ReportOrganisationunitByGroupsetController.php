@@ -75,9 +75,33 @@ class ReportOrganisationunitByGroupsetController extends Controller
             $organisationunitGroupset = $organisationunitByGroupsetFormData['organisationunitGroupset'];
         }
 
+        $title = $organisationunit->getLongname().": Organisation Unit Report by ".$organisationunitGroupset->getName();
+
+        $queryBuilder = $this->getDoctrine()->getManager()->createQueryBuilder();
+        $organisationunitGroupCounts = $queryBuilder->select( 'organisationunitGroup.name,organisationunitGroup.id, COUNT(organisationunit.id) as organisationunitCount ')
+            ->from('HrisOrganisationunitBundle:OrganisationunitGroupset','organisationunitGroupset')
+            ->join('organisationunitGroupset.organisationunitGroup','organisationunitGroup')
+            ->join('organisationunitGroup.organisationunit','organisationunit')
+            ->join('organisationunit.organisationunitStructure','organisationunitStructure')
+            ->join('organisationunitStructure.level','organisationunitLevel')
+            ->where('organisationunitGroupset.id = :organisationunitGroupsetId')
+            ->andWhere('organisationunit.active=True')
+            ->andWhere('organisationunitLevel.level >= (
+                                        SELECT selectedOrganisationunitLevel.level
+                                        FROM HrisOrganisationunitBundle:OrganisationunitStructure selectedOrganisationunitStructure
+                                        INNER JOIN selectedOrganisationunitStructure.level selectedOrganisationunitLevel
+                                        WHERE selectedOrganisationunitStructure.organisationunit=:selectedOrganisationunit )'
+            )
+            ->groupBy('organisationunitGroup.name,organisationunitGroup.id')
+            ->andWhere('organisationunitStructure.level'.$organisationunit->getOrganisationunitStructure()->getLevel()->getLevel().'Organisationunit=:levelId')
+            ->setParameters(array('organisationunitGroupsetId'=> $organisationunitGroupset->getId(),'levelId'=>$organisationunit->getId(),'selectedOrganisationunit'=>$organisationunit->getId()))
+            ->getQuery()->getResult();
+
         return array(
             'organisationunit' => $organisationunit,
             'organisationunitGroupset'   => $organisationunitGroupset,
+            'organisationunitGroupCounts' => $organisationunitGroupCounts,
+            'title' => $title,
         );
     }
 

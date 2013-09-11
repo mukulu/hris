@@ -28,7 +28,6 @@
                     <th>Name</th>
                     <th>Level</th>
                     <th>Description</th>
-                    <th>Dhisuid</th>
                     <th>Dataentrylevel</th>
                     <th>Actions</th>
                 </tr>
@@ -39,8 +38,7 @@
                     <td><a href="{{ path('organisationunitlevel_show', { 'id': entity.id }) }}">{{ entity.name }}</a></td>
                     <td>{{ entity.level }}</td>
                     <td>{{ entity.description }}</td>
-                    <td>{{ entity.dhisUid }}</td>
-                    <td>{{ entity.dataentrylevel }}</td>
+                    <td>{% if entity.dataentrylevel %} True {% else %} False {% endif %}</td>
                     <td>
                     <ul class="inline">
                         <li>

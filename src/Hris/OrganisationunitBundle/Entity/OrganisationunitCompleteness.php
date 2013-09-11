@@ -68,6 +68,17 @@ class OrganisationunitCompleteness
     private $organisationunit;
 
     /**
+     * @var Form
+     *
+     * @ORM\ManyToOne(targetEntity="Hris\FormBundle\Entity\Form",inversedBy="organisationunitCompleteness")
+     * @ORM\JoinColumns({
+     *   @ORM\JoinColumn(name="form_id", referencedColumnName="id",nullable=false)
+     * })
+     * @ORM\GeneratedValue(strategy="NONE")
+     */
+    private $form;
+
+    /**
      * @var integer $expectation
      *
      * @Gedmo\Versioned
@@ -235,5 +246,28 @@ class OrganisationunitCompleteness
     {
         $completeness = 'Organisationunit:'.$this->getOrganisationunit().' Expectation:'.$this->getExpectation();
         return $completeness;
+    }
+
+    /**
+     * Set form
+     *
+     * @param \Hris\FormBundle\Entity\Form $form
+     * @return OrganisationunitCompleteness
+     */
+    public function setForm(\Hris\FormBundle\Entity\Form $form)
+    {
+        $this->form = $form;
+    
+        return $this;
+    }
+
+    /**
+     * Get form
+     *
+     * @return \Hris\FormBundle\Entity\Form 
+     */
+    public function getForm()
+    {
+        return $this->form;
     }
 }

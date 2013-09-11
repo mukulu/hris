@@ -45,10 +45,13 @@ class ReportAggregationType extends AbstractType
                     )
                 ))->addModelTransformer($transformer)
             )
-            ->add('withLowerLevels','checkbox')
+            ->add('withLowerLevels','checkbox',array(
+                'required'=>False,
+            ))
             ->add('organisationunitGroup','entity',array(
-                'class'=>'HrisOrganisationunitBundle:OrganisationunitGroup',
+                    'class'=>'HrisOrganisationunitBundle:OrganisationunitGroup',
                     'multiple'=>true,
+                    'required'=>False,
                 )
             )
             ->add('forms','entity', array(
@@ -64,8 +67,9 @@ class ReportAggregationType extends AbstractType
                     return $er->createQueryBuilder('field')
                         ->innerJoin('field.inputType','inputType')
                         ->where('inputType.name=:inputTypeName')
+                        ->orWhere('field.isCalculated=True')
                         ->setParameter('inputTypeName',"Select")
-                        ->orderBy('field.name');
+                        ->orderBy('field.isCalculated,field.name','ASC');
                 },
                 'constraints'=> array(
                     new NotBlank(),
@@ -73,12 +77,15 @@ class ReportAggregationType extends AbstractType
             ))
             ->add('fieldsTwo','entity',array(
                 'class'=>'HrisFormBundle:Field',
+                'empty_value' => '--SELECT--',
+                'required'=>False,
                 'query_builder'=>function(EntityRepository $er) {
                     return $er->createQueryBuilder('field')
                         ->innerJoin('field.inputType','inputType')
                         ->where('inputType.name=:inputTypeName')
+                        ->orWhere('field.isCalculated=True')
                         ->setParameter('inputTypeName',"Select")
-                        ->orderBy('field.name');
+                        ->orderBy('field.isCalculated,field.name','ASC');
                 },
                 'constraints'=> array(
                     new NotBlank(),

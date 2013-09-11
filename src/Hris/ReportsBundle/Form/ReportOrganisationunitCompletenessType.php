@@ -31,7 +31,7 @@ use Symfony\Component\Form\FormBuilderInterface;
 use Symfony\Component\OptionsResolver\OptionsResolverInterface;
 use Symfony\Component\Validator\Constraints\NotBlank;
 
-class ReportOrganisationunitByLevelsType extends AbstractType
+class ReportOrganisationunitCompletenessType extends AbstractType
 {
     public function buildForm(FormBuilderInterface $builder, array $options)
     {
@@ -56,6 +56,13 @@ class ReportOrganisationunitByLevelsType extends AbstractType
                     new NotBlank(),
                 )
             ))
+            ->add('forms','entity', array(
+                'class'=>'HrisFormBundle:Form',
+                'multiple'=>true,
+                'constraints'=>array(
+                    new NotBlank(),
+                )
+            ))
             ->add('submit','submit')
         ;
     }
@@ -72,6 +79,6 @@ class ReportOrganisationunitByLevelsType extends AbstractType
 
     public function getName()
     {
-        return 'hris_reportsbundle_reportorganisationunitlevelstype';
+        return 'hris_reportsbundle_reportorganisationunitcompletenesstype';
     }
 }
