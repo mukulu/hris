@@ -77,10 +77,18 @@ class ValidationController extends Controller
             $em->flush();
 
             return $this->redirect($this->generateUrl('validation_show', array('id' => $entity->getId())));
+        }else {
+            print_r($form->getErrors());
+            die();
         }
+
+        $leftExpressionFields = $this->getDoctrine()->getRepository('HrisFormBundle:Field')->findAll();
+        $rightExpressionFields = $this->getDoctrine()->getRepository(('HrisFormBundle:Field'))->findAll();
 
         return array(
             'entity' => $entity,
+            'leftExpressionFields'=>$leftExpressionFields,
+            'rightExpressionFields'=>$rightExpressionFields,
             'form'   => $form->createView(),
         );
     }
@@ -151,10 +159,15 @@ class ValidationController extends Controller
         $editForm = $this->createForm(new ValidationType(), $entity);
         $deleteForm = $this->createDeleteForm($id);
 
+        $leftExpressionFields = $this->getDoctrine()->getRepository('HrisFormBundle:Field')->findAll();
+        $rightExpressionFields = $this->getDoctrine()->getRepository(('HrisFormBundle:Field'))->findAll();
+
         return array(
             'entity'      => $entity,
             'edit_form'   => $editForm->createView(),
             'delete_form' => $deleteForm->createView(),
+            'leftExpressionFields'=>$leftExpressionFields,
+            'rightExpressionFields'=>$rightExpressionFields,
         );
     }
 
@@ -162,7 +175,7 @@ class ValidationController extends Controller
      * Edits an existing Validation entity.
      *
      * @Route("/{id}", name="validation_update")
-     * @Method("PUT")
+     * @Method("POST")
      * @Template()
      */
     public function updateAction(Request $request, $id)

@@ -38,11 +38,11 @@
             <tr>
                 <th>No.</th>
                 {% if visibleFields %}
-                    {% for visibleField in visibleFields | slice(0,5) %}
+                    {% for visibleField in visibleFields  %}
                         <th>{{ visibleField.name }}</th>
                     {% endfor %}
                 {% else %}
-                    {% for formField in formFields | slice(0,5) %}
+                    {% for formField in formFields  %}
                         <th>{{ formField.name }}</th>
                     {% endfor %}
                 {% endif %}

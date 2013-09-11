@@ -11,24 +11,26 @@ class ValidationType extends AbstractType
 {
 
     public function buildForm(FormBuilderInterface $builder, array $options)
-<<<<<<< Updated upstream
 
-=======
->>>>>>> Stashed changes
       {
           $builder
 
             ->add('name','text')
             ->add('description','textarea')
-            ->add('leftExpression','textarea')
-            ->add('rightExpression','textarea')
-             ->add('operator', 'choice', array(
-                  'choices'   => array('==(Equal)',
-                      '!=(Not Equal)',
-                      '>(Greater Than)',
-                      '>=(Greater Than or Equal)',
-                      '<(Less Than)',
-                      '<=(Less Than or Equal)')))
+            ->add('leftExpression','textarea',array(
+                  'attr' => array('cols' => '29', 'rows' => '8')))
+            ->add('rightExpression','textarea',array(
+                  'attr' => array('cols' => '29', 'rows' => '8')))
+             ->add('operator', 'choice',array(
+                  'choices'   => array(
+                      '--Select--'=>'--Select--',
+                      '==(Equal)'=>'==(Equal)',
+                      '!=(Not Equal)'=>'!=(Not Equal)',
+                      '>(Greater Than)'=>'>(Greater Than)',
+                      '>=(Greater Than or Equal)'=>'>=(Greater Than or Equal)',
+                      '<(Less Than)'=>'<(Less Than)',
+                      '<=(Less Than or Equal)'=>'<=(Less Than or Equal)')))
+          ->add('submit','submit')
           ;
 
     }
@@ -36,8 +38,10 @@ class ValidationType extends AbstractType
     public function setDefaultOptions(OptionsResolverInterface $resolver)
     {
         $resolver->setDefaults(array(
-            'data_class' => 'Hris\DataQualityBundle\Entity\Validation'
-
+            'data_class' => 'Hris\DataQualityBundle\Entity\Validation',
+            'csrf_protection' => true,
+            'csrf_field_name' => '_token',
+            'intention'=> 'create_validation',
         ));
     }
 
