@@ -9,7 +9,7 @@ use Symfony\Component\OptionsResolver\OptionsResolverInterface;
 
 class ValidationType extends AbstractType
 {
-    public function buildForm(FormBuilderInterface $builder, array $options)
+    public function buildForm(FormBuilderInterface $builder,array $options)
       {
           $builder
 
@@ -32,6 +32,7 @@ class ValidationType extends AbstractType
     {
         $resolver->setDefaults(array(
             'data_class' => 'Hris\DataQualityBundle\Entity\Validation'
+
         ));
     }
 
