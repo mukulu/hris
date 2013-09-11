@@ -13,3 +13,7 @@ organisationunitByLevels:
 organisationunitByGroupset:
     resource: "@HrisReportsBundle/Controller/ReportOrganisationunitByGroupsetController.php"
     type: annotation
+
+organisationunitCompleteness:
+    resource: "@HrisReportsBundle/Controller/ReportOrganisationunitCompletenessController.php"
+    type: annotation

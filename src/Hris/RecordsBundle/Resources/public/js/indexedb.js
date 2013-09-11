@@ -19,65 +19,65 @@ var replaceOptionString = "";
 
 function createDatabase(databaseName, tableName, columnNames, dataValues) {
     /*
-    Parsing the names of columns form strin to Json Format
+     Parsing the names of columns form strin to Json Format
      */
     tableName = JSON.parse(tableName);
 
     var openRequest = localDatabase.indexedDB.open(databaseName);
 
-    openRequest.onupgradeneeded = function() {
+    openRequest.onupgradeneeded = function () {
         // The database did not previously exist, so create object stores and indexes.
         var db = openRequest.result;
         //var tables = ["hris_form2", "hris_form3"];
 
-        for (var key in tableName){
+        for (var key in tableName) {
             var dataStore = db.createObjectStore(tableName[key], {keyPath: "id"});
             console.log("data Store " + tableName[key] + " Created");
 
             dataStore.createIndex("uid", "uid", { unique: true });
-            console.log("data Store Column UID  Added for the datastore " + tableName[key] );
+            console.log("data Store Column UID  Added for the datastore " + tableName[key]);
         }
 
         /*
          Creating the Columns for data Storage
 
-        for (var key in columnNames){
-            var column_name = columnNames[key];
+         for (var key in columnNames){
+         var column_name = columnNames[key];
 
-            dataStore.createIndex(column_name, column_name, { unique: false });
-            console.log("data Store Column '" + column_name + "' Added");
-        }
+         dataStore.createIndex(column_name, column_name, { unique: false });
+         console.log("data Store Column '" + column_name + "' Added");
+         }
          */
     };
 
-    openRequest.onsuccess = function() {
+    openRequest.onsuccess = function () {
         db = openRequest.result;
         console.log("this is done deal");
-/*
-        var transaction = db.transaction(tableName, "readwrite");
-        var store = transaction.objectStore(tableName);
+        /*
+         var transaction = db.transaction(tableName, "readwrite");
+         var store = transaction.objectStore(tableName);
 
-        var results = '{';
+         var results = '{';
 
-        for (var key in dataValues){
-            Object.getOwnPropertyNames(dataValues[key]).forEach(function(val, idx, array) {
-                results += '"'+ val + '" : "' + encodeURIComponent(dataValues[key][val]) +'", ';
-            });
+         for (var key in dataValues){
+         Object.getOwnPropertyNames(dataValues[key]).forEach(function(val, idx, array) {
+         results += '"'+ val + '" : "' + encodeURIComponent(dataValues[key][val]) +'", ';
+         });
 
-            console.log("this is the name " + results.name);
-            results = results.slice(0,-2);
-            results += '}';
-            console.log(results);
-            store.put( JSON.parse(results) );
-            console.log("Results has been update");
-            var results = '{';
-        }
+         console.log("this is the name " + results.name);
+         results = results.slice(0,-2);
+         results += '}';
+         console.log(results);
+         store.put( JSON.parse(results) );
+         console.log("Results has been update");
+         var results = '{';
+         }
 
-        transaction.oncomplete = function() {
-            // All requests have succeeded and the transaction has committed.
-            console.log("All transaction done");
-        };
- */
+         transaction.oncomplete = function() {
+         // All requests have succeeded and the transaction has committed.
+         console.log("All transaction done");
+         };
+         */
     };
 
 }
@@ -90,7 +90,7 @@ function deleteDatabase(databaseName) {
     var deleteRequest = localDatabase.indexedDB.deleteDatabase(databaseName);
     console.log("deleting " + databaseName + " database");
 
-    deleteRequest.onsuccess = function() {
+    deleteRequest.onsuccess = function () {
 
         console.log("database " + databaseName + "deleted");
 
@@ -115,7 +115,7 @@ function addRecords(databaseName, tableName, dataValues) {
 
     var openRequest = localDatabase.indexedDB.open(databaseName);
 
-    openRequest.onsuccess = function() {
+    openRequest.onsuccess = function () {
         db = openRequest.result;
         console.log("this is done deal");
 
@@ -124,29 +124,29 @@ function addRecords(databaseName, tableName, dataValues) {
 
         var results = '{';
 
-        for (var key in dataValues){
-            Object.getOwnPropertyNames(dataValues[key]).forEach(function(val, idx, array) {
+        for (var key in dataValues) {
+            Object.getOwnPropertyNames(dataValues[key]).forEach(function (val, idx, array) {
 
-                if( val == "dataType" || val == "inputType" ){
-                    results += '"'+ val + '" : "' + encodeURIComponent(dataValues[key][val]['name']) +'", ';
-                }else if( val == "datecreated" || val == "lastupdated" ){
-                    results += '"'+ val + '" : "' + encodeURIComponent(dataValues[key][val]['date']) +'", ';
-                }else if( val == "field" ){
-                    results += '"'+ val + '" : "' + encodeURIComponent(dataValues[key][val]['uid']) +'", ';
-                }else{
-                    results += '"'+ val + '" : "' + encodeURIComponent(dataValues[key][val]) +'", ';
+                if (val == "dataType" || val == "inputType") {
+                    results += '"' + val + '" : "' + encodeURIComponent(dataValues[key][val]['name']) + '", ';
+                } else if (val == "datecreated" || val == "lastupdated") {
+                    results += '"' + val + '" : "' + encodeURIComponent(dataValues[key][val]['date']) + '", ';
+                } else if (val == "field") {
+                    results += '"' + val + '" : "' + encodeURIComponent(dataValues[key][val]['uid']) + '", ';
+                } else {
+                    results += '"' + val + '" : "' + encodeURIComponent(dataValues[key][val]) + '", ';
                 }
             });
 
-            results = results.slice(0,-2);
+            results = results.slice(0, -2);
             results += '}';
             console.log(results);
-            store.put( JSON.parse(results) );
+            store.put(JSON.parse(results));
             console.log("Results has been update");
             var results = '{';
         }
 
-        transaction.oncomplete = function() {
+        transaction.oncomplete = function () {
             // All requests have succeeded and the transaction has committed.
             console.log("All transaction done");
         };
@@ -166,7 +166,7 @@ function getSingleRecord(databaseName, uid, tableName) {
 
     var openRequest = localDatabase.indexedDB.open(databaseName);
 
-    openRequest.onsuccess = function() {
+    openRequest.onsuccess = function () {
         db = openRequest.result;
         console.log("this is done deal");
 
@@ -178,7 +178,7 @@ function getSingleRecord(databaseName, uid, tableName) {
         var index = store.index("uid");
 
         var request = index.get(uid);
-        request.onsuccess = function() {
+        request.onsuccess = function () {
             var matching = request.result;
             if (matching !== undefined) {
                 // A match was found.
@@ -189,13 +189,13 @@ function getSingleRecord(databaseName, uid, tableName) {
                 console.log(decodeURIComponent(matching.hypertext));
 
                 //return matching.hypertext;
-/*
-                $.ajax({
-                    type: "POST",
-                    url: "http://localhost/hris/web/app_dev.php/record/new/3",
-                    data: { variable: matching }
-                }).success( console.log ("the event completed successful") );
-*/
+                /*
+                 $.ajax({
+                 type: "POST",
+                 url: "http://localhost/hris/web/app_dev.php/record/new/3",
+                 data: { variable: matching }
+                 }).success( console.log ("the event completed successful") );
+                 */
 
             } else {
                 // No match was found.
@@ -206,8 +206,6 @@ function getSingleRecord(databaseName, uid, tableName) {
     };
 
 }
-
-var testString = "";
 
 function getDataEntryForm(databaseName, uid, tableName) {
 
@@ -220,7 +218,7 @@ function getDataEntryForm(databaseName, uid, tableName) {
 
     var openRequest = localDatabase.indexedDB.open(databaseName);
 
-    openRequest.onsuccess = function() {
+    openRequest.onsuccess = function () {
         db = openRequest.result;
         console.log("this is done deal");
 
@@ -230,7 +228,7 @@ function getDataEntryForm(databaseName, uid, tableName) {
         var index = store.index("uid");
 
         var request = index.get(uid);
-        request.onsuccess = function() {
+        request.onsuccess = function () {
             var matching = request.result;
             if (matching !== undefined) {
                 // A match was found.
@@ -250,7 +248,7 @@ function getDataEntryForm(databaseName, uid, tableName) {
 
                 var fieldRequest = storeObject.openCursor();
 
-                fieldRequest.onsuccess = function(evt) {
+                fieldRequest.onsuccess = function (evt) {
 
 
                     var cursor = fieldRequest.result;
@@ -262,12 +260,8 @@ function getDataEntryForm(databaseName, uid, tableName) {
 
                         console.log(decodeURIComponent(inputType));
 
-                        function foo(fn){
-
-
-                        if( inputType == "combo" ){
+                        if (inputType == "combo") {
                             //getting all the field Combos
-
 
 
                             var fieldOptionTransaction = db.transaction("hris_fieldoption", "readonly");
@@ -279,14 +273,13 @@ function getDataEntryForm(databaseName, uid, tableName) {
                             var replaceOptionString = "<select name='" + fieldName + "'>";
 
 
-
-                            fielOptiondRequest.onsuccess = function(callback) {
+                            fielOptiondRequest.onsuccess = function (callback) {
 
                                 var cursorOption = fielOptiondRequest.result;
 
                                 if (cursorOption) {
 
-                                    if ( cursorOption.value.field == cursor.value.uid ){
+                                    if (cursorOption.value.field == cursor.value.uid) {
                                         replaceOptionString += "<option value='" + cursorOption.value.id + "'>" + cursorOption.value.value + "</option>";
 
                                         //console.log(" Inside Field UID from Option = "+ cursorOption.value.field + " and UID from Fields " + cursor.value.uid +" and option value " + cursorOption.value.value);
@@ -297,8 +290,7 @@ function getDataEntryForm(databaseName, uid, tableName) {
                                 else {
                                     // No more matching records.
                                     console.log('No more Matching Fields Options');
-                                   replaceOptionString += "</select >";
-                                   fn(replaceOptionString);
+                                    replaceOptionString += "</select >";
 
                                     //hypertext = hypertext.replace("~" + fieldName + "~", replaceOptionString);
                                     //console.log(hypertext);
@@ -308,35 +300,26 @@ function getDataEntryForm(databaseName, uid, tableName) {
                             }
 
                         }
-                        else if( inputType == "text_box" ){
+                        else if (inputType == "text_box") {
                             //replacing the field with Text Box
                             var replaceString = "<input type='text' name='" + fieldName + "'>";
                             hypertext = hypertext.replace("~" + fieldName + "~", replaceString);
                         }
-                        else if( inputType == "textArea" ){
+                        else if (inputType == "textArea") {
                             //replacing the field with Text Area
                         }
 
                         cursor.continue();
-                    }
 
-                        foo(function(location){
-                            alert(location); // this is where you get the return value
-                            console.log("replacement " + location);
-                            hypertext = hypertext.replace("~" + fieldName + "~", location);
-                            console.log(hypertext);
-
-                            result.innerHTML = hypertext;
-                        });
-                }else {
+                    } else {
                         // No more matching records.
                         //console.log('No more Matching Fields');
                         //console.log(hypertext);
-                        //result.innerHTML = hypertext;
+                        result.innerHTML = hypertext;
+
                         // console.log(hypertext);
                     }
                 }
-
 
 
             } else {
@@ -346,5 +329,55 @@ function getDataEntryForm(databaseName, uid, tableName) {
         };
 
     };
+
+}
+
+function loadFieldOptions(fieldUIDS, databaseName) {
+
+    var fieldUid = JSON.parse(fieldUIDS);
+    alert("this is the first alert?" + fieldUid);
+    console.log(fieldUid);
+
+    $.each(fieldUid, function (key, value) {
+        console.log(key + ": " + value);
+
+        var field_uid = value;
+
+
+        //getting all the field Combos
+
+        var openRequest = localDatabase.indexedDB.open(databaseName);
+
+        openRequest.onsuccess = function () {
+            db = openRequest.result;
+
+            var fieldOptionTransaction = db.transaction("hris_fieldoption", "readonly");
+            var fieldOptionStore = fieldOptionTransaction.objectStore("hris_fieldoption");
+
+            var fielOptiondRequest = fieldOptionStore.openCursor();
+
+            fielOptiondRequest.onsuccess = function (callback) {
+
+                var cursorOption = fielOptiondRequest.result;
+
+                if (cursorOption) {
+
+                    if (cursorOption.value.field == field_uid) {
+
+                        $("#" + field_uid).append($('<option>', {
+                            value: cursorOption.value.id,
+                            text: decodeURIComponent(cursorOption.value.value)
+                        }));
+                    }
+                    cursorOption.continue();
+                }
+                else {
+                    // No more matching records.
+                    console.log('No more Matching Fields Options');
+                }
+
+            }
+        }
+    });
 
 }

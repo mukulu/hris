@@ -1,0 +1,80 @@
+{% extends '::base.html.twig' %}
+{% block javascripts %}
+    {{ parent() }}
+    <script type="text/javascript" src="{{ asset('commons/js/jquery.dataTables.js') }}"></script>
+    <script type="text/javascript" src="{{ asset('commons/js/dt_settings.js') }}"></script>
+    <script>window["_GOOG_TRANS_EXT_VER"] = "1";</script>
+{% endblock javascripts %}
+
+{% block stylesheets %}
+    {{ parent() }}
+    <link rel="stylesheet" href="{{ asset('commons/css/dt_bootstrap.css') }}" />
+{% endblock stylesheets %}
+
+{% block right_content -%}
+
+<div class="container">
+    <h1><small>{{ title }}</small></h1>
+
+    {% if sameLevel or parent %}
+        <ul class="inline">
+            {% if sameLevel %}
+                <li>
+                    <a class="btn" href="{{ path('report_organisationunit_completeness') }}">
+                        Back To {{ rootNodeOrganisationunit.getLongname() }}
+                    </a>
+                </li>
+            {% elseif parent %}
+                <li>
+                    <a class="btn" href="{{ path('report_organisationunit_completeness') }}">
+                        Back To {{ rootNodeOrganisationunit.getLongname() }}
+                    </a>
+                </li>
+            {% endif %}
+        </ul>
+    {% endif %}
+
+    <table class="records_list dataTable table table-striped table-bordered table-hover" cellpadding="0" cellspacing="0" border="0">
+        <thead>
+        <tr>
+            {% if organisationunitChildren %}
+                {% if organisationunitChildren and sameLevel %}
+                    <th>Sn</th>
+                    <th>Organisationunit</th>
+                {% endif %}
+                {% for form in forms %}
+
+                    {% if organisationunitChildren or sameLevel %}
+                        {% set colspan = visibleFields | length %}
+                    {% else %}
+                        {% set colspan=3 %}
+                    {% endif %}
+
+                    {% if organisationunitChildren and sameLevel %}
+                        <th colspan="{{ colspan }}">{{ form.name }}</th>
+                    {% endif %}
+
+                {% endfor %}
+            {% endif %}
+        </tr>
+        <tr>
+            {% if organisationunitChildren or sameLevel %}
+                {% for form in forms %}
+                    <th>Entered Records</th>
+                    <th>Expected Records</th>
+                    <th>Percentage</th>
+                {% endfor %}
+            {% endif %}
+        </tr>
+
+
+        </thead>
+        <tbody>
+            {% set counter = 0 %}
+                <tr>
+                    <td>{{ counter }}</td>
+                </tr>
+        </tbody>
+    </table>
+</div>
+{% endblock %}

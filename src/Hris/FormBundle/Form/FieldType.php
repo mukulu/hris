@@ -35,10 +35,24 @@ class FieldType extends AbstractType
         $builder
             ->add('name')
             ->add('caption')
-            ->add('description')
-            ->add('compulsory')
-            ->add('isUnique')
-            ->add('hashistory')
+            ->add('description',null,array(
+                'required'=>false,
+            ))
+            ->add('compulsory',null,array(
+                'required'=>false,
+            ))
+            ->add('isUnique',null,array(
+                'required'=>false,
+            ))
+            ->add('isCalculated',null,array(
+                'required'=>false,
+            ))
+            ->add('calculatedExpression',null,array(
+                'required'=>false,
+            ))
+            ->add('hashistory',null,array(
+                'required'=>false,
+            ))
             ->add('dataType')
             ->add('inputType')
         ;

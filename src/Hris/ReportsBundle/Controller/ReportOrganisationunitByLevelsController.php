@@ -73,10 +73,40 @@ class ReportOrganisationunitByLevelsController extends Controller
             $organisationunit = $organisationunitByLevelsFormData['organisationunit'];
             $level = $organisationunitByLevelsFormData['organisationunitLevel'];
         }
+        /*
+		 * Filter out organisationunit by selected parent and desired level
+		 */
+        $selectedParentStructure = $this->getDoctrine()->getManager()->getRepository('HrisOrganisationunitBundle:OrganisationunitStructure')->findOneBy(array('organisationunit'=>$organisationunit));
+        $queryBuilder = $this->getDoctrine()->getManager()->createQueryBuilder();
+        $organisationunitStructureObjects = $queryBuilder->select('organisationunitStructure')
+                                        ->from('HrisOrganisationunitBundle:OrganisationunitStructure','organisationunitStructure')
+                                        ->join('organisationunitStructure.organisationunit','organisationunit')
+                                        ->where('organisationunitStructure.level'.$selectedParentStructure->getLevel()->getLevel().'Organisationunit=:organisationunit')
+                                        ->andWhere('organisationunitStructure.level=:level')
+                                        //->andWhere('organisationunit.active=True')
+                                        ->setParameters(array(
+                                                'organisationunit'=>$organisationunit,
+                                                'level'=>$level
+                                        ))
+                                        ->getQuery()->getResult();
+        // Fetching higher level headings[level<= levelPrefereed] excluding highest level
+        $lowerLevels = $queryBuilder->select('DISTINCT(organisationunitLevel.level),organisationunitLevel.name')
+                                    ->from('HrisOrganisationunitBundle:OrganisationunitLevel','organisationunitLevel')
+                                    ->where($queryBuilder->expr()->lte('organisationunitLevel.level',':lowerLevel'))
+                                    ->andWhere($queryBuilder->expr()->gt('organisationunitLevel.level',':selectedLevel'))
+                                    ->setParameters(array(
+                                            'lowerLevel'=>$level->getLevel(),
+                                            'selectedLevel'=>$selectedParentStructure->getLevel()->getLevel()
+                                    ))
+                                    ->orderBy('organisationunitLevel.level','ASC')->getQuery()->getResult();
 
+        $selectedOrgunitName = $organisationunit->getLongname();
+        $title = "List of All " . $lowerLevels[0]['name'] . " Under ". $selectedOrgunitName;
         return array(
-            'organisationunit' => $organisationunit,
-            'organisationunitLevel'   => $level,
+            'title' => $title,
+            'lowerLevels' => $lowerLevels,
+            'orgunitStructureObjects'   => $organisationunitStructureObjects,
+            'selectedLevel' => $level,
         );
     }
 

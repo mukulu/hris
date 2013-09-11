@@ -6,8 +6,26 @@
     <script type="text/javascript">
         var treeplaceholder="treeplaceholder";
         var inputboxname="hris_reportsbundle_reportorganisationunitlevelstype[organisationunit]";
-        var urlExtension="";
-        var selectedNode="";
+        var organisationunitLevelsTagId = "#hris_reportsbundle_reportorganisationunitlevelstype_organisationunitLevel";
+        var organisationunitLevelsSubmitTagId = "#hris_reportsbundle_reportorganisationunitlevelstype_submit";
+        var organisationunitTreeUrl='{{ path('organisationunit_tree', {'_format':'json'}) }}';
+        var levelsUrl = '{{ path('organisationunit_levels',{'_format':'json'}) }}';
+        function updateOrganisationunitLevels() {
+            postData={'organisationunitid': $('input[name="'+inputboxname+'"]').val() };
+            $.post(levelsUrl,postData , function( organisationunitLevels ){
+                $(organisationunitLevelsTagId).find('option').remove();
+                if (jQuery.isEmptyObject(organisationunitLevels)){
+                    $(organisationunitLevelsTagId).attr('disabled', 'true');
+                    $(organisationunitLevelsSubmitTagId).attr('disabled', 'true');
+                }else {
+                    $(organisationunitLevelsTagId).removeAttr('disabled');
+                    $(organisationunitLevelsSubmitTagId).removeAttr('disabled');
+                    $.each(organisationunitLevels, function(organisationunitLevelIndex, organisationunitLevel) {
+                        $(organisationunitLevelsTagId).append(new Option(organisationunitLevel['name'], organisationunitLevel['id']));
+                    });
+                }
+            });
+        }
         Ext.define('OrganisationUnitTreeModel2', {
             extend: 'Ext.data.Model',
             idProperty: 'id',
@@ -20,7 +38,7 @@
                 model: 'OrganisationUnitTreeModel2',
                 proxy: {
                     type: 'ajax',
-                    url: '{{ path('organisationunit_tree') }}'+urlExtension,
+                    url: organisationunitTreeUrl,
                     reader: { type: 'json', root: 'organisationUnits'}
                 },
                 nodeParam: 'id',
@@ -42,12 +60,7 @@
                         var selectedOrgunits2 = selModel2.getSelection();
                         var selectedId2 = selectedOrgunits2[0].get('id');
                         $('input[name="'+inputboxname+'"]').val(selectedId2);
-
-                    },
-                    afterrender: function(treePanel,eOpts) {
-                        if(selectedNode){
-                            this.selectPath(selectedNode,'id','');
-                        };
+                        updateOrganisationunitLevels();
                     }
                 }
 

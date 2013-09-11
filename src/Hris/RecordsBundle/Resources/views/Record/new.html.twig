@@ -7,6 +7,12 @@
 
         getDataEntryForm( '{{ project_code | lower | raw }}', '{{ uid | raw }}', '{{ table_name | raw }}' );
 
+        //getting field Options and append them on select statements
+
+        $(window).load(function(){
+            loadFieldOptions('{{ fields | raw | escape('js') }}', '{{ project_code | lower | raw }}');
+        });
+
     </script>
 
 {% endblock %}

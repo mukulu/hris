@@ -30,7 +30,7 @@
 
                     <select id="content_field" ondblclick="$('#showPopupModal').modal('hide')" name="content" size="10" style="width: 100%; height: 90%; font-family: 'Courier New',Courier,mono; font-size: 12px;" dir="ltr" wrap="soft">
                         {% for field in fields %}
-                            <option value="{{ field.name }}">{{ field.caption }}</option>
+                            <option value="{{ field.inputType.htmltag | replace({'fieldName': field.name, 'fieldId': field.uid, '(fieldId)':  "('" ~ field.uid ~ "')" }) }}">{{ field.caption }}</option>
                         {% endfor %}
                     </select>
                 </div>

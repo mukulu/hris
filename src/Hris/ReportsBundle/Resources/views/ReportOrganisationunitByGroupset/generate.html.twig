@@ -1,10 +1,49 @@
 {% extends '::base.html.twig' %}
+{% block javascripts %}
+    {{ parent() }}
+    <script type="text/javascript" src="{{ asset('commons/js/jquery.dataTables.js') }}"></script>
+    <script type="text/javascript" src="{{ asset('commons/js/dt_settings.js') }}"></script>
+    <script>window["_GOOG_TRANS_EXT_VER"] = "1";</script>
+{% endblock javascripts %}
+
+{% block stylesheets %}
+    {{ parent() }}
+    <link rel="stylesheet" href="{{ asset('commons/css/dt_bootstrap.css') }}" />
+{% endblock stylesheets %}
 
 {% block right_content -%}
-    <h1><small>Report Organisationunit By Groupset - Results</small></h1>
 
-    <h1>Organisationunit: {{ organisationunit }}</h1>
-    <h2>Groupset:{{ organisationunitGroupset }}</h2>
+<div class="container">
+    <h1><small>{{ title }}</small></h1>
 
+    <table class="records_list dataTable table table-striped table-bordered table-hover" cellpadding="0" cellspacing="0" border="0">
+        <thead>
+        <tr>
+            <th>No.</th>
+            <th>Organisationunit Group</th>
+            <th>Total Facilities</th>
+        </tr>
+        </thead>
+        <tbody>
+            {% set counter = 1 %}
+            {% set totalFacilityCount = 0 %}
+            {% for organisationunitGroupCount in organisationunitGroupCounts %}
+                <tr>
+                    <td>{{ counter }}</td>
+                    <td>{{ organisationunitGroupCount.name }}</td>
+                    <td>{{ organisationunitGroupCount.organisationunitCount }}</td>
+                </tr>
+                {% set totalFacilityCount = totalFacilityCount + organisationunitGroupCount.organisationunitCount %}
+                {% set counter = counter + 1 %}
+            {% endfor %}
+            <tr>
+                <td>{{ counter }}</td>
+                <td>Total Count</td>
+                <td>{{ totalFacilityCount }}</td>
+            </tr>
+
+        </tbody>
+    </table>
+</div>
 
 {% endblock %}

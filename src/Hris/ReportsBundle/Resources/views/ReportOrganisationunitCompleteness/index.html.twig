@@ -5,9 +5,27 @@
     <script type="text/javascript" language="javascript" src="{{ asset('commons/js/ext-all.js') }}"></script>
     <script type="text/javascript">
         var treeplaceholder="treeplaceholder";
-        var inputboxname="hris_reportsbundle_reportaggregationtype[organisationunit]";
-        var urlExtension="";
-        var selectedNode="";
+        var inputboxname="hris_reportsbundle_reportorganisationunitcompletenesstype[organisationunit]";
+        var organisationunitLevelsTagId = "#hris_reportsbundle_reportorganisationunitcompletenesstype_organisationunitLevel";
+        var organisationunitLevelsSubmitTagId = "#hris_reportsbundle_reportorganisationunitcompletenesstype_submit";
+        var organisationunitTreeUrl='{{ path('organisationunit_tree', {'_format':'json'}) }}';
+        var levelsUrl = '{{ path('organisationunit_levels',{'_format':'json'}) }}';
+        function updateOrganisationunitLevels() {
+            postData={'organisationunitid': $('input[name="'+inputboxname+'"]').val() };
+            $.post(levelsUrl,postData , function( organisationunitLevels ){
+                $(organisationunitLevelsTagId).find('option').remove();
+                if (jQuery.isEmptyObject(organisationunitLevels)){
+                    $(organisationunitLevelsTagId).attr('disabled', 'true');
+                    $(organisationunitLevelsSubmitTagId).attr('disabled', 'true');
+                }else {
+                    $(organisationunitLevelsTagId).removeAttr('disabled');
+                    $(organisationunitLevelsSubmitTagId).removeAttr('disabled');
+                    $.each(organisationunitLevels, function(organisationunitLevelIndex, organisationunitLevel) {
+                        $(organisationunitLevelsTagId).append(new Option(organisationunitLevel['name'], organisationunitLevel['id']));
+                    });
+                }
+            });
+        }
         Ext.define('OrganisationUnitTreeModel2', {
             extend: 'Ext.data.Model',
             idProperty: 'id',
@@ -20,7 +38,7 @@
                 model: 'OrganisationUnitTreeModel2',
                 proxy: {
                     type: 'ajax',
-                    url: '{{ path('organisationunit_tree',{'_format':'json'}) }}'+urlExtension,
+                    url: organisationunitTreeUrl,
                     reader: { type: 'json', root: 'organisationUnits'}
                 },
                 nodeParam: 'id',
@@ -42,42 +60,11 @@
                         var selectedOrgunits2 = selModel2.getSelection();
                         var selectedId2 = selectedOrgunits2[0].get('id');
                         $('input[name="'+inputboxname+'"]').val(selectedId2);
-                    },
-                    afterrender: function(treePanel,eOpts) {
-                        if(selectedNode){
-                            this.selectPath(selectedNode,'id','');
-                        };
+                        updateOrganisationunitLevels();
                     }
                 }
 
             });
-        });
-        $( document ).ready(function() {
-            var fieldOneId='#hris_reportsbundle_reportaggregationtype_fields';
-            var fieldTwoId='#hris_reportsbundle_reportaggregationtype_fieldsTwo';
-            var graphTypeId='#hris_reportsbundle_reportaggregationtype_graphType';
-            // Disable second field
-            $(fieldTwoId).attr('disabled', 'true');
-            $(fieldOneId).on('change', function() {
-                // enable field two
-                $(fieldTwoId).removeAttr('disabled');
-                // On change of first field, trime selected option
-                // from first field on second.
-                //$(fieldTwoId).find('option').remove();
-                $(fieldOneId+' option').each(function(){
-                    if( $($fieldOneId).val() != $(this).val() ) {
-                        alert('it gets here!!');
-                        $(fieldTwoId).append(new Option($(this).text(), $(this).val()));
-                    }
-                });
-            });
-            // On entering value of second field remove pie chart option
-            $(fieldOneId).on('change', function() {
-                if( $(fieldTwoId).val() != '' ) {
-                    $(graphTypeId).find('option[value="pie"]').remove();
-                }
-            });
-
         });
     </script>
 {% endblock javascripts %}
@@ -89,25 +76,20 @@
 {% endblock stylesheets %}
 
 {% block right_content -%}
-    <h1><small>Report Aggregation</small></h1>
+    <h1><small>Report Organisationunit Completeness</small></h1>
 
-    {{ form_start(aggregationForm, { 'method' : 'PUT' } ) }}
+    {{ form_start(organisationunitCompletenessForm, { 'method' : 'PUT' } ) }}
 
     <div>
         <div id="treeplaceholder"></div>
-        {{ form_errors( aggregationForm.organisationunit ) }}
-        {{ form_widget( aggregationForm.organisationunit ) }}
+        {{ form_errors( organisationunitCompletenessForm.organisationunit ) }}
+        {{ form_widget( organisationunitCompletenessForm.organisationunit ) }}
     </div>
     <br/>
-    {{ form_row( aggregationForm.withLowerLevels ) }}
-    {{ form_row( aggregationForm.organisationunitGroup ) }}
-    {{ form_row( aggregationForm.forms ) }}
+    {{ form_row( organisationunitCompletenessForm.organisationunitLevel ) }}
+    {{ form_row( organisationunitCompletenessForm.forms ) }}
 
-    {{ form_label(aggregationForm.fields) }}
-    {{ form_widget(aggregationForm.fields, {'attr': {'class': 'task_field'}}) }}
-    {{ form_widget(aggregationForm.fields, {'attr': {'class': 'task_field'}}) }}
-
-    {{ form_end(aggregationForm) }}
+    {{ form_end(organisationunitCompletenessForm) }}
 
 
 {% endblock %}

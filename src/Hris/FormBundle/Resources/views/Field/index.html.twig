@@ -30,6 +30,7 @@
                     <th>Caption</th>
                     <th>Compulsory</th>
                     <th>Unique</th>
+                    <th>Calculated</th>
                     <th>Hashistory</th>
                     <th>Actions</th>
                 </tr>
@@ -49,6 +50,12 @@
                         TRUE
                         {% else %}
                         FALSE
+                        {% endif %}
+                    </td>
+                    <td>{% if entity.isCalculated %}
+                            TRUE
+                        {% else %}
+                            FALSE
                         {% endif %}
                     </td>
                     <td>{% if entity.hashistory %}
