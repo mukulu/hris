@@ -17,3 +17,7 @@ organisationunitByGroupset:
 organisationunitCompleteness:
     resource: "@HrisReportsBundle/Controller/ReportOrganisationunitCompletenessController.php"
     type: annotation
+
+recordsReport:
+    resource: "@HrisReportsBundle/Controller/ReportEmployeeRecordsController.php"
+    type: annotation
