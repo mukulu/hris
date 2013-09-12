@@ -49,7 +49,7 @@ class ConfigureMenuListener
 
 
         $reportsModule->addChild('Records Report',
-            array('uri'=>'#recordsreport',
+            array('route'=>'report_records',
                 'extras'=>array('tag'=>'div'),
                 'name'=>'Records Report',
                 'attributes'=> array('class'=>'accordion-group'),
