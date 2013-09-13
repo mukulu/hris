@@ -63,7 +63,7 @@ class ConfigureMenuListener
             )
         );
         $reportsModule->addChild('Generic Report',
-            array('uri'=>'#genericreport',
+            array('route'=>'report_friendlyreport',
                 'extras'=>array('tag'=>'div'),
                 'name'=>'Generic Report',
                 'attributes'=> array('class'=>'accordion-group'),

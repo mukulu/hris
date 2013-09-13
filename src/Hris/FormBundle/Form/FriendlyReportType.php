@@ -37,8 +37,15 @@ class FriendlyReportType extends AbstractType
             ->add('description')
             ->add('sort')
             ->add('serie')
-            ->add('arithmeticFilter')
-            ->add('relationalFilter')
+            ->add('friendlyReportCategory',null,array(
+                'required'=>True,
+            ))
+            ->add('arithmeticFilter',null, array(
+                'required'=>False,
+            ))
+            ->add('relationalFilter',null,array(
+                'required'=>False,
+            ))
         ;
     }
 
