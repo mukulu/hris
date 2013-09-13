@@ -170,8 +170,6 @@ function getSingleRecord(databaseName, uid, tableName) {
         db = openRequest.result;
         console.log("this is done deal");
 
-        //var transaction = db.transaction(tableName, "readwrite");
-        //var store = transaction.objectStore(tableName);
 
         var transaction = db.transaction(tableName, "readonly");
         var store = transaction.objectStore(tableName);
@@ -182,20 +180,10 @@ function getSingleRecord(databaseName, uid, tableName) {
             var matching = request.result;
             if (matching !== undefined) {
                 // A match was found.
-                //report(matching.hypertext);
 
                 var jsonStr = JSON.stringify(decodeURIComponent(matching.hypertext));
                 result.innerHTML = decodeURIComponent(matching.hypertext);
                 console.log(decodeURIComponent(matching.hypertext));
-
-                //return matching.hypertext;
-                /*
-                 $.ajax({
-                 type: "POST",
-                 url: "http://localhost/hris/web/app_dev.php/record/new/3",
-                 data: { variable: matching }
-                 }).success( console.log ("the event completed successful") );
-                 */
 
             } else {
                 // No match was found.
@@ -236,91 +224,8 @@ function getDataEntryForm(databaseName, uid, tableName) {
                 var jsonStr = JSON.stringify(decodeURIComponent(matching.hypertext));
 
                 var hypertext = decodeURIComponent(matching.hypertext);
-                //Formating the forms to be sent out as a complete form
 
-                /*
-                 /*
-                 Getting Field Data
-                 */
-
-                var fieldTransaction = db.transaction("hris_field", "readonly");
-                var storeObject = fieldTransaction.objectStore("hris_field");
-
-                var fieldRequest = storeObject.openCursor();
-
-                fieldRequest.onsuccess = function (evt) {
-
-
-                    var cursor = fieldRequest.result;
-                    if (cursor) {
-                        // Called for each matching record.
-
-                        var inputType = cursor.value.inputType;
-                        var fieldName = cursor.value.name;
-
-                        console.log(decodeURIComponent(inputType));
-
-                        if (inputType == "combo") {
-                            //getting all the field Combos
-
-
-                            var fieldOptionTransaction = db.transaction("hris_fieldoption", "readonly");
-                            var fieldOptionStore = fieldOptionTransaction.objectStore("hris_fieldoption");
-
-                            var fielOptiondRequest = fieldOptionStore.openCursor();
-                            //replacing the field with Combo Box
-
-                            var replaceOptionString = "<select name='" + fieldName + "'>";
-
-
-                            fielOptiondRequest.onsuccess = function (callback) {
-
-                                var cursorOption = fielOptiondRequest.result;
-
-                                if (cursorOption) {
-
-                                    if (cursorOption.value.field == cursor.value.uid) {
-                                        replaceOptionString += "<option value='" + cursorOption.value.id + "'>" + cursorOption.value.value + "</option>";
-
-                                        //console.log(" Inside Field UID from Option = "+ cursorOption.value.field + " and UID from Fields " + cursor.value.uid +" and option value " + cursorOption.value.value);
-                                    }
-                                    //console.log("Field UID from Option = "+ cursorOption.value.field + " and UID from Fields " + cursor.value.uid +" and option value " + cursorOption.value.value);
-                                    cursorOption.continue();
-                                }
-                                else {
-                                    // No more matching records.
-                                    console.log('No more Matching Fields Options');
-                                    replaceOptionString += "</select >";
-
-                                    //hypertext = hypertext.replace("~" + fieldName + "~", replaceOptionString);
-                                    //console.log(hypertext);
-
-                                }
-
-                            }
-
-                        }
-                        else if (inputType == "text_box") {
-                            //replacing the field with Text Box
-                            var replaceString = "<input type='text' name='" + fieldName + "'>";
-                            hypertext = hypertext.replace("~" + fieldName + "~", replaceString);
-                        }
-                        else if (inputType == "textArea") {
-                            //replacing the field with Text Area
-                        }
-
-                        cursor.continue();
-
-                    } else {
-                        // No more matching records.
-                        //console.log('No more Matching Fields');
-                        //console.log(hypertext);
-                        result.innerHTML = hypertext;
-
-                        // console.log(hypertext);
-                    }
-                }
-
+                result.innerHTML = hypertext;
 
             } else {
                 // No match was found.
@@ -335,7 +240,7 @@ function getDataEntryForm(databaseName, uid, tableName) {
 function loadFieldOptions(fieldUIDS, databaseName) {
 
     var fieldUid = JSON.parse(fieldUIDS);
-    alert("this is the first alert?" + fieldUid);
+
     console.log(fieldUid);
 
     $.each(fieldUid, function (key, value) {
@@ -349,30 +254,33 @@ function loadFieldOptions(fieldUIDS, databaseName) {
         var openRequest = localDatabase.indexedDB.open(databaseName);
 
         openRequest.onsuccess = function () {
-            db = openRequest.result;
+
+            var db = openRequest.result;
 
             var fieldOptionTransaction = db.transaction("hris_fieldoption", "readonly");
             var fieldOptionStore = fieldOptionTransaction.objectStore("hris_fieldoption");
 
             var fielOptiondRequest = fieldOptionStore.openCursor();
 
-            fielOptiondRequest.onsuccess = function (callback) {
+            fielOptiondRequest.onsuccess = function () {
 
                 var cursorOption = fielOptiondRequest.result;
 
+
                 if (cursorOption) {
 
-                    if (cursorOption.value.field == field_uid) {
+                    if (field_uid == cursorOption.value.field) {
+                        console.log(decodeURIComponent(cursorOption.value.value) + " uid " + field_uid + " field_id " + cursorOption.value.uid);
 
                         $("#" + field_uid).append($('<option>', {
-                            value: cursorOption.value.id,
+                            value: cursorOption.value.uid,
                             text: decodeURIComponent(cursorOption.value.value)
                         }));
                     }
+
                     cursorOption.continue();
                 }
                 else {
-                    // No more matching records.
                     console.log('No more Matching Fields Options');
                 }
 
