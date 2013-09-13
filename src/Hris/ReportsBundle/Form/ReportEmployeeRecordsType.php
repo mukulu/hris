@@ -31,7 +31,7 @@ use Symfony\Component\Form\FormBuilderInterface;
 use Symfony\Component\OptionsResolver\OptionsResolverInterface;
 use Symfony\Component\Validator\Constraints\NotBlank;
 
-class ReportAggregationType extends AbstractType
+class ReportEmployeeRecordsType extends AbstractType
 {
     public function buildForm(FormBuilderInterface $builder, array $options)
     {
@@ -48,56 +48,12 @@ class ReportAggregationType extends AbstractType
             ->add('withLowerLevels','checkbox',array(
                 'required'=>False,
             ))
-            ->add('organisationunitGroup','entity',array(
-                    'class'=>'HrisOrganisationunitBundle:OrganisationunitGroup',
-                    'multiple'=>true,
-                    'required'=>False,
-                )
-            )
+            ->add('withLowerLevels','checkbox',array(
+                'required'=>False,
+            ))
             ->add('forms','entity', array(
                 'class'=>'HrisFormBundle:Form',
                 'multiple'=>true,
-                'constraints'=>array(
-                    new NotBlank(),
-                )
-            ))
-            ->add('fields','entity',array(
-                'class'=>'HrisFormBundle:Field',
-                'empty_value' => '--SELECT--',
-                'query_builder'=>function(EntityRepository $er) {
-                    return $er->createQueryBuilder('field')
-                        ->innerJoin('field.inputType','inputType')
-                        ->where('inputType.name=:inputTypeName')
-                        ->orWhere('field.isCalculated=True')
-                        ->setParameter('inputTypeName',"Select")
-                        ->orderBy('field.isCalculated,field.name','ASC');
-                },
-                'constraints'=> array(
-                    new NotBlank(),
-                )
-            ))
-            ->add('fieldsTwo','entity',array(
-                'class'=>'HrisFormBundle:Field',
-                'empty_value' => '--SELECT--',
-                'required'=>False,
-                'query_builder'=>function(EntityRepository $er) {
-                    return $er->createQueryBuilder('field')
-                        ->innerJoin('field.inputType','inputType')
-                        ->where('inputType.name=:inputTypeName')
-                        ->orWhere('field.isCalculated=True')
-                        ->setParameter('inputTypeName',"Select")
-                        ->orderBy('field.isCalculated,field.name','ASC');
-                },
-                'constraints'=> array(
-                    new NotBlank(),
-                )
-            ))
-            ->add('graphType','choice',array(
-                'choices'=>array(
-                    'bar'=>'Bar Chart',
-                    'line'=>'Line Chart',
-                    'pie'=>'Pie Chart'
-                ),
                 'constraints'=>array(
                     new NotBlank(),
                 )
@@ -118,6 +74,6 @@ class ReportAggregationType extends AbstractType
 
     public function getName()
     {
-        return 'hris_reportsbundle_reportaggregationtype';
+        return 'hris_reportsbundle_reportemployeerecordstype';
     }
 }

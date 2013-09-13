@@ -1,9 +1,9 @@
 {% extends '::base.html.twig' %}
 
 {% block right_content -%}
-    <h1>Record</h1>
+    <h1><i class="icon-circle-info icon-largest" title="Show"></i> <small>Record</small></h1>
 
-    <table class="record_properties">
+    <table class="record_properties table table-striped table-bordered table-hover">
         <tbody>
             <tr>
                 <th>Id</th>
@@ -19,19 +19,43 @@
             </tr>
             <tr>
                 <th>Complete</th>
-                <td>{{ entity.complete }}</td>
+                <td>
+                    {% if entity.complete %}
+                        True
+                    {% else %}
+                        False
+                    {% endif %}
+                </td>
             </tr>
             <tr>
                 <th>Correct</th>
-                <td>{{ entity.correct }}</td>
+                <td>
+                    {% if entity.correct %}
+                        True
+                    {% else %}
+                        False
+                    {% endif %}
+                </td>
             </tr>
             <tr>
                 <th>Hashistory</th>
-                <td>{{ entity.hashistory }}</td>
+                <td>
+                    {% if entity.hashistory %}
+                        True
+                    {% else %}
+                        False
+                    {% endif %}
+                </td>
             </tr>
             <tr>
                 <th>Hastraining</th>
-                <td>{{ entity.hastraining }}</td>
+                <td>
+                    {% if entity.hastraining %}
+                        True
+                    {% else %}
+                        False
+                    {% endif %}
+                </td>
             </tr>
             <tr>
                 <th>Datecreated</th>
@@ -48,23 +72,23 @@
         </tbody>
     </table>
 
-        <ul class="record_actions">
-    <li>
-        <a href="{{ path('record') }}">
-            Back to the list
-        </a>
-    </li>
-    <li>
-        <a href="{{ path('record_edit', { 'id': entity.id }) }}">
-            Edit
-        </a>
-    </li>
-    <li>
-        <form action="{{ path('record_delete', { 'id': entity.id }) }}" method="post">
-            <input type="hidden" name="_method" value="DELETE" />
-            {{ form_widget(delete_form) }}
-            <button type="submit">Delete</button>
-        </form>
-    </li>
-</ul>
+    <ul class="record_actions inline">
+        <li>
+            <a href="{{ path('record') }}">
+                Back to the list
+            </a>
+        </li>
+        <li>
+            <a href="{{ path('record_edit', { 'id': entity.id }) }}">
+                Edit
+            </a>
+        </li>
+        <li>
+            <form action="{{ path('record_delete', { 'id': entity.id }) }}" method="post">
+                <input type="hidden" name="_method" value="DELETE" />
+                {{ form_widget(delete_form) }}
+                <button type="submit">Delete</button>
+            </form>
+        </li>
+    </ul>
 {% endblock %}

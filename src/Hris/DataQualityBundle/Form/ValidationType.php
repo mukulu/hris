@@ -9,44 +9,35 @@ use Symfony\Component\OptionsResolver\OptionsResolverInterface;
 
 class ValidationType extends AbstractType
 {
-    public function buildForm(FormBuilderInterface $builder, array $options)
-    {
-        $builder
-            ->add('name','text')
-            ->add('description')
-            ->add('operator','choice',array( 'choices' => array(
-                    'option1' => '==(Equal)',
-                    'option2' => '=!(Not Equal)',
-                    'option3' => '>(Greater Than)',
-                    'option4' => '>=(Greater Than or Equal)',
-                    'option5' => '<(Less Than)',
-                    'option6' => '<=(Less Than or Equal)',
 
-                  'required'  => false,
-                  'empty_data'  => null
-            ) ) )
-            ->add('leftExpression','entity', array(
-                        'class' => 'HrisFormBundle:Field',
-                        'query_builder' => function(EntityRepository $er) {
-                            return $er->createQueryBuilder('field')
-                                ->orderBy('field.name', 'ASC');
-                        },
-                    )
-            )
-            ->add('rightExpression','entity', array(
-                'class' => 'HrisFormBundle:Field',
-                'query_builder' => function(EntityRepository $er) {
-                    return $er->createQueryBuilder('field')
-                        ->orderBy('field.name', 'ASC');
-                },
-            ))
-        ;
+    public function buildForm(FormBuilderInterface $builder, array $options)
+<<<<<<< Updated upstream
+
+=======
+>>>>>>> Stashed changes
+      {
+          $builder
+
+            ->add('name','text')
+            ->add('description','textarea')
+            ->add('leftExpression','textarea')
+            ->add('rightExpression','textarea')
+             ->add('operator', 'choice', array(
+                  'choices'   => array('==(Equal)',
+                      '!=(Not Equal)',
+                      '>(Greater Than)',
+                      '>=(Greater Than or Equal)',
+                      '<(Less Than)',
+                      '<=(Less Than or Equal)')))
+          ;
+
     }
 
     public function setDefaultOptions(OptionsResolverInterface $resolver)
     {
         $resolver->setDefaults(array(
             'data_class' => 'Hris\DataQualityBundle\Entity\Validation'
+
         ));
     }
 
@@ -54,4 +45,5 @@ class ValidationType extends AbstractType
     {
         return 'hris_dataqualitybundle_validationtype';
     }
+
 }

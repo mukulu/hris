@@ -96,9 +96,12 @@ class ValidationController extends Controller
     {
         $entity = new Validation();
         $form   = $this->createForm(new ValidationType(), $entity);
+        $leftExpressionFields = $this->getDoctrine()->getRepository('HrisFormBundle:Field')->findAll();
+        $rightExpressionFields = $this->getDoctrine()->getRepository(('HrisFormBundle:Field'))->findAll();
 
         return array(
-            'entity' => $entity,
+            'leftExpressionFields'=>$leftExpressionFields,
+            'rightExpressionFields'=>$rightExpressionFields,
             'form'   => $form->createView(),
         );
     }
