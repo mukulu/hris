@@ -26,8 +26,12 @@
                 <td>{{ entity.sort }}</td>
             </tr>
             <tr>
-                <th>Datecreated</th>
-                <td>{{ entity.datecreated|date('Y-m-d H:i:s') }}</td>
+                <th>Series</th>
+                <td>{{ entity.serie }}</td>
+            </tr>
+            <tr>
+                <th>Report Categories</th>
+                <td>{{ entity.friendlyReportCategory|join(', ') }}</td>
             </tr>
             <tr>
                 <th>Lastupdated</th>

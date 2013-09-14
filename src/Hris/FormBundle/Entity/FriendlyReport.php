@@ -217,14 +217,14 @@ class FriendlyReport
     public function setSort($sort)
     {
         $this->sort = $sort;
-    
+
         return $this;
     }
 
     /**
      * Get sort
      *
-     * @return integer 
+     * @return integer
      */
     public function getSort()
     {
@@ -333,6 +333,17 @@ class FriendlyReport
     public function removeFriendlyReportCategory(FriendlyReportCategory $friendlyReportCategory)
     {
         $this->friendlyReportCategory->removeElement($friendlyReportCategory);
+    }
+
+    /**
+     * Remove All friendlyReportCategory
+     *
+     */
+    public function removeAllFriendlyReportCategory()
+    {
+        foreach($this->friendlyReportCategory as $key=>$reportCategory) {
+            $this->friendlyReportCategory->removeElement($reportCategory);
+        }
     }
 
     /**
