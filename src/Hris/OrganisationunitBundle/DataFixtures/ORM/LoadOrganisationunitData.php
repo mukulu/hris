@@ -7685,9 +7685,10 @@ class LoadOrganisationunitData extends AbstractFixture implements OrderedFixture
             // Persist and it's reference
             $organisationunitLevel = new OrganisationunitLevel();
             $organisationunitLevel->setLevel(1);
-            $levelName = 'Level '.$organisationunitLevel->getLevel();
-            if($organisationunitLevel->getLevel()==1) $levelName="Ministry Of Health &SW";
-            $organisationunitLevel->setName($levelName);
+//            $levelName = 'Level '.$organisationunitLevel->getLevel();
+//            if($organisationunitLevel->getLevel()==1) $levelName="Ministry Of Health &SW";
+//            $organisationunitLevel->setName($levelName);
+            $organisationunitLevel->setName('Level '.$organisationunitLevel->getLevel());
             $this->addReference($organisationunitLevelReference, $organisationunitLevel);
             $manager->persist($organisationunitLevel);
         }
@@ -7722,17 +7723,18 @@ class LoadOrganisationunitData extends AbstractFixture implements OrderedFixture
                     }else {
                         // Create new Level and reference.
                         $organisationunitLevel = new OrganisationunitLevel();
-                        $levelName = 'Level '.$parentOrganisationunitStructureByReference->getLevel()->getLevel()+1;
-                        if(($parentOrganisationunitStructureByReference->getLevel()->getLevel()+1)==2) {
-                            $levelName="Divisions";
-                        }elseif(($parentOrganisationunitStructureByReference->getLevel()->getLevel()+1)==3) {
-                            $levelName="Regions/Departments/Referrals/T.Institutions";
-                        }elseif( ($parentOrganisationunitStructureByReference->getLevel()->getLevel()+1)==4 ) {
-                            $levelName="Councils/Reg.Hospitals";
-                        }elseif( ($parentOrganisationunitStructureByReference->getLevel()->getLevel()+1)==5 ) {
-                            $levelName="Health Facilities";
-                        }
-                        $organisationunitLevel->setLevel($levelName);
+//                        $levelName = 'Level '.$parentOrganisationunitStructureByReference->getLevel()->getLevel()+1;
+//                        if(($parentOrganisationunitStructureByReference->getLevel()->getLevel()+1)==2) {
+//                            $levelName="Divisions";
+//                        }elseif(($parentOrganisationunitStructureByReference->getLevel()->getLevel()+1)==3) {
+//                            $levelName="Regions/Departments/Referrals/T.Institutions";
+//                        }elseif( ($parentOrganisationunitStructureByReference->getLevel()->getLevel()+1)==4 ) {
+//                            $levelName="Councils/Reg.Hospitals";
+//                        }elseif( ($parentOrganisationunitStructureByReference->getLevel()->getLevel()+1)==5 ) {
+//                            $levelName="Health Facilities";
+//                        }
+//                        $organisationunitLevel->setLevel($levelName);
+                        $organisationunitLevel->setLevel($parentOrganisationunitStructureByReference->getLevel()->getLevel()+1);
                         $organisationunitLevel->setName('Level '.$organisationunitLevel->getLevel());
                         //Wild hack to set data entry level
                         if($organisationunitLevel->getLevel() == 4) {
