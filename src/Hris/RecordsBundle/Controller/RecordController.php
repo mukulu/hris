@@ -190,8 +190,6 @@ class RecordController extends Controller
             }
         }
 
-        var_dump(json_encode($selectFields));
-
         return array(
 
             'uid' => $formEntity->getUid(),

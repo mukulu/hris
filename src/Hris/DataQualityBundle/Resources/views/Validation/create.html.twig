@@ -1,0 +1,94 @@
+{% extends '::base.html.twig' %}
+
+{% block right_content -%}
+    <h1><small>Validation creation</small></h1>
+
+
+    {% block javascripts %}
+
+        <script type="text/javascript" language="javascript" src="{{ asset('commons/js/validation-js.js') }}"></script>
+
+    {% endblock javascripts %}
+
+        {{ form_start(form, {'action': path('validation_create'), 'method': 'POST'}) }}
+
+
+        <label for="hris_dataqualitybundle_validationtype_name" class="required">Name</label>
+        {{ form_widget(form.name) }}
+        <label for="hris_dataqualitybundle_validationtype_description" class="required">Description</label>
+        {{ form_widget(form.description) }}
+
+        <div>
+
+        <label for="hris_dataqualitybundle_leftexpression" class="required">Left Expression</label>
+
+        <select name="left_field" size="10" id="left_field" class="left_field" multiple="multiple" style="width:250px" ondblclick="copySelectedLeft()">
+
+
+            {% for leftExpressionField in leftExpressionFields  %}
+                <option value="{{ leftExpressionField.id }}">{{ leftExpressionField.name }}</option>
+            {% endfor %}
+        </select>
+
+
+            <input type="button" value=" + " name="add" id="add" onclick="copyValueOfLeftAddButton()">
+            <input type="button" value=" - " name="minus" id="minus" onclick="copyValueOfLeftMinusButton()">
+            <input type="button" value=" * " name="multiply" id="multiply" onclick="copyValueOfLeftMultiplyButton()">
+            <input type="button" value=" / " name="devide" id="divide" onclick="copyValueOfLeftDivideButton()">
+            <input type="button" value=" % " name="reminder" id="reminder" onclick="copyValueOfLeftReminderButton()">
+            <input type="button" value=" ( " name="brckt1" id="brckt1" onclick="copyValueOfLeftBracketOneButton()">
+            <input type="button" value=" ) " name="brckt2" id="brckt2" onclick="copyValueOfLeftBracketTwoButton()">
+
+
+
+            {{ form_widget(form.leftExpression) }}
+
+        <br/>
+
+
+        </div>
+
+
+        <div>
+
+        <label for="hris_dataqualitybundle_rightexpression" class="required">Right Expression</label>
+        <select name="right_field" id="right_field" size="10" multiple="multiple" style="width:250px" ondblclick="copySelectedRight()">
+
+
+            {% for rightExpressionField in rightExpressionFields  %}
+                <option value="{{ rightExpressionField.id }}">{{ rightExpressionField.name }}</option>
+            {% endfor %}
+        </select>
+
+
+            <input type="button" value=" + " name="add1" id="add1" onclick="copyValueOfRightAddButton()">
+            <input type="button" value=" - " name="minus1" id="minus1" onclick="copyValueOfRightMinusButton()">
+            <input type="button" value=" * " name="multiply1" id="multiply1" onclick="copyValueOfRightMultiplyButton()">
+            <input type="button" value=" / " name="devide1" id="divide1" onclick="copyValueOfRightDivideButton()">
+            <input type="button" value=" % " name="reminder1" id="reminder1" onclick="copyValueOfRightReminderButton()">
+            <input type="button" value=" ( " name="brckt11" id="brckt11" onclick="copyValueOfRightBracketOneButton()">
+            <input type="button" value=" ) " name="brckt21" id="brckt21" onclick="copyValueOfRightBracketTwoButton()">
+
+
+            {{ form_widget(form.rightExpression) }}
+            <br/>
+        </div>
+
+        <div>
+            <label for="hris_dataqualitybundle_validationtype_operator" class="required">Operator</label>
+
+            {{ form_widget(form.operator) }}
+            </div>
+
+
+    {{ form_end()  }}
+
+        <br/>
+        <ul class="record_actions inline" style="float:left;">
+            <li>
+                <a href="{{ path('validation') }}" class="btn">
+                    Back to the list
+                </a>
+            </li>
+        </ul>
+{% endblock %}

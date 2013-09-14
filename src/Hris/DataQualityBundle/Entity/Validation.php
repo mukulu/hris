@@ -74,7 +74,7 @@ class Validation
      * @var string $operator
      *
      * @Gedmo\Versioned
-     * @ORM\Column(name="operator", type="string", length=20)
+     * @ORM\Column(name="operator", type="string", length=40)
      */
     private $operator;
 
