@@ -38,46 +38,11 @@ function createDatabase(databaseName, tableName, columnNames, dataValues) {
             console.log("data Store Column UID  Added for the datastore " + tableName[key]);
         }
 
-        /*
-         Creating the Columns for data Storage
-
-         for (var key in columnNames){
-         var column_name = columnNames[key];
-
-         dataStore.createIndex(column_name, column_name, { unique: false });
-         console.log("data Store Column '" + column_name + "' Added");
-         }
-         */
     };
 
     openRequest.onsuccess = function () {
         db = openRequest.result;
         console.log("this is done deal");
-        /*
-         var transaction = db.transaction(tableName, "readwrite");
-         var store = transaction.objectStore(tableName);
-
-         var results = '{';
-
-         for (var key in dataValues){
-         Object.getOwnPropertyNames(dataValues[key]).forEach(function(val, idx, array) {
-         results += '"'+ val + '" : "' + encodeURIComponent(dataValues[key][val]) +'", ';
-         });
-
-         console.log("this is the name " + results.name);
-         results = results.slice(0,-2);
-         results += '}';
-         console.log(results);
-         store.put( JSON.parse(results) );
-         console.log("Results has been update");
-         var results = '{';
-         }
-
-         transaction.oncomplete = function() {
-         // All requests have succeeded and the transaction has committed.
-         console.log("All transaction done");
-         };
-         */
     };
 
 }
