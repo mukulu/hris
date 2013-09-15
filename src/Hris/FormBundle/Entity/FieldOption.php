@@ -300,6 +300,7 @@ class FieldOption
     public function addParentFieldOption(FieldOption $parentFieldOption)
     {
         $this->parentFieldOption[$parentFieldOption->getId()] = $parentFieldOption;
+        $parentFieldOption->addChildFieldOption($this);
     
         return $this;
     }

@@ -1962,7 +1962,8 @@ class LoadFieldData extends AbstractFixture implements OrderedFixtureInterface
             if(!empty($humanResourceField['parentField'])) {
                 foreach($humanResourceField['parentField'] as $parentField) {
                     $parentFieldByReference = $manager->merge($this->getReference( strtolower(str_replace(' ','',$parentField)).'-field' ));
-                    $manager->persist($parentFieldByReference);
+                    //$manager->persist($parentFieldByReference);
+                    //@todo ensure addition of relation works
                     $field->addParentField($parentFieldByReference);
                 }
             }

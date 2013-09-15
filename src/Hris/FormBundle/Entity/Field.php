@@ -474,6 +474,7 @@ class Field
     public function addParentField(Field $parentField)
     {
         $this->parentField[$parentField->getId()] = $parentField;
+        $parentField->addChildField($this);
     
         return $this;
     }
