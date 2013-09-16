@@ -7838,7 +7838,9 @@ class LoadOrganisationunitData extends AbstractFixture implements OrderedFixture
 	 */
 	public function getOrder()
 	{
-		return 6;
+        //LoadFriendlyReport preceeds
+		return 7;
+        //LoadOrganisationunitGroup follows
 	}
 
 }

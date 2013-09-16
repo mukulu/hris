@@ -127,6 +127,7 @@ class LoadFieldData extends AbstractFixture implements OrderedFixtureInterface
                 'compulsory'=>true,
                 'isUnique'=>false,
                 'isCalculated'=>false,
+                'skipInReport'=>false,
                 'calculatedExpression'=>'',
                 'fieldRelation'=>False,
                 'parentField'=>Null,
@@ -140,6 +141,7 @@ class LoadFieldData extends AbstractFixture implements OrderedFixtureInterface
                 'compulsory'=>false,
                 'isUnique'=>false,
                 'isCalculated'=>false,
+                'skipInReport'=>false,
                 'calculatedExpression'=>'',
                 'fieldRelation'=>False,
                 'parentField'=>Null,
@@ -154,6 +156,7 @@ class LoadFieldData extends AbstractFixture implements OrderedFixtureInterface
                 'fieldRelation'=>False,
                 'isUnique'=>false,
                 'isCalculated'=>false,
+                'skipInReport'=>false,
                 'calculatedExpression'=>'',
                 'parentField'=>Null,
                 'description'=>"Employee's Surname/Lastname(Compulsory)",
@@ -166,6 +169,7 @@ class LoadFieldData extends AbstractFixture implements OrderedFixtureInterface
                 'compulsory'=>true,
                 'isUnique'=>false,
                 'isCalculated'=>false,
+                'skipInReport'=>false,
                 'calculatedExpression'=>'',
                 'fieldRelation'=>False,
                 'parentField'=>Null,
@@ -179,6 +183,7 @@ class LoadFieldData extends AbstractFixture implements OrderedFixtureInterface
                 'compulsory'=>true,
                 'isUnique'=>false,
                 'isCalculated'=>false,
+                'skipInReport'=>false,
                 'calculatedExpression'=>'',
                 'fieldRelation'=>False,
                 'parentField'=>Null,
@@ -192,6 +197,7 @@ class LoadFieldData extends AbstractFixture implements OrderedFixtureInterface
                 'compulsory'=>true,
                 'isUnique'=>false,
                 'isCalculated'=>false,
+                'skipInReport'=>false,
                 'calculatedExpression'=>'',
                 'fieldRelation'=>False,
                 'parentField'=>Null,
@@ -205,6 +211,7 @@ class LoadFieldData extends AbstractFixture implements OrderedFixtureInterface
                 'compulsory'=>true,
                 'isUnique'=>false,
                 'isCalculated'=>false,
+                'skipInReport'=>true,
                 'calculatedExpression'=>'',
                 'fieldRelation'=>False,
                 'parentField'=>Null,
@@ -218,6 +225,7 @@ class LoadFieldData extends AbstractFixture implements OrderedFixtureInterface
                 'compulsory'=>true,
                 'isUnique'=>false,
                 'isCalculated'=>false,
+                'skipInReport'=>true,
                 'calculatedExpression'=>'',
                 'fieldRelation'=>False,
                 'parentField'=>Null,
@@ -231,6 +239,7 @@ class LoadFieldData extends AbstractFixture implements OrderedFixtureInterface
                 'compulsory'=>true,
                 'isUnique'=>false,
                 'isCalculated'=>false,
+                'skipInReport'=>false,
                 'calculatedExpression'=>'',
                 'fieldRelation'=>False,
                 'parentField'=>Null,
@@ -244,6 +253,7 @@ class LoadFieldData extends AbstractFixture implements OrderedFixtureInterface
                 'compulsory'=>true,
                 'isUnique'=>false,
                 'isCalculated'=>false,
+                'skipInReport'=>false,
                 'calculatedExpression'=>'',
                 'fieldRelation'=>False,
                 'parentField'=>Null,
@@ -257,6 +267,7 @@ class LoadFieldData extends AbstractFixture implements OrderedFixtureInterface
                 'compulsory'=>false,
                 'isUnique'=>false,
                 'isCalculated'=>false,
+                'skipInReport'=>false,
                 'calculatedExpression'=>'',
                 'fieldRelation'=>False,
                 'parentField'=>Null,
@@ -270,6 +281,7 @@ class LoadFieldData extends AbstractFixture implements OrderedFixtureInterface
                 'compulsory'=>false,
                 'isUnique'=>false,
                 'isCalculated'=>false,
+                'skipInReport'=>false,
                 'calculatedExpression'=>'',
                 'fieldRelation'=>False,
                 'parentField'=>Null,
@@ -283,6 +295,7 @@ class LoadFieldData extends AbstractFixture implements OrderedFixtureInterface
                 'compulsory'=>true,
                 'isUnique'=>false,
                 'isCalculated'=>false,
+                'skipInReport'=>false,
                 'calculatedExpression'=>'',
                 'fieldRelation'=>False,
                 'parentField'=>Null,
@@ -296,6 +309,7 @@ class LoadFieldData extends AbstractFixture implements OrderedFixtureInterface
                 'compulsory'=>true,
                 'isUnique'=>true,
                 'isCalculated'=>false,
+                'skipInReport'=>false,
                 'calculatedExpression'=>'',
                 'fieldRelation'=>False,
                 'parentField'=>Null,
@@ -309,6 +323,7 @@ class LoadFieldData extends AbstractFixture implements OrderedFixtureInterface
                 'compulsory'=>false,
                 'isUnique'=>false,
                 'isCalculated'=>false,
+                'skipInReport'=>false,
                 'calculatedExpression'=>'',
                 'fieldRelation'=>False,
                 'parentField'=>Null,
@@ -322,6 +337,7 @@ class LoadFieldData extends AbstractFixture implements OrderedFixtureInterface
                 'compulsory'=>true,
                 'isUnique'=>false,
                 'isCalculated'=>false,
+                'skipInReport'=>false,
                 'calculatedExpression'=>'',
                 'fieldRelation'=>False,
                 'parentField'=>Null,
@@ -335,6 +351,7 @@ class LoadFieldData extends AbstractFixture implements OrderedFixtureInterface
                 'compulsory'=>true,
                 'isUnique'=>false,
                 'isCalculated'=>false,
+                'skipInReport'=>false,
                 'calculatedExpression'=>'',
                 'fieldRelation'=>True,
                 'parentField'=>Null,
@@ -348,6 +365,7 @@ class LoadFieldData extends AbstractFixture implements OrderedFixtureInterface
                 'compulsory'=>true,
                 'isUnique'=>false,
                 'isCalculated'=>false,
+                'skipInReport'=>false,
                 'calculatedExpression'=>'',
                 'fieldRelation'=>False,
                 'parentField'=>Array('Profession'),
@@ -361,6 +379,7 @@ class LoadFieldData extends AbstractFixture implements OrderedFixtureInterface
                 'compulsory'=>true,
                 'isUnique'=>false,
                 'isCalculated'=>false,
+                'skipInReport'=>false,
                 'calculatedExpression'=>'',
                 'fieldRelation'=>False,
                 'parentField'=>Null,
@@ -374,6 +393,7 @@ class LoadFieldData extends AbstractFixture implements OrderedFixtureInterface
                 'compulsory'=>true,
                 'isUnique'=>false,
                 'isCalculated'=>false,
+                'skipInReport'=>false,
                 'calculatedExpression'=>'',
                 'fieldRelation'=>False,
                 'parentField'=>Null,
@@ -387,6 +407,7 @@ class LoadFieldData extends AbstractFixture implements OrderedFixtureInterface
                 'compulsory'=>true,
                 'isUnique'=>false,
                 'isCalculated'=>false,
+                'skipInReport'=>false,
                 'calculatedExpression'=>'',
                 'fieldRelation'=>False,
                 'parentField'=>Null,
@@ -400,6 +421,7 @@ class LoadFieldData extends AbstractFixture implements OrderedFixtureInterface
                 'compulsory'=>false,
                 'isUnique'=>false,
                 'isCalculated'=>false,
+                'skipInReport'=>false,
                 'calculatedExpression'=>'',
                 'fieldRelation'=>False,
                 'parentField'=>Null,
@@ -413,6 +435,7 @@ class LoadFieldData extends AbstractFixture implements OrderedFixtureInterface
                 'compulsory'=>true,
                 'isUnique'=>false,
                 'isCalculated'=>false,
+                'skipInReport'=>false,
                 'calculatedExpression'=>'',
                 'fieldRelation'=>False,
                 'parentField'=>Null,
@@ -426,6 +449,7 @@ class LoadFieldData extends AbstractFixture implements OrderedFixtureInterface
                 'compulsory'=>false,
                 'isUnique'=>false,
                 'isCalculated'=>false,
+                'skipInReport'=>false,
                 'calculatedExpression'=>'',
                 'fieldRelation'=>False,
                 'parentField'=>Null,
@@ -439,6 +463,7 @@ class LoadFieldData extends AbstractFixture implements OrderedFixtureInterface
                 'compulsory'=>false,
                 'isUnique'=>false,
                 'isCalculated'=>false,
+                'skipInReport'=>false,
                 'calculatedExpression'=>'',
                 'fieldRelation'=>False,
                 'parentField'=>Null,
@@ -452,6 +477,7 @@ class LoadFieldData extends AbstractFixture implements OrderedFixtureInterface
                 'compulsory'=>true,
                 'isUnique'=>false,
                 'isCalculated'=>false,
+                'skipInReport'=>false,
                 'calculatedExpression'=>'',
                 'fieldRelation'=>False,
                 'parentField'=>Null,
@@ -465,6 +491,7 @@ class LoadFieldData extends AbstractFixture implements OrderedFixtureInterface
                 'compulsory'=>true,
                 'isUnique'=>false,
                 'isCalculated'=>false,
+                'skipInReport'=>false,
                 'calculatedExpression'=>'',
                 'fieldRelation'=>False,
                 'parentField'=>Null,
@@ -478,6 +505,7 @@ class LoadFieldData extends AbstractFixture implements OrderedFixtureInterface
                 'compulsory'=>false,
                 'isUnique'=>false,
                 'isCalculated'=>false,
+                'skipInReport'=>false,
                 'calculatedExpression'=>'',
                 'fieldRelation'=>False,
                 'parentField'=>Null,
@@ -491,6 +519,7 @@ class LoadFieldData extends AbstractFixture implements OrderedFixtureInterface
                 'compulsory'=>true,
                 'isUnique'=>false,
                 'isCalculated'=>false,
+                'skipInReport'=>false,
                 'calculatedExpression'=>'',
                 'fieldRelation'=>False,
                 'parentField'=>Null,
@@ -504,6 +533,7 @@ class LoadFieldData extends AbstractFixture implements OrderedFixtureInterface
                 'compulsory'=>false,
                 'isUnique'=>false,
                 'isCalculated'=>false,
+                'skipInReport'=>false,
                 'calculatedExpression'=>'',
                 'fieldRelation'=>False,
                 'parentField'=>Null,
@@ -517,6 +547,7 @@ class LoadFieldData extends AbstractFixture implements OrderedFixtureInterface
                 'compulsory'=>false,
                 'isUnique'=>false,
                 'isCalculated'=>false,
+                'skipInReport'=>false,
                 'calculatedExpression'=>'',
                 'fieldRelation'=>False,
                 'parentField'=>Null,
@@ -530,6 +561,7 @@ class LoadFieldData extends AbstractFixture implements OrderedFixtureInterface
                 'compulsory'=>false,
                 'isUnique'=>false,
                 'isCalculated'=>false,
+                'skipInReport'=>false,
                 'calculatedExpression'=>'',
                 'fieldRelation'=>False,
                 'parentField'=>Null,
@@ -543,6 +575,7 @@ class LoadFieldData extends AbstractFixture implements OrderedFixtureInterface
                 'compulsory'=>false,
                 'isUnique'=>false,
                 'isCalculated'=>true,
+                'skipInReport'=>false,
                 'calculatedExpression'=>'range( date_format(#{DateofFirstAppointment},"Y"), date_format("now","Y")-10 ) ',
                 'fieldRelation'=>False,
                 'parentField'=>Null,
@@ -556,6 +589,7 @@ class LoadFieldData extends AbstractFixture implements OrderedFixtureInterface
                 'compulsory'=>false,
                 'isUnique'=>false,
                 'isCalculated'=>true,
+                'skipInReport'=>false,
                 'calculatedExpression'=>'range( date_format(#{Birthdate},"Y"), date_format("now","Y")-10 ) ',
                 'fieldRelation'=>False,
                 'parentField'=>Null,
@@ -569,6 +603,7 @@ class LoadFieldData extends AbstractFixture implements OrderedFixtureInterface
                 'compulsory'=>false,
                 'isUnique'=>false,
                 'isCalculated'=>true,
+                'skipInReport'=>false,
                 'calculatedExpression'=>'range( date_format(#{Birthdate},"Y"), date_format("now","Y")-10 ) ',
                 'fieldRelation'=>False,
                 'parentField'=>Null,
@@ -1719,7 +1754,7 @@ class LoadFieldData extends AbstractFixture implements OrderedFixtureInterface
                 'skipinreport'=>True,
                 'sort'=> 4),
             188=>Array(
-                'value'=>'On Leave Without Employment Status',
+                'value'=>'On Leave Without Payment',
                 'description'=>'Employee`s Employer',
                 'field'=>  'EmploymentStatus-field',
                 'skipinreport'=>False,
@@ -1851,7 +1886,7 @@ class LoadFieldData extends AbstractFixture implements OrderedFixtureInterface
      */
     public function addDummyFieldOptionGroups()
     {
-        // Load dummy field option groups for indicators
+        // Load dummy field option groups for indicators and friendly/generic reports
         $this->fieldOptionGroups = Array(
             0=>Array(
                 'name'=>'Atleast Secondary Education',
@@ -1861,8 +1896,93 @@ class LoadFieldData extends AbstractFixture implements OrderedFixtureInterface
             1=>Array(
                 'name'=>'University Education',
                 'description'=>"Bachelor Degree, Masters and Phd",
-                'options'=> Array( 0=>'Postgraduate Diploma', 1=>'Bachelor Degree', 2=> 'Masters Degree', 3=> 'PhD'),
+                'options'=> Array(
+                    0=>'Postgraduate Diploma',
+                    1=>'Bachelor Degree',
+                    2=> 'Masters Degree',
+                    3=> 'PhD'
+                ),
             ),
+            2=>Array(
+                'name'=>'CCHP Attrition',
+                'description'=>"Comprehensive Council Health Plan Attrition Options",
+                'options'=> Array(
+                    0=>'Abscondent',
+                    1=>'Deceased',
+                    2=> 'Retired',
+                    3=> 'Transfered'
+                ),
+            ),
+            3=>Array(
+                'name'=>'CCHP CoreAndCoopted',
+                'description'=>"Comprehensive Council Health Plan Core and Co-opted member Options",
+                'options'=> Array(
+                    0=>'CHMT Co-Opted Member',
+                    1=>'CHMT Member',
+                    2=> 'Head of Department',
+                    3=> 'Head of Facility',
+                    4=>'Hospital Management Team',
+                    5=>'Programme Coordinator',
+                    6=>'RHMT Co-Opted Member',
+                    7=>'RHMT Member',
+                    8=>'Regional Medical Officer'
+                ),
+            ),
+            4=>Array(
+                'name'=>'CCHP Professions',
+                'description'=>"Comprehensive Council Health Plan Profession Options",
+                'options'=> Array(
+                    0=>'Assistant Medical Officer',
+                    1=>'Clinical Assistant',
+                    2=> 'Dental Technologist',
+                    3=> 'Environmental Health Officer',
+                    4=>'Medical Doctor',
+                    5=>'Nursing Officer',
+                    6=>'Pharmacist',
+                    7=>'Pharmacist',
+                ),
+            ),
+            5=>Array(
+                'name'=>'CCHP Staff Availability',
+                'description'=>"Comprehensive Council Health Plan Staff Availability Options",
+                'options'=> Array(
+                    0=>'Abscondent',
+                    1=>'Deceased',
+                    2=> 'Retired',
+                    3=> 'Transfered',
+                    5=>'Off Duty',
+                    6=>'On Annual Leave',
+                    7=>'On Duty',
+                    8=>'On Leave',
+                    9=>'On Leave Without Payment',
+                    10=>'On Maternity Leave',
+                    11=>'On Secondment',
+                    12=>'On Study Leave',
+                    13=>'On Sick Leave'
+                ),
+            ),
+            6=>Array(
+                'name'=>'Health Professions',
+                'description'=>"Health Sector Professions",
+                'options'=> Array(
+                    0=>'Medical Doctor',
+                    1=>'Pharmacist',
+                    2=> 'Environmental Health Officer',
+                    3=> 'Assistant Medical Officer',
+                    4=>'Nursing Officer',
+                    5=>'Dental Technologist',
+                    6=>'Clinical Assistant'
+                ),
+            ),
+            7=>Array(
+                'name'=>'  Gender',
+                'description'=>"Employee`s gender",
+                'options'=> Array(
+                    0=>'Female',
+                    1=>'Male'
+                ),
+            ),
+
         );
         return $this->fieldOptionGroups;
     }
@@ -1958,12 +2078,12 @@ class LoadFieldData extends AbstractFixture implements OrderedFixtureInterface
 			$field->setCompulsory($humanResourceField['compulsory']);
             $field->setIsUnique($humanResourceField['isUnique']);
             $field->setIsCalculated($humanResourceField['isCalculated']);
+            $field->setSkipInReport($humanResourceField['skipInReport']);
             $field->setCalculatedExpression($humanResourceField['calculatedExpression']);
             if(!empty($humanResourceField['parentField'])) {
                 foreach($humanResourceField['parentField'] as $parentField) {
                     $parentFieldByReference = $manager->merge($this->getReference( strtolower(str_replace(' ','',$parentField)).'-field' ));
                     //$manager->persist($parentFieldByReference);
-                    //@todo ensure addition of relation works
                     $field->addParentField($parentFieldByReference);
                 }
             }
@@ -2087,7 +2207,9 @@ class LoadFieldData extends AbstractFixture implements OrderedFixtureInterface
 	 */
 	public function getOrder()
 	{
+        // LoadDataType preceeds
 		return 4;
+        // LoadFormData follows
 	}
 
 }

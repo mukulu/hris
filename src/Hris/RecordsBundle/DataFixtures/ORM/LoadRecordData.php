@@ -322,7 +322,7 @@ class LoadRecordData extends AbstractFixture implements OrderedFixtureInterface
 	 */
 	public function getOrder()
 	{
-		return 10;
+		return 11;
 	}
 
 }
