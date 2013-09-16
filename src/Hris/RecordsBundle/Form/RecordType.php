@@ -42,6 +42,7 @@ class RecordType extends AbstractType
             ->add('datecreated')
             ->add('lastupdated')
             ->add('username')
+            ->add('value')
             ->add('organisationunit')
             ->add('form')
         ;
