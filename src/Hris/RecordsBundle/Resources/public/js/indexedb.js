@@ -171,6 +171,8 @@ function getDataEntryForm(databaseName, uid, tableName) {
 
     var openRequest = localDatabase.indexedDB.open(databaseName);
 
+    function getForm(callback) {
+
     openRequest.onsuccess = function () {
         db = openRequest.result;
         console.log("this is done deal");
@@ -199,6 +201,12 @@ function getDataEntryForm(databaseName, uid, tableName) {
         };
 
     };
+        callback();
+    }
+
+    getForm(function() {
+        //alert('Finished eating my sandwich.');
+    });
 
 }
 

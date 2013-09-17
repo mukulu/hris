@@ -2,6 +2,7 @@
 {% block javascripts %}
     {{ parent() }}
     <script type="text/javascript" src="{{ asset('bundles/hrisrecords/js/indexedb.js') }}"></script>
+    <script type="text/javascript" src="{{ asset('bundles/hrisrecords/js/dataentry.js') }}"></script>
 
     <script type="text/javascript">
 
@@ -21,14 +22,15 @@
 
     <h1>{{ title | raw }}</h1>
 
-    <form action="{{ path('record_list') }}" method="post">
+    <form action="{{ path('record_create') }}" method="post">
+
 
         <div id="result" />
-
+        </div>
         <p>
-            <button type="submit">Save</button>
+            <input type="hidden" name="formId" value="{{ id }}">
+            <button name='Save' class="btn"> Save Records</button>
         </p>
-
     </form>
 
 {% endblock %}

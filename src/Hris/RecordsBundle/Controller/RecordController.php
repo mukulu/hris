@@ -25,6 +25,7 @@
 namespace Hris\RecordsBundle\Controller;
 
 use Doctrine\ORM\EntityManager;
+use Doctrine\Tests\Common\Annotations\True;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Bundle\FrameworkBundle\Controller\Controller;
 use Doctrine\ORM\QueryBuilder as QueryBuilder;
@@ -35,6 +36,7 @@ use Sensio\Bundle\FrameworkExtraBundle\Configuration\Route;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Template;
 use Hris\RecordsBundle\Entity\Record;
 use Hris\RecordsBundle\Form\RecordType;
+use Hris\OrganisationunitBundle\Entity\Organisationunit;
 use Doctrine\Common\Collections\ArrayCollection;
 use Hris\FormBundle\Entity\Field;
 use Hris\FormBundle\Form\FormType;
@@ -70,7 +72,7 @@ class RecordController extends Controller
             'entities' => $entities,
         );
     }
-    
+
     /**
      * List Forms Available for Record entry.
      *
@@ -137,7 +139,7 @@ class RecordController extends Controller
             'field_option_table_name' => $filed_Option_Table_Name,
         );
     }
-    
+
     /**
      * Creates a new Record entity.
      *
@@ -147,17 +149,51 @@ class RecordController extends Controller
      */
     public function createAction(Request $request)
     {
-        $entity  = new Record();
-        $form = $this->createForm(new RecordType(), $entity);
-        $form->bind($request);
+        $em = $this->getDoctrine()->getManager();
 
-        if ($form->isValid()) {
+        $entity  = new Record();
+        //$record = $this->createForm(new RecordType(), $entity);
+        //$record->bind($request);
+
+        $formId = $this->get('request')->request->get('formId');
+
+        $orgunit = $em->getRepository('HrisOrganisationunitBundle:Organisationunit')->find(1);
+
+        $form = $em->getRepository('HrisFormBundle:Form')->find($formId);
+        $fields = $form->getSimpleField();
+
+
+        foreach ($fields as $key => $field){
+            $recordValue = $this->get('request')->request->get($field->getName());
+            $recordArray[$field->getId()] = $recordValue;
+        }
+
+        var_dump(json_encode($recordArray));
+
+        $entity->setValue($recordArray);
+        $entity->setForm($form);
+        $entity->setOrganisationunit($orgunit);
+        $entity->setUsername("Testing_User");
+        $entity->setComplete(True);
+        $entity->setCorrect(True);
+        $entity->setHashistory(False);
+        $entity->setHastraining(False);
+       // $entity->setDatecreated(new \Datetime());
+       // $entity->setLastupdated(new \Datetime());
+
+
+
+        //if ($entity->isValid()) {
             $em = $this->getDoctrine()->getManager();
             $em->persist($entity);
             $em->flush();
 
-            return $this->redirect($this->generateUrl('record_show', array('id' => $entity->getId())));
-        }
+        var_dump("this is done without any doubt");
+
+            return $this->redirect($this->generateUrl('record_new', array('id' => $form->getId())));
+        //}
+
+
 
         return array(
             'entity' => $entity,
@@ -226,6 +262,21 @@ class RecordController extends Controller
     }
 
     /**
+     * Creates a form to delete a Record entity by id.
+     *
+     * @param mixed $id The entity id
+     *
+     * @return \Symfony\Component\Form\Form The form
+     */
+    private function createDeleteForm($id)
+    {
+        return $this->createFormBuilder(array('id' => $id))
+            ->add('id', 'hidden')
+            ->getForm()
+        ;
+    }
+
+    /**
      * Displays a form to edit an existing Record entity.
      *
      * @Route("/{id}/edit", name="record_edit")
@@ -257,7 +308,7 @@ class RecordController extends Controller
      *
      * @Route("/{id}", name="record_update")
      * @Method("PUT")
-     * @Template("HrisRecordsBundle:Record:edit.html.twig")
+     * @Template("HrisRecordsBundle:Record:new.html.twig")
      */
     public function updateAction(Request $request, $id)
     {
@@ -286,6 +337,7 @@ class RecordController extends Controller
             'delete_form' => $deleteForm->createView(),
         );
     }
+
     /**
      * Deletes a Record entity.
      *
@@ -310,20 +362,5 @@ class RecordController extends Controller
         }
 
         return $this->redirect($this->generateUrl('record'));
-    }
-
-    /**
-     * Creates a form to delete a Record entity by id.
-     *
-     * @param mixed $id The entity id
-     *
-     * @return \Symfony\Component\Form\Form The form
-     */
-    private function createDeleteForm($id)
-    {
-        return $this->createFormBuilder(array('id' => $id))
-            ->add('id', 'hidden')
-            ->getForm()
-        ;
     }
 }
