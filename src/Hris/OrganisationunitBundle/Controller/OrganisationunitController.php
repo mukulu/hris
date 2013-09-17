@@ -116,8 +116,6 @@ class OrganisationunitController extends Controller
                                                         WHERE organisationunit.parent=:parentid
                                                         GROUP BY organisationunit.id")->setParameter('parentid',$id);
 
-
-
             try {
                 $entities = $organisationunitQuery->getArrayResult();
             } catch(NoResultException $e) {

@@ -145,7 +145,7 @@ class FriendlyReportCategory
      */
     public function __toString()
     {
-        $friendlyReport = 'FriendlyReport:'.$this->getFriendlyReport()->__toString().' OptionGroup:'.$this->getFieldOptionGroup()->__toString();
+        $friendlyReport = $this->getFieldOptionGroup()->__toString();
         return $friendlyReport;
     }
 }

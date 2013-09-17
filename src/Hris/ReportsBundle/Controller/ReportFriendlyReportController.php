@@ -19,14 +19,16 @@
  * MA 02110-1301, USA.
  *
  * @since 2012
- * @author Wilfred Felix Senyoni <senyoni@gmail.com>
+ * @author John Francis Mukulu <john.f.mukulu@gmail.com>
  *
  */
 namespace Hris\ReportsBundle\Controller;
 
 use Hris\OrganisationunitBundle\Entity\Organisationunit;
 use Hris\FormBundle\Entity\Field;
-use Hris\ReportsBundle\Form\ReportRecordsType;
+use Hris\ReportsBundle\Form\ReportAggregationType;
+use Hris\ReportsBundle\Form\ReportFriendlyReportType;
+use Hris\ReportsBundle\Form\ReportFriendlyType;
 use Symfony\Component\HttpFoundation\Request;
 use Doctrine\Common\Collections\ArrayCollection;
 use Symfony\Bundle\FrameworkBundle\Controller\Controller;
@@ -39,53 +41,59 @@ use Ob\HighchartsBundle\Highcharts\Highchart;
 use Zend\Json\Expr;
 
 /**
- * Report Records controller.
+ * Report Friendly Report controller for generation of friendlier
+ * standard/generic reports.
  *
- * @Route("/reports/records")
+ * @Route("/reports/friendlyreport")
  */
-class ReportRecordsController extends Controller
+class ReportFriendlyReportController extends Controller
 {
 
     /**
-     * Show Report Records
+     * Show Report Aggregation
      *
-     * @Route("/", name="report_records")
+     * @Route("/", name="report_friendlyreport")
      * @Method("GET")
      * @Template()
      */
     public function indexAction()
     {
 
-        $recordsForm = $this->createForm(new ReportRecordsType(),null,array('em'=>$this->getDoctrine()->getManager()));
+        $friendlyReportForm = $this->createForm(new ReportFriendlyReportType(),null,array('em'=>$this->getDoctrine()->getManager()));
 
         return array(
-            'recordsForm'=>$recordsForm->createView(),
+            'friendlyReportForm'=>$friendlyReportForm->createView(),
         );
     }
 
     /**
-     * Generate records reports
+     * Generate friendly reports
      *
-     * @Route("/", name="report_records_generate")
+     * @Route("/", name="report_friendlyreport_generate")
      * @Method("PUT")
      * @Template()
      */
     public function generateAction(Request $request)
     {
-        $recordsForm = $this->createForm(new ReportRecordsType(),null,array('em'=>$this->getDoctrine()->getManager()));
-        $recordsForm->bind($request);
+        $friendlyReportForm = $this->createForm(new ReportFriendlyReportType(),null,array('em'=>$this->getDoctrine()->getManager()));
+        $friendlyReportForm->bind($request);
 
-        if ($recordsForm->isValid()) {
-            $recordsFormData = $recordsForm->getData();
-            $organisationUnit = $recordsFormData['organisationunit'];
-            $forms = $recordsFormData['forms'];
-            $withLowerLevels = $recordsFormData['withLowerLevels'];
+        if ($friendlyReportForm->isValid()) {
+            $friendlyReportFormData = $friendlyReportForm->getData();
+            $friendlyReport = $friendlyReportFormData['genericReport'];
+            $organisationUnit = $friendlyReportFormData['organisationunit'];
+            $forms = $friendlyReportFormData['forms'];
+            $organisationunitGroupset = $friendlyReportFormData['organisationunitGroupset'];
+            $organisationunitGroup = $friendlyReportFormData['organisationunitGroup'];
         }
 
-
-
-
         return array(
+            'friendlyReport'=>$friendlyReport,
+            'organisationUnit' => $organisationUnit,
+            'forms' => $forms,
+            'organisationunitGroupset' => $organisationunitGroupset,
+            'organisationunitGroup' => $organisationunitGroup,
         );
     }
+
 }

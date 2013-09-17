@@ -28,6 +28,7 @@ use Doctrine\Common\DataFixtures\AbstractFixture;
 use Doctrine\Common\Persistence\ObjectManager;
 
 use Hris\OrganisationunitBundle\Entity\Organisationunit;
+use Hris\OrganisationunitBundle\Entity\OrganisationunitCompleteness;
 use Hris\OrganisationunitBundle\Entity\OrganisationunitLevel;
 use Hris\OrganisationunitBundle\Entity\OrganisationunitStructure;
 
@@ -7599,6 +7600,9 @@ class LoadOrganisationunitData extends AbstractFixture implements OrderedFixture
                     $dispensary->setLongname($dispensaryName);
                     $dispensary->setParent($parentOrganisationunit);
                     $dispensary->setActive(true);
+                    // Populate expected completeness figures for public and private
+                    $organisationunitCompleteness = new OrganisationunitCompleteness();
+
                     $this->addReference($dispensaryReference, $dispensary);
                     $distinctLongnameAndParent[] = array('longname'=>$dispensaryName,'parent'=>$parentOrganisationunit->getId());
 
@@ -7681,6 +7685,9 @@ class LoadOrganisationunitData extends AbstractFixture implements OrderedFixture
             // Persist and it's reference
             $organisationunitLevel = new OrganisationunitLevel();
             $organisationunitLevel->setLevel(1);
+//            $levelName = 'Level '.$organisationunitLevel->getLevel();
+//            if($organisationunitLevel->getLevel()==1) $levelName="Ministry Of Health &SW";
+//            $organisationunitLevel->setName($levelName);
             $organisationunitLevel->setName('Level '.$organisationunitLevel->getLevel());
             $this->addReference($organisationunitLevelReference, $organisationunitLevel);
             $manager->persist($organisationunitLevel);
@@ -7716,6 +7723,17 @@ class LoadOrganisationunitData extends AbstractFixture implements OrderedFixture
                     }else {
                         // Create new Level and reference.
                         $organisationunitLevel = new OrganisationunitLevel();
+//                        $levelName = 'Level '.$parentOrganisationunitStructureByReference->getLevel()->getLevel()+1;
+//                        if(($parentOrganisationunitStructureByReference->getLevel()->getLevel()+1)==2) {
+//                            $levelName="Divisions";
+//                        }elseif(($parentOrganisationunitStructureByReference->getLevel()->getLevel()+1)==3) {
+//                            $levelName="Regions/Departments/Referrals/T.Institutions";
+//                        }elseif( ($parentOrganisationunitStructureByReference->getLevel()->getLevel()+1)==4 ) {
+//                            $levelName="Councils/Reg.Hospitals";
+//                        }elseif( ($parentOrganisationunitStructureByReference->getLevel()->getLevel()+1)==5 ) {
+//                            $levelName="Health Facilities";
+//                        }
+//                        $organisationunitLevel->setLevel($levelName);
                         $organisationunitLevel->setLevel($parentOrganisationunitStructureByReference->getLevel()->getLevel()+1);
                         $organisationunitLevel->setName('Level '.$organisationunitLevel->getLevel());
                         //Wild hack to set data entry level
