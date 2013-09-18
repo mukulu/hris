@@ -24,12 +24,12 @@ class ValidationType extends AbstractType
              ->add('operator', 'choice',array(
                   'choices'   => array(
                       '--Select--'=>'--Select--',
-                      '==(Equal)'=>'==(Equal)',
-                      '!=(Not Equal)'=>'!=(Not Equal)',
-                      '>(Greater Than)'=>'>(Greater Than)',
-                      '>=(Greater Than or Equal)'=>'>=(Greater Than or Equal)',
-                      '<(Less Than)'=>'<(Less Than)',
-                      '<=(Less Than or Equal)'=>'<=(Less Than or Equal)')))
+                      '=='=>'==(Equal)',
+                      '!='=>'!=(Not Equal)',
+                      '>'=>'>(Greater Than)',
+                      '>='=>'>=(Greater Than or Equal)',
+                      '<'=>'<(Less Than)',
+                      '<='=>'<=(Less Than or Equal)')))
           ->add('submit','submit')
           ;
 

@@ -18,59 +18,39 @@
     {{ form_widget(form.description) }}
 
     <div>
+        <table>
 
-        <label for="hris_dataqualitybundle_leftexpression" class="required">Left Expression</label>
+        <tr><label for="hris_dataqualitybundle_leftexpression" class="required">Left Expression</label></tr>
 
-        <select name="left_field" size="10" id="left_field" class="left_field" multiple="multiple" style="width:250px" ondblclick="copySelectedLeft()">
+       <tr> <td><select name="left_field" size="12" id="left_field" class="left_field" multiple="multiple" style="width:250px" ondblclick="copySelectedLeft()">
 
 
             {% for leftExpressionField in leftExpressionFields  %}
                 <option value="{{ leftExpressionField.id }}">{{ leftExpressionField.name }}</option>
             {% endfor %}
         </select>
+           </td>
 
 
-        <input type="button" value=" + " name="add" id="add" onclick="copyValueOfLeftAddButton()">
-        <input type="button" value=" - " name="minus" id="minus" onclick="copyValueOfLeftMinusButton()">
-        <input type="button" value=" * " name="multiply" id="multiply" onclick="copyValueOfLeftMultiplyButton()">
-        <input type="button" value=" / " name="devide" id="divide" onclick="copyValueOfLeftDivideButton()">
-        <input type="button" value=" % " name="reminder" id="reminder" onclick="copyValueOfLeftReminderButton()">
-        <input type="button" value=" ( " name="brckt1" id="brckt1" onclick="copyValueOfLeftBracketOneButton()">
-        <input type="button" value=" ) " name="brckt2" id="brckt2" onclick="copyValueOfLeftBracketTwoButton()">
+         <td>
 
+        <input type="button" value=" + " name="add" id="add" onclick="copyValueOfLeftAddButton()"><br/>
+        <input type="button" value=" - " name="minus" id="minus" onclick="copyValueOfLeftMinusButton()"><br/>
+        <input type="button" value=" * " name="multiply" id="multiply" onclick="copyValueOfLeftMultiplyButton()"><br/>
+        <input type="button" value=" / " name="devide" id="divide" onclick="copyValueOfLeftDivideButton()"><br/>
+        <input type="button" value=" ( " name="brckt1" id="brckt1" onclick="copyValueOfLeftBracketOneButton()"><br/>
+        <input type="button" value=" ) " name="brckt2" id="brckt2" onclick="copyValueOfLeftBracketTwoButton()"><br/>
 
+        </td>
 
+       <td>
         {{ form_widget(form.leftExpression) }}
-
+            </td>
+            </tr>
+         </table>
         <br/>
 
 
-    </div>
-
-
-    <div>
-
-        <label for="hris_dataqualitybundle_rightexpression" class="required">Right Expression</label>
-        <select name="right_field" id="right_field" size="10" multiple="multiple" style="width:250px" ondblclick="copySelectedRight()">
-
-
-            {% for rightExpressionField in rightExpressionFields  %}
-                <option value="{{ rightExpressionField.id }}">{{ rightExpressionField.name }}</option>
-            {% endfor %}
-        </select>
-
-
-        <input type="button" value=" + " name="add1" id="add1" onclick="copyValueOfRightAddButton()">
-        <input type="button" value=" - " name="minus1" id="minus1" onclick="copyValueOfRightMinusButton()">
-        <input type="button" value=" * " name="multiply1" id="multiply1" onclick="copyValueOfRightMultiplyButton()">
-        <input type="button" value=" / " name="devide1" id="divide1" onclick="copyValueOfRightDivideButton()">
-        <input type="button" value=" % " name="reminder1" id="reminder1" onclick="copyValueOfRightReminderButton()">
-        <input type="button" value=" ( " name="brckt11" id="brckt11" onclick="copyValueOfRightBracketOneButton()">
-        <input type="button" value=" ) " name="brckt21" id="brckt21" onclick="copyValueOfRightBracketTwoButton()">
-
-
-        {{ form_widget(form.rightExpression) }}
-        <br/>
     </div>
 
     <div>
@@ -78,6 +58,42 @@
 
         {{ form_widget(form.operator)  }}
     </div>
+
+
+    <div>
+        <table>
+
+       <tr> <label for="hris_dataqualitybundle_rightexpression" class="required">Right Expression</label></tr>
+        <tr><td><select name="right_field" id="right_field" size="12" multiple="multiple" style="width:250px" ondblclick="copySelectedRight()">
+
+
+            {% for rightExpressionField in rightExpressionFields  %}
+                <option value="{{ rightExpressionField.id }}">{{ rightExpressionField.name }}</option>
+            {% endfor %}
+        </select>
+         </td>
+
+            <td>
+
+
+        <input type="button" value=" + " name="add1" id="add1" onclick="copyValueOfRightAddButton()"><br/>
+        <input type="button" value=" - " name="minus1" id="minus1" onclick="copyValueOfRightMinusButton()"><br/>
+        <input type="button" value=" * " name="multiply1" id="multiply1" onclick="copyValueOfRightMultiplyButton()"><br/>
+        <input type="button" value=" / " name="devide1" id="divide1" onclick="copyValueOfRightDivideButton()"><br/>
+        <input type="button" value=" ( " name="brckt11" id="brckt11" onclick="copyValueOfRightBracketOneButton()"><br/>
+        <input type="button" value=" ) " name="brckt21" id="brckt21" onclick="copyValueOfRightBracketTwoButton()"><br/>
+
+           </td>
+
+        <td>
+        {{ form_widget(form.rightExpression) }}
+            </td>
+            </tr>
+            </table>
+        <br/>
+    </div>
+
+
 
 
     {{ form_end(form)  }}
