@@ -73,12 +73,12 @@ class LoadFormData extends AbstractFixture implements OrderedFixtureInterface
                             <tr>
                                 <td><em>1.</em></td>
                                 <td><span>First Name</span></td>
-                                <td class="whitebg"><input type="text" name="FirstName" id="FirstName"/></td>
+                                <td class="whitebg"><input type="text" name="Firstname" id="Firstname"/></td>
                             </tr>
                             <tr>
                                 <td><span>2.</span></td>
                                 <td><span>Middle Name</span></td>
-                                <td><input type="text" name="MiddleName" id="MiddleName"/></td>
+                                <td><input type="text" name="Middlename" id="Middlename"/></td>
                             </tr>
                             <tr>
                                 <td><span>3.</span></td>
@@ -249,12 +249,12 @@ class LoadFormData extends AbstractFixture implements OrderedFixtureInterface
                             <tr>
                                 <td><em>1.</em></td>
                                 <td><span>First Name</span></td>
-                                <td class="whitebg"><input type="text" name="FirstName" id="FirstName"/></td>
+                                <td class="whitebg"><input type="text" name="Firstname" id="Firstname"/></td>
                             </tr>
                             <tr>
                                 <td><span>2.</span></td>
                                 <td><span>Middle Name</span></td>
-                                <td><input type="text" name="MiddleName" id="MiddleName"/></td>
+                                <td><input type="text" name="Middlename" id="Middlename"/></td>
                             </tr>
                             <tr>
                                 <td><span>3.</span></td>
@@ -425,12 +425,12 @@ class LoadFormData extends AbstractFixture implements OrderedFixtureInterface
                             <tr>
                                 <td><em>1.</em></td>
                                 <td><span>First Name</span></td>
-                                <td class="whitebg"><input type="text" name="FirstName" id="FirstName"/></td>
+                                <td class="whitebg"><input type="text" name="Firstname" id="Firstname"/></td>
                             </tr>
                             <tr>
                                 <td><span>2.</span></td>
                                 <td><span>Middle Name</span></td>
-                                <td><input type="text" name="MiddleName" id="MiddleName"/></td>
+                                <td><input type="text" name="Middlename" id="Middlename"/></td>
                             </tr>
                             <tr>
                                 <td><span>3.</span></td>
@@ -601,12 +601,12 @@ class LoadFormData extends AbstractFixture implements OrderedFixtureInterface
                             <tr>
                                 <td><em>1.</em></td>
                                 <td><span>First Name</span></td>
-                                <td class="whitebg"><input type="text" name="FirstName" id="FirstName"/></td>
+                                <td class="whitebg"><input type="text" name="Firstname" id="Firstname"/></td>
                             </tr>
                             <tr>
                                 <td><span>2.</span></td>
                                 <td><span>Middle Name</span></td>
-                                <td><input type="text" name="MiddleName" id="MiddleName"/></td>
+                                <td><input type="text" name="Middlename" id="Middlename"/></td>
                             </tr>
                             <tr>
                                 <td><span>3.</span></td>
