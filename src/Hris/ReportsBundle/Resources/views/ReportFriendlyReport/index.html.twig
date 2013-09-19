@@ -5,25 +5,9 @@
     <script type="text/javascript" language="javascript" src="{{ asset('commons/js/ext-all.js') }}"></script>
     <script type="text/javascript">
         var treeplaceholder="treeplaceholder";
-        var inputboxname="hris_reportsbundle_reportorganisationunitcompletenesstype[organisationunit]";
-        var organisationunitLevelsTagId = "#hris_reportsbundle_reportorganisationunitcompletenesstype_organisationunitLevel";
-        var organisationunitLevelsSubmitTagId = "#hris_reportsbundle_reportorganisationunitcompletenesstype_submit";
-        var organisationunitTreeUrl='{{ path('organisationunit_tree', {'_format':'json'}) }}';
-        var levelsUrl = '{{ path('organisationunit_levels',{'_format':'json'}) }}';
-        function updateOrganisationunitLevels() {
-            postData={'organisationunitid': $('input[name="'+inputboxname+'"]').val() };
-            $.post(levelsUrl,postData , function( organisationunitLevels ){
-                $(organisationunitLevelsTagId).find('option').remove();
-                if (jQuery.isEmptyObject(organisationunitLevels)){
-                    $(organisationunitLevelsTagId).attr('disabled', 'true');
-                }else {
-                    $(organisationunitLevelsTagId).removeAttr('disabled');
-                    $.each(organisationunitLevels, function(organisationunitLevelIndex, organisationunitLevel) {
-                        $(organisationunitLevelsTagId).append(new Option(organisationunitLevel['name'], organisationunitLevel['id']));
-                    });
-                }
-            });
-        }
+        var inputboxname="hris_reportsbundle_reportfriendlytype[organisationunit]";
+        var urlExtension="";
+        var selectedNode="";
         Ext.define('OrganisationUnitTreeModel2', {
             extend: 'Ext.data.Model',
             idProperty: 'id',
@@ -36,7 +20,7 @@
                 model: 'OrganisationUnitTreeModel2',
                 proxy: {
                     type: 'ajax',
-                    url: organisationunitTreeUrl,
+                    url: '{{ path('organisationunit_tree',{'_format':'json'}) }}'+urlExtension,
                     reader: { type: 'json', root: 'organisationUnits'}
                 },
                 nodeParam: 'id',
@@ -58,10 +42,13 @@
                         var selectedOrgunits2 = selModel2.getSelection();
                         var selectedId2 = selectedOrgunits2[0].get('id');
                         $('input[name="'+inputboxname+'"]').val(selectedId2);
-                        updateOrganisationunitLevels();
+                    },
+                    afterrender: function(treePanel,eOpts) {
+                        if(selectedNode){
+                            this.selectPath(selectedNode,'id','');
+                        };
                     }
                 }
-
             });
         });
     </script>
@@ -73,30 +60,23 @@
 {% endblock stylesheets %}
 
 {% block right_content -%}
-    <h1><small>Report Organisationunit Completeness</small></h1>
+    <h1><small>Friendly Report</small></h1>
 
-    {% if app.session.flashbag.get('warning') %}
-        <div class="alerts">
-        {% for flashMessage in app.session.flashbag.get('warning') %}
-            <div class="alert-message warning">
-                <a class="close" href="#">×</a>
-                <p><strong>Warning!</strong> {{ flashMessage }}.</p>
-            </div>
-        {% endfor %}
-        </div>
-    {% endif %}
-    {{ form_start(organisationunitCompletenessForm, { 'method' : 'PUT' } ) }}
+    {{ form_start(friendlyReportForm, { 'method' : 'PUT' } ) }}
+
+    {{ form_row( friendlyReportForm.genericReport ) }}
 
     <div>
         <div id="treeplaceholder"></div>
-        {{ form_errors( organisationunitCompletenessForm.organisationunit ) }}
-        {{ form_widget( organisationunitCompletenessForm.organisationunit ) }}
+        {{ form_errors( friendlyReportForm.organisationunit ) }}
+        {{ form_widget( friendlyReportForm.organisationunit ) }}
     </div>
     <br/>
-    {{ form_row( organisationunitCompletenessForm.organisationunitLevel ) }}
-    {{ form_row( organisationunitCompletenessForm.forms ) }}
+    {{ form_row( friendlyReportForm.forms ) }}
+    {{ form_row( friendlyReportForm.organisationunitGroupset ) }}
+    {{ form_row( friendlyReportForm.organisationunitGroup ) }}
 
-    {{ form_end(organisationunitCompletenessForm) }}
+    {{ form_end(friendlyReportForm) }}
 
 
 {% endblock %}

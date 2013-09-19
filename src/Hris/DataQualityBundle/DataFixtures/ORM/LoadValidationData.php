@@ -112,7 +112,9 @@ class LoadValidationData extends AbstractFixture implements OrderedFixtureInterf
 	 */
 	public function getOrder()
 	{
-		return 8;
+        //LoadOrganisationunitGroup preeceds
+		return 9;
+        //LoadIndicator follows
 	}
 
 }

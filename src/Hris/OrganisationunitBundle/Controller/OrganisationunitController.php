@@ -59,7 +59,19 @@ class OrganisationunitController extends Controller
     {
         $em = $this->getDoctrine()->getManager();
         if($parent == NULL) {
-            $entities = $em->getRepository('HrisOrganisationunitBundle:Organisationunit')->findAll();
+
+            $queryBuilder = $em->createQueryBuilder();
+            $entities = $queryBuilder->select('organisationunit')
+                                        ->from('HrisOrganisationunitBundle:Organisationunit', 'organisationunit')
+                                        ->where('organisationunit.parent IS NULL')->getQuery()->getResult();
+        }else {
+            $queryBuilder = $em->createQueryBuilder();
+            $entities = $queryBuilder->select('organisationunit')
+                ->from('HrisOrganisationunitBundle:Organisationunit', 'organisationunit')
+                ->join('organisationunit.parent parent')
+                ->where('parent.id=:parentId')
+                ->setParameter('parentId',$parent)->getQuery()->getResult();
+            $parent = $this->getDoctrine()->getManager()->getRepository('HrisOrganisationunitBundle:Organisationunit')->find($parent);
         }
         $delete_forms = NULL;
         foreach($entities as $entity) {
@@ -69,6 +81,7 @@ class OrganisationunitController extends Controller
 
         return array(
             'entities' => $entities,
+            'parent'=>$parent,
             'delete_forms' => $delete_forms,
         );
     }
@@ -115,8 +128,6 @@ class OrganisationunitController extends Controller
                                                         FROM HrisOrganisationunitBundle:Organisationunit organisationunit
                                                         WHERE organisationunit.parent=:parentid
                                                         GROUP BY organisationunit.id")->setParameter('parentid',$id);
-
-
 
             try {
                 $entities = $organisationunitQuery->getArrayResult();
@@ -186,13 +197,18 @@ class OrganisationunitController extends Controller
      * @Secure(roles="ROLE_ORGANISATIONUNIT_ORGANISATIONUNIT_CREATE,ROLE_USER")
      *
      * @Route("/new", name="organisationunit_new")
+     * @Route("/new/{parent}/parent", name="organisationunit_new_parent")
      * @Method("GET")
      * @Template()
      */
-    public function newAction()
+    public function newAction($parent=NULL)
     {
         $entity = new Organisationunit();
         $form   = $this->createForm(new OrganisationunitType(), $entity);
+        if(!empty($parent)) {
+            $parent = $this->getDoctrine()->getManager()->getRepository('HrisOrganisationunitBundle:Organisationunit')->findBy(array('id'=>$parent));
+            $form->get('parent')->setData($parent);
+        }
 
         return array(
             'entity' => $entity,

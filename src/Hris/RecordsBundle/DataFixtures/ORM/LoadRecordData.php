@@ -161,7 +161,9 @@ class LoadRecordData extends AbstractFixture implements OrderedFixtureInterface
                         $record = new Record();
                         $record->setOrganisationunit($organisationunit);
                         // Enter record for public and private form
-                        $formName='Public Employee Form';
+                        $formNames=Array('Public Employee Form','Private Employee Form');
+                        $formName=$formNames[array_rand($formNames,1)];
+                        if(empty($formName)) $formName='Public Employee Form';
                         $form = $manager->getRepository('HrisFormBundle:Form')->findOneBy(array('name'=>$formName));
 
                         $record->setForm($form);
@@ -220,13 +222,12 @@ class LoadRecordData extends AbstractFixture implements OrderedFixtureInterface
                                 // or $fieldOptions[0]->getValue() depending on value of $recordKeyName
                                 // $fieldOptionKey = ucfirst($record->getFieldOptionKey());
                                 //$valueKey = call_user_func_array(array($fieldOptions[0], "get${fieldOptionKey}"),array());
-
+                                $fieldOptionKey = ucfirst(Record::getFieldOptionKey());
 
                                 $fieldOptions = $manager->getRepository('HrisFormBundle:FieldOption')->findBy(array('field'=>$formFieldMember->getField()));
                                 // For case of gender choose match name with gender
                                 if($formFieldMember->getField()->getName()=="Sex") {
                                     // Made FieldOption key to store in record value array dynamic.
-                                    $fieldOptionKey = ucfirst(Record::getFieldOptionKey());
                                     if($fieldOptions[0]->getValue()==$gender_picked) $value[$valueKey] = call_user_func_array(array($fieldOptions[0], "get${fieldOptionKey}"),array());
                                     else $value[$valueKey] = call_user_func_array(array($fieldOptions[1], "get${fieldOptionKey}"),array());
                                 }else {
@@ -321,7 +322,7 @@ class LoadRecordData extends AbstractFixture implements OrderedFixtureInterface
 	 */
 	public function getOrder()
 	{
-		return 10;
+		return 11;
 	}
 
 }

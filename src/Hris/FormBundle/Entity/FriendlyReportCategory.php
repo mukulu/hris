@@ -55,7 +55,7 @@ class FriendlyReportCategory
      *
      * @ORM\ManyToOne(targetEntity="Hris\FormBundle\Entity\FieldOptionGroup",inversedBy="friendlyReportCategory")
      * @ORM\JoinColumns({
-     *   @ORM\JoinColumn(name="fieldoption_id", referencedColumnName="id",nullable=false, onDelete="CASCADE")
+     *   @ORM\JoinColumn(name="fieldoptiongroup_id", referencedColumnName="id",nullable=false, onDelete="CASCADE")
      * })
      * @ORM\Id
      * @ORM\GeneratedValue(strategy="NONE")
@@ -145,7 +145,7 @@ class FriendlyReportCategory
      */
     public function __toString()
     {
-        $friendlyReport = 'FriendlyReport:'.$this->getFriendlyReport()->__toString().' OptionGroup:'.$this->getFieldOptionGroup()->__toString();
+        $friendlyReport = $this->getFieldOptionGroup()->__toString();
         return $friendlyReport;
     }
 }

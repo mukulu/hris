@@ -244,7 +244,9 @@ class LoadOrganisationunitGroupData extends AbstractFixture implements OrderedFi
 	 */
 	public function getOrder()
 	{
-		return 7;
+        //LoadOrganisationunit preceeds
+		return 8;
+        //LoadValidation follows
 	}
 
 }

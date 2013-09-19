@@ -28,6 +28,7 @@ use Doctrine\Common\DataFixtures\AbstractFixture;
 use Doctrine\Common\Persistence\ObjectManager;
 
 use Hris\OrganisationunitBundle\Entity\Organisationunit;
+use Hris\OrganisationunitBundle\Entity\OrganisationunitCompleteness;
 use Hris\OrganisationunitBundle\Entity\OrganisationunitLevel;
 use Hris\OrganisationunitBundle\Entity\OrganisationunitStructure;
 
@@ -7599,10 +7600,26 @@ class LoadOrganisationunitData extends AbstractFixture implements OrderedFixture
                     $dispensary->setLongname($dispensaryName);
                     $dispensary->setParent($parentOrganisationunit);
                     $dispensary->setActive(true);
+
                     $this->addReference($dispensaryReference, $dispensary);
                     $distinctLongnameAndParent[] = array('longname'=>$dispensaryName,'parent'=>$parentOrganisationunit->getId());
-
                     $manager->persist($dispensary);
+
+
+                    // Populate expected completeness figures for public and private
+                    // Enter record for public and private form
+                    $formNames=Array('Public Employee Form','Private Employee Form');
+                    $form = $manager->getRepository('HrisFormBundle:Form')->findOneBy(array('name'=>$formNames[array_rand($formNames,1)]));
+
+                    $organisationunitCompleteness = new OrganisationunitCompleteness();
+                    $organisationunitCompleteness->setOrganisationunit($dispensary);
+                    $organisationunitCompleteness->setForm($form);
+                    $expectations=Array(2,3,4);
+                    $organisationunitCompleteness->setExpectation($expectations[array_rand($expectations,1)]);
+                    $manager->persist($organisationunitCompleteness);
+                    //$organisationunitCompletenessReference = strtolower(str_replace(' ','',$dispensaryShortname.substr($parentOrganisationunit->getShortname(),0,5).$form->getName())).'-organisationunitcompleteness';
+                    //$this->addToIndexedOrganisationunit($organisationunitCompletenessReference);
+
                     // Keep reference index for senquential generation of organisation unit structure
                     $this->addToIndexedOrganisationunit($dispensaryReference);
                     $dispensary = NULL;
@@ -7631,6 +7648,20 @@ class LoadOrganisationunitData extends AbstractFixture implements OrderedFixture
                     $this->addReference($healthCentreReference, $healthCentre);
                     $distinctLongnameAndParent[] = array('longname'=>$healthCentreName,'parent'=>$parentOrganisationunit->getId());
                     $manager->persist($healthCentre);
+
+                    // Populate expected completeness figures for public and private
+                    // Enter record for public and private form
+                    $formNames=Array('Public Employee Form','Private Employee Form');
+                    $form = $manager->getRepository('HrisFormBundle:Form')->findOneBy(array('name'=>$formNames[array_rand($formNames,1)]));
+
+                    $organisationunitCompleteness = new OrganisationunitCompleteness();
+                    $organisationunitCompleteness->setOrganisationunit($healthCentre);
+                    $organisationunitCompleteness->setForm($form);
+                    $organisationunitCompleteness->setExpectation(array_rand(array(2,3,4),1));
+                    $manager->persist($organisationunitCompleteness);
+                    //$organisationunitCompletenessReference = strtolower(str_replace(' ','',$healthCentreShortname.substr($parentOrganisationunit->getShortname(),0,5).$form->getName())).'-organisationunitcompleteness';
+                    //$this->addToIndexedOrganisationunit($organisationunitCompletenessReference);
+
                     // Keep reference index for senquential generation of organisation unit structure
                     $this->addToIndexedOrganisationunit($healthCentreReference);
                     $healthCentre = NULL;
@@ -7659,6 +7690,20 @@ class LoadOrganisationunitData extends AbstractFixture implements OrderedFixture
                     $this->addReference($hospitalReference, $hospital);
                     $distinctLongnameAndParent[] = array('longname'=>$hospitalName,'parent'=>$parentOrganisationunit->getId());
                     $manager->persist($hospital);
+
+                    // Populate expected completeness figures for public and private
+                    // Enter record for public and private form
+                    $formNames=Array('Public Employee Form','Private Employee Form');
+                    $form = $manager->getRepository('HrisFormBundle:Form')->findOneBy(array('name'=>$formNames[array_rand($formNames,1)]));
+
+                    $organisationunitCompleteness = new OrganisationunitCompleteness();
+                    $organisationunitCompleteness->setOrganisationunit($hospital);
+                    $organisationunitCompleteness->setForm($form);
+                    $organisationunitCompleteness->setExpectation(array_rand(array(2,3,4),1));
+                    $manager->persist($organisationunitCompleteness);
+                    //$organisationunitCompletenessReference = strtolower(str_replace(' ','',$hospitalShortname.substr($parentOrganisationunit->getShortname(),0,5).$form->getName())).'-organisationunitcompleteness';
+                    //$this->addToIndexedOrganisationunit($organisationunitCompletenessReference);
+
                     // Keep reference index for senquential generation of organisation unit structure
                     $this->addToIndexedOrganisationunit($hospitalReference);
                     $hospital = NULL;
@@ -7681,6 +7726,9 @@ class LoadOrganisationunitData extends AbstractFixture implements OrderedFixture
             // Persist and it's reference
             $organisationunitLevel = new OrganisationunitLevel();
             $organisationunitLevel->setLevel(1);
+//            $levelName = 'Level '.$organisationunitLevel->getLevel();
+//            if($organisationunitLevel->getLevel()==1) $levelName="Ministry Of Health &SW";
+//            $organisationunitLevel->setName($levelName);
             $organisationunitLevel->setName('Level '.$organisationunitLevel->getLevel());
             $this->addReference($organisationunitLevelReference, $organisationunitLevel);
             $manager->persist($organisationunitLevel);
@@ -7716,6 +7764,17 @@ class LoadOrganisationunitData extends AbstractFixture implements OrderedFixture
                     }else {
                         // Create new Level and reference.
                         $organisationunitLevel = new OrganisationunitLevel();
+//                        $levelName = 'Level '.$parentOrganisationunitStructureByReference->getLevel()->getLevel()+1;
+//                        if(($parentOrganisationunitStructureByReference->getLevel()->getLevel()+1)==2) {
+//                            $levelName="Divisions";
+//                        }elseif(($parentOrganisationunitStructureByReference->getLevel()->getLevel()+1)==3) {
+//                            $levelName="Regions/Departments/Referrals/T.Institutions";
+//                        }elseif( ($parentOrganisationunitStructureByReference->getLevel()->getLevel()+1)==4 ) {
+//                            $levelName="Councils/Reg.Hospitals";
+//                        }elseif( ($parentOrganisationunitStructureByReference->getLevel()->getLevel()+1)==5 ) {
+//                            $levelName="Health Facilities";
+//                        }
+//                        $organisationunitLevel->setLevel($levelName);
                         $organisationunitLevel->setLevel($parentOrganisationunitStructureByReference->getLevel()->getLevel()+1);
                         $organisationunitLevel->setName('Level '.$organisationunitLevel->getLevel());
                         //Wild hack to set data entry level
@@ -7779,7 +7838,9 @@ class LoadOrganisationunitData extends AbstractFixture implements OrderedFixture
 	 */
 	public function getOrder()
 	{
-		return 6;
+        //LoadFriendlyReport preceeds
+		return 7;
+        //LoadOrganisationunitGroup follows
 	}
 
 }

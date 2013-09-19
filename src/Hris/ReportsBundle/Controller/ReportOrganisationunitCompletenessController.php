@@ -74,14 +74,19 @@ class ReportOrganisationunitCompletenessController extends Controller
             $organisationunit = $organisationunitCompletenessFormData['organisationunit'];
             $organisationunitLevel = $organisationunitCompletenessFormData['organisationunitLevel'];
             $forms = $organisationunitCompletenessFormData['forms'];
+        }else {
+            $organisationunitCompletenessFormData = $organisationunitCompletenessForm->getData();
+            $organisationunit = $organisationunitCompletenessFormData['organisationunit'];
+            $organisationunitLevel = $organisationunitCompletenessFormData['organisationunitLevel'];
+            $forms = $organisationunitCompletenessFormData['forms'];
+            if(empty($organisationunit) && empty($forms)) {
+                $this->get('session')->getFlashBag()->add(
+                    'notice',
+                    'Your changes were saved!'
+                );
+                return $this->redirect($this->generateUrl('report_organisationunit_completeness'));
+            }
         }
-
-
-
-
-
-
-
 
         // Create FormIds
         $formIds = NULL;
@@ -105,14 +110,18 @@ class ReportOrganisationunitCompletenessController extends Controller
                 ->where('organisationunitStructure.level=:organisationunitLevel')
                 ->andWhere('organisationunitStructure.level'.$organisationunit->getOrganisationunitStructure()->getLevel()->getLevel().'Organisationunit=:levelOrganisationunit')
                 ->setParameters(array(
-                    'organisationunitLevel'=>$organisationunitLevel->getLevel(),
+                    'organisationunitLevel'=>$organisationunitLevel,
                     'levelOrganisationunit'=>$organisationunit,
                 ))
                 ->getQuery()->getResult();
-
         }else {
             // Display children for lower level of the selected organisationunit
-            if($organisationunit->getOrganisationunitStructure()->getLevel()->getLevel() !== $lowestOrganisationunitLevel ) {
+            $lowerOrganisationunitCount = $this->getDoctrine()->getManager()->createQuery("SELECT COUNT(lowerOrganisationunit.id)
+                                                            FROM HrisOrganisationunitBundle:Organisationunit lowerOrganisationunit
+                                                            INNER JOIN lowerOrganisationunit.parent parentOrganisationunit
+                                                            WHERE parentOrganisationunit.id=".$organisationunit->getId())->getSingleScalarResult();
+            if($organisationunit->getOrganisationunitStructure()->getLevel()->getLevel() !== $lowestOrganisationunitLevel  && !empty($lowerOrganisationunitCount)) {
+                // Deal with organisationunit with children
                 $organisationunitLevel = $this->getDoctrine()->getManager()->getRepository('HrisOrganisationunitBundle:OrganisationunitLevel')->findOneBy(array('level' => ($organisationunit->getOrganisationunitStructure()->getLevel()+1) ));
                 $levelName=$organisationunitLevel->getName() ." Under ";
             }else {
@@ -156,17 +165,21 @@ class ReportOrganisationunitCompletenessController extends Controller
 
                 $recordFieldOptionKey = ucfirst(Record::getFieldOptionKey());
                 // Translates to $fieldOptionToskip->getUid() assuming Record::getFieldOptionKey returns "uid"
-                $valuePatern[$valueKey] = call_user_func_array(array($fieldOptionToSkip, "get${recordFieldOptionKey}"),array());
+                $valuePattern[$valueKey] = call_user_func_array(array($fieldOptionToSkip, "get${recordFieldOptionKey}"),array());
 
-                $jsonPattern = json_encode($valuePatern);
+                $jsonPattern = json_encode($valuePattern);
                 $subJsonpatern = str_replace("{", "", $jsonPattern);
                 $subJsonpatern = str_replace("}", "", $subJsonpatern);
-                if($whereExpression==NULL) $whereExpression =' values.value NOT LIKE ?'.$maskIncr; else $whereExpression .=' AND values.value NOT LIKE ?'.$maskIncr;
+                if($whereExpression==NULL) $whereExpression =' record.value NOT LIKE ?'.$maskIncr; else $whereExpression .=' AND record.value NOT LIKE ?'.$maskIncr;
                 $maskParameters[$maskIncr]='%'.$subJsonpatern.'%';
                 $maskIncr++;
             }
-            if($whereExpression==NULL) $whereExpression =' values.value LIKE ?'.$maskIncr; else $whereExpression .=' AND values.value LIKE ?'.$maskIncr;
-            $maskParameters[$maskIncr]='%"'.$fieldOptionToSkip->getField()->getId().'":%';
+            if($whereExpression==NULL) $whereExpression =' record.value LIKE ?'.$maskIncr; else $whereExpression .=' AND record.value LIKE ?'.$maskIncr;
+            // Translates to $field->getUid()
+            // or $field->getUid() depending on value of $recordKeyName
+            $recordFieldKey = ucfirst(Record::getFieldKey());
+            $valueKey = call_user_func_array(array($fieldOptionToSkip->getField(), "get${recordFieldKey}"),array());
+            $maskParameters[$maskIncr]='%"'.$valueKey.'":%';
         }
         if (isset($organisationunitChildren)) {
 
@@ -179,26 +192,26 @@ class ReportOrganisationunitCompletenessController extends Controller
                 /*
                  * Construct completeness matrix
                  * @Note: $completenessMatrix[organisationunitId][formId] //Holds particular value
-                 * @Note: $totalCompletenessMatrix[formId] // Holds total for all values of the organisationunits
+                 * @Note: $totalCompletenessMatrix[formId] // Holds total for all records of the organisationunits
                  * @Note: $childrenNames[organisationunitId] hold names of OrganisationUnits in completeness matrix
-                 * @Note: $formNames[formid] holds names of forms in completeness matrix
                  * @Note: $expectedCompleteness[organisationunitId][formId]
                  */
                 foreach($forms as $key=>$form ) {
                     $queryBuilder = $this->getDoctrine()->getManager()->createQueryBuilder();
                     if($childOrganisationunit->getOrganisationunitStructure()->getLevel()->getLevel() !== $lowestOrganisationunitLevel ) {
-                        // Calculation for levels above the lowest ( Sum for only values below the selectedLevel)
+                        // Calculation for levels above the lowest ( Sum for only records below the selectedLevel)
                         $aliasParameters=$maskParameters;
                         $aliasParameters['levelId']=$childOrganisationunit->getId();
-                        $valuecount = $queryBuilder->select('COUNT(values.instance) as employeeCount ')
+                        $valuecount = $queryBuilder->select('COUNT(record.instance) as employeeCount ')
                             ->from('HrisRecordsBundle:Record','record')
                             ->join('record.organisationunit','organisationunit')
                             ->join('record.form','form')
                             ->join('organisationunit.organisationunitStructure','organisationunitStructure')
+                            ->join('organisationunitStructure.level','level')
                             ->andWhere('
 					            			( 
 						            			(
-					            					organisationunitStructure.level >= :organisationunitLevel
+					            					level.level >= :organisationunitLevel
 						            				AND organisationunitStructure.level'.$childOrganisationunit->getOrganisationunitStructure()->getLevel()->getLevel().'Organisationunit=:levelId
 						            			)
 					            				OR organisationunit.id=:organisationunitId
@@ -206,9 +219,9 @@ class ReportOrganisationunitCompletenessController extends Controller
                             )
                             ->andWhere($queryBuilder->expr()->in('form.id',$form->getId()))
                             ->andWhere($whereExpression); // Append in query, field options to exclude
-                        $aliasParameters['organisationunitLevel']=$childOrganisationunit->getOrganisationunitStructure()->getLevel();
+                        $aliasParameters['organisationunitLevel']=$childOrganisationunit->getOrganisationunitStructure()->getLevel()->getLevel();
                         $aliasParameters['organisationunitId']=$childOrganisationunit->getId();
-                        $valuecount->setParameters($aliasParameters) // Set mask value for all parameters
+                        $valuecount=$valuecount->setParameters($aliasParameters) // Set mask value for all parameters
                             ->getQuery()->getResult();
 
                         $queryBuilder = $this->getDoctrine()->getManager()->createQueryBuilder();
@@ -217,19 +230,16 @@ class ReportOrganisationunitCompletenessController extends Controller
                             ->join('organisationunit.organisationunitCompleteness','organisationunitCompleteness')
                             ->join('organisationunitCompleteness.form','form')
                             ->join('organisationunit.organisationunitStructure','organisationunitStructure')
-                            ->andWhere('
-					            			(
-					            			(
-					            			organisationunitStructure.level >= :organisationunitLevel
-					            			AND organisationunitStructure.level'.$childOrganisationunit->getOrganisationunitStructure()->getLevel().'Id=:levelId
-					            	)
+                            ->join('organisationunitStructure.level','level')
+                            ->andWhere('(
+					            			( level.level >= :organisationunitLevel AND organisationunitStructure.level'.$childOrganisationunit->getOrganisationunitStructure()->getLevel()->getLevel().'Organisationunit=:levelId )
 					            			OR organisationunit.id=:organisationunitid
-					            	)'
+					            	    )'
                             )
                             ->andWhere($queryBuilder->expr()->in('form.id',$form->getId()))
                             ->setParameters(array(
                                 'levelId'=>$childOrganisationunit->getId(),
-                                'organisationunitLevel'=>$childOrganisationunit->getOrganisationunitStructure()->getLevel(),
+                                'organisationunitLevel'=>$childOrganisationunit->getOrganisationunitStructure()->getLevel()->getLevel(),
                                 'organisationunitid'=>$childOrganisationunit->getId(),
                             ))
                             ->getQuery()->getResult();
@@ -246,9 +256,8 @@ class ReportOrganisationunitCompletenessController extends Controller
                             $totalExpectedCompleteness[$form->getId()] = $expectedCompleteness[$childOrganisationunit->getId()][$form->getId()];
                         }
                         $childrenNames[$childOrganisationunit->getId()]= $childOrganisationunit->getLongname();
-                        $formNames[$form->getId()] = $form->getName();
                     }else {
-                        // Calculation for the lowest level ( Sum for values of that particular organisationunits )
+                        // Calculation for the lowest level ( Sum for records of that particular organisationunits )
                         $aliasParameters=$maskParameters;
                         $aliasParameters['organisationunitId']=$childOrganisationunit->getId();
                         $valuecount = $queryBuilder->select('COUNT(record.instance) as employeeCount ')
@@ -261,7 +270,7 @@ class ReportOrganisationunitCompletenessController extends Controller
                             ->setParameters($aliasParameters) // Set mask value for all parameters
                             ->getQuery()->getResult();
                         $queryBuilder = $this->getDoctrine()->getManager()->createQueryBuilder();
-                        // Sum of expectation values
+                        // Sum of expectation records
                         $expectations = $queryBuilder->select('SUM(organisationunitCompleteness.expectation) as expectation')
                             ->from('HrisOrganisationunitBundle:Organisationunit','organisationunit')
                             ->join('organisationunit.organisationunitCompleteness','organisationunitCompleteness')
@@ -286,7 +295,6 @@ class ReportOrganisationunitCompletenessController extends Controller
                             $totalExpectedCompleteness[$form->getId()] = $expectedCompleteness[$childOrganisationunit->getId()][$form->getId()];
                         }
                         $childrenNames[$childOrganisationunit->getId()]= $childOrganisationunit->getLongname();
-                        $formNames[$form->getId()] = $form->getName();
                     }
                 }
             }
@@ -330,7 +338,6 @@ class ReportOrganisationunitCompletenessController extends Controller
                 }
 
                 $childrenNames[$rootNodeOrganisationunit->getId()]= $rootNodeOrganisationunit->getLongname();
-                $formNames[$form->getId()] = $form->getName();
             }
             // Account for displaying of individual records
             if(empty($organisationunitChildren) || isset($sameLevel)) {
@@ -411,13 +418,90 @@ class ReportOrganisationunitCompletenessController extends Controller
                 $option=NULL;
                 $completenessMatrix=NULL;
             }
+        }else {
+            // Organsiationunit without children
+            $counter=0;
+            // For Organisation Units without childrens
+            $aliasParameters=$maskParameters;
+            $aliasParameters['organisationunitId']=$organisationunit->getId();
+            $queryBuilder = $this->getDoctrine()->getManager()->createQueryBuilder();
+            $records = $queryBuilder->select('record')->from('HrisRecordsBundle:Record','record')->join('record.organisationunit','organisationunit')->join('record.form','form')
+                ->andWhere($queryBuilder->expr()->in('form.id',$formIds))->andWhere('organisationunit.id=:organisationunitId')
+                ->andWhere($whereExpression) // Append in query, field options to exclude
+                ->setParameters($aliasParameters) // Set mask value for all parameters
+                ->getQuery()->getResult();
+            //Preparing array of Combination Categories
+            $categoryOption = $this->getDoctrine()->getManager()->getRepository('HrisFormBundle:FieldOption')->findAll();
+            foreach ($categoryOption as $key => $optionObject) {
+                //@todo implement dynamic record value name
+                // Translates to $optionObject->getUid()
+                // or $optionObject->getUid() depending on value of $recordKeyName
+                $recordFieldOptionKey = ucfirst(Record::getFieldOptionKey());
+                $fieldOptionKey = call_user_func_array(array($optionObject, "get${recordFieldOptionKey}"),array());
+                $option[$fieldOptionKey] = $optionObject->getValue();
+            }
+            // Gather Visible Fields from all passed Forms
+            if(!empty($forms)) {
+                $queryBuilder = $this->getDoctrine()->getManager()->createQueryBuilder();
+                $visibleFieldIds = $queryBuilder->select('DISTINCT(field),formVisibleFields.sort')
+                    ->from('HrisFormBundle:FormVisibleFields','formVisibleFields')
+                    ->innerJoin('formVisibleFields.field', 'field')
+                    ->innerJoin('formVisibleFields.form', 'form')
+                    ->where($queryBuilder->expr()->in('form.id',$formIds))
+                    ->orderBy('formVisibleFields.sort','ASC')->getQuery()->getResult();
+                foreach($visibleFieldIds as $visibleKey=>$visibleFieldId) {
+                    $visibleFields[] = $this->getDoctrine()->getManager()->createQueryBuilder()->select('afield')->from('HrisFormBundle:Field','afield')->where($queryBuilder->expr()->in('afield.id',$visibleFieldId['id']))->getQuery()->getSingleResult();
+                    $this->getDoctrine()->getManager()->flush();
+                }
+                if(empty($visibleFieldIds)) {
+                    $queryBuilder = $this->getDoctrine()->getManager()->createQueryBuilder();
+                    $visibleFields = $queryBuilder->select('field')->from('HrisFormBundle:Field','field')->where('field.isCalculated=False')->orderBy('field.uid','ASC')->getQuery()->getResult();
+                }
+            }else {
+                /*
+                 * Make all fields visible
+                */
+                $visibleFields = $queryBuilder->select('field')->from('HrisFormBundle:Field','field')->orderBy('field.name','ASC')->getQuery()->getResult();
+            }
+            // Initiate recordsToDisplay array
+            $recordsToDisplay=NULL;
+            $recordInstances = NULL;
+            foreach($records as $key=>$dataValueInstance) {
+                $dataValue = $dataValueInstance->getValue();
+                $recordInstances[] = $dataValueInstance->getInstance();
+                foreach($visibleFields as $key=>$visibleField) {
+                    // Translates to $field->getUid()
+                    // or $visibleField->getUid() depending on value of $recordKeyName
+                    $recordFieldKey = ucfirst(Record::getFieldKey());
+                    $valueKey = call_user_func_array(array($visibleField, "get${recordFieldKey}"),array());
+
+                    if ($visibleField->getInputType()->getName() == 'Select') {
+                        if(isset($option[$dataValue[$valueKey]])) $displayValue = $option[$dataValue[$valueKey]];else $displayValue='&nbsp;';
+                    }
+                    else if ($visibleField->getInputType()->getName() == 'Date') {
+                        if(!empty($dataValue[$valueKey])) {
+                            $dataValue[$valueKey] = new \DateTime($dataValue[$valueKey]['date'],new \DateTimeZone ($dataValue[$valueKey]['timezone']));
+                            $displayValue = $dataValue[$valueKey];
+                            $displayValue = $displayValue->format('d/m/Y');
+                        }
+                    }else {
+                        $displayValue = $dataValue[$valueKey];
+                    }
+                    $recordsToDisplay[$dataValueInstance->getInstance()][$visibleField->getUid()] = $displayValue;
+                }
+                $recordsToDisplay[$dataValueInstance->getInstance()]['form'] = $dataValueInstance->getForm()->getName();
+            }
         }
         if(!isset($visibleFields)) $visibleFields = NULL;
         if(!isset($sameLevel)) $sameLevel = NULL;
         if(!isset($dataValue)) $dataValue = NULL;
-        
-        
-        
+        if(!isset($records)) $records = NULL;
+        if(!isset($recordsToDisplay)) $recordsToDisplay = NULL;
+        if(!isset($recordInstances)) $recordInstances = NULL;
+        if(!isset($totalCompletenessMatrix)) $totalCompletenessMatrix = NULL;
+        if(!isset($totalExpectedCompleteness)) $totalExpectedCompleteness = NULL;
+        if(!isset($expectedCompleteness)) $expectedCompleteness = NULL;
+
         
         return array(
             'title' => $title,
@@ -426,13 +510,12 @@ class ReportOrganisationunitCompletenessController extends Controller
             'visibleFields'=>$visibleFields,
             'forms'=>$forms,
             'sameLevel'=>$sameLevel,
-            'formNames'=>$formNames,
             'completenessMatrix'=>$completenessMatrix,
             'expectedCompleteness'=>$expectedCompleteness,
             'totalCompletenessMatrix'=>$totalCompletenessMatrix,
             'totalExpectedCompleteness'=>$totalExpectedCompleteness,
-            'records'=>$records,
-            'dataValue'=>$dataValue,
+            'recordsToDisplay'=>$recordsToDisplay,
+            'recordInstances'=>$recordInstances,
             'parent'=>$parent,
         );
     }

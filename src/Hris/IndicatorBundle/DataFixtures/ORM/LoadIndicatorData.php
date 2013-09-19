@@ -100,7 +100,9 @@ class LoadIndicatorData extends AbstractFixture implements OrderedFixtureInterfa
 	 */
 	public function getOrder()
 	{
-		return 9;
+        //LoadValidation preceeds
+		return 10;
+        //LoadRecord follows
 	}
 
 }

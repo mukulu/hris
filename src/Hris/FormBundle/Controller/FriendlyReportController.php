@@ -24,6 +24,8 @@
  */
 namespace Hris\FormBundle\Controller;
 
+use Doctrine\Common\Collections\ArrayCollection;
+use Hris\FormBundle\Entity\FriendlyReportCategory;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Bundle\FrameworkBundle\Controller\Controller;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Method;
@@ -58,6 +60,25 @@ class FriendlyReportController extends Controller
             'entities' => $entities,
         );
     }
+
+    /**
+     * Displays a form to create a new FriendlyReport entity.
+     *
+     * @Route("/new", name="friendlyreport_new")
+     * @Method("GET")
+     * @Template()
+     */
+    public function newAction()
+    {
+        $entity = new FriendlyReport();
+        $form   = $this->createForm(new FriendlyReportType(), $entity);
+
+        return array(
+            'entity' => $entity,
+            'form'   => $form->createView(),
+        );
+    }
+
     /**
      * Creates a new FriendlyReport entity.
      *
@@ -73,29 +94,23 @@ class FriendlyReportController extends Controller
 
         if ($form->isValid()) {
             $em = $this->getDoctrine()->getManager();
+            $incr=1;
+            $requestcontent = $request->request->get('hris_formbundle_friendlyreporttype');
+            $fieldOptionGroupIds = $requestcontent['friendlyReportCategory'];
+            foreach($fieldOptionGroupIds as $fieldOptionGroupIdKey=>$fieldOptionGroupId) {
+                $fieldOptionGroup = $this->getDoctrine()->getRepository('HrisFormBundle:FieldOptionGroup')->findOneBy(array('id'=>$fieldOptionGroupId));
+                $friendlyReportCategory = new FriendlyReportCategory();
+                $friendlyReportCategory->setFriendlyReport($entity);
+                $friendlyReportCategory->setFieldOptionGroup($fieldOptionGroup);
+                $friendlyReportCategory->setSort($incr++);
+                $entity->addFriendlyReportCategory($friendlyReportCategory);
+            }
+
             $em->persist($entity);
             $em->flush();
 
             return $this->redirect($this->generateUrl('friendlyreport_show', array('id' => $entity->getId())));
         }
-
-        return array(
-            'entity' => $entity,
-            'form'   => $form->createView(),
-        );
-    }
-
-    /**
-     * Displays a form to create a new FriendlyReport entity.
-     *
-     * @Route("/new", name="friendlyreport_new")
-     * @Method("GET")
-     * @Template()
-     */
-    public function newAction()
-    {
-        $entity = new FriendlyReport();
-        $form   = $this->createForm(new FriendlyReportType(), $entity);
 
         return array(
             'entity' => $entity,
@@ -146,6 +161,13 @@ class FriendlyReportController extends Controller
         }
 
         $editForm = $this->createForm(new FriendlyReportType(), $entity);
+
+        $friendlyReportCategories = $em->getRepository('HrisFormBundle:FriendlyReportCategory')->findBy(array('friendlyReport'=>$entity));
+        $fieldOptionGroups = new ArrayCollection();
+        foreach($friendlyReportCategories as $friendlyReportCategoryKey=>$friendlyReportCategory) {
+            $fieldOptionGroups->add($friendlyReportCategory->getFieldOptionGroup());
+        }
+        $editForm->get('friendlyReportCategory')->setData($fieldOptionGroups);
         $deleteForm = $this->createDeleteForm($id);
 
         return array(
@@ -177,6 +199,20 @@ class FriendlyReportController extends Controller
         $editForm->bind($request);
 
         if ($editForm->isValid()) {
+            $incr=1;
+            $requestcontent = $request->request->get('hris_formbundle_friendlyreporttype');
+            $fieldOptionGroupIds = $requestcontent['friendlyReportCategory'];
+            // Clear Report categories
+            $entity->removeAllFriendlyReportCategory();
+            foreach($fieldOptionGroupIds as $fieldOptionGroupIdKey=>$fieldOptionGroupId) {
+                $fieldOptionGroup = $this->getDoctrine()->getRepository('HrisFormBundle:FieldOptionGroup')->findOneBy(array('id'=>$fieldOptionGroupId));
+                $friendlyReportCategory = new FriendlyReportCategory();
+                $friendlyReportCategory->setFriendlyReport($entity);
+                $friendlyReportCategory->setFieldOptionGroup($fieldOptionGroup);
+                $friendlyReportCategory->setSort($incr++);
+                $entity->addFriendlyReportCategory($friendlyReportCategory);
+            }
+
             $em->persist($entity);
             $em->flush();
 

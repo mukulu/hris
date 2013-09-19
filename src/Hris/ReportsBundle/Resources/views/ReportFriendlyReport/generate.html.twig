@@ -1,0 +1,17 @@
+{% extends '::base.html.twig' %}
+
+{% block right_content -%}
+    {{ friendlyReport.name }}
+    <br/>
+    {{ organisationUnit }}
+    <br/>
+    {% for form in forms %}
+        {{ form.name }}
+    {% endfor %}
+    <br/>
+    {{ organisationunitGroupset }}
+
+    {% for singleGrganisationunitGroup in organisationunitGroup %}
+        {{ singleGrganisationunitGroup.name }}
+    {% endfor %}
+{% endblock %}

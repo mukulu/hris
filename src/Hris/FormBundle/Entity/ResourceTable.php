@@ -47,6 +47,12 @@ use Symfony\Component\Validator\Constraints as Assert;
 class ResourceTable
 {
     /**
+     * Returns standard resource table name to use
+     * @var string $fieldKey
+     */
+    private static $standardResourceTableName='_resource_all_fields';
+
+    /**
      * @var integer $id
      *
      * @ORM\Column(name="id", type="integer")
@@ -395,6 +401,16 @@ class ResourceTable
         $this->resourceTableFieldMember = new ArrayCollection();
         $this->uid = uniqid();
         $this->sort = 0;
+    }
+
+    /**
+     * Returns Standard Resource Table name to use
+     *
+     * @return string
+     */
+    static public function getStandardResourceTableName()
+    {
+        return self::$standardResourceTableName;
     }
 
     /**
