@@ -78,6 +78,11 @@ class UserController extends Controller
         $form   = $this->createForm(new UserType(), $entity);
         $form->bind($request);
         if ($form->isValid()) {
+            $formData = $form->getData();
+            $organisationunits = $formData->getOrganisationunit();
+            foreach($organisationunits as $organisationunitKey=>$organisationunit) {
+                $entity->addOrganisationunit($organisationunit);
+            }
             $em = $this->getDoctrine()->getManager();
             $em->persist($entity);
             $em->flush();

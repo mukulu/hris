@@ -24,35 +24,20 @@
  */
 namespace Hris\UserBundle\Form;
 
-use Hris\ReportsBundle\Form\OrganisationunitToIdTransformer;
 use Symfony\Component\Form\AbstractType;
 use Symfony\Component\Form\FormBuilderInterface;
 use Symfony\Component\OptionsResolver\OptionsResolverInterface;
-use Symfony\Component\Validator\Constraints\NotBlank;
 
-class UserType extends AbstractType
+class UserInfoType extends AbstractType
 {
     public function buildForm(FormBuilderInterface $builder, array $options)
     {
         $builder
-            ->add('username', null, array('label' => 'form.username', 'translation_domain' => 'FOSUserBundle'))
-            ->add('email', 'email', array('label' => 'form.email', 'translation_domain' => 'FOSUserBundle'))
-            ->add('plainPassword', 'repeated', array(
-                'type' => 'password',
-                'options' => array('translation_domain' => 'FOSUserBundle'),
-                'first_options' => array('label' => 'form.password'),
-                'second_options' => array('label' => 'form.password_confirmation'),
-                'invalid_message' => 'fos_user.password.mismatch',
-            ))
-            ->add('organisationunit','hidden',array(
-                    'constraints'=> array(
-                        new NotBlank(),
-                    ),
-                    'mapped'=>false,
-            ))
-            ->add('enabled',null,array(
-                'required'=>false,
-            ))
+            ->add('phonenumber')
+            ->add('jobTitle')
+            ->add('firstName')
+            ->add('middleName')
+            ->add('surname')
             ->add('roles')
         ;
     }
@@ -60,12 +45,12 @@ class UserType extends AbstractType
     public function setDefaultOptions(OptionsResolverInterface $resolver)
     {
         $resolver->setDefaults(array(
-            'data_class' => 'Hris\UserBundle\Entity\User'
+            'data_class' => 'Hris\UserBundle\Entity\UserInfo'
         ));
     }
 
     public function getName()
     {
-        return 'hris_userbundle_usertype';
+        return 'hris_userbundle_userinfotype';
     }
 }
