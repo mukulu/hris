@@ -27,6 +27,7 @@
                         {% for leftExpressionField in leftExpressionFields  %}
                             <option value="{{ leftExpressionField.id }}">{{ leftExpressionField.name }}</option>
                         {% endfor %}
+                        <option value="Now" id="Now">Now</option>
                     </select>
                 </td>
 
@@ -73,6 +74,7 @@
                         {% for rightExpressionField in rightExpressionFields  %}
                             <option value="{{ rightExpressionField.id }}">{{ rightExpressionField.name }}</option>
                         {% endfor %}
+                        <option value="Now" id="Now">Now</option>
                     </select>
                 </td>
 
