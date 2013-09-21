@@ -29,6 +29,8 @@
             <thead>
                 <tr>
                     <th>Username</th>
+                    <th>Firstname</th>
+                    <th>Surname</th>
                     <th>Email</th>
                     <th>Lastlogin</th>
                     <th>Roles</th>
@@ -40,6 +42,8 @@
             {% for entity in entities %}
                 <tr {% if entity.enabled!=1 %}class="error"{% endif %}>
                     <td><a href="{{ path('user_show', { 'id': entity.id }) }}">{{ entity.username }}</a></td>
+                    <td>{{ entity.firstname }}</td>
+                    <td>{{ entity.surname }}</td>
                     <td>{{ entity.email }}</td>
                     <td>{% if entity.lastLogin %}{{ entity.lastLogin|date('H:i:s d/m/Y') }}{% endif %}</td>
                     <td>{% for role in entity.roles %}
