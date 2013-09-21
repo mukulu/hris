@@ -32,7 +32,7 @@
                     <th>Email</th>
                     <th>Lastlogin</th>
                     <th>Roles</th>
-                    <th>Organisationunits</th>
+                    <th>Organisationunit</th>
                     <th>Actions</th>
                 </tr>
             </thead>
@@ -46,10 +46,7 @@
                             {{ role }},
                         {% endfor %}
                     </td>
-                    <td>
-                        {% for organisationunit in entity.organisationunit %}
-                            organisationunit.longname,
-                        {% endfor %}</td>
+                    <td>{{ entity.organisationunit }}</td>
                     <td>
                     <ul class="inline">
                         <li>

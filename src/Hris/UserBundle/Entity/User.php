@@ -125,16 +125,11 @@ class User extends BaseUser
     /**
      * @var Organisationunit $organisationunit
      *
-     * @ORM\ManyToMany(targetEntity="Hris\OrganisationunitBundle\Entity\Organisationunit", inversedBy="user")
-     * @ORM\JoinTable(name="hris_user_organisationunits",
-     *   joinColumns={
-     *     @ORM\JoinColumn(name="user_id", referencedColumnName="id", onDelete="CASCADE")
-     *   },
-     *   inverseJoinColumns={
-     *     @ORM\JoinColumn(name="organisationunit_id", referencedColumnName="id", onDelete="CASCADE")
-     *   }
-     * )
-     * @ORM\OrderBy({"longname" = "ASC"})
+     * @Gedmo\Versioned
+     * @ORM\ManyToOne(targetEntity="Hris\OrganisationunitBundle\Entity\Organisationunit",inversedBy="user")
+     * @ORM\JoinColumns({
+     *   @ORM\JoinColumn(name="organisationunit_id", referencedColumnName="id", onDelete="CASCADE")
+     * })
      */
     private $organisationunit;
 
@@ -168,7 +163,6 @@ class User extends BaseUser
         {
             $this->datecreated = new \DateTime('now');
         }
-        $this->organisationunit = new ArrayCollection();
     }
     
     /**
@@ -202,40 +196,6 @@ class User extends BaseUser
     public function getUid()
     {
         return $this->uid;
-    }
-
-
-    /**
-     * Add organisationunit
-     *
-     * @param Organisationunit $organisationunit
-     * @return User
-     */
-    public function addOrganisationunit(Organisationunit $organisationunit)
-    {
-        $this->organisationunit[$organisationunit->getId()] = $organisationunit;
-
-        return $this;
-    }
-
-    /**
-     * Remove organisationunit
-     *
-     * @param Organisationunit $organisationunit
-     */
-    public function removeOrganisationunit(Organisationunit $organisationunit)
-    {
-        $this->organisationunit->removeElement($organisationunit);
-    }
-
-    /**
-     * Get organisationunit
-     *
-     * @return \Doctrine\Common\Collections\Collection
-     */
-    public function getOrganisationunit()
-    {
-        return $this->organisationunit;
     }
 
     /**
@@ -355,5 +315,30 @@ class User extends BaseUser
     public function __toString()
     {
         return $this->username;
+    }
+
+    /**
+     * Set organisationunit
+     *
+     * @param \Hris\OrganisationunitBundle\Entity\Organisationunit $organisationunit
+     * @return User
+     */
+    public function setOrganisationunit(\Hris\OrganisationunitBundle\Entity\Organisationunit $organisationunit = null)
+    {
+        $this->organisationunit = $organisationunit;
+
+        $organisationunit->addUser($this);
+    
+        return $this;
+    }
+
+    /**
+     * Get organisationunit
+     *
+     * @return \Hris\OrganisationunitBundle\Entity\Organisationunit 
+     */
+    public function getOrganisationunit()
+    {
+        return $this->organisationunit;
     }
 }

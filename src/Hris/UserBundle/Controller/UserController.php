@@ -25,6 +25,10 @@
  */
 namespace Hris\UserBundle\Controller;
 
+use Doctrine\Common\Collections\ArrayCollection;
+use Hris\OrganisationunitBundle\Entity\Organisationunit;
+use Hris\UserBundle\Form\UserEditType;
+use Hris\UserBundle\Form\UserNewType;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Bundle\FrameworkBundle\Controller\Controller;
 use Symfony\Component\HttpFoundation\RedirectResponse;
@@ -75,14 +79,9 @@ class UserController extends Controller
     public function createAction(Request $request)
     {
         $entity = new User();
-        $form   = $this->createForm(new UserType(), $entity);
+        $form   = $this->createForm(new UserNewType(), $entity,array('em'=>$this->getDoctrine()->getManager()));
         $form->bind($request);
         if ($form->isValid()) {
-            $formData = $form->getData();
-            $organisationunits = $formData->getOrganisationunit();
-            foreach($organisationunits as $organisationunitKey=>$organisationunit) {
-                $entity->addOrganisationunit($organisationunit);
-            }
             $em = $this->getDoctrine()->getManager();
             $em->persist($entity);
             $em->flush();
@@ -104,7 +103,7 @@ class UserController extends Controller
     public function newAction()
     {
         $entity = new User();
-        $form   = $this->createForm(new UserType(), $entity);
+        $form   = $this->createForm(new UserNewType(), $entity,array('em'=>$this->getDoctrine()->getManager()));
 
         return array(
             'entity' => $entity,
@@ -154,7 +153,7 @@ class UserController extends Controller
             throw $this->createNotFoundException('Unable to find User entity.');
         }
 
-        $editForm = $this->createForm(new UserType(), $entity);
+        $editForm = $this->createForm(new UserType(), $entity,array('em'=>$this->getDoctrine()->getManager()));
         $deleteForm = $this->createDeleteForm($id);
 
         return array(
@@ -182,7 +181,7 @@ class UserController extends Controller
         }
 
         $deleteForm = $this->createDeleteForm($id);
-        $editForm = $this->createForm(new UserType(), $entity);
+        $editForm = $this->createForm(new UserType(), $entity,array('em'=>$this->getDoctrine()->getManager()));
         $editForm->bind($request);
 
         if ($editForm->isValid()) {
