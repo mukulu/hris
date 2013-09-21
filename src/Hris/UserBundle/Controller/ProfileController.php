@@ -46,12 +46,11 @@ class ProfileController extends ContainerAware
     public function showAction()
     {
         $user = $this->container->get('security.context')->getToken()->getUser();
-        $userInfo = $user->getUserInfo();
         if (!is_object($user) || !$user instanceof UserInterface) {
             throw new AccessDeniedException('This user does not have access to this section.');
         }
 
-        return $this->container->get('templating')->renderResponse('HrisUserBundle:Profile:show.html.twig', array('user' => $user,'userInfo'=>$userInfo));
+        return $this->container->get('templating')->renderResponse('HrisUserBundle:Profile:show.html.twig', array('user' => $user));
     }
 
     /**

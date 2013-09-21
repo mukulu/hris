@@ -54,6 +54,11 @@ class UserNewType extends AbstractType
                     )
                 ))->addModelTransformer($transformer)
             )
+            ->add('phonenumber')
+            ->add('jobTitle')
+            ->add('firstName')
+            ->add('middleName')
+            ->add('surname')
             ->add('enabled',null,array(
                 'required'=>false,
             ))

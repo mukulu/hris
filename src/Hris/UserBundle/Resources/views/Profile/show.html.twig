@@ -1,11 +1,58 @@
 {% extends "::base.html.twig" %}
 
 {% block right_content %}
-    <div class="fos_user_user_show">
-        <p>{{ 'profile.show.username'|trans({}, 'FOSUserBundle') }}: {{ user.username }}</p>
-        <p>{{ 'profile.show.email'|trans({}, 'FOSUserBundle') }}: {{ user.email }}</p>
-        <p>{{ 'profile.show.last_updated'|trans({}, 'FOSUserBundle') }}: {{ user.lastUpdated |date("jS F Y") }}</p>
-    </div>
+
+
+    <h1><i class="icon-circle-info icon-largest" title="Show"></i> <small>{{ user.username | capitalize }}'s Profile Details</small></h1>
+
+    <table class="record_properties table table-striped table-bordered table-hover">
+        <tbody>
+        <tr>
+            <th>Username</th>
+            <td>{{ user.username }}</td>
+        </tr>
+        <tr>
+            <th>Email</th>
+            <td>{{ user.email }}</td>
+        </tr>
+        <tr>
+            <th>Phonenumber</th>
+            <td>{{ user.phonenumber }}</td>
+        </tr>
+        <tr>
+            <th>Job Title</th>
+            <td>{{ user.jobTitle }}</td>
+        </tr>
+        <tr>
+            <th>First name</th>
+            <td>{{ user.firstName }}</td>
+        </tr>
+        <tr>
+            <th>Middle name</th>
+            <td>{{ user.middleName }}</td>
+        </tr>
+        <tr>
+            <th>Surname</th>
+            <td>{{ user.surname }}</td>
+        </tr>
+        <tr>
+            <th>Lastlogin</th>
+            <td>{{ user.lastLogin|date('Y-m-d H:i:s') }}</td>
+        </tr>
+        <tr>
+            <th>Roles</th>
+            <td>
+                {% for role in user.roles %}
+                {{ role }},
+                {% endfor %}
+            </td>
+        </tr>
+        <tr>
+            <th>Lastupdated</th>
+            <td>{{ user.lastupdated|date('Y-m-d H:i:s') }}</td>
+        </tr>
+        </tbody>
+    </table>
 
     <div class="btn-group">
         <button class="btn" onclick="document.location.href='{{ path('fos_user_profile_edit') }}' ">Edit Profile</button>

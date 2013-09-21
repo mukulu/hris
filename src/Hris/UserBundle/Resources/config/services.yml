@@ -1,5 +1,5 @@
 parameters:
-#    hris_user.example.class: Hris\UserBundle\Example
+    hris_user.model.user.class:
 
 services:
     admin.user:
