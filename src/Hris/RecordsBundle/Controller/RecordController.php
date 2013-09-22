@@ -160,37 +160,51 @@ class RecordController extends Controller
         $orgunit = $em->getRepository('HrisOrganisationunitBundle:Organisationunit')->find(1);
 
         $form = $em->getRepository('HrisFormBundle:Form')->find($formId);
+        $uniqueFields = $form->getUniqueRecordFields();
         $fields = $form->getSimpleField();
+
+        $instance = '';
+        foreach($uniqueFields as $key => $field_unique){
+            $instance .= $this->get('request')->request->get($field_unique->getName());
+        }
 
 
         foreach ($fields as $key => $field){
             $recordValue = $this->get('request')->request->get($field->getName());
-            $recordArray[$field->getId()] = $recordValue;
+
+            /**
+             * Made dynamic, on which field column is used as key, i.e. uid, name or id.
+             */
+            // Translates to $field->getUid()
+            // or $field->getUid() depending on value of $recordKeyName
+            $recordFieldKey = ucfirst(Record::getFieldKey());
+            $valueKey = call_user_func_array(array($field, "get${recordFieldKey}"),array());
+
+            $recordArray[$valueKey] = $recordValue;
         }
 
-        var_dump(json_encode($recordArray));
+        $user = $this->container->get('security.context')->getToken()->getUser();
 
         $entity->setValue($recordArray);
         $entity->setForm($form);
+        $entity->setInstance(md5(uniqid()));
         $entity->setOrganisationunit($orgunit);
-        $entity->setUsername("Testing_User");
+        $entity->setUsername($user->getUsername());
         $entity->setComplete(True);
         $entity->setCorrect(True);
         $entity->setHashistory(False);
         $entity->setHastraining(False);
-       // $entity->setDatecreated(new \Datetime());
-       // $entity->setLastupdated(new \Datetime());
 
 
 
         //if ($entity->isValid()) {
-            $em = $this->getDoctrine()->getManager();
-            $em->persist($entity);
-            $em->flush();
+        $em = $this->getDoctrine()->getManager();
+        $em->persist($entity);
+        $em->flush();
 
         var_dump("this is done without any doubt");
 
-            return $this->redirect($this->generateUrl('record_new', array('id' => $form->getId())));
+        return $this->redirect($this->generateUrl('record_new', array('id' => $form->getId())));
         //}
 
 
@@ -200,6 +214,7 @@ class RecordController extends Controller
             'form'   => $form->createView(),
         );
     }
+
 
     /**
      * Displays a form to create a new Record entity.
