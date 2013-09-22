@@ -31,6 +31,7 @@ use Sensio\Bundle\FrameworkExtraBundle\Configuration\Route;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Template;
 use Hris\DataQualityBundle\Entity\Validation;
 use Hris\DataQualityBundle\Form\ValidationType;
+//use Hris\FormBundle\Entity\Field;
 
 /**
  * Validation controller.
@@ -104,8 +105,28 @@ class ValidationController extends Controller
     {
         $entity = new Validation();
         $form   = $this->createForm(new ValidationType(), $entity);
-        $leftExpressionFields = $this->getDoctrine()->getRepository('HrisFormBundle:Field')->findAll();
-        $rightExpressionFields = $this->getDoctrine()->getRepository(('HrisFormBundle:Field'))->findAll();
+
+        $em = $this->getDoctrine()->getManager();
+        $query = $em->createQuery('SELECT n from Hris\FormBundle\Entity\Field n WHERE (n.name = :name1 OR n.name = :name2 OR n.name=:name3 OR n.name=:name4 OR n.name=:name5 OR n.name=:name6 OR n.name=:name7)');
+        $query->setParameters(array(
+            'name1' => 'MonthlyBasicSalary',
+            'name2' => 'Birthdate',
+            'name3' => 'DateofLastPromotion',
+            'name4' => 'DateofConfirmation',
+            'name5' => 'DateofFirstAppointment',
+            'name6' => 'NumberofChildrenDependants',
+            'name7' => 'Now',
+
+                    ));
+        $leftExpressionFields = $query->getResult();
+        $rightExpressionFields = $query->getResult();
+
+
+
+
+       // $leftExpressionFields = $this->getDoctrine()->getRepository('HrisFormBundle:Field')->findByName(array('name'=>'Birthdate','name'=>'MonthlyBasicSalary'));
+
+        //$rightExpressionFields = $this->getDoctrine()->getRepository(('HrisFormBundle:Field'))->findAll();
 
         return array(
             'leftExpressionFields'=>$leftExpressionFields,
@@ -113,6 +134,8 @@ class ValidationController extends Controller
             'form'   => $form->createView(),
         );
     }
+
+
 
     /**
      * Finds and displays a Validation entity.
@@ -159,8 +182,25 @@ class ValidationController extends Controller
         $editForm = $this->createForm(new ValidationType(), $entity);
         $deleteForm = $this->createDeleteForm($id);
 
-        $leftExpressionFields = $this->getDoctrine()->getRepository('HrisFormBundle:Field')->findAll();
-        $rightExpressionFields = $this->getDoctrine()->getRepository(('HrisFormBundle:Field'))->findAll();
+
+        $em = $this->getDoctrine()->getManager();
+        $query = $em->createQuery('SELECT n from Hris\FormBundle\Entity\Field n WHERE (n.name = :name1 OR n.name = :name2 OR n.name=:name3 OR n.name=:name4 OR n.name=:name5 OR n.name=:name6 OR n.name=:name7)');
+        $query->setParameters(array(
+            'name1' => 'MonthlyBasicSalary',
+            'name2' => 'Birthdate',
+            'name3' => 'DateofLastPromotion',
+            'name4' => 'DateofConfirmation',
+            'name5' => 'DateofFirstAppointment',
+            'name6' => 'NumberofChildrenDependants',
+            'name7' => 'Now',
+
+        ));
+        $leftExpressionFields = $query->getResult();
+        $rightExpressionFields = $query->getResult();
+
+       // $leftExpressionFields = $this->getDoctrine()->getRepository('HrisFormBundle:Field')->findAll();
+
+        //$rightExpressionFields = $this->getDoctrine()->getRepository(('HrisFormBundle:Field'))->findAll();
 
         return array(
             'entity'      => $entity,

@@ -12,7 +12,7 @@
                 <button type="submit" class="btn">Edit</button>
             </li>
             <li>
-                <a href="{{ path('organisationunit') }}" class="btn">
+                <a href="{{ path('organisationunit_list_parent', { 'parent': entity.parent.id }) }}" class="btn">
                     Back to the list
                 </a>
             </li>

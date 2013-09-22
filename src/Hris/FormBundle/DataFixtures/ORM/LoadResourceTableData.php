@@ -137,7 +137,7 @@ class LoadResourceTableData extends AbstractFixture implements OrderedFixtureInt
 	 */
 	public function getOrder()
 	{
-		return 11;
+		return 12;
 	}
 
 }

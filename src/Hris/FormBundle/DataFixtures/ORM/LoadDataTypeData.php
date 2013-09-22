@@ -54,7 +54,9 @@ class LoadDataTypeData extends AbstractFixture implements OrderedFixtureInterfac
 	 */
 	public function getOrder()
 	{
+        // LoadInputType preceeds
 		return 3;
+        //LoadField follows
 	}
 
 }

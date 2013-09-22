@@ -445,8 +445,8 @@ class ReportEmployeeRecordsController extends Controller
                         if ($fieldObject->getInputType()->getName() == 'Select') {
                             $displayValue = $recordArray[strtolower($fieldObject->getName())];
                         }else if ($fieldObject->getInputType()->getName() == 'Date') {
-                            if(isset($recordArray[$fieldObject->getName()])) {
-                                $displayValue = new \DateTime($recordArray[$fieldObject->getName()]);
+                            if(isset($recordArray[strtolower($fieldObject->getName())])) {
+                                $displayValue = new \DateTime($recordArray[strtolower($fieldObject->getName())]);
                                 // Date Field Value
                                 $displayValue = $displayValue->format('d/m/Y');
                             }

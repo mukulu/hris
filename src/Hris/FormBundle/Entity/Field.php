@@ -194,6 +194,14 @@ class Field
      * })
      */
     private $inputType;
+
+    /**
+     * @var boolean $skipInReport
+     *
+     * @Gedmo\Versioned
+     * @ORM\Column(name="skipInReport", type="boolean", nullable=true)
+     */
+    private $skipInReport;
     
     /**
      * @var FormVisibleFields $formVisibleFields
@@ -474,6 +482,7 @@ class Field
     public function addParentField(Field $parentField)
     {
         $this->parentField[$parentField->getId()] = $parentField;
+        $parentField->addChildField($this);
     
         return $this;
     }
@@ -575,6 +584,29 @@ class Field
     public function getInputType()
     {
         return $this->inputType;
+    }
+
+    /**
+     * Set skipInReport
+     *
+     * @param boolean $skipInReport
+     * @return FieldOption
+     */
+    public function setSkipInReport($skipInReport)
+    {
+        $this->skipInReport = $skipInReport;
+
+        return $this;
+    }
+
+    /**
+     * Get skipInReport
+     *
+     * @return boolean
+     */
+    public function getSkipInReport()
+    {
+        return $this->skipInReport;
     }
 
     /**

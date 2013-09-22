@@ -13,14 +13,20 @@ function copySelectedLeft()
 {
     var n1 = document.getElementById('left_field');
     var n2 = document.getElementById('hris_dataqualitybundle_validationtype_leftExpression');
-    n2.value+=n1.options[n1.selectedIndex].text;
-}
+    if(n1.options[n1.selectedIndex].text!="Now")
+    n2.value+="#{"+n1.options[n1.selectedIndex].text+'}';
+    else
+    n2.value+="Now";
+    }
 
 function copySelectedRight()
 {
     var n1 = document.getElementById('right_field');
     var n2 = document.getElementById('hris_dataqualitybundle_validationtype_rightExpression');
-    n2.value+=n1.options[n1.selectedIndex].text;
+    if(n1.options[n1.selectedIndex].text!="Now")
+    n2.value+="#{"+n1.options[n1.selectedIndex].text+'}';
+    else
+        n2.value+="Now";
 }
 
 function copyValueOfLeftAddButton()

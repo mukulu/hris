@@ -90,7 +90,7 @@
 
         <ul class="record_actions inline">
             <li>
-                <a href="{{ path('organisationunit') }}" class="btn">
+                <a href="{{ path('organisationunit_list_parent', { 'parent': entity.parent.id }) }}" class="btn">
                     Back to the list
                 </a>
             </li>

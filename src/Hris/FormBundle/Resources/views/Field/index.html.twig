@@ -32,6 +32,7 @@
                     <th>Unique</th>
                     <th>Calculated</th>
                     <th>Hashistory</th>
+                    <th>Skip in report</th>
                     <th>Actions</th>
                 </tr>
             </thead>
@@ -59,6 +60,12 @@
                         {% endif %}
                     </td>
                     <td>{% if entity.hashistory %}
+                        TRUE
+                        {% else %}
+                        FALSE
+                        {% endif %}
+                    </td>
+                    <td>{% if entity.skipInReport %}
                         TRUE
                         {% else %}
                         FALSE

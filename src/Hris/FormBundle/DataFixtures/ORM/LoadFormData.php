@@ -777,21 +777,28 @@ class LoadFormData extends AbstractFixture implements OrderedFixtureInterface
             $form = new Form();
             $form->setName($humanResourceForm['name']);
             $form->setTitle($humanResourceForm['name']);
-            $form->setHypertext($humanResourceForm['hypertext']);
             $this->addReference(strtolower(str_replace(' ','',$humanResourceForm['name'])).'-form', $form);
             $manager->persist($form);
             // Add Field Members for the form created
             $sort=1;
             foreach($dummyFields as $key => $dummyField)
             {
+                $fieldByReference=$manager->merge($this->getReference( strtolower(str_replace(' ','',$dummyField['name'])).'-field' ));
+                $formByReference=$manager->merge($this->getReference(strtolower( str_replace(' ','',$humanResourceForm['name'])). '-form'));
                 $formMember = new FormFieldMember();
-                $formMember->setField($manager->merge($this->getReference( strtolower(str_replace(' ','',$dummyField['name'])).'-field' )));
-                $formMember->setForm( $manager->merge($this->getReference(strtolower( str_replace(' ','',$humanResourceForm['name'])). '-form')) );
+                $formMember->setField($fieldByReference);
+                $formMember->setForm( $formByReference );
                 $formMember->setSort($sort++);
                 $referenceName = strtolower(str_replace(' ','',$humanResourceForm['name']).str_replace(' ','',$dummyField['name'])).'-form-field-member';
                 $this->addReference($referenceName, $formMember);
                 $manager->persist($formMember);
+                // Overwrite fieldnames in inputags ids with uids
+                $humanResourceForm['hypertext'] = str_replace("id=\"".$dummyField['name']."\"","id=\"".$fieldByReference->getUid()."\"",$humanResourceForm['hypertext']);
+                if($fieldByReference->getInputType()->getName()=="Select") {
+                    $humanResourceForm['hypertext'] = str_replace("changeRelatedFieldOptions('".$dummyField['name']."')","changeRelatedFieldOptions('".$fieldByReference->getUid()."')",$humanResourceForm['hypertext']);
+                }
             }
+            $form->setHypertext($humanResourceForm['hypertext']);
         }
 		$manager->flush();
 	}
@@ -802,7 +809,9 @@ class LoadFormData extends AbstractFixture implements OrderedFixtureInterface
 	 */
 	public function getOrder()
 	{
+        //LoadField preceeds
 		return 5;
+        //LoadOrganisationunit follows
 	}
 
 }
