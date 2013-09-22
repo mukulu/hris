@@ -106,7 +106,7 @@ class SettingsController extends Controller
     /**
      * Displays a form to create a new Settings entity.
      *
-     * @Route("/new", name="settings_new")
+     * @Route("/{username}/new", requirements={"username"="\w+"}, name="settings_new")
      * @Method("GET")
      * @Template()
      */
@@ -124,21 +124,25 @@ class SettingsController extends Controller
     /**
      * Finds and displays a Settings entity.
      *
-     * @Route("/{id}", name="settings_show")
+     * @Route("/{username}", requirements={"username"="\w+"}, name="settings_show")
      * @Method("GET")
      * @Template()
      */
-    public function showAction($id)
+    public function showAction($username)
     {
         $em = $this->getDoctrine()->getManager();
-
-        $entity = $em->getRepository('HrisDashboardBundle:Settings')->find($id);
+        $entity = $em->createQueryBuilder()->select('settings')
+            ->from('HrisDashboardBundle:Settings', 'settings')
+            ->innerJoin('settings.user','user')
+            ->where('user.username=:username')
+            ->setParameter('username',$username)
+            ->getQuery()->getResult();
 
         if (!$entity) {
-            throw $this->createNotFoundException('Unable to find Settings entity.');
+            return $this->redirect($this->generateUrl('settings_new', array('username' => $username)));
         }
 
-        $deleteForm = $this->createDeleteForm($id);
+        $deleteForm = $this->createDeleteForm($entity->getId());
 
         return array(
             'entity'      => $entity,

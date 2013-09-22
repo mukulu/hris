@@ -15,14 +15,10 @@ class SettingsType extends AbstractType
     public function buildForm(FormBuilderInterface $builder, array $options)
     {
         $builder
-            ->add('uid')
             ->add('emailNotification')
             ->add('smsNotification')
             ->add('completenessAlert')
             ->add('qualityCheckAlert')
-            ->add('datecreated')
-            ->add('lastupdated')
-            ->add('user')
         ;
     }
     
