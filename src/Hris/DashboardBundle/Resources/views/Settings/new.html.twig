@@ -2,14 +2,15 @@
 
 {% block right_content -%}
     <h1><small>Settings creation</small></h1>
+    <div class="well form-signin">
+        {{ form(form) }}
 
-    {{ form(form) }}
-
-    <ul class="record_actions inline">
-        <li>
-            <a href="{{ path('settings') }}" class="btn">
-                Back to the list
-            </a>
-        </li>
-    </ul>
+        <ul class="record_actions inline">
+            <li>
+                <a href="{{ path('settings') }}" class="btn">
+                    Back to the list
+                </a>
+            </li>
+        </ul>
+    </div>
 {% endblock %}

@@ -36,7 +36,6 @@ class OrganisationunitType extends AbstractType
             ->add('code')
             ->add('shortname')
             ->add('longname')
-            ->add('parent')
             ->add('active')
             ->add('address')
             ->add('email')
