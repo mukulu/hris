@@ -1,0 +1,15 @@
+{% extends '::base.html.twig' %}
+
+{% block right_content -%}
+    <h1>Settings creation</h1>
+
+    {{ form(form) }}
+
+        <ul class="record_actions">
+    <li>
+        <a href="{{ path('settings') }}">
+            Back to the list
+        </a>
+    </li>
+</ul>
+{% endblock %}
