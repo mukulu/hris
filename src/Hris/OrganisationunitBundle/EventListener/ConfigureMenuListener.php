@@ -68,8 +68,8 @@ class ConfigureMenuListener
                 'attributes'=> array('class'=>'accordion-group'),
             )
         );
-        $orgunitModule->addChild('Hierarchy Operations',
-            array('uri'=>'#organisationunitlevel_list',
+        $orgunitModule->addChild('Hierarchy Operation',
+            array('route'=>'organisationunit_hierarchy_operation',
                 'extras'=>array('tag'=>'div'),
                 'name'=>'Hierarchy Operations',
                 'attributes'=> array('class'=>'accordion-group'),

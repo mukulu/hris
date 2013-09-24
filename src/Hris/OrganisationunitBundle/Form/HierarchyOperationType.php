@@ -22,7 +22,7 @@
  * @author John Francis Mukulu <john.f.mukulu@gmail.com>
  *
  */
-namespace Hris\ReportsBundle\Form;
+namespace Hris\OrganisationunitBundle\Form;
 
 use Hris\ReportsBundle\Form\OrganisationunitToIdTransformer;
 use Doctrine\ORM\EntityRepository;
@@ -31,7 +31,7 @@ use Symfony\Component\Form\FormBuilderInterface;
 use Symfony\Component\OptionsResolver\OptionsResolverInterface;
 use Symfony\Component\Validator\Constraints\NotBlank;
 
-class ReportFriendlyReportType extends AbstractType
+class HierarchyOperationType extends AbstractType
 {
     public function buildForm(FormBuilderInterface $builder, array $options)
     {
@@ -39,26 +39,12 @@ class ReportFriendlyReportType extends AbstractType
         $em = $options['em'];
         $transformer = new OrganisationunitToIdTransformer($em);
         $builder
-            ->add('genericReport','entity', array(
-                'class'=>'HrisFormBundle:FriendlyReport',
-                'multiple'=>false,
-                'constraints'=>array(
-                    new NotBlank(),
-                )
-            ))
             ->add($builder->create('organisationunit','hidden',array(
                     'constraints'=> array(
                         new NotBlank(),
                     )
                 ))->addModelTransformer($transformer)
             )
-            ->add('forms','entity', array(
-                'class'=>'HrisFormBundle:Form',
-                'multiple'=>true,
-                'constraints'=>array(
-                    new NotBlank(),
-                )
-            ))
             ->add('submit','submit')
         ;
     }
@@ -75,6 +61,6 @@ class ReportFriendlyReportType extends AbstractType
 
     public function getName()
     {
-        return 'hris_reportsbundle_reportfriendlytype';
+        return 'hris_organisationunitbundle_hierarchyoperationtype';
     }
 }

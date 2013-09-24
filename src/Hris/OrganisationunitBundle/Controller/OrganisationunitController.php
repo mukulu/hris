@@ -26,6 +26,7 @@ namespace Hris\OrganisationunitBundle\Controller;
 
 use Doctrine\ORM\NoResultException;
 use Doctrine\Tests\Common\Annotations\Null;
+use Hris\OrganisationunitBundle\Form\HierarchyOperationType;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Bundle\FrameworkBundle\Controller\Controller;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Method;
@@ -365,6 +366,23 @@ class OrganisationunitController extends Controller
 
         return array(
             'entities' => $serializer->serialize($organisationunitTreeNodes,$_format)
+        );
+    }
+
+    /**
+     * Displays form for performing Hierarchy Operation
+     *
+     * @Route("/hierarchyoperation", name="organisationunit_hierarchy_operation")
+     * @Method("GET")
+     * @Template()
+     */
+    public function hierarchyOperationAction()
+    {
+
+        $hierarchyOperationForm = $this->createForm(new HierarchyOperationType(),null,array('em'=>$this->getDoctrine()->getManager()));
+
+        return array(
+            'hierarchyOperationForm'=>$hierarchyOperationForm->createView(),
         );
     }
 }
