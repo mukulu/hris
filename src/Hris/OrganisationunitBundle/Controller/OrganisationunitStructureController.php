@@ -111,7 +111,7 @@ class OrganisationunitStructureController extends Controller
     /**
      * Finds and displays a OrganisationunitStructure entity.
      *
-     * @Route("/{id}", name="organisationunitstructure_show")
+     * @Route("/{id}", requirements={"id"="\d+"}, name="organisationunitstructure_show")
      * @Method("GET")
      * @Template()
      */

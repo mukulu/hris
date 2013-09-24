@@ -106,7 +106,7 @@ class HistoryController extends Controller
     /**
      * Finds and displays a History entity.
      *
-     * @Route("/{id}", name="history_show")
+     * @Route("/{id}", requirements={"id"="\d+"}, name="history_show")
      * @Method("GET")
      * @Template()
      */

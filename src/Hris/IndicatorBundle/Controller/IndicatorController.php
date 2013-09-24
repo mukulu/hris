@@ -111,7 +111,7 @@ class IndicatorController extends Controller
     /**
      * Finds and displays a Indicator entity.
      *
-     * @Route("/{id}", name="indicator_show")
+     * @Route("/{id}", requirements={"id"="\d+"}, name="indicator_show")
      * @Method("GET")
      * @Template()
      */

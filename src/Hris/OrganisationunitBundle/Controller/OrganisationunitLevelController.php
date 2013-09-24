@@ -177,7 +177,7 @@ class OrganisationunitLevelController extends Controller
     /**
      * Finds and displays a OrganisationunitLevel entity.
      *
-     * @Route("/{id}", name="organisationunitlevel_show")
+     * @Route("/{id}", requirements={"id"="\d+"}, name="organisationunitlevel_show")
      * @Method("GET")
      * @Template()
      */

@@ -106,7 +106,7 @@ class RelationalFilterController extends Controller
     /**
      * Finds and displays a RelationalFilter entity.
      *
-     * @Route("/{id}", name="relationalfilter_show")
+     * @Route("/{id}", requirements={"id"="\d+"}, name="relationalfilter_show")
      * @Method("GET")
      * @Template()
      */

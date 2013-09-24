@@ -112,7 +112,7 @@ class FieldOptionGroupsetController extends Controller
     /**
      * Finds and displays a FieldOptionGroupset entity.
      *
-     * @Route("/{id}", name="fieldoptiongroupset_show")
+     * @Route("/{id}", requirements={"id"="\d+"}, name="fieldoptiongroupset_show")
      * @Method("GET")
      * @Template()
      */

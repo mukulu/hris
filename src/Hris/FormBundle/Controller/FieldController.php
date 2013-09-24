@@ -112,7 +112,7 @@ class FieldController extends Controller
     /**
      * Finds and displays a Field entity.
      *
-     * @Route("/{id}", name="field_show")
+     * @Route("/{id}", requirements={"id"="\d+"}, name="field_show")
      * @Method("GET")
      * @Template()
      */

@@ -254,7 +254,7 @@ class RecordController extends Controller
     /**
      * Finds and displays a Record entity.
      *
-     * @Route("/{id}", name="record_show")
+     * @Route("/{id}", requirements={"id"="\d+"}, name="record_show")
      * @Method("GET")
      * @Template()
      */

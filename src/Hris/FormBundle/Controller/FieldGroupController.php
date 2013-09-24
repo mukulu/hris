@@ -112,7 +112,7 @@ class FieldGroupController extends Controller
     /**
      * Finds and displays a FieldGroup entity.
      *
-     * @Route("/{id}", name="fieldgroup_show")
+     * @Route("/{id}", requirements={"id"="\d+"}, name="fieldgroup_show")
      * @Method("GET")
      * @Template()
      */

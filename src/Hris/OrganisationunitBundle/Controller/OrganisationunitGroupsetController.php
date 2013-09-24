@@ -112,7 +112,7 @@ class OrganisationunitGroupsetController extends Controller
     /**
      * Finds and displays a OrganisationunitGroupset entity.
      *
-     * @Route("/{id}", name="organisationunitgroupset_show")
+     * @Route("/{id}", requirements={"id"="\d+"}, name="organisationunitgroupset_show")
      * @Method("GET")
      * @Template()
      */

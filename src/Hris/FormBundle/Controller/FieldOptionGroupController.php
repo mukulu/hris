@@ -112,7 +112,7 @@ class FieldOptionGroupController extends Controller
     /**
      * Finds and displays a FieldOptionGroup entity.
      *
-     * @Route("/{id}", name="fieldoptiongroup_show")
+     * @Route("/{id}", requirements={"id"="\d+"}, name="fieldoptiongroup_show")
      * @Method("GET")
      * @Template()
      */

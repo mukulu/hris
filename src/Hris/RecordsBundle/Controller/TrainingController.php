@@ -106,7 +106,7 @@ class TrainingController extends Controller
     /**
      * Finds and displays a Training entity.
      *
-     * @Route("/{id}", name="training_show")
+     * @Route("/{id}", requirements={"id"="\d+"}, name="training_show")
      * @Method("GET")
      * @Template()
      */

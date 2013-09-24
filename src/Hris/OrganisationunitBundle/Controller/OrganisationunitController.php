@@ -156,7 +156,7 @@ class OrganisationunitController extends Controller
      *
      * @Secure(roles="ROLE_ORGANISATIONUNIT_ORGANISATIONUNIT_SHOW,ROLE_USER")
      *
-     * @Route("/{id}", name="organisationunit_show")
+     * @Route("/{id}", requirements={"id"="\d+"}, name="organisationunit_show")
      * @Method("GET")
      * @Template()
      */
@@ -292,13 +292,12 @@ class OrganisationunitController extends Controller
         ;
     }
 
-
     /**
      * Returns Organisationunit tree json.
      *
      * @Secure(roles="ROLE_ORGANISATIONUNIT_ORGANISATIONUNIT_TREE,ROLE_USER")
      *
-     * @Route("/tree.{_format}", requirements={"_format"="yml|xml|json|"}, defaults={"format"="json","parent"=0}, name="organisationunit_tree")
+     * @Route("/tree.{_format}", requirements={"_format"="yml|xml|json"}, defaults={"format"="json","parent"=0}, name="organisationunit_tree")
      * @Route("/tree/{parent}/parent",requirements={"parent"="\d+"},defaults={"parent"=0}, name="organisationunit_tree_parent")
      * @Method("GET")
      * @Template()
