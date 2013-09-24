@@ -363,7 +363,7 @@ class ReportOrganisationunitCompletenessController extends Controller
                     $visibleFields = $queryBuilder->select('field')->from('HrisFormBundle:Field','field')->orderBy('field.name','ASC')->getQuery()->getResult();
                 }
                 //Preparing array of Combination Categories
-                $categoryOption = $this->getDoctrine()->getManager()->getRepository('HrisFormBundle:FieldOption')->findAll();
+                $fieldOption = $this->getDoctrine()->getManager()->getRepository('HrisFormBundle:FieldOption')->findAll();
 
                 $counter=0;
                 // For Organisation Units without childrens
@@ -375,8 +375,7 @@ class ReportOrganisationunitCompletenessController extends Controller
                     ->andWhere($whereExpression) // Append in query, field options to exclude
                     ->setParameters($aliasParameters) // Set mask value for all parameters
                     ->getQuery()->getResult();
-                foreach ($categoryOption as $key => $optionObject) {
-                    //@todo implement dynamic record value name
+                foreach ($fieldOption as $key => $optionObject) {
                     // Translates to $optionObject->getUid()
                     // or $optionObject->getUid() depending on value of $recordKeyName
                     $recordFieldOptionKey = ucfirst(Record::getFieldOptionKey());
@@ -431,9 +430,8 @@ class ReportOrganisationunitCompletenessController extends Controller
                 ->setParameters($aliasParameters) // Set mask value for all parameters
                 ->getQuery()->getResult();
             //Preparing array of Combination Categories
-            $categoryOption = $this->getDoctrine()->getManager()->getRepository('HrisFormBundle:FieldOption')->findAll();
-            foreach ($categoryOption as $key => $optionObject) {
-                //@todo implement dynamic record value name
+            $fieldOption = $this->getDoctrine()->getManager()->getRepository('HrisFormBundle:FieldOption')->findAll();
+            foreach ($fieldOption as $key => $optionObject) {
                 // Translates to $optionObject->getUid()
                 // or $optionObject->getUid() depending on value of $recordKeyName
                 $recordFieldOptionKey = ucfirst(Record::getFieldOptionKey());

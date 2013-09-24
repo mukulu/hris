@@ -296,6 +296,7 @@ class FieldOptionGroup
     public function addFieldOption(FieldOption $fieldOption)
     {
         $this->fieldOption[$fieldOption->getId()] = $fieldOption;
+        $fieldOption->addFieldOptionGroup($this);
     
         return $this;
     }

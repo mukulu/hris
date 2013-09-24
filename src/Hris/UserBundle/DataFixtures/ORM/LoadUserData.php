@@ -57,6 +57,11 @@ class LoadUserData extends AbstractFixture implements OrderedFixtureInterface
                 'email'=>'admin@localhost.local',
                 'role'=>'ROLE_SUPERUSER',
                 'enabled'=>True,
+                'phonenumber'=>'+255717000000',
+                'jobtitle'=>'System Administrator',
+                'firstname'=>'Hris',
+                'middlename'=>'System',
+                'surname'=>'Administrator',
             ),
             1=> Array(
                 'username'=>'district',
@@ -64,6 +69,11 @@ class LoadUserData extends AbstractFixture implements OrderedFixtureInterface
                 'email'=>'district@localhost.local',
                 'role'=>'ROLE_USER',
                 'enabled'=>True,
+                'phonenumber'=>'+255716000000',
+                'jobtitle'=>'Data Manager',
+                'firstname'=>'Hris',
+                'middlename'=>'Data',
+                'surname'=>'Manager',
             )
         );
         return $this->users;
@@ -83,6 +93,11 @@ class LoadUserData extends AbstractFixture implements OrderedFixtureInterface
             $user->setEmail($humanResourceUser['email']);
             $user->addRole($humanResourceUser['role']);
             $user->setEnabled($humanResourceUser['enabled']);
+            $user->setPhonenumber($humanResourceUser['phonenumber']);
+            $user->setJobTitle($humanResourceUser['jobtitle']);
+            $user->setFirstName($humanResourceUser['firstname']);
+            $user->setMiddleName($humanResourceUser['middlename']);
+            $user->setSurname($humanResourceUser['surname']);
             $this->addReference($user->getUsername().'-user', $user);
 
             $manager->persist($user);

@@ -25,6 +25,10 @@
  */
 namespace Hris\UserBundle\Controller;
 
+use Doctrine\Common\Collections\ArrayCollection;
+use Hris\OrganisationunitBundle\Entity\Organisationunit;
+use Hris\UserBundle\Form\UserEditType;
+use Hris\UserBundle\Form\UserNewType;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Bundle\FrameworkBundle\Controller\Controller;
 use Symfony\Component\HttpFoundation\RedirectResponse;
@@ -74,38 +78,18 @@ class UserController extends Controller
      */
     public function createAction(Request $request)
     {
+        $entity = new User();
+        $form   = $this->createForm(new UserNewType(), $entity,array('em'=>$this->getDoctrine()->getManager()));
+        $form->bind($request);
+        if ($form->isValid()) {
+            $em = $this->getDoctrine()->getManager();
+            $em->persist($entity);
+            $em->flush();
 
-        $form = $this->container->get('fos_user.registration.form');
-        $formHandler = $this->container->get('fos_user.registration.form.handler');
-        $confirmationEnabled = $this->container->getParameter('fos_user.registration.confirmation.enabled');
-
-        $process = $formHandler->process($confirmationEnabled);
-        if ($process) {
-            $user = $form->getData();
-
-            $authUser = false;
-            if ($confirmationEnabled) {
-                $this->container->get('session')->set('fos_user_send_confirmation_email/email', $user->getEmail());
-                $route = 'fos_user_registration_check_email';
-            } else {
-                $authUser = true;
-                $route = 'fos_user_registration_confirmed';
-            }
-
-            $this->setFlash('fos_user_success', 'registration.flash.user_created');
-            $url = $this->container->get('router')->generate($route);
-            $response = new RedirectResponse($url);
-
-            if ($authUser) {
-                $this->authenticateUser($user, $response);
-            }
-
-            return $response;
+            return $this->redirect($this->generateUrl('user_list', array('id' => $entity->getId())));
+        }else {
+            return $this->redirect($this->generateUrl('user_new'));
         }
-
-        return $this->container->get('templating')->renderResponse('HrisUserBundle:Registration:register.html.'.$this->getEngine(), array(
-            'form' => $form->createView(),
-        ));
 
     }
 
@@ -119,7 +103,7 @@ class UserController extends Controller
     public function newAction()
     {
         $entity = new User();
-        $form   = $this->createForm(new UserType(), $entity);
+        $form   = $this->createForm(new UserNewType(), $entity,array('em'=>$this->getDoctrine()->getManager()));
 
         return array(
             'entity' => $entity,
@@ -169,7 +153,7 @@ class UserController extends Controller
             throw $this->createNotFoundException('Unable to find User entity.');
         }
 
-        $editForm = $this->createForm(new UserType(), $entity);
+        $editForm = $this->createForm(new UserType(), $entity,array('em'=>$this->getDoctrine()->getManager()));
         $deleteForm = $this->createDeleteForm($id);
 
         return array(
@@ -197,14 +181,14 @@ class UserController extends Controller
         }
 
         $deleteForm = $this->createDeleteForm($id);
-        $editForm = $this->createForm(new UserType(), $entity);
+        $editForm = $this->createForm(new UserType(), $entity,array('em'=>$this->getDoctrine()->getManager()));
         $editForm->bind($request);
 
         if ($editForm->isValid()) {
             $em->persist($entity);
             $em->flush();
 
-            return $this->redirect($this->generateUrl('user_edit', array('id' => $id)));
+            return $this->redirect($this->generateUrl('user_list'));
         }
 
         return array(

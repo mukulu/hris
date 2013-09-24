@@ -221,6 +221,8 @@ class Form
     public function addUniqueRecordField(Field $uniqueRecordFields)
     {
         $this->uniqueRecordFields[$uniqueRecordFields->getId()] = $uniqueRecordFields;
+
+        $uniqueRecordFields->addUniqueRecordForm($this);
     
         return $this;
     }

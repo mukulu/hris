@@ -29,12 +29,12 @@
             <thead>
                 <tr>
                     <th>Username</th>
+                    <th>Firstname</th>
+                    <th>Surname</th>
                     <th>Email</th>
-                    <th>Enabled</th>
                     <th>Lastlogin</th>
                     <th>Roles</th>
-                    <th>Datecreated</th>
-                    <th>Lastupdated</th>
+                    <th>Organisationunit</th>
                     <th>Actions</th>
                 </tr>
             </thead>
@@ -42,15 +42,15 @@
             {% for entity in entities %}
                 <tr {% if entity.enabled!=1 %}class="error"{% endif %}>
                     <td><a href="{{ path('user_show', { 'id': entity.id }) }}">{{ entity.username }}</a></td>
+                    <td>{{ entity.firstname }}</td>
+                    <td>{{ entity.surname }}</td>
                     <td>{{ entity.email }}</td>
-                    <td>{% if entity.enabled == 1 %} Enabled {% else %} Disabled {% endif %}</td>
                     <td>{% if entity.lastLogin %}{{ entity.lastLogin|date('H:i:s d/m/Y') }}{% endif %}</td>
                     <td>{% for role in entity.roles %}
                             {{ role }},
                         {% endfor %}
                     </td>
-                    <td>{% if entity.datecreated %}{{ entity.datecreated|date('d/m/Y') }}{% endif %}</td>
-                    <td>{% if entity.lastupdated %}{{ entity.lastupdated|date('d/m/Y') }}{% endif %}</td>
+                    <td>{{ entity.organisationunit }}</td>
                     <td>
                     <ul class="inline">
                         <li>

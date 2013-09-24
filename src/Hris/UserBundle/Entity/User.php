@@ -26,12 +26,10 @@ namespace Hris\UserBundle\Entity;
 
 use Gedmo\Mapping\Annotation as Gedmo;
 use FOS\UserBundle\Entity\User as BaseUser;
-use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\ORM\Mapping as ORM;
 use Symfony\Component\Validator\Constraints as Assert;
 
 use Hris\OrganisationunitBundle\Entity\Organisationunit;
-use Hris\UserBundle\Entity\UserInfo;
 
 /**
  * Hris\UserBundle\Entity\User
@@ -113,28 +111,50 @@ class User extends BaseUser
      * @Gedmo\Versioned
      */
     protected $plainPassword;
-    
+
     /**
-     * @var UserInfo $userInfo
+     * @var string $phonenumber
      *
-     * @Gedmo\Versioned
-     * @ORM\OneToOne(targetEntity="Hris\UserBundle\Entity\UserInfo", inversedBy="user")
+     * @ORM\Column(name="phonenumber", type="string", length=64, nullable=true)
      */
-    private $userInfo;
+    private $phonenumber;
+
+    /**
+     * @var string $jobTitle
+     *
+     * @ORM\Column(name="jobTitle", type="string", length=64, nullable=true)
+     */
+    private $jobTitle;
+
+    /**
+     * @var string $firstName
+     *
+     * @ORM\Column(name="firstName", type="string", length=64, nullable=true)
+     */
+    private $firstName;
+
+    /**
+     * @var string $middleName
+     *
+     * @ORM\Column(name="middleName", type="string", length=64, nullable=true)
+     */
+    private $middleName;
+
+    /**
+     * @var string $surname
+     *
+     * @ORM\Column(name="surname", type="string", length=64, nullable=true)
+     */
+    private $surname;
 
     /**
      * @var Organisationunit $organisationunit
      *
-     * @ORM\ManyToMany(targetEntity="Hris\OrganisationunitBundle\Entity\Organisationunit", inversedBy="user")
-     * @ORM\JoinTable(name="hris_user_organisationunits",
-     *   joinColumns={
-     *     @ORM\JoinColumn(name="user_id", referencedColumnName="id", onDelete="CASCADE")
-     *   },
-     *   inverseJoinColumns={
-     *     @ORM\JoinColumn(name="organisationunit_id", referencedColumnName="id", onDelete="CASCADE")
-     *   }
-     * )
-     * @ORM\OrderBy({"longname" = "ASC"})
+     * @Gedmo\Versioned
+     * @ORM\ManyToOne(targetEntity="Hris\OrganisationunitBundle\Entity\Organisationunit",inversedBy="user")
+     * @ORM\JoinColumns({
+     *   @ORM\JoinColumn(name="organisationunit_id", referencedColumnName="id", onDelete="CASCADE")
+     * })
      */
     private $organisationunit;
 
@@ -168,7 +188,6 @@ class User extends BaseUser
         {
             $this->datecreated = new \DateTime('now');
         }
-        $this->organisationunit = new ArrayCollection();
     }
     
     /**
@@ -202,40 +221,6 @@ class User extends BaseUser
     public function getUid()
     {
         return $this->uid;
-    }
-
-
-    /**
-     * Add organisationunit
-     *
-     * @param Organisationunit $organisationunit
-     * @return User
-     */
-    public function addOrganisationunit(Organisationunit $organisationunit)
-    {
-        $this->organisationunit[$organisationunit->getId()] = $organisationunit;
-
-        return $this;
-    }
-
-    /**
-     * Remove organisationunit
-     *
-     * @param Organisationunit $organisationunit
-     */
-    public function removeOrganisationunit(Organisationunit $organisationunit)
-    {
-        $this->organisationunit->removeElement($organisationunit);
-    }
-
-    /**
-     * Get organisationunit
-     *
-     * @return \Doctrine\Common\Collections\Collection
-     */
-    public function getOrganisationunit()
-    {
-        return $this->organisationunit;
     }
 
     /**
@@ -282,29 +267,6 @@ class User extends BaseUser
     public function getDatecreated()
     {
         return $this->datecreated;
-    }
-
-    /**
-     * Set userInfo
-     *
-     * @param UserInfo $userInfo
-     * @return User
-     */
-    public function setUserInfo(UserInfo $userInfo = null)
-    {
-        $this->userInfo = $userInfo;
-    
-        return $this;
-    }
-
-    /**
-     * Get userInfo
-     *
-     * @return UserInfo
-     */
-    public function getUserInfo()
-    {
-        return $this->userInfo;
     }
     
     /**
@@ -355,5 +317,145 @@ class User extends BaseUser
     public function __toString()
     {
         return $this->username;
+    }
+
+    /**
+     * Set organisationunit
+     *
+     * @param \Hris\OrganisationunitBundle\Entity\Organisationunit $organisationunit
+     * @return User
+     */
+    public function setOrganisationunit(\Hris\OrganisationunitBundle\Entity\Organisationunit $organisationunit = null)
+    {
+        $this->organisationunit = $organisationunit;
+
+        $organisationunit->addUser($this);
+    
+        return $this;
+    }
+
+    /**
+     * Get organisationunit
+     *
+     * @return \Hris\OrganisationunitBundle\Entity\Organisationunit 
+     */
+    public function getOrganisationunit()
+    {
+        return $this->organisationunit;
+    }
+
+    /**
+     * Set phonenumber
+     *
+     * @param string $phonenumber
+     * @return User
+     */
+    public function setPhonenumber($phonenumber)
+    {
+        $this->phonenumber = $phonenumber;
+    
+        return $this;
+    }
+
+    /**
+     * Get phonenumber
+     *
+     * @return string 
+     */
+    public function getPhonenumber()
+    {
+        return $this->phonenumber;
+    }
+
+    /**
+     * Set jobTitle
+     *
+     * @param string $jobTitle
+     * @return User
+     */
+    public function setJobTitle($jobTitle)
+    {
+        $this->jobTitle = $jobTitle;
+    
+        return $this;
+    }
+
+    /**
+     * Get jobTitle
+     *
+     * @return string 
+     */
+    public function getJobTitle()
+    {
+        return $this->jobTitle;
+    }
+
+    /**
+     * Set firstName
+     *
+     * @param string $firstName
+     * @return User
+     */
+    public function setFirstName($firstName)
+    {
+        $this->firstName = $firstName;
+    
+        return $this;
+    }
+
+    /**
+     * Get firstName
+     *
+     * @return string 
+     */
+    public function getFirstName()
+    {
+        return $this->firstName;
+    }
+
+    /**
+     * Set middleName
+     *
+     * @param string $middleName
+     * @return User
+     */
+    public function setMiddleName($middleName)
+    {
+        $this->middleName = $middleName;
+    
+        return $this;
+    }
+
+    /**
+     * Get middleName
+     *
+     * @return string 
+     */
+    public function getMiddleName()
+    {
+        return $this->middleName;
+    }
+
+    /**
+     * Set surname
+     *
+     * @param string $surname
+     * @return User
+     */
+    public function setSurname($surname)
+    {
+        $this->surname = $surname;
+    
+        return $this;
+    }
+
+    /**
+     * Get surname
+     *
+     * @return string 
+     */
+    public function getSurname()
+    {
+        return $this->surname;
     }
 }
