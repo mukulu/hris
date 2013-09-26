@@ -97,7 +97,7 @@
                             {# Expected records and Percentage #}
                             {% if expectedCompleteness[childOrganisationunit.id][form.id] %}
                                 {# Entered records #}
-                                <td>expectedCompleteness[childOrganisationunit.id][form.id]</td>
+                                <td>{{ expectedCompleteness[childOrganisationunit.id][form.id] }}</td>
                                 {# Percentage #}
                                 {% if completenessMatrix[childOrganisationunit.id][form.id] > expectedCompleteness[childOrganisationunit.id][form.id] %}
                                     <td>Above Expected</td>

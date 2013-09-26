@@ -30,6 +30,7 @@ use Gedmo\Mapping\Annotation as Gedmo;
 
 use Hris\OrganisationunitBundle\Entity\OrganisationunitStructure;
 use Hris\OrganisationunitBundle\Entity\OrganisationunitGroup;
+use Hris\UserBundle\Entity\User;
 use Symfony\Component\Validator\Constraints as Assert;
 
 /**
@@ -205,6 +206,14 @@ class Organisationunit
      * @ORM\OrderBy({"expectation" = "ASC"})
      */
     private $organisationunitCompleteness;
+
+    /**
+     * @var User $user
+     *
+     * @ORM\OneToMany(targetEntity="Hris\UserBundle\Entity\User", mappedBy="organisationunit",cascade={"ALL"})
+     * @ORM\OrderBy({"longname" = "ASC"})
+     */
+    private $user;
 
     /**
      * @var OrganisationunitStructure $organisationunitStructure
@@ -1022,5 +1031,38 @@ class Organisationunit
     public function getOrganisationunitCompleteness()
     {
         return $this->organisationunitCompleteness;
+    }
+
+    /**
+     * Add user
+     *
+     * @param \Hris\UserBundle\Entity\User $user
+     * @return Organisationunit
+     */
+    public function addUser(\Hris\UserBundle\Entity\User $user)
+    {
+        $this->user[] = $user;
+    
+        return $this;
+    }
+
+    /**
+     * Remove user
+     *
+     * @param \Hris\UserBundle\Entity\User $user
+     */
+    public function removeUser(\Hris\UserBundle\Entity\User $user)
+    {
+        $this->user->removeElement($user);
+    }
+
+    /**
+     * Get user
+     *
+     * @return \Doctrine\Common\Collections\Collection 
+     */
+    public function getUser()
+    {
+        return $this->user;
     }
 }

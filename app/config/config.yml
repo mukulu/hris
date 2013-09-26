@@ -2,6 +2,8 @@ imports:
     - { resource: parameters.yml }
     - { resource: security.yml }
     - { resource: doctrine_extensions.yml }
+    - { resource: "@HrisUserBundle/Resources/config/profile.xml" }
+    - { resource: "@HrisUserBundle/Resources/config/registration.xml" }
 
 framework:
     #esi:             ~

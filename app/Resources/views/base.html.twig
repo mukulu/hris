@@ -8,6 +8,14 @@
             <link rel="stylesheet" href="{{ asset('css/bootstrap.css') }}" />
             <link rel="stylesheet" href="{{ asset('css/bootstrap.icon-large.min.css') }}" />
             <link rel="stylesheet" href="{{ asset('commons/css/style.css') }}" />
+            <style type="text/css">
+                #logo {
+                    background: url("{{ asset('commons/images/coat_of_arms_of_Tz.svg') }}");
+                    background-repeat: no-repeat;
+                    background-position: 30px 0px;
+                    background-size:110px 90px;
+                }
+            </style>
 
         {% endblock %}
         {% block favicon %}
@@ -61,8 +69,8 @@
                         <div id="banner" class="hidden-phone text-center">
                             {% block banner_logo %}
                                 <div id="logo">
-                                    <h2>{{ client_name }}({{ client_code }})</h2>
-                                    <h3>{{ project }}({{ project_code }})</h3>
+                                    <h2 style="color:#08C">{{ client_name }}({{ client_code }})</h2>
+                                    <h3 style="color:#08C">{{ project }}({{ project_code }})</h3>
                                 </div>
                             {% endblock banner_logo %}
                         </div>

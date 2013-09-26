@@ -29,7 +29,7 @@ use Doctrine\ORM\Mapping as ORM;
 use Gedmo\Mapping\Annotation as Gedmo;
 
 use Hris\FormBundle\Entity\Form;
-use Hris\UserBundle\Entity\UserInfo;
+use Hris\UserBundle\Entity\User;
 use Hris\OrganisationunitBundle\Entity\Organisationunit;
 use Symfony\Component\Validator\Constraints as Assert;
 
@@ -37,7 +37,7 @@ use Symfony\Component\Validator\Constraints as Assert;
  * Hris\DashboardBundle\Entity\DashboardChart
  *
  * @Gedmo\Loggable
- * @ORM\Table(name="hris_dashboardchart", uniqueConstraints={@ORM\UniqueConstraint(name="userFieldOneTwoGraphTypeLowerLevel_idx",columns={"userinfo_id", "fieldOne","fieldTwo","graphType","lowerLevels"})})
+ * @ORM\Table(name="hris_dashboardchart", uniqueConstraints={@ORM\UniqueConstraint(name="userFieldOneTwoGraphTypeLowerLevel_idx",columns={"user_id", "fieldOne","fieldTwo","graphType","lowerLevels"})})
  * @ORM\Entity(repositoryClass="Hris\DashboardBundle\Entity\DashboardChartRepository")
  */
 class DashboardChart
@@ -132,15 +132,15 @@ class DashboardChart
     private $organisationunit;
     
     /**
-     * @var UserInfo $userInfo
+     * @var User $user
      *
      * @Gedmo\Versioned
-     * @ORM\ManyToOne(targetEntity="Hris\UserBundle\Entity\UserInfo",inversedBy="dashboardChart")
+     * @ORM\ManyToOne(targetEntity="Hris\UserBundle\Entity\User",inversedBy="dashboardChart")
      * @ORM\JoinColumns({
-     *   @ORM\JoinColumn(name="userinfo_id", referencedColumnName="id", onDelete="CASCADE")
+     *   @ORM\JoinColumn(name="user_id", referencedColumnName="id", onDelete="CASCADE")
      * })
      */
-    private $userInfo;
+    private $user;
     
     /**
      * @var Form $form
@@ -494,26 +494,26 @@ class DashboardChart
     }
 
     /**
-     * Set userInfo
+     * Set user
      *
-     * @param UserInfo $userInfo
+     * @param User $user
      * @return DashboardChart
      */
-    public function setUserInfo(UserInfo $userInfo = null)
+    public function setUser(User $user = null)
     {
-        $this->userInfo = $userInfo;
+        $this->user = $user;
     
         return $this;
     }
 
     /**
-     * Get userInfo
+     * Get user
      *
-     * @return UserInfo
+     * @return User
      */
-    public function getUserInfo()
+    public function getUser()
     {
-        return $this->userInfo;
+        return $this->user;
     }
 
     /**

@@ -121,8 +121,8 @@ class ReportEmployeeRecordsController extends Controller
         $employeeRecordsParameters  = Array();
         if(!empty($visibleFields)) {
             foreach ($visibleFields as $key => $fieldObject) {
-                if(empty($visibleFieldUids)) $visibleFieldUids  = $fieldObject->getField()->getId();
-                else $visibleFieldUids .=','.$fieldObject->getField()->getId();
+                if(empty($visibleFieldUids)) $visibleFieldUids  = $fieldObject->getId();
+                else $visibleFieldUids .=','.$fieldObject->getId();
                 $individualSearchClause .= '{type:"text"},';
                 $visibleFieldsCounter++;
             }

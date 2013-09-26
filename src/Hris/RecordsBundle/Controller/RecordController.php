@@ -122,9 +122,34 @@ class RecordController extends Controller
             ->join('o.field', 'f')
             ->getQuery()
             ->getArrayResult();
-
+        //var_dump($field_Option_entities);
         $field_Option_Values = json_encode($field_Option_entities);
         $filed_Option_Table_Name = json_encode($em->getClassMetadata('HrisFormBundle:FieldOption')->getTableName());
+
+        /*
+         * Field Options Associations
+         */
+
+        $field_Options = $em->getRepository( 'HrisFormBundle:FieldOption' )
+        ->createQueryBuilder('o')
+        ->select('o', 'f')
+        ->join('o.field', 'f')
+        ->getQuery()
+        ->getResult();
+
+        $id = 1;
+        $fieldOptionAssocitiontablename = "field_option_association";
+        foreach($field_Options as $key => $fieldOption){
+            $option_associations =  $fieldOption->getChildFieldOption();
+            if (!empty($option_associations) ){
+                foreach($option_associations as $keyoption => $option){
+                    //print "<br><br>the reference Key ". $fieldOption->getValue()." the referenced Field ".$option->getValue()." the reference Field ". $fieldOption->getField()->getName(). " the associate field ".$option->getField()->getName();
+                    $fieldOptions[] = array( 'id' => $id++,'fieldoption'=>$fieldOption->getUid(), 'fielduid' => $fieldOption->getField()->getUid(), 'fieldoptionref' => $option->getValue(), 'fieldoptionrefuid' => $option->getUid(), 'fieldref'=>$option->getField()->getUid() );
+                }
+            }
+        }
+
+        //var_dump($fieldOptions);
 
         return array(
             'entities' => $entities,
@@ -137,6 +162,8 @@ class RecordController extends Controller
             'field_values' => $filed_Values,
             'field_option_values' => $field_Option_Values,
             'field_option_table_name' => $filed_Option_Table_Name,
+            'option_associations_values' => json_encode($fieldOptions),
+            'option_associations_table' => $fieldOptionAssocitiontablename,
         );
     }
 
@@ -160,46 +187,59 @@ class RecordController extends Controller
         $orgunit = $em->getRepository('HrisOrganisationunitBundle:Organisationunit')->find(1);
 
         $form = $em->getRepository('HrisFormBundle:Form')->find($formId);
+        $uniqueFields = $form->getUniqueRecordFields();
         $fields = $form->getSimpleField();
+
+        $instance = '';
+        foreach($uniqueFields as $key => $field_unique){
+            $instance .= $this->get('request')->request->get($field_unique->getName());
+        }
 
 
         foreach ($fields as $key => $field){
             $recordValue = $this->get('request')->request->get($field->getName());
-            $recordArray[$field->getId()] = $recordValue;
+
+            /**
+             * Made dynamic, on which field column is used as key, i.e. uid, name or id.
+             */
+            // Translates to $field->getUid()
+            // or $field->getUid() depending on value of $recordKeyName
+            $recordFieldKey = ucfirst(Record::getFieldKey());
+            $valueKey = call_user_func_array(array($field, "get${recordFieldKey}"),array());
+
+            $recordArray[$valueKey] = $recordValue;
         }
 
-        var_dump(json_encode($recordArray));
+        $user = $this->container->get('security.context')->getToken()->getUser();
 
         $entity->setValue($recordArray);
         $entity->setForm($form);
+        $entity->setInstance(md5(uniqid()));
         $entity->setOrganisationunit($orgunit);
-        $entity->setUsername("Testing_User");
+        $entity->setUsername($user->getUsername());
         $entity->setComplete(True);
         $entity->setCorrect(True);
         $entity->setHashistory(False);
         $entity->setHastraining(False);
-       // $entity->setDatecreated(new \Datetime());
-       // $entity->setLastupdated(new \Datetime());
 
 
 
         //if ($entity->isValid()) {
-            $em = $this->getDoctrine()->getManager();
-            $em->persist($entity);
-            $em->flush();
+        $em = $this->getDoctrine()->getManager();
+        $em->persist($entity);
+        $em->flush();
 
         var_dump("this is done without any doubt");
 
-            return $this->redirect($this->generateUrl('record_new', array('id' => $form->getId())));
+        return $this->redirect($this->generateUrl('record_new', array('id' => $form->getId())));
         //}
-
-
 
         return array(
             'entity' => $entity,
             'form'   => $form->createView(),
         );
     }
+
 
     /**
      * Displays a form to create a new Record entity.

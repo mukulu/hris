@@ -374,6 +374,20 @@ class LoadFieldData extends AbstractFixture implements OrderedFixtureInterface
             18=>Array(
                 'dataType'=>'String',
                 'inputType'=>'Select',
+                'name'=>'HospitalPresentDesignation',
+                'caption'=>'Hospital Present Designation',
+                'compulsory'=>true,
+                'isUnique'=>false,
+                'isCalculated'=>false,
+                'skipInReport'=>false,
+                'calculatedExpression'=>'',
+                'fieldRelation'=>False,
+                'parentField'=>Array('Profession'),
+                'description'=>"Employee's Hospital Present Designation(Compulsory)",
+                'history'=>true),
+            19=>Array(
+                'dataType'=>'String',
+                'inputType'=>'Select',
                 'name'=>'SuperlativeSubstantivePosition',
                 'caption'=>'Superlative Substantive Position',
                 'compulsory'=>true,
@@ -385,7 +399,7 @@ class LoadFieldData extends AbstractFixture implements OrderedFixtureInterface
                 'parentField'=>Null,
                 'description'=>"Employee's Superlative Substantive Position(Compulsory)",
                 'history'=>true),
-            19=>Array(
+            20=>Array(
                 'dataType'=>'String',
                 'inputType'=>'Select',
                 'name'=>'Department',
@@ -399,7 +413,7 @@ class LoadFieldData extends AbstractFixture implements OrderedFixtureInterface
                 'parentField'=>Null,
                 'description'=>"Employee's Department(Compulsory)",
                 'history'=>true),
-            20=>Array(
+            21=>Array(
                 'dataType'=>'String',
                 'inputType'=>'Select',
                 'name'=>'SalaryScale',
@@ -413,7 +427,7 @@ class LoadFieldData extends AbstractFixture implements OrderedFixtureInterface
                 'parentField'=>Null,
                 'description'=>"Employee's Salary Scale(Compulsory)",
                 'history'=>true),
-            21=>Array(
+            22=>Array(
                 'dataType'=>'String',
                 'inputType'=>'Text',
                 'name'=>'MonthlyBasicSalary',
@@ -427,7 +441,7 @@ class LoadFieldData extends AbstractFixture implements OrderedFixtureInterface
                 'parentField'=>Null,
                 'description'=>"Employee's Monthly Basic Salary(Optional)",
                 'history'=>true),
-            22=>Array(
+            23=>Array(
                 'dataType'=>'Date',
                 'inputType'=>'Date',
                 'name'=>'DateofFirstAppointment',
@@ -441,7 +455,7 @@ class LoadFieldData extends AbstractFixture implements OrderedFixtureInterface
                 'parentField'=>Null,
                 'description'=>"Employee's Date of First Appointment(Compulsory)",
                 'history'=>false),
-            23=>Array(
+            24=>Array(
                 'dataType'=>'Date',
                 'inputType'=>'Date',
                 'name'=>'DateofConfirmation',
@@ -455,7 +469,7 @@ class LoadFieldData extends AbstractFixture implements OrderedFixtureInterface
                 'parentField'=>Null,
                 'description'=>"Employee's Date of Confirmation(Optional)",
                 'history'=>false),
-            24=>Array(
+            25=>Array(
                 'dataType'=>'Date',
                 'inputType'=>'Date',
                 'name'=>'DateofLastPromotion',
@@ -469,7 +483,7 @@ class LoadFieldData extends AbstractFixture implements OrderedFixtureInterface
                 'parentField'=>Null,
                 'description'=>"Employee's Date of Last Promotion(Optional)",
                 'history'=>true),
-            25=>Array(
+            26=>Array(
                 'dataType'=>'String',
                 'inputType'=>'Select',
                 'name'=>'Employer',
@@ -483,7 +497,7 @@ class LoadFieldData extends AbstractFixture implements OrderedFixtureInterface
                 'parentField'=>Null,
                 'description'=>"Employee's Employer(Compulsory)",
                 'history'=>true),
-            26=>Array(
+            27=>Array(
                 'dataType'=>'String',
                 'inputType'=>'Select',
                 'name'=>'EmploymentStatus',
@@ -497,7 +511,7 @@ class LoadFieldData extends AbstractFixture implements OrderedFixtureInterface
                 'parentField'=>Null,
                 'description'=>"Employee's Employment Status(Compulsory)",
                 'history'=>true),
-            27=>Array(
+            28=>Array(
                 'dataType'=>'String',
                 'inputType'=>'Select',
                 'name'=>'RegisteredDisability',
@@ -511,7 +525,7 @@ class LoadFieldData extends AbstractFixture implements OrderedFixtureInterface
                 'parentField'=>Null,
                 'description'=>"Employee's Legal Registered Disability(Optional)",
                 'history'=>false),
-            28=>Array(
+            29=>Array(
                 'dataType'=>'String',
                 'inputType'=>'TextArea',
                 'name'=>'ContactsofEmployee',
@@ -525,7 +539,7 @@ class LoadFieldData extends AbstractFixture implements OrderedFixtureInterface
                 'parentField'=>Null,
                 'description'=>"Employee's Contacts of Employee(Compulsory)",
                 'history'=>false),
-            29=>Array(
+            30=>Array(
                 'dataType'=>'String',
                 'inputType'=>'Text',
                 'name'=>'NextofKin',
@@ -539,7 +553,7 @@ class LoadFieldData extends AbstractFixture implements OrderedFixtureInterface
                 'parentField'=>Null,
                 'description'=>"Employee's Next of Kin(Optional)",
                 'history'=>true),
-            30=>Array(
+            31=>Array(
                 'dataType'=>'String',
                 'inputType'=>'Select',
                 'name'=>'RelationshiptoNextofKin',
@@ -553,7 +567,7 @@ class LoadFieldData extends AbstractFixture implements OrderedFixtureInterface
                 'parentField'=>Null,
                 'description'=>"Employee's Relationship to Next of Kin(Optional)",
                 'history'=>true),
-            31=>Array(
+            32=>Array(
                 'dataType'=>'String',
                 'inputType'=>'TextArea',
                 'name'=>'ContactsofNextofKin',
@@ -567,7 +581,7 @@ class LoadFieldData extends AbstractFixture implements OrderedFixtureInterface
                 'parentField'=>Null,
                 'description'=>"Employee's Contacts of Next of Kin(Optional)",
                 'history'=>true),
-            32=>Array(
+            33=>Array(
                 'dataType'=>'String',
                 'inputType'=>'TextArea',
                 'name'=>'EmploymentDistribution',
@@ -581,7 +595,7 @@ class LoadFieldData extends AbstractFixture implements OrderedFixtureInterface
                 'parentField'=>Null,
                 'description'=>"Employee's Contacts of Next of Kin(Optional)",
                 'history'=>true),
-            33=>Array(
+            34=>Array(
                 'dataType'=>'String',
                 'inputType'=>'TextArea',
                 'name'=>'RetirementDistribution',
@@ -595,7 +609,7 @@ class LoadFieldData extends AbstractFixture implements OrderedFixtureInterface
                 'parentField'=>Null,
                 'description'=>"Employee's Contacts of Next of Kin(Optional)",
                 'history'=>true),
-            34=>Array(
+            35=>Array(
                 'dataType'=>'String',
                 'inputType'=>'TextArea',
                 'name'=>'AgeDistribution',
@@ -714,7 +728,6 @@ class LoadFieldData extends AbstractFixture implements OrderedFixtureInterface
                 'value'=>'Atheist',
                 'description'=>'Employee`s Religion',
                 'field'=>  'Religion-field',
-                'skipinreport'=>False,
                 'skipinreport'=>False,
                 'sort'=> 1,),
             15=>Array(
@@ -972,11 +985,11 @@ class LoadFieldData extends AbstractFixture implements OrderedFixtureInterface
                 'field'=>  'PresentDesignation-field',
                 'parentFieldOption'=>'Assistant Medical Officer',
                 'skipinreport'=>False,
-                'sort' => 1,
+                'sort' => 1),
             64=>Array(
                 'value'=>'Assistant Medical Officer II',
                 'description'=>'Employee`s Present Designation',
-                'field'=>  'PresentDesignation-field'),
+                'field'=>'PresentDesignation-field',
                 'parentFieldOption'=>'Assistant Medical Officer',
                 'skipinreport'=>False,
                 'sort' => 2),
@@ -1190,11 +1203,11 @@ class LoadFieldData extends AbstractFixture implements OrderedFixtureInterface
                 'description'=>'Employee`s Superlative Substantive Position',
                 'field'=>  'SuperlativeSubstantivePosition-field',
                 'skipinreport'=>False,
-                'sort'=> 8,
+                'sort'=> 8),
             96=>Array(
                 'value'=>'Director, Medicine and Costmetics',
                 'description'=>'Employee`s Superlative Substantive Position',
-                'field'=>  'SuperlativeSubstantivePosition-field'),
+                'field'=>  'SuperlativeSubstantivePosition-field',
                 'skipinreport'=>False,
                 'sort'=> 9),
             97=>Array(
@@ -1251,43 +1264,43 @@ class LoadFieldData extends AbstractFixture implements OrderedFixtureInterface
                 'field'=>  'SuperlativeSubstantivePosition-field',
                 'skipinreport'=>False,
                 'sort'=> 18),
-            105=>Array(
+            106=>Array(
                 'value'=>'Hospital Management Team',
                 'description'=>'Employee`s Superlative Substantive Position',
                 'field'=>  'SuperlativeSubstantivePosition-field',
                 'skipinreport'=>False,
                 'sort'=> 19),
-            106=>Array(
+            107=>Array(
                 'value'=>'RHMT Co-Opted Member',
                 'description'=>'Employee`s Superlative Substantive Position',
                 'field'=>  'SuperlativeSubstantivePosition-field',
                 'skipinreport'=>False,
                 'sort'=> 20),
-            107=>Array(
+            108=>Array(
                 'value'=>'RHMT Member',
                 'description'=>'Employee`s Superlative Substantive Position',
                 'field'=>  'SuperlativeSubstantivePosition-field',
                 'skipinreport'=>False,
                 'sort'=> 21),
-            108=>Array(
+            109=>Array(
                 'value'=>'CHMT Co-Opted Member',
                 'description'=>'Employee`s Superlative Substantive Position',
                 'field'=>  'SuperlativeSubstantivePosition-field',
                 'skipinreport'=>False,
                 'sort'=> 22),
-            109=>Array(
+            110=>Array(
                 'value'=>'CHMT Member',
                 'description'=>'Employee`s Superlative Substantive Position',
                 'field'=>  'SuperlativeSubstantivePosition-field',
                 'skipinreport'=>False,
                 'sort'=> 23),
-            110=>Array(
+            111=>Array(
                 'value'=>'Head of Department',
                 'description'=>'Employee`s Superlative Substantive Position',
                 'field'=>  'SuperlativeSubstantivePosition-field',
                 'skipinreport'=>False,
                 'sort'=> 24),
-            111=>Array(
+            112=>Array(
                 'value'=>'Head of Facility',
                 'description'=>'Employee`s Superlative Substantive Position',
                 'field'=>  'SuperlativeSubstantivePosition-field',
@@ -1311,11 +1324,11 @@ class LoadFieldData extends AbstractFixture implements OrderedFixtureInterface
                 'description'=>'Employee`s Department',
                 'field'=>  'Department-field',
                 'skipinreport'=>False,
-                'sort'=> 1,
+                'sort'=> 1),
             115=>Array(
                 'value'=>'Preventive Service',
                 'description'=>'Employee`s Department',
-                'field'=>  'Department-field'),
+                'field'=>  'Department-field',
                 'skipinreport'=>False,
                 'sort'=> 2),
             116=>Array(
@@ -1875,6 +1888,280 @@ class LoadFieldData extends AbstractFixture implements OrderedFixtureInterface
                 'field'=>  'RelationshiptoNextofKin-field',
                 'skipinreport'=>False,
                 'sort'=> 6),
+            //HospitalPresent Designation options
+            208=>Array(
+                'value'=>'Medical Officer I',
+                'description'=>'Employee`s Present Designation',
+                'field'=>  'HospitalPresentDesignation-field',
+                'parentFieldOption'=>'Medical Doctor',
+                'skipinreport'=>False,
+                'sort' => 1),
+            209=>Array(
+                'value'=>'Medical Officer II',
+                'description'=>'Employee`s Present Designation',
+                'field'=>  'HospitalPresentDesignation-field',
+                'parentFieldOption'=>'Medical Doctor',
+                'skipinreport'=>False,
+                'sort' => 2),
+            209=>Array(
+                'value'=>'Medical Officer III',
+                'description'=>'Employee`s Present Designation',
+                'field'=>  'HospitalPresentDesignation-field',
+                'parentFieldOption'=>'Medical Doctor',
+                'skipinreport'=>False,
+                'sort' => 3),
+            210=>Array(
+                'value'=>'Principal Medical Officer I',
+                'description'=>'Employee`s Present Designation',
+                'field'=>  'HospitalPresentDesignation-field',
+                'parentFieldOption'=>'Medical Doctor',
+                'skipinreport'=>False,
+                'sort' => 4),
+            211=>Array(
+                'value'=>'Principal Medical Officer II',
+                'description'=>'Employee`s Present Designation',
+                'field'=>  'HospitalPresentDesignation-field',
+                'parentFieldOption'=>'Medical Doctor',
+                'skipinreport'=>False,
+                'sort' => 5),
+            212=>Array(
+                'value'=>'Senior Medical Officer I',
+                'description'=>'Employee`s Present Designation',
+                'field'=>  'HospitalPresentDesignation-field',
+                'parentFieldOption'=>'Medical Doctor',
+                'skipinreport'=>False,
+                'sort' => 6),
+            212=>Array(
+                'value'=>'Senior Medical Officer II',
+                'description'=>'Employee`s Present Designation',
+                'field'=>  'HospitalPresentDesignation-field',
+                'parentFieldOption'=>'Medical Doctor',
+                'skipinreport'=>False,
+                'sort' => 7),
+            212=>Array(
+                'value'=>'Senior Medical Officer III',
+                'description'=>'Employee`s Present Designation',
+                'field'=>  'HospitalPresentDesignation-field',
+                'parentFieldOption'=>'Medical Doctor',
+                'skipinreport'=>False,
+                'sort' => 8),
+            213=>Array(
+                'value'=>'Nursing Officer I',
+                'description'=>'Employee`s Present Designation',
+                'field'=>  'HospitalPresentDesignation-field',
+                'parentFieldOption'=>'Nursing Officer',
+                'skipinreport'=>False,
+                'sort' => 1),
+            214=>Array(
+                'value'=>'Nursing Officer II',
+                'description'=>'Employee`s Present Designation',
+                'field'=>  'HospitalPresentDesignation-field',
+                'parentFieldOption'=>'Nursing Officer',
+                'skipinreport'=>False,
+                'sort' => 2),
+            215=>Array(
+                'value'=>'Principal Nursing Officer I',
+                'description'=>'Employee`s Present Designation',
+                'field'=>  'HospitalPresentDesignation-field',
+                'parentFieldOption'=>'Nursing Officer',
+                'skipinreport'=>False,
+                'sort' => 3),
+            216=>Array(
+                'value'=>'Principal Nursing Officer II',
+                'description'=>'Employee`s Present Designation',
+                'field'=>  'HospitalPresentDesignation-field',
+                'parentFieldOption'=>'Nursing Officer',
+                'skipinreport'=>False,
+                'sort' => 4),
+            217=>Array(
+                'value'=>'Senior Nursing Officer',
+                'description'=>'Employee`s Present Designation',
+                'field'=>  'HospitalPresentDesignation-field',
+                'parentFieldOption'=>'Nursing Officer',
+                'skipinreport'=>False,
+                'sort' => 5),
+            218=>Array(
+                'value'=>'Assistant Medical Officer I',
+                'description'=>'Employee`s Present Designation',
+                'field'=>  'HospitalPresentDesignation-field',
+                'parentFieldOption'=>'Assistant Medical Officer',
+                'skipinreport'=>False,
+                'sort' => 1),
+            219=>Array(
+                'value'=>'Assistant Medical Officer II',
+                'description'=>'Employee`s Present Designation',
+                'field'=>  'HospitalPresentDesignation-field',
+                'parentFieldOption'=>'Assistant Medical Officer',
+                'skipinreport'=>False,
+                'sort' => 2),
+            220=>Array(
+                'value'=>'Principal Assistant Medical Officer I',
+                'description'=>'Employee`s Present Designation',
+                'field'=>  'HospitalPresentDesignation-field',
+                'parentFieldOption'=>'Assistant Medical Officer',
+                'skipinreport'=>False,
+                'sort' => 3),
+            221=>Array(
+                'value'=>'Principal Assistant Medical Officer II',
+                'description'=>'Employee`s Present Designation',
+                'field'=>  'HospitalPresentDesignation-field',
+                'parentFieldOption'=>'Assistant Medical Officer',
+                'skipinreport'=>False,
+                'sort' => 4),
+            222=>Array(
+                'value'=>'Senior Assistant Medical Officer',
+                'description'=>'Employee`s Present Designation',
+                'field'=>  'HospitalPresentDesignation-field',
+                'parentFieldOption'=>'Assistant Medical Officer',
+                'skipinreport'=>False,
+                'sort' => 5),
+            223=>Array(
+                'value'=>'Driver I',
+                'description'=>'Employee`s Present Designation',
+                'field'=>  'HospitalPresentDesignation-field',
+                'parentFieldOption'=>'Driver',
+                'skipinreport'=>False,
+                'sort' => 1),
+            224=>Array(
+                'value'=>'Driver II',
+                'description'=>'Employee`s Present Designation',
+                'field'=>  'HospitalPresentDesignation-field',
+                'parentFieldOption'=>'Driver',
+                'skipinreport'=>False,
+                'sort' => 2),
+            225=>Array(
+                'value'=>'Driver III',
+                'description'=>'Employee`s Present Designation',
+                'field'=>  'HospitalPresentDesignation-field',
+                'parentFieldOption'=>'Driver',
+                'skipinreport'=>False,
+                'sort' => 3),
+            226=>Array(
+                'value'=>'Pharmacist I',
+                'description'=>'Employee`s Present Designation',
+                'field'=>  'HospitalPresentDesignation-field',
+                'parentFieldOption'=>'Pharmacist',
+                'skipinreport'=>False,
+                'sort' => 1),
+            227=>Array(
+                'value'=>'Pharmacist II',
+                'description'=>'Employee`s Present Designation',
+                'field'=>  'HospitalPresentDesignation-field',
+                'parentFieldOption'=>'Pharmacist',
+                'skipinreport'=>False,
+                'sort' => 2),
+            228=>Array(
+                'value'=>'Principal Pharmacist I',
+                'description'=>'Employee`s Present Designation',
+                'field'=>  'HospitalPresentDesignation-field',
+                'parentFieldOption'=>'Pharmacist',
+                'skipinreport'=>False,
+                'sort' => 3),
+            229=>Array(
+                'value'=>'Principal Pharmacist II',
+                'description'=>'Employee`s Present Designation',
+                'field'=>  'HospitalPresentDesignation-field',
+                'parentFieldOption'=>'Pharmacist',
+                'skipinreport'=>False,
+                'sort' => 4),
+            230=>Array(
+                'value'=>'Senior Pharmacist',
+                'description'=>'Employee`s Present Designation',
+                'field'=>  'HospitalPresentDesignation-field',
+                'parentFieldOption'=>'Pharmacist',
+                'skipinreport'=>False,
+                'sort' => 5),
+            231=>Array(
+                'value'=>'Dental Technologist I',
+                'description'=>'Employee`s Present Designation',
+                'field'=>  'HospitalPresentDesignation-field',
+                'parentFieldOption'=>'Dental Technologist',
+                'skipinreport'=>False,
+                'sort' => 1),
+            232=>Array(
+                'value'=>'Dental Technologist II',
+                'description'=>'Employee`s Present Designation',
+                'field'=>  'HospitalPresentDesignation-field',
+                'parentFieldOption'=>'Dental Technologist',
+                'skipinreport'=>False,
+                'sort' => 2),
+            233=>Array(
+                'value'=>'Principal Dental Technologist I',
+                'description'=>'Employee`s Present Designation',
+                'field'=>  'HospitalPresentDesignation-field',
+                'parentFieldOption'=>'Dental Technologist',
+                'skipinreport'=>False,
+                'sort' => 3),
+            234=>Array(
+                'value'=>'Principal Dental Technologist II',
+                'description'=>'Employee`s Present Designation',
+                'field'=>  'HospitalPresentDesignation-field',
+                'parentFieldOption'=>'Dental Technologist',
+                'skipinreport'=>False,
+                'sort' => 4),
+            235=>Array(
+                'value'=>'Senior Dental Technologist',
+                'description'=>'Employee`s Present Designation',
+                'field'=>  'HospitalPresentDesignation-field',
+                'parentFieldOption'=>'Dental Technologist',
+                'skipinreport'=>False,
+                'sort' => 5),
+            236=>Array(
+                'value'=>'Environmental Health Officer I',
+                'description'=>'Employee`s Present Designation',
+                'field'=>  'HospitalPresentDesignation-field',
+                'parentFieldOption'=>'Environmental Health Officer',
+                'skipinreport'=>False,
+                'sort' => 1),
+            237=>Array(
+                'value'=>'Environmental Health Officer II',
+                'description'=>'Employee`s Present Designation',
+                'field'=>  'HospitalPresentDesignation-field',
+                'parentFieldOption'=>'Environmental Health Officer',
+                'skipinreport'=>False,
+                'sort' => 2),
+            238=>Array(
+                'value'=>'Principal Environmental Health Officer I',
+                'description'=>'Employee`s Present Designation',
+                'field'=>  'HospitalPresentDesignation-field',
+                'parentFieldOption'=>'Environmental Health Officer',
+                'skipinreport'=>False,
+                'sort' => 3),
+            239=>Array(
+                'value'=>'Principal Environmental Health Officer II',
+                'description'=>'Employee`s Present Designation',
+                'field'=>  'HospitalPresentDesignation-field',
+                'parentFieldOption'=>'Environmental Health Officer',
+                'skipinreport'=>False,
+                'sort' => 4),
+            240=>Array(
+                'value'=>'Senior Environmental Health Officer',
+                'description'=>'Employee`s Present Designation',
+                'field'=>  'HospitalPresentDesignation-field',
+                'parentFieldOption'=>'Environmental Health Officer',
+                'skipinreport'=>False,
+                'sort' => 5),
+            241=>Array(
+                'value'=>'Clinical Assistant',
+                'description'=>'Employee`s Present Designation',
+                'field'=>  'HospitalPresentDesignation-field',
+                'parentFieldOption'=>'Clinical Assistant',
+                'skipinreport'=>False,
+                'sort' => 1),
+            242=>Array(
+                'value'=>'Principal Clinical Assistant',
+                'description'=>'Employee`s Present Designation',
+                'field'=>  'HospitalPresentDesignation-field',
+                'parentFieldOption'=>'Clinical Assistant',
+                'skipinreport'=>False,
+                'sort' => 2),
+            243=>Array(
+                'value'=>'Senior Clinical Assistant',
+                'description'=>'Employee`s Present Designation',
+                'field'=>  'HospitalPresentDesignation-field',
+                'parentFieldOption'=>'Clinical Assistant',
+                'skipinreport'=>False,
+                'sort' => 3),
         );
         return $this->fieldOptions;
     }
@@ -1890,96 +2177,106 @@ class LoadFieldData extends AbstractFixture implements OrderedFixtureInterface
         $this->fieldOptionGroups = Array(
             0=>Array(
                 'name'=>'Atleast Secondary Education',
+                'field'=>'BasicEducationLevel-field',
                 'description'=>"Primary and Secondary Education",
-                'options'=> Array(0=>'Ordinary Secondary Education', 1=>'Primary Education'),
+                'options'=> Array(
+                    0=> strtolower(str_replace(' ','','Ordinary Secondary Education')).'BasicEducationLevel-fieldoption',
+                    1=> strtolower(str_replace(' ','','Primary Education')).'BasicEducationLevel-fieldoption',
+                ),
             ),
             1=>Array(
                 'name'=>'University Education',
+                'field'=>'ProfessionEducationLevel-field',
                 'description'=>"Bachelor Degree, Masters and Phd",
                 'options'=> Array(
-                    0=>'Postgraduate Diploma',
-                    1=>'Bachelor Degree',
-                    2=> 'Masters Degree',
-                    3=> 'PhD'
+                    0=> strtolower(str_replace(' ','','Postgraduate Diploma')).'ProfessionEducationLevel-fieldoption',
+                    1=> strtolower(str_replace(' ','','Bachelor Degree')).'ProfessionEducationLevel-fieldoption',
+                    2=> strtolower(str_replace(' ','','Masters Degree')).'ProfessionEducationLevel-fieldoption',
+                    3=> strtolower(str_replace(' ','','PhD')).'ProfessionEducationLevel-fieldoption'
                 ),
             ),
             2=>Array(
                 'name'=>'CCHP Attrition',
+                'field'=>'EmploymentStatus-field',
                 'description'=>"Comprehensive Council Health Plan Attrition Options",
                 'options'=> Array(
-                    0=>'Abscondent',
-                    1=>'Deceased',
-                    2=> 'Retired',
-                    3=> 'Transfered'
+                    0=> strtolower(str_replace(' ','','Abscondent')).'EmploymentStatus-fieldoption',
+                    1=> strtolower(str_replace(' ','','Deceased')).'EmploymentStatus-fieldoption',
+                    2=> strtolower(str_replace(' ','','Retired')).'EmploymentStatus-fieldoption',
+                    3=> strtolower(str_replace(' ','','Transfered')).'EmploymentStatus-fieldoption'
                 ),
             ),
             3=>Array(
                 'name'=>'CCHP CoreAndCoopted',
+                'field'=>'SuperlativeSubstantivePosition-field',
                 'description'=>"Comprehensive Council Health Plan Core and Co-opted member Options",
                 'options'=> Array(
-                    0=>'CHMT Co-Opted Member',
-                    1=>'CHMT Member',
-                    2=> 'Head of Department',
-                    3=> 'Head of Facility',
-                    4=>'Hospital Management Team',
-                    5=>'Programme Coordinator',
-                    6=>'RHMT Co-Opted Member',
-                    7=>'RHMT Member',
-                    8=>'Regional Medical Officer'
+                    0=> strtolower(str_replace(' ','','CHMT Co-Opted Member')).'SuperlativeSubstantivePosition-fieldoption',
+                    1=> strtolower(str_replace(' ','','CHMT Member')).'SuperlativeSubstantivePosition-fieldoption',
+                    2=> strtolower(str_replace(' ','','Head of Department')).'SuperlativeSubstantivePosition-fieldoption',
+                    3=> strtolower(str_replace(' ','','Head of Facility')).'SuperlativeSubstantivePosition-fieldoption',
+                    4=> strtolower(str_replace(' ','','Hospital Management Team')).'SuperlativeSubstantivePosition-fieldoption',
+                    5=> strtolower(str_replace(' ','','Programme Coordinator')).'SuperlativeSubstantivePosition-fieldoption',
+                    6=> strtolower(str_replace(' ','','RHMT Co-Opted Member')).'SuperlativeSubstantivePosition-fieldoption',
+                    7=> strtolower(str_replace(' ','','RHMT Member')).'SuperlativeSubstantivePosition-fieldoption',
+                    8=> strtolower(str_replace(' ','','Regional Medical Officer')).'SuperlativeSubstantivePosition-fieldoption'
                 ),
             ),
             4=>Array(
                 'name'=>'CCHP Professions',
+                'field'=>'Profession-field',
                 'description'=>"Comprehensive Council Health Plan Profession Options",
                 'options'=> Array(
-                    0=>'Assistant Medical Officer',
-                    1=>'Clinical Assistant',
-                    2=> 'Dental Technologist',
-                    3=> 'Environmental Health Officer',
-                    4=>'Medical Doctor',
-                    5=>'Nursing Officer',
-                    6=>'Pharmacist',
-                    7=>'Pharmacist',
+                    0=> strtolower(str_replace(' ','','Assistant Medical Officer')).'Profession-fieldoption',
+                    1=> strtolower(str_replace(' ','','Clinical Assistant')).'Profession-fieldoption',
+                    2=> strtolower(str_replace(' ','','Dental Technologist')).'Profession-fieldoption',
+                    3=> strtolower(str_replace(' ','','Environmental Health Officer')).'Profession-fieldoption',
+                    4=> strtolower(str_replace(' ','','Medical Doctor')).'Profession-fieldoption',
+                    5=> strtolower(str_replace(' ','','Nursing Officer')).'Profession-fieldoption',
+                    6=> strtolower(str_replace(' ','','Pharmacist')).'Profession-fieldoption'
                 ),
             ),
             5=>Array(
                 'name'=>'CCHP Staff Availability',
+                'field'=>  'EmploymentStatus-field',
                 'description'=>"Comprehensive Council Health Plan Staff Availability Options",
                 'options'=> Array(
-                    0=>'Abscondent',
-                    1=>'Deceased',
-                    2=> 'Retired',
-                    3=> 'Transfered',
-                    5=>'Off Duty',
-                    6=>'On Annual Leave',
-                    7=>'On Duty',
-                    8=>'On Leave',
-                    9=>'On Leave Without Payment',
-                    10=>'On Maternity Leave',
-                    11=>'On Secondment',
-                    12=>'On Study Leave',
-                    13=>'On Sick Leave'
+                    0=> strtolower(str_replace(' ','','Abscondent')).'EmploymentStatus-fieldoption',
+                    1=> strtolower(str_replace(' ','','Deceased')).'EmploymentStatus-fieldoption',
+                    2=> strtolower(str_replace(' ','','Retired')).'EmploymentStatus-fieldoption',
+                    3=> strtolower(str_replace(' ','','Transfered')).'EmploymentStatus-fieldoption',
+                    5=> strtolower(str_replace(' ','','Off Duty')).'EmploymentStatus-fieldoption',
+                    6=> strtolower(str_replace(' ','','On Annual Leave')).'EmploymentStatus-fieldoption',
+                    7=> strtolower(str_replace(' ','','On Duty')).'EmploymentStatus-fieldoption',
+                    8=> strtolower(str_replace(' ','','On Leave')).'EmploymentStatus-fieldoption',
+                    9=> strtolower(str_replace(' ','','On Leave Without Payment')).'EmploymentStatus-fieldoption',
+                    10=> strtolower(str_replace(' ','','On Maternity Leave')).'EmploymentStatus-fieldoption',
+                    11=> strtolower(str_replace(' ','','On Secondment')).'EmploymentStatus-fieldoption',
+                    12=> strtolower(str_replace(' ','','On Study Leave')).'EmploymentStatus-fieldoption',
+                    13=> strtolower(str_replace(' ','','On Sick Leave')).'EmploymentStatus-fieldoption'
                 ),
             ),
             6=>Array(
                 'name'=>'Health Professions',
+                'field'=>'Profession-field',
                 'description'=>"Health Sector Professions",
                 'options'=> Array(
-                    0=>'Medical Doctor',
-                    1=>'Pharmacist',
-                    2=> 'Environmental Health Officer',
-                    3=> 'Assistant Medical Officer',
-                    4=>'Nursing Officer',
-                    5=>'Dental Technologist',
-                    6=>'Clinical Assistant'
+                    0=> strtolower(str_replace(' ','','Medical Doctor')).'Profession-fieldoption',
+                    1=> strtolower(str_replace(' ','','Pharmacist')).'Profession-fieldoption',
+                    2=> strtolower(str_replace(' ','','Environmental Health Officer')).'Profession-fieldoption',
+                    3=> strtolower(str_replace(' ','','Assistant Medical Officer')).'Profession-fieldoption',
+                    4=> strtolower(str_replace(' ','','Nursing Officer')).'Profession-fieldoption',
+                    5=> strtolower(str_replace(' ','','Dental Technologist')).'Profession-fieldoption',
+                    6=> strtolower(str_replace(' ','','Clinical Assistant')).'Profession-fieldoption'
                 ),
             ),
             7=>Array(
-                'name'=>'  Gender',
+                'name'=>'Gender',
+                'field'=>  'Sex-field',
                 'description'=>"Employee`s gender",
                 'options'=> Array(
-                    0=>'Female',
-                    1=>'Male'
+                    0=> strtolower(str_replace(' ','','Female')).'Sex-fieldoption',
+                    1=> strtolower(str_replace(' ','','Male')).'Sex-fieldoption'
                 ),
             ),
 
@@ -2055,16 +2352,6 @@ class LoadFieldData extends AbstractFixture implements OrderedFixtureInterface
             $manager->persist($fieldOptionGroupset);
         }
 
-        // Create FieldOptionGroups specific for indicators
-        foreach($this->fieldOptionGroups as $fieldOptionGroupKey=>$humanResourceFieldOptionGroup) {
-            $fieldOptionGroup = new FieldOptionGroup();
-            $fieldOptionGroup->setName($humanResourceFieldOptionGroup['name']);
-            $fieldOptionGroup->setDescription($humanResourceFieldOptionGroup['description']);
-            $fieldOptionGroupReference = strtolower(str_replace(' ','',$humanResourceFieldOptionGroup['name'])).'-fieldoptiongroup';
-            $this->addReference($fieldOptionGroupReference, $fieldOptionGroup);
-            $manager->persist($fieldOptionGroup);
-        }
-
         // Populate dummy fields
 		foreach($this->fields as $fieldKey=>$humanResourceField) {
 			$field = new Field();
@@ -2083,7 +2370,6 @@ class LoadFieldData extends AbstractFixture implements OrderedFixtureInterface
             if(!empty($humanResourceField['parentField'])) {
                 foreach($humanResourceField['parentField'] as $parentField) {
                     $parentFieldByReference = $manager->merge($this->getReference( strtolower(str_replace(' ','',$parentField)).'-field' ));
-                    //$manager->persist($parentFieldByReference);
                     $field->addParentField($parentFieldByReference);
                 }
             }
@@ -2092,10 +2378,10 @@ class LoadFieldData extends AbstractFixture implements OrderedFixtureInterface
             $manager->persist($field);
             // Append  dummy options for input type of select.
             if($humanResourceField['inputType'] == 'Select') {
-
                 //Create Field Option Group by Field
                 $fieldOptionGroup = new FieldOptionGroup();
                 $fieldOptionGroup->setName($humanResourceField['name']);
+                $fieldOptionGroup->setField($field);
                 $fieldOptionGroup->setDescription($humanResourceField['description']);
                 $fieldOptionGroupReference = strtolower(str_replace(' ','',$humanResourceField['name'])).'-fieldoptiongroup';
                 $this->addReference($fieldOptionGroupReference, $fieldOptionGroup);
@@ -2127,15 +2413,6 @@ class LoadFieldData extends AbstractFixture implements OrderedFixtureInterface
                         $manager->persist($fieldOption);
                         // Assign field option to it's field option group
                         $fieldOptionGroup->addFieldOption($fieldOption);
-
-                        // Go through dummy field option groups for indicators checking membership
-                        foreach($this->fieldOptionGroups as $dummyFieldOptionGroupKey=>$dummyFieldOptionGroup) {
-                            if( in_array($fieldOption->getValue(),$dummyFieldOptionGroup['options']) ) {
-                                $fieldOptionGroupReference = strtolower(str_replace(' ','',$dummyFieldOptionGroup['name'])).'-fieldoptiongroup';
-                                $fieldOptionGroupByReference = $manager->merge($this->getReference( $fieldOptionGroupReference ));
-                                $fieldOption->addFieldOptionGroup($fieldOptionGroupByReference);
-                            }
-                        }
                     }
                     // Append options for Indicator groups of alteast secondary school and University education.
 
@@ -2153,10 +2430,23 @@ class LoadFieldData extends AbstractFixture implements OrderedFixtureInterface
 
                 $manager->persist($fieldOptionGroup);
             }
-
-
-
 		}
+		// Create FieldOptionGroups specific for indicators
+        foreach($this->fieldOptionGroups as $fieldOptionGroupKey=>$humanResourceFieldOptionGroup) {
+            $fieldOptionGroup = new FieldOptionGroup();
+            $fieldOptionGroup->setName($humanResourceFieldOptionGroup['name']);
+            $fieldOptionGroup->setField($manager->merge($this->getReference(strtolower($humanResourceFieldOptionGroup['field']))));
+            $fieldOptionGroup->setDescription($humanResourceFieldOptionGroup['description']);
+            $fieldOptionGroupReference = strtolower(str_replace(' ','',$humanResourceFieldOptionGroup['name'])).'-fieldoptiongroup';
+            //Add option members
+            foreach($humanResourceFieldOptionGroup['options'] as $dummyFieldOption) {
+                $fieldOptionReference = $dummyFieldOption;
+                $fieldOptionByReference = $manager->merge($this->getReference( $fieldOptionReference ));
+                $fieldOptionGroup->addFieldOption($fieldOptionByReference);
+            }
+            $this->addReference($fieldOptionGroupReference, $fieldOptionGroup);
+            $manager->persist($fieldOptionGroup);
+        }
 
         // Populate dummy field Groups
         foreach($this->fieldGroups as $fieldGroupKey=>$humanResourceFieldGroup) {

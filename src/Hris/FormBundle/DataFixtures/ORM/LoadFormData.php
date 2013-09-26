@@ -30,6 +30,7 @@ use Doctrine\Common\Persistence\ObjectManager;
 use Hris\FormBundle\Entity\Form;
 use Hris\FormBundle\Entity\FormFieldMember;
 use Hris\FormBundle\DataFixtures\ORM\LoadFieldData;
+use Hris\FormBundle\Entity\FormVisibleFields;
 
 class LoadFormData extends AbstractFixture implements OrderedFixtureInterface
 {
@@ -60,6 +61,55 @@ class LoadFormData extends AbstractFixture implements OrderedFixtureInterface
             0=>Array(
                 'name'=>'Public Employee Form',
                 'title'=>'Public Employee Data Entry Form',
+                'fields'=>Array(
+                    0=>'Firstname',
+                    1=>'Middlename',
+                    2=>'Surname',
+                    3=>'Birthdate',
+                    4=>'Sex',
+                    5=>'MaritalStatus',
+                    6=>'Nationality',
+                    7=>'Religion',
+                    8=>'BasicEducationLevel',
+                    9=>'ProfessionEducationLevel',
+                    10=>'NumberofChildrenDependants',
+                    11=>'DistrictofDomicile',
+                    12=>'CheckNumber',
+                    13=>'EmployersFileNumber',
+                    14=>'RegistrationNumber',
+                    15=>'TermsofEmployment',
+                    16=>'Profession',
+                    17=>'PresentDesignation',
+                    18=>'SuperlativeSubstantivePosition',
+                    19=>'Department',
+                    20=>'SalaryScale',
+                    21=>'MonthlyBasicSalary',
+                    22=>'DateofFirstAppointment',
+                    23=>'DateofConfirmation',
+                    24=>'DateofLastPromotion',
+                    25=>'Employer',
+                    26=>'EmploymentStatus',
+                    27=>'RegisteredDisability',
+                    28=>'ContactsofEmployee',
+                    29=>'NextofKin',
+                    30=>'RelationshiptoNextofKin',
+                    31=>'ContactsofNextofKin'
+                ),
+                'visibleFields'=>Array(
+                    0=>'Firstname',
+                    1=>'Middlename',
+                    2=>'Surname',
+                    3=>'Birthdate',
+                    4=>'Sex',
+                    16=>'Profession',
+                    17=>'PresentDesignation',
+                ),
+                'uniqueFields'=>Array(
+                    0=>'Firstname',
+                    1=>'Middlename',
+                    2=>'Surname',
+                    3=>'Birthdate'
+                ),
                 'hypertext'=>'
                 <table class="dataentry" border="1">
                         <thead>
@@ -73,12 +123,12 @@ class LoadFormData extends AbstractFixture implements OrderedFixtureInterface
                             <tr>
                                 <td><em>1.</em></td>
                                 <td><span>First Name</span></td>
-                                <td class="whitebg"><input type="text" name="FirstName" id="FirstName"/></td>
+                                <td class="whitebg"><input type="text" name="Firstname" id="Firstname"/></td>
                             </tr>
                             <tr>
                                 <td><span>2.</span></td>
                                 <td><span>Middle Name</span></td>
-                                <td><input type="text" name="MiddleName" id="MiddleName"/></td>
+                                <td><input type="text" name="Middlename" id="Middlename"/></td>
                             </tr>
                             <tr>
                                 <td><span>3.</span></td>
@@ -236,6 +286,49 @@ class LoadFormData extends AbstractFixture implements OrderedFixtureInterface
             1=>Array(
                 'name'=>'Private Employee Form',
                 'title'=>'Private Employee Data Entry Form',
+                'fields'=>Array(
+                    0=>'Firstname',
+                    1=>'Middlename',
+                    2=>'Surname',
+                    3=>'Birthdate',
+                    4=>'Sex',
+                    5=>'MaritalStatus',
+                    6=>'Nationality',
+                    7=>'Religion',
+                    8=>'BasicEducationLevel',
+                    9=>'ProfessionEducationLevel',
+                    10=>'NumberofChildrenDependants',
+                    11=>'DistrictofDomicile',
+                    15=>'TermsofEmployment',
+                    16=>'Profession',
+                    17=>'PresentDesignation',
+                    19=>'Department',
+                    21=>'MonthlyBasicSalary',
+                    22=>'DateofFirstAppointment',
+                    24=>'DateofLastPromotion',
+                    25=>'Employer',
+                    26=>'EmploymentStatus',
+                    27=>'RegisteredDisability',
+                    28=>'ContactsofEmployee',
+                    29=>'NextofKin',
+                    30=>'RelationshiptoNextofKin',
+                    31=>'ContactsofNextofKin'
+                ),
+                'visibleFields'=>Array(
+                    0=>'Firstname',
+                    1=>'Middlename',
+                    2=>'Surname',
+                    3=>'Birthdate',
+                    4=>'Sex',
+                    16=>'Profession',
+                    17=>'PresentDesignation',
+                ),
+                'uniqueFields'=>Array(
+                    0=>'Firstname',
+                    1=>'Middlename',
+                    2=>'Surname',
+                    3=>'Birthdate'
+                ),
                 'hypertext'=>'
                 <table class="dataentry" border="1">
                         <thead>
@@ -249,12 +342,12 @@ class LoadFormData extends AbstractFixture implements OrderedFixtureInterface
                             <tr>
                                 <td><em>1.</em></td>
                                 <td><span>First Name</span></td>
-                                <td class="whitebg"><input type="text" name="FirstName" id="FirstName"/></td>
+                                <td class="whitebg"><input type="text" name="Firstname" id="Firstname"/></td>
                             </tr>
                             <tr>
                                 <td><span>2.</span></td>
                                 <td><span>Middle Name</span></td>
-                                <td><input type="text" name="MiddleName" id="MiddleName"/></td>
+                                <td><input type="text" name="Middlename" id="Middlename"/></td>
                             </tr>
                             <tr>
                                 <td><span>3.</span></td>
@@ -308,101 +401,71 @@ class LoadFormData extends AbstractFixture implements OrderedFixtureInterface
                             </tr>
                             <tr>
                                 <td><span>13.</span></td>
-                                <td><span>Check Number</span></td>
-                                <td class="whitebg"><input type="text" name="CheckNumber" id="CheckNumber"/></td>
-                            </tr>
-                            <tr>
-                                <td><span>14.</span></td>
-                                <td><span>Employer`s File Number</span></td>
-                                <td><input type="text" name="EmployersFileNumber" id="EmployersFileNumber"/></td>
-                            </tr>
-                            <tr>
-                                <td><span>15.</span></td>
-                                <td><span>Registration Number</span></td>
-                                <td class="whitebg"><input type="text" name="RegistrationNumber" id="RegistrationNumber"/></td>
-                            </tr>
-                            <tr>
-                                <td><span>16.</span></td>
                                 <td><span>Terms of Employment</span></td>
                                 <td><select name="TermsofEmployment" id="TermsofEmployment" onload="loadFieldOptions(\'TermsofEmployment\')" onchange="changeRelatedFieldOptions(\'TermsofEmployment\')"></select></td>
                             </tr>
                             <tr>
-                                <td><span>17.</span></td>
+                                <td><span>14.</span></td>
                                 <td><span>Profession</span></td>
                                 <td class="whitebg"><select name="Profession" id="Profession" onload="loadFieldOptions(\'Profession\')" onchange="changeRelatedFieldOptions(\'Profession\')"></select></td>
                             </tr>
                             <tr>
-                                <td><span>18.</span></td>
+                                <td><span>15.</span></td>
                                 <td><span>Present Designation</span></td>
                                 <td><select name="PresentDesignation" id="PresentDesignation" onload="loadFieldOptions(\'PresentDesignation\')" onchange="changeRelatedFieldOptions(\'PresentDesignation\')"></select></td>
                             </tr>
                             <tr>
-                                <td><span>19.</span></td>
-                                <td><span>Superlative Substantive Position</span></td>
-                                <td class="whitebg"><select name="SuperlativeSubstantivePosition" id="SuperlativeSubstantivePosition" onload="loadFieldOptions(\'SuperlativeSubstantivePosition\')" onchange="changeRelatedFieldOptions(\'SuperlativeSubstantivePosition\')"></select></td>
-                            </tr>
-                            <tr>
-                                <td><span>20.</span></td>
+                                <td><span>16.</span></td>
                                 <td><span>Department</span></td>
                                 <td><select name="Department" id="Department" onload="loadFieldOptions(\'Department\')" onchange="changeRelatedFieldOptions(\'Department\')"></select></td>
                             </tr>
                             <tr>
-                                <td><span>21.</span></td>
-                                <td><span>Salary Scale</span></td>
-                                <td class="whitebg"><select name="SalaryScale" id="SalaryScale" onload="loadFieldOptions(\'SalaryScale\')" onchange="changeRelatedFieldOptions(\'SalaryScale\')"></select></td>
-                            </tr>
-                            <tr>
-                                <td><span>22.</span></td>
+                                <td><span>17.</span></td>
                                 <td><span>Monthly Basic Salary</span></td>
                                 <td><input type="text" name="MonthlyBasicSalary" id="MonthlyBasicSalary"/></td>
                             </tr>
                             <tr>
-                                <td><span>23.</span></td>
+                                <td><span>18.</span></td>
                                 <td><span>Date of First Appointment</span></td>
                                 <td class="whitebg"><input type="date" name="DateofFirstAppointment" id="DateofFirstAppointment" /></td>
                             </tr>
                             <tr>
-                                <td><span>24.</span></td>
-                                <td><span>Date of Confirmation</span></td>
-                                <td><input type="date" name="DateofConfirmation" id="DateofConfirmation" /></td>
-                            </tr>
-                            <tr>
-                                <td><span>25.</span></td>
+                                <td><span>19.</span></td>
                                 <td><span>Date of Last Promotion</span></td>
                                 <td class="whitebg"><input type="date" name="DateofLastPromotion" id="DateofLastPromotion" /></td>
                             </tr>
                             <tr>
-                                <td><span>26.</span></td>
+                                <td><span>20.</span></td>
                                 <td><span>Employer</span></td>
                                 <td><select name="Employer" id="Employer" onload="loadFieldOptions(\'Employer\')" onchange="changeRelatedFieldOptions(\'Employer\')"></select></td>
                             </tr>
                             <tr>
-                                <td><span>27.</span></td>
+                                <td><span>21.</span></td>
                                 <td><span>Employment Status</span></td>
                                 <td class="whitebg"><select name="EmploymentStatus" id="EmploymentStatus" onload="loadFieldOptions(\'EmploymentStatus\')" onchange="changeRelatedFieldOptions(\'EmploymentStatus\')"></select></td>
                             </tr>
                             <tr>
-                                <td><span>28.</span></td>
+                                <td><span>22.</span></td>
                                 <td><span>Registered Disability</span></td>
                                 <td><select name="RegisteredDisability" id="RegisteredDisability" onload="loadFieldOptions(\'RegisteredDisability\')" onchange="changeRelatedFieldOptions(\'RegisteredDisability\')"></select></td>
                             </tr>
                             <tr>
-                                <td><span>29.</span></td>
+                                <td><span>23.</span></td>
                                 <td><span>Contacts of Employee</span></td>
                                 <td class="whitebg"><textarea name="ContactsofEmployee" id="ContactsofEmployee"></textarea></td>
                             </tr>
                             <tr>
-                                <td><span>30.</span></td>
+                                <td><span>24.</span></td>
                                 <td><span>Next of Kin</span></td>
                                 <td><input type="text" name="NextofKin" id="NextofKin"/></td>
                             </tr>
                             <tr>
-                                <td><span>31.</span></td>
+                                <td><span>25.</span></td>
                                 <td><span>Relationship to Next of Kin</span></td>
                                 <td class="whitebg"><select name="RelationshiptoNextofKin" id="RelationshiptoNextofKin" onload="loadFieldOptions(\'RelationshiptoNextofKin\')" onchange="changeRelatedFieldOptions(\'RelationshiptoNextofKin\')"></select></td>
                             </tr>
                             <tr>
-                                <td><span>32.</span></td>
+                                <td><span>26.</span></td>
                                 <td><span>Contacts of Next of Kin</span></td>
                                 <td><textarea name="ContactsofNextofKin" id="ContactsofNextofKin"></textarea></td>
                             </tr>
@@ -412,6 +475,55 @@ class LoadFormData extends AbstractFixture implements OrderedFixtureInterface
             2=>Array(
                 'name'=>'Hospital Employee Form',
                 'title'=>'Hospital Employee Data Entry Form',
+                'fields'=>Array(
+                    0=>'Firstname',
+                    1=>'Middlename',
+                    2=>'Surname',
+                    3=>'Birthdate',
+                    4=>'Sex',
+                    5=>'MaritalStatus',
+                    6=>'Nationality',
+                    7=>'Religion',
+                    8=>'BasicEducationLevel',
+                    9=>'ProfessionEducationLevel',
+                    10=>'NumberofChildrenDependants',
+                    11=>'DistrictofDomicile',
+                    12=>'CheckNumber',
+                    13=>'EmployersFileNumber',
+                    14=>'RegistrationNumber',
+                    15=>'TermsofEmployment',
+                    16=>'Profession',
+                    17=>'PresentDesignation',
+                    18=>'SuperlativeSubstantivePosition',
+                    19=>'Department',
+                    20=>'SalaryScale',
+                    21=>'MonthlyBasicSalary',
+                    22=>'DateofFirstAppointment',
+                    23=>'DateofConfirmation',
+                    24=>'DateofLastPromotion',
+                    25=>'Employer',
+                    26=>'EmploymentStatus',
+                    27=>'RegisteredDisability',
+                    28=>'ContactsofEmployee',
+                    29=>'NextofKin',
+                    30=>'RelationshiptoNextofKin',
+                    31=>'ContactsofNextofKin'
+                ),
+                'visibleFields'=>Array(
+                    0=>'Firstname',
+                    1=>'Middlename',
+                    2=>'Surname',
+                    3=>'Birthdate',
+                    4=>'Sex',
+                    16=>'Profession',
+                    17=>'PresentDesignation',
+                ),
+                'uniqueFields'=>Array(
+                    0=>'Firstname',
+                    1=>'Middlename',
+                    2=>'Surname',
+                    3=>'Birthdate'
+                ),
                 'hypertext'=>'
                 <table class="dataentry" border="1">
                         <thead>
@@ -425,12 +537,12 @@ class LoadFormData extends AbstractFixture implements OrderedFixtureInterface
                             <tr>
                                 <td><em>1.</em></td>
                                 <td><span>First Name</span></td>
-                                <td class="whitebg"><input type="text" name="FirstName" id="FirstName"/></td>
+                                <td class="whitebg"><input type="text" name="Firstname" id="Firstname"/></td>
                             </tr>
                             <tr>
                                 <td><span>2.</span></td>
                                 <td><span>Middle Name</span></td>
-                                <td><input type="text" name="MiddleName" id="MiddleName"/></td>
+                                <td><input type="text" name="Middlename" id="Middlename"/></td>
                             </tr>
                             <tr>
                                 <td><span>3.</span></td>
@@ -588,6 +700,55 @@ class LoadFormData extends AbstractFixture implements OrderedFixtureInterface
             3=>Array(
                 'name'=>'Training Institution Employee Form',
                 'title'=>'Training Institution Employee Form',
+                'fields'=>Array(
+                    0=>'Firstname',
+                    1=>'Middlename',
+                    2=>'Surname',
+                    3=>'Birthdate',
+                    4=>'Sex',
+                    5=>'MaritalStatus',
+                    6=>'Nationality',
+                    7=>'Religion',
+                    8=>'BasicEducationLevel',
+                    9=>'ProfessionEducationLevel',
+                    10=>'NumberofChildrenDependants',
+                    11=>'DistrictofDomicile',
+                    12=>'CheckNumber',
+                    13=>'EmployersFileNumber',
+                    14=>'RegistrationNumber',
+                    15=>'TermsofEmployment',
+                    16=>'Profession',
+                    17=>'HospitalPresentDesignation',
+                    18=>'SuperlativeSubstantivePosition',
+                    19=>'Department',
+                    20=>'SalaryScale',
+                    21=>'MonthlyBasicSalary',
+                    22=>'DateofFirstAppointment',
+                    23=>'DateofConfirmation',
+                    24=>'DateofLastPromotion',
+                    25=>'Employer',
+                    26=>'EmploymentStatus',
+                    27=>'RegisteredDisability',
+                    28=>'ContactsofEmployee',
+                    29=>'NextofKin',
+                    30=>'RelationshiptoNextofKin',
+                    31=>'ContactsofNextofKin'
+                ),
+                'visibleFields'=>Array(
+                    0=>'Firstname',
+                    1=>'Middlename',
+                    2=>'Surname',
+                    3=>'Birthdate',
+                    4=>'Sex',
+                    16=>'Profession',
+                    17=>'HospitalPresentDesignation',
+                ),
+                'uniqueFields'=>Array(
+                    0=>'Firstname',
+                    1=>'Middlename',
+                    2=>'Surname',
+                    3=>'Birthdate'
+                ),
                 'hypertext'=>'
                 <table class="dataentry" border="1">
                         <thead>
@@ -601,12 +762,12 @@ class LoadFormData extends AbstractFixture implements OrderedFixtureInterface
                             <tr>
                                 <td><em>1.</em></td>
                                 <td><span>First Name</span></td>
-                                <td class="whitebg"><input type="text" name="FirstName" id="FirstName"/></td>
+                                <td class="whitebg"><input type="text" name="Firstname" id="Firstname"/></td>
                             </tr>
                             <tr>
                                 <td><span>2.</span></td>
                                 <td><span>Middle Name</span></td>
-                                <td><input type="text" name="MiddleName" id="MiddleName"/></td>
+                                <td><input type="text" name="Middlename" id="Middlename"/></td>
                             </tr>
                             <tr>
                                 <td><span>3.</span></td>
@@ -781,22 +942,43 @@ class LoadFormData extends AbstractFixture implements OrderedFixtureInterface
             $manager->persist($form);
             // Add Field Members for the form created
             $sort=1;
-            foreach($dummyFields as $key => $dummyField)
+            foreach($humanResourceForm['fields'] as $dummyField)
             {
-                $fieldByReference=$manager->merge($this->getReference( strtolower(str_replace(' ','',$dummyField['name'])).'-field' ));
+                $fieldByReference=$manager->merge($this->getReference( strtolower(str_replace(' ','',$dummyField)).'-field' ));
                 $formByReference=$manager->merge($this->getReference(strtolower( str_replace(' ','',$humanResourceForm['name'])). '-form'));
                 $formMember = new FormFieldMember();
                 $formMember->setField($fieldByReference);
                 $formMember->setForm( $formByReference );
                 $formMember->setSort($sort++);
-                $referenceName = strtolower(str_replace(' ','',$humanResourceForm['name']).str_replace(' ','',$dummyField['name'])).'-form-field-member';
-                $this->addReference($referenceName, $formMember);
+                //$referenceName = strtolower(str_replace(' ','',$humanResourceForm['name']).str_replace(' ','',$dummyField['name'])).'-form-field-member';
+                //$this->addReference($referenceName, $formMember);
                 $manager->persist($formMember);
                 // Overwrite fieldnames in inputags ids with uids
                 $humanResourceForm['hypertext'] = str_replace("id=\"".$dummyField['name']."\"","id=\"".$fieldByReference->getUid()."\"",$humanResourceForm['hypertext']);
                 if($fieldByReference->getInputType()->getName()=="Select") {
                     $humanResourceForm['hypertext'] = str_replace("changeRelatedFieldOptions('".$dummyField['name']."')","changeRelatedFieldOptions('".$fieldByReference->getUid()."')",$humanResourceForm['hypertext']);
                 }
+            }
+            $sort=1;
+            foreach($humanResourceForm['visibleFields'] as $key => $dummyField)
+            {
+                $fieldByReference=$manager->merge($this->getReference( strtolower(str_replace(' ','',$dummyField)).'-field' ));
+                $formByReference=$manager->merge($this->getReference(strtolower( str_replace(' ','',$humanResourceForm['name'])). '-form'));
+                $visibleFieldMember = new FormVisibleFields();
+                $visibleFieldMember->setField($fieldByReference);
+                $visibleFieldMember->setForm( $formByReference );
+                $visibleFieldMember->setSort($sort++);
+                $manager->persist($visibleFieldMember);
+                // Overwrite fieldnames in inputags ids with uids
+                $humanResourceForm['hypertext'] = str_replace("id=\"".$dummyField['name']."\"","id=\"".$fieldByReference->getUid()."\"",$humanResourceForm['hypertext']);
+                if($fieldByReference->getInputType()->getName()=="Select") {
+                    $humanResourceForm['hypertext'] = str_replace("changeRelatedFieldOptions('".$dummyField['name']."')","changeRelatedFieldOptions('".$fieldByReference->getUid()."')",$humanResourceForm['hypertext']);
+                }
+            }
+            foreach($humanResourceForm['uniqueFields'] as $key => $dummyField)
+            {
+                $fieldByReference=$manager->merge($this->getReference( strtolower(str_replace(' ','',$dummyField)).'-field' ));
+                $form->addUniqueRecordField($fieldByReference);
             }
             $form->setHypertext($humanResourceForm['hypertext']);
         }
