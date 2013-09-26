@@ -40,7 +40,7 @@
                             {% endif %}
                         </div>
                         <div class="modal-footer">
-                            <form action="{{ path('user_delete', { 'id': entity.id }) }}" method="post">
+                            <form action="{{ path('indicator_delete', { 'id': entity.id }) }}" method="post">
                                 <input type="hidden" name="_method" value="DELETE" />
                                 {{ form_widget(delete_form) }}
                                 <button type="button" class="btn btn-default" data-dismiss="modal">Close</button>
@@ -53,5 +53,6 @@
             </div><!-- /.modal -->
 
         </li>
+    </ul>
 
 {% endblock %}
