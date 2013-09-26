@@ -653,12 +653,12 @@ class ReportEmployeeRecordsController extends Controller
         //write the header of the report
         $column = 'A';
         $row  = 1;
-        //$date = "Date: ".date("jS F Y");
+        $date = "Date: ".date("jS F Y");
         $excelService->excelObj->getActiveSheet()->getDefaultRowDimension()->setRowHeight(15);
         $excelService->excelObj->getActiveSheet()->getDefaultColumnDimension()->setWidth(15);
         $excelService->excelObj->setActiveSheetIndex(0)
             ->setCellValue($column.$row++, $title)
-            ->setCellValue($column.$row, '');
+            ->setCellValue($column.$row, $date);
         //add style to the header
         $heading_format = array(
             'font' => array(
@@ -824,11 +824,11 @@ class ReportEmployeeRecordsController extends Controller
     /**
      * Download records reports
      *
-     * @Route("/download", name="report_employeerecords_download")
+     * @Route("/download_bycarde", name="report_employeerecords_download_bycarde")
      * @Method("GET")
      * @Template()
      */
-    public function downloadAction(Request $request)
+    public function downloadByCardeAction(Request $request)
     {
         $em = $this->getDoctrine()->getManager();
 
@@ -854,6 +854,7 @@ class ReportEmployeeRecordsController extends Controller
             $title .=" with Lower Levels";
         }
         $title .= " for ".$formNames;
+        $title .= ' Order by Cadre';
 
         $selectedOrgunitStructure = $em->getRepository('HrisOrganisationunitBundle:OrganisationunitStructure')->findOneBy(array('organisationunit' => $organisationUnit->getId()));
 
@@ -910,6 +911,7 @@ class ReportEmployeeRecordsController extends Controller
             $query .= " AND ".$fieldOptionToExclude->getField()->getName()." !='".$fieldOptionToExclude->getValue()."'";
         }
 
+        $query .= " ORDER BY ResourceTable.profession, ResourceTable.dateoffirstappointment";
         $report = $em -> getConnection() -> executeQuery($query) -> fetchAll();
 
         // ask the service for a Excel5
@@ -925,12 +927,12 @@ class ReportEmployeeRecordsController extends Controller
         //write the header of the report
         $column = 'A';
         $row  = 1;
-        //$date = "Date: ".date("jS F Y");
+        $date = "Date: ".date("jS F Y");
         $excelService->excelObj->getActiveSheet()->getDefaultRowDimension()->setRowHeight(15);
         $excelService->excelObj->getActiveSheet()->getDefaultColumnDimension()->setWidth(15);
         $excelService->excelObj->setActiveSheetIndex(0)
             ->setCellValue($column.$row++, $title)
-            ->setCellValue($column.$row, '');
+            ->setCellValue($column.$row, $date);
         //add style to the header
         $heading_format = array(
             'font' => array(
@@ -1002,39 +1004,52 @@ class ReportEmployeeRecordsController extends Controller
         $excelService->excelObj->getActiveSheet()->mergeCells('A1:'.$columnmerge.'1');
         $excelService->excelObj->getActiveSheet()->mergeCells('A2:'.$columnmerge.'2');
 
-        //write the table heading of the values
-        $excelService->excelObj->getActiveSheet()->getStyle('A4:'.$columnmerge.'4')->applyFromArray($header_format);
-        $excelService->excelObj->setActiveSheetIndex(0)
-            ->setCellValue($column++.$row, 'SN');
-        foreach ($results as $key => $value) {
-            $excelService->excelObj->setActiveSheetIndex(0)
-                ->setCellValue($column++.$row, $value['caption']);
-        }
-        // Make Levels of orgunit
-        foreach($orgunitLevels as $orgunitLevelLevelKey=>$orgunitLevel) {
-            $excelService->excelObj->setActiveSheetIndex(0)
-                ->setCellValue($column++.$row, $orgunitLevel->getName());
-        }
-        // Make Groupset Column
-        foreach($groupsets as $groupsetKey=>$groupset) {
-            $excelService->excelObj->setActiveSheetIndex(0)
-                ->setCellValue($column++.$row, $groupset->getName());
-        }
-        // Calculated fields
-        $excelService->excelObj->setActiveSheetIndex(0)
-            ->setCellValue($column++.$row, 'Age')
-            ->setCellValue($column++.$row, 'Age Group')
-            ->setCellValue($column++.$row, 'Employment Duration')
-            ->setCellValue($column++.$row, 'Retirement Date')
-            ->setCellValue($column++.$row, 'Retirement Date Year')
-            ->setCellValue($column++.$row, 'Form Name')
-            ->setCellValue($column.$row, 'Duty Post');
-
         //write the values
         $i =1; //count the row
+        $currentProfessional = null;
         foreach($report as $rows){
             $column = 'A';//return to the 1st column
             $row++; //increment one row
+            if($currentProfessional != $rows['profession'] ){
+                //write the heading for the professional
+                $row++;
+                $excelService->excelObj->getActiveSheet()->getStyle($column.$row.':D'.$row)->applyFromArray($heading_format);
+                $excelService->excelObj->getActiveSheet()->mergeCells($column.$row.':D'.$row);
+                $excelService->excelObj->setActiveSheetIndex(0)
+                    ->setCellValue($column.$row, $rows['profession']);
+
+                //Write the heading for the data
+                $row++;
+                $column = 'A';//reset to the first column
+                $excelService->excelObj->getActiveSheet()->getStyle($column.$row.':'.$columnmerge.$row)->applyFromArray($header_format);
+                $excelService->excelObj->setActiveSheetIndex(0)
+                    ->setCellValue($column++.$row, 'SN');
+                foreach ($results as $key => $value) {
+                    $excelService->excelObj->setActiveSheetIndex(0)
+                        ->setCellValue($column++.$row, $value['caption']);
+                }
+                // Make Levels of orgunit
+                foreach($orgunitLevels as $orgunitLevelLevelKey=>$orgunitLevel) {
+                    $excelService->excelObj->setActiveSheetIndex(0)
+                        ->setCellValue($column++.$row, $orgunitLevel->getName());
+                }
+                // Make Groupset Column
+                foreach($groupsets as $groupsetKey=>$groupset) {
+                    $excelService->excelObj->setActiveSheetIndex(0)
+                        ->setCellValue($column++.$row, $groupset->getName());
+                }
+                // Calculated fields
+                $excelService->excelObj->setActiveSheetIndex(0)
+                    ->setCellValue($column++.$row, 'Age')
+                    ->setCellValue($column++.$row, 'Age Group')
+                    ->setCellValue($column++.$row, 'Employment Duration')
+                    ->setCellValue($column++.$row, 'Retirement Date')
+                    ->setCellValue($column++.$row, 'Retirement Date Year')
+                    ->setCellValue($column++.$row, 'Form Name')
+                    ->setCellValue($column.$row, 'Duty Post');
+
+                $i =0;//reset the serial number
+            }
 
             //format of the row
             if (($row % 2) == 1)
@@ -1072,6 +1087,8 @@ class ReportEmployeeRecordsController extends Controller
                 ->setCellValue($column++.$row,  $rows["retirement_date_year"])
                 ->setCellValue($column++.$row,  $rows["form_name"])
                 ->setCellValue($column.$row,  $rows["longname"]);
+
+            $currentProfessional = $rows['profession'];
 
         }
         $excelService->excelObj->getActiveSheet()->setTitle('List of Records');

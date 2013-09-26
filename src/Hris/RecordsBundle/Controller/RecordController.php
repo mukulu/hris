@@ -168,6 +168,28 @@ class RecordController extends Controller
     }
 
     /**
+     * List Forms Available for Update Record.
+     *
+     * @Route("/formlistupdate", name="record_form_list_update")
+     * @Method("GET")
+     * @Template("HrisRecordsBundle:Record:formlistupdate.html.twig")
+     */
+    public function formlistupdateAction()
+    {
+        $em = $this->getDoctrine()->getManager();
+
+        /*
+         * Getting the Form Metadata and Values
+         */
+
+        $entities = $em->getRepository( 'HrisFormBundle:Form' )->createQueryBuilder('p')->getQuery()->getArrayResult();
+
+        return array(
+            'entities' => $entities,
+        );
+    }
+
+    /**
      * Creates a new Record entity.
      *
      * @Route("/", name="record_create")
@@ -403,4 +425,6 @@ class RecordController extends Controller
 
         return $this->redirect($this->generateUrl('record'));
     }
+
+
 }
