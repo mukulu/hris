@@ -195,6 +195,7 @@ class OrganisationunitGroupController extends Controller
             'delete_form' => $deleteForm->createView(),
         );
     }
+
     /**
      * Deletes a OrganisationunitGroup entity.
      *

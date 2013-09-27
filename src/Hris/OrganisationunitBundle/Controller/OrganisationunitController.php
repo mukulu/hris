@@ -298,12 +298,12 @@ class OrganisationunitController extends Controller
      *
      * @Secure(roles="ROLE_ORGANISATIONUNIT_ORGANISATIONUNIT_TREE,ROLE_USER")
      *
-     * @Route("/tree.{_format}", requirements={"_format"="yml|xml|json"}, defaults={"format"="json","parent"=0}, name="organisationunit_tree")
-     * @Route("/tree/{parent}/parent",requirements={"parent"="\d+"},defaults={"parent"=0}, name="organisationunit_tree_parent")
+     * @Route("/{treetype}/tree.{_format}", requirements={"_format"="yml|xml|json","treetype"="list|checked"}, defaults={"format"="json","parent"=0,"treetype"="list"}, name="organisationunit_tree")
+     * @Route("/{treetype}/tree/{parent}/parent",requirements={"parent"="\d+","treetype"="list|checked"},defaults={"parent"=0,"treetype"="list"}, name="organisationunit_tree_parent")
      * @Method("GET")
      * @Template()
      */
-    public function treeAction($parent,$_format)
+    public function treeAction($parent,$_format,$treetype)
     {
         $em = $this->getDoctrine()->getManager();
         $id = $this->getRequest()->query->get('id');
@@ -354,12 +354,22 @@ class OrganisationunitController extends Controller
                 );
             }else {
                 // Entity has children
-                $organisationunitTreeNodes[] = Array(
-                    'id' => $entity['id'],
-                    'longname' => $entity['longname'],
-                    'cls' => 'file',
-                    'leaf' => true,
-                );
+                if($treetype=="checked") {
+                    $organisationunitTreeNodes[] = Array(
+                        'id' => $entity['id'],
+                        'checked'=>true,
+                        'longname' => $entity['longname'],
+                        'cls' => 'file',
+                        'leaf' => true,
+                    );
+                }else {
+                    $organisationunitTreeNodes[] = Array(
+                        'id' => $entity['id'],
+                        'longname' => $entity['longname'],
+                        'cls' => 'file',
+                        'leaf' => true,
+                    );
+                }
             }
         }
         $serializer = $this->container->get('serializer');
