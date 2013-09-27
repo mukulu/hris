@@ -1,4 +1,5 @@
 {% extends '::base.html.twig' %}
+
 {% block javascripts %}
     {{ parent() }}
     <script type="text/javascript" language="javascript" src="{{ asset('commons/js/ext-all.js') }}"></script>
@@ -42,22 +43,18 @@
                 renderTo: treeplaceholder,
                 listeners : {
                     checkchange : function(rec, check){
-                        var levelsUrl = '{{ path('organisationunit_levels',{'_format':'json'}) }}';
+                        // Update on each single click(for update members of organisationunitgroup)
+                        var organisationunitgroupMemberUpdateURL = '{{ path('organisationunitgroup_update_member',{'_format':'json'}) }}';
                         postData={'organisationunitid': rec.get('id'),'selected': check };
-                        $.post(levelsUrl,postData , function( organisationunitLevels ){
-                            $(organisationunitLevelsTagId).find('option').remove();
-                            if (jQuery.isEmptyObject(organisationunitLevels)){
-                                $(organisationunitLevelsTagId).attr('disabled', 'true');
-                                $(organisationunitLevelsSubmitTagId).attr('disabled', 'true');
-                            }else {
-                                $(organisationunitLevelsTagId).removeAttr('disabled');
-                                $(organisationunitLevelsSubmitTagId).removeAttr('disabled');
-                                $.each(organisationunitLevels, function(organisationunitLevelIndex, organisationunitLevel) {
-                                    $(organisationunitLevelsTagId).append(new Option(organisationunitLevel['name'], organisationunitLevel['id']));
-                                });
-                            }
+                        $.post(organisationunitgroupMemberUpdateURL,postData , function( organisationunitLevels ){
+                            $('#notification').val(rec.get('longname')+' added to group');
                         });
-
+                        // Update collectively in the end(for adding members of organisationunitgroup)
+                        var organisationunitgroupMemberUpdateURL = '{{ path('organisationunitgroup_update_members',{'_format':'json'}) }}';
+                        postData={'organisationunitid': rec.get('id'),'selected': check };
+                        $.post(organisationunitgroupMemberUpdateURL,postData , function( organisationunitLevels ){
+                            $('#notification').val(rec.get('longname')+' added to group');
+                        });
 
                         console.info(rec.get('id')+rec.get('longname')+':'+check);
                         var records = tree.getView().getChecked();

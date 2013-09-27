@@ -298,12 +298,11 @@ class OrganisationunitController extends Controller
      *
      * @Secure(roles="ROLE_ORGANISATIONUNIT_ORGANISATIONUNIT_TREE,ROLE_USER")
      *
-     * @Route("/{treetype}/tree.{_format}", requirements={"_format"="yml|xml|json","treetype"="list|checked"}, defaults={"format"="json","parent"=0,"treetype"="list"}, name="organisationunit_tree")
-     * @Route("/{treetype}/tree/{parent}/parent",requirements={"parent"="\d+","treetype"="list|checked"},defaults={"parent"=0,"treetype"="list"}, name="organisationunit_tree_parent")
+     * @Route("/tree.{_format}", requirements={"_format"="yml|xml|json"}, defaults={"format"="json"}, name="organisationunit_tree")
      * @Method("GET")
      * @Template()
      */
-    public function treeAction($parent,$_format,$treetype)
+    public function treeAction($_format)
     {
         $em = $this->getDoctrine()->getManager();
         $id = $this->getRequest()->query->get('id');
@@ -354,22 +353,146 @@ class OrganisationunitController extends Controller
                 );
             }else {
                 // Entity has children
-                if($treetype=="checked") {
+                $organisationunitTreeNodes[] = Array(
+                    'id' => $entity['id'],
+                    'longname' => $entity['longname'],
+                    'cls' => 'file',
+                    'leaf' => true,
+                );
+            }
+        }
+        $serializer = $this->container->get('serializer');
+
+        return array(
+            'entities' => $serializer->serialize($organisationunitTreeNodes,$_format)
+        );
+    }
+
+    /**
+     * Returns OrganisationunitGroup members tree json.
+     *
+     * @Secure(roles="ROLE_ORGANISATIONUNIT_ORGANISATIONUNIT_TREE,ROLE_USER")
+     *
+     * @Route("/group/{organisationunitgroupid}/tree.{_format}", requirements={"_format"="yml|xml|json","organisationunitgroupid"="\d+"}, defaults={"format"="json","organisationunitgroupid"=0}, name="organisationunit_tree_group_members")
+     * @Method("GET")
+     * @Template()
+     */
+    public function treeOrganisationunitGroupMembersAction($_format,$organisationunitgroupid)
+    {
+        $em = $this->getDoctrine()->getManager();
+        $id = $this->getRequest()->query->get('id');
+        $memberOrganisationUnits=Array();
+
+        if($id == NULL || $id==0) {
+            // Root organisationunits called
+            $organisationunitQuery = $em->createQuery("SELECT organisationunit.id,organisationunit.longname,
+                                                        (
+                                                            SELECT COUNT(lowerOrganisationunit.id)
+                                                            FROM HrisOrganisationunitBundle:Organisationunit lowerOrganisationunit
+                                                            WHERE lowerOrganisationunit.parent=organisationunit
+                                                        ) AS lowerChildrenCount
+                                                        FROM HrisOrganisationunitBundle:Organisationunit organisationunit
+                                                        WHERE organisationunit.parent IS NULL
+                                                        GROUP BY organisationunit.id,organisationunit.longname");
+            try {
+                $entities = $organisationunitQuery->getArrayResult();
+            } catch(NoResultException $e) {
+                $entities = NULL;
+            }
+            if(!empty($organisationunitgroupid) && $organisationunitgroupid!=0) {
+                $queryBuilder = $this->getDoctrine()->getManager()->createQueryBuilder();
+                $memberOrganisationUnitResult = $queryBuilder->select('organisationunit.id')
+                    ->from('HrisOrganisationunitBundle:OrganisationunitGroup','organisationunitGroup')
+                    ->join('organisationunitGroup.organisationunit','organisationunit')
+                    ->where('organisationunitGroup.id=:organisationunitGroupId')
+                    ->andWhere('organisationunit.parent IS NULL')
+                    ->setParameter('organisationunitGroupId',$organisationunitgroupid)
+                    ->getQuery()->getArrayResult();
+                $memberOrganisationUnitResult = $this->array_value_recursive('id',$memberOrganisationUnitResult);
+                if(gettype($memberOrganisationUnitResult)!="array") {
+                    $memberOrganisationUnits[]=$memberOrganisationUnitResult;
+                }else {
+                    $memberOrganisationUnits = $memberOrganisationUnitResult;
+                }
+            }
+        }else {
+            // Leaf organisationunits called
+            $organisationunitQuery = $em->createQuery("SELECT organisationunit.id,organisationunit.longname,
+                                                        (
+                                                            SELECT COUNT(lowerOrganisationunit.id)
+                                                            FROM HrisOrganisationunitBundle:Organisationunit lowerOrganisationunit
+                                                            WHERE lowerOrganisationunit.parent=organisationunit
+                                                        ) AS lowerChildrenCount
+                                                        FROM HrisOrganisationunitBundle:Organisationunit organisationunit
+                                                        WHERE organisationunit.parent=:parentid
+                                                        GROUP BY organisationunit.id,organisationunit.longname")->setParameter('parentid',$id);
+
+            try {
+                $entities = $organisationunitQuery->getArrayResult();
+            } catch(NoResultException $e) {
+                $entities = NULL;
+            }
+            if(!empty($organisationunitgroupid) && $organisationunitgroupid!=0) {
+                $queryBuilder = $this->getDoctrine()->getManager()->createQueryBuilder();
+                $memberOrganisationUnitResult = $queryBuilder->select('organisationunit.id')
+                    ->from('HrisOrganisationunitBundle:OrganisationunitGroup','organisationunitGroup')
+                    ->join('organisationunitGroup.organisationunit','organisationunit')
+                    ->where('organisationunitGroup.id=:organisationunitGroupId')
+                    ->andWhere('organisationunit.parent=:parentId')
+                    ->setParameters(array(
+                        'organisationunitGroupId'=>$organisationunitgroupid,
+                        'parentId'=>$id
+                    ))
+                    ->getQuery()->getArrayResult();
+                $memberOrganisationUnitResult = $this->array_value_recursive('id',$memberOrganisationUnitResult);
+                if(gettype($memberOrganisationUnitResult)!="array") {
+                    $memberOrganisationUnits[]=$memberOrganisationUnitResult;
+                }else {
+                    $memberOrganisationUnits = $memberOrganisationUnitResult;
+                }
+            }
+        }
+
+        $organisationunitTreeNodes = NULL;
+        foreach($entities as $key=>$entity) {
+            if($entity['lowerChildrenCount'] > 0 ) {
+                // Entity has no children
+                if(in_array($entity['id'],$memberOrganisationUnits)) {
                     $organisationunitTreeNodes[] = Array(
                         'id' => $entity['id'],
+                        'longname' => $entity['longname'],
                         'checked'=>true,
+                        'cls' => 'folder'
+                    );
+                }else {
+                    $organisationunitTreeNodes[] = Array(
+                        'id' => $entity['id'],
+                        'longname' => $entity['longname'],
+                        'checked'=>false,
+                        'cls' => 'folder'
+                    );
+                }
+
+            }else {
+                // Entity has children
+                if(in_array($entity['id'],$memberOrganisationUnits)) {
+                    $organisationunitTreeNodes[] = Array(
+                        'id' => $entity['id'],
                         'longname' => $entity['longname'],
                         'cls' => 'file',
+                        'checked'=>true,
                         'leaf' => true,
                     );
                 }else {
                     $organisationunitTreeNodes[] = Array(
                         'id' => $entity['id'],
                         'longname' => $entity['longname'],
+                        'checked'=>false,
                         'cls' => 'file',
                         'leaf' => true,
                     );
                 }
+
             }
         }
         $serializer = $this->container->get('serializer');
@@ -394,5 +517,18 @@ class OrganisationunitController extends Controller
         return array(
             'hierarchyOperationForm'=>$hierarchyOperationForm->createView(),
         );
+    }
+
+    /**
+     * Get all values from specific key in a multidimensional array
+     *
+     * @param $key string
+     * @param $arr array
+     * @return null|string|array
+     */
+    public function array_value_recursive($key, array $arr){
+        $val = array();
+        array_walk_recursive($arr, function($v, $k) use($key, &$val){if($k == $key) array_push($val, $v);});
+        return count($val) > 1 ? $val : array_pop($val);
     }
 }

@@ -197,6 +197,38 @@ class OrganisationunitGroupController extends Controller
     }
 
     /**
+     * Updates OrganisationunitGroup member.
+     *
+     * @Route("/{id}/member", requirements={"id"="\d+"}, name="organisationunitgroup_update_member")
+     * @Method("POST")
+     * @Template()
+     */
+    public function updateMemberAction(Request $request, $id)
+    {
+        $em = $this->getDoctrine()->getManager();
+
+        $entity = $em->getRepository('HrisOrganisationunitBundle:OrganisationunitGroup')->find($id);
+
+        if (!$entity) {
+            throw $this->createNotFoundException('Unable to find OrganisationunitGroup entity.');
+        }
+        $organisationunitid = $this->getRequest()->request->get('organisationunitid');
+        $selected = $this->getRequest()->request->get('selected');
+        $organisationunit = $em->getRepository('HrisOrganisationunitBundle:Organisationunit')->find($organisationunitid);
+        if($selected=="true") {
+            $entity->addOrganisationunit($organisationunit);
+        }else {
+            $entity->removeOrganisationunit($organisationunit);
+        }
+        $em->persist($entity);
+        $em->flush();
+
+        return array(
+            'success'      => 'success',
+        );
+    }
+
+    /**
      * Deletes a OrganisationunitGroup entity.
      *
      * @Route("/{id}", name="organisationunitgroup_delete")
