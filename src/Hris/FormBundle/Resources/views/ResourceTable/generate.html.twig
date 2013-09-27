@@ -60,7 +60,12 @@
             <a href="{{ path('resourcetable_edit', { 'id': entity.id }) }}" class="btn">Edit</a>
         </li>
         <li>
-            <a href="{{ path('resourcetable_generate', { 'id': entity.id }) }}" class="btn btn-success">Regenerate</a>
+            {% if entity.getIsgenerating %}
+                <a href="{{ path('resourcetable_generate', { 'id': entity.id,'context':'forced' }) }}" class="btn btn-success">Stop and Regenerate</a>
+            {% else %}
+                <a href="{{ path('resourcetable_generate', { 'id': entity.id }) }}" class="btn btn-success">Regenerate</a>
+            {% endif %}
+
         </li>
         <li>
             <a data-toggle="modal" href="#deleteModalFor{{ entity.uid }}" class="btn btn-danger">Delete {{ entity.name | capitalize }}</a>

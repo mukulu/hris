@@ -136,11 +136,11 @@ class ResourceTableController extends Controller
     /**
      * Finds and generates a ResourceTable entity.
      *
-     * @Route("/{id}/generate", requirements={"id"="\d+"}, name="resourcetable_generate")
+     * @Route("/{id}/generate/{context}", requirements={"id"="\d+","context"="graceful|forced"}, defaults={"context"="graceful"}, name="resourcetable_generate")
      * @Method("GET")
      * @Template()
      */
-    public function generateAction($id)
+    public function generateAction($id,$context)
     {
         $em = $this->getDoctrine()->getManager();
 
@@ -148,6 +148,11 @@ class ResourceTableController extends Controller
 
         if (!$entity) {
             throw $this->createNotFoundException('Unable to find ResourceTable entity.');
+        }
+        if($context=="forced") {
+            $entity->setIsgenerating(false);
+            $em->persist($entity);
+            $em->flush();
         }
 
         $deleteForm = $this->createDeleteForm($id);
