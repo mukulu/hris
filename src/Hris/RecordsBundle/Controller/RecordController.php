@@ -122,9 +122,34 @@ class RecordController extends Controller
             ->join('o.field', 'f')
             ->getQuery()
             ->getArrayResult();
-
+        //var_dump($field_Option_entities);
         $field_Option_Values = json_encode($field_Option_entities);
         $filed_Option_Table_Name = json_encode($em->getClassMetadata('HrisFormBundle:FieldOption')->getTableName());
+
+        /*
+         * Field Options Associations
+         */
+
+        $field_Options = $em->getRepository( 'HrisFormBundle:FieldOption' )
+        ->createQueryBuilder('o')
+        ->select('o', 'f')
+        ->join('o.field', 'f')
+        ->getQuery()
+        ->getResult();
+
+        $id = 1;
+        $fieldOptionAssocitiontablename = "field_option_association";
+        foreach($field_Options as $key => $fieldOption){
+            $option_associations =  $fieldOption->getChildFieldOption();
+            if (!empty($option_associations) ){
+                foreach($option_associations as $keyoption => $option){
+                    //print "<br><br>the reference Key ". $fieldOption->getValue()." the referenced Field ".$option->getValue()." the reference Field ". $fieldOption->getField()->getName(). " the associate field ".$option->getField()->getName();
+                    $fieldOptions[] = array( 'id' => $id++,'fieldoption'=>$fieldOption->getUid(), 'fielduid' => $fieldOption->getField()->getUid(), 'fieldoptionref' => $option->getValue(), 'fieldoptionrefuid' => $option->getUid(), 'fieldref'=>$option->getField()->getUid() );
+                }
+            }
+        }
+
+        //var_dump($fieldOptions);
 
         return array(
             'entities' => $entities,
@@ -137,6 +162,8 @@ class RecordController extends Controller
             'field_values' => $filed_Values,
             'field_option_values' => $field_Option_Values,
             'field_option_table_name' => $filed_Option_Table_Name,
+            'option_associations_values' => json_encode($fieldOptions),
+            'option_associations_table' => $fieldOptionAssocitiontablename,
         );
     }
 
@@ -206,8 +233,6 @@ class RecordController extends Controller
 
         return $this->redirect($this->generateUrl('record_new', array('id' => $form->getId())));
         //}
-
-
 
         return array(
             'entity' => $entity,

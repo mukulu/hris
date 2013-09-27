@@ -249,13 +249,54 @@ class ReportAggregationController extends Controller
                         unset($fieldOptionsToExclude[$key]);
 
         //create the query to aggregate the records from the static resource table
+        //check if field one is calculating field so to create the sub query
+        $resourceTableName = "_resource_all_fields";
+        if($fields->getIsCalculated()){
+            $subQuery = 'SELECT ';
+            $subQuery .= $fields->getCalculatedExpression();
+            str_replace('$field',$fields->getName() ,$subQuery);
+            $subQuery .= " AS age";
+            if ($fields->getId() != $fieldsTwo->getId()) {
+                $subQuery .= " , ResourceTable.".$fieldsTwo->getName();
+            }
+
+            $subQuery .= " FROM ".$resourceTableName." ResourceTable inner join hris_organisationunit as Orgunit ON Orgunit.id = ResourceTable.organisationunit_id INNER JOIN hris_organisationunitstructure AS Structure ON Structure.organisationunit_id = ResourceTable.organisationunit_id";
+
+            $subQuery .= " WHERE ResourceTable.".$fields->getName()." is not NULL ";
+            if ($fields->getId() != $fieldsTwo->getId()) {
+                $subQuery .= " AND ResourceTable.".$fieldsTwo->getName()." is not NULL";
+            }
+
+            //filter the records by the selected form and facility
+            $subQuery .= " AND ResourceTable.form_id IN (";
+            foreach($forms as $form){
+                $subQuery .= $form->getId()." ,";
+            }
+
+            if($withLowerLevels){
+                $subQuery .= " AND Structure.level".$selectedOrgunitStructure->getLevel()->getLevel()."_id=".$organisationUnit->getId();
+                $subQuery .= " AND  Structure.level_id >= ";
+                $subQuery .= "(SELECT hris_organisationunitstructure.level_id FROM hris_organisationunitstructure WHERE hris_organisationunitstructure.organisationunit_id=".$organisationUnit->getId()." )";
+            }else{
+                $subQuery .= " AND ResourceTable.organisationunit_id=".$organisationUnit->getId();
+            }
+
+            //filter the records if the organisation group was choosen
+            //if(!empty($orgunitGroupId))$subQuery .= " AND (type='".$orgunitGroup->getName()."' OR ownership='".$orgunitGroup->getName()."' OR administrative='".$orgunitGroup->getName()."')";
+
+
+
+            //remove the record which have field option set to exclude in reports
+            foreach($fieldOptionsToExclude as $key => $fieldOptionToExclude)
+                $subQuery .= " AND ResourceTable.".$fieldOptionToExclude->getField()->getName()." != '".$fieldOptionToExclude->getValue()."'";
+
+        }
         $query = "SELECT ResourceTable.".$fields->getName();
         if ($fieldsTwo->getId() != $fields->getId()) {
             $query .= " , ResourceTable.".$fieldsTwo->getName()." , count(ResourceTable.".$fieldsTwo->getName().") as total";
        }else{
             $query .= " , count(ResourceTable.".$fields->getName().") as total";
        }
-        $resourceTableName = "_resource_all_fields";
 
         $query .= " FROM ".$resourceTableName." ResourceTable inner join hris_organisationunit as Orgunit ON Orgunit.id = ResourceTable.organisationunit_id INNER JOIN hris_organisationunitstructure AS Structure ON Structure.organisationunit_id = ResourceTable.organisationunit_id";
 
