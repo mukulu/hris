@@ -40,6 +40,7 @@ use Hris\OrganisationunitBundle\Form\OrganisationunitLevelType;
  */
 class OrganisationunitLevelController extends Controller
 {
+    private $returnMessage;
 
     /**
      * Lists all OrganisationunitLevel entities.
@@ -55,10 +56,79 @@ class OrganisationunitLevelController extends Controller
 
         $entities = $em->getRepository('HrisOrganisationunitBundle:OrganisationunitLevel')->findAll();
 
+        foreach($entities as $entity) {
+            $delete_form= $this->createDeleteForm($entity->getId());
+            $delete_forms[$entity->getId()] = $delete_form->createView();
+        }
+
         return array(
             'entities' => $entities,
+            'delete_forms' => $delete_forms,
         );
     }
+
+    /**
+     * Regenerate all OrganisationunitLevel entities.
+     *
+     * @Route("/regeneration", name="organisationunitlevel_regeneration")
+     * @Method("GET")
+     * @Template()
+     */
+    public function regenerationAction()
+    {
+        $entityManager = $this->getDoctrine()->getManager();
+
+        // Check and Notify if organisationunit structure doesn't exist
+        $queryBuilder = $entityManager->createQueryBuilder();
+        $organisationunitStructureCount =  $queryBuilder->select('count( organisationunitStructure.id )')->from('HrisOrganisationunitBundle:OrganisationunitStructure','organisationunitStructure')->getQuery()->getSingleScalarResult();
+        $queryBuilder = $entityManager->createQueryBuilder();
+        $organisationunitCount =  $queryBuilder->select('count( organisationunit.id )')->from('HrisOrganisationunitBundle:Organisationunit','organisationunit')->getQuery()->getSingleScalarResult();
+
+        // Regenerate Orgunit Stucture of Orgunit and OrgunitStructure Differs
+        if($organisationunitCount!=$organisationunitStructureCount) {
+            $this->returnMessage ='';
+            // Regenerate Orgunit Structure
+            $organisationunitStructure = new OrganisationunitStructureController();
+            $this->returnMessage = $organisationunitStructure->regenerateOrganisationunitStructure($entityManager);
+        }else {
+            $this->returnMessage='Organisationunit structure is complete!';
+        };
+
+
+        // Regenerate Levels if OrgunitLevel and DISTINCT OrgunitStructure.level differs
+        $organisationunitStructureLevels = $entityManager->createQuery('SELECT DISTINCT organisationunitLevel.level FROM HrisOrganisationunitBundle:OrganisationunitStructure organisationunitStructure INNER JOIN organisationunitStructure.level organisationunitLevel ORDER BY organisationunitLevel.level ')->getResult();
+        $organisationunitLevelInfos = $entityManager->createQuery('SELECT organisationunitLevel.level,organisationunitLevel.name,organisationunitLevel.description FROM HrisOrganisationunitBundle:OrganisationunitLevel organisationunitLevel ORDER BY organisationunitLevel.level ')->getResult();
+        $organisationunitStructureLevels = $this->array_value_recursive('level', $organisationunitStructureLevels);
+        $organisationunitLevelsLevel = $this->array_value_recursive('level', $organisationunitLevelInfos);
+        if($organisationunitLevelsLevel != $organisationunitStructureLevels && !empty($organisationunitStructureLevels)) {
+            if(!empty($organisationunitLevelInfos)) {
+                // Cache in-memory saved Level names and descriptions
+                $organisationunitLevelsName = $this->array_value_recursive('name', $organisationunitLevelInfos);
+                $organisationunitLevelsDescription = $this->array_value_recursive('description', $organisationunitLevelInfos);
+                $organisationunitLevelsName = array_combine($organisationunitLevelsLevel,$organisationunitLevelsName);
+                $organisationunitLevelsDescription = array_combine($organisationunitLevelsLevel,$organisationunitLevelsDescription);
+                $qb = $entityManager->createQueryBuilder('organisationunitLevel')->delete('HrisOrganisationunitBundle:OrganisationunitLevel','organisationunitLevel')->getQuery() -> getResult();
+            }
+            foreach($organisationunitStructureLevels as $key => $organisationunitStructureLevel) {
+                // Update Levels
+                $organisationunitLevel = new OrganisationunitLevel();
+                if(in_array($organisationunitStructureLevel,$organisationunitLevelsLevel)) {
+                    $organisationunitLevel->setName($organisationunitLevelsName[$organisationunitStructureLevel]);
+                    $organisationunitLevel->setDescription($organisationunitLevelsDescription[$organisationunitStructureLevel]);
+                    $organisationunitLevel->setLevel($organisationunitStructureLevel);
+                    $entityManager->persist($organisationunitLevel);
+                }else {
+                    $organisationunitLevel->setName('Level'.$organisationunitStructureLevel);
+                    $organisationunitLevel->setDescription('Level'.$organisationunitStructureLevel);
+                    $organisationunitLevel->setLevel($organisationunitStructureLevel);
+                    $entityManager->persist($organisationunitLevel);
+                }
+            }
+            $entityManager->flush();
+        }
+        return $this->redirect($this->generateUrl('organisationunitlevel_list'));
+    }
+
     /**
      * Creates a new OrganisationunitLevel entity.
      *
@@ -107,7 +177,7 @@ class OrganisationunitLevelController extends Controller
     /**
      * Finds and displays a OrganisationunitLevel entity.
      *
-     * @Route("/{id}", name="organisationunitlevel_show")
+     * @Route("/{id}", requirements={"id"="\d+"}, name="organisationunitlevel_show")
      * @Method("GET")
      * @Template()
      */
@@ -272,5 +342,18 @@ class OrganisationunitLevelController extends Controller
         return array(
             'entities' => $serializer->serialize($organisationunitLevels,$_format)
         );
+    }
+
+    /**
+     * Get all values from specific key in a multidimensional array
+     *
+     * @param $key string
+     * @param $arr array
+     * @return null|string|array
+     */
+    public function array_value_recursive($key, array $arr){
+        $val = array();
+        array_walk_recursive($arr, function($v, $k) use($key, &$val){if($k == $key) array_push($val, $v);});
+        return count($val) > 1 ? $val : array_pop($val);
     }
 }

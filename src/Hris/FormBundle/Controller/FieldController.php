@@ -54,8 +54,14 @@ class FieldController extends Controller
 
         $entities = $em->getRepository('HrisFormBundle:Field')->findAll();
 
+        foreach($entities as $entity) {
+            $delete_form= $this->createDeleteForm($entity->getId());
+            $delete_forms[$entity->getId()] = $delete_form->createView();
+        }
+
         return array(
             'entities' => $entities,
+            'delete_forms' => $delete_forms,
         );
     }
     /**
@@ -106,7 +112,7 @@ class FieldController extends Controller
     /**
      * Finds and displays a Field entity.
      *
-     * @Route("/{id}", name="field_show")
+     * @Route("/{id}", requirements={"id"="\d+"}, name="field_show")
      * @Method("GET")
      * @Template()
      */

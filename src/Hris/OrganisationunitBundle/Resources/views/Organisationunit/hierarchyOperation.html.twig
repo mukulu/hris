@@ -1,0 +1,126 @@
+{% extends '::base.html.twig' %}
+
+{% block javascripts %}
+    {{ parent() }}
+    <script type="text/javascript" language="javascript" src="{{ asset('commons/js/ext-all.js') }}"></script>
+    <script type="text/javascript">
+        var treeplaceholder="treeplaceholder";
+        var inputboxname="hris_organisationunitbundle_hierarchyoperationtype[organisationunit]";
+        var urlExtension="";
+        var selectedNode="";
+        Ext.define('OrganisationUnitTreeModel2', {
+            extend: 'Ext.data.Model',
+            idProperty: 'id',
+            fields: [{name: 'longname',type: 'string'},{name: 'id',type: 'int'},{ name: 'cls',type: 'string'},{name: 'leaf', type: 'boolean'}],
+            validations: [{type: 'exclusion', field: 'cls',list: ['file','folder']}]
+        });
+        Ext.onReady(function(){
+            var OrganisationUnitTreeStore2 = Ext.create('Ext.data.TreeStore', {
+                storeId: 'MyJsonOrganisationUnitTreeStore2',
+                model: 'OrganisationUnitTreeModel2',
+                proxy: {
+                    type: 'ajax',
+                    url: '{{ path('organisationunit_tree',{'_format':'json'}) }}'+urlExtension,
+                    reader: { type: 'json', root: 'organisationUnits'}
+                },
+                nodeParam: 'id',
+                root: {longname: 'Orgunits', id: 'src', expanded: true},
+                folderSort: true,
+                sorters: [{property: 'longname', direction: 'ASC'}]
+            });
+            var OrganisationUnitTreePanel2 = Ext.create('Ext.tree.Panel', {
+                id: 'organisationUnitTreePanel2',
+                store: OrganisationUnitTreeStore2,
+                displayField: 'longname',
+                rootVisible: false,
+                singleExpand: false,
+                height: 250,
+                viewConfig: {},
+                renderTo: treeplaceholder,
+                listeners: {
+                    select: function(selModel2, record, index, options) {
+                        var selectedOrgunits2 = selModel2.getSelection();
+                        var selectedId2 = selectedOrgunits2[0].get('id');
+                        $('input[name="'+inputboxname+'"]').val(selectedId2);
+                    },
+                    afterrender: function(treePanel,eOpts) {
+                        if(selectedNode){
+                            this.selectPath(selectedNode,'id','');
+                        };
+                    }
+                }
+            });
+        });
+    </script>
+{% endblock javascripts %}
+
+{% block stylesheets %}
+    {{ parent() }}
+    <link rel="stylesheet" type="text/css" media="all" href="{{ asset('commons/css/ext-standard.css') }}">
+    <link rel="stylesheet" href="{{ asset('commons/css/dt_bootstrap.css') }}" />
+{% endblock stylesheets %}
+
+{% block right_content -%}
+    <h1><small>Hierarchy Operations</small></h1>
+
+    {{ form_start(hierarchyOperationForm, { 'method' : 'PUT' } ) }}
+    <div class="span4">
+        {{ form_errors( hierarchyOperationForm.organisationunit ) }}
+        {{ form_widget( hierarchyOperationForm.organisationunit ) }}
+        <div id="treeplaceholder"></div>
+    </div>
+    <div class="span4">
+        <div id="toMoveSection">
+            <div>1. Select an organisation unit to move</div>
+            <div id="innerToMoveSection">
+
+                <input type="hidden" name="toMoveOrgunitId" id="toMoveOrgunitId" class="required">
+                <input type="hidden" name="toMoveOrgunitConfirm" id="toMoveOrgunitConfirm" class="required" value="firstGlance">
+                <span id="toMoveOrgunitNameField">[Select Organisation unit] </span>
+                <br>
+                <input id="confirmOrgunitToMoveButton" type="button" value="Confirm" onclick="confirmToMoveOrgunit();" style="width:10em">
+            </div>
+        </div>
+        <div id="newParentSection">
+            <div>2. Select New Parent for <span id="childOrgunitName">Above Selected Organisationunit</span></div>
+            <div id="innerNewParentSection">
+                    <input type="hidden" name="newParentOrgunitId" id="newParentOrgunitId" class="required" value="">
+                    <input type="hidden" name="newParentOrgunitConfirm" id="newParentOrgunitConfirm" class="required" value="firstGlance">
+                    <span id="newParentOrgunitNameField"><em>[Select Parent]</em></span>
+                    <br>
+                    <input id="confirmNewParentOrgunitButton" type="button" value="Confirm" onclick="confirmNewParentOrgunit()" style="width:10em" disabled="disabled">
+                </div>
+            </div>
+        </div>
+        <div id="newParentSection">
+            <div>3. Move</div>
+            <div id="innerNewParentSection">
+                <input type="hidden" name="newParentOrgunitId" id="newParentOrgunitId" class="required" value="">
+                <input type="hidden" name="newParentOrgunitConfirm" id="newParentOrgunitConfirm" class="required" value="firstGlance">
+                <span id="newParentOrgunitNameField"><em>[Select Parent]</em></span>
+                <br>
+                <input id="confirmNewParentOrgunitButton" type="button" value="Confirm" onclick="confirmNewParentOrgunit()" style="width:10em" disabled="disabled">
+            </div>
+        </div>
+
+        <div id="confirmMoveSection">
+            <script type="text/javascript">
+                function confirmNewParentOrgunit() {
+                    moveOrgunitToNewParentOrgunitURL=
+                            '?pg=hierarchy&toMoveOrgunitId='
+                                    +$('#toMoveOrgunitId').val()
+                                    +'&newParentOrgunitId='
+                                    +$('#newParentOrgunitId').val();
+                    if (confirm("Are you sure you want Move Organisation Unit?")) { document.location = moveOrgunitToNewParentOrgunitURL; }
+                }
+            </script>
+            <input id="submitButton" type="submit" value="Move" name="changeHierarchy" onclick="confirmNewParentOrgunit()" style="width:10em;" disabled="disabled">
+            <input type="button" value="Reset" style="width:10em" onclick="window.location.href='?pg=hierarchy'">
+        </div>
+
+    </div>
+
+    {{ form_end(hierarchyOperationForm) }}
+
+
+{% endblock %}

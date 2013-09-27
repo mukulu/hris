@@ -59,18 +59,6 @@ class ReportFriendlyReportType extends AbstractType
                     new NotBlank(),
                 )
             ))
-            ->add('organisationunitGroupset','entity',array(
-                    'class'=>'HrisOrganisationunitBundle:OrganisationunitGroupset',
-                    'multiple'=>false,
-                    'required'=>False,
-                )
-            )
-            ->add('organisationunitGroup','entity',array(
-                    'class'=>'HrisOrganisationunitBundle:OrganisationunitGroup',
-                    'multiple'=>true,
-                    'required'=>False,
-                )
-            )
             ->add('submit','submit')
         ;
     }

@@ -121,7 +121,7 @@ class FriendlyReportController extends Controller
     /**
      * Finds and displays a FriendlyReport entity.
      *
-     * @Route("/{id}", name="friendlyreport_show")
+     * @Route("/{id}", requirements={"id"="\d+"}, name="friendlyreport_show")
      * @Method("GET")
      * @Template()
      */

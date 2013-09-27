@@ -54,8 +54,14 @@ class FieldOptionGroupController extends Controller
 
         $entities = $em->getRepository('HrisFormBundle:FieldOptionGroup')->findAll();
 
+        foreach($entities as $entity) {
+            $delete_form= $this->createDeleteForm($entity->getId());
+            $delete_forms[$entity->getId()] = $delete_form->createView();
+        }
+
         return array(
             'entities' => $entities,
+            'delete_forms' => $delete_forms,
         );
     }
     /**
@@ -106,7 +112,7 @@ class FieldOptionGroupController extends Controller
     /**
      * Finds and displays a FieldOptionGroup entity.
      *
-     * @Route("/{id}", name="fieldoptiongroup_show")
+     * @Route("/{id}", requirements={"id"="\d+"}, name="fieldoptiongroup_show")
      * @Method("GET")
      * @Template()
      */
@@ -208,7 +214,11 @@ class FieldOptionGroupController extends Controller
                 throw $this->createNotFoundException('Unable to find FieldOptionGroup entity.');
             }
 
-            $em->remove($entity);
+            $em->createQueryBuilder('fieldOptionGroup')
+                ->delete('HrisFormBundle:FieldOptionGroup','fieldOptionGroup')
+                ->where('fieldOptionGroup.id= :fieldOptionGroupId')
+                ->setParameter('fieldOptionGroupId',$id)
+                ->getQuery()->getResult();
             $em->flush();
         }
 

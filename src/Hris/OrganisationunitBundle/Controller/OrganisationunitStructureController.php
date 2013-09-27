@@ -24,6 +24,7 @@
  */
 namespace Hris\OrganisationunitBundle\Controller;
 
+use Hris\OrganisationunitBundle\Entity\OrganisationunitLevel;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Bundle\FrameworkBundle\Controller\Controller;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Method;
@@ -31,6 +32,7 @@ use Sensio\Bundle\FrameworkExtraBundle\Configuration\Route;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Template;
 use Hris\OrganisationunitBundle\Entity\OrganisationunitStructure;
 use Hris\OrganisationunitBundle\Form\OrganisationunitStructureType;
+use Symfony\Component\Stopwatch\Stopwatch;
 
 /**
  * OrganisationunitStructure controller.
@@ -40,6 +42,9 @@ use Hris\OrganisationunitBundle\Form\OrganisationunitStructureType;
 class OrganisationunitStructureController extends Controller
 {
 
+    private $returnMessage;
+
+    private $entityManager;
     /**
      * Lists all OrganisationunitStructure entities.
      *
@@ -106,7 +111,7 @@ class OrganisationunitStructureController extends Controller
     /**
      * Finds and displays a OrganisationunitStructure entity.
      *
-     * @Route("/{id}", name="organisationunitstructure_show")
+     * @Route("/{id}", requirements={"id"="\d+"}, name="organisationunitstructure_show")
      * @Method("GET")
      * @Template()
      */
@@ -228,5 +233,126 @@ class OrganisationunitStructureController extends Controller
             ->add('id', 'hidden')
             ->getForm()
         ;
+    }
+
+    /**
+     * Generate organiastionunit structure
+     * @param $entityManager
+     * @return string
+     */
+    public function regenerateOrganisationunitStructure($entityManager) {
+        $this->entityManager = $entityManager;
+        $stopwatch = new Stopwatch();
+        $stopwatch->start('organisationnunitStructureRegeneration');
+        $parents = $this->entityManager->createQuery("SELECT organisationunit FROM HrisOrganisationunitBundle:Organisationunit organisationunit WHERE organisationunit.parent IS NULL")->getResult();
+        $qb = $this->entityManager->createQueryBuilder()->delete('HrisOrganisationunitBundle:OrganisationunitStructure','organisationunitStructure')->getQuery();
+        try {
+            $orgStructure = $qb->getSingleResult();
+            $this->returnMessage.= "Deletion of orgunit structure was successful\n";
+        } catch (\Doctrine\Orm\NoResultException $e) {
+            $this->returnMessage.= "Deletion of Orgunit Structure Failed/No Contents to Delete\n";
+        }
+        $this->persistOrganisationunitStructure($parents,1);
+        $this->entityManager->flush();
+        /*
+         * Check Clock for time spent
+        */
+        $organisationunitStructureGenerationTime = $stopwatch->stop('resourceTableGeneration');
+        $duration = $organisationunitStructureGenerationTime->getDuration()/60;
+        $duration = round($duration, 2);
+
+        if( $duration < 1 ) {
+            $durationMessage = ($duration*60).' seconds';
+        }else if ( $duration >= 60 ) {
+            $durationMessage = ( $duration / 60 ) . " hours";
+        }else {
+            $durationMessage = $duration . " minutes";
+        }
+        $this->returnMessage .='Orgunit structure generation completeted in'. $durationMessage .'\n';
+        echo $this->returnMessage;
+        return $this->returnMessage;
+    }
+
+    /**
+     * @param $parentOrganisatinunits
+     * @param $level
+     */
+    public function persistOrganisationunitStructure($parentOrganisatinunits, $level) {
+        $this->returnMessage .= "Persisting Level ". $level ." successfully!\n";
+        $levelEntity = $this->entityManager->getRepository('HrisOrganisationunitBundle:OrganisationunitLevel')->findOneBy(array('level'=>$level));
+        if(empty($levelEntity)) {
+            $levelEntity = new OrganisationunitLevel();
+            $levelEntity->setLevel($level);
+            $levelEntity->setName('Level '.$level);
+            $this->entityManager->persist($levelEntity);
+        }
+        if ( sizeof($parentOrganisatinunits) > 0 ) {
+            // Store the passed parents
+            foreach($parentOrganisatinunits as $key => $organisationunit ) {
+                $organisationunitStructure = new OrganisationunitStructure();
+                $organisationunitStructure->setOrganisationunit($organisationunit);
+                $organisationunitStructure->setLevel($levelEntity);
+                /*
+                 * Store parents in structure
+                 */
+                for($incr=1;$incr<$level;$incr++) {
+                    $nLevelParent=$this->getParentByNLevelsBack($organisationunit,($level-$incr));
+                    call_user_func_array(array($organisationunitStructure,"setLevel${incr}Organisationunit"),array($nLevelParent));
+                }
+                call_user_func_array(array($organisationunitStructure, "setLevel${level}Organisationunit"),array($organisationunit));
+                // Persist orgunit
+                $this->entityManager->persist($organisationunitStructure);
+            }
+
+            /*
+             * Fetch the grand children if exists
+            */
+            foreach($parentOrganisatinunits as $key=>$organisationunit) {
+                $parentOrganisationunitIds[] = $organisationunit->getId();
+            }
+            $queryBuilder = $this->entityManager->createQueryBuilder();
+            $childrenOrgunits = $queryBuilder->select('organisationunit')
+                                            ->from('HrisOrganisationunitBundle:Organisationunit','organisationunit')
+                                            ->innerJoin('organisationunit.parent','parent')
+                                            ->where($queryBuilder->expr()->in('parent.id',$parentOrganisationunitIds))
+                                            ->orderBy('parent.id','ASC')
+                                            ->addOrderBy('organisationunit.longname','ASC')
+                                            ->getQuery()->getResult();
+            if( ! empty($childrenOrgunits) ) {$this->persistOrganisationunitStructure($childrenOrgunits,$level+1);}
+        }
+    }
+
+    /**
+     * Get ParentByNLevelsBack
+     * Translates into something like, say $level=2
+     * $organisationunit->getParent()->getParent();
+     *
+     * @param $organisationunit
+     * @param $level
+     * @throws Exception
+     * @return Organisationunit
+     */
+    public function getParentByNLevelsBack($organisationunit,$level) {
+        // Translates into something like, say $level=2
+        // $organisationunit->getParent()->getParent();
+        if($level>1) {
+            // Recursively Call persist upper most parent and call lower parent
+            $parentNLevelsBack = $this->getParentByNLevelsBack($organisationunit,$level-1);
+            if(method_exists($parentNLevelsBack,"getParent")) {
+                $parentNLevelsBack = call_user_func_array(array($parentNLevelsBack, "getParent"),$args=Array());
+                // Translates into something like $parentNLevelsBack = $parentNLevelsBack->getParent($args);
+            }else {
+                throw new Exception('Object or method doesn\'t exist');
+            }
+        }else {
+            // Return the parent
+            if(method_exists($organisationunit,"getParent")) {
+                $parentNLevelsBack = call_user_func_array(array($organisationunit, "getParent"),$args=Array());
+                // Translates into something like $parentNLevelsBack = $parentNLevelsBack->getParent($args);
+            }else {
+                throw new Exception('Object or method doesn\'t exist');
+            }
+        }
+        return $parentNLevelsBack;
     }
 }

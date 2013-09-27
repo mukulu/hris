@@ -21,7 +21,7 @@ class DesignFormController extends Controller
 	/**
      * Design custom form for data entry.
      *
-     * @Route("/{id}/design", name="form_design")
+     * @Route("/{id}/design", requirements={"id"="\d+"}, name="form_design")
      * @Method("GET")
      * @Template()
      */
@@ -48,7 +48,7 @@ class DesignFormController extends Controller
     /**
      * Edits an existing Form entity.
      *
-     * @Route("/{id}", name="design_update")
+     * @Route("/{id}", requirements={"id"="\d+"}, name="design_update")
      * @Method("PUT")
      * @Template("HrisFormBundle:Form:index.html.twig")
      */

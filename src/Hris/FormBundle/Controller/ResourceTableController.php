@@ -106,7 +106,7 @@ class ResourceTableController extends Controller
     /**
      * Finds and displays a ResourceTable entity.
      *
-     * @Route("/{id}", name="resourcetable_show")
+     * @Route("/{id}", requirements={"id"="\d+"}, name="resourcetable_show")
      * @Method("GET")
      * @Template()
      */

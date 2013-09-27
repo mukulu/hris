@@ -24,36 +24,43 @@
  */
 namespace Hris\OrganisationunitBundle\Form;
 
+use Hris\ReportsBundle\Form\OrganisationunitToIdTransformer;
+use Doctrine\ORM\EntityRepository;
 use Symfony\Component\Form\AbstractType;
 use Symfony\Component\Form\FormBuilderInterface;
 use Symfony\Component\OptionsResolver\OptionsResolverInterface;
+use Symfony\Component\Validator\Constraints\NotBlank;
 
-class OrganisationunitType extends AbstractType
+class HierarchyOperationType extends AbstractType
 {
     public function buildForm(FormBuilderInterface $builder, array $options)
     {
+        // assuming $entityManager is passed in options
+        $em = $options['em'];
+        $transformer = new OrganisationunitToIdTransformer($em);
         $builder
-            ->add('code')
-            ->add('shortname')
-            ->add('longname')
-            ->add('active')
-            ->add('address')
-            ->add('email')
-            ->add('phonenumber')
-            ->add('contactperson')
-            ->add('description')
+            ->add($builder->create('organisationunit','hidden',array(
+                    'constraints'=> array(
+                        new NotBlank(),
+                    )
+                ))->addModelTransformer($transformer)
+            )
+            ->add('submit','submit')
         ;
     }
 
     public function setDefaultOptions(OptionsResolverInterface $resolver)
     {
-        $resolver->setDefaults(array(
-            'data_class' => 'Hris\OrganisationunitBundle\Entity\Organisationunit'
+        $resolver->setRequired(
+            array('em')
+        );
+        $resolver->setAllowedTypes(array(
+            'em'=>'Doctrine\Common\Persistence\ObjectManager',
         ));
     }
 
     public function getName()
     {
-        return 'hris_organisationunitbundle_organisationunittype';
+        return 'hris_organisationunitbundle_hierarchyoperationtype';
     }
 }

@@ -54,8 +54,14 @@ class OrganisationunitGroupController extends Controller
 
         $entities = $em->getRepository('HrisOrganisationunitBundle:OrganisationunitGroup')->findAll();
 
+        foreach($entities as $entity) {
+            $delete_form= $this->createDeleteForm($entity->getId());
+            $delete_forms[$entity->getId()] = $delete_form->createView();
+        }
+
         return array(
             'entities' => $entities,
+            'delete_forms' => $delete_forms,
         );
     }
     /**
@@ -106,7 +112,7 @@ class OrganisationunitGroupController extends Controller
     /**
      * Finds and displays a OrganisationunitGroup entity.
      *
-     * @Route("/{id}", name="organisationunitgroup_show")
+     * @Route("/{id}", requirements={"id"="\d+"}, name="organisationunitgroup_show")
      * @Method("GET")
      * @Template()
      */

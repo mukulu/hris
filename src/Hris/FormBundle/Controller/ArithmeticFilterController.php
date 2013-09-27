@@ -106,7 +106,7 @@ class ArithmeticFilterController extends Controller
     /**
      * Finds and displays a ArithmeticFilter entity.
      *
-     * @Route("/{id}", name="arithmeticfilter_show")
+     * @Route("/{id}", requirements={"id"="\d+"}, name="arithmeticfilter_show")
      * @Method("GET")
      * @Template()
      */

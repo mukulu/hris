@@ -140,7 +140,7 @@ class ValidationController extends Controller
     /**
      * Finds and displays a Validation entity.
      *
-     * @Route("/{id}", name="validation_show")
+     * @Route("/{id}", requirements={"id"="\d+"}, name="validation_show")
      * @Method("GET")
      * @Template()
      */

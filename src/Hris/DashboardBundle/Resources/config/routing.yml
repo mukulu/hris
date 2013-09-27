@@ -1,3 +1,7 @@
 hris_dashboard:
     resource: "@HrisDashboardBundle/Controller/DashboardController.php"
     type: annotation
+    
+hris_usersettings:
+    resource: "@HrisDashboardBundle/Controller/SettingsController.php"
+    type: annotation

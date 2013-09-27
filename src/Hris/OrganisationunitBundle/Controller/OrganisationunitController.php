@@ -26,6 +26,7 @@ namespace Hris\OrganisationunitBundle\Controller;
 
 use Doctrine\ORM\NoResultException;
 use Doctrine\Tests\Common\Annotations\Null;
+use Hris\OrganisationunitBundle\Form\HierarchyOperationType;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Bundle\FrameworkBundle\Controller\Controller;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Method;
@@ -49,7 +50,7 @@ class OrganisationunitController extends Controller
      * @Secure(roles="ROLE_ORGANISATIONUNIT_ORGANISATIONUNIT_LIST,ROLE_USER")
      *
      * @Route("/", name="organisationunit")
-     * @Route("/{parent}/parent", name="organisationunit_parent")
+     * @Route("/{parent}/parent",requirements={"parent"="\d+"}, name="organisationunit_parent")
      * @Route("/list", name="organisationunit_list")
      * @Route("/list/{parent}/parent", name="organisationunit_list_parent")
      * @Method("GET")
@@ -68,7 +69,7 @@ class OrganisationunitController extends Controller
             $queryBuilder = $em->createQueryBuilder();
             $entities = $queryBuilder->select('organisationunit')
                 ->from('HrisOrganisationunitBundle:Organisationunit', 'organisationunit')
-                ->join('organisationunit.parent parent')
+                ->join('organisationunit.parent','parent')
                 ->where('parent.id=:parentId')
                 ->setParameter('parentId',$parent)->getQuery()->getResult();
             $parent = $this->getDoctrine()->getManager()->getRepository('HrisOrganisationunitBundle:Organisationunit')->find($parent);
@@ -87,91 +88,16 @@ class OrganisationunitController extends Controller
     }
 
     /**
-     * Returns Organisationunit tree json.
-     *
-     * @Secure(roles="ROLE_ORGANISATIONUNIT_ORGANISATIONUNIT_TREE,ROLE_USER")
-     *
-     * @Route("/tree.{_format}", requirements={"_format"="yml|xml|json|"}, defaults={"format"="json","parent"=0}, name="organisationunit_tree")
-     * @Route("/tree/{parent}/parent",requirements={"parent"="\d+"},defaults={"parent"=0}, name="organisationunit_tree_parent")
-     * @Method("GET")
-     * @Template()
-     */
-    public function treeAction($parent,$_format)
-    {
-        $em = $this->getDoctrine()->getManager();
-        $id = $this->getRequest()->query->get('id');
-
-        if($id == NULL || $id==0) {
-            // Root organisationunits called
-            $organisationunitQuery = $em->createQuery("SELECT organisationunit.id,organisationunit.longname,
-                                                        (
-                                                            SELECT COUNT(lowerOrganisationunit.id)
-                                                            FROM HrisOrganisationunitBundle:Organisationunit lowerOrganisationunit
-                                                            WHERE lowerOrganisationunit.parent=organisationunit
-                                                        ) AS lowerChildrenCount
-                                                        FROM HrisOrganisationunitBundle:Organisationunit organisationunit
-                                                        WHERE organisationunit.parent IS NULL
-                                                        GROUP BY organisationunit.id,organisationunit.longname");
-            try {
-                $entities = $organisationunitQuery->getArrayResult();
-            } catch(NoResultException $e) {
-                $entities = NULL;
-            }
-        }else {
-            // Leaf organisationunits called
-            $organisationunitQuery = $em->createQuery("SELECT organisationunit.id,organisationunit.longname,
-                                                        (
-                                                            SELECT COUNT(lowerOrganisationunit.id)
-                                                            FROM HrisOrganisationunitBundle:Organisationunit lowerOrganisationunit
-                                                            WHERE lowerOrganisationunit.parent=organisationunit
-                                                        ) AS lowerChildrenCount
-                                                        FROM HrisOrganisationunitBundle:Organisationunit organisationunit
-                                                        WHERE organisationunit.parent=:parentid
-                                                        GROUP BY organisationunit.id,organisationunit.longname")->setParameter('parentid',$id);
-
-            try {
-                $entities = $organisationunitQuery->getArrayResult();
-            } catch(NoResultException $e) {
-                $entities = NULL;
-            }
-        }
-
-        $organisationunitTreeNodes = NULL;
-        foreach($entities as $key=>$entity) {
-            if($entity['lowerChildrenCount'] > 0 ) {
-                    // Entity has no children
-                    $organisationunitTreeNodes[] = Array(
-                        'id' => $entity['id'],
-                        'longname' => $entity['longname'],
-                        'cls' => 'folder'
-                    );
-            }else {
-                // Entity has children
-                $organisationunitTreeNodes[] = Array(
-                    'id' => $entity['id'],
-                    'longname' => $entity['longname'],
-                    'cls' => 'file',
-                    'leaf' => true,
-                );
-            }
-        }
-        $serializer = $this->container->get('serializer');
-
-        return array(
-            'entities' => $serializer->serialize($organisationunitTreeNodes,$_format)
-        );
-    }
-
-    /**
      * Creates a new Organisationunit entity.
      *
      * @Secure(roles="ROLE_ORGANISATIONUNIT_ORGANISATIONUNIT_CREATE,ROLE_USER")
      *
      * @Route("/", name="organisationunit_create")
+     * @Route("/{parent}/parent",requirements={"parent"="\d+"}, name="organisationunit_create_parent")
      * @Method("POST")
      * @Template("HrisOrganisationunitBundle:Organisationunit:new.html.twig")
      */
-    public function createAction(Request $request)
+    public function createAction(Request $request,$parent=NULL)
     {
         $entity  = new Organisationunit();
         $form = $this->createForm(new OrganisationunitType(), $entity);
@@ -179,11 +105,19 @@ class OrganisationunitController extends Controller
 
         if ($form->isValid()) {
             $em = $this->getDoctrine()->getManager();
+            if(!empty($parent)) {
+                $parent = $this->getDoctrine()->getManager()->getRepository('HrisOrganisationunitBundle:Organisationunit')->findOneBy(array('id'=>$parent));
+                $entity->setParent($parent);
+            }else {
+                $parent = NULL;
+                $entity->setParent($parent);
+            }
             $em->persist($entity);
             $em->flush();
 
             return $this->redirect($this->generateUrl('organisationunit_show', array('id' => $entity->getId())));
         }
+
 
         return array(
             'entity' => $entity,
@@ -206,12 +140,14 @@ class OrganisationunitController extends Controller
         $entity = new Organisationunit();
         $form   = $this->createForm(new OrganisationunitType(), $entity);
         if(!empty($parent)) {
-            $parent = $this->getDoctrine()->getManager()->getRepository('HrisOrganisationunitBundle:Organisationunit')->findBy(array('id'=>$parent));
-            $form->get('parent')->setData($parent);
+            $parent = $this->getDoctrine()->getManager()->getRepository('HrisOrganisationunitBundle:Organisationunit')->findOneBy(array('id'=>$parent));
+        }else {
+            $parent = NULL;
         }
 
         return array(
             'entity' => $entity,
+            'parent'=>$parent,
             'form'   => $form->createView(),
         );
     }
@@ -221,7 +157,7 @@ class OrganisationunitController extends Controller
      *
      * @Secure(roles="ROLE_ORGANISATIONUNIT_ORGANISATIONUNIT_SHOW,ROLE_USER")
      *
-     * @Route("/{id}", name="organisationunit_show")
+     * @Route("/{id}", requirements={"id"="\d+"}, name="organisationunit_show")
      * @Method("GET")
      * @Template()
      */
@@ -320,20 +256,26 @@ class OrganisationunitController extends Controller
     {
         $form = $this->createDeleteForm($id);
         $form->bind($request);
+        $parent = NULL;
 
         if ($form->isValid()) {
             $em = $this->getDoctrine()->getManager();
-            $entity = $em->getRepository('HrisOrganisationunitBundle:Organisationunit')->find($id);
+            $entity = $em->getRepository('HrisOrganisationunitBundle:Organisationunit')->findOneBy(array('id'=>$id));
+            $parent = $entity->getParent();
 
             if (!$entity) {
                 throw $this->createNotFoundException('Unable to find Organisationunit entity.');
             }
 
-            $em->remove($entity);
+            $em->createQueryBuilder('organisationunit')
+                ->delete('HrisOrganisationunitBundle:Organisationunit','organisationunit')
+                ->where('organisationunit.id= :organisationunitId')
+                ->setParameter('organisationunitId',$id)
+                ->getQuery()->getResult();
             $em->flush();
         }
 
-        return $this->redirect($this->generateUrl('organisationunit'));
+        return !empty($parent) ? $this->redirect($this->generateUrl('organisationunit_list_parent', array('parent' => $parent->getId()))) : $this->redirect($this->generateUrl('organisationunit_list'));
     }
 
     /**
@@ -349,5 +291,98 @@ class OrganisationunitController extends Controller
             ->add('id', 'hidden')
             ->getForm()
         ;
+    }
+
+    /**
+     * Returns Organisationunit tree json.
+     *
+     * @Secure(roles="ROLE_ORGANISATIONUNIT_ORGANISATIONUNIT_TREE,ROLE_USER")
+     *
+     * @Route("/tree.{_format}", requirements={"_format"="yml|xml|json"}, defaults={"format"="json","parent"=0}, name="organisationunit_tree")
+     * @Route("/tree/{parent}/parent",requirements={"parent"="\d+"},defaults={"parent"=0}, name="organisationunit_tree_parent")
+     * @Method("GET")
+     * @Template()
+     */
+    public function treeAction($parent,$_format)
+    {
+        $em = $this->getDoctrine()->getManager();
+        $id = $this->getRequest()->query->get('id');
+
+        if($id == NULL || $id==0) {
+            // Root organisationunits called
+            $organisationunitQuery = $em->createQuery("SELECT organisationunit.id,organisationunit.longname,
+                                                        (
+                                                            SELECT COUNT(lowerOrganisationunit.id)
+                                                            FROM HrisOrganisationunitBundle:Organisationunit lowerOrganisationunit
+                                                            WHERE lowerOrganisationunit.parent=organisationunit
+                                                        ) AS lowerChildrenCount
+                                                        FROM HrisOrganisationunitBundle:Organisationunit organisationunit
+                                                        WHERE organisationunit.parent IS NULL
+                                                        GROUP BY organisationunit.id,organisationunit.longname");
+            try {
+                $entities = $organisationunitQuery->getArrayResult();
+            } catch(NoResultException $e) {
+                $entities = NULL;
+            }
+        }else {
+            // Leaf organisationunits called
+            $organisationunitQuery = $em->createQuery("SELECT organisationunit.id,organisationunit.longname,
+                                                        (
+                                                            SELECT COUNT(lowerOrganisationunit.id)
+                                                            FROM HrisOrganisationunitBundle:Organisationunit lowerOrganisationunit
+                                                            WHERE lowerOrganisationunit.parent=organisationunit
+                                                        ) AS lowerChildrenCount
+                                                        FROM HrisOrganisationunitBundle:Organisationunit organisationunit
+                                                        WHERE organisationunit.parent=:parentid
+                                                        GROUP BY organisationunit.id,organisationunit.longname")->setParameter('parentid',$id);
+
+            try {
+                $entities = $organisationunitQuery->getArrayResult();
+            } catch(NoResultException $e) {
+                $entities = NULL;
+            }
+        }
+
+        $organisationunitTreeNodes = NULL;
+        foreach($entities as $key=>$entity) {
+            if($entity['lowerChildrenCount'] > 0 ) {
+                // Entity has no children
+                $organisationunitTreeNodes[] = Array(
+                    'id' => $entity['id'],
+                    'longname' => $entity['longname'],
+                    'cls' => 'folder'
+                );
+            }else {
+                // Entity has children
+                $organisationunitTreeNodes[] = Array(
+                    'id' => $entity['id'],
+                    'longname' => $entity['longname'],
+                    'cls' => 'file',
+                    'leaf' => true,
+                );
+            }
+        }
+        $serializer = $this->container->get('serializer');
+
+        return array(
+            'entities' => $serializer->serialize($organisationunitTreeNodes,$_format)
+        );
+    }
+
+    /**
+     * Displays form for performing Hierarchy Operation
+     *
+     * @Route("/hierarchyoperation", name="organisationunit_hierarchy_operation")
+     * @Method("GET")
+     * @Template()
+     */
+    public function hierarchyOperationAction()
+    {
+
+        $hierarchyOperationForm = $this->createForm(new HierarchyOperationType(),null,array('em'=>$this->getDoctrine()->getManager()));
+
+        return array(
+            'hierarchyOperationForm'=>$hierarchyOperationForm->createView(),
+        );
     }
 }

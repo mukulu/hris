@@ -106,7 +106,7 @@ class OrganisationunitCompletenessController extends Controller
     /**
      * Finds and displays a OrganisationunitCompleteness entity.
      *
-     * @Route("/{id}", name="organisationunitcompleteness_show")
+     * @Route("/{id}", requirements={"id"="\d+"}, name="organisationunitcompleteness_show")
      * @Method("GET")
      * @Template()
      */
