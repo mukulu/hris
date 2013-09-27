@@ -1,0 +1,98 @@
+{% extends '::base.html.twig' %}
+
+{% block right_content -%}
+    <h1><i class="icon-circle-info icon-largest" title="Show"></i> <small>{{ entity.name | capitalize }}'s Generation Details</small></h1>
+
+    {% if success %}
+        <div class="alert-success success">
+            <a class="close" href="#">x</a>
+            <p><strong>Yay!!</strong> Operation was successful!</strong></p>
+        </div>
+    {% elseif not entity.getIsgenerating %}
+        <div class="alert-success success">
+            <a class="close" href="#">x</a>
+            <p><strong>Nothing Generated</strong> Resource table is up to date!</p>
+        </div>
+    {% endif %}
+
+    {% if entity.getIsgenerating %}
+        <div class="alert-success alert-block success">
+            <a class="close" href="#">x</a>
+            <p><strong>This resource table is Currently Being Generated</strong></p>
+            <h2><small>See details of previously generated!!</small></h2>
+        </div>
+    {% endif %}
+
+    <table class="record_properties table table-striped table-bordered table-hover">
+        <thead>
+            <tr>
+                <th>Action</th>
+                <th>Description</th>
+            </tr>
+        </thead>
+        <tbody>
+            <tr>
+                <td>Date Created</td>
+                <td>{{ entity.getDatecreated|date('Y-m-d H:i:s') }}</td>
+            </tr>
+            <tr>
+                <td>Last Updated</td>
+                <td>{{ entity.getLastupdated|date("jS F Y") }}</td>
+            </tr>
+            <tr>
+                <td>Last Generated</td>
+                <td>{{ entity.getLastgenerated|date('Y-m-d H:i:s') }}</td>
+            </tr>
+            {% for message in messages %}
+                <tr>
+                    <td>{{ message[0] }}</td>
+                    <td>{{ message[1] }}</td>
+                </tr>
+            {% endfor %}
+        </tbody>
+    </table>
+
+    <ul class="record_actions inline">
+        <li>
+            <a href="{{ path('resourcetable') }}" class="btn">Back to the list</a>
+        </li>
+        <li>
+            <a href="{{ path('resourcetable_edit', { 'id': entity.id }) }}" class="btn">Edit</a>
+        </li>
+        <li>
+            <a href="{{ path('resourcetable_generate', { 'id': entity.id }) }}" class="btn btn-success">Regenerate</a>
+        </li>
+        <li>
+            <a data-toggle="modal" href="#deleteModalFor{{ entity.uid }}" class="btn btn-danger">Delete {{ entity.name | capitalize }}</a>
+
+            <!-- Modal -->
+            <div class="modal fade" id="deleteModalFor{{ entity.uid }}">
+                <div class="modal-dialog">
+                    <div class="modal-content">
+                        <div class="modal-header">
+                            <button type="button" class="close" data-dismiss="modal" aria-hidden="true">×</button>
+                            <h4 class="modal-title"><i class="icon-circle-remove icon-largest" title="Delete"></i>Deleting {{ entity.name | capitalize }}</h4>
+                        </div>
+                        <div class="modal-body">
+                            Are you sure you want to delete <strong>{{ entity.name | capitalize }}</strong> that was created on <em>{{ entity.datecreated|date('d/m/Y') }}</em>
+                            {% if entity.lastUpdated %}
+                                and last updated on {{ entity.lastUpdated|date('H:i:s d/m/Y') }} ??
+                            {% else %}
+                                and never updated ??
+                            {% endif %}
+                        </div>
+                        <div class="modal-footer">
+                            <form action="{{ path('resourcetable_delete', { 'id': entity.id }) }}" method="post">
+                                <input type="hidden" class="btn btn-danger" name="_method" value="DELETE" />
+                                {{ form_widget(delete_form) }}
+                                <button type="button" class="btn btn-default" data-dismiss="modal">Close</button>
+                                <button type="submit" class="btn btn-danger">Delete</button>
+                            </form>
+
+                        </div>
+                    </div><!-- /.modal-content -->
+                </div><!-- /.modal-dialog -->
+            </div><!-- /.modal -->
+        </li>
+    </ul>
+{% endblock %}

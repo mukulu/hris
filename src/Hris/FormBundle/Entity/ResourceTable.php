@@ -561,15 +561,15 @@ class ResourceTable
             }
 
             if($this->isResourceTableOutdated($entityManager)) {
-                $this->messagelog ="ResourceTable Regeneration Triggered by being outdated.\n";
-            }elseif( $this->isResourceTableGeneratedCompletely($entityManager) == False ) {
-                $this->messagelog = "ResourceTable Regeneration Triggered by being incomplete.\n";
+                $this->messagelog ="Regeneration Trigger: Outdated Resource Table.\n";
+            }elseif( $this->isResourceTableCompletelyGenerated($entityManager) == False ) {
+                $this->messagelog = "Regeneration Trigger:Incomplete Resource Tabe.\n";
             }else {
                 $this->messagelog = '';
             }
             if( $schemaManager->tablesExist($resourceTableName) ) {
                 $schemaManager->dropTable($resourceTableName);
-                $this->messagelog .="Dropping existent resource table\n";
+                $this->messagelog .="Operation: Dropping existent resource table\n";
             }
 
             /**
@@ -650,7 +650,7 @@ class ResourceTable
 
             // Creating table
             $schemaManager->createTable($resourceTable);
-            $this->messagelog .='Resource Table '. $resourceTableName.' with '. $totalResourceTableFields ." Fields Generated Successfully.\n";
+            $this->messagelog .='Operation: '. $resourceTableName.' with '. $totalResourceTableFields ." Fields Generated Successfully.\n";
 
             // Populating data into created table
             $queryBuilder = $entityManager->createQueryBuilder()->select('record')->from('HrisRecordsBundle:Record', 'record')
@@ -869,11 +869,11 @@ class ResourceTable
             }else {
                 $durationMessage = $duration . " hours";
             }
-            $this->messagelog .= $totalInsertedRecords .' Records Inserted into '. $resourceTableName .".\n";
-            $this->messagelog .= 'Resource Table generation completeted in '. $durationMessage .".\n\n";
+            $this->messagelog .= "Operation: ".$totalInsertedRecords ." Records Inserted into ". $resourceTableName .".\n";
+            $this->messagelog .= "Operation: Resource Table generation completeted in ". $durationMessage .".\n\n";
             return True;
         }else {
-            $this->messagelog .= 'Resource Table '.$resourceTableName." is upto date.\n";
+            $this->messagelog .= "Status: Resource Table ".$resourceTableName." is upto date.\n";
             return False;
         }
     }
