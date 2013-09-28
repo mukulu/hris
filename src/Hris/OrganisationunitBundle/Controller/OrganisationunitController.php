@@ -520,6 +520,37 @@ class OrganisationunitController extends Controller
     }
 
     /**
+     * Perform Hierarchy Operation and display results
+     *
+     * @Route("/hierarchyoperation", name="organisationunit_hierarchy_operation_update")
+     * @Method("PUT")
+     * @Template("HrisOrganisationunitBundle:Organisationunit:hierarchyOperation.html.twig")
+     */
+    public function updateHierarchyOperationAction(Request $request)
+    {
+
+        $em = $this->getDoctrine()->getManager();
+
+        $hierarchyOperationForm = $this->createForm(new HierarchyOperationType(),null,array('em'=>$this->getDoctrine()->getManager()));
+        $hierarchyOperationForm->bind($request);
+
+        if ($hierarchyOperationForm->isValid()) {
+            $hierarchyOperationFormData = $hierarchyOperationForm->getData();
+            $organisationunitToMove = $hierarchyOperationFormData['organisationunitToMove'];
+            $parentOrganisationunit = $hierarchyOperationFormData['parentOrganisationunit'];
+
+            // Change parent
+            $organisationunitToMove->setParent($parentOrganisationunit);
+            $em->persist($organisationunitToMove);
+            $em->flush();
+        }
+
+        return array(
+            'hierarchyOperationForm'=>$hierarchyOperationForm->createView(),
+        );
+    }
+
+    /**
      * Get all values from specific key in a multidimensional array
      *
      * @param $key string
