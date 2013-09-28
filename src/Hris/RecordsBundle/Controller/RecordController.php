@@ -178,10 +178,6 @@ class RecordController extends Controller
     {
         $em = $this->getDoctrine()->getManager();
 
-        /*
-         * Getting the Form Metadata and Values
-         */
-
         $entities = $em->getRepository( 'HrisFormBundle:Form' )->createQueryBuilder('p')->getQuery()->getArrayResult();
 
         return array(
@@ -189,6 +185,44 @@ class RecordController extends Controller
         );
     }
 
+    /**
+     * List Records Available for Updating.
+     *
+     * @Route("/{id}", name="record_update_list")
+     * @Method("GET")
+     * @Template("")
+     */
+    public function updatelistAction(Request $request, $id)
+    {
+
+        $em = $this->getDoctrine()->getManager();
+        $forms = $em->getRepository('HrisFormBundle:Form')->find($id);
+
+        $user = $this->container->get('security.context')->getToken()->getUser();
+        $searchString = $this->getRequest()->request->get('sSearch');
+        $sEcho = $this->getRequest()->request->get('sEcho');
+
+        if(!isset($searchString)) $searchString=NULL;
+
+        if ($user->getOrganisationunit()->getOrganisationunitStructure()->getLevel()->getDataentrylevel()) {
+            $oganisationunitObjects = $em->getRepository('HrisOrganisationunitBundle:Organisationunit')->findBy(array('parent' => $user->getOrganisationunit()->getId()));
+            foreach ($oganisationunitObjects as $key => $oganisationunit) {
+                $oganisationunitids[] = $oganisationunit->getId();
+            }
+            $oganisationunitids[] = $user->getOrganisationunit()->getId();
+        } else {
+            $oganisationunitids = $user->getOrganisationunit()->getId();
+        }
+
+        //preparing array of Fields
+        //mukulu continue from here
+
+
+
+        return array(
+
+        );
+    }
     /**
      * Creates a new Record entity.
      *

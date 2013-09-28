@@ -31,6 +31,7 @@ use Hris\ReportsBundle\Form\ReportAggregationType;
 use Symfony\Component\HttpFoundation\Request;
 use Doctrine\Common\Collections\ArrayCollection;
 use Symfony\Bundle\FrameworkBundle\Controller\Controller;
+use Hris\FormBundle\Entity\ResourceTable;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Method;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Route;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Template;
@@ -250,7 +251,7 @@ class ReportAggregationController extends Controller
 
         //create the query to aggregate the records from the static resource table
         //check if field one is calculating field so to create the sub query
-        $resourceTableName = "_resource_all_fields";
+        $resourceTableName = ResourceTable::getStandardResourceTableName();
         if($fields->getIsCalculated()){
             $subQuery = 'SELECT ';
             $subQuery .= $fields->getCalculatedExpression();
@@ -657,7 +658,7 @@ class ReportAggregationController extends Controller
         //Pull the organisation unit Structure
         $selectedOrgunitStructure = $em->getRepository('HrisOrganisationunitBundle:OrganisationunitStructure')->findOneBy(array('organisationunit' => $organisationUnit->getId()));
 
-        $resourceTableName = "_resource_all_fields";
+        $resourceTableName = ResourceTable::getStandardResourceTableName();
         //create the query to select the records from the resource table
         $query ="SELECT ResourceTable.firstname, ResourceTable.middlename, ResourceTable.surname, ResourceTable.profession,ResourceTable.".$fields->getName();
 

@@ -585,7 +585,7 @@ class ReportEmployeeRecordsController extends Controller
 
         $selectedOrgunitStructure = $em->getRepository('HrisOrganisationunitBundle:OrganisationunitStructure')->findOneBy(array('organisationunit' => $organisationUnit->getId()));
 
-        $resourceTableName = "_resource_all_fields";
+        $resourceTableName = ResourceTable::getStandardResourceTableName();
 
         $sql = "SELECT * FROM (SELECT DISTINCT ON (field_id) field_id, form_id, sort, name,caption FROM hris_form_fieldmembers inner join hris_field ON hris_field.id=hris_form_fieldmembers.field_id WHERE form_id in ($formid)) as T order by T.sort";
 
@@ -858,7 +858,7 @@ class ReportEmployeeRecordsController extends Controller
 
         $selectedOrgunitStructure = $em->getRepository('HrisOrganisationunitBundle:OrganisationunitStructure')->findOneBy(array('organisationunit' => $organisationUnit->getId()));
 
-        $resourceTableName = "_resource_all_fields";
+        $resourceTableName = ResourceTable::getStandardResourceTableName();
 
         $sql = "SELECT * FROM (SELECT DISTINCT ON (field_id) field_id, form_id, sort, name,caption FROM hris_form_fieldmembers inner join hris_field ON hris_field.id=hris_form_fieldmembers.field_id WHERE form_id in ($formid)) as T order by T.sort";
 

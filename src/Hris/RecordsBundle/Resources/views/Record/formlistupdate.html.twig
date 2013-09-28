@@ -13,11 +13,11 @@
         <tbody>
         {% for entity in entities %}
             <tr>
-                <td><a href="{{ path('record_new', { 'id': entity.id }) }}">{{ entity.title }}</a></td>
+                <td><a href="{{ path('record_update_list', { 'id': entity.id }) }}">{{ entity.title }}</a></td>
                 <td>
                 <ul class="inline">
                     <li>
-                        <a href="{{ path('record_new', { 'id': entity.id }) }}"><i class="icon-down-arrow icon-large" title="Show"></i></a>
+                        <a href="{{ path('record_update_list', { 'id': entity.id }) }}"><i class="icon-down-arrow icon-large" title="Show"></i></a>
                     </li>
                 </ul>
                 </td>
