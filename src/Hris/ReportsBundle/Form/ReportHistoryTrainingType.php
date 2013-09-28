@@ -22,7 +22,7 @@
  * @author John Francis Mukulu <john.f.mukulu@gmail.com>
  *
  */
-namespace Hris\OrganisationunitBundle\Form;
+namespace Hris\ReportsBundle\Form;
 
 use Hris\ReportsBundle\Form\OrganisationunitToIdTransformer;
 use Doctrine\ORM\EntityRepository;
@@ -31,7 +31,7 @@ use Symfony\Component\Form\FormBuilderInterface;
 use Symfony\Component\OptionsResolver\OptionsResolverInterface;
 use Symfony\Component\Validator\Constraints\NotBlank;
 
-class HierarchyOperationType extends AbstractType
+class ReportHistoryTrainingType extends AbstractType
 {
     public function buildForm(FormBuilderInterface $builder, array $options)
     {
@@ -45,17 +45,51 @@ class HierarchyOperationType extends AbstractType
                     )
                 ))->addModelTransformer($transformer)
             )
-            ->add($builder->create('organisationunitToMove','hidden',array(
-                    'constraints'=> array(
-                        new NotBlank(),
-                    )
-                ))->addModelTransformer($transformer)
-            )->add($builder->create('parentOrganisationunit','hidden',array(
-                    'constraints'=> array(
-                        new NotBlank(),
-                    )
-                ))->addModelTransformer($transformer)
-            )
+            ->add('withLowerLevels','checkbox',array(
+                'required'=>False,
+            ))
+            ->add('reportType','choice',array(
+                'choices'=>array(
+                    ''=>'--SELECT--',
+                    'history'=>'History Report',
+                    'training'=>'In Service Training Report'
+                ),
+                'constraints'=>array(
+                    new NotBlank(),
+                )
+            ))
+            ->add('forms','entity', array(
+                'class'=>'HrisFormBundle:Form',
+                //'multiple'=>true,
+                'constraints'=>array(
+                    new NotBlank(),
+                )
+            ))
+            ->add('fields','entity',array(
+                'class'=>'HrisFormBundle:Field',
+                'empty_value' => '--SELECT--',
+                'query_builder'=>function(EntityRepository $er) {
+                    return $er->createQueryBuilder('field')
+                        ->innerJoin('field.inputType','inputType')
+                        ->where('inputType.name=:inputTypeName')
+                        ->orWhere('field.isCalculated=True')
+                        ->setParameter('inputTypeName',"Select")
+                        ->orderBy('field.isCalculated,field.name','ASC');
+                },
+                'constraints'=> array(
+                    new NotBlank(),
+                )
+            ))
+            ->add('graphType','choice',array(
+                'choices'=>array(
+                    'bar'=>'Bar Chart',
+                    'line'=>'Line Chart',
+                    'pie'=>'Pie Chart'
+                ),
+                'constraints'=>array(
+                    new NotBlank(),
+                )
+            ))
             ->add('submit','submit')
         ;
     }
@@ -72,6 +106,6 @@ class HierarchyOperationType extends AbstractType
 
     public function getName()
     {
-        return 'hris_organisationunitbundle_hierarchyoperationtype';
+        return 'hris_reportsbundle_reportaggregationtype';
     }
 }

@@ -70,54 +70,32 @@
         <div id="treeplaceholder"></div>
     </div>
     <div class="span4">
-        <div id="toMoveSection">
-            <div>1. Select an organisation unit to move</div>
-            <div id="innerToMoveSection">
-
-                <input type="hidden" name="toMoveOrgunitId" id="toMoveOrgunitId" class="required">
-                <input type="hidden" name="toMoveOrgunitConfirm" id="toMoveOrgunitConfirm" class="required" value="firstGlance">
-                <span id="toMoveOrgunitNameField">[Select Organisation unit] </span>
-                <br>
-                <input id="confirmOrgunitToMoveButton" type="button" value="Confirm" onclick="confirmToMoveOrgunit();" style="width:10em">
+        <div id="organisationunitSection">
+            <div>1. Select organisation unit to move</div>
+            <div id="innerOrganisationunitSection">
+                {{ form_errors( hierarchyOperationForm.organisationunitToMove ) }}
+                {{ form_widget( hierarchyOperationForm.organisationunitToMove ) }}
+                <span id="organisationunitname" class="organisationunitname">&nbsp;[[Select Organisation unit]] </span>
+                <br/>
+                <input id="confirmOrganisationunit" type="button" value="Confirm" onclick="confirmOrganisationunit();">
             </div>
         </div>
-        <div id="newParentSection">
-            <div>2. Select New Parent for <span id="childOrgunitName">Above Selected Organisationunit</span></div>
-            <div id="innerNewParentSection">
-                    <input type="hidden" name="newParentOrgunitId" id="newParentOrgunitId" class="required" value="">
-                    <input type="hidden" name="newParentOrgunitConfirm" id="newParentOrgunitConfirm" class="required" value="firstGlance">
-                    <span id="newParentOrgunitNameField"><em>[Select Parent]</em></span>
-                    <br>
-                    <input id="confirmNewParentOrgunitButton" type="button" value="Confirm" onclick="confirmNewParentOrgunit()" style="width:10em" disabled="disabled">
-                </div>
+        <hr/>
+        <div id="parentOrganisationunitSection">
+            <div>2. Select New Parent for <span id="childOrganisationunit" class="organisationunitname">[[Above Selected Organisationunit]]</span></div>
+            <div id="innerParentOrganisationunitSection">
+                {{ form_errors( hierarchyOperationForm.parentOrganisationunit ) }}
+                {{ form_widget( hierarchyOperationForm.parentOrganisationunit ) }}
+                <span id="parentOrganisationunitname" class="parentOrganisationunitname"><em>[[Select Parent]]</em></span>
+                <br/>
+                <input id="confirmParentOrganisationunit" type="button" value="Confirm" onclick="confirmParentOrganisationunit()" disabled="disabled">
             </div>
         </div>
-        <div id="newParentSection">
-            <div>3. Move</div>
-            <div id="innerNewParentSection">
-                <input type="hidden" name="newParentOrgunitId" id="newParentOrgunitId" class="required" value="">
-                <input type="hidden" name="newParentOrgunitConfirm" id="newParentOrgunitConfirm" class="required" value="firstGlance">
-                <span id="newParentOrgunitNameField"><em>[Select Parent]</em></span>
-                <br>
-                <input id="confirmNewParentOrgunitButton" type="button" value="Confirm" onclick="confirmNewParentOrgunit()" style="width:10em" disabled="disabled">
-            </div>
-        </div>
-
+        <hr/>
         <div id="confirmMoveSection">
-            <script type="text/javascript">
-                function confirmNewParentOrgunit() {
-                    moveOrgunitToNewParentOrgunitURL=
-                            '?pg=hierarchy&toMoveOrgunitId='
-                                    +$('#toMoveOrgunitId').val()
-                                    +'&newParentOrgunitId='
-                                    +$('#newParentOrgunitId').val();
-                    if (confirm("Are you sure you want Move Organisation Unit?")) { document.location = moveOrgunitToNewParentOrgunitURL; }
-                }
-            </script>
-            <input id="submitButton" type="submit" value="Move" name="changeHierarchy" onclick="confirmNewParentOrgunit()" style="width:10em;" disabled="disabled">
-            <input type="button" value="Reset" style="width:10em" onclick="window.location.href='?pg=hierarchy'">
+            {{ form_widget(hierarchyOperationForm.submit, {'attr': {'id': 'submitButton','disabled':'disabled','onclick':'confirmNewParentOrgunit()'}}) }}
+            <input type="button" value="Reset" onclick="window.location.href='?pg=hierarchy'">
         </div>
-
     </div>
 
     {{ form_end(hierarchyOperationForm) }}
