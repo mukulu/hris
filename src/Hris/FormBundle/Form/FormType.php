@@ -33,9 +33,21 @@ class FormType extends AbstractType
     public function buildForm(FormBuilderInterface $builder, array $options)
     {
         $builder
-            ->add('uid','hidden')
             ->add('name')
             ->add('title')
+            ->add('uniqueRecordFields')
+            ->add('formFieldMembers','entity',array(
+                'class'=>'HrisFormBundle:Field',
+                'multiple'=>True,
+                'required'=>True,
+                'mapped'=>False,
+            ))
+            ->add('formVisibleFields','entity',array(
+                'class'=>'HrisFormBundle:Field',
+                'multiple'=>True,
+                'required'=>True,
+                'mapped'=>False,
+            ))
         ;
     }
 

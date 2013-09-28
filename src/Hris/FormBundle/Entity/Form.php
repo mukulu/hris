@@ -402,6 +402,18 @@ class Form
     }
 
     /**
+     * Remove All formFieldMember
+     *
+     * @internal param \Hris\FormBundle\Entity\FormFieldMember $formFieldMember
+     */
+    public function removeAllFormFieldMember()
+    {
+        foreach($this->formFieldMember as $key=>$formFieldMember) {
+            $this->formFieldMember->removeElement($formFieldMember);
+        }
+    }
+
+    /**
      * Get formFieldMember
      *
      * @return \Doctrine\Common\Collections\Collection
@@ -509,13 +521,25 @@ class Form
     }
 
     /**
-     * Remove formVisibleFields
+     * Remove formVisibleField
      *
-     * @param FormVisibleFields $formVisibleFields
+     * @param FormVisibleFields $formVisibleField
      */
-    public function removeFormVisibleField(FormVisibleFields $formVisibleFields)
+    public function removeFormVisibleField(FormVisibleFields $formVisibleField)
     {
-        $this->formVisibleFields->removeElement($formVisibleFields);
+        $this->formVisibleFields->removeElement($formVisibleField);
+    }
+
+    /**
+     * Remove All formVisibleField
+     *
+     * @internal param \Hris\FormBundle\Entity\FormVisibleFields $formVisibleField
+     */
+    public function removeAllFormVisibleFields()
+    {
+        foreach($this->formVisibleFields as $key=>$formVisibleField) {
+            $this->formVisibleFields->removeElement($formVisibleField);
+        }
     }
 
     /**

@@ -6,8 +6,23 @@
     <script type="text/javascript">
         var treeplaceholder="treeplaceholder";
         var inputboxname="hris_organisationunitbundle_hierarchyoperationtype[organisationunit]";
+        var organisationunitToMove="#hris_organisationunitbundle_hierarchyoperationtype_organisationunitToMove";
+        var parentOrganisationnit="#hris_organisationunitbundle_hierarchyoperationtype_parentOrganisationunit";
         var urlExtension="";
         var selectedNode="";
+        function updateOrganisationunitHierarchy() {
+            alert($('#confirmParentOrganisationunit').attr('disabled'));
+            if($('#confirmOrganisationunitToMove').attr('disabled').val()=='disabled') {
+                alert('organisationunit to move already selected');
+
+            }else {
+                //Update organisationunit to move if confirm is not disabled
+                alert('organisationunit to move not selected yet');
+                $(organisationunitToMove).val( $('input[name="'+inputboxname+'"]').val() );
+                //Change Color of organisationuniToMoveSection
+                $('#organisationunitSection').attr('style').val('background-color:#CCFFCC;');
+            }
+        }
         Ext.define('OrganisationUnitTreeModel2', {
             extend: 'Ext.data.Model',
             idProperty: 'id',
@@ -42,6 +57,7 @@
                         var selectedOrgunits2 = selModel2.getSelection();
                         var selectedId2 = selectedOrgunits2[0].get('id');
                         $('input[name="'+inputboxname+'"]').val(selectedId2);
+                        updateOrganisationunitHierarchy();
                     },
                     afterrender: function(treePanel,eOpts) {
                         if(selectedNode){
@@ -75,9 +91,9 @@
             <div id="innerOrganisationunitSection">
                 {{ form_errors( hierarchyOperationForm.organisationunitToMove ) }}
                 {{ form_widget( hierarchyOperationForm.organisationunitToMove ) }}
-                <span id="organisationunitname" class="organisationunitname">&nbsp;[[Select Organisation unit]] </span>
+                <span id="organisationunitname" class="organisationunitname"><em>[[Select Organisation unit]]</em> </span>
                 <br/>
-                <input id="confirmOrganisationunit" type="button" value="Confirm" onclick="confirmOrganisationunit();">
+                <input id="confirmOrganisationunitToMove" type="button" class="btn" value="Confirm" onclick="confirmOrganisationunit();">
             </div>
         </div>
         <hr/>
@@ -88,13 +104,13 @@
                 {{ form_widget( hierarchyOperationForm.parentOrganisationunit ) }}
                 <span id="parentOrganisationunitname" class="parentOrganisationunitname"><em>[[Select Parent]]</em></span>
                 <br/>
-                <input id="confirmParentOrganisationunit" type="button" value="Confirm" onclick="confirmParentOrganisationunit()" disabled="disabled">
+                <input id="confirmParentOrganisationunit" type="button" class="btn" value="Confirm" onclick="confirmParentOrganisationunit()" disabled="disabled">
             </div>
         </div>
         <hr/>
         <div id="confirmMoveSection">
-            {{ form_widget(hierarchyOperationForm.submit, {'attr': {'id': 'submitButton','disabled':'disabled','onclick':'confirmNewParentOrgunit()'}}) }}
-            <input type="button" value="Reset" onclick="window.location.href='?pg=hierarchy'">
+            {{ form_widget(hierarchyOperationForm.submit, {'attr': {'id': 'submitButton','class':'btn','disabled':'disabled','onclick':'confirmNewParentOrgunit()'} }) }}
+            <input type="button" class="btn" value="Reset" onclick="window.location.href='?pg=hierarchy'">
         </div>
     </div>
 
