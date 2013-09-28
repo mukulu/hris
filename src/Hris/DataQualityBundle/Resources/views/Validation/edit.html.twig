@@ -10,103 +10,78 @@
 
     {{ form_start(edit_form, {'action': path('validation_update',{'id':entity.id}), 'method': 'POST'}) }}
 
-
-    <label for="hris_dataqualitybundle_validationtype_name" class="required">Name</label>
+    {{ form_label(edit_form.name) }}
     {{ form_widget(edit_form.name) }}
-    <label for="hris_dataqualitybundle_validationtype_description" class="required">Description</label>
+
+    {{ form_label(edit_form.description) }}
     {{ form_widget(edit_form.description) }}
 
     <div>
-        <table border="1" cellpadding="5" cellspacing="5">
-
-            <tr><label for="hris_dataqualitybundle_leftexpression" class="required">Left Expression</label></tr>
-
-            <tr> <td><select name="left_field" size="12" id="left_field" class="left_field" multiple="multiple" style="width:250px" ondblclick="copySelectedLeft()">
-
-
+        <table cellpadding="5" cellspacing="5">
+            <tr>
+                <td colspan="3">{{ form_label(edit_form.leftExpression) }}</td>
+            </tr>
+            <tr>
+                <td>
+                    <select name="left_field" size="12" id="left_field" class="left_field" multiple="multiple" style="width:250px;height:170px;" ondblclick="copySelectedLeft()">
                         {% for leftExpressionField in leftExpressionFields  %}
                             <option value="{{ leftExpressionField.id }}">{{ leftExpressionField.name }}</option>
                         {% endfor %}
                         <option value="Now" id="Now">Now</option>
                     </select>
                 </td>
-
-
                 <td>
-
-                    <input type="button" value=" + " name="add" id="add" onclick="copyValueOfLeftAddButton()"><br/>
-                    <input type="button" value=" - " name="minus" id="minus" onclick="copyValueOfLeftMinusButton()"><br/>
-                    <input type="button" value=" * " name="multiply" id="multiply" onclick="copyValueOfLeftMultiplyButton()"><br/>
-                    <input type="button" value=" / " name="devide" id="divide" onclick="copyValueOfLeftDivideButton()"><br/>
-                    <input type="button" value=" ( " name="brckt1" id="brckt1" onclick="copyValueOfLeftBracketOneButton()"><br/>
-                    <input type="button" value=" ) " name="brckt2" id="brckt2" onclick="copyValueOfLeftBracketTwoButton()"><br/>
-
+                    <input type="button" class="btn" value=" + " name="add" id="add" onclick="copyValueOfLeftAddButton()"><br/>
+                    <input type="button" class="btn" value=" - " name="minus" id="minus" onclick="copyValueOfLeftMinusButton()"><br/>
+                    <input type="button" class="btn" value=" * " name="multiply" id="multiply" onclick="copyValueOfLeftMultiplyButton()"><br/>
+                    <input type="button" class="btn" value=" / " name="devide" id="divide" onclick="copyValueOfLeftDivideButton()"><br/>
+                    <input type="button" class="btn" value=" ( " name="brckt1" id="brckt1" onclick="copyValueOfLeftBracketOneButton()"><br/>
+                    <input type="button" class="btn" value=" ) " name="brckt2" id="brckt2" onclick="copyValueOfLeftBracketTwoButton()"><br/>
                 </td>
-
                 <td>
                     {{ form_widget(edit_form.leftExpression) }}
                 </td>
             </tr>
         </table>
-        <br/>
-
-
     </div>
 
-
-
-
     <div>
-        <label for="hris_dataqualitybundle_validationtype_operator" class="required">Operator</label>
-
+        {{ form_label(edit_form.operator) }}
         {{ form_widget(edit_form.operator) }}
     </div>
 
-
     <div>
-
-        <table border="1" cellpadding="5" cellspacing="5">
-
-            <tr> <label for="hris_dataqualitybundle_rightexpression" class="required">Right Expression</label></tr>
-            <tr><td><select name="right_field" id="right_field" size="12" multiple="multiple" style="width:250px" ondblclick="copySelectedRight()">
-
-
+        <table cellpadding="5" cellspacing="5">
+            <tr>
+                <td colspan="3">{{ form_label(edit_form.rightExpression) }}</td>
+            </tr>
+            <tr>
+                <td>
+                    <select name="right_field" id="right_field" size="12" multiple="multiple" style="width:250px;height:170px;" ondblclick="copySelectedRight()">
                         {% for rightExpressionField in rightExpressionFields  %}
                             <option value="{{ rightExpressionField.id }}">{{ rightExpressionField.name }}</option>
                         {% endfor %}
                         <option value="Now" id="Now">Now</option>
                     </select>
                 </td>
-
                 <td>
-
-
-                    <input type="button" value=" + " name="add1" id="add1" onclick="copyValueOfRightAddButton()"><br/>
-                    <input type="button" value=" - " name="minus1" id="minus1" onclick="copyValueOfRightMinusButton()"><br/>
-                    <input type="button" value=" * " name="multiply1" id="multiply1" onclick="copyValueOfRightMultiplyButton()"><br/>
-                    <input type="button" value=" / " name="devide1" id="divide1" onclick="copyValueOfRightDivideButton()"><br/>
-                    <input type="button" value=" ( " name="brckt11" id="brckt11" onclick="copyValueOfRightBracketOneButton()"><br/>
-                    <input type="button" value=" ) " name="brckt21" id="brckt21" onclick="copyValueOfRightBracketTwoButton()"><br/>
-
+                    <input type="button" class="btn" value=" + " name="add1" id="add1" onclick="copyValueOfRightAddButton()"><br/>
+                    <input type="button" class="btn" value=" - " name="minus1" id="minus1" onclick="copyValueOfRightMinusButton()"><br/>
+                    <input type="button" class="btn" value=" * " name="multiply1" id="multiply1" onclick="copyValueOfRightMultiplyButton()"><br/>
+                    <input type="button" class="btn" value=" / " name="devide1" id="divide1" onclick="copyValueOfRightDivideButton()"><br/>
+                    <input type="button" class="btn" value=" ( " name="brckt11" id="brckt11" onclick="copyValueOfRightBracketOneButton()"><br/>
+                    <input type="button" class="btn" value=" ) " name="brckt21" id="brckt21" onclick="copyValueOfRightBracketTwoButton()"><br/>
                 </td>
-
                 <td>
                     {{ form_widget(edit_form.rightExpression) }}
                 </td>
             </tr>
         </table>
-        <br/>
-    </div>
-
-    <div>
-        <label for="hris_dataqualitybundle_validationtype_operator" class="required">Operator</label>
-
-        {{ form_widget(edit_form.operator) }}
     </div>
     <br/>
     <ul class="record_actions inline" style="float:left;">
         <li>
-            <button type="submit" class="btn">Edit</button>
+            {{ form_widget(edit_form.submit, {'attr': {'class': 'btn'}}) }}
         </li>
         <li>
             <a href="{{ path('validation') }}" class="btn">
@@ -114,9 +89,7 @@
             </a>
         </li>
     </ul>
-
     {{ form_end(edit_form)  }}
-
 
     <ul class="inline" style="float:left;margin-top:-20px;">
         <li>
@@ -133,25 +106,25 @@
                         <div class="modal-body">
                             Are you sure you want to delete <strong>{{ entity.name | capitalize }}</strong> that was created on {{ entity.datecreated|date('d/m/Y') }}
                             {% if entity.lastUpdated %}
-                                and last updated on {{ entity.lastupdated|date('H:i:s d/m/Y') }} ??
+                                and last updated on {{ entity.lastUpdated|date('H:i:s d/m/Y') }} ??
                             {% else %}
                                 and never updated ??
                             {% endif %}
                         </div>
                         <div class="modal-footer">
-                            <form action="{{ path('organisationunit_delete', { 'id': entity.id }) }}" method="post">
+                            <form action="{{ path('validation_delete', { 'id': entity.id }) }}" method="post">
                                 <input type="hidden" name="_method" value="DELETE" />
                                 {{ form_widget(delete_form) }}
                                 <button type="button" class="btn btn-default" data-dismiss="modal">Close</button>
                                 <button type="submit" class="btn btn-danger">Delete</button>
                             </form>
+
                         </div>
                     </div><!-- /.modal-content -->
                 </div><!-- /.modal-dialog -->
             </div><!-- /.modal -->
 
         </li>
-
-
     </ul>
+
 {% endblock %}
