@@ -52,7 +52,7 @@ class OrganisationunitController extends Controller
      * @Route("/", name="organisationunit")
      * @Route("/{parent}/parent",requirements={"parent"="\d+"}, name="organisationunit_parent")
      * @Route("/list", name="organisationunit_list")
-     * @Route("/list/{parent}/parent", name="organisationunit_list_parent")
+     * @Route("/list/{parent}/parent",requirements={"parent"="\d+"}, name="organisationunit_list_parent")
      * @Method("GET")
      * @Template()
      */
@@ -131,7 +131,7 @@ class OrganisationunitController extends Controller
      * @Secure(roles="ROLE_ORGANISATIONUNIT_ORGANISATIONUNIT_CREATE,ROLE_USER")
      *
      * @Route("/new", name="organisationunit_new")
-     * @Route("/new/{parent}/parent", name="organisationunit_new_parent")
+     * @Route("/new/{parent}/parent",requirements={"parent"="\d+"}, name="organisationunit_new_parent")
      * @Method("GET")
      * @Template()
      */
@@ -184,7 +184,7 @@ class OrganisationunitController extends Controller
      *
      * @Secure(roles="ROLE_ORGANISATIONUNIT_ORGANISATIONUNIT_EDIT,ROLE_USER")
      *
-     * @Route("/{id}/edit", name="organisationunit_edit")
+     * @Route("/{id}/edit", requirements={"id"="\d+"}, name="organisationunit_edit")
      * @Method("GET")
      * @Template()
      */
@@ -213,7 +213,7 @@ class OrganisationunitController extends Controller
      *
      * @Secure(roles="ROLE_ORGANISATIONUNIT_ORGANISATIONUNIT_EDIT,ROLE_USER")
      *
-     * @Route("/{id}", name="organisationunit_update")
+     * @Route("/{id}", requirements={"id"="\d+"}, name="organisationunit_update")
      * @Method("PUT")
      * @Template("HrisOrganisationunitBundle:Organisationunit:edit.html.twig")
      */
@@ -249,7 +249,7 @@ class OrganisationunitController extends Controller
      *
      * @Secure(roles="ROLE_ORGANISATIONUNIT_ORGANISATIONUNIT_DELETE,ROLE_USER")
      *
-     * @Route("/{id}", name="organisationunit_delete")
+     * @Route("/{id}", requirements={"id"="\d+"}, name="organisationunit_delete")
      * @Method("DELETE")
      */
     public function deleteAction(Request $request, $id)

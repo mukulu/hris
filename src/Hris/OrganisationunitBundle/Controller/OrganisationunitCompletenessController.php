@@ -106,7 +106,7 @@ class OrganisationunitCompletenessController extends Controller
     /**
      * Finds and displays a OrganisationunitCompleteness entity.
      *
-     * @Route("/{id}", requirements={"id"="\d+"}, name="organisationunitcompleteness_show")
+     * @Route("/{id}", requirements={"id"="\d+"}, requirements={"id"="\d+"}, name="organisationunitcompleteness_show")
      * @Method("GET")
      * @Template()
      */
@@ -131,7 +131,7 @@ class OrganisationunitCompletenessController extends Controller
     /**
      * Displays a form to edit an existing OrganisationunitCompleteness entity.
      *
-     * @Route("/{id}/edit", name="organisationunitcompleteness_edit")
+     * @Route("/{id}/edit", requirements={"id"="\d+"}, name="organisationunitcompleteness_edit")
      * @Method("GET")
      * @Template()
      */
@@ -158,7 +158,7 @@ class OrganisationunitCompletenessController extends Controller
     /**
      * Edits an existing OrganisationunitCompleteness entity.
      *
-     * @Route("/{id}", name="organisationunitcompleteness_update")
+     * @Route("/{id}", requirements={"id"="\d+"}, name="organisationunitcompleteness_update")
      * @Method("PUT")
      * @Template("HrisOrganisationunitBundle:OrganisationunitCompleteness:edit.html.twig")
      */
@@ -192,7 +192,7 @@ class OrganisationunitCompletenessController extends Controller
     /**
      * Deletes a OrganisationunitCompleteness entity.
      *
-     * @Route("/{id}", name="organisationunitcompleteness_delete")
+     * @Route("/{id}", requirements={"id"="\d+"}, name="organisationunitcompleteness_delete")
      * @Method("DELETE")
      */
     public function deleteAction(Request $request, $id)

@@ -112,7 +112,7 @@ class FormController extends Controller
     /**
      * Finds and displays a Form entity.
      *
-     * @Route("/{id}", requirements={"id"="\d+"}, name="form_show")
+     * @Route("/{id}", requirements={"id"="\d+"}, requirements={"id"="\d+"}, name="form_show")
      * @Method("GET")
      * @Template()
      */
@@ -137,7 +137,7 @@ class FormController extends Controller
     /**
      * Displays a form to edit an existing Form entity.
      *
-     * @Route("/{id}/edit", name="form_edit")
+     * @Route("/{id}/edit", requirements={"id"="\d+"}, name="form_edit")
      * @Method("GET")
      * @Template()
      */
@@ -164,7 +164,7 @@ class FormController extends Controller
     /**
      * Edits an existing Form entity.
      *
-     * @Route("/{id}", name="form_update")
+     * @Route("/{id}", requirements={"id"="\d+"}, name="form_update")
      * @Method("PUT")
      * @Template("HrisFormBundle:Form:edit.html.twig")
      */
@@ -198,7 +198,7 @@ class FormController extends Controller
     /**
      * Deletes a Form entity.
      *
-     * @Route("/{id}", name="form_delete")
+     * @Route("/{id}", requirements={"id"="\d+"}, name="form_delete")
      * @Method("DELETE")
      */
     public function deleteAction(Request $request, $id)

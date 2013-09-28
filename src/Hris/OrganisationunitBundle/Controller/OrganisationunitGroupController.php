@@ -126,7 +126,7 @@ class OrganisationunitGroupController extends Controller
     /**
      * Finds and displays a OrganisationunitGroup entity.
      *
-     * @Route("/{id}", requirements={"id"="\d+"}, name="organisationunitgroup_show")
+     * @Route("/{id}", requirements={"id"="\d+"}, requirements={"id"="\d+"}, name="organisationunitgroup_show")
      * @Method("GET")
      * @Template()
      */
@@ -151,7 +151,7 @@ class OrganisationunitGroupController extends Controller
     /**
      * Displays a form to edit an existing OrganisationunitGroup entity.
      *
-     * @Route("/{id}/edit", name="organisationunitgroup_edit")
+     * @Route("/{id}/edit", requirements={"id"="\d+"}, name="organisationunitgroup_edit")
      * @Method("GET")
      * @Template()
      */
@@ -178,7 +178,7 @@ class OrganisationunitGroupController extends Controller
     /**
      * Edits an existing OrganisationunitGroup entity.
      *
-     * @Route("/{id}", name="organisationunitgroup_update")
+     * @Route("/{id}", requirements={"id"="\d+"}, name="organisationunitgroup_update")
      * @Method("PUT")
      * @Template("HrisOrganisationunitBundle:OrganisationunitGroup:edit.html.twig")
      */
@@ -245,7 +245,7 @@ class OrganisationunitGroupController extends Controller
     /**
      * Deletes a OrganisationunitGroup entity.
      *
-     * @Route("/{id}", name="organisationunitgroup_delete")
+     * @Route("/{id}", requirements={"id"="\d+"}, name="organisationunitgroup_delete")
      * @Method("DELETE")
      */
     public function deleteAction(Request $request, $id)

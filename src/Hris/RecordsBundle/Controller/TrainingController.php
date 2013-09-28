@@ -106,7 +106,7 @@ class TrainingController extends Controller
     /**
      * Finds and displays a Training entity.
      *
-     * @Route("/{id}", requirements={"id"="\d+"}, name="training_show")
+     * @Route("/{id}", requirements={"id"="\d+"}, requirements={"id"="\d+"}, name="training_show")
      * @Method("GET")
      * @Template()
      */
@@ -131,7 +131,7 @@ class TrainingController extends Controller
     /**
      * Displays a form to edit an existing Training entity.
      *
-     * @Route("/{id}/edit", name="training_edit")
+     * @Route("/{id}/edit", requirements={"id"="\d+"}, name="training_edit")
      * @Method("GET")
      * @Template()
      */
@@ -158,7 +158,7 @@ class TrainingController extends Controller
     /**
      * Edits an existing Training entity.
      *
-     * @Route("/{id}", name="training_update")
+     * @Route("/{id}", requirements={"id"="\d+"}, name="training_update")
      * @Method("PUT")
      * @Template("HrisRecordsBundle:Training:edit.html.twig")
      */
@@ -192,7 +192,7 @@ class TrainingController extends Controller
     /**
      * Deletes a Training entity.
      *
-     * @Route("/{id}", name="training_delete")
+     * @Route("/{id}", requirements={"id"="\d+"}, name="training_delete")
      * @Method("DELETE")
      */
     public function deleteAction(Request $request, $id)

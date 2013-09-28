@@ -202,7 +202,7 @@ class OrganisationunitLevelController extends Controller
     /**
      * Displays a form to edit an existing OrganisationunitLevel entity.
      *
-     * @Route("/{id}/edit", name="organisationunitlevel_edit")
+     * @Route("/{id}/edit", requirements={"id"="\d+"}, name="organisationunitlevel_edit")
      * @Method("GET")
      * @Template()
      */
@@ -229,7 +229,7 @@ class OrganisationunitLevelController extends Controller
     /**
      * Edits an existing OrganisationunitLevel entity.
      *
-     * @Route("/{id}", name="organisationunitlevel_update")
+     * @Route("/{id}", requirements={"id"="\d+"}, name="organisationunitlevel_update")
      * @Method("PUT")
      * @Template("HrisOrganisationunitBundle:OrganisationunitLevel:edit.html.twig")
      */
@@ -263,7 +263,7 @@ class OrganisationunitLevelController extends Controller
     /**
      * Deletes a OrganisationunitLevel entity.
      *
-     * @Route("/{id}", name="organisationunitlevel_delete")
+     * @Route("/{id}", requirements={"id"="\d+"}, name="organisationunitlevel_delete")
      * @Method("DELETE")
      */
     public function deleteAction(Request $request, $id)
