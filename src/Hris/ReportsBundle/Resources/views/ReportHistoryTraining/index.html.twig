@@ -54,15 +54,14 @@
         });
         $( document ).ready(function() {
 
-            var withLowerLevels='#hris_reportsbundle_reportaggregationtype_withLowerLevels';
-            var organisationunitGroup='#hris_reportsbundle_reportaggregationtype_organisationunitGroup';
-            var fieldOneId='#hris_reportsbundle_reportaggregationtype_fields';
-            var fieldTwoId='#hris_reportsbundle_reportaggregationtype_fieldsTwo';
-            var graphTypeId='#hris_reportsbundle_reportaggregationtype_graphType';
+            var withLowerLevels='#hris_reportsbundle_reporthistorytrainingtype_withLowerLevels';
+            var forms='#hris_reportsbundle_reporthistorytrainingtype_forms';
+            var fields='#hris_reportsbundle_reporthistorytrainingtype_fields';
+            var graphTypeId='#hris_reportsbundle_reporthistorytrainingtype_graphType';
 
-            // Disable second field and organisationunitGroup
-            $(organisationunitGroup).attr('disabled', 'true');
-            $(fieldTwoId).attr('disabled', 'true');
+            // Disable fields and forms
+            $(forms).attr('disabled', 'true');
+            $(fields).attr('disabled', 'true');
 
             // On checking the withLowerLevels fields enable organisationunitGroup
             $(withLowerLevels).on('change', function() {
@@ -115,25 +114,23 @@
 {% endblock stylesheets %}
 
 {% block right_content -%}
-    <h1><small>Report Aggregation</small></h1>
+    <h1><small>History Report</small></h1>
 
-    {{ form_start(aggregationForm, { 'method' : 'PUT' } ) }}
+    {{ form_start(historytrainingForm, { 'method' : 'PUT' } ) }}
 
     <div>
         <div id="treeplaceholder"></div>
-        {{ form_errors( aggregationForm.organisationunit ) }}
-        {{ form_widget( aggregationForm.organisationunit ) }}
+        {{ form_errors( historytrainingForm.organisationunit ) }}
+        {{ form_widget( historytrainingForm.organisationunit ) }}
     </div>
     <br/>
-    {{ form_row( aggregationForm.withLowerLevels ) }}
-    {{ form_row( aggregationForm.organisationunitGroup ) }}
-    {{ form_row( aggregationForm.forms ) }}
+    {{ form_row( historytrainingForm.withLowerLevels ) }}
+    {{ form_row( historytrainingForm.reportType ) }}
+    {{ form_row( historytrainingForm.forms ) }}
 
-    {{ form_label(aggregationForm.fields) }}
-    {{ form_widget(aggregationForm.fields, {'attr': {'class': 'task_field'}}) }}
-    {{ form_widget(aggregationForm.fields, {'attr': {'class': 'task_field'}}) }}
+    {{ form_row( historytrainingForm.fields ) }}
 
-    {{ form_end(aggregationForm) }}
+    {{ form_end(historytrainingForm) }}
 
 
 {% endblock %}

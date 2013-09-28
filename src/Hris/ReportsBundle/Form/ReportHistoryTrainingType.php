@@ -31,7 +31,7 @@ use Symfony\Component\Form\FormBuilderInterface;
 use Symfony\Component\OptionsResolver\OptionsResolverInterface;
 use Symfony\Component\Validator\Constraints\NotBlank;
 
-class ReportAggregationType extends AbstractType
+class ReportHistoryTrainingType extends AbstractType
 {
     public function buildForm(FormBuilderInterface $builder, array $options)
     {
@@ -48,15 +48,19 @@ class ReportAggregationType extends AbstractType
             ->add('withLowerLevels','checkbox',array(
                 'required'=>False,
             ))
-            ->add('organisationunitGroup','entity',array(
-                    'class'=>'HrisOrganisationunitBundle:OrganisationunitGroup',
-                    'multiple'=>true,
-                    'required'=>False,
+            ->add('reportType','choice',array(
+                'choices'=>array(
+                    ''=>'--SELECT--',
+                    'history'=>'History Report',
+                    'training'=>'In Service Training Report'
+                ),
+                'constraints'=>array(
+                    new NotBlank(),
                 )
-            )
+            ))
             ->add('forms','entity', array(
                 'class'=>'HrisFormBundle:Form',
-                'multiple'=>true,
+                //'multiple'=>true,
                 'constraints'=>array(
                     new NotBlank(),
                 )
@@ -64,22 +68,6 @@ class ReportAggregationType extends AbstractType
             ->add('fields','entity',array(
                 'class'=>'HrisFormBundle:Field',
                 'empty_value' => '--SELECT--',
-                'query_builder'=>function(EntityRepository $er) {
-                    return $er->createQueryBuilder('field')
-                        ->innerJoin('field.inputType','inputType')
-                        ->where('inputType.name=:inputTypeName')
-                        ->orWhere('field.isCalculated=True')
-                        ->setParameter('inputTypeName',"Select")
-                        ->orderBy('field.isCalculated,field.name','ASC');
-                },
-                'constraints'=> array(
-                    new NotBlank(),
-                )
-            ))
-            ->add('fieldsTwo','entity',array(
-                'class'=>'HrisFormBundle:Field',
-                'empty_value' => '--SELECT--',
-                'required'=>False,
                 'query_builder'=>function(EntityRepository $er) {
                     return $er->createQueryBuilder('field')
                         ->innerJoin('field.inputType','inputType')

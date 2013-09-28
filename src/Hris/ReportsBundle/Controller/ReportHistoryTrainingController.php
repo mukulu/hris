@@ -27,7 +27,7 @@ namespace Hris\ReportsBundle\Controller;
 
 use Hris\OrganisationunitBundle\Entity\Organisationunit;
 use Hris\FormBundle\Entity\Field;
-use Hris\ReportsBundle\Form\ReportAggregationType;
+use Hris\ReportsBundle\Form\ReportHistoryTrainingType;
 use Symfony\Component\HttpFoundation\Request;
 use Doctrine\Common\Collections\ArrayCollection;
 use Symfony\Bundle\FrameworkBundle\Controller\Controller;
@@ -40,27 +40,27 @@ use Ob\HighchartsBundle\Highcharts\Highchart;
 use Zend\Json\Expr;
 
 /**
- * Report Aggregation controller.
+ * Report HistoryTraining controller.
  *
- * @Route("/reports/aggregation")
+ * @Route("/reports/historytraining")
  */
-class ReportAggregationController extends Controller
+class ReportHistoryTrainingController extends Controller
 {
 
     /**
-     * Show Report Aggregation
+     * Show Report HistoryTraining
      *
-     * @Route("/", name="report_aggregation")
+     * @Route("/", name="report_historytraining")
      * @Method("GET")
      * @Template()
      */
     public function indexAction()
     {
 
-        $aggregationForm = $this->createForm(new ReportAggregationType(),null,array('em'=>$this->getDoctrine()->getManager()));
+        $historytrainingForm = $this->createForm(new ReportHistoryTrainingType(),null,array('em'=>$this->getDoctrine()->getManager()));
 
         return array(
-            'aggregationForm'=>$aggregationForm->createView(),
+            'historytrainingForm'=>$historytrainingForm->createView(),
         );
     }
 
