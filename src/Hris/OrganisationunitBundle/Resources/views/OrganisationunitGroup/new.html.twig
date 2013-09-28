@@ -5,6 +5,7 @@
     <script type="text/javascript" language="javascript" src="{{ asset('commons/js/ext-all.js') }}"></script>
     <script type="text/javascript">
         var treeplaceholder='treeplaceholder';
+        var inputboxname="hris_organisationunitbundle_organisationunitgroupmembertype[organisationunitGroupMembers]";
         Ext.define('OrganisationUnitTreeModel2', {
             extend: 'Ext.data.Model',
             idProperty: 'id',
@@ -43,28 +44,14 @@
                 renderTo: treeplaceholder,
                 listeners : {
                     checkchange : function(rec, check){
-                        // Update on each single click(for update members of organisationunitgroup)
-                        var organisationunitgroupMemberUpdateURL = '{{ path('organisationunitgroup_update_member',{'_format':'json'}) }}';
-                        postData={'organisationunitid': rec.get('id'),'selected': check };
-                        $.post(organisationunitgroupMemberUpdateURL,postData , function( organisationunitLevels ){
-                            $('#notification').val(rec.get('longname')+' added to group');
-                        });
                         // Update collectively in the end(for adding members of organisationunitgroup)
-                        var organisationunitgroupMemberUpdateURL = '{{ path('organisationunitgroup_update_members',{'_format':'json'}) }}';
-                        postData={'organisationunitid': rec.get('id'),'selected': check };
-                        $.post(organisationunitgroupMemberUpdateURL,postData , function( organisationunitLevels ){
-                            $('#notification').val(rec.get('longname')+' added to group');
-                        });
-
-                        console.info(rec.get('id')+rec.get('longname')+':'+check);
                         var records = tree.getView().getChecked();
-                        var name=rec.get('id');
                         names = [];
-
-
                         Ext.Array.each(records, function(rec){
                             names.push(rec.get('id'));
                         });
+                        console.log(names);
+                        $('input[name="'+inputboxname+'"]').val(names);
                     }
                 }
             });

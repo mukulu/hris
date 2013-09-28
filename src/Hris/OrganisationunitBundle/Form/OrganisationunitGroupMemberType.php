@@ -28,7 +28,7 @@ use Symfony\Component\Form\AbstractType;
 use Symfony\Component\Form\FormBuilderInterface;
 use Symfony\Component\OptionsResolver\OptionsResolverInterface;
 
-class OrganisationunitGroupType extends AbstractType
+class OrganisationunitGroupMemberType extends AbstractType
 {
     public function buildForm(FormBuilderInterface $builder, array $options)
     {
@@ -37,6 +37,11 @@ class OrganisationunitGroupType extends AbstractType
             ->add('code')
             ->add('description')
             ->add('dhisUid')
+            ->add('organisationunitGroupMembers','hidden',array(
+                'mapped'=>false,
+                'required'=>true,
+
+            ))
         ;
     }
 
@@ -49,6 +54,6 @@ class OrganisationunitGroupType extends AbstractType
 
     public function getName()
     {
-        return 'hris_organisationunitbundle_organisationunitgrouptype';
+        return 'hris_organisationunitbundle_organisationunitgroupmembertype';
     }
 }

@@ -24,6 +24,7 @@
  */
 namespace Hris\OrganisationunitBundle\Controller;
 
+use Hris\OrganisationunitBundle\Form\OrganisationunitGroupMemberType;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Bundle\FrameworkBundle\Controller\Controller;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Method;
@@ -74,10 +75,23 @@ class OrganisationunitGroupController extends Controller
     public function createAction(Request $request)
     {
         $entity  = new OrganisationunitGroup();
-        $form = $this->createForm(new OrganisationunitGroupType(), $entity);
+        $form = $this->createForm(new OrganisationunitGroupMemberType(), $entity);
         $form->bind($request);
 
         if ($form->isValid()) {
+            $formData = $this->getRequest()->request->get('hris_organisationunitbundle_organisationunitgroupmembertype');
+            $organisationunitGroupMemberIds = $formData['organisationunitGroupMembers'];
+            if(!empty($organisationunitGroupMemberIds)) {
+                $queryBuilder = $this->getDoctrine()->getManager()->createQueryBuilder();
+                $organisationunits = $queryBuilder->select('organisationunit')
+                    ->from('HrisOrganisationunitBundle:Organisationunit','organisationunit')
+                    ->where($queryBuilder->expr()->in('organisationunit.id',$organisationunitGroupMemberIds))
+                    ->getQuery()->getResult();
+                foreach($organisationunits as $key=>$organisationunit) {
+                    $entity->addOrganisationunit($organisationunit);
+                }
+            }
+
             $em = $this->getDoctrine()->getManager();
             $em->persist($entity);
             $em->flush();
@@ -101,7 +115,7 @@ class OrganisationunitGroupController extends Controller
     public function newAction()
     {
         $entity = new OrganisationunitGroup();
-        $form   = $this->createForm(new OrganisationunitGroupType(), $entity);
+        $form   = $this->createForm(new OrganisationunitGroupMemberType(), $entity);
 
         return array(
             'entity' => $entity,
