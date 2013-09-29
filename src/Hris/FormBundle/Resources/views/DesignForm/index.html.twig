@@ -30,7 +30,13 @@
 
                     <select id="content_field" ondblclick="$('#showPopupModal').modal('hide')" name="content" size="10" style="width: 100%; height: 90%; font-family: 'Courier New',Courier,mono; font-size: 12px;" dir="ltr" wrap="soft">
                         {% for field in fields %}
-                            <option value="{{ field.inputType.htmltag | replace({'fieldName': field.name, 'fieldId': field.uid, '(fieldId)':  "('" ~ field.uid ~ "')" }) }}">{{ field.caption }}</option>
+
+                            {% if field.compulsory %}
+                                {% set required = "required" %}
+                            {% else %}
+                                {% set required = "" %}
+                            {% endif %}
+                            <option value="{{ field.inputType.htmltag | replace({'fieldName': field.name, 'fieldId': field.uid, '(fieldId)':  "('" ~ field.uid ~ "')", 'required': required,}) }}">{{ field.caption }}</option>
                         {% endfor %}
                     </select>
                 </div>
