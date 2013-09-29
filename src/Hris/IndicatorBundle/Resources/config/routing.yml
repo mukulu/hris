@@ -1,0 +1,3 @@
+indicator:
+    resource: "@HrisIndicatorBundle/Controller/IndicatorController.php"
+    type: annotation

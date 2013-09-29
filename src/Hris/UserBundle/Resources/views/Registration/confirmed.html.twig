@@ -1,13 +1,10 @@
-{% extends "FOSUserBundle::layout.html.twig" %}
+{% extends "::base.html.twig" %}
 
-{% block fos_user_content %}
-    <p>{{ 'registration.confirmed'|trans({'%username%': user.username}, 'FOSUserBundle') }}</p>
+{% block right_content %}
+    <h1><small>{{ 'registration.confirmed'|trans({'%username%': user.username}, 'FOSUserBundle') }}</small></h1>
     {% if app.session is not empty %}
-        {% set targetUrl = app.session.get('_security.target_path') %}
-        {% if targetUrl is not empty %}
-        	<p><a href="{{ targetUrl }}">{{ 'registration.back'|trans({}, 'FOSUserBundle') }}</a></p>
-        {% else %}
-        	<p><a href="{{ path('HrisUserBundle_homepage',{'name':user.username}) }}">{{ 'registration.back'|trans({}, 'FOSUserBundle') }}</a></p>
-        {% endif %}
+        {% set targetUrl = app.session.get('_security.' ~ app.security.token.providerKey ~ '.target_path') %}
+        {% if targetUrl is not empty %}<p><a href="{{ targetUrl }}" class="btn">{{ 'registration.back'|trans({}, 'FOSUserBundle') }}</a></p>{% endif %}
+        <p><a href="{{ path('hris_homepage') }}" class="btn">{{ 'registration.to_dashboard'|trans({}, 'FOSUserBundle') }}</a></p>
     {% endif %}
-{% endblock fos_user_content %}
+{% endblock right_content %}

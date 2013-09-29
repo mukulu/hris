@@ -1,0 +1,24 @@
+{% extends '::base.html.twig' %}
+
+{% block right_content -%}
+    <h1><small>Organisationunit creation</small></h1>
+
+    {% if  parent is not empty %}
+        <form action="{{ path('organisationunit_create_parent',{'parent': parent.id}) }}" method="post" {{ form_enctype(form) }}>
+    {% else %}
+            <form action="{{ path('organisationunit_create') }}" method="post" {{ form_enctype(form) }}>
+    {% endif %}
+        {{ form_widget(form) }}
+        <br/>
+        <ul class="record_actions inline" style="float:left;">
+            <li>
+                <button type="submit" class="btn">Create</button>
+            </li>
+            <li>
+                <a href="{{ path('organisationunit') }}" class="btn">
+                    Back to the list
+                </a>
+            </li>
+        </ul>
+    </form>
+{% endblock %}

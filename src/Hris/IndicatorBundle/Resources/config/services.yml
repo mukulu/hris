@@ -1,0 +1,8 @@
+parameters:
+#    hris_indicator.example.class: Hris\IndicatorBundle\Example
+
+services:
+    hris_indicator.configure_menu_listener:
+            class: Hris\IndicatorBundle\EventListener\ConfigureMenuListener
+            tags:
+                - { name: kernel.event_listener, event: hris_indicator.menu_configure, method: onMenuConfigure }

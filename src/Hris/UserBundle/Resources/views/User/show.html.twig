@@ -1,0 +1,137 @@
+{% extends '::base.html.twig' %}
+
+{% block right_content -%}
+    <h1><i class="icon-circle-info icon-largest" title="Show"></i> <small>{{ entity.username | capitalize }}'s Account Details</small></h1>
+
+    <table class="record_properties table table-striped table-bordered table-hover">
+        <tbody>
+            <tr>
+                <th>Username</th>
+                <td>{{ entity.username }}</td>
+            </tr>
+            <tr>
+                <th>Usernamecanonical</th>
+                <td>{{ entity.usernameCanonical }}</td>
+            </tr>
+            <tr>
+                <th>Email</th>
+                <td>{{ entity.email }}</td>
+            </tr>
+            <tr>
+                <th>Emailcanonical</th>
+                <td>{{ entity.emailCanonical }}</td>
+            </tr>
+            <tr>
+                <th>Enabled</th>
+                <td>{{ entity.enabled }}</td>
+            </tr>
+            <tr>
+                <th>Salt</th>
+                <td>{{ entity.salt }}</td>
+            </tr>
+            <tr>
+                <th>Password</th>
+                <td>{{ entity.password }}</td>
+            </tr>
+            <tr>
+                <th>Lastlogin</th>
+                <td>{{ entity.lastLogin|date('Y-m-d H:i:s') }}</td>
+            </tr>
+            <tr>
+                <th>Locked</th>
+                <td>{{ entity.locked }}</td>
+            </tr>
+            <tr>
+                <th>Expired</th>
+                <td>{{ entity.expired }}</td>
+            </tr>
+            <tr>
+                <th>Expiresat</th>
+                <td>{{ entity.expiresAt|date('Y-m-d H:i:s') }}</td>
+            </tr>
+            <tr>
+                <th>Confirmationtoken</th>
+                <td>{{ entity.confirmationToken }}</td>
+            </tr>
+            <tr>
+                <th>Passwordrequestedat</th>
+                <td>{{ entity.passwordRequestedAt|date('Y-m-d H:i:s') }}</td>
+            </tr>
+            <tr>
+                <th>Roles</th>
+                <td>{{ entity.roles }}</td>
+            </tr>
+            <tr>
+                <th>Credentialsexpired</th>
+                <td>{{ entity.credentialsExpired }}</td>
+            </tr>
+            <tr>
+                <th>Credentialsexpireat</th>
+                <td>{{ entity.credentialsExpireAt|date('Y-m-d H:i:s') }}</td>
+            </tr>
+            <tr>
+                <th>Id</th>
+                <td>{{ entity.id }}</td>
+            </tr>
+            <tr>
+                <th>Datecreated</th>
+                <td>{{ entity.datecreated|date('Y-m-d H:i:s') }}</td>
+            </tr>
+            <tr>
+                <th>Lastupdated</th>
+                <td>{{ entity.lastupdated|date('Y-m-d H:i:s') }}</td>
+            </tr>
+            <tr>
+                <th>Deletedat</th>
+                <td>{{ entity.deletedAt|date('Y-m-d H:i:s') }}</td>
+            </tr>
+        </tbody>
+    </table>
+
+    <ul class="record_actions inline">
+        <li>
+            <a href="{{ path('user') }}" class="btn">
+                Back to the list
+            </a>
+        </li>
+        <li>
+            <a href="{{ path('user_edit', { 'id': entity.id }) }}" class="btn">
+                Edit
+            </a>
+        </li>
+        <li>
+            <a data-toggle="modal" href="#deleteModalFor{{ entity.username }}" class="btn btn-danger">Delete {{ entity.username | capitalize }}</a>
+
+            <!-- Modal -->
+            <div class="modal fade" id="deleteModalFor{{ entity.username }}">
+                <div class="modal-dialog">
+                    <div class="modal-content">
+                        <div class="modal-header">
+                            <button type="button" class="close" data-dismiss="modal" aria-hidden="true">×</button>
+                            <h4 class="modal-title"><i class="icon-circle-remove icon-largest" title="Delete"></i>Deleting {{ entity.username | capitalize }}</h4>
+                        </div>
+                        <div class="modal-body">
+                            Are you sure you want to delete <strong>{{ entity.username | capitalize }}</strong> who's account was created on <em>{{ entity.datecreated|date('d/m/Y') }}</em>
+                            {% if entity.lastLogin %}
+                                and last logged in on {{ entity.lastLogin|date('H:i:s d/m/Y') }}
+                            {% else %}
+                                and
+                                {% if entity.enabled == 1 %} activated but never used ?? {% else %} never activated ?? {% endif %}
+                            {% endif %}
+                        </div>
+                        <div class="modal-footer">
+                            <form action="{{ path('user_delete', { 'id': entity.id }) }}" method="post">
+                                <input type="hidden" name="_method" value="DELETE" />
+                                {{ form_widget(delete_form) }}
+                                <button type="button" class="btn btn-default" data-dismiss="modal">Close</button>
+                                <button type="submit" class="btn btn-danger">Delete</button>
+                            </form>
+
+                        </div>
+                    </div><!-- /.modal-content -->
+                </div><!-- /.modal-dialog -->
+            </div><!-- /.modal -->
+
+        </li>
+    </ul>
+{% endblock %}

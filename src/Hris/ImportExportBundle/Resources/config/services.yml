@@ -1,0 +1,8 @@
+parameters:
+#    hris_import_export.example.class: Hris\ImportExportBundle\Example
+
+services:
+    hris_importexport.configure_menu_listener:
+                class: Hris\ImportExportBundle\EventListener\ConfigureMenuListener
+                tags:
+                    - { name: kernel.event_listener, event: hris_importexport.menu_configure, method: onMenuConfigure }

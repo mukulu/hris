@@ -1,0 +1,20 @@
+{% extends '::base.html.twig' %}
+
+{% block right_content -%}
+    <h1><small>ArithmeticFilter creation</small></h1>
+
+    <form action="{{ path('arithmeticfilter_create') }}" method="post" {{ form_enctype(form) }}>
+        {{ form_widget(form) }}
+        <br/>
+        <ul class="record_actions inline" style="float:left;">
+            <li>
+                <button type="submit" class="btn">Create</button>
+            </li>
+            <li>
+                <a href="{{ path('arithmeticfilter') }}" class="btn">
+                    Back to the list
+                </a>
+            </li>
+        </ul>
+    </form>
+{% endblock %}

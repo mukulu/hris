@@ -28,6 +28,7 @@ use Doctrine\ORM\Mapping as ORM;
 
 use Hris\FormBundle\Entity\Field;
 use Hris\FormBundle\Entity\FormSection;
+use Symfony\Component\Validator\Constraints as Assert;
 
 /**
  * Hris\FormBundle\Entity\FormSectionFieldMember
@@ -38,11 +39,11 @@ use Hris\FormBundle\Entity\FormSection;
 class FormSectionFieldMember
 {
     /**
-     * @var \Hris\FormBundle\Entity\FormSection $formSection
+     * @var FormSection $formSection
      *
      * @ORM\ManyToOne(targetEntity="Hris\FormBundle\Entity\FormSection",inversedBy="formSectionFieldMember")
      * @ORM\JoinColumns({
-     *   @ORM\JoinColumn(name="formsection_id", referencedColumnName="id",nullable=false)
+     *   @ORM\JoinColumn(name="formsection_id", referencedColumnName="id",nullable=false, onDelete="CASCADE")
      * })
      * @ORM\Id
      * @ORM\GeneratedValue(strategy="NONE")
@@ -50,11 +51,11 @@ class FormSectionFieldMember
     private $formSection;
     
     /**
-     * @var \Hris\FormBundle\Entity\Field $field
+     * @var Field $field
      *
      * @ORM\ManyToOne(targetEntity="Hris\FormBundle\Entity\Field",inversedBy="formSectionFieldMember")
      * @ORM\JoinColumns({
-     *   @ORM\JoinColumn(name="field_id", referencedColumnName="id",nullable=false)
+     *   @ORM\JoinColumn(name="field_id", referencedColumnName="id",nullable=false, onDelete="CASCADE")
      * })
      * @ORM\Id
      * @ORM\GeneratedValue(strategy="NONE")
@@ -101,10 +102,10 @@ class FormSectionFieldMember
     /**
      * Set formSection
      *
-     * @param \Hris\FormBundle\Entity\FormSection $formSection
+     * @param FormSection $formSection
      * @return FormSectionFieldMember
      */
-    public function setFormSection(\Hris\FormBundle\Entity\FormSection $formSection)
+    public function setFormSection(FormSection $formSection)
     {
         $this->formSection = $formSection;
     
@@ -114,7 +115,7 @@ class FormSectionFieldMember
     /**
      * Get formSection
      *
-     * @return \Hris\FormBundle\Entity\FormSection
+     * @return FormSection
      */
     public function getFormSection()
     {
@@ -124,10 +125,10 @@ class FormSectionFieldMember
     /**
      * Set field
      *
-     * @param \Hris\FormBundle\Entity\Field $field
+     * @param Field $field
      * @return FormSectionFieldMember
      */
-    public function setField(\Hris\FormBundle\Entity\Field $field)
+    public function setField(Field $field)
     {
         $this->field = $field;
     
@@ -137,10 +138,21 @@ class FormSectionFieldMember
     /**
      * Get field
      *
-     * @return \Hris\FormBundle\Entity\Field
+     * @return Field
      */
     public function getField()
     {
         return $this->field;
+    }
+
+    /**
+     * Get Entity verbose name
+     *
+     * @return string
+     */
+    public function __toString()
+    {
+        $formSectionMember = 'Section:'.$this->getFormSection()->__toString().' Field:'.$this->getField()->__toString();
+        return $formSectionMember;
     }
 }

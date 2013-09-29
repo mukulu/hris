@@ -24,16 +24,21 @@
  */
 namespace Hris\FormBundle\Entity;
 
+use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\ORM\Mapping as ORM;
+use Gedmo\Mapping\Annotation as Gedmo;
 
 use Hris\FormBundle\Entity\FriendlyReportCategory;
 use Hris\FormBundle\Entity\FieldOptionGroupset;
 use Hris\FormBundle\Entity\FieldOption;
 use Hris\FormBundle\Entity\Field;
+use Hris\IndicatorBundle\Entity\Indicator;
+use Symfony\Component\Validator\Constraints as Assert;
 
 /**
  * Hris\FormBundle\Entity\FieldOptionGroup
  *
+ * @Gedmo\Loggable
  * @ORM\Table(name="hris_fieldoptiongroup")
  * @ORM\Entity(repositoryClass="Hris\FormBundle\Entity\FieldOptionGroupRepository")
  */
@@ -51,6 +56,7 @@ class FieldOptionGroup
     /**
      * @var string $uid
      *
+     * @Gedmo\Versioned
      * @ORM\Column(name="uid", type="string", length=13, unique=true)
      */
     private $uid;
@@ -58,6 +64,7 @@ class FieldOptionGroup
     /**
      * @var string $name
      *
+     * @Gedmo\Versioned
      * @ORM\Column(name="name", type="string", length=64,unique=true)
      */
     private $name;
@@ -65,12 +72,13 @@ class FieldOptionGroup
     /**
      * @var string $description
      *
+     * @Gedmo\Versioned
      * @ORM\Column(name="description", type="text", nullable=true)
      */
     private $description;
     
     /**
-     * @var \Hris\FormBundle\Entity\FieldOption $fieldOption
+     * @var FieldOption $fieldOption
      *
      * @ORM\ManyToMany(targetEntity="Hris\FormBundle\Entity\FieldOption", inversedBy="fieldOptionGroup")
      * @ORM\JoinTable(name="hris_fieldoptiongroup_members",
@@ -87,17 +95,18 @@ class FieldOptionGroup
     private $fieldOption;
     
     /**
-     * @var \Hris\FormBundle\Entity\Field $field
+     * @var Field $field
      *
+     * @Gedmo\Versioned
      * @ORM\ManyToOne(targetEntity="Hris\FormBundle\Entity\Field")
      * @ORM\JoinColumns({
-     *   @ORM\JoinColumn(name="field_id", referencedColumnName="id")
+     *   @ORM\JoinColumn(name="field_id", referencedColumnName="id", onDelete="CASCADE")
      * })
      */
     private $field;
     
     /**
-     * @var \Hris\FormBundle\Entity\FieldOptionGroupset $fieldOptionGroupset
+     * @var FieldOptionGroupset $fieldOptionGroupset
      *
      * @ORM\ManyToMany(targetEntity="Hris\FormBundle\Entity\FieldOptionGroupset", mappedBy="fieldOptionGroup")
      * @ORM\OrderBy({"name" = "ASC"})
@@ -105,26 +114,36 @@ class FieldOptionGroup
     private $fieldOptionGroupset;
     
     /**
-     * @var \Hris\FormBundle\Entity\FriendlyReportCategory $friendlyReportCategory
+     * @var FriendlyReportCategory $friendlyReportCategory
      *
      * @ORM\OneToMany(targetEntity="Hris\FormBundle\Entity\FriendlyReportCategory", mappedBy="fieldOptionGroup")
      * @ORM\OrderBy({"sort" = "ASC"})
      */
     private $friendlyReportCategory;
-    
+
     /**
      * @var \DateTime $datecreated
      *
+     * @Gedmo\Timestampable(on="create")
      * @ORM\Column(name="datecreated", type="datetime")
      */
     private $datecreated;
-    
+
     /**
-     * @var \DateTime $lastmodified
+     * @var \DateTime $lastupdated
      *
-     * @ORM\Column(name="lastmodified", type="datetime", nullable=true)
+     * @Gedmo\Timestampable(on="update")
+     * @ORM\Column(name="lastupdated", type="datetime", nullable=true)
      */
-    private $lastmodified;
+    private $lastupdated;
+
+    /**
+     * @var Indicator $indicator
+     *
+     * @ORM\OneToMany(targetEntity="Hris\IndicatorBundle\Entity\Indicator", mappedBy="indicator",cascade={"ALL"})
+     * @ORM\OrderBy({"name" = "ASC"})
+     */
+    private $indicator;
     
     /**
      * @todo Support filter to further constraint criteria for items fitting in the field group
@@ -164,13 +183,7 @@ class FieldOptionGroup
      */
     public function getName()
     {
-    	$fieldCaption = $this->field->getCaption();
-    	if( empty($fieldCaption) ) {
-        	$descriptiveName = $this->name;
-    	}else {
-    		$descriptiveName = $this->name ." - ". $this->field->getCaption();
-    	}
-    	return $descriptiveName;
+    	return $this->name;
     }
 
     /**
@@ -200,7 +213,8 @@ class FieldOptionGroup
      */
     public function __construct()
     {
-        $this->fieldOption = new \Doctrine\Common\Collections\ArrayCollection();
+        $this->fieldOption = new ArrayCollection();
+        $this->indicator = new ArrayCollection();
         $this->uid = uniqid();
     }
     
@@ -231,19 +245,19 @@ class FieldOptionGroup
      * Set datecreated
      *
      * @param \DateTime $datecreated
-     * @return FieldOptionGroup
+     * @return Field
      */
     public function setDatecreated($datecreated)
     {
         $this->datecreated = $datecreated;
-    
+
         return $this;
     }
 
     /**
      * Get datecreated
      *
-     * @return \DateTime 
+     * @return \DateTime
      */
     public function getDatecreated()
     {
@@ -251,37 +265,38 @@ class FieldOptionGroup
     }
 
     /**
-     * Set lastmodified
+     * Set lastupdated
      *
-     * @param \DateTime $lastmodified
-     * @return FieldOptionGroup
+     * @param \DateTime $lastupdated
+     * @return Field
      */
-    public function setLastmodified($lastmodified)
+    public function setLastupdated($lastupdated)
     {
-        $this->lastmodified = $lastmodified;
-    
+        $this->lastupdated = $lastupdated;
+
         return $this;
     }
 
     /**
-     * Get lastmodified
+     * Get lastupdated
      *
-     * @return \DateTime 
+     * @return \DateTime
      */
-    public function getLastmodified()
+    public function getLastupdated()
     {
-        return $this->lastmodified;
+        return $this->lastupdated;
     }
 
     /**
      * Add fieldOption
      *
-     * @param \Hris\FormBundle\Entity\FieldOption $fieldOption
+     * @param FieldOption $fieldOption
      * @return FieldOptionGroup
      */
-    public function addFieldOption(\Hris\FormBundle\Entity\FieldOption $fieldOption)
+    public function addFieldOption(FieldOption $fieldOption)
     {
-        $this->fieldOption[] = $fieldOption;
+        $this->fieldOption[$fieldOption->getId()] = $fieldOption;
+        $fieldOption->addFieldOptionGroup($this);
     
         return $this;
     }
@@ -289,9 +304,9 @@ class FieldOptionGroup
     /**
      * Remove fieldOption
      *
-     * @param \Hris\FormBundle\Entity\FieldOption $fieldOption
+     * @param FieldOption $fieldOption
      */
-    public function removeFieldOption(\Hris\FormBundle\Entity\FieldOption $fieldOption)
+    public function removeFieldOption(FieldOption $fieldOption)
     {
         $this->fieldOption->removeElement($fieldOption);
     }
@@ -309,10 +324,10 @@ class FieldOptionGroup
     /**
      * Set field
      *
-     * @param \Hris\FormBundle\Entity\Field $field
+     * @param Field $field
      * @return FieldOptionGroup
      */
-    public function setField(\Hris\FormBundle\Entity\Field $field = null)
+    public function setField(Field $field = null)
     {
         $this->field = $field;
     
@@ -322,7 +337,7 @@ class FieldOptionGroup
     /**
      * Get field
      *
-     * @return \Hris\FormBundle\Entity\Field
+     * @return Field
      */
     public function getField()
     {
@@ -332,12 +347,12 @@ class FieldOptionGroup
     /**
      * Add fieldOptionGroupset
      *
-     * @param \Hris\FormBundle\Entity\FieldOptionGroupset $fieldOptionGroupset
+     * @param FieldOptionGroupset $fieldOptionGroupset
      * @return FieldOptionGroup
      */
-    public function addFieldOptionGroupset(\Hris\FormBundle\Entity\FieldOptionGroupset $fieldOptionGroupset)
+    public function addFieldOptionGroupset(FieldOptionGroupset $fieldOptionGroupset)
     {
-        $this->fieldOptionGroupset[] = $fieldOptionGroupset;
+        $this->fieldOptionGroupset[$fieldOptionGroupset->getId()] = $fieldOptionGroupset;
     
         return $this;
     }
@@ -345,9 +360,9 @@ class FieldOptionGroup
     /**
      * Remove fieldOptionGroupset
      *
-     * @param \Hris\FormBundle\Entity\FieldOptionGroupset $fieldOptionGroupset
+     * @param FieldOptionGroupset $fieldOptionGroupset
      */
-    public function removeFieldOptionGroupset(\Hris\FormBundle\Entity\FieldOptionGroupset $fieldOptionGroupset)
+    public function removeFieldOptionGroupset(FieldOptionGroupset $fieldOptionGroupset)
     {
         $this->fieldOptionGroupset->removeElement($fieldOptionGroupset);
     }
@@ -365,10 +380,10 @@ class FieldOptionGroup
     /**
      * Add friendlyReportCategory
      *
-     * @param \Hris\FormBundle\Entity\FriendlyReportCategory $friendlyReportCategory
+     * @param FriendlyReportCategory $friendlyReportCategory
      * @return FieldOptionGroup
      */
-    public function addFriendlyReportCategory(\Hris\FormBundle\Entity\FriendlyReportCategory $friendlyReportCategory)
+    public function addFriendlyReportCategory(FriendlyReportCategory $friendlyReportCategory)
     {
         $this->friendlyReportCategory[] = $friendlyReportCategory;
     
@@ -378,9 +393,9 @@ class FieldOptionGroup
     /**
      * Remove friendlyReportCategory
      *
-     * @param \Hris\FormBundle\Entity\FriendlyReportCategory $friendlyReportCategory
+     * @param FriendlyReportCategory $friendlyReportCategory
      */
-    public function removeFriendlyReportCategory(\Hris\FormBundle\Entity\FriendlyReportCategory $friendlyReportCategory)
+    public function removeFriendlyReportCategory(FriendlyReportCategory $friendlyReportCategory)
     {
         $this->friendlyReportCategory->removeElement($friendlyReportCategory);
     }
@@ -393,5 +408,48 @@ class FieldOptionGroup
     public function getFriendlyReportCategory()
     {
         return $this->friendlyReportCategory;
+    }
+
+    /**
+     * Add indicator
+     *
+     * @param Indicator $indicator
+     * @return FieldOptionGroup
+     */
+    public function addIndicator(Indicator $indicator)
+    {
+        $this->indicator[$indicator->getId()] = $indicator;
+
+        return $this;
+    }
+
+    /**
+     * Remove indicator
+     *
+     * @param Indicator $indicator
+     */
+    public function removeIndicator(Indicator $indicator)
+    {
+        $this->indicator->removeElement($indicator);
+    }
+
+    /**
+     * Get indicator
+     *
+     * @return \Doctrine\Common\Collections\Collection
+     */
+    public function getIndicator()
+    {
+        return $this->indicator;
+    }
+
+    /**
+     * Get Entity verbose name
+     *
+     * @return string
+     */
+    public function __toString()
+    {
+        return $this->name;
     }
 }

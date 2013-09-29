@@ -1,0 +1,60 @@
+{% extends '::base.html.twig' %}
+{% block stylesheets %}
+    <link rel="stylesheet" href="{{ asset('css/bootstrap.css') }}"/>
+    <link rel="stylesheet" href="{{ asset('css/bootstrap.icon-large.min.css') }}"/>
+    <link rel="stylesheet" href="{{ asset('commons/css/style.css') }}"/>
+{% endblock %}
+{% block right_content -%}
+
+    <h1>Form design</h1>
+    {{ form_start(form, { 'action': path('design_update', { 'id': entity.id }), 'method' : 'PUT' } ) }}
+    {{ tinymce_init() }}
+
+    {{ form_widget(form.hypertext, { 'attr': { 'class': 'tinymce', 'data-theme' : 'advanced' } } ) }}
+    <p style="margin-top:10px;float: left;">
+        <button type="submit" class="btn">Edit</button>
+    </p>
+    {{ form_end(form) }}
+    <a href="{{ path('form') }}" class="btn" style="float:right; margin-top:-10px;">
+        Back to the list
+    </a>
+
+    <div class="modal fade" id="showPopupModal">
+        <div class="modal-dialog">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <button type="button" class="close" data-dismiss="modal" aria-hidden="true">×</button>
+                    <h4 class="modal-title"><i class="icon-circle-remove icon-largest" title="Delete"></i>Deleting</h4>
+                </div>
+                <div class="modal-body">
+
+                    <select id="content_field" ondblclick="$('#showPopupModal').modal('hide')" name="content" size="10" style="width: 100%; height: 90%; font-family: 'Courier New',Courier,mono; font-size: 12px;" dir="ltr" wrap="soft">
+                        {% for field in fields %}
+
+                            {% if field.compulsory %}
+                                {% set required = "required" %}
+                            {% else %}
+                                {% set required = "" %}
+                            {% endif %}
+                            <option value="{{ field.inputType.htmltag | replace({'fieldName': field.name, 'fieldId': field.uid, '(fieldId)':  "('" ~ field.uid ~ "')", 'required': required,}) }}">{{ field.caption }}</option>
+                        {% endfor %}
+                    </select>
+                </div>
+                <div class="modal-footer">
+                    <form action="" method="post">
+                        <input type="hidden" class="btn btn-danger" name="_method" value="DELETE"/>
+                        <input type="hidden" value="" id="selectedField"/>
+                        <button type="button" class="btn btn-success" onclick="$('#showPopupModal').modal('hide')">Insert Field</button>
+                        <button type="button" class="btn btn-primary" data-dismiss="modal">Close</button>
+                    </form>
+
+                </div>
+            </div>
+            <!-- /.modal-content -->
+        </div>
+        <!-- /.modal-dialog -->
+    </div>
+
+{% endblock %}
+ 
+ 

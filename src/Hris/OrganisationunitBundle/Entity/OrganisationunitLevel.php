@@ -24,13 +24,17 @@
  */
 namespace Hris\OrganisationunitBundle\Entity;
 
+use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\ORM\Mapping as ORM;
+use Gedmo\Mapping\Annotation as Gedmo;
 
 use Hris\OrganisationunitBundle\Entity\OrganisationunitStructure;
+use Symfony\Component\Validator\Constraints as Assert;
 
 /**
  * Hris\OrganisationunitBundle\Entity\OrganisationunitLevel
  *
+ * @Gedmo\Loggable
  * @ORM\Table(name="hris_organisationunitlevel")
  * @ORM\Entity(repositoryClass="Hris\OrganisationunitBundle\Entity\OrganisationunitLevelRepository")
  */
@@ -48,20 +52,15 @@ class OrganisationunitLevel
     /**
      * @var string $uid
      *
+     * @Gedmo\Versioned
      * @ORM\Column(name="uid", type="string", length=13, unique=true)
      */
     private $uid;
-    
-    /**
-     * @var string $dhisUid
-     *
-     * @ORM\Column(name="dhisUid", type="string", length=11, nullable=true, unique=true)
-     */
-    private $dhisUid;
 
     /**
      * @var integer $level
      *
+     * @Gedmo\Versioned
      * @ORM\Column(name="level", type="integer", unique=true)
      */
     private $level;
@@ -69,6 +68,7 @@ class OrganisationunitLevel
     /**
      * @var string $name
      *
+     * @Gedmo\Versioned
      * @ORM\Column(name="name", type="string", length=128, unique=true)
      */
     private $name;
@@ -76,6 +76,7 @@ class OrganisationunitLevel
     /**
      * @var string $description
      *
+     * @Gedmo\Versioned
      * @ORM\Column(name="description", type="text", nullable=true)
      */
     private $description;
@@ -83,12 +84,13 @@ class OrganisationunitLevel
     /**
      * @var boolean $dataentrylevel
      *
+     * @Gedmo\Versioned
      * @ORM\Column(name="dataentrylevel", type="boolean")
      */
     private $dataentrylevel;
     
     /**
-     * @var \Hris\OrganisationunitBundle\Entity\OrganisationunitStructure $organisationunitStructure
+     * @var OrganisationunitStructure $organisationunitStructure
      *
      * @ORM\OneToMany(targetEntity="Hris\OrganisationunitBundle\Entity\OrganisationunitStructure", mappedBy="level",cascade={"ALL"})
      */
@@ -97,6 +99,7 @@ class OrganisationunitLevel
     /**
      * @var \DateTime $datecreated
      *
+     * @Gedmo\Timestampable(on="create")
      * @ORM\Column(name="datecreated", type="datetime")
      */
     private $datecreated;
@@ -104,6 +107,7 @@ class OrganisationunitLevel
     /**
      * @var \DateTime $lastupdated
      *
+     * @Gedmo\Timestampable(on="update")
      * @ORM\Column(name="lastupdated", type="datetime", nullable=true)
      */
     private $lastupdated;
@@ -280,37 +284,14 @@ class OrganisationunitLevel
     }
 
     /**
-     * Set dhisUid
-     *
-     * @param string $dhisUid
-     * @return OrganisationunitLevel
-     */
-    public function setDhisUid($dhisUid)
-    {
-        $this->dhisUid = $dhisUid;
-    
-        return $this;
-    }
-
-    /**
-     * Get dhisUid
-     *
-     * @return string 
-     */
-    public function getDhisUid()
-    {
-        return $this->dhisUid;
-    }
-
-    /**
      * Add organisationunitStructure
      *
-     * @param \Hris\OrganisationunitBundle\Entity\OrganisationunitStructure $organisationunitStructure
+     * @param OrganisationunitStructure $organisationunitStructure
      * @return OrganisationunitLevel
      */
-    public function addOrganisationunitStructure(\Hris\OrganisationunitBundle\Entity\OrganisationunitStructure $organisationunitStructure)
+    public function addOrganisationunitStructure(OrganisationunitStructure $organisationunitStructure)
     {
-        $this->organisationunitStructure[] = $organisationunitStructure;
+        $this->organisationunitStructure[$organisationunitStructure->getId()] = $organisationunitStructure;
     
         return $this;
     }
@@ -318,9 +299,9 @@ class OrganisationunitLevel
     /**
      * Remove organisationunitStructure
      *
-     * @param \Hris\OrganisationunitBundle\Entity\OrganisationunitStructure $organisationunitStructure
+     * @param OrganisationunitStructure $organisationunitStructure
      */
-    public function removeOrganisationunitStructure(\Hris\OrganisationunitBundle\Entity\OrganisationunitStructure $organisationunitStructure)
+    public function removeOrganisationunitStructure(OrganisationunitStructure $organisationunitStructure)
     {
         $this->organisationunitStructure->removeElement($organisationunitStructure);
     }
@@ -340,8 +321,18 @@ class OrganisationunitLevel
     public function __construct()
     {
     	$this->uid = uniqid();
-        $this->organisationunitStructure = new \Doctrine\Common\Collections\ArrayCollection();
+        $this->organisationunitStructure = new ArrayCollection();
         $this->dataentrylevel = FALSE;
+    }
+
+    /**
+     * Get Entity verbose name
+     *
+     * @return string
+     */
+    public function __toString()
+    {
+        return $this->name;
     }
     
 }

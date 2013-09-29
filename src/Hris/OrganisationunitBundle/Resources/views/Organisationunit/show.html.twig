@@ -1,0 +1,143 @@
+{% extends '::base.html.twig' %}
+
+{% block right_content -%}
+    <h1><i class="icon-circle-info icon-largest" title="Show"></i> <small>{{ entity.longname | capitalize }}'s Details</small></h1>
+
+    <table class="record_properties table table-striped table-bordered table-hover">
+        <tbody>
+            <tr>
+                <th>Id</th>
+                <td>{{ entity.id }}</td>
+            </tr>
+            <tr>
+                <th>Uid</th>
+                <td>{{ entity.uid }}</td>
+            </tr>
+            <tr>
+                <th>Dhisuid</th>
+                <td>{{ entity.dhisUid }}</td>
+            </tr>
+            <tr>
+                <th>Code</th>
+                <td>{{ entity.code }}</td>
+            </tr>
+            <tr>
+                <th>Shortname</th>
+                <td>{{ entity.shortname }}</td>
+            </tr>
+            <tr>
+                <th>Longname</th>
+                <td>{{ entity.longname }}</td>
+            </tr>
+            <tr>
+                <th>Parent</th>
+                <td>{{ entity.parent }}</td>
+            </tr>
+            <tr>
+                <th>Active</th>
+                <td>{{ entity.active }}</td>
+            </tr>
+            <tr>
+                <th>Openingdate</th>
+                <td>{{ entity.openingdate|date('Y-m-d H:i:s') }}</td>
+            </tr>
+            <tr>
+                <th>Closingdate</th>
+                <td>{{ entity.closingdate|date('Y-m-d H:i:s') }}</td>
+            </tr>
+            <tr>
+                <th>Geocode</th>
+                <td>{{ entity.geocode }}</td>
+            </tr>
+            <tr>
+                <th>Coordinates</th>
+                <td>{{ entity.coordinates }}</td>
+            </tr>
+            <tr>
+                <th>Featuretype</th>
+                <td>{{ entity.featuretype }}</td>
+            </tr>
+            <tr>
+                <th>Address</th>
+                <td>{{ entity.address }}</td>
+            </tr>
+            <tr>
+                <th>Email</th>
+                <td>{{ entity.email }}</td>
+            </tr>
+            <tr>
+                <th>Phonenumber</th>
+                <td>{{ entity.phonenumber }}</td>
+            </tr>
+            <tr>
+                <th>Contactperson</th>
+                <td>{{ entity.contactperson }}</td>
+            </tr>
+            <tr>
+                <th>Description</th>
+                <td>{{ entity.description }}</td>
+            </tr>
+            <tr>
+                <th>Datecreated</th>
+                <td>{{ entity.datecreated|date('Y-m-d H:i:s') }}</td>
+            </tr>
+            <tr>
+                <th>Lastupdated</th>
+                <td>{{ entity.lastupdated|date('Y-m-d H:i:s') }}</td>
+            </tr>
+        </tbody>
+    </table>
+
+        <ul class="record_actions inline">
+            <li>
+                {% if entity.parent is not empty %}
+                    <a href="{{ path('organisationunit_list_parent', { 'parent': entity.parent.id }) }}" class="btn">Back to the list</a>
+                {% else %}
+                    <a href="{{ path('organisationunit_list') }}" class="btn">Back to the list</a>
+                {% endif %}
+            </li>
+            <li>
+                <a href="{{ path('organisationunit_edit', { 'id': entity.id }) }}" class="btn">
+                    Edit
+                </a>
+            </li>
+            <li>
+                <a class="btn" href="{{ path('organisationunit_new') }}">
+                    Create a another
+                </a>
+            </li>
+            <li>
+                <a data-toggle="modal" href="#deleteModalFor{{ entity.uid }}" class="btn btn-danger">Delete {{ entity.longname | capitalize }}</a>
+
+                <!-- Modal -->
+                <div class="modal fade" id="deleteModalFor{{ entity.uid }}">
+                    <div class="modal-dialog">
+                        <div class="modal-content">
+                            <div class="modal-header">
+                                <button type="button" class="close" data-dismiss="modal" aria-hidden="true">×</button>
+                                <h4 class="modal-title"><i class="icon-circle-remove icon-largest" title="Delete"></i>Deleting {{ entity.longname | capitalize }}</h4>
+                            </div>
+                            <div class="modal-body">
+                                Are you sure you want to delete <strong>{{ entity.longname | capitalize }}</strong> that was created on <em>{{ entity.datecreated|date('d/m/Y') }}</em>
+                                {% if entity.lastUpdated %}
+                                    and last updated on {{ entity.lastUpdated|date('H:i:s d/m/Y') }} ??
+                                {% else %}
+                                    and never updated ??
+                                {% endif %}
+                            </div>
+                            <div class="modal-footer">
+                                <form action="{{ path('organisationunit_delete', { 'id': entity.id }) }}" method="post">
+                                    <input type="hidden" class="btn btn-danger" name="_method" value="DELETE" />
+                                    {{ form_widget(delete_form) }}
+                                    <button type="button" class="btn btn-default" data-dismiss="modal">Close</button>
+                                    <button type="submit" class="btn btn-danger">Delete</button>
+                                </form>
+
+                            </div>
+                        </div><!-- /.modal-content -->
+                    </div><!-- /.modal-dialog -->
+                </div><!-- /.modal -->
+
+            </li>
+        </ul>
+{% endblock %}

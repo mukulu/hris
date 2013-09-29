@@ -1,3 +1,11 @@
-hris_records_homepage:
-    pattern:  /hello/{name}
-    defaults: { _controller: HrisRecordsBundle:Default:index }
+history:
+    resource: "@HrisRecordsBundle/Controller/HistoryController.php"
+    type: annotation
+
+record:
+    resource: "@HrisRecordsBundle/Controller/RecordController.php"
+    type: annotation
+
+training:
+    resource: "@HrisRecordsBundle/Controller/TrainingController.php"
+    type: annotation

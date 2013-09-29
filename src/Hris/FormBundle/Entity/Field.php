@@ -24,7 +24,9 @@
  */
 namespace Hris\FormBundle\Entity;
 
+use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\ORM\Mapping as ORM;
+use Gedmo\Mapping\Annotation as Gedmo;
 
 use Hris\FormBundle\Entity\ResourceTableFieldMember;
 use Hris\FormBundle\Entity\FormSectionFieldMember;
@@ -38,10 +40,12 @@ use Hris\FormBundle\Entity\InputType;
 use Hris\RecordsBundle\Entity\RecordValue;
 use Hris\RecordsBundle\Entity\RecordStats;
 use \DateTime;
+use Symfony\Component\Validator\Constraints as Assert;
 
 /**
  * Hris\FormBundle\Entity\Field
  *
+ * @Gedmo\Loggable
  * @ORM\Table(name="hris_field")
  * @ORM\Entity(repositoryClass="Hris\FormBundle\Entity\FieldRepository")
  */
@@ -59,6 +63,7 @@ class Field
     /**
      * @var string $uid
      *
+     * @Gedmo\Versioned
      * @ORM\Column(name="uid", type="string", length=13, unique=true)
      */
     private $uid;
@@ -66,6 +71,8 @@ class Field
     /**
      * @var string $name
      *
+     * @Gedmo\Versioned
+     * @Assert\NotBlank()
      * @ORM\Column(name="name", type="string", length=64, unique=true)
      */
     private $name;
@@ -73,6 +80,8 @@ class Field
     /**
      * @var string $caption
      *
+     * @Gedmo\Versioned
+     * @Assert\NotBlank()
      * @ORM\Column(name="caption", type="string", length=64)
      */
     private $caption;
@@ -80,28 +89,48 @@ class Field
     /**
      * @var boolean $compulsory
      *
-     * @ORM\Column(name="compulsory", type="boolean")
+     * @Gedmo\Versioned
+     * @ORM\Column(name="compulsory", type="boolean", nullable=True)
      */
     private $compulsory;
 
     /**
-     * @var boolean $unique
+     * @var boolean isUnique
      *
-     * @ORM\Column(name="unique", type="boolean")
+     * @Gedmo\Versioned
+     * @ORM\Column(name="isUnique", type="boolean", nullable=True)
      */
-    private $unique;
+    private $isUnique;
+
+    /**
+     * @var boolean isCalculated
+     *
+     * @Gedmo\Versioned
+     * @ORM\Column(name="isCalculated", type="boolean", nullable=True)
+     */
+    private $isCalculated;
 
     /**
      * @var string $description
      *
+     * @Gedmo\Versioned
      * @ORM\Column(name="description", type="text", nullable=true)
      */
     private $description;
 
     /**
+     * @var string $calculatedExpression
+     *
+     * @Gedmo\Versioned
+     * @ORM\Column(name="calculatedExpression", type="text", nullable=true)
+     */
+    private $calculatedExpression;
+
+    /**
      * @var boolean $hashistory
      *
-     * @ORM\Column(name="hashistory", type="boolean")
+     * @Gedmo\Versioned
+     * @ORM\Column(name="hashistory", type="boolean", nullable=True)
      */
     private $hashistory;
 
@@ -113,7 +142,7 @@ class Field
     private $fieldrelation;
     
     /**
-     * @var \Hris\FormBundle\Entity\FieldGroup $fieldGroup
+     * @var FieldGroup $fieldGroup
      *
      * @ORM\ManyToMany(targetEntity="Hris\FormBundle\Entity\FieldGroup", mappedBy="field")
      * @ORM\OrderBy({"name" = "ASC"})
@@ -121,7 +150,7 @@ class Field
     private $fieldGroup;
     
     /**
-     * @var \Hris\FormBundle\Entity\Field $parentField
+     * @var Field $parentField
      *
      * @ORM\ManyToMany(targetEntity="Hris\FormBundle\Entity\Field", mappedBy="childField")
      * @ORM\OrderBy({"name" = "ASC"})
@@ -129,7 +158,7 @@ class Field
     private $parentField;
     
     /**
-     * @var \Hris\FormBundle\Entity\Field $childField
+     * @var Field $childField
      *
      * @ORM\ManyToMany(targetEntity="Hris\FormBundle\Entity\Field", inversedBy="parentField")
      * @ORM\JoinTable(name="hris_field_relation",
@@ -145,51 +174,37 @@ class Field
     private $childField;
     
     /**
-     * @var \Hris\FormBundle\Entity\DataType $dataType
+     * @var DataType $dataType
      *
+     * @Gedmo\Versioned
      * @ORM\ManyToOne(targetEntity="Hris\FormBundle\Entity\DataType",inversedBy="field")
      * @ORM\JoinColumns({
-     *   @ORM\JoinColumn(name="datatype_id", referencedColumnName="id")
+     *   @ORM\JoinColumn(name="datatype_id", referencedColumnName="id", onDelete="CASCADE")
      * })
      */
     private $dataType;
     
     /**
-     * @var \Hris\FormBundle\Entity\InputType $inputType
+     * @var InputType $inputType
      *
+     * @Gedmo\Versioned
      * @ORM\ManyToOne(targetEntity="Hris\FormBundle\Entity\InputType",inversedBy="field")
      * @ORM\JoinColumns({
-     *   @ORM\JoinColumn(name="inputtype_id", referencedColumnName="id")
+     *   @ORM\JoinColumn(name="inputtype_id", referencedColumnName="id", onDelete="CASCADE")
      * })
      */
     private $inputType;
-    
+
     /**
-     *	@var \Hris\FormBundle\Entity\FieldOption $fieldOption
+     * @var boolean $skipInReport
      *
-     * @ORM\OneToMany(targetEntity="Hris\FormBundle\Entity\FieldOption", mappedBy="field",cascade={"ALL"})
-     * @ORM\OrderBy({"value" = "ASC"})
+     * @Gedmo\Versioned
+     * @ORM\Column(name="skipInReport", type="boolean", nullable=true)
      */
-    private $fieldOption;
+    private $skipInReport;
     
     /**
-     *	@var \Hris\RecordsBundle\Entity\RecordValue $recordValue
-     *
-     * @ORM\OneToMany(targetEntity="Hris\RecordsBundle\Entity\RecordValue", mappedBy="field",cascade={"ALL"})
-     * @ORM\OrderBy({"value" = "ASC"})
-     */
-    private $recordValue;
-    
-    /**
-     *	@var \Hris\RecordsBundle\Entity\RecordStats $recordStats
-     *
-     * @ORM\OneToMany(targetEntity="Hris\RecordsBundle\Entity\RecordStats", mappedBy="field",cascade={"ALL"})
-     * @ORM\OrderBy({"count" = "ASC"})
-     */
-    private $recordStats;
-    
-    /**
-     * @var \Hris\FormBundle\Entity\FormVisibleFields $formVisibleFields
+     * @var FormVisibleFields $formVisibleFields
      *
      * @ORM\OneToMany(targetEntity="Hris\FormBundle\Entity\FormVisibleFields", mappedBy="field",cascade={"ALL"})
      * @ORM\OrderBy({"sort" = "ASC"})
@@ -197,7 +212,7 @@ class Field
     private $formVisibleFields;
     
     /**
-     * @var \Hris\FormBundle\Entity\FieldOptionMerge $fieldOptionMerge
+     * @var FieldOptionMerge $fieldOptionMerge
      *
      * @ORM\OneToMany(targetEntity="Hris\FormBundle\Entity\FieldOptionMerge", mappedBy="removedOptionField",cascade={"ALL"})
      * @ORM\OrderBy({"removedoptionvalue" = "ASC"})
@@ -205,7 +220,7 @@ class Field
     private $fieldOptionMerge;
     
     /**
-     * @var \Hris\FormBundle\Entity\FormFieldMember $formFieldMember
+     * @var FormFieldMember $formFieldMember
      *
      * @ORM\OneToMany(targetEntity="Hris\FormBundle\Entity\FormFieldMember", mappedBy="field", cascade={"ALL"})
      * @ORM\OrderBy({"sort" = "ASC"})
@@ -213,7 +228,7 @@ class Field
     private $formFieldMember;
     
     /**
-     * @var \Hris\FormBundle\Entity\FormSectionFieldMember $formSectionFieldMember
+     * @var FormSectionFieldMember $formSectionFieldMember
      *
      * @ORM\OneToMany(targetEntity="Hris\FormBundle\Entity\FormSectionFieldMember", mappedBy="field",cascade={"ALL"})
      * @ORM\OrderBy({"sort" = "ASC"})
@@ -221,7 +236,7 @@ class Field
     private $formSectionFieldMember;
     
     /**
-     * @var \Hris\FormBundle\Entity\Form $uniqueRecordForms
+     * @var Form $uniqueRecordForms
      * Forms in which this field together(or not) with others makes a record unique in the form
      *
      * @ORM\ManyToMany(targetEntity="Hris\FormBundle\Entity\Form", mappedBy="uniqueRecordFields")
@@ -230,7 +245,7 @@ class Field
     private $uniqueRecordForms;
     
     /**
-     * @var \Hris\FormBundle\Entity\ResourceTableFieldMember $resourceTableFieldMember
+     * @var ResourceTableFieldMember $resourceTableFieldMember
      *
      * @ORM\OneToMany(targetEntity="Hris\FormBundle\Entity\ResourceTableFieldMember", mappedBy="field",cascade={"ALL"})
      * @ORM\OrderBy({"sort" = "ASC"})
@@ -240,6 +255,7 @@ class Field
     /**
      * @var \DateTime $datecreated
      *
+     * @Gedmo\Timestampable(on="create")
      * @ORM\Column(name="datecreated", type="datetime")
      */
     private $datecreated;
@@ -247,6 +263,7 @@ class Field
     /**
      * @var \DateTime $lastupdated
      *
+     * @Gedmo\Timestampable(on="update")
      * @ORM\Column(name="lastupdated", type="datetime", nullable=true)
      */
     private $lastupdated;
@@ -332,26 +349,26 @@ class Field
     }
 
     /**
-     * Set unique
+     * Set isUnique
      *
-     * @param boolean $unique
+     * @param boolean $isUnique
      * @return Field
      */
-    public function setUnique($unique)
+    public function setIsUnique($isUnique)
     {
-        $this->unique = $unique;
+        $this->isUnique = $isUnique;
     
         return $this;
     }
 
     /**
-     * Get unique
+     * Get isUnique
      *
      * @return boolean 
      */
-    public function getUnique()
+    public function getIsUnique()
     {
-        return $this->unique;
+        return $this->isUnique;
     }
 
     /**
@@ -426,12 +443,12 @@ class Field
     /**
      * Add fieldGroup
      *
-     * @param \Hris\FormBundle\Entity\FieldGroup $fieldGroup
+     * @param FieldGroup $fieldGroup
      * @return Field
      */
-    public function addFieldGroup(\Hris\FormBundle\Entity\FieldGroup $fieldGroup)
+    public function addFieldGroup(FieldGroup $fieldGroup)
     {
-        $this->fieldGroup[] = $fieldGroup;
+        $this->fieldGroup[$fieldGroup->getId()] = $fieldGroup;
     
         return $this;
     }
@@ -439,9 +456,9 @@ class Field
     /**
      * Remove fieldGroup
      *
-     * @param \Hris\FormBundle\Entity\FieldGroup $fieldGroup
+     * @param FieldGroup $fieldGroup
      */
-    public function removeFieldGroup(\Hris\FormBundle\Entity\FieldGroup $fieldGroup)
+    public function removeFieldGroup(FieldGroup $fieldGroup)
     {
         $this->fieldGroup->removeElement($fieldGroup);
     }
@@ -459,12 +476,13 @@ class Field
     /**
      * Add parentField
      *
-     * @param \Hris\FormBundle\Entity\Field $parentField
+     * @param Field $parentField
      * @return Field
      */
-    public function addParentField(\Hris\FormBundle\Entity\Field $parentField)
+    public function addParentField(Field $parentField)
     {
-        $this->parentField[] = $parentField;
+        $this->parentField[$parentField->getId()] = $parentField;
+        $parentField->addChildField($this);
     
         return $this;
     }
@@ -472,9 +490,9 @@ class Field
     /**
      * Remove parentField
      *
-     * @param \Hris\FormBundle\Entity\Field $parentField
+     * @param Field $parentField
      */
-    public function removeParentField(\Hris\FormBundle\Entity\Field $parentField)
+    public function removeParentField(Field $parentField)
     {
         $this->parentField->removeElement($parentField);
     }
@@ -492,12 +510,12 @@ class Field
     /**
      * Add childField
      *
-     * @param \Hris\FormBundle\Entity\Field $childField
+     * @param Field $childField
      * @return Field
      */
-    public function addChildField(\Hris\FormBundle\Entity\Field $childField)
+    public function addChildField(Field $childField)
     {
-        $this->childField[] = $childField;
+        $this->childField[$childField->getId()] = $childField;
     
         return $this;
     }
@@ -505,9 +523,9 @@ class Field
     /**
      * Remove childField
      *
-     * @param \Hris\FormBundle\Entity\Field $childField
+     * @param Field $childField
      */
-    public function removeChildField(\Hris\FormBundle\Entity\Field $childField)
+    public function removeChildField(Field $childField)
     {
         $this->childField->removeElement($childField);
     }
@@ -525,10 +543,10 @@ class Field
     /**
      * Set dataType
      *
-     * @param \Hris\FormBundle\Entity\DataType $dataType
+     * @param DataType $dataType
      * @return Field
      */
-    public function setDataType(\Hris\FormBundle\Entity\DataType $dataType = null)
+    public function setDataType(DataType $dataType = null)
     {
         $this->dataType = $dataType;
     
@@ -538,7 +556,7 @@ class Field
     /**
      * Get dataType
      *
-     * @return \Hris\FormBundle\Entity\DataType
+     * @return DataType
      */
     public function getDataType()
     {
@@ -548,10 +566,10 @@ class Field
     /**
      * Set inputType
      *
-     * @param \Hris\FormBundle\Entity\InputType $inputType
+     * @param InputType $inputType
      * @return Field
      */
-    public function setInputType(\Hris\FormBundle\Entity\InputType $inputType = null)
+    public function setInputType(InputType $inputType = null)
     {
         $this->inputType = $inputType;
     
@@ -561,7 +579,7 @@ class Field
     /**
      * Get inputType
      *
-     * @return \Hris\FormBundle\Entity\InputType
+     * @return InputType
      */
     public function getInputType()
     {
@@ -569,14 +587,37 @@ class Field
     }
 
     /**
+     * Set skipInReport
+     *
+     * @param boolean $skipInReport
+     * @return FieldOption
+     */
+    public function setSkipInReport($skipInReport)
+    {
+        $this->skipInReport = $skipInReport;
+
+        return $this;
+    }
+
+    /**
+     * Get skipInReport
+     *
+     * @return boolean
+     */
+    public function getSkipInReport()
+    {
+        return $this->skipInReport;
+    }
+
+    /**
      * Add fieldOption
      *
-     * @param \Hris\FormBundle\Entity\FieldOption $fieldOption
+     * @param FieldOption $fieldOption
      * @return Field
      */
-    public function addFieldOption(\Hris\FormBundle\Entity\FieldOption $fieldOption)
+    public function addFieldOption(FieldOption $fieldOption)
     {
-        $this->fieldOption[] = $fieldOption;
+        $this->fieldOption[$fieldOption->getId()] = $fieldOption;
     
         return $this;
     }
@@ -584,9 +625,9 @@ class Field
     /**
      * Remove fieldOption
      *
-     * @param \Hris\FormBundle\Entity\FieldOption $fieldOption
+     * @param FieldOption $fieldOption
      */
-    public function removeFieldOption(\Hris\FormBundle\Entity\FieldOption $fieldOption)
+    public function removeFieldOption(FieldOption $fieldOption)
     {
         $this->fieldOption->removeElement($fieldOption);
     }
@@ -673,12 +714,12 @@ class Field
     /**
      * Add fieldOptionMerge
      *
-     * @param \Hris\FormBundle\Entity\FieldOptionMerge $fieldOptionMerge
+     * @param FieldOptionMerge $fieldOptionMerge
      * @return Field
      */
-    public function addFieldOptionMerge(\Hris\FormBundle\Entity\FieldOptionMerge $fieldOptionMerge)
+    public function addFieldOptionMerge(FieldOptionMerge $fieldOptionMerge)
     {
-        $this->fieldOptionMerge[] = $fieldOptionMerge;
+        $this->fieldOptionMerge[$fieldOptionMerge->getId()] = $fieldOptionMerge;
     
         return $this;
     }
@@ -686,9 +727,9 @@ class Field
     /**
      * Remove fieldOptionMerge
      *
-     * @param \Hris\FormBundle\Entity\FieldOptionMerge $fieldOptionMerge
+     * @param FieldOptionMerge $fieldOptionMerge
      */
-    public function removeFieldOptionMerge(\Hris\FormBundle\Entity\FieldOptionMerge $fieldOptionMerge)
+    public function removeFieldOptionMerge(FieldOptionMerge $fieldOptionMerge)
     {
         $this->fieldOptionMerge->removeElement($fieldOptionMerge);
     }
@@ -706,10 +747,10 @@ class Field
     /**
      * Add formFieldMember
      *
-     * @param \Hris\FormBundle\Entity\FormFieldMember $formFieldMember
+     * @param FormFieldMember $formFieldMember
      * @return Field
      */
-    public function addFormFieldMember(\Hris\FormBundle\Entity\FormFieldMember $formFieldMember)
+    public function addFormFieldMember(FormFieldMember $formFieldMember)
     {
         $this->formFieldMember[] = $formFieldMember;
     
@@ -719,9 +760,9 @@ class Field
     /**
      * Remove formFieldMember
      *
-     * @param \Hris\FormBundle\Entity\FormFieldMember $formFieldMember
+     * @param FormFieldMember $formFieldMember
      */
-    public function removeFormFieldMember(\Hris\FormBundle\Entity\FormFieldMember $formFieldMember)
+    public function removeFormFieldMember(FormFieldMember $formFieldMember)
     {
         $this->formFieldMember->removeElement($formFieldMember);
     }
@@ -740,10 +781,10 @@ class Field
     /**
      * Add formSectionFieldMember
      *
-     * @param \Hris\FormBundle\Entity\FormSectionFieldMember $formSectionFieldMember
+     * @param FormSectionFieldMember $formSectionFieldMember
      * @return Field
      */
-    public function addFormSectionFieldMember(\Hris\FormBundle\Entity\FormSectionFieldMember $formSectionFieldMember)
+    public function addFormSectionFieldMember(FormSectionFieldMember $formSectionFieldMember)
     {
         $this->formSectionFieldMember[] = $formSectionFieldMember;
     
@@ -753,9 +794,9 @@ class Field
     /**
      * Remove formSectionFieldMember
      *
-     * @param \Hris\FormBundle\Entity\FormSectionFieldMember $formSectionFieldMember
+     * @param FormSectionFieldMember $formSectionFieldMember
      */
-    public function removeFormSectionFieldMember(\Hris\FormBundle\Entity\FormSectionFieldMember $formSectionFieldMember)
+    public function removeFormSectionFieldMember(FormSectionFieldMember $formSectionFieldMember)
     {
         $this->formSectionFieldMember->removeElement($formSectionFieldMember);
     }
@@ -773,10 +814,10 @@ class Field
     /**
      * Add resourceTableFieldMember
      *
-     * @param \Hris\FormBundle\Entity\ResourceTableFieldMember $resourceTableFieldMember
+     * @param ResourceTableFieldMember $resourceTableFieldMember
      * @return Field
      */
-    public function addResourceTableFieldMember(\Hris\FormBundle\Entity\ResourceTableFieldMember $resourceTableFieldMember)
+    public function addResourceTableFieldMember(ResourceTableFieldMember $resourceTableFieldMember)
     {
         $this->resourceTableFieldMember[] = $resourceTableFieldMember;
     
@@ -786,9 +827,9 @@ class Field
     /**
      * Remove resourceTableFieldMember
      *
-     * @param \Hris\FormBundle\Entity\ResourceTableFieldMember $resourceTableFieldMember
+     * @param ResourceTableFieldMember $resourceTableFieldMember
      */
-    public function removeResourceTableFieldMember(\Hris\FormBundle\Entity\ResourceTableFieldMember $resourceTableFieldMember)
+    public function removeResourceTableFieldMember(ResourceTableFieldMember $resourceTableFieldMember)
     {
         $this->resourceTableFieldMember->removeElement($resourceTableFieldMember);
     }
@@ -806,12 +847,12 @@ class Field
     /**
      * Add uniqueRecordForms
      *
-     * @param \Hris\FormBundle\Entity\Form $uniqueRecordForms
+     * @param Form $uniqueRecordForms
      * @return Field
      */
-    public function addUniqueRecordForm(\Hris\FormBundle\Entity\Form $uniqueRecordForms)
+    public function addUniqueRecordForm(Form $uniqueRecordForms)
     {
-        $this->uniqueRecordForms[] = $uniqueRecordForms;
+        $this->uniqueRecordForms[$uniqueRecordForms->getId()] = $uniqueRecordForms;
     
         return $this;
     }
@@ -819,9 +860,9 @@ class Field
     /**
      * Remove uniqueRecordForms
      *
-     * @param \Hris\FormBundle\Entity\Form $uniqueRecordForms
+     * @param Form $uniqueRecordForms
      */
-    public function removeUniqueRecordForm(\Hris\FormBundle\Entity\Form $uniqueRecordForms)
+    public function removeUniqueRecordForm(Form $uniqueRecordForms)
     {
         $this->uniqueRecordForms->removeElement($uniqueRecordForms);
     }
@@ -840,30 +881,31 @@ class Field
      */
     public function __construct()
     {
-        $this->fieldGroup = new \Doctrine\Common\Collections\ArrayCollection();
-        $this->parentField = new \Doctrine\Common\Collections\ArrayCollection();
-        $this->childField = new \Doctrine\Common\Collections\ArrayCollection();
-        $this->fieldOption = new \Doctrine\Common\Collections\ArrayCollection();
-        $this->formVisibleFields = new \Doctrine\Common\Collections\ArrayCollection();
-        $this->fieldOptionMerge = new \Doctrine\Common\Collections\ArrayCollection();
-        $this->formFieldMember = new \Doctrine\Common\Collections\ArrayCollection();
-        $this->formSectionFieldMember = new \Doctrine\Common\Collections\ArrayCollection();
-        $this->uniqueRecordForms = new \Doctrine\Common\Collections\ArrayCollection();
-        $this->resourceTableFieldMember = new \Doctrine\Common\Collections\ArrayCollection();
+        $this->fieldGroup = new ArrayCollection();
+        $this->parentField = new ArrayCollection();
+        $this->childField = new ArrayCollection();
+        $this->fieldOption = new ArrayCollection();
+        $this->formVisibleFields = new ArrayCollection();
+        $this->fieldOptionMerge = new ArrayCollection();
+        $this->formFieldMember = new ArrayCollection();
+        $this->formSectionFieldMember = new ArrayCollection();
+        $this->uniqueRecordForms = new ArrayCollection();
+        $this->resourceTableFieldMember = new ArrayCollection();
         $this->uid = uniqid();
         $this->datecreated = new \DateTime('now');
         $this->hashistory = false;
-        $this->unique = false;
+        $this->isUnique = false;
         $this->compulsory = True;
+        $this->isCalculated=False;
     }
     
     /**
      * Add formVisibleFields
      *
-     * @param \Hris\FormBundle\Entity\FormVisibleFields $formVisibleFields
+     * @param FormVisibleFields $formVisibleFields
      * @return Field
      */
-    public function addFormVisibleField(\Hris\FormBundle\Entity\FormVisibleFields $formVisibleFields)
+    public function addFormVisibleField(FormVisibleFields $formVisibleFields)
     {
         $this->formVisibleFields[] = $formVisibleFields;
     
@@ -873,9 +915,9 @@ class Field
     /**
      * Remove formVisibleFields
      *
-     * @param \Hris\FormBundle\Entity\FormVisibleFields $formVisibleFields
+     * @param FormVisibleFields $formVisibleFields
      */
-    public function removeFormVisibleField(\Hris\FormBundle\Entity\FormVisibleFields $formVisibleFields)
+    public function removeFormVisibleField(FormVisibleFields $formVisibleFields)
     {
         $this->formVisibleFields->removeElement($formVisibleFields);
     }
@@ -891,68 +933,58 @@ class Field
     }
 
     /**
-     * Add recordValue
+     * Get Entity verbose name
      *
-     * @param \Hris\RecordsBundle\Entity\RecordValue $recordValue
+     * @return string
+     */
+    public function __toString()
+    {
+        return $this->caption;
+    }
+
+    /**
+     * Set isCalculated
+     *
+     * @param boolean $isCalculated
      * @return Field
      */
-    public function addRecordValue(\Hris\RecordsBundle\Entity\RecordValue $recordValue)
+    public function setIsCalculated($isCalculated)
     {
-        $this->recordValue[] = $recordValue;
+        $this->isCalculated = $isCalculated;
     
         return $this;
     }
 
     /**
-     * Remove recordValue
+     * Get isCalculated
      *
-     * @param \Hris\RecordsBundle\Entity\RecordValue $recordValue
+     * @return boolean 
      */
-    public function removeRecordValue(\Hris\RecordsBundle\Entity\RecordValue $recordValue)
+    public function getIsCalculated()
     {
-        $this->recordValue->removeElement($recordValue);
+        return $this->isCalculated;
     }
 
     /**
-     * Get recordValue
+     * Set calculatedExpression
      *
-     * @return \Doctrine\Common\Collections\Collection
-     */
-    public function getRecordValue()
-    {
-        return $this->recordValue;
-    }
-
-    /**
-     * Add recordStats
-     *
-     * @param \Hris\RecordsBundle\Entity\RecordStats $recordStats
+     * @param string $calculatedExpression
      * @return Field
      */
-    public function addRecordStat(\Hris\RecordsBundle\Entity\RecordStats $recordStats)
+    public function setCalculatedExpression($calculatedExpression)
     {
-        $this->recordStats[] = $recordStats;
+        $this->calculatedExpression = $calculatedExpression;
     
         return $this;
     }
 
     /**
-     * Remove recordStats
+     * Get calculatedExpression
      *
-     * @param \Hris\RecordsBundle\Entity\RecordStats $recordStats
+     * @return string 
      */
-    public function removeRecordStat(\Hris\RecordsBundle\Entity\RecordStats $recordStats)
+    public function getCalculatedExpression()
     {
-        $this->recordStats->removeElement($recordStats);
-    }
-
-    /**
-     * Get recordStats
-     *
-     * @return \Doctrine\Common\Collections\Collection
-     */
-    public function getRecordStats()
-    {
-        return $this->recordStats;
+        return $this->calculatedExpression;
     }
 }

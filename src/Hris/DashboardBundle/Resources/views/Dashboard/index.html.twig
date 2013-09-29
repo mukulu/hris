@@ -1,0 +1,53 @@
+{# src/Hris/UDashboardBundle/Resources/views/Dashboard/dashboard.html.twig #}
+{% extends "HrisDashboardBundle::layout.html.twig" %}
+
+{% block javascripts %}
+    {{ parent() }}
+    <script src="{{ asset('bundles/obhighcharts/js/highcharts/highcharts.js') }}"></script>
+    <script src="{{ asset('bundles/obhighcharts/js/highcharts/modules/exporting.js') }}"></script>
+    <script type="text/javascript">
+        {{ chart(chart) }}
+    </script>
+{%  endblock %}
+{% block right_content %}
+    <h1 class="visible-phone"><small>Welcome! Please use navigation on top panel,</small></h1>
+    <h1 class="hidden-phone"><small>Welcome! Please use navigation on your left,</small></h1>
+
+    <div class="tabbable">
+        <ul class="nav nav-tabs">
+            <li class="active"><a href="#employment-distribution" data-toggle="tab">Employment Distribution</a></li>
+            <li class=""><a href="#retirement-distribution" data-toggle="tab">Retirement Distribution</a></li>
+            <li class=""><a href="#age-distribution" data-toggle="tab">Age Distribution</a></li>
+            <li class=""><a href="#sex-distribution" data-toggle="tab">Sex Distribution</a></li>
+        </ul>
+        <div class="tab-content">
+            <div class="tab-pane active" id="employment-distribution">
+                <h4>The Employment Distribution Chart</h4>
+                <div id="chart_placeholder" style="min-width: 400px; height: 400px; margin: 0 auto"></div>
+                <ul class="record_actions inline offset8">
+                    <li>
+                        <a href="#" class="btn">Download Excel</a>
+                    </li>
+                    <li>
+                        <a href="#" class="btn">Download Pdf</a>
+                    </li>
+                </ul>
+            </div>
+            <div class="tab-pane" id="retirement-distribution">
+                <h4>Retirement Distribution</h4>
+                <h1><small>Contents will stay here</small></h1>
+            </div>
+            <div class="tab-pane" id="age-distribution">
+                <h4>Age Distribution</h4>
+                <h1><small>Contents will stay here</small></h1>
+            </div>
+            <div class="tab-pane" id="sex-distribution">
+                <h4>Sex Distribution</h4>
+                <h1><small>Contents will stay here</small></h1>
+            </div>
+        </div><!-- /.tab-content -->
+    </div>
+    
+    
+    
+{% endblock %}

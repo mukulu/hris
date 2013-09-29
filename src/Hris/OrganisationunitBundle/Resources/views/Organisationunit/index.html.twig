@@ -1,0 +1,109 @@
+{% extends '::base.html.twig' %}
+{% block javascripts %}
+    {{ parent() }}
+    <script type="text/javascript" src="{{ asset('commons/js/jquery.dataTables.js') }}"></script>
+    <script type="text/javascript" src="{{ asset('commons/js/dt_settings.js') }}"></script>
+    <script>window["_GOOG_TRANS_EXT_VER"] = "1";</script>
+{% endblock javascripts %}
+
+{% block stylesheets %}
+    {{ parent() }}
+    <link rel="stylesheet" href="{{ asset('commons/css/dt_bootstrap.css') }}" />
+{% endblock stylesheets %}
+
+{% block right_content -%}
+
+    <div class="container">
+        <h1><small>Organisationunit list</small></h1>
+        <ul class="inline">
+            <li>
+                {% if parent %}
+                    <a class="btn" href="{{ path('organisationunit_new_parent', { 'parent': parent.id }) }}">
+                        Create a new entry
+                    </a>
+                    {% if parent.parent is empty %}
+                        <a class="btn" href="{{ path('organisationunit_list') }}">
+                            Back Up
+                        </a>
+                    {% else %}
+                        <a class="btn" href="{{ path('organisationunit_list_parent', { 'parent': parent.parent.id }) }}">
+                            Back to Up
+                        </a>
+                    {% endif %}
+
+                {% else %}
+                    <a class="btn" href="{{ path('organisationunit_new') }}">
+                        Create a new entry
+                    </a>
+                {% endif %}
+            </li>
+        </ul>
+
+
+        <table class="records_list dataTable table table-striped table-bordered table-hover" cellpadding="0" cellspacing="0" border="0">
+            <thead>
+                <tr>
+                    <th>Shortname</th>
+                    <th>Longname</th>
+                    <th>Parent</th>
+                    <th>Active</th>
+                    <th>Actions</th>
+                </tr>
+            </thead>
+            <tbody>
+            {% for entity in entities %}
+                <tr>
+                    <td>{{ entity.shortname }}</td>
+                    <td><a href="{{ path('organisationunit_show', { 'id': entity.id }) }}">{{ entity.longname }}</a></td>
+                    <td>{% if entity.parent %} {{ entity.parent.longname }} {% else %} - {% endif %}</td>
+                    <td>{% if entity.active %} Active {% else %} Inactive {% endif %}</td>
+                    <td>
+                    <ul class="inline">
+                        <li>
+                            <a href="{{ path('organisationunit_show', { 'id': entity.id }) }}"><i class="icon-info-sign icon-large" title="Show"></i></a>
+                        </li>
+                        <li>
+                            <a href="{{ path('organisationunit_edit', { 'id': entity.id }) }}"><i class="icon-edit icon-large" title="Edit"></i></a>
+                        </li>
+                        <li>
+                            <a href="{{ path('organisationunit_list_parent', { 'parent': entity.id }) }}"><i class="icon-circle-arrow-down icon-large" title="Children"></i></a>
+                        </li>
+                        <li>
+                            <a data-toggle="modal" href="#deleteModalFor{{ entity.uid }}"><i class="icon-remove-sign icon-large" title="Delete"></i></a>
+                            <!-- Modal -->
+                            <div class="modal fade" id="deleteModalFor{{ entity.uid }}">
+                                <div class="modal-dialog">
+                                    <div class="modal-content">
+                                        <div class="modal-header">
+                                            <button type="button" class="close" data-dismiss="modal" aria-hidden="true">×</button>
+                                            <h4 class="modal-title"><i class="icon-circle-remove icon-largest" title="Delete"></i>Deleting <strong>{{ entity.longname | capitalize }}</strong></h4>
+                                        </div>
+                                        <div class="modal-body">
+                                            Are you sure you want to delete <strong>{{ entity.longname | capitalize }}</strong> that was created on <em>{{ entity.datecreated|date('d/m/Y') }}</em>
+                                            {% if entity.lastUpdated %}
+                                                and last updated on {{ entity.lastUpdated|date('H:i:s d/m/Y') }} ??
+                                            {% else %}
+                                                and never updated ??
+                                            {% endif %}
+                                        </div>
+                                        <div class="modal-footer">
+                                            <form action="{{ path('organisationunit_delete', { 'id': entity.id }) }}" method="post">
+                                                <input type="hidden" name="_method" value="DELETE" />
+                                                {{ form_widget(delete_forms[entity.id] ) }}
+                                                <button type="button" class="btn btn-default" data-dismiss="modal">Close</button>
+                                                <button type="submit" class="btn btn-danger">Delete</button>
+                                            </form>
+                                        </div>
+                                    </div><!-- /.modal-content -->
+                                </div><!-- /.modal-dialog -->
+                            </div><!-- /.modal -->
+
+                        </li>
+                    </ul>
+                    </td>
+                </tr>
+            {% endfor %}
+            </tbody>
+        </table>
+    </div>
+    {% endblock %}

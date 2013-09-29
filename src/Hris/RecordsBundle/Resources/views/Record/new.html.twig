@@ -1,0 +1,35 @@
+{% extends '::base.html.twig' %}
+{% block javascripts %}
+    {{ parent() }}
+    <script type="text/javascript" src="{{ asset('bundles/hrisrecords/js/indexedb.js') }}"></script>
+
+    <script type="text/javascript">
+
+        getDataEntryForm( '{{ project_code | lower | raw }}', '{{ uid | raw }}', '{{ table_name | raw }}' );
+
+        //getting field Options and append them on select statements
+
+        $(window).load(function(){
+            loadFieldOptions('{{ fields | raw | escape('js') }}', '{{ project_code | lower | raw }}');
+        });
+
+    </script>
+
+{% endblock %}
+
+{% block right_content -%}
+
+    <h1>{{ title | raw }}</h1>
+
+    <form action="{{ path('record_create') }}" method="post">
+
+
+        <div id="result" />
+        </div>
+        <p>
+            <input type="hidden" name="formId" value="{{ id }}">
+            <button name='Save' class="btn"> Save Records</button>
+        </p>
+    </form>
+
+{% endblock %}

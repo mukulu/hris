@@ -25,6 +25,7 @@
 namespace Hris\OrganisationunitBundle\Entity;
 
 use Doctrine\ORM\EntityRepository;
+use Doctrine\ORM\NoResultException;
 
 /**
  * OrganisationunitRepository
@@ -34,4 +35,66 @@ use Doctrine\ORM\EntityRepository;
  */
 class OrganisationunitRepository extends EntityRepository
 {
+    /**
+     * Returns organisationunit count
+     * @param Organisationunit $organiastionunit
+     * @return null|integer
+     */
+    public function getImmediateChildrenCount( Organisationunit $organiastionunit)
+    {
+        $queryBuilder = $this->getEntityManager()-> $this->getEntityManager()->createQueryBuilder();
+        $query = $queryBuilder->select('COUNT(organisationunit')
+                            ->from('HrisOrganisationunitBundle:Organisationunit','organisationunit')
+                            ->where('organisationunit.parent = :parent')
+                            ->setParameters(array(
+                                        'parent'=>$organiastionunit
+                            )
+            )->getQuery();
+
+        try {
+            $immediateChildren = $query->getSingleResult();
+            $result = $immediateChildren[1];
+        } catch( NoResultException $e) {
+            $result = NULL;
+        }
+        return $result;
+    }
+
+    /**
+     * Returns organisationunit count
+     * @param Organisationunit $organiastionunit
+     * @return \Doctrine\Common\Collections\Collection
+     */
+    public function getImmediateChildren( Organisationunit $organiastionunit)
+    {
+        $queryBuilder = $this->getEntityManager()->createQueryBuilder();
+        $query = $queryBuilder->select('organisationunit')
+            ->from('HrisOrganisationunitBundle:Organisationunit','organisationunit')
+            ->where('organisationunit.parent = :parent')
+            ->setParameters(array(
+                    'parent'=>$organiastionunit
+                )
+            )->getQuery();
+
+        try {
+            $immediateChildren = $query->getSingleResult();
+            $result = $immediateChildren[1];
+        } catch( NoResultException $e) {
+            $result = NULL;
+        }
+        return $result;
+    }
+
+    /**
+     * Get all values from specific key in a multidimensional array
+     *
+     * @param $key string
+     * @param $arr array
+     * @return null|string|array
+     */
+    public function array_value_recursive($key, array $arr){
+        $val = array();
+        array_walk_recursive($arr, function($v, $k) use($key, &$val){if($k == $key) array_push($val, $v);});
+        return count($val) > 1 ? $val : array_pop($val);
+    }
 }

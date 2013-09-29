@@ -1,39 +1,44 @@
-jms_security_extra:
-    secure_all_services: false
-    expressions: true
-
 security:
-    encoders:
-      FOS\UserBundle\Model\UserInterface: sha512
-    
-    role_hierarchy:
-        ROLE_ADMIN:       ROLE_USER
-        ROLE_SUPER_ADMIN: [ROLE_USER, ROLE_ADMIN, ROLE_ALLOWED_TO_SWITCH]
-
-    providers:
-        fos_userbundle:
-            id: fos_user.user_provider.username
-
-
     firewalls:
-        login_firewall:
-            pattern:  ^/login$
-            anonymous: ~
-        main_firewall:
-            pattern:    ^/
+        secured_area:
+            pattern: ^/
             form_login:
-                check_path: /login_check
-                login_path: /login
+                login_path: fos_user_security_login
+                check_path: fos_user_security_check
+                default_target_path: hris_dashboard_homepage
+                always_use_default_target_path: true
+                use_referer: true
                 provider: fos_userbundle
+                csrf_provider: form.csrf_provider
             logout:
-                path:   /logout
-                target: /login
-            #anonymous: ~
-            #http_basic:
-            #    realm: "Secured Demo Area"
+                path: fos_user_security_logout
+                target: fos_user_security_login
+            anonymous: ~
+
     access_control:
         - { path: ^/login, roles: IS_AUTHENTICATED_ANONYMOUSLY }
+        - { path: ^/register, roles: IS_AUTHENTICATED_ANONYMOUSLY }
+        - { path: ^/register/check-email, roles: IS_AUTHENTICATED_ANONYMOUSLY }
+        - { path: ^/resetting/request, roles: IS_AUTHENTICATED_ANONYMOUSLY }
+        - { path: ^/resetting/send-email, roles: IS_AUTHENTICATED_ANONYMOUSLY }
+        - { path: ^/resetting/check-email, roles: IS_AUTHENTICATED_ANONYMOUSLY }
+        - { path: ^/resetting/reset, roles: IS_AUTHENTICATED_ANONYMOUSLY }
         - { path: ^/, roles: ROLE_USER }
         
         #- { path: ^/login, roles: IS_AUTHENTICATED_ANONYMOUSLY}
         #- { path: ^/_internal/secure, roles: IS_AUTHENTICATED_ANONYMOUSLY, ip: 127.0.0.1 }
+
+    providers:
+        fos_userbundle:
+            id: fos_user.user_provider.username_email
+
+    encoders:
+      FOS\UserBundle\Model\UserInterface: sha512
+
+    role_hierarchy:
+        ROLE_ADMIN:       ROLE_USER
+        ROLE_SUPER_ADMIN: [ROLE_USER, ROLE_ADMIN, ROLE_ALLOWED_TO_SWITCH]
+
+
+
+

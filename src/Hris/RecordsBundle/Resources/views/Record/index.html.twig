@@ -1,0 +1,83 @@
+{% extends '::base.html.twig' %}
+{% block javascripts %}
+    {{ parent() }}
+    <script type="text/javascript" src="{{ asset('commons/js/jquery.dataTables.js') }}"></script>
+    <script type="text/javascript" src="{{ asset('commons/js/dt_settings.js') }}"></script>
+    <script>window["_GOOG_TRANS_EXT_VER"] = "1";</script>
+{% endblock javascripts %}
+
+{% block stylesheets %}
+    {{ parent() }}
+    <link rel="stylesheet" href="{{ asset('commons/css/dt_bootstrap.css') }}" />
+{% endblock stylesheets %}
+
+{% block right_content -%}
+<div class="container">
+    <h1><small>Record list</small></h1>
+
+    <table class="records_list dataTable table table-striped table-bordered table-hover">
+        <thead>
+            <tr
+                <th>Id</th>
+                <th>Instance</th>
+                <th>Complete</th>
+                <th>Correct</th>
+                <th>Hashistory</th>
+                <th>Hastraining</th>
+                <th>Datecreated</th>
+                <th>Lastupdated</th>
+                <th>Username</th>
+                <th>Actions</th>
+            </tr>
+        </thead>
+        <tbody>
+        {% for entity in entities %}
+            <tr>
+                <td><a href="{{ path('record_show', { 'id': entity.id }) }}">{{ entity.instance }}</a></td>
+                <td>
+                    {% if entity.complete %}
+                       True
+                    {% else %}
+                        False
+                    {% endif %}
+                </td>
+                <td>
+                    {% if entity.correct %}
+                        True
+                    {% else %}
+                        False
+                    {% endif %}
+                </td>
+                <td>
+                    {% if entity.hashistory %}
+                        True
+                    {% else %}
+                        False
+                    {% endif %}
+                </td>
+                <td>
+                    {% if entity.hastraining %}
+                        True
+                    {% else %}
+                        False
+                    {% endif %}
+                </td>
+                <td>{% if entity.datecreated %}{{ entity.datecreated|date("d/m/Y") }}{% endif %}</td>
+                <td>{% if entity.lastupdated %}{{ entity.lastupdated|date("d/m/Y") }}{% endif %}</td>
+                <td>{{ entity.username }}</td>
+                <td>
+                <ul class="inline">
+                    <li>
+                        <a href="{{ path('record_show', { 'id': entity.id }) }}"><i class="icon-info-sign icon-large" title="Show"></i></a>
+                    </li>
+                    <li>
+                        <a href="{{ path('record_edit', { 'id': entity.id }) }}"><i class="icon-edit icon-large" title="Edit"></i></a>
+                    </li>
+                </ul>
+                </td>
+            </tr>
+        {% endfor %}
+        </tbody>
+    </table>
+</div>
+    {% endblock %}

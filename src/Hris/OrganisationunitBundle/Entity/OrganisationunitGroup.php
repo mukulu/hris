@@ -24,15 +24,19 @@
  */
 namespace Hris\OrganisationunitBundle\Entity;
 
+use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\ORM\Mapping as ORM;
+use Gedmo\Mapping\Annotation as Gedmo;
 
 use Hris\OrganisationunitBundle\Entity\Organisationunit;
 use Hris\OrganisationunitBundle\Entity\OrganisationunitGroupset;
+use Symfony\Component\Validator\Constraints as Assert;
 
 /**
  * Hris\OrganisationunitBundle\Entity\OrganisationunitGroup
  *
  * @ORM\Table(name="hris_organisationunitgroup")
+ * @Gedmo\Loggable
  * @ORM\Entity(repositoryClass="Hris\OrganisationunitBundle\Entity\OrganisationunitGroupRepository")
  */
 class OrganisationunitGroup
@@ -49,6 +53,7 @@ class OrganisationunitGroup
     /**
      * @var string $uid
      *
+     * @Gedmo\Versioned
      * @ORM\Column(name="uid", type="string", length=13, unique=true)
      */
     private $uid;
@@ -56,13 +61,23 @@ class OrganisationunitGroup
     /**
      * @var string $name
      *
+     * @Gedmo\Versioned
      * @ORM\Column(name="name", type="string", length=64, unique=true)
      */
     private $name;
+
+    /**
+     * @var string $description
+     *
+     * @Gedmo\Versioned
+     * @ORM\Column(name="description", type="text", nullable=true)
+     */
+    private $description;
     
     /**
      * @var string $dhisUid
      *
+     * @Gedmo\Versioned
      * @ORM\Column(name="dhisUid", type="string", length=11, unique=true, nullable=true)
      */
     private $dhisUid;
@@ -70,12 +85,13 @@ class OrganisationunitGroup
     /**
      * @var string $code
      *
+     * @Gedmo\Versioned
      * @ORM\Column(name="code", type="string", length=50, nullable=true, unique=true)
      */
     private $code;
     
     /**
-     * @var \Hris\OrganisationunitBundle\Entity\Organisationunit $organisationunit
+     * @var Organisationunit $organisationunit
      *
      * @ORM\ManyToMany(targetEntity="Hris\OrganisationunitBundle\Entity\Organisationunit", inversedBy="organisationunitGroup")
      * @ORM\JoinTable(name="hris_organisationunitgroup_members",
@@ -91,11 +107,11 @@ class OrganisationunitGroup
     private $organisationunit;
     
     /**
-     * @var \Hris\OrganisationunitBundle\Entity\OrganisationunitGroupset $organisationunitGroupset
+     * @var OrganisationunitGroupset $organisationunitGroupset
      *
      * @ORM\ManyToOne(targetEntity="Hris\OrganisationunitBundle\Entity\OrganisationunitGroupset",inversedBy="organisationunitGroup")
      * @ORM\JoinColumns({
-     *   @ORM\JoinColumn(name="organisationunitgroupset_id", referencedColumnName="id")
+     *   @ORM\JoinColumn(name="organisationunitgroupset_id", referencedColumnName="id", onDelete="CASCADE")
      * })
      */
     private $organisationunitGroupset;
@@ -103,6 +119,7 @@ class OrganisationunitGroup
     /**
      * @var \DateTime $datecreated
      *
+     * @Gedmo\Timestampable(on="create")
      * @ORM\Column(name="datecreated", type="datetime")
      */
     private $datecreated;
@@ -110,6 +127,7 @@ class OrganisationunitGroup
     /**
      * @var \DateTime $lastupdated
      *
+     * @Gedmo\Timestampable(on="update")
      * @ORM\Column(name="lastupdated", type="datetime", nullable=true)
      */
     private $lastupdated;
@@ -243,12 +261,13 @@ class OrganisationunitGroup
     /**
      * Add organisationunit
      *
-     * @param \Hris\OrganisationunitBundle\Entity\Organisationunit $organisationunit
+     * @param Organisationunit $organisationunit
      * @return OrganisationunitGroup
      */
-    public function addOrganisationunit(\Hris\OrganisationunitBundle\Entity\Organisationunit $organisationunit)
+    public function addOrganisationunit(Organisationunit $organisationunit)
     {
-        $this->organisationunit[] = $organisationunit;
+        $this->organisationunit[$organisationunit->getId()] = $organisationunit;
+        $organisationunit->addOrganisationunitGroup($this);
     
         return $this;
     }
@@ -256,11 +275,12 @@ class OrganisationunitGroup
     /**
      * Remove organisationunit
      *
-     * @param \Hris\OrganisationunitBundle\Entity\Organisationunit $organisationunit
+     * @param Organisationunit $organisationunit
      */
-    public function removeOrganisationunit(\Hris\OrganisationunitBundle\Entity\Organisationunit $organisationunit)
+    public function removeOrganisationunit(Organisationunit $organisationunit)
     {
         $this->organisationunit->removeElement($organisationunit);
+        $organisationunit->removeOrganisationunitGroup($this);
     }
 
     /**
@@ -277,7 +297,7 @@ class OrganisationunitGroup
      */
     public function __construct()
     {
-        $this->organisationunit = new \Doctrine\Common\Collections\ArrayCollection();
+        $this->organisationunit = new ArrayCollection();
         $this->uid = uniqid();
     }
     
@@ -305,12 +325,35 @@ class OrganisationunitGroup
     }
 
     /**
+     * Set description
+     *
+     * @param string $description
+     * @return Organisationunit
+     */
+    public function setDescription($description)
+    {
+        $this->description = $description;
+
+        return $this;
+    }
+
+    /**
+     * Get description
+     *
+     * @return string
+     */
+    public function getDescription()
+    {
+        return $this->description;
+    }
+
+    /**
      * Set organisationunitGroupset
      *
-     * @param \Hris\OrganisationunitBundle\Entity\OrganisationunitGroupset $organisationunitGroupset
+     * @param OrganisationunitGroupset $organisationunitGroupset
      * @return OrganisationunitGroup
      */
-    public function setOrganisationunitGroupset(\Hris\OrganisationunitBundle\Entity\OrganisationunitGroupset $organisationunitGroupset = null)
+    public function setOrganisationunitGroupset(OrganisationunitGroupset $organisationunitGroupset = null)
     {
         $this->organisationunitGroupset = $organisationunitGroupset;
     
@@ -320,10 +363,20 @@ class OrganisationunitGroup
     /**
      * Get organisationunitGroupset
      *
-     * @return \Hris\OrganisationunitBundle\Entity\OrganisationunitGroupset
+     * @return OrganisationunitGroupset
      */
     public function getOrganisationunitGroupset()
     {
         return $this->organisationunitGroupset;
+    }
+
+    /**
+     * Get Entity verbose name
+     *
+     * @return string
+     */
+    public function __toString()
+    {
+        return $this->name;
     }
 }

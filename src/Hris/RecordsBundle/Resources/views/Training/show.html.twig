@@ -1,0 +1,74 @@
+{% extends '::base.html.twig' %}
+
+{% block body -%}
+    <h1>Training</h1>
+
+    <table class="record_properties">
+        <tbody>
+            <tr>
+                <th>Id</th>
+                <td>{{ entity.id }}</td>
+            </tr>
+            <tr>
+                <th>Uid</th>
+                <td>{{ entity.uid }}</td>
+            </tr>
+            <tr>
+                <th>Instance</th>
+                <td>{{ entity.instance }}</td>
+            </tr>
+            <tr>
+                <th>Coursename</th>
+                <td>{{ entity.coursename }}</td>
+            </tr>
+            <tr>
+                <th>Courselocation</th>
+                <td>{{ entity.courselocation }}</td>
+            </tr>
+            <tr>
+                <th>Sponsor</th>
+                <td>{{ entity.sponsor }}</td>
+            </tr>
+            <tr>
+                <th>Startdate</th>
+                <td>{{ entity.startdate }}</td>
+            </tr>
+            <tr>
+                <th>Enddate</th>
+                <td>{{ entity.enddate }}</td>
+            </tr>
+            <tr>
+                <th>Username</th>
+                <td>{{ entity.username }}</td>
+            </tr>
+            <tr>
+                <th>Datecreated</th>
+                <td>{{ entity.datecreated|date('Y-m-d H:i:s') }}</td>
+            </tr>
+            <tr>
+                <th>Lastupdated</th>
+                <td>{{ entity.lastupdated|date('Y-m-d H:i:s') }}</td>
+            </tr>
+        </tbody>
+    </table>
+
+        <ul class="record_actions">
+    <li>
+        <a href="{{ path('training') }}">
+            Back to the list
+        </a>
+    </li>
+    <li>
+        <a href="{{ path('training_edit', { 'id': entity.id }) }}">
+            Edit
+        </a>
+    </li>
+    <li>
+        <form action="{{ path('training_delete', { 'id': entity.id }) }}" method="post">
+            <input type="hidden" name="_method" value="DELETE" />
+            {{ form_widget(delete_form) }}
+            <button type="submit">Delete</button>
+        </form>
+    </li>
+</ul>
+{% endblock %}
