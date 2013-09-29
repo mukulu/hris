@@ -26,7 +26,11 @@
 
 {% block right_content -%}
 <div class="container">
-    <h1><small>Data Entry Forms</small></h1>
+    {% if channel=='dataentry' %}
+        <h1><small>Data Entry Forms</small></h1>
+    {% elseif channel=='updaterecords' %}
+        <h1><small>View Records</small></h1>
+    {% endif %}
 
     <table class="records_list dataTable table table-striped table-bordered table-hover">
         <thead>
@@ -38,12 +42,22 @@
         <tbody>
         {% for entity in entities %}
             <tr>
-                <td><a href="{{ path('record_new', { 'id': entity.id }) }}">{{ entity.title }}</a></td>
+                {% if channel=="dataentry" %}
+                    <td><a href="{{ path('record_new', { 'id': entity.id }) }}">{{ entity.title }}</a></td>
+                {% else %}
+                <td><a href="{{ path('record_viewrecords', { 'formid': entity.id }) }}">{{ entity.title }}</a></td>
+                {% endif %}
                 <td>
                 <ul class="inline">
-                    <li>
-                        <a href="{{ path('record_new', { 'id': entity.id }) }}"><i class="icon-down-arrow icon-large" title="Show"></i></a>
-                    </li>
+                    {% if channel=='dataentry' %}
+                        <li>
+                            <a href="{{ path('record_new', { 'id': entity.id }) }}"><i class="icon-down-arrow icon-large" title="Show"></i></a>
+                        </li>
+                    {% elseif channel=='updaterecords' %}
+                        <li>
+                            <a href="{{ path('record_viewrecords', { 'formid': entity.id }) }}"><i class="icon-folder-open icon-large" title="Show"></i></a>
+                        </li>
+                    {% endif %}
                 </ul>
                 </td>
             </tr>
