@@ -106,7 +106,7 @@ class ReportController extends Controller
     /**
      * Finds and displays a Report entity.
      *
-     * @Route("/{id}", name="report_show")
+     * @Route("/{id}", requirements={"id"="\d+"}, name="report_show")
      * @Method("GET")
      * @Template()
      */
@@ -131,7 +131,7 @@ class ReportController extends Controller
     /**
      * Displays a form to edit an existing Report entity.
      *
-     * @Route("/{id}/edit", name="report_edit")
+     * @Route("/{id}/edit", requirements={"id"="\d+"}, name="report_edit")
      * @Method("GET")
      * @Template()
      */
@@ -158,7 +158,7 @@ class ReportController extends Controller
     /**
      * Edits an existing Report entity.
      *
-     * @Route("/{id}", name="report_update")
+     * @Route("/{id}", requirements={"id"="\d+"}, name="report_update")
      * @Method("PUT")
      * @Template("HrisReportsBundle:Report:edit.html.twig")
      */
@@ -192,7 +192,7 @@ class ReportController extends Controller
     /**
      * Deletes a Report entity.
      *
-     * @Route("/{id}", name="report_delete")
+     * @Route("/{id}", requirements={"id"="\d+"}, name="report_delete")
      * @Method("DELETE")
      */
     public function deleteAction(Request $request, $id)

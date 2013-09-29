@@ -137,7 +137,7 @@ class FieldController extends Controller
     /**
      * Displays a form to edit an existing Field entity.
      *
-     * @Route("/{id}/edit", name="field_edit")
+     * @Route("/{id}/edit", requirements={"id"="\d+"}, name="field_edit")
      * @Method("GET")
      * @Template()
      */
@@ -164,7 +164,7 @@ class FieldController extends Controller
     /**
      * Edits an existing Field entity.
      *
-     * @Route("/{id}", name="field_update")
+     * @Route("/{id}", requirements={"id"="\d+"}, name="field_update")
      * @Method("PUT")
      * @Template("HrisFormBundle:Field:edit.html.twig")
      */
@@ -198,7 +198,7 @@ class FieldController extends Controller
     /**
      * Deletes a Field entity.
      *
-     * @Route("/{id}", name="field_delete")
+     * @Route("/{id}", requirements={"id"="\d+"}, name="field_delete")
      * @Method("DELETE")
      */
     public function deleteAction(Request $request, $id)

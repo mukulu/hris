@@ -48,7 +48,7 @@ class DesignFormController extends Controller
     /**
      * Edits an existing Form entity.
      *
-     * @Route("/{id}", requirements={"id"="\d+"}, name="design_update")
+     * @Route("/{id}", requirements={"id"="\d+"}, requirements={"id"="\d+"}, name="design_update")
      * @Method("PUT")
      * @Template("HrisFormBundle:Form:index.html.twig")
      */
@@ -81,7 +81,7 @@ class DesignFormController extends Controller
     /**
      * Design Popup entry for form related Fields.
      *
-     * @Route("/{id}/list", name="form_fields_list")
+     * @Route("/{id}/list", requirements={"id"="\d+"}, name="form_fields_list")
      * @Method("GET")
      * @Template()
      */

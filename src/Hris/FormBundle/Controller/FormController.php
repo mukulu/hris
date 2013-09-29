@@ -24,6 +24,9 @@
  */
 namespace Hris\FormBundle\Controller;
 
+use Doctrine\Common\Collections\ArrayCollection;
+use Hris\FormBundle\Entity\FormFieldMember;
+use Hris\FormBundle\Entity\FormVisibleFields;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Bundle\FrameworkBundle\Controller\Controller;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Method;
@@ -79,6 +82,30 @@ class FormController extends Controller
 
         if ($form->isValid()) {
             $em = $this->getDoctrine()->getManager();
+            $requestcontent = $request->request->get('hris_formbundle_formtype');
+
+            // Add Form Field Members
+            $formFieldMemberIds = $requestcontent['formFieldMembers'];
+            $incr=1;
+            foreach($formFieldMemberIds as $formFieldMemberIdKey=>$formFieldMemberId) {
+                $field = $this->getDoctrine()->getRepository('HrisFormBundle:Field')->findOneBy(array('id'=>$formFieldMemberId));
+                $formFieldMember = new FormFieldMember();
+                $formFieldMember->setForm($entity);
+                $formFieldMember->setField($field);
+                $formFieldMember->setSort($incr++);
+                $entity->addFormFieldMember($formFieldMember);
+            }
+            // Add Form Visible Fields
+            $formVisibleFieldIds = $requestcontent['formVisibleFields'];
+            $incr=1;
+            foreach($formVisibleFieldIds as $formVisibleFieldIdKey=>$formVisibleFieldId) {
+                $field = $this->getDoctrine()->getRepository('HrisFormBundle:Field')->findOneBy(array('id'=>$formVisibleFieldId));
+                $formVisibleField = new FormVisibleFields();
+                $formVisibleField->setForm($entity);
+                $formVisibleField->setField($field);
+                $formVisibleField->setSort($incr++);
+                $entity->addFormVisibleField($formVisibleField);
+            }
             $em->persist($entity);
             $em->flush();
 
@@ -112,7 +139,7 @@ class FormController extends Controller
     /**
      * Finds and displays a Form entity.
      *
-     * @Route("/{id}", requirements={"id"="\d+"}, name="form_show")
+     * @Route("/{id}", requirements={"id"="\d+"}, requirements={"id"="\d+"}, name="form_show")
      * @Method("GET")
      * @Template()
      */
@@ -137,7 +164,7 @@ class FormController extends Controller
     /**
      * Displays a form to edit an existing Form entity.
      *
-     * @Route("/{id}/edit", name="form_edit")
+     * @Route("/{id}/edit", requirements={"id"="\d+"}, name="form_edit")
      * @Method("GET")
      * @Template()
      */
@@ -152,6 +179,20 @@ class FormController extends Controller
         }
 
         $editForm = $this->createForm(new FormType(), $entity);
+
+        // Populate selected Form Field Members
+        $formFields = new ArrayCollection();
+        foreach($entity->getFormFieldMember() as $formFieldMemberKey=>$formFieldMember) {
+            $formFields->add($formFieldMember->getField());
+        }
+        $editForm->get('formFieldMembers')->setData($formFields);
+        // Populate selected Visible Fields
+        $visibleFields = new ArrayCollection();
+        foreach($entity->getFormVisibleFields() as $formVisibleFieldKey=>$formVisibleField) {
+            $visibleFields->add($formVisibleField->getField());
+        }
+        $editForm->get('formVisibleFields')->setData($visibleFields);
+
         $deleteForm = $this->createDeleteForm($id);
 
         return array(
@@ -164,7 +205,7 @@ class FormController extends Controller
     /**
      * Edits an existing Form entity.
      *
-     * @Route("/{id}", name="form_update")
+     * @Route("/{id}", requirements={"id"="\d+"}, name="form_update")
      * @Method("PUT")
      * @Template("HrisFormBundle:Form:edit.html.twig")
      */
@@ -183,6 +224,44 @@ class FormController extends Controller
         $editForm->bind($request);
 
         if ($editForm->isValid()) {
+            $requestcontent = $request->request->get('hris_formbundle_formtype');
+            $formFieldMemberIds = $requestcontent['formFieldMembers'];
+            // Clear Form Field Members
+            //$entity->removeAllFormFieldMember();
+            $em->createQueryBuilder('formFieldMember')
+                ->delete('HrisFormBundle:FormFieldMember','formFieldMember')
+                ->where('formFieldMember.form= :form')
+                ->setParameter('form',$entity)
+                ->getQuery()->getResult();
+            $em->flush();
+            $incr=1;
+            foreach($formFieldMemberIds as $formFieldMemberIdKey=>$formFieldMemberId) {
+                $field = $this->getDoctrine()->getRepository('HrisFormBundle:Field')->findOneBy(array('id'=>$formFieldMemberId));
+                $formFieldMember = new FormFieldMember();
+                $formFieldMember->setForm($entity);
+                $formFieldMember->setField($field);
+                $formFieldMember->setSort($incr++);
+                $entity->addFormFieldMember($formFieldMember);
+            }
+            $visibleFormFieldIds = $requestcontent['formVisibleFields'];
+            $em->persist($entity);
+            // Clear Visible Form Field
+            //$entity->removeAllFormVisibleFields();
+            $em->createQueryBuilder('formVisibleFields')
+                ->delete('HrisFormBundle:FormVisibleFields','formVisibleFields')
+                ->where('formVisibleFields.form= :form')
+                ->setParameter('form',$entity)
+                ->getQuery()->getResult();
+            $em->flush();
+            $incr=1;
+            foreach($visibleFormFieldIds as $visibleFormFieldIdKey=>$visibleFormFieldId) {
+                $field = $this->getDoctrine()->getRepository('HrisFormBundle:Field')->findOneBy(array('id'=>$visibleFormFieldId));
+                $visibleFormField = new FormVisibleFields();
+                $visibleFormField->setForm($entity);
+                $visibleFormField->setField($field);
+                $visibleFormField->setSort($incr++);
+                $entity->addFormVisibleField($visibleFormField);
+            }
             $em->persist($entity);
             $em->flush();
 
@@ -198,7 +277,7 @@ class FormController extends Controller
     /**
      * Deletes a Form entity.
      *
-     * @Route("/{id}", name="form_delete")
+     * @Route("/{id}", requirements={"id"="\d+"}, name="form_delete")
      * @Method("DELETE")
      */
     public function deleteAction(Request $request, $id)

@@ -112,7 +112,7 @@ class FieldOptionController extends Controller
     /**
      * Finds and displays a FieldOption entity.
      *
-     * @Route("/{id}", requirements={"id"="\d+"}, name="fieldoption_show")
+     * @Route("/{id}", requirements={"id"="\d+"}, requirements={"id"="\d+"}, name="fieldoption_show")
      * @Method("GET")
      * @Template()
      */
@@ -137,7 +137,7 @@ class FieldOptionController extends Controller
     /**
      * Displays a form to edit an existing FieldOption entity.
      *
-     * @Route("/{id}/edit", name="fieldoption_edit")
+     * @Route("/{id}/edit", requirements={"id"="\d+"}, name="fieldoption_edit")
      * @Method("GET")
      * @Template()
      */
@@ -164,7 +164,7 @@ class FieldOptionController extends Controller
     /**
      * Edits an existing FieldOption entity.
      *
-     * @Route("/{id}", name="fieldoption_update")
+     * @Route("/{id}", requirements={"id"="\d+"}, name="fieldoption_update")
      * @Method("PUT")
      * @Template("HrisFormBundle:FieldOption:edit.html.twig")
      */
@@ -198,7 +198,7 @@ class FieldOptionController extends Controller
     /**
      * Deletes a FieldOption entity.
      *
-     * @Route("/{id}", name="fieldoption_delete")
+     * @Route("/{id}", requirements={"id"="\d+"}, name="fieldoption_delete")
      * @Method("DELETE")
      */
     public function deleteAction(Request $request, $id)

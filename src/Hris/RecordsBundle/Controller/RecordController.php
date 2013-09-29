@@ -266,7 +266,7 @@ class RecordController extends Controller
     /**
      * Displays a form to create a new Record entity.
      *
-     * @Route("/new/{id}", name="record_new")
+     * @Route("/new/{id}", requirements={"id"="\d+"}, name="record_new")
      * @Method("GET")
      * @Template()
      */
@@ -341,7 +341,7 @@ class RecordController extends Controller
     /**
      * Displays a form to edit an existing Record entity.
      *
-     * @Route("/{id}/edit", name="record_edit")
+     * @Route("/{id}/edit", requirements={"id"="\d+"}, name="record_edit")
      * @Method("GET")
      * @Template()
      */
@@ -368,7 +368,7 @@ class RecordController extends Controller
     /**
      * Edits an existing Record entity.
      *
-     * @Route("/{id}", name="record_update")
+     * @Route("/{id}", requirements={"id"="\d+"}, name="record_update")
      * @Method("PUT")
      * @Template("HrisRecordsBundle:Record:new.html.twig")
      */
@@ -403,7 +403,7 @@ class RecordController extends Controller
     /**
      * Deletes a Record entity.
      *
-     * @Route("/{id}", name="record_delete")
+     * @Route("/{id}", requirements={"id"="\d+"}, name="record_delete")
      * @Method("DELETE")
      */
     public function deleteAction(Request $request, $id)

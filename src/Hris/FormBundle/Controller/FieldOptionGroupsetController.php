@@ -112,7 +112,7 @@ class FieldOptionGroupsetController extends Controller
     /**
      * Finds and displays a FieldOptionGroupset entity.
      *
-     * @Route("/{id}", requirements={"id"="\d+"}, name="fieldoptiongroupset_show")
+     * @Route("/{id}", requirements={"id"="\d+"}, requirements={"id"="\d+"}, name="fieldoptiongroupset_show")
      * @Method("GET")
      * @Template()
      */
@@ -137,7 +137,7 @@ class FieldOptionGroupsetController extends Controller
     /**
      * Displays a form to edit an existing FieldOptionGroupset entity.
      *
-     * @Route("/{id}/edit", name="fieldoptiongroupset_edit")
+     * @Route("/{id}/edit", requirements={"id"="\d+"}, name="fieldoptiongroupset_edit")
      * @Method("GET")
      * @Template()
      */
@@ -164,7 +164,7 @@ class FieldOptionGroupsetController extends Controller
     /**
      * Edits an existing FieldOptionGroupset entity.
      *
-     * @Route("/{id}", name="fieldoptiongroupset_update")
+     * @Route("/{id}", requirements={"id"="\d+"}, name="fieldoptiongroupset_update")
      * @Method("PUT")
      * @Template("HrisFormBundle:FieldOptionGroupset:edit.html.twig")
      */
@@ -198,7 +198,7 @@ class FieldOptionGroupsetController extends Controller
     /**
      * Deletes a FieldOptionGroupset entity.
      *
-     * @Route("/{id}", name="fieldoptiongroupset_delete")
+     * @Route("/{id}", requirements={"id"="\d+"}, name="fieldoptiongroupset_delete")
      * @Method("DELETE")
      */
     public function deleteAction(Request $request, $id)

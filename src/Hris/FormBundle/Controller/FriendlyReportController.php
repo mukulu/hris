@@ -121,7 +121,7 @@ class FriendlyReportController extends Controller
     /**
      * Finds and displays a FriendlyReport entity.
      *
-     * @Route("/{id}", requirements={"id"="\d+"}, name="friendlyreport_show")
+     * @Route("/{id}", requirements={"id"="\d+"}, requirements={"id"="\d+"}, name="friendlyreport_show")
      * @Method("GET")
      * @Template()
      */
@@ -146,7 +146,7 @@ class FriendlyReportController extends Controller
     /**
      * Displays a form to edit an existing FriendlyReport entity.
      *
-     * @Route("/{id}/edit", name="friendlyreport_edit")
+     * @Route("/{id}/edit", requirements={"id"="\d+"}, name="friendlyreport_edit")
      * @Method("GET")
      * @Template()
      */
@@ -180,7 +180,7 @@ class FriendlyReportController extends Controller
     /**
      * Edits an existing FriendlyReport entity.
      *
-     * @Route("/{id}", name="friendlyreport_update")
+     * @Route("/{id}", requirements={"id"="\d+"}, name="friendlyreport_update")
      * @Method("PUT")
      * @Template("HrisFormBundle:FriendlyReport:edit.html.twig")
      */
@@ -228,7 +228,7 @@ class FriendlyReportController extends Controller
     /**
      * Deletes a FriendlyReport entity.
      *
-     * @Route("/{id}", name="friendlyreport_delete")
+     * @Route("/{id}", requirements={"id"="\d+"}, name="friendlyreport_delete")
      * @Method("DELETE")
      */
     public function deleteAction(Request $request, $id)
