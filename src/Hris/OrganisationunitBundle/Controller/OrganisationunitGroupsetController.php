@@ -137,7 +137,7 @@ class OrganisationunitGroupsetController extends Controller
     /**
      * Displays a form to edit an existing OrganisationunitGroupset entity.
      *
-     * @Route("/{id}/edit", name="organisationunitgroupset_edit")
+     * @Route("/{id}/edit", requirements={"id"="\d+"}, name="organisationunitgroupset_edit")
      * @Method("GET")
      * @Template()
      */
@@ -164,7 +164,7 @@ class OrganisationunitGroupsetController extends Controller
     /**
      * Edits an existing OrganisationunitGroupset entity.
      *
-     * @Route("/{id}", name="organisationunitgroupset_update")
+     * @Route("/{id}", requirements={"id"="\d+"}, name="organisationunitgroupset_update")
      * @Method("PUT")
      * @Template("HrisOrganisationunitBundle:OrganisationunitGroupset:edit.html.twig")
      */
@@ -198,7 +198,7 @@ class OrganisationunitGroupsetController extends Controller
     /**
      * Deletes a OrganisationunitGroupset entity.
      *
-     * @Route("/{id}", name="organisationunitgroupset_delete")
+     * @Route("/{id}", requirements={"id"="\d+"}, name="organisationunitgroupset_delete")
      * @Method("DELETE")
      */
     public function deleteAction(Request $request, $id)

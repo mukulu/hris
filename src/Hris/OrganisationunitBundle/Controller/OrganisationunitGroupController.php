@@ -24,6 +24,7 @@
  */
 namespace Hris\OrganisationunitBundle\Controller;
 
+use Hris\OrganisationunitBundle\Form\OrganisationunitGroupMemberType;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Bundle\FrameworkBundle\Controller\Controller;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Method;
@@ -74,10 +75,23 @@ class OrganisationunitGroupController extends Controller
     public function createAction(Request $request)
     {
         $entity  = new OrganisationunitGroup();
-        $form = $this->createForm(new OrganisationunitGroupType(), $entity);
+        $form = $this->createForm(new OrganisationunitGroupMemberType(), $entity);
         $form->bind($request);
 
         if ($form->isValid()) {
+            $formData = $this->getRequest()->request->get('hris_organisationunitbundle_organisationunitgroupmembertype');
+            $organisationunitGroupMemberIds = $formData['organisationunitGroupMembers'];
+            if(!empty($organisationunitGroupMemberIds)) {
+                $queryBuilder = $this->getDoctrine()->getManager()->createQueryBuilder();
+                $organisationunits = $queryBuilder->select('organisationunit')
+                    ->from('HrisOrganisationunitBundle:Organisationunit','organisationunit')
+                    ->where($queryBuilder->expr()->in('organisationunit.id',$organisationunitGroupMemberIds))
+                    ->getQuery()->getResult();
+                foreach($organisationunits as $key=>$organisationunit) {
+                    $entity->addOrganisationunit($organisationunit);
+                }
+            }
+
             $em = $this->getDoctrine()->getManager();
             $em->persist($entity);
             $em->flush();
@@ -101,7 +115,7 @@ class OrganisationunitGroupController extends Controller
     public function newAction()
     {
         $entity = new OrganisationunitGroup();
-        $form   = $this->createForm(new OrganisationunitGroupType(), $entity);
+        $form   = $this->createForm(new OrganisationunitGroupMemberType(), $entity);
 
         return array(
             'entity' => $entity,
@@ -112,7 +126,7 @@ class OrganisationunitGroupController extends Controller
     /**
      * Finds and displays a OrganisationunitGroup entity.
      *
-     * @Route("/{id}", requirements={"id"="\d+"}, name="organisationunitgroup_show")
+     * @Route("/{id}", requirements={"id"="\d+"}, requirements={"id"="\d+"}, name="organisationunitgroup_show")
      * @Method("GET")
      * @Template()
      */
@@ -137,7 +151,7 @@ class OrganisationunitGroupController extends Controller
     /**
      * Displays a form to edit an existing OrganisationunitGroup entity.
      *
-     * @Route("/{id}/edit", name="organisationunitgroup_edit")
+     * @Route("/{id}/edit", requirements={"id"="\d+"}, name="organisationunitgroup_edit")
      * @Method("GET")
      * @Template()
      */
@@ -164,7 +178,7 @@ class OrganisationunitGroupController extends Controller
     /**
      * Edits an existing OrganisationunitGroup entity.
      *
-     * @Route("/{id}", name="organisationunitgroup_update")
+     * @Route("/{id}", requirements={"id"="\d+"}, name="organisationunitgroup_update")
      * @Method("PUT")
      * @Template("HrisOrganisationunitBundle:OrganisationunitGroup:edit.html.twig")
      */
@@ -195,10 +209,43 @@ class OrganisationunitGroupController extends Controller
             'delete_form' => $deleteForm->createView(),
         );
     }
+
+    /**
+     * Updates OrganisationunitGroup member.
+     *
+     * @Route("/{id}/member", requirements={"id"="\d+"}, name="organisationunitgroup_update_member")
+     * @Method("POST")
+     * @Template()
+     */
+    public function updateMemberAction(Request $request, $id)
+    {
+        $em = $this->getDoctrine()->getManager();
+
+        $entity = $em->getRepository('HrisOrganisationunitBundle:OrganisationunitGroup')->find($id);
+
+        if (!$entity) {
+            throw $this->createNotFoundException('Unable to find OrganisationunitGroup entity.');
+        }
+        $organisationunitid = $this->getRequest()->request->get('organisationunitid');
+        $selected = $this->getRequest()->request->get('selected');
+        $organisationunit = $em->getRepository('HrisOrganisationunitBundle:Organisationunit')->find($organisationunitid);
+        if($selected=="true") {
+            $entity->addOrganisationunit($organisationunit);
+        }else {
+            $entity->removeOrganisationunit($organisationunit);
+        }
+        $em->persist($entity);
+        $em->flush();
+
+        return array(
+            'success'      => 'success',
+        );
+    }
+
     /**
      * Deletes a OrganisationunitGroup entity.
      *
-     * @Route("/{id}", name="organisationunitgroup_delete")
+     * @Route("/{id}", requirements={"id"="\d+"}, name="organisationunitgroup_delete")
      * @Method("DELETE")
      */
     public function deleteAction(Request $request, $id)
