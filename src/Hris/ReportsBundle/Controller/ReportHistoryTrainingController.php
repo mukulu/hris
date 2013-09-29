@@ -67,27 +67,26 @@ class ReportHistoryTrainingController extends Controller
     /**
      * Generate aggregated reports
      *
-     * @Route("/", name="report_aggregation_generate")
+     * @Route("/", name="report_historytraining_generate")
      * @Method("PUT")
      * @Template()
      */
     public function generateAction(Request $request)
     {
-        $aggregationForm = $this->createForm(new ReportAggregationType(),null,array('em'=>$this->getDoctrine()->getManager()));
-        $aggregationForm->bind($request);
+        $historytrainingForm = $this->createForm(new ReportHistoryTrainingType(),null,array('em'=>$this->getDoctrine()->getManager()));
+        $historytrainingForm->bind($request);
 
-        if ($aggregationForm->isValid()) {
-            $aggregationFormData = $aggregationForm->getData();
-            $organisationUnit = $aggregationFormData['organisationunit'];
-            $forms = $aggregationFormData['forms'];
-            $organisationunitGroup = $aggregationFormData['organisationunitGroup'];
-            $withLowerLevels = $aggregationFormData['withLowerLevels'];
-            $fields = $aggregationFormData['fields'];
-            $fieldsTwo = $aggregationFormData['fieldsTwo'];
-            $graphType = $aggregationFormData['graphType'];
+        if ($historytrainingForm->isValid()) {
+            $historytrainingFormData = $historytrainingForm->getData();
+            $organisationUnit = $historytrainingFormData['organisationunit'];
+            $forms = $historytrainingFormData['forms'];
+            $reportType = $historytrainingFormData['reportType'];
+            $withLowerLevels = $historytrainingFormData['withLowerLevels'];
+            $fields = $historytrainingFormData['fields'];
+            $graphType = $historytrainingFormData['graphType'];
         }
 
-        $results = $this->aggregationEngine($organisationUnit, $forms, $fields, $organisationunitGroup, $withLowerLevels, $fieldsTwo);
+        $results = $this->aggregationEngine($organisationUnit, $forms, $fields, $reportType, $withLowerLevels);
 
         //Get the Id for the forms
         $formsId = '';
@@ -226,12 +225,11 @@ class ReportHistoryTrainingController extends Controller
      * @param Organisationunit $organisationUnit
      * @param ArrayCollection $forms
      * @param Field $fields
-     * @param ArrayCollection $organisationunitGroup
+     * @param $reportType
      * @param $withLowerLevels
-     * @param Field $fieldsTwo
      * @return mixed
      */
-    private function aggregationEngine(Organisationunit $organisationUnit,  ArrayCollection $forms, Field $fields, ArrayCollection $organisationunitGroup, $withLowerLevels, Field $fieldsTwo)
+    private function aggregationEngine(Organisationunit $organisationUnit,  ArrayCollection $forms, Field $fields, $reportType, $withLowerLevels)
     {
 
         $entityManager = $this->getDoctrine()->getManager();
@@ -396,7 +394,7 @@ class ReportHistoryTrainingController extends Controller
     /**
      * Download aggregated reports
      *
-     * @Route("/download", name="report_aggregation_download")
+     * @Route("/download", name="report_historytraining_download")
      * @Method("GET")
      * @Template()
      */
@@ -612,7 +610,7 @@ class ReportHistoryTrainingController extends Controller
     /**
      * Download aggregated reports by Cadre
      *
-     * @Route("/records", name="report_aggregation_download_records")
+     * @Route("/records", name="report_historytraining_download_records")
      * @Method("GET")
      * @Template()
      */

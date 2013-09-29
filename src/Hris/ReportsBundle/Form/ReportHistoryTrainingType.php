@@ -70,11 +70,8 @@ class ReportHistoryTrainingType extends AbstractType
                 'empty_value' => '--SELECT--',
                 'query_builder'=>function(EntityRepository $er) {
                     return $er->createQueryBuilder('field')
-                        ->innerJoin('field.inputType','inputType')
-                        ->where('inputType.name=:inputTypeName')
-                        ->orWhere('field.isCalculated=True')
-                        ->setParameter('inputTypeName',"Select")
-                        ->orderBy('field.isCalculated,field.name','ASC');
+                        ->where('field.hashistory=True')
+                        ->orderBy('field.name','ASC');
                 },
                 'constraints'=> array(
                     new NotBlank(),
@@ -106,6 +103,6 @@ class ReportHistoryTrainingType extends AbstractType
 
     public function getName()
     {
-        return 'hris_reportsbundle_reportaggregationtype';
+        return 'hris_reportsbundle_reporthistorytrainingtype';
     }
 }

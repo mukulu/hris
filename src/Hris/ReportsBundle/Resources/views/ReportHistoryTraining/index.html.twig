@@ -54,7 +54,7 @@
         });
         $( document ).ready(function() {
 
-            var withLowerLevels='#hris_reportsbundle_reporthistorytrainingtype_withLowerLevels';
+            var reportType='#hris_reportsbundle_reporthistorytrainingtype_reportType';
             var forms='#hris_reportsbundle_reporthistorytrainingtype_forms';
             var fields='#hris_reportsbundle_reporthistorytrainingtype_fields';
             var graphTypeId='#hris_reportsbundle_reporthistorytrainingtype_graphType';
@@ -63,24 +63,36 @@
             $(forms).attr('disabled', 'true');
             $(fields).attr('disabled', 'true');
 
-            // On checking the withLowerLevels fields enable organisationunitGroup
-            $(withLowerLevels).on('change', function() {
-                // enable organisationunitGroup
-                if( $(withLowerLevels).is(':checked')) {
-                    $(organisationunitGroup).removeAttr('disabled');
+            // On Selecting Report Type, enable Forms
+            $(reportType).on('change', function() {
+                // enable forms
+                if( $(reportType).val() != '') {
+                    $(forms).removeAttr('disabled');
                 }else{
-                    $(organisationunitGroup).attr('disabled', 'true');
+                    $(forms).attr('disabled', 'true');
                 }
             });
-            $(fieldOneId).on('change', function() {
-                $(fieldTwoId).find('option[value=""]').remove();
+
+            // Fields is enabled only when history report type is selected
+            $(reportType).on('change', function() {
+                // enable forms
+                if( $(reportType).val() == 'history' && $(forms).val() != '') {
+                    $(fields).removeAttr('disabled');
+                }else{
+                    $(fields).attr('disabled', 'true');
+                }
+            });
+
+            //Change options of fields based on selected form
+            $(forms).on('change', function() {
+                $(fields).find('option[value=""]').remove();
                 // enable field two when the field field value  is not empty
-                if( $(fieldOneId).val() != '' ) {
-                    $(fieldTwoId).removeAttr('disabled');
+                if( $(forms).val() != '' ) {
+                    $(fields).removeAttr('disabled');
                     // On change of first field, trim selected option
                     // from first field on second.
-                    $(fieldTwoId+' option').each(function(){
-                        if( $(fieldOneId).val() == $(this).val() ) {
+                    $(fields+' option').each(function(){
+                        if( $(fields).val() == $(this).val() ) {
                             //alert($(fieldTwoId).text());
                             $(this).text('Use one Field')
                             //$(fieldTwoId).append(new Option($(this).text(), $(this).val()));
@@ -90,18 +102,7 @@
                         }
                     });
                 }else{
-                    $(fieldTwoId).attr('disabled', 'true');
-                }
-            });
-            // On entering value of second field remove pie chart option
-            $(fieldTwoId).on('change', function() {
-                if($(this).val() != ''){
-                        if($(this).val() != $(fieldOneId).val())
-                            //alert($(fieldTwoId).val());
-                            $(graphTypeId).find('option[value="pie"]').remove();
-                //add the pie chart option in the select if removed
-                }else if ($(graphTypeId).find( 'option[value="' + "pie" + '"]').length === 0) {
-                    $(graphTypeId).append(new Option('Pie Chart', 'pie'));
+                    $(fields).attr('disabled', 'true');
                 }
             });
         });
