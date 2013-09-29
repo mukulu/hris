@@ -5,9 +5,78 @@
     <script type="text/javascript" language="javascript" src="{{ asset('commons/js/ext-all.js') }}"></script>
     <script type="text/javascript">
         var treeplaceholder="treeplaceholder";
+        var currentOrganisationunitName='';
         var inputboxname="hris_organisationunitbundle_hierarchyoperationtype[organisationunit]";
+        var organisationunitToMove="#hris_organisationunitbundle_hierarchyoperationtype_organisationunitToMove";
+        var parentOrganisationnit="#hris_organisationunitbundle_hierarchyoperationtype_parentOrganisationunit";
         var urlExtension="";
         var selectedNode="";
+        function updateOrganisationunitHierarchy() {
+            if($('#confirmOrganisationunitToMove').attr('disabled')=='disabled') {
+                //Operations for step 2
+                if($('#confirmParentOrganisationunit').attr('disabled')!='disabled') {
+                    // step 2 is still active for selection of parent
+                    if($(organisationunitToMove).val() != $('input[name="'+inputboxname+'"]').val()) {
+                        //Update organisationunit to move if confirm is not disabled
+                        $(parentOrganisationnit).val( $('input[name="'+inputboxname+'"]').val() );
+                        // Label name of selected Organisationunit
+                        $('#parentOrganisationunitname').html(currentOrganisationunitName);
+                    }else {
+                        alert('Organisationunit and parent are the same!!');
+                    }
+                }
+
+            }else {
+                // Operations for step 1
+                //Enable confirmation button
+                //Update organisationunit to move if confirm is not disabled
+                $(organisationunitToMove).val( $('input[name="'+inputboxname+'"]').val() );
+                //Change Color of organisationuniToMoveSection
+                $('#organisationunitSection').css('background-color','#CCFFCC');
+                // Label name of selected Organisationunit
+                $('#organisationunitname').html(currentOrganisationunitName);
+            }
+        };
+        function confirmOrganisationunit() {
+            // confirm only if organisationunit is selected
+            if($(organisationunitToMove).val() !='') {
+                // Disable first step confirmation
+                $('#confirmOrganisationunitToMove').attr('disabled', 'true');
+                // Remove green color from step 1 and place in step 2
+                $('#organisationunitSection').removeAttr('style');
+                $('#parentOrganisationunitSection').css('background-color','#CCFFCC');
+                // State select new parent for child organisationunit
+                $('#childOrganisationunit').html($('#organisationunitname').text());
+                // Activate confirm button for step2
+                $('#confirmParentOrganisationunit').removeAttr('disabled');
+            }
+        };
+        function confirmParentOrganisationunitSelection() {
+            // Disable second step confirmation
+            $('#confirmParentOrganisationunit').attr('disabled', 'true');
+            // Remove green color from step 2 and place in step 3
+            $('#parentOrganisationunitSection').removeAttr('style');
+            $('#confirmMoveSection').css('background-color','#CCFFCC');
+            // Activate confirm button for step3
+            $('#hris_organisationunitbundle_hierarchyoperationtype_submit').removeAttr('disabled');
+        };
+        function resetHierarchyOperation() {
+            //Remove green color on step3 and three and place on step1
+            $('#parentOrganisationunitSection').removeAttr('style');
+            $('#confirmMoveSection').removeAttr('style');
+            $('#organisationunitSection').css('background-color','#CCFFCC');
+            //Disabled confirmation for step 2 and 3 and activate for step1
+            $('#hris_organisationunitbundle_hierarchyoperationtype_submit').attr('disabled', 'true');
+            $('#confirmParentOrganisationunit').attr('disabled', 'true');
+            $('#confirmOrganisationunitToMove').removeAttr('disabled');
+            //Reset html contents for #parentOrganisationunitname, #childOrganisationunit and organisationunitname
+            $('#parentOrganisationunitname').html('[[Select Parent]]');
+            $('#childOrganisationunit').html('[[Above Selected Organisationunit]]');
+            $('#organisationunitname').html('<em>[[Select Organisation unit]]</em>');
+            //Clear values for input boxes
+            $(organisationunitToMove).val('');
+            $(parentOrganisationnit).val('');
+        };
         Ext.define('OrganisationUnitTreeModel2', {
             extend: 'Ext.data.Model',
             idProperty: 'id',
@@ -42,6 +111,8 @@
                         var selectedOrgunits2 = selModel2.getSelection();
                         var selectedId2 = selectedOrgunits2[0].get('id');
                         $('input[name="'+inputboxname+'"]').val(selectedId2);
+                        currentOrganisationunitName =selectedOrgunits2[0].get('longname');
+                        updateOrganisationunitHierarchy();
                     },
                     afterrender: function(treePanel,eOpts) {
                         if(selectedNode){
@@ -75,9 +146,9 @@
             <div id="innerOrganisationunitSection">
                 {{ form_errors( hierarchyOperationForm.organisationunitToMove ) }}
                 {{ form_widget( hierarchyOperationForm.organisationunitToMove ) }}
-                <span id="organisationunitname" class="organisationunitname">&nbsp;[[Select Organisation unit]] </span>
+                <span id="organisationunitname" class="organisationunitname"><em>[[Select Organisation unit]]</em> </span>
                 <br/>
-                <input id="confirmOrganisationunit" type="button" value="Confirm" onclick="confirmOrganisationunit();">
+                <input id="confirmOrganisationunitToMove" type="button" class="btn" value="Confirm" onclick="confirmOrganisationunit();">
             </div>
         </div>
         <hr/>
@@ -88,13 +159,14 @@
                 {{ form_widget( hierarchyOperationForm.parentOrganisationunit ) }}
                 <span id="parentOrganisationunitname" class="parentOrganisationunitname"><em>[[Select Parent]]</em></span>
                 <br/>
-                <input id="confirmParentOrganisationunit" type="button" value="Confirm" onclick="confirmParentOrganisationunit()" disabled="disabled">
+                <input id="confirmParentOrganisationunit" type="button" class="btn" value="Confirm" onclick="confirmParentOrganisationunitSelection();" disabled="disabled">
             </div>
         </div>
         <hr/>
         <div id="confirmMoveSection">
-            {{ form_widget(hierarchyOperationForm.submit, {'attr': {'id': 'submitButton','disabled':'disabled','onclick':'confirmNewParentOrgunit()'}}) }}
-            <input type="button" value="Reset" onclick="window.location.href='?pg=hierarchy'">
+            <div>3. Confirm Move</div>
+            {{ form_widget(hierarchyOperationForm.submit, {'attr': {'id': 'submitButton','class':'btn','disabled':'disabled','onclick':'confirmNewParentOrgunit()'} }) }}
+            <input type="button" class="btn" value="Reset" onclick="resetHierarchyOperation();">
         </div>
     </div>
 

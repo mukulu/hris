@@ -36,6 +36,7 @@
                             {% else %}
                                 {% set required = "" %}
                             {% endif %}
+
                             <option value="{{ field.inputType.htmltag | replace({'fieldName': field.name, 'fieldId': field.uid, '(fieldId)':  "('" ~ field.uid ~ "')", 'required': required,}) }}">{{ field.caption }}</option>
                         {% endfor %}
                     </select>

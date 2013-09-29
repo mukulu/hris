@@ -22,31 +22,25 @@
  * @author John Francis Mukulu <john.f.mukulu@gmail.com>
  *
  */
-namespace Hris\FormBundle\Form;
+namespace Hris\OrganisationunitBundle\Form;
 
 use Symfony\Component\Form\AbstractType;
 use Symfony\Component\Form\FormBuilderInterface;
 use Symfony\Component\OptionsResolver\OptionsResolverInterface;
 
-class FormType extends AbstractType
+class OrganisationunitGroupMemberType extends AbstractType
 {
     public function buildForm(FormBuilderInterface $builder, array $options)
     {
         $builder
             ->add('name')
-            ->add('title')
-            ->add('uniqueRecordFields')
-            ->add('formFieldMembers','entity',array(
-                'class'=>'HrisFormBundle:Field',
-                'multiple'=>True,
-                'required'=>True,
-                'mapped'=>False,
-            ))
-            ->add('formVisibleFields','entity',array(
-                'class'=>'HrisFormBundle:Field',
-                'multiple'=>True,
-                'required'=>True,
-                'mapped'=>False,
+            ->add('code')
+            ->add('description')
+            ->add('dhisUid')
+            ->add('organisationunitGroupMembers','hidden',array(
+                'mapped'=>false,
+                'required'=>true,
+
             ))
         ;
     }
@@ -54,12 +48,12 @@ class FormType extends AbstractType
     public function setDefaultOptions(OptionsResolverInterface $resolver)
     {
         $resolver->setDefaults(array(
-            'data_class' => 'Hris\FormBundle\Entity\Form'
+            'data_class' => 'Hris\OrganisationunitBundle\Entity\OrganisationunitGroup'
         ));
     }
 
     public function getName()
     {
-        return 'hris_formbundle_formtype';
+        return 'hris_organisationunitbundle_organisationunitgroupmembertype';
     }
 }

@@ -139,7 +139,7 @@ class UserController extends Controller
     /**
      * Displays a form to edit an existing User entity.
      *
-     * @Route("/{id}/edit", name="user_edit")
+     * @Route("/{id}/edit", requirements={"id"="\d+"}, name="user_edit")
      * @Method("GET")
      * @Template()
      */
@@ -166,7 +166,7 @@ class UserController extends Controller
     /**
      * Edits an existing User entity.
      *
-     * @Route("/{id}", name="user_update")
+     * @Route("/{id}", requirements={"id"="\d+"}, name="user_update")
      * @Method("PUT")
      * @Template("HrisUserBundle:User:edit.html.twig")
      */
@@ -200,7 +200,7 @@ class UserController extends Controller
     /**
      * Deletes a User entity.
      *
-     * @Route("/{id}", name="user_delete")
+     * @Route("/{id}", requirements={"id"="\d+"}, name="user_delete")
      * @Method("DELETE")
      */
     public function deleteAction(Request $request, $id)

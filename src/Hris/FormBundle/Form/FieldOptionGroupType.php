@@ -35,8 +35,8 @@ class FieldOptionGroupType extends AbstractType
         $builder
             ->add('name')
             ->add('description')
-            ->add('fieldOption')
             ->add('field')
+            ->add('fieldOption')
         ;
     }
 

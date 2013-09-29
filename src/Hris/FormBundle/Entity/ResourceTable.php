@@ -703,16 +703,32 @@ class ResourceTable
                                     $dataArray[$field->getName()] = NULL;
                                 }
                             }else if ($field->getInputType()->getName() == 'Date') {
-                                if(!empty($dataValue[$valueKey])) {
-                                    $displayValue = new \DateTime($dataValue[$valueKey]['date'],new \DateTimeZone ($dataValue[$valueKey]['timezone']));
-                                    $dataArray[$field->getName()] = trim($displayValue->format('Y-m-d H:i:s.u')); //working on date format fix
-                                    //$dataArray[$field->getName().'_day'] = trim($displayValue->format('l'));
-                                    //$dataArray[$field->getName().'_month_number'] = trim($displayValue->format('m'));
-                                    $dataArray[$field->getName().'_month_text'] = trim($displayValue->format('F'));
-                                    $dataArray[$field->getName().'_year'] = trim($displayValue->format('Y'));
-                                    //$dataArray[$field->getName().'_month_and_year'] = trim($displayValue->format('F Y'));
+                                if($field->getIsCalculated()){
+                                    if(preg_match_all('/\#{([^\}]+)\}/',$field->getCalculated(),$match)) {
+                                        var_dump($match);
+                                        if(!empty($dataValue[strtolower($match[1][0])])) {
+                                            $displayValue = new \DateTime($dataValue[strtolower($match[1][0])]['date'],new \DateTimeZone ($dataValue[strtolower($match[1][0])]['timezone']));
+                                            var_dump($displayValue);exit();
+                                            $dataArray[$field->getName()] = trim(str_replace($match[0][0],$displayValue,$field->getCalculated()));
+                                            //$dataArray[$field->getName()] = trim($displayValue->format('Y-m-d H:i:s.u')); //working on date format fix
+                                            //$dataArray[$field->getName().'_month_text'] = trim($displayValue->format('F'));
+                                            //$dataArray[$field->getName().'_year'] = trim($displayValue->format('Y'));
+                                        }else{
+                                        $dataArray[$field->getName()] = NULL;
+                                    }
+                                    }
                                 }else{
-                                    $dataArray[$field->getName()] = NULL;
+                                    if(!empty($dataValue[$valueKey])) {
+                                        $displayValue = new \DateTime($dataValue[$valueKey]['date'],new \DateTimeZone ($dataValue[$valueKey]['timezone']));
+                                        $dataArray[$field->getName()] = trim($displayValue->format('Y-m-d H:i:s.u')); //working on date format fix
+                                        //$dataArray[$field->getName().'_day'] = trim($displayValue->format('l'));
+                                        //$dataArray[$field->getName().'_month_number'] = trim($displayValue->format('m'));
+                                        $dataArray[$field->getName().'_month_text'] = trim($displayValue->format('F'));
+                                        $dataArray[$field->getName().'_year'] = trim($displayValue->format('Y'));
+                                        //$dataArray[$field->getName().'_month_and_year'] = trim($displayValue->format('F Y'));
+                                    }else{
+                                        $dataArray[$field->getName()] = NULL;
+                                    }
                                 }
 
                                 // @todo implement calculated fields feature and remove hard-coding
