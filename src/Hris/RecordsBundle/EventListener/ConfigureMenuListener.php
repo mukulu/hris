@@ -54,7 +54,7 @@ class ConfigureMenuListener
             )
         );
         $recordsModule->addChild('Update Records',
-            array('route'=>'record_create',
+            array('route'=>'record_form_list_updaterecords',
                   'extras'=>array('tag'=>'div'),
                   'name'=>'Reports Module',
                   'attributes'=> array('class'=>'accordion-group'),

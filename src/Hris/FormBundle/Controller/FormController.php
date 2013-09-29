@@ -139,7 +139,7 @@ class FormController extends Controller
     /**
      * Finds and displays a Form entity.
      *
-     * @Route("/{id}", requirements={"id"="\d+"}, requirements={"id"="\d+"}, name="form_show")
+     * @Route("/{id}", requirements={"id"="\d+"}, name="form_show")
      * @Method("GET")
      * @Template()
      */

@@ -99,7 +99,7 @@ class ReportEmployeeRecordsController extends Controller
             if(empty($formNames)) {
                 $formNames = $form->getTitle();
             }else {
-                if(count($formNames)==$incr) $formNames.=$form->getTitle();
+                if(count($formNames)==$incr) $formNames.=','.$form->getTitle();
             }
             // Accrue visible fields
             foreach($form->getFormVisibleFields() as $visibleFieldKey=>$visibleField) {

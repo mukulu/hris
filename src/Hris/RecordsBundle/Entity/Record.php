@@ -475,11 +475,20 @@ class Record
     /**
      * Get value
      *
-     * @return array 
+     * @return mixed
      */
-    public function getValue()
+    public function getValue($uid=NULL)
     {
-        return $this->value;
+        if(!empty($uid)) {
+            if(gettype($this->value[$uid])=="array") {
+                $output = new \DateTime($this->value[$uid]['date'],new \DateTimeZone($this->value[$uid]['timezone']));
+            }else {
+                $output = $this->value[$uid];
+            }
+        }else {
+            $output = $this->value;
+        }
+        return $output;
     }
 
     /**

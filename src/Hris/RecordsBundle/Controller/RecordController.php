@@ -74,13 +74,115 @@ class RecordController extends Controller
     }
 
     /**
-     * List Forms Available for Record entry.
+     * Lists all Records by forms.
      *
-     * @Route("/formlist", name="record_form_list")
+     * @Route("/viewrecords/{formid}/form", requirements={"formid"="\d+"}, defaults={"formid"=0}, name="record_viewrecords")
      * @Method("GET")
      * @Template()
      */
-    public function formlistAction()
+    public function viewRecordsAction($formid)
+    {
+        $em = $this->getDoctrine()->getManager();
+        $queryBuilder = $this->getDoctrine()->getManager()->createQueryBuilder();
+
+        $userManager = $this->container->get('fos_user.user_manager');
+        $user = $userManager->findUserByUsername($this->getUser());
+        $organisationunit = $user->getOrganisationunit();
+
+        if($formid == 0) {
+            $formIds = $this->getDoctrine()->getManager()->createQueryBuilder()->select( 'form.id')
+                            ->from('HrisFormBundle:Form','form')->getQuery()->getArrayResult();
+            $formIds = $this->array_value_recursive('id',$formIds);
+            $forms = $em->getRepository('HrisFormBundle:Form')->findAll();
+        }else {
+            $forms = $em->getRepository('HrisFormBundle:Form')->findby(array('id'=>$formid));
+            $formIds[]=$formid;
+        }
+
+        //Prepare field Option map, converting from stored FieldOption key in record value array to actual text value
+        $fieldOptions = $this->getDoctrine()->getManager()->getRepository('HrisFormBundle:FieldOption')->findAll();
+        foreach ($fieldOptions as $fieldOptionKey => $fieldOption) {
+            $recordFieldOptionKey = ucfirst(Record::getFieldOptionKey());
+            $fieldOptionMap[call_user_func_array(array($fieldOption, "get${recordFieldOptionKey}"),array()) ] =   $fieldOption->getValue();
+        }
+
+        //Prepare field map, converting from stored FieldOption key in record value array to actual text value
+        $fields = $this->getDoctrine()->getManager()->getRepository('HrisFormBundle:Field')->findAll();
+        foreach ($fields as $fieldKey => $field) {
+            $recordFieldKey = ucfirst(Record::getFieldKey());
+            $fieldMap[$field->getName()] =  call_user_func_array(array($field, "get${recordFieldKey}"),array());
+        }
+
+        $records = $queryBuilder->select('record')
+            ->from('HrisRecordsBundle:Record','record')
+            ->join('record.organisationunit','organisationunit')
+            ->join('record.form','form')
+            ->join('organisationunit.organisationunitStructure','organisationunitStructure')
+            ->join('organisationunitStructure.level','organisationunitLevel')
+            ->andWhere('organisationunit.active=True')
+            ->andWhere('organisationunitLevel.level >= (
+                                        SELECT selectedOrganisationunitLevel.level
+                                        FROM HrisOrganisationunitBundle:OrganisationunitStructure selectedOrganisationunitStructure
+                                        INNER JOIN selectedOrganisationunitStructure.level selectedOrganisationunitLevel
+                                        WHERE selectedOrganisationunitStructure.organisationunit=:selectedOrganisationunit )'
+            )
+            ->andWhere('organisationunitStructure.level'.$organisationunit->getOrganisationunitStructure()->getLevel()->getLevel().'Organisationunit=:levelId')
+            ->andWhere($queryBuilder->expr()->in('form.id',':formIds'))
+            ->setParameters(array(
+                'levelId'=>$organisationunit->getId(),
+                'selectedOrganisationunit'=>$organisationunit->getId(),
+                'formIds'=>$formIds,
+            ))
+            ->getQuery()->getResult();
+
+        $formNames = NULL;
+        $visibleFields = Array();
+        $formFields = Array();
+        $incr=0;
+        $formIds = Array();
+        foreach($forms as $formKey=>$form) {
+            $incr++;
+            $formIds[] = $form->getId();
+            // Concatenate form Names
+            if(empty($formNames)) {
+                $formNames = $form->getTitle();
+            }else {
+                if(count($formNames)==$incr) $formNames.=','.$form->getTitle();
+            }
+            // Accrue visible fields
+            foreach($form->getFormVisibleFields() as $visibleFieldKey=>$visibleField) {
+
+                if(!in_array($visibleField->getField(),$visibleFields) && !$visibleField->getField()->getIsCalculated()) $visibleFields[] =$visibleField->getField();
+            }
+            // Accrue form fields
+            foreach($form->getFormFieldMember() as $formFieldKey=>$formField) {
+                if(!in_array($formField->getField(),$formFields) && !$formField->getField()->getIsCalculated()) $formFields[] =$formField->getField();
+            }
+        }
+        $title = "Records Report for ".$organisationunit->getLongname();
+
+        $title .= " for ".$formNames;
+        if(empty($visibleFields)) $visibleFields=$formFields;
+
+
+        return array(
+            'title'=>$title,
+            'visibleFields' => $visibleFields,
+            'records'=>$records,
+            'optionMap'=>$fieldOptionMap,
+            'fieldMap'=>$fieldMap,
+        );
+    }
+
+    /**
+     * List Forms Available for Record entry.
+     *
+     * @Route("/formlist/dataentry", defaults={"channel"="dataentry"}, name="record_form_list")
+     * @Route("/formlist/updaterecords", defaults={"channel"="updaterecords"}, name="record_form_list_updaterecords")
+     * @Method("GET")
+     * @Template()
+     */
+    public function formlistAction($channel)
     {
         $em = $this->getDoctrine()->getManager();
 
@@ -137,6 +239,7 @@ class RecordController extends Controller
             'field_values' => $filed_Values,
             'field_option_values' => $field_Option_Values,
             'field_option_table_name' => $filed_Option_Table_Name,
+            'channel'=>$channel,
         );
     }
 
@@ -377,5 +480,18 @@ class RecordController extends Controller
         }
 
         return $this->redirect($this->generateUrl('record'));
+    }
+
+    /**
+     * Get all values from specific key in a multidimensional array
+     *
+     * @param $key string
+     * @param $arr array
+     * @return null|string|array
+     */
+    public function array_value_recursive($key, array $arr){
+        $val = array();
+        array_walk_recursive($arr, function($v, $k) use($key, &$val){if($k == $key) array_push($val, $v);});
+        return count($val) > 1 ? $val : array_pop($val);
     }
 }

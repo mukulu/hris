@@ -12,9 +12,11 @@
                 <button type="submit" class="btn">Edit</button>
             </li>
             <li>
-                <a href="{{ path('organisationunit_list_parent', { 'parent': entity.parent.id }) }}" class="btn">
-                    Back to the list
-                </a>
+                {% if entity.parent is not empty %}
+                    <a href="{{ path('organisationunit_list_parent', { 'parent': entity.parent.id }) }}" class="btn">Back to the list</a>
+                {% else %}
+                    <a href="{{ path('organisationunit_list') }}" class="btn">Back to the list</a>
+                {% endif %}
             </li>
         </ul>
     </form>
