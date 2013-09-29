@@ -127,6 +127,35 @@ class RecordController extends Controller
         $filed_Option_Table_Name = json_encode($em->getClassMetadata('HrisFormBundle:FieldOption')->getTableName());
 
         /*
+        * Getting the Organisation Unit Metadata and Values
+        */
+
+        $user = $this->container->get('security.context')->getToken()->getUser();
+
+        if ($user->getOrganisationunit()->getOrganisationunitStructure()->getLevel()->getDataentrylevel()){
+        $orgUnit = $em->getRepository( 'HrisOrganisationunitBundle:Organisationunit' )
+            ->createQueryBuilder('o')
+            ->select('o', 'p')
+            ->join('o.parent', 'p')
+            ->where('o.uid = :uid')
+            ->orWhere('o.parent = :parent')
+            ->setParameters(array('uid' => $user->getOrganisationunit()->getUid(), 'parent' => $user->getOrganisationunit()))
+            ->getQuery()
+            ->getArrayResult();
+
+        }else{
+            $orgUnit = $em->getRepository( 'HrisOrganisationunitBundle:Organisationunit' )
+                ->createQueryBuilder('o')
+                ->select('o')
+                ->where('o.uid = :uid')
+                ->setParameters(array('uid' => $user->getOrganisationunit()->getUid()))
+                ->getQuery()
+                ->getArrayResult();
+        }
+        $orgunit_Values = json_encode($orgUnit);
+        $orgunit_table = json_encode($em->getClassMetadata('HrisOrganisationunitBundle:Organisationunit')->getTableName());
+
+        /*
          * Field Options Associations
          */
 
@@ -164,6 +193,8 @@ class RecordController extends Controller
             'field_option_table_name' => $filed_Option_Table_Name,
             'option_associations_values' => json_encode($fieldOptions),
             'option_associations_table' => $fieldOptionAssocitiontablename,
+            'organisation_Values' => $orgunit_Values,
+            'organisation_unit_table' => $orgunit_table,
         );
     }
 
@@ -279,6 +310,17 @@ class RecordController extends Controller
 
         $fields = $formEntity->getSimpleField();
 
+        $user = $this->container->get('security.context')->getToken()->getUser();
+
+        $orgUnit = $em->getRepository( 'HrisOrganisationunitBundle:Organisationunit' )
+            ->createQueryBuilder('o')
+            ->select('o')
+            ->where('o.uid = :uid')
+            ->setParameters(array('uid' => $user->getOrganisationunit()->getUid()))
+            ->getQuery()
+            ->getArrayResult();
+
+        $isEntryLevel = $user->getOrganisationunit()->getOrganisationunitStructure()->getLevel()->getDataentrylevel();
         $selectFields = array();
         $key = NULL;
 
@@ -295,6 +337,8 @@ class RecordController extends Controller
             'id' => $formEntity->getId(),
             'table_name' => $tableName,
             'fields' => json_encode($selectFields),
+            'entryLevel' => $isEntryLevel,
+            'organisation_unit' => array_shift($orgUnit),
         );
     }
 

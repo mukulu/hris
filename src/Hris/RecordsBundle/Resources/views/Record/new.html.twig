@@ -22,7 +22,22 @@
     <h1>{{ title | raw }}</h1>
 
     <form action="{{ path('record_create') }}" method="post">
+        {% if entryLevel %}
+            Duty Post
+            <select name="orgunitParent" onchange="getunits(this)" required>
+                <option value="">
+                    --
+                </option>
+                <option value="{{ organisation_unit['uid'] }}">
+                    {{ organisation_unit['longname'] }}
+                </option>
+            </select>
+            <br />
+            Work Station
+            <select name="orgunitParent" id="units" >
 
+            </select>
+        {% endif %}
 
         <div id="result" />
         </div>
