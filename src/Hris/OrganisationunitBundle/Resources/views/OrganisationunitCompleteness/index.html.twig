@@ -1,0 +1,47 @@
+{% extends '::base.html.twig' %}
+
+{% block right_content -%}
+    <h1>OrganisationunitCompleteness list</h1>
+
+    <table class="records_list">
+        <thead>
+            <tr>
+                <th>Id</th>
+                <th>Uid</th>
+                <th>Expectation</th>
+                <th>Lastupdated</th>
+                <th>Datecreated</th>
+                <th>Actions</th>
+            </tr>
+        </thead>
+        <tbody>
+        {% for entity in entities %}
+            <tr>
+                <td><a href="{{ path('organisationunitcompleteness_show', { 'id': entity.id }) }}">{{ entity.id }}</a></td>
+                <td>{{ entity.uid }}</td>
+                <td>{{ entity.expectation }}</td>
+                <td>{% if entity.lastupdated %}{{ entity.lastupdated|date('Y-m-d H:i:s') }}{% endif %}</td>
+                <td>{% if entity.datecreated %}{{ entity.datecreated|date('Y-m-d H:i:s') }}{% endif %}</td>
+                <td>
+                <ul>
+                    <li>
+                        <a href="{{ path('organisationunitcompleteness_show', { 'id': entity.id }) }}">show</a>
+                    </li>
+                    <li>
+                        <a href="{{ path('organisationunitcompleteness_edit', { 'id': entity.id }) }}">edit</a>
+                    </li>
+                </ul>
+                </td>
+            </tr>
+        {% endfor %}
+        </tbody>
+    </table>
+
+        <ul>
+        <li>
+            <a href="{{ path('organisationunitcompleteness_new') }}">
+                Create a new entry
+            </a>
+        </li>
+    </ul>
+    {% endblock %}

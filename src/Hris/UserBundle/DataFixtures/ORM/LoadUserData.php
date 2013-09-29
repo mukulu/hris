@@ -32,24 +32,81 @@ use Hris\UserBundle\Entity\User;
 
 class LoadUserData extends AbstractFixture implements OrderedFixtureInterface 
 {
+    /**
+     * @var users
+     */
+    private $users;
+
+
+    public function getUsers()
+    {
+        return $this->users;
+    }
+
+    /**
+     * Returns Array of dummy Users
+     *
+     * @return array
+     */
+    public function addDummyUsers()
+    {
+        $this->users = Array(
+            0=> Array(
+                'username'=>'admin',
+                'password'=>'district',
+                'email'=>'admin@localhost.local',
+                'role'=>'ROLE_SUPERUSER',
+                'enabled'=>True,
+                'phonenumber'=>'+255717000000',
+                'jobtitle'=>'System Administrator',
+                'firstname'=>'Hris',
+                'middlename'=>'System',
+                'surname'=>'Administrator',
+            ),
+            1=> Array(
+                'username'=>'district',
+                'password'=>'district',
+                'email'=>'district@localhost.local',
+                'role'=>'ROLE_USER',
+                'enabled'=>True,
+                'phonenumber'=>'+255716000000',
+                'jobtitle'=>'Data Manager',
+                'firstname'=>'Hris',
+                'middlename'=>'Data',
+                'surname'=>'Manager',
+            )
+        );
+        return $this->users;
+    }
+
 	/**
 	 * {@inheritDoc}
 	 * @see Doctrine\Common\DataFixtures.FixtureInterface::load()
 	 */
 	public function load(ObjectManager $manager)
 	{
-		$userAdmin = new User;
-		$userAdmin->setUsername('admin');
-		$userAdmin->setPlainPassword('district');
-		$userAdmin->setEmail('admin@hris.info');
-		$userAdmin->addRole('ROLE_SUPERUSER');
-		$userAdmin->addRole('ROLE_USER');
-		$userAdmin->setEnabled(True);
-		
-		$manager->persist($userAdmin);
+        $this->addDummyUsers();
+        foreach($this->getUsers() as $userKey=>$humanResourceUser) {
+            $user = new User();
+            $user->setUsername($humanResourceUser['username']);
+            $user->setPlainPassword($humanResourceUser['password']);
+            $user->setEmail($humanResourceUser['email']);
+            $user->addRole($humanResourceUser['role']);
+            $user->setEnabled($humanResourceUser['enabled']);
+            $user->setPhonenumber($humanResourceUser['phonenumber']);
+            $user->setJobTitle($humanResourceUser['jobtitle']);
+            $user->setFirstName($humanResourceUser['firstname']);
+            $user->setMiddleName($humanResourceUser['middlename']);
+            $user->setSurname($humanResourceUser['surname']);
+            $this->addReference($user->getUsername().'-user', $user);
+
+            $manager->persist($user);
+
+        }
+
 		$manager->flush();
 		
-		$this->addReference('admin', $userAdmin);
+
 	}
 	
 	/**
@@ -59,6 +116,7 @@ class LoadUserData extends AbstractFixture implements OrderedFixtureInterface
 	public function getOrder()
 	{
 		return 1;
+        //LoadInputTypes
 	}
 
 

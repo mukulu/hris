@@ -16,11 +16,12 @@ class AppKernel extends Kernel
             new Symfony\Bundle\AsseticBundle\AsseticBundle(),
             new Doctrine\Bundle\DoctrineBundle\DoctrineBundle(),
             new Doctrine\Bundle\FixturesBundle\DoctrineFixturesBundle(),
-            new Doctrine\Bundle\MigrationsBundle\DoctrineMigrationsBundle(),
             new Sensio\Bundle\FrameworkExtraBundle\SensioFrameworkExtraBundle(),
+
             new JMS\AopBundle\JMSAopBundle(),
-            new JMS\DiExtraBundle\JMSDiExtraBundle($this),
             new JMS\SecurityExtraBundle\JMSSecurityExtraBundle(),
+            new JMS\DiExtraBundle\JMSDiExtraBundle($this),
+            new JMS\SerializerBundle\JMSSerializerBundle(),
             new Sonata\AdminBundle\SonataAdminBundle(),
             new Sonata\BlockBundle\SonataBlockBundle(),
             new Sonata\CacheBundle\SonataCacheBundle(),
@@ -28,17 +29,22 @@ class AppKernel extends Kernel
             new Sonata\DoctrineORMAdminBundle\SonataDoctrineORMAdminBundle(),
             new Knp\Bundle\MenuBundle\KnpMenuBundle(),
         	new FOS\UserBundle\FOSUserBundle(),
+        	new Bc\Bundle\BootstrapBundle\BcBootstrapBundle(),
+            new Ob\HighchartsBundle\ObHighchartsBundle(),
             new Hris\UserBundle\HrisUserBundle(),
             new Hris\DashboardBundle\HrisDashboardBundle(),
-            new Hris\AssetsBundle\HrisAssetsBundle(),
             new Hris\OrganisationunitBundle\HrisOrganisationunitBundle(),
             new Hris\FormBundle\HrisFormBundle(),
             new Hris\RecordsBundle\HrisRecordsBundle(),
             new Hris\DataQualityBundle\HrisDataQualityBundle(),
+            new Hris\IndicatorBundle\HrisIndicatorBundle(),
+            new Hris\ReportsBundle\HrisReportsBundle(),
+            new Hris\ImportExportBundle\HrisImportExportBundle(),
+        	new Stfalcon\Bundle\TinymceBundle\StfalconTinymceBundle(),
+            new Liuggio\ExcelBundle\LiuggioExcelBundle(),
         );
 
         if (in_array($this->getEnvironment(), array('dev', 'test'))) {
-            $bundles[] = new Acme\DemoBundle\AcmeDemoBundle();
             /** @noinspection PhpUndefinedNamespaceInspection */
             $bundles[] = new Symfony\Bundle\WebProfilerBundle\WebProfilerBundle();
             /** @noinspection PhpUndefinedNamespaceInspection */

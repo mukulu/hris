@@ -1,0 +1,102 @@
+{% extends '::base.html.twig' %}
+{% block javascripts %}
+    {{ parent() }}
+    <script type="text/javascript" src="{{ asset('commons/js/jquery.dataTables.js') }}"></script>
+    <script type="text/javascript" src="{{ asset('commons/js/dt_settings.js') }}"></script>
+    <script>window["_GOOG_TRANS_EXT_VER"] = "1";</script>
+{% endblock javascripts %}
+
+{% block stylesheets %}
+    {{ parent() }}
+    <link rel="stylesheet" href="{{ asset('commons/css/dt_bootstrap.css') }}" />
+{% endblock stylesheets %}
+
+{% block right_content %}
+
+
+    <div class="container">
+        <h1><small>User list</small></h1>
+        <ul class="inline">
+            <li>
+                <a class="btn" href="{{ path('user_new') }}">
+                    Create a new user
+                </a>
+            </li>
+        </ul>
+
+
+        <table class="records_list dataTable table table-striped table-bordered table-hover" cellpadding="0" cellspacing="0" border="0">
+            <thead>
+                <tr>
+                    <th>Username</th>
+                    <th>Firstname</th>
+                    <th>Surname</th>
+                    <th>Email</th>
+                    <th>Lastlogin</th>
+                    <th>Roles</th>
+                    <th>Organisationunit</th>
+                    <th>Actions</th>
+                </tr>
+            </thead>
+            <tbody>
+            {% for entity in entities %}
+                <tr {% if entity.enabled!=1 %}class="error"{% endif %}>
+                    <td><a href="{{ path('user_show', { 'id': entity.id }) }}">{{ entity.username }}</a></td>
+                    <td>{{ entity.firstname }}</td>
+                    <td>{{ entity.surname }}</td>
+                    <td>{{ entity.email }}</td>
+                    <td>{% if entity.lastLogin %}{{ entity.lastLogin|date('H:i:s d/m/Y') }}{% endif %}</td>
+                    <td>{% for role in entity.roles %}
+                            {{ role }},
+                        {% endfor %}
+                    </td>
+                    <td>{{ entity.organisationunit }}</td>
+                    <td>
+                    <ul class="inline">
+                        <li>
+                            <a href="{{ path('user_show', { 'id': entity.id }) }}"><i class="icon-info-sign icon-large" title="Show"></i></a>
+                        </li>
+                        <li>
+                            <a href="{{ path('user_edit', { 'id': entity.id }) }}"><i class="icon-edit icon-large" title="Edit"></i></a>
+                        </li>
+                        <li>
+                            <a data-toggle="modal" href="#deleteModalFor{{ entity.username }}"><i class="icon-remove-sign icon-large" title="Delete"></i></a>
+                            <!-- Modal -->
+                            <div class="modal fade" id="deleteModalFor{{ entity.username }}">
+                                <div class="modal-dialog">
+                                    <div class="modal-content">
+                                        <div class="modal-header">
+                                            <button type="button" class="close" data-dismiss="modal" aria-hidden="true">×</button>
+                                            <h4 class="modal-title"><i class="icon-circle-remove icon-largest" title="Delete"></i>Deleting <strong>{{ entity.username | capitalize }}</strong></h4>
+                                        </div>
+                                        <div class="modal-body">
+                                            Are you sure you want to delete <strong>{{ entity.username | capitalize }}</strong> who's account was created on <em>{{ entity.datecreated|date('d/m/Y') }}</em>
+                                            {% if entity.lastLogin %}
+                                                and last logged in on {{ entity.lastLogin|date('H:i:s d/m/Y') }}
+                                            {% else %}
+                                                and
+                                                {% if entity.enabled == 1 %} activated but never used ?? {% else %} never activated ?? {% endif %}
+                                            {% endif %}
+                                        </div>
+                                        <div class="modal-footer">
+                                            <form action="{{ path('user_delete', { 'id': entity.id }) }}" method="post">
+                                                <input type="hidden" name="_method" value="DELETE" />
+                                                {{ form_widget(delete_forms[entity.id] ) }}
+                                                <button type="button" class="btn btn-default" data-dismiss="modal">Close</button>
+                                                <button type="submit" class="btn btn-danger">Delete</button>
+                                            </form>
+                                        </div>
+                                    </div><!-- /.modal-content -->
+                                </div><!-- /.modal-dialog -->
+                            </div><!-- /.modal -->
+
+                        </li>
+                    </ul>
+                    </td>
+                </tr>
+            {% endfor %}
+            </tbody>
+        </table>
+    </div>
+
+{% endblock right_content %}

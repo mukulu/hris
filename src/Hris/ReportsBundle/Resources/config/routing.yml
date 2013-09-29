@@ -1,0 +1,31 @@
+reports:
+    resource: "@HrisReportsBundle/Controller/ReportController.php"
+    type: annotation
+
+aggregation:
+    resource: "@HrisReportsBundle/Controller/ReportAggregationController.php"
+    type: annotation
+
+historytrainingreport:
+    resource: "@HrisReportsBundle/Controller/ReportHistoryTrainingController.php"
+    type: annotation
+
+organisationunitByLevels:
+    resource: "@HrisReportsBundle/Controller/ReportOrganisationunitByLevelsController.php"
+    type: annotation
+
+organisationunitByGroupset:
+    resource: "@HrisReportsBundle/Controller/ReportOrganisationunitByGroupsetController.php"
+    type: annotation
+
+organisationunitCompleteness:
+    resource: "@HrisReportsBundle/Controller/ReportOrganisationunitCompletenessController.php"
+    type: annotation
+
+recordsReport:
+    resource: "@HrisReportsBundle/Controller/ReportEmployeeRecordsController.php"
+    type: annotation
+
+friendlyReport:
+    resource: "@HrisReportsBundle/Controller/ReportFriendlyReportController.php"
+    type: annotation

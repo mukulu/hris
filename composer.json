@@ -1,51 +1,120 @@
 {
-    "name": "symfony/framework-standard-edition",
-    "description": "The \"Symfony Standard Edition\" distribution",
+    "name": "hrisproject/hris",
+    "license": "MIT",
+    "type": "project",
+    "description": "Human Resource Information system",
     "autoload": {
         "psr-0": { "": "src/" }
     },
     "require": {
         "php": ">=5.3.3",
-        "symfony/symfony": "2.1.*",
+        "symfony/symfony": "2.3.*",
         "doctrine/orm": ">=2.2.3,<2.4-dev",
-        "doctrine/data-fixtures": "*",
-        "doctrine/doctrine-fixtures-bundle": "dev-master",
-        "doctrine/doctrine-bundle": "1.0.*",
+        "doctrine/doctrine-bundle": "1.2.*",
         "twig/extensions": "1.0.*",
-        "symfony/assetic-bundle": "2.1.*",
-        "symfony/swiftmailer-bundle": "2.1.*",
-        "symfony/monolog-bundle": "2.1.*",
-        "sensio/distribution-bundle": "2.1.*",
-        "sensio/framework-extra-bundle": "2.1.*",
-        "sensio/generator-bundle": "2.1.*",
-        "jms/security-extra-bundle": "1.2.*",
-        "jms/di-extra-bundle": "1.1.*",
+        "symfony/assetic-bundle": "2.3.*",
+        "symfony/swiftmailer-bundle": "2.3.*",
+        "symfony/monolog-bundle": "2.3.*",
+        "sensio/distribution-bundle": "2.3.*",
+        "sensio/framework-extra-bundle": "2.3.*",
+        "sensio/generator-bundle": "2.3.*",
+        "incenteev/composer-parameter-handler": "~2.0",
+        "doctrine/data-fixtures": "dev-master",
+        "doctrine/doctrine-fixtures-bundle": "dev-master",
+        "gedmo/doctrine-extensions": "dev-master",
         "friendsofsymfony/user-bundle": "*",
-        "doctrine/doctrine-migrations-bundle": "dev-master",
         "sonata-project/cache-bundle": "master-dev",
         "sonata-project/doctrine-orm-admin-bundle": "master-dev",
-        "mukulu/admin-bundle": "dev-master"
+        "sonata-project/admin-bundle": "dev-master",
+        "stfalcon/tinymce-bundle": "dev-master",
+        "braincrafted/bootstrap-bundle": "dev-master",
+        "twitter/bootstrap": "2.3.2.0",
+        "leafo/lessphp": "dev-master",
+        "jquery/jquery":"1.10.*",
+        "ob/highcharts-bundle": "dev-master",
+        "jms/security-extra-bundle": "dev-master",
+        "jms/serializer-bundle": "dev-master",
+        "liuggio/excelbundle": ">=1.0.4"
     },
     "scripts": {
         "post-install-cmd": [
+			"Incenteev\\ParameterHandler\\ScriptHandler::buildParameters",
             "Sensio\\Bundle\\DistributionBundle\\Composer\\ScriptHandler::buildBootstrap",
             "Sensio\\Bundle\\DistributionBundle\\Composer\\ScriptHandler::clearCache",
             "Sensio\\Bundle\\DistributionBundle\\Composer\\ScriptHandler::installAssets",
             "Sensio\\Bundle\\DistributionBundle\\Composer\\ScriptHandler::installRequirementsFile"
         ],
         "post-update-cmd": [
+			"Incenteev\\ParameterHandler\\ScriptHandler::buildParameters",
             "Sensio\\Bundle\\DistributionBundle\\Composer\\ScriptHandler::buildBootstrap",
             "Sensio\\Bundle\\DistributionBundle\\Composer\\ScriptHandler::clearCache",
             "Sensio\\Bundle\\DistributionBundle\\Composer\\ScriptHandler::installAssets",
             "Sensio\\Bundle\\DistributionBundle\\Composer\\ScriptHandler::installRequirementsFile"
         ]
     },
-    "config": {
-        "bin-dir": "bin"
+    "config":{
+        "bin-dir":"bin"
     },
-    "minimum-stability": "dev",
+    "minimum-stability":"alpha",
+    "extra":{
+        "symfony-app-dir":"app",
+        "symfony-web-dir":"web",
+        "branch-alias":{
+            "dev-master":"2.2-dev"
+        }
+    },
+    "minimum-stability": "RC",
     "extra": {
         "symfony-app-dir": "app",
-        "symfony-web-dir": "web"
-    }
+        "symfony-web-dir": "web",
+        "incenteev-parameters": {
+            "file": "app/config/parameters.yml"
+        },
+        "branch-alias": {
+            "dev-master": "2.4-dev"
+        }
+    },
+    "repositories":[
+        {
+            "type":"package",
+            "package":{
+                "name":"jquery/jquery",
+                "version":"1.10.0",
+                "dist":{
+                    "url":"http://code.jquery.com/jquery-1.10.0.js",
+                    "type":"file"
+                }
+            }
+        }
+    ],
+    "license":[
+        "LGPL-2.1",
+        "GPL-3.0+"
+    ],
+    "authors":[
+        {
+            "name":"Ismail Yusuph Koleleni",
+            "email":"ismailkoleleni@gmail.com",
+            "homepage":"http://hrhis.moh.go.tz",
+            "role":"Developer"
+        },
+        {
+            "name":"John Fransis Mukulu",
+            "email":"john.f.mukulu@gmail.com",
+            "homepage":"http://hrhis.moh.go.tz",
+            "role":"Developer"
+        },
+        {
+            "name":"Wilfred Senyoni",
+            "email":"senyoni@gmail.com",
+            "homepage":"http://hrhis.moh.go.tz",
+            "role":"Developer"
+        },
+        {
+            "name":"Yusuph Kassim Kulindwa",
+            "email":"yusuphk@gmail.com",
+            "homepage":"http://hrhis.moh.go.tz",
+            "role":"Developer"
+        }
+    ]
 }

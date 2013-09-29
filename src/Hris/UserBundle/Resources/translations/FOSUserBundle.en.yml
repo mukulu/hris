@@ -12,21 +12,25 @@ group:
         deleted: The group has been deleted
 
 # Security
-"Bad credentials": "Login Failed: Please Contact your system Administrator!"
-
 security:
     login:
+        login: "Login"
+        create_account: "Register"
         username: "Username:"
         password: "Password:"
-        remember_me: Remember me
-        submit: Login
-        reset: Reset
+        remember_me: "Keep me signed in"
+        bad_credentials: "Login Failed: Please Contact your system Administrator!"
+        help: "Help"
+        submit: "Login"
+        reset: "Reset"
+        access_denied: "Access Denied"
 
 # Profile
 profile:
     show:
         username: Username
         email: Email
+        last_updated: "Last Updated"
     edit:
         submit: Update
     flash:
@@ -43,6 +47,7 @@ registration:
     check_email: An email has been sent to %email%. It contains an activation link you must click to activate your account.
     confirmed: Congrats %username%, your account is now activated.
     back: Back to the originating page.
+    to_dashboard: Go to Dashboard
     submit: Register
     flash:
         user_created: The user has been created successfully
@@ -60,6 +65,7 @@ registration:
 resetting:
     password_already_requested: The password for this user has already been requested within the last 24 hours.
     check_email: An email has been sent to %email%. It contains a link you must click to reset your password.
+    to_login: Back to Login
     request:
         invalid_username: The username or email address "%username%" does not exist.
         username: "Username or email address:"

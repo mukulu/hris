@@ -24,16 +24,20 @@
  */
 namespace Hris\DashboardBundle\Entity;
 
+use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\ORM\Mapping as ORM;
+use Gedmo\Mapping\Annotation as Gedmo;
 
 use Hris\FormBundle\Entity\Form;
-use Hris\UserBundle\Entity\UserInfo;
+use Hris\UserBundle\Entity\User;
 use Hris\OrganisationunitBundle\Entity\Organisationunit;
+use Symfony\Component\Validator\Constraints as Assert;
 
 /**
  * Hris\DashboardBundle\Entity\DashboardChart
  *
- * @ORM\Table(name="hris_dashboardchart", uniqueConstraints={@ORM\UniqueConstraint(name="userFieldOneTwoGraphTypeLowerLevel_idx",columns={"userinfo_id", "fieldOne","fieldTwo","graphType","lowerLevels"})})
+ * @Gedmo\Loggable
+ * @ORM\Table(name="hris_dashboardchart", uniqueConstraints={@ORM\UniqueConstraint(name="userFieldOneTwoGraphTypeLowerLevel_idx",columns={"user_id", "fieldOne","fieldTwo","graphType","lowerLevels"})})
  * @ORM\Entity(repositoryClass="Hris\DashboardBundle\Entity\DashboardChartRepository")
  */
 class DashboardChart
@@ -50,6 +54,7 @@ class DashboardChart
     /**
      * @var string $uid
      *
+     * @Gedmo\Versioned
      * @ORM\Column(name="uid", type="string", length=13, unique=true)
      */
     private $uid;
@@ -57,6 +62,7 @@ class DashboardChart
     /**
      * @var string $name
      *
+     * @Gedmo\Versioned
      * @ORM\Column(name="name", type="string", length=64, unique=true)
      */
     private $name;
@@ -64,6 +70,7 @@ class DashboardChart
     /**
      * @var string $description
      *
+     * @Gedmo\Versioned
      * @ORM\Column(name="description", type="text", nullable=true)
      */
     private $description;
@@ -71,6 +78,7 @@ class DashboardChart
     /**
      * @var string $fieldOne
      *
+     * @Gedmo\Versioned
      * @ORM\Column(name="fieldOne", type="string", length=64)
      */
     private $fieldOne;
@@ -78,6 +86,7 @@ class DashboardChart
     /**
      * @var string $fieldTwo
      *
+     * @Gedmo\Versioned
      * @ORM\Column(name="fieldTwo", type="string", length=64)
      */
     private $fieldTwo;
@@ -85,6 +94,7 @@ class DashboardChart
     /**
      * @var string $graphType
      *
+     * @Gedmo\Versioned
      * @ORM\Column(name="graphType", type="string", length=64)
      */
     private $graphType;
@@ -92,6 +102,7 @@ class DashboardChart
     /**
      * @var boolean $lowerLevels
      *
+     * @Gedmo\Versioned
      * @ORM\Column(name="lowerLevels", type="boolean")
      */
     private $lowerLevels;
@@ -99,12 +110,13 @@ class DashboardChart
     /**
      * @var boolean $systemWide
      *
+     * @Gedmo\Versioned
      * @ORM\Column(name="systemWide", type="boolean")
      */
     private $systemWide;
     
     /**
-     * @var \Hris\OrganisationunitBundle\Entity\Organisationunit $organisationunit
+     * @var Organisationunit $organisationunit
      *
      * @ORM\ManyToMany(targetEntity="Hris\OrganisationunitBundle\Entity\Organisationunit", inversedBy="dashboardChart")
      * @ORM\JoinTable(name="hris_dashboardchart_organisationunitmembers",
@@ -120,17 +132,18 @@ class DashboardChart
     private $organisationunit;
     
     /**
-     * @var \Hris\UserBundle\Entity\UserInfo $userInfo
+     * @var User $user
      *
-     * @ORM\ManyToOne(targetEntity="Hris\UserBundle\Entity\UserInfo",inversedBy="dashboardChart")
+     * @Gedmo\Versioned
+     * @ORM\ManyToOne(targetEntity="Hris\UserBundle\Entity\User",inversedBy="dashboardChart")
      * @ORM\JoinColumns({
-     *   @ORM\JoinColumn(name="userinfo_id", referencedColumnName="id")
+     *   @ORM\JoinColumn(name="user_id", referencedColumnName="id", onDelete="CASCADE")
      * })
      */
-    private $userInfo;
+    private $user;
     
     /**
-     * @var \Hris\FormBundle\Entity\Form $form
+     * @var Form $form
      *
      * @ORM\ManyToMany(targetEntity="Hris\FormBundle\Entity\Form", inversedBy="dashboardChart")
      * @ORM\JoinTable(name="hris_dashboardchart_formmembers",
@@ -144,17 +157,19 @@ class DashboardChart
      * @ORM\OrderBy({"name" = "ASC"})
      */
     private $form;
-    
+
     /**
      * @var \DateTime $datecreated
      *
+     * @Gedmo\Timestampable(on="create")
      * @ORM\Column(name="datecreated", type="datetime")
      */
     private $datecreated;
-    
+
     /**
      * @var \DateTime $lastupdated
      *
+     * @Gedmo\Timestampable(on="update")
      * @ORM\Column(name="lastupdated", type="datetime", nullable=true)
      */
     private $lastupdated;
@@ -357,12 +372,12 @@ class DashboardChart
     /**
      * Add form
      *
-     * @param \Hris\FormBundle\Entity\Form $form
+     * @param Form $form
      * @return DashboardChart
      */
-    public function addForm(\Hris\FormBundle\Entity\Form $form)
+    public function addForm(Form $form)
     {
-        $this->form[] = $form;
+        $this->form[$form->getId()] = $form;
     
         return $this;
     }
@@ -370,9 +385,9 @@ class DashboardChart
     /**
      * Remove form
      *
-     * @param \Hris\FormBundle\Entity\Form $form
+     * @param Form $form
      */
-    public function removeForm(\Hris\FormBundle\Entity\Form $form)
+    public function removeForm(Form $form)
     {
         $this->form->removeElement($form);
     }
@@ -413,12 +428,12 @@ class DashboardChart
     /**
      * Add organisationunit
      *
-     * @param \Hris\OrganisationunitBundle\Entity\Organisationunit $organisationunit
+     * @param Organisationunit $organisationunit
      * @return DashboardChart
      */
-    public function addOrganisationunit(\Hris\OrganisationunitBundle\Entity\Organisationunit $organisationunit)
+    public function addOrganisationunit(Organisationunit $organisationunit)
     {
-        $this->organisationunit[] = $organisationunit;
+        $this->organisationunit[$organisationunit->getId()] = $organisationunit;
     
         return $this;
     }
@@ -426,9 +441,9 @@ class DashboardChart
     /**
      * Remove organisationunit
      *
-     * @param \Hris\OrganisationunitBundle\Entity\Organisationunit $organisationunit
+     * @param Organisationunit $organisationunit
      */
-    public function removeOrganisationunit(\Hris\OrganisationunitBundle\Entity\Organisationunit $organisationunit)
+    public function removeOrganisationunit(Organisationunit $organisationunit)
     {
         $this->organisationunit->removeElement($organisationunit);
     }
@@ -448,8 +463,8 @@ class DashboardChart
      */
     public function __construct()
     {
-        $this->organisationunit = new \Doctrine\Common\Collections\ArrayCollection();
-        $this->form = new \Doctrine\Common\Collections\ArrayCollection();
+        $this->organisationunit = new ArrayCollection();
+        $this->form = new ArrayCollection();
         $this->lowerLevels = True;
         $this->uid = uniqid();
     }
@@ -479,25 +494,35 @@ class DashboardChart
     }
 
     /**
-     * Set userInfo
+     * Set user
      *
-     * @param \Hris\UserBundle\Entity\UserInfo $userInfo
+     * @param User $user
      * @return DashboardChart
      */
-    public function setUserInfo(\Hris\UserBundle\Entity\UserInfo $userInfo = null)
+    public function setUser(User $user = null)
     {
-        $this->userInfo = $userInfo;
+        $this->user = $user;
     
         return $this;
     }
 
     /**
-     * Get userInfo
+     * Get user
      *
-     * @return \Hris\UserBundle\Entity\UserInfo
+     * @return User
      */
-    public function getUserInfo()
+    public function getUser()
     {
-        return $this->userInfo;
+        return $this->user;
+    }
+
+    /**
+     * Get Entity verbose name
+     *
+     * @return string
+     */
+    public function __toString()
+    {
+        return $this->name;
     }
 }

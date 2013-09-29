@@ -1,0 +1,122 @@
+/*
+ * style.css
+ * 
+ * Copyright 2012 
+ * Author: John Francis Mukulu <john.f.mukulu@gmail.com>
+ * 
+ * This program is free software; you can redistribute it and/or modify
+ * it under the terms of the GNU General Public License as published by
+ * the Free Software Foundation; either version 2 of the License, or
+ * (at your option) any later version.
+ * 
+ */
+#banner {
+    margin-top:-20px;
+    background-color: whitesmoke;
+    color:#777;
+}
+
+/* Data Tables Css */
+.bordered-table{border:1px solid #ddd;border-collapse:separate;*border-collapse:collapse;-webkit-border-radius:4px;-moz-border-radius:4px;border-radius:4px;}.bordered-table th+th,.bordered-table td+td,.bordered-table th+td{border-left:1px solid #ddd;}
+.bordered-table thead tr:first-child th:first-child,.bordered-table tbody tr:first-child td:first-child{-webkit-border-radius:4px 0 0 0;-moz-border-radius:4px 0 0 0;border-radius:4px 0 0 0;}
+.bordered-table thead tr:first-child th:last-child,.bordered-table tbody tr:first-child td:last-child{-webkit-border-radius:0 4px 0 0;-moz-border-radius:0 4px 0 0;border-radius:0 4px 0 0;}
+.bordered-table tbody tr:last-child td:first-child{-webkit-border-radius:0 0 0 4px;-moz-border-radius:0 0 0 4px;border-radius:0 0 0 4px;}
+.bordered-table tbody tr:last-child td:last-child{-webkit-border-radius:0 0 4px 0;-moz-border-radius:0 0 4px 0;border-radius:0 0 4px 0;}
+
+.zebra-striped tbody tr:nth-child(odd) td,.zebra-striped tbody tr:nth-child(odd) th{background-color:#f9f9f9;}
+.zebra-striped tbody tr:hover td,.zebra-striped tbody tr:hover th{background-color:#f5f5f5;}
+
+/* Overriding twitter bootstrap */
+.container-fluid > .row-fluid > .span2 {
+    min-width: 210px;
+    max-width: 260px;
+}
+.accordion-group .active > .accordion-heading > a,
+.accordion-group .active > .accordion-heading > a:hover,
+.accordion-group .active > .accordion-heading > a:focus {
+    color: #ffffff;
+    text-shadow: 0 -1px 0 rgba(0, 0, 0, 0.2);
+    background-color: #0088cc;
+}
+.current_ancestor,
+.current_ancestor:hover,
+.current_ancestor:focus {
+    background-color: whitesmoke;
+}
+.well {
+    background-color:#ffffff;
+}
+ul.nav > li.dropdown:hover > ul.dropdown-menu{
+    display: block;
+}
+a.menu:after, .dropdown-toggle:after {
+    content: none;
+}
+.container > .dataTables_wrapper > .row {
+    margin-left:0px;
+}
+
+tbody > tr > td > ul.inline {
+    margin: 0px 0px -25px 25px;
+}
+
+/* Sticky footer styles
+ -------------------------------------------------- */
+
+html,
+body {
+    height: 100%;
+    /* The html and body elements cannot have any padding or margin. */
+}
+/* Wrapper for page content to push down footer */
+#wrap {
+    min-height: 100%;
+    height: auto !important;
+    height: 100%;
+    /* Negative indent footer by it's height */
+    margin: 0 auto -60px;
+}
+/* Set the fixed height of the footer here */
+#push,
+#footer {
+    height: 60px;
+    margin-top:55px;
+}
+#footer {
+    background-color: #f5f5f5;
+}
+/* Lastly, apply responsive CSS fixes as necessary */
+@media (max-width: 767px) {
+    #footer {
+        margin-left: -20px;
+        margin-right: -20px;
+        padding-left: 20px;
+        padding-right: 20px;
+    }
+}
+
+
+
+/* Custom page CSS
+-------------------------------------------------- */
+/* Not required for template or sticky footer method. */
+#wrap > .container {
+    padding-top: 60px;
+}
+.container .credit {
+    margin: 20px 0;
+}
+code {
+    font-size: 80%;
+}
+/* Data Entry Form Css */
+
+table.dataentry {border-collapse: collapse;border-color:#0070C0;}
+table.dataentry > thead > tr {height:35.45pt;}
+table.dataentry > thead > tr > th {background:#d6dff7;}
+table.dataentry > thead > tr > th > p > span{font-size: 18pt; color: #0070c0;}
+table.dataentry > tbody > tr {height: 35.2pt; border: 1pt #2e468b;}
+table.dataentry > tbody > tr > td {background-color:#d6dff7;padding: 0in 5.4pt;height: 17.2pt;}
+table.dataentry > tbody > tr > td > span {font-size: 14.0pt;width: 216.3pt;color: #1f497d;}
+table.dataentry > tbody > tr > td > em {font-size: 14.0pt;font-style: normal;color: #1f497d;}
+table.dataentry > tbody > tr > td.whitebg {background-color:#ffffff;width:288px;}

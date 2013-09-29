@@ -25,18 +25,33 @@
 namespace Hris\RecordsBundle\Entity;
 
 use Doctrine\ORM\Mapping as ORM;
+use Gedmo\Mapping\Annotation as Gedmo;
 
 use Hris\OrganisationunitBundle\Entity\Organisationunit;
 use Hris\FormBundle\Entity\Form;
+use Symfony\Component\Validator\Constraints as Assert;
 
 /**
  * Hris\RecordsBundle\Entity\Record
  *
+ * @Gedmo\Loggable
  * @ORM\Table(name="hris_record")
  * @ORM\Entity(repositoryClass="Hris\RecordsBundle\Entity\RecordRepository")
  */
 class Record
 {
+    /**
+     * Field column to be used in value array
+     * @var string $fieldKey
+     */
+    private static $fieldKey='uid';
+
+    /**
+     * FieldOption column to be used in value array
+     * @var string $fieldOptionKey
+     */
+    private static $fieldOptionKey='uid';
+
     /**
      * @var integer $id
      *
@@ -49,6 +64,7 @@ class Record
     /**
      * @var string $uid
      *
+     * @Gedmo\Versioned
      * @ORM\Column(name="uid", type="string", length=13, unique=true)
      */
     private $uid;
@@ -56,33 +72,46 @@ class Record
     /**
      * @var string $instance
      *
+     * @Gedmo\Versioned
      * @ORM\Column(name="instance", type="string", length=64, unique=true)
      */
     private $instance;
     
     /**
-     * @var Hris\OrganisationunitBundle\Entity\Organisationunit $organisationunit
+     * @var Organisationunit $organisationunit
      *
+     * @Gedmo\Versioned
      * @ORM\ManyToOne(targetEntity="Hris\OrganisationunitBundle\Entity\Organisationunit")
      * @ORM\JoinColumns({
-     *   @ORM\JoinColumn(name="organisationunit_id", referencedColumnName="id", nullable=true)
+     *   @ORM\JoinColumn(name="organisationunit_id", referencedColumnName="id", nullable=true, onDelete="CASCADE")
      * })
      */
     private $organisationunit;
     
     /**
-     * @var Hris\FormBundle\Entity\Form $form
+     * @var Form $form
      *
+     * @Gedmo\Versioned
      * @ORM\ManyToOne(targetEntity="Hris\FormBundle\Entity\Form",inversedBy="record")
      * @ORM\JoinColumns({
-     *   @ORM\JoinColumn(name="form_id", referencedColumnName="id",nullable=false)
+     *   @ORM\JoinColumn(name="form_id", referencedColumnName="id",nullable=false, onDelete="CASCADE")
      * })
      */
     private $form;
 
     /**
+     *
+     * @var json_array $value
+     *
+     * @Gedmo\Versioned
+     * @ORM\Column(name="value", type="json_array", nullable=false)
+     */
+    private $value;
+
+    /**
      * @var boolean $complete
      *
+     * @Gedmo\Versioned
      * @ORM\Column(name="complete", type="boolean")
      */
     private $complete;
@@ -90,6 +119,7 @@ class Record
     /**
      * @var boolean $correct
      *
+     * @Gedmo\Versioned
      * @ORM\Column(name="correct", type="boolean")
      */
     private $correct;
@@ -97,6 +127,7 @@ class Record
     /**
      * @var boolean $hashistory
      *
+     * @Gedmo\Versioned
      * @ORM\Column(name="hashistory", type="boolean")
      */
     private $hashistory;
@@ -104,6 +135,7 @@ class Record
     /**
      * @var boolean $hastraining
      *
+     * @Gedmo\Versioned
      * @ORM\Column(name="hastraining", type="boolean")
      */
     private $hastraining;
@@ -111,13 +143,15 @@ class Record
     /**
      * @var \DateTime $datecreated
      *
-     * @ORM\Column(name="datecreated", type="datetime")
+     * @Gedmo\Timestampable(on="create")
+     * @ORM\Column(name="datecreated", type="datetime", nullable=false)
      */
     private $datecreated;
 
     /**
      * @var \DateTime $lastupdated
      *
+     * @Gedmo\Timestampable(on="update")
      * @ORM\Column(name="lastupdated", type="datetime", nullable=true)
      */
     private $lastupdated;
@@ -125,7 +159,7 @@ class Record
     /**
      * @var string $username
      *
-     * @ORM\Column(name="username", type="string", length=64, unique=true)
+     * @ORM\Column(name="username", type="string", length=64)
      */
     private $username;
     
@@ -139,6 +173,26 @@ class Record
     	$this->hastraining = FALSE;
     	$this->correct = FALSE;
     	$this->uid = uniqid();
+    }
+
+    /**
+     * Returns Field column name to be used in value array
+     *
+     * @return string
+     */
+    static public function getFieldKey()
+    {
+        return self::$fieldKey;
+    }
+
+    /**
+     * Returns FieldOption column name to be used in value array
+     *
+     * @return string
+     */
+    static public function getFieldOptionKey()
+    {
+        return self::$fieldOptionKey;
     }
 
 
@@ -362,10 +416,10 @@ class Record
     /**
      * Set organisationunit
      *
-     * @param \Hris\OrganisationunitBundle\Entity\Organisationunit $organisationunit
+     * @param Organisationunit $organisationunit
      * @return Record
      */
-    public function setOrganisationunit(\Hris\OrganisationunitBundle\Entity\Organisationunit $organisationunit = null)
+    public function setOrganisationunit(Organisationunit $organisationunit = null)
     {
         $this->organisationunit = $organisationunit;
     
@@ -375,7 +429,7 @@ class Record
     /**
      * Get organisationunit
      *
-     * @return \Hris\OrganisationunitBundle\Entity\Organisationunit
+     * @return Organisationunit
      */
     public function getOrganisationunit()
     {
@@ -385,10 +439,10 @@ class Record
     /**
      * Set form
      *
-     * @param \Hris\FormBundle\Entity\Form $form
+     * @param Form $form
      * @return Record
      */
-    public function setForm(\Hris\FormBundle\Entity\Form $form)
+    public function setForm(Form $form)
     {
         $this->form = $form;
     
@@ -398,10 +452,44 @@ class Record
     /**
      * Get form
      *
-     * @return Hris\FormBundle\Entity\Form 
+     * @return Form
      */
     public function getForm()
     {
         return $this->form;
+    }
+
+    /**
+     * Set value
+     *
+     * @param array $value
+     * @return Record
+     */
+    public function setValue($value)
+    {
+        $this->value = $value;
+    
+        return $this;
+    }
+
+    /**
+     * Get value
+     *
+     * @return array 
+     */
+    public function getValue()
+    {
+        return $this->value;
+    }
+
+    /**
+     * Get Entity verbose name
+     *
+     * @return string
+     */
+    public function __toString()
+    {
+        $recordDetail = 'Organisationunit:'.$this->getOrganisationunit()->__toString().' Form:'.$this->getForm()->__toString().' instance:'.$this->getInstance();
+        return $recordDetail;
     }
 }

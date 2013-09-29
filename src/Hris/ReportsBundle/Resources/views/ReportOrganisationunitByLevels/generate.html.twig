@@ -1,0 +1,55 @@
+{% extends '::base.html.twig' %}
+{% block javascripts %}
+    {{ parent() }}
+    <script type="text/javascript" src="{{ asset('commons/js/jquery.dataTables.js') }}"></script>
+    <script type="text/javascript" src="{{ asset('commons/js/dt_settings.js') }}"></script>
+    <script>window["_GOOG_TRANS_EXT_VER"] = "1";</script>
+{% endblock javascripts %}
+
+{% block stylesheets %}
+    {{ parent() }}
+    <link rel="stylesheet" href="{{ asset('commons/css/dt_bootstrap.css') }}" />
+{% endblock stylesheets %}
+
+{% block right_content -%}
+
+<div class="container">
+    <h1><small>{{ title }}</small></h1>
+
+    <table class="records_list dataTable table table-striped table-bordered table-hover" cellpadding="0" cellspacing="0" border="0">
+        <thead>
+        <tr>
+            <th>No.</th>
+            {% for lowerLevel in lowerLevels %}
+                <th>{{ lowerLevel.name }}</th>
+            {% endfor %}
+        </tr>
+        </thead>
+        <tbody>
+            {% set counter = 0 %}
+            {% for orgunitStructureObject in orgunitStructureObjects %}
+                <tr>
+                    <td>{{ counter }}</td>
+                    {% for lowerLevel in lowerLevels %}
+                        {% if selectedLevel.getLevel() - lowerLevel.level == 0 %}
+                            <td> {{ orgunitStructureObject.getOrganisationunit().getLongname() }}</td>
+                        {% elseif selectedLevel.getLevel() - lowerLevel.level == 1 %}
+                            <td> {{ orgunitStructureObject.getOrganisationunit().getParent().getLongname() }}</td>
+                        {% elseif selectedLevel.getLevel() - lowerLevel.level == 2 %}
+                            <td> {{ orgunitStructureObject.getOrganisationunit().getParent().getParent().getLongname() }}</td>
+                        {% elseif selectedLevel.getLevel() - lowerLevel.level == 3 %}
+                            <td> {{ orgunitStructureObject.getOrganisationunit().getParent().getParent().getParent().getLongname() }}</td>
+                        {% elseif selectedLevel.getLevel() - lowerLevel.level == 4 %}
+                            <td> {{ orgunitStructureObject.getOrganisationunit().getParent().getParent().getParent().getParent().getLongname() }}</td>
+                        {% elseif selectedLevel.getLevel() - lowerLevel.level == 5 %}
+                            <td> {{ orgunitStructureObject.getOrganisationunit().getParent().getParent().getParent().getParent().getParent().getLongname() }}</td>
+                        {% endif %}
+                    {% endfor %}
+                </tr>
+                {%set counter=counter+1 %}
+            {% endfor %}
+        </tbody>
+    </table>
+</div>
+
+{% endblock %}

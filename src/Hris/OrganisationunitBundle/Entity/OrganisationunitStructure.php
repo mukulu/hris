@@ -25,13 +25,15 @@
 namespace Hris\OrganisationunitBundle\Entity;
 
 use Doctrine\ORM\Mapping as ORM;
-
+use Gedmo\Mapping\Annotation as Gedmo;
 use Hris\OrganisationunitBundle\Entity\OrganisationunitLevel;
 use Hris\OrganisationunitBundle\Entity\Organisationunit;
+use Symfony\Component\Validator\Constraints as Assert;
 
 /**
  * Hris\OrganisationunitBundle\Entity\OrganisationunitStructure
  *
+ * @Gedmo\Loggable
  * @ORM\Table(name="hris_organisationunitstructure")
  * @ORM\Entity(repositoryClass="Hris\OrganisationunitBundle\Entity\OrganisationunitStructureRepository")
  */
@@ -45,128 +47,99 @@ class OrganisationunitStructure
      * @ORM\GeneratedValue(strategy="AUTO")
      */
     private $id;
+
+    /**
+     * @var string $uid
+     *
+     * @Gedmo\Versioned
+     * @ORM\Column(name="uid", type="string", length=13, unique=true)
+     */
+    private $uid;
     
     /**
-     * @var \Hris\OrganisationunitBundle\Entity\Organisationunit $organisationunit
+     * @Gedmo\Versioned
+     * @var Organisationunit $organisationunit
      *
      * @ORM\OneToOne(targetEntity="Hris\OrganisationunitBundle\Entity\Organisationunit", mappedBy="organisationunitStructure")
-     * @ORM\JoinColumn(name="organisationunit_id", referencedColumnName="id", nullable=false,unique=true)
+     * @ORM\JoinColumn(name="organisationunit_id", referencedColumnName="id", nullable=false,unique=true, onDelete="CASCADE")
      */
     private $organisationunit;
 
     /**
+     * @Gedmo\Versioned
      * @var \Hris\OrganisationunitBundle\Entity\OrganisationunitLevel $level
      *
      * @ORM\ManyToOne(targetEntity="Hris\OrganisationunitBundle\Entity\OrganisationunitLevel",inversedBy="organisationunitStructure")
      * @ORM\JoinColumns({
-     *   @ORM\JoinColumn(name="level", referencedColumnName="id", nullable=true)
+     *   @ORM\JoinColumn(name="level_id", referencedColumnName="id", nullable=true, onDelete="CASCADE")
      * })
      */
     private $level;
     
     /**
-     * @var \Hris\OrganisationunitBundle\Entity\Organisationunit $level1Organisationunit
+     * @var Organisationunit $level1Organisationunit
      *
      * @ORM\ManyToOne(targetEntity="Hris\OrganisationunitBundle\Entity\Organisationunit",inversedBy="level1OrganisationunitStructure")
      * @ORM\JoinColumns({
-     *   @ORM\JoinColumn(name="level1_id", referencedColumnName="id", nullable=true)
+     *   @ORM\JoinColumn(name="level1_id", referencedColumnName="id", nullable=true, onDelete="CASCADE")
      * })
      */
     private $level1Organisationunit;
     
     /**
-     * @var \Hris\OrganisationunitBundle\Entity\Organisationunit $level2Organisationunit
+     * @var Organisationunit $level2Organisationunit
      *
      * @ORM\ManyToOne(targetEntity="Hris\OrganisationunitBundle\Entity\Organisationunit",inversedBy="level2OrganisationunitStructure")
      * @ORM\JoinColumns({
-     *   @ORM\JoinColumn(name="level2_id", referencedColumnName="id", nullable=true)
+     *   @ORM\JoinColumn(name="level2_id", referencedColumnName="id", nullable=true, onDelete="CASCADE")
      * })
      */
     private $level2Organisationunit;
     
     /**
-     * @var \Hris\OrganisationunitBundle\Entity\Organisationunit $level3Organisationunit
+     * @var Organisationunit $level3Organisationunit
      *
      * @ORM\ManyToOne(targetEntity="Hris\OrganisationunitBundle\Entity\Organisationunit",inversedBy="level3OrganisationunitStructure")
      * @ORM\JoinColumns({
-     *   @ORM\JoinColumn(name="level3_id", referencedColumnName="id", nullable=true)
+     *   @ORM\JoinColumn(name="level3_id", referencedColumnName="id", nullable=true, onDelete="CASCADE")
      * })
      */
     private $level3Organisationunit;
     
     /**
-     * @var \Hris\OrganisationunitBundle\Entity\Organisationunit $level4Organisationunit
+     * @var Organisationunit $level4Organisationunit
      *
      * @ORM\ManyToOne(targetEntity="Hris\OrganisationunitBundle\Entity\Organisationunit",inversedBy="level4OrganisationunitStructure")
      * @ORM\JoinColumns({
-     *   @ORM\JoinColumn(name="level4_id", referencedColumnName="id", nullable=true)
+     *   @ORM\JoinColumn(name="level4_id", referencedColumnName="id", nullable=true, onDelete="CASCADE")
      * })
      */
     private $level4Organisationunit;
     
     /**
-     * @var \Hris\OrganisationunitBundle\Entity\Organisationunit $level5Organisationunit
+     * @var Organisationunit $level5Organisationunit
      *
      * @ORM\ManyToOne(targetEntity="Hris\OrganisationunitBundle\Entity\Organisationunit",inversedBy="level5OrganisationunitStructure")
      * @ORM\JoinColumns({
-     *   @ORM\JoinColumn(name="level5_id", referencedColumnName="id", nullable=true)
+     *   @ORM\JoinColumn(name="level5_id", referencedColumnName="id", nullable=true, onDelete="CASCADE")
      * })
      */
     private $level5Organisationunit;
     
     /**
-     * @var \Hris\OrganisationunitBundle\Entity\Organisationunit $level6Organisationunit
+     * @var Organisationunit $level6Organisationunit
      *
      * @ORM\ManyToOne(targetEntity="Hris\OrganisationunitBundle\Entity\Organisationunit",inversedBy="level6OrganisationunitStructure")
      * @ORM\JoinColumns({
-     *   @ORM\JoinColumn(name="level6_id", referencedColumnName="id", nullable=true)
+     *   @ORM\JoinColumn(name="level6_id", referencedColumnName="id", nullable=true, onDelete="CASCADE")
      * })
      */
     private $level6Organisationunit;
     
     /**
-     * @var \Hris\OrganisationunitBundle\Entity\Organisationunit $level7Organisationunit
-     *
-     * @ORM\ManyToOne(targetEntity="Hris\OrganisationunitBundle\Entity\Organisationunit",inversedBy="level7OrganisationunitStructure")
-     * @ORM\JoinColumns({
-     *   @ORM\JoinColumn(name="level7_id", referencedColumnName="id", nullable=true)
-     * })
-     */
-    private $level7Organisationunit;
-    
-    /**
-     * @var \Hris\OrganisationunitBundle\Entity\Organisationunit $level8Organisationunit
-     *
-     * @ORM\ManyToOne(targetEntity="Hris\OrganisationunitBundle\Entity\Organisationunit",inversedBy="level8OrganisationunitStructure")
-     * @ORM\JoinColumns({
-     *   @ORM\JoinColumn(name="level8_id", referencedColumnName="id", nullable=true)
-     * })
-     */
-    private $level8Organisationunit;
-    
-    /**
-     * @var \Hris\OrganisationunitBundle\Entity\Organisationunit $level9Organisationunit
-     *
-     * @ORM\ManyToOne(targetEntity="Hris\OrganisationunitBundle\Entity\Organisationunit",inversedBy="level9OrganisationunitStructure")
-     * @ORM\JoinColumns({
-     *   @ORM\JoinColumn(name="level9_id", referencedColumnName="id", nullable=true)
-     * })
-     */
-    private $level9Organisationunit;
-    
-    /**
-     * @var \Hris\OrganisationunitBundle\Entity\Organisationunit $level10Organisationunit
-     *
-     * @ORM\ManyToOne(targetEntity="Hris\OrganisationunitBundle\Entity\Organisationunit",inversedBy="level10OrganisationunitStructure")
-     * @ORM\JoinColumns({
-     *   @ORM\JoinColumn(name="level10_id", referencedColumnName="id", nullable=true)
-     * })
-     */
-    private $level10Organisationunit;
-    
-    /**
      * @var \DateTime $datecreated
      *
+     * @Gedmo\Timestampable(on="create")
      * @ORM\Column(name="datecreated", type="datetime", nullable=false)
      */
     private $datecreated;
@@ -174,6 +147,7 @@ class OrganisationunitStructure
     /**
      * @var \DateTime $lastupdated
      *
+     * @Gedmo\Timestampable(on="update")
      * @ORM\Column(name="lastupdated", type="datetime", nullable=true)
      */
     private $lastupdated;
@@ -190,9 +164,32 @@ class OrganisationunitStructure
     }
 
     /**
+     * Set uid
+     *
+     * @param string $uid
+     * @return Organisationunit
+     */
+    public function setUid($uid)
+    {
+        $this->uid = $uid;
+
+        return $this;
+    }
+
+    /**
+     * Get uid
+     *
+     * @return string
+     */
+    public function getUid()
+    {
+        return $this->uid;
+    }
+
+    /**
      * Set level
      *
-     * @param integer $level
+     * @param OrganisationunitLevel $level
      * @return OrganisationunitStructure
      */
     public function setLevel($level)
@@ -205,7 +202,7 @@ class OrganisationunitStructure
     /**
      * Get level
      *
-     * @return integer 
+     * @return OrganisationunitLevel
      */
     public function getLevel()
     {
@@ -261,10 +258,10 @@ class OrganisationunitStructure
     /**
      * Set organisationunit
      *
-     * @param \Hris\OrganisationunitBundle\Entity\Organisationunit $organisationunit
+     * @param Organisationunit $organisationunit
      * @return OrganisationunitStructure
      */
-    public function setOrganisationunit(\Hris\OrganisationunitBundle\Entity\Organisationunit $organisationunit)
+    public function setOrganisationunit(Organisationunit $organisationunit)
     {
         $this->organisationunit = $organisationunit;
     
@@ -274,7 +271,7 @@ class OrganisationunitStructure
     /**
      * Get organisationunit
      *
-     * @return \Hris\OrganisationunitBundle\Entity\Organisationunit
+     * @return Organisationunit
      */
     public function getOrganisationunit()
     {
@@ -284,10 +281,10 @@ class OrganisationunitStructure
     /**
      * Set level1Organisationunit
      *
-     * @param \Hris\OrganisationunitBundle\Entity\Organisationunit $level1Organisationunit
+     * @param Organisationunit $level1Organisationunit
      * @return OrganisationunitStructure
      */
-    public function setLevel1Organisationunit(\Hris\OrganisationunitBundle\Entity\Organisationunit $level1Organisationunit = null)
+    public function setLevel1Organisationunit(Organisationunit $level1Organisationunit = null)
     {
         $this->level1Organisationunit = $level1Organisationunit;
     
@@ -297,7 +294,7 @@ class OrganisationunitStructure
     /**
      * Get level1Organisationunit
      *
-     * @return \Hris\OrganisationunitBundle\Entity\Organisationunit
+     * @return Organisationunit
      */
     public function getLevel1Organisationunit()
     {
@@ -307,10 +304,10 @@ class OrganisationunitStructure
     /**
      * Set level2Organisationunit
      *
-     * @param \Hris\OrganisationunitBundle\Entity\Organisationunit $level2Organisationunit
+     * @param Organisationunit $level2Organisationunit
      * @return OrganisationunitStructure
      */
-    public function setLevel2Organisationunit(\Hris\OrganisationunitBundle\Entity\Organisationunit $level2Organisationunit = null)
+    public function setLevel2Organisationunit(Organisationunit $level2Organisationunit = null)
     {
         $this->level2Organisationunit = $level2Organisationunit;
     
@@ -320,7 +317,7 @@ class OrganisationunitStructure
     /**
      * Get level2Organisationunit
      *
-     * @return \Hris\OrganisationunitBundle\Entity\Organisationunit
+     * @return Organisationunit
      */
     public function getLevel2Organisationunit()
     {
@@ -330,10 +327,10 @@ class OrganisationunitStructure
     /**
      * Set level3Organisationunit
      *
-     * @param \Hris\OrganisationunitBundle\Entity\Organisationunit $level3Organisationunit
+     * @param Organisationunit $level3Organisationunit
      * @return OrganisationunitStructure
      */
-    public function setLevel3Organisationunit(\Hris\OrganisationunitBundle\Entity\Organisationunit $level3Organisationunit = null)
+    public function setLevel3Organisationunit(Organisationunit $level3Organisationunit = null)
     {
         $this->level3Organisationunit = $level3Organisationunit;
     
@@ -343,7 +340,7 @@ class OrganisationunitStructure
     /**
      * Get level3Organisationunit
      *
-     * @return \Hris\OrganisationunitBundle\Entity\Organisationunit
+     * @return Organisationunit
      */
     public function getLevel3Organisationunit()
     {
@@ -353,10 +350,10 @@ class OrganisationunitStructure
     /**
      * Set level4Organisationunit
      *
-     * @param \Hris\OrganisationunitBundle\Entity\Organisationunit $level4Organisationunit
+     * @param Organisationunit $level4Organisationunit
      * @return OrganisationunitStructure
      */
-    public function setLevel4Organisationunit(\Hris\OrganisationunitBundle\Entity\Organisationunit $level4Organisationunit = null)
+    public function setLevel4Organisationunit(Organisationunit $level4Organisationunit = null)
     {
         $this->level4Organisationunit = $level4Organisationunit;
     
@@ -366,7 +363,7 @@ class OrganisationunitStructure
     /**
      * Get level4Organisationunit
      *
-     * @return \Hris\OrganisationunitBundle\Entity\Organisationunit
+     * @return Organisationunit
      */
     public function getLevel4Organisationunit()
     {
@@ -376,10 +373,10 @@ class OrganisationunitStructure
     /**
      * Set level5Organisationunit
      *
-     * @param \Hris\OrganisationunitBundle\Entity\Organisationunit $level5Organisationunit
+     * @param Organisationunit $level5Organisationunit
      * @return OrganisationunitStructure
      */
-    public function setLevel5Organisationunit(\Hris\OrganisationunitBundle\Entity\Organisationunit $level5Organisationunit = null)
+    public function setLevel5Organisationunit(Organisationunit $level5Organisationunit = null)
     {
         $this->level5Organisationunit = $level5Organisationunit;
     
@@ -389,7 +386,7 @@ class OrganisationunitStructure
     /**
      * Get level5Organisationunit
      *
-     * @return \Hris\OrganisationunitBundle\Entity\Organisationunit
+     * @return Organisationunit
      */
     public function getLevel5Organisationunit()
     {
@@ -399,10 +396,10 @@ class OrganisationunitStructure
     /**
      * Set level6Organisationunit
      *
-     * @param \Hris\OrganisationunitBundle\Entity\Organisationunit $level6Organisationunit
+     * @param Organisationunit $level6Organisationunit
      * @return OrganisationunitStructure
      */
-    public function setLevel6Organisationunit(\Hris\OrganisationunitBundle\Entity\Organisationunit $level6Organisationunit = null)
+    public function setLevel6Organisationunit(Organisationunit $level6Organisationunit = null)
     {
         $this->level6Organisationunit = $level6Organisationunit;
     
@@ -412,7 +409,7 @@ class OrganisationunitStructure
     /**
      * Get level6Organisationunit
      *
-     * @return \Hris\OrganisationunitBundle\Entity\Organisationunit
+     * @return Organisationunit
      */
     public function getLevel6Organisationunit()
     {
@@ -420,94 +417,55 @@ class OrganisationunitStructure
     }
 
     /**
-     * Set level7Organisationunit
-     *
-     * @param \Hris\OrganisationunitBundle\Entity\Organisationunit $level7Organisationunit
-     * @return OrganisationunitStructure
+     * Constructor
      */
-    public function setLevel7Organisationunit(\Hris\OrganisationunitBundle\Entity\Organisationunit $level7Organisationunit = null)
+    public function __construct()
     {
-        $this->level7Organisationunit = $level7Organisationunit;
-    
-        return $this;
+        $this->uid = uniqid();
     }
 
     /**
-     * Get level7Organisationunit
+     * Get Entity verbose name
      *
-     * @return \Hris\OrganisationunitBundle\Entity\Organisationunit
+     * @return string
      */
-    public function getLevel7Organisationunit()
+    public function __toString()
     {
-        return $this->level7Organisationunit;
+        $organisationunitStructure = 'Organisationunit:'.$this->getOrganisationunit().' Level:'.$this->getLevel();
+        return $organisationunitStructure;
     }
 
     /**
-     * Set level8Organisationunit
+     * Get ParentByNLevelsBack
+     * Translates into something like, say $level=2
+     * $organisationunit->getParent()->getParent();
      *
-     * @param \Hris\OrganisationunitBundle\Entity\Organisationunit $level8Organisationunit
-     * @return OrganisationunitStructure
+     * @param $organisationunit
+     * @param $level
+     * @throws Exception
+     * @return Organisationunit
      */
-    public function setLevel8Organisationunit(\Hris\OrganisationunitBundle\Entity\Organisationunit $level8Organisationunit = null)
-    {
-        $this->level8Organisationunit = $level8Organisationunit;
-    
-        return $this;
-    }
-
-    /**
-     * Get level8Organisationunit
-     *
-     * @return \Hris\OrganisationunitBundle\Entity\Organisationunit
-     */
-    public function getLevel8Organisationunit()
-    {
-        return $this->level8Organisationunit;
-    }
-
-    /**
-     * Set level9Organisationunit
-     *
-     * @param \Hris\OrganisationunitBundle\Entity\Organisationunit $level9Organisationunit
-     * @return OrganisationunitStructure
-     */
-    public function setLevel9Organisationunit(\Hris\OrganisationunitBundle\Entity\Organisationunit $level9Organisationunit = null)
-    {
-        $this->level9Organisationunit = $level9Organisationunit;
-    
-        return $this;
-    }
-
-    /**
-     * Get level9Organisationunit
-     *
-     * @return \Hris\OrganisationunitBundle\Entity\Organisationunit
-     */
-    public function getLevel9Organisationunit()
-    {
-        return $this->level9Organisationunit;
-    }
-
-    /**
-     * Set level10Organisationunit
-     *
-     * @param \Hris\OrganisationunitBundle\Entity\Organisationunit $level10Organisationunit
-     * @return OrganisationunitStructure
-     */
-    public function setLevel10Organisationunit(\Hris\OrganisationunitBundle\Entity\Organisationunit $level10Organisationunit = null)
-    {
-        $this->level10Organisationunit = $level10Organisationunit;
-    
-        return $this;
-    }
-
-    /**
-     * Get level10Organisationunit
-     *
-     * @return \Hris\OrganisationunitBundle\Entity\Organisationunit
-     */
-    public function getLevel10Organisationunit()
-    {
-        return $this->level10Organisationunit;
+    public function getParentByNLevelsBack($organisationunit,$level) {
+        // Translates into something like, say $level=2
+        // $organisationunit->getParent()->getParent();
+        if($level>1) {
+            // Recursively Call persist upper most parent and call lower parent
+            $parentNLevelsBack = $this->getParentByNLevelsBack($organisationunit,$level-1);
+            if(method_exists($parentNLevelsBack,"getParent")) {
+                $parentNLevelsBack = call_user_func_array(array($parentNLevelsBack, "getParent"),$args=Array());
+                // Translates into something like $parentNLevelsBack = $parentNLevelsBack->getParent($args);
+            }else {
+                throw new Exception('Object or method doesn\'t exist');
+            }
+        }else {
+            // Return the parent
+            if(method_exists($organisationunit,"getParent")) {
+                $parentNLevelsBack = call_user_func_array(array($organisationunit, "getParent"),$args=Array());
+                // Translates into something like $parentNLevelsBack = $parentNLevelsBack->getParent($args);
+            }else {
+                throw new Exception('Object or method doesn\'t exist');
+            }
+        }
+        return $parentNLevelsBack;
     }
 }

@@ -24,15 +24,19 @@
  */
 namespace Hris\FormBundle\Entity;
 
+use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\ORM\Mapping as ORM;
+use Gedmo\Mapping\Annotation as Gedmo;
 
 use Hris\FormBundle\Entity\FieldOptionMerge;
 use Hris\FormBundle\Entity\RelationalFilter;
 use Hris\FormBundle\Entity\FieldOptionGroup;
+use Symfony\Component\Validator\Constraints as Assert;
 
 /**
  * Hris\FormBundle\Entity\FieldOption
  *
+ * @Gedmo\Loggable
  * @ORM\Table(name="hris_fieldoption",uniqueConstraints={@ORM\UniqueConstraint(name="unique_fieldoption_idx",columns={"value", "field_id"})})
  * @ORM\Entity(repositoryClass="Hris\FormBundle\Entity\FieldOptionRepository")
  */
@@ -50,6 +54,7 @@ class FieldOption
     /**
      * @var string $uid
      *
+     * @Gedmo\Versioned
      * @ORM\Column(name="uid", type="string", length=13, unique=true)
      */
     private $uid;
@@ -57,19 +62,36 @@ class FieldOption
     /**
      * @var string $value
      *
+     * @Gedmo\Versioned
      * @ORM\Column(name="value", type="string", length=64)
      */
     private $value;
+
+    /**
+     * @var boolean $skipInReport
+     *
+     * @Gedmo\Versioned
+     * @ORM\Column(name="skipInReport", type="boolean", nullable=true)
+     */
+    private $skipInReport;
     
     /**
      * @var string $description
      *
+     * @Gedmo\Versioned
      * @ORM\Column(name="description", type="text", nullable=true)
      */
     private $description;
+
+    /**
+     * @var integer $sort
+     *
+     * @ORM\Column(name="sort", type="integer", nullable=true)
+     */
+    private $sort;
     
     /**
-     * @var \Hris\FormBundle\Entity\FieldOption $parentFieldOption
+     * @var FieldOption $parentFieldOption
      *
      * @ORM\ManyToMany(targetEntity="Hris\FormBundle\Entity\FieldOption", mappedBy="childFieldOption")
      * @ORM\OrderBy({"value" = "ASC"})
@@ -77,7 +99,7 @@ class FieldOption
     private $parentFieldOption;
     
     /**
-     * @var \Hris\FormBundle\Entity\FieldOption $childFieldOption
+     * @var FieldOption $childFieldOption
      *
      * @ORM\ManyToMany(targetEntity="Hris\FormBundle\Entity\FieldOption", inversedBy="parentFieldOption")
      * @ORM\JoinTable(name="hris_fieldoption_children",
@@ -93,7 +115,7 @@ class FieldOption
     private $childFieldOption;
     
     /**
-     * @var \Hris\FormBundle\Entity\FieldOptionGroup $fieldOptionGroup
+     * @var FieldOptionGroup $fieldOptionGroup
      *
      * @ORM\ManyToMany(targetEntity="Hris\FormBundle\Entity\FieldOptionGroup", mappedBy="fieldOption")
      * @ORM\OrderBy({"name" = "ASC"})
@@ -101,17 +123,18 @@ class FieldOption
     private $fieldOptionGroup;
     
     /**
-     * @var \Hris\FormBundle\Entity\Field $field
+     * @var Field $field
      *
+     * @Gedmo\Versioned
      * @ORM\ManyToOne(targetEntity="Hris\FormBundle\Entity\Field", inversedBy="fieldOption")
      * @ORM\JoinColumns({
-     *   @ORM\JoinColumn(name="field_id", referencedColumnName="id")
+     *   @ORM\JoinColumn(name="field_id", referencedColumnName="id", onDelete="CASCADE")
      * })
      */
     private $field;
     
     /**
-     * @var \Hris\FormBundle\Entity\RelationalFilter $relationalFilter
+     * @var RelationalFilter $relationalFilter
      *
      * @ORM\ManyToMany(targetEntity="Hris\FormBundle\Entity\RelationalFilter", mappedBy="fieldOption")
      * @ORM\OrderBy({"name" = "ASC"})
@@ -119,7 +142,7 @@ class FieldOption
     private $relationalFilter;
     
     /**
-     * @var \Hris\FormBundle\Entity\FieldOptionMerge $fieldOptionMerge
+     * @var FieldOptionMerge $fieldOptionMerge
      *
      * @ORM\OneToMany(targetEntity="Hris\FormBundle\Entity\FieldOptionMerge", mappedBy="mergedFieldOption")
      * @ORM\OrderBy({"removedoptionvalue" = "ASC"})
@@ -129,6 +152,7 @@ class FieldOption
     /**
      * @var \DateTime $datecreated
      *
+     * @Gedmo\Timestampable(on="create")
      * @ORM\Column(name="datecreated", type="datetime")
      */
     private $datecreated;
@@ -136,6 +160,7 @@ class FieldOption
     /**
      * @var \DateTime $lastupdated
      *
+     * @Gedmo\Timestampable(on="update")
      * @ORM\Column(name="lastupdated", type="datetime", nullable=true)
      */
     private $lastupdated;
@@ -172,6 +197,29 @@ class FieldOption
     public function getValue()
     {
         return $this->value;
+    }
+
+    /**
+     * Set skipInReport
+     *
+     * @param boolean $skipInReport
+     * @return FieldOption
+     */
+    public function setSkipInReport($skipInReport)
+    {
+        $this->skipInReport = $skipInReport;
+
+        return $this;
+    }
+
+    /**
+     * Get skipInReport
+     *
+     * @return boolean
+     */
+    public function getSkipInReport()
+    {
+        return $this->skipInReport;
     }
 
     /**
@@ -246,12 +294,13 @@ class FieldOption
     /**
      * Add parentFieldOption
      *
-     * @param \Hris\FormBundle\Entity\FieldOption $parentFieldOption
+     * @param FieldOption $parentFieldOption
      * @return FieldOption
      */
-    public function addParentFieldOption(\Hris\FormBundle\Entity\FieldOption $parentFieldOption)
+    public function addParentFieldOption(FieldOption $parentFieldOption)
     {
-        $this->parentFieldOption[] = $parentFieldOption;
+        $this->parentFieldOption[$parentFieldOption->getId()] = $parentFieldOption;
+        $parentFieldOption->addChildFieldOption($this);
     
         return $this;
     }
@@ -259,9 +308,9 @@ class FieldOption
     /**
      * Remove parentFieldOption
      *
-     * @param \Hris\FormBundle\Entity\FieldOption $parentFieldOption
+     * @param FieldOption $parentFieldOption
      */
-    public function removeParentFieldOption(\Hris\FormBundle\Entity\FieldOption $parentFieldOption)
+    public function removeParentFieldOption(FieldOption $parentFieldOption)
     {
         $this->parentFieldOption->removeElement($parentFieldOption);
     }
@@ -279,12 +328,12 @@ class FieldOption
     /**
      * Add childFieldOption
      *
-     * @param \Hris\FormBundle\Entity\FieldOption $childFieldOption
+     * @param FieldOption $childFieldOption
      * @return FieldOption
      */
-    public function addChildFieldOption(\Hris\FormBundle\Entity\FieldOption $childFieldOption)
+    public function addChildFieldOption(FieldOption $childFieldOption)
     {
-        $this->childFieldOption[] = $childFieldOption;
+        $this->childFieldOption[$childFieldOption->getId()] = $childFieldOption;
     
         return $this;
     }
@@ -292,9 +341,9 @@ class FieldOption
     /**
      * Remove childFieldOption
      *
-     * @param \Hris\FormBundle\Entity\FieldOption $childFieldOption
+     * @param FieldOption $childFieldOption
      */
-    public function removeChildFieldOption(\Hris\FormBundle\Entity\FieldOption $childFieldOption)
+    public function removeChildFieldOption(FieldOption $childFieldOption)
     {
         $this->childFieldOption->removeElement($childFieldOption);
     }
@@ -312,12 +361,12 @@ class FieldOption
     /**
      * Add fieldOptionGroup
      *
-     * @param \Hris\FormBundle\Entity\FieldOptionGroup $fieldOptionGroup
+     * @param FieldOptionGroup $fieldOptionGroup
      * @return FieldOption
      */
-    public function addFieldOptionGroup(\Hris\FormBundle\Entity\FieldOptionGroup $fieldOptionGroup)
+    public function addFieldOptionGroup(FieldOptionGroup $fieldOptionGroup)
     {
-        $this->fieldOptionGroup[] = $fieldOptionGroup;
+        $this->fieldOptionGroup[$fieldOptionGroup->getId()] = $fieldOptionGroup;
     
         return $this;
     }
@@ -325,9 +374,9 @@ class FieldOption
     /**
      * Remove fieldOptionGroup
      *
-     * @param \Hris\FormBundle\Entity\FieldOptionGroup $fieldOptionGroup
+     * @param FieldOptionGroup $fieldOptionGroup
      */
-    public function removeFieldOptionGroup(\Hris\FormBundle\Entity\FieldOptionGroup $fieldOptionGroup)
+    public function removeFieldOptionGroup(FieldOptionGroup $fieldOptionGroup)
     {
         $this->fieldOptionGroup->removeElement($fieldOptionGroup);
     }
@@ -345,10 +394,10 @@ class FieldOption
     /**
      * Set field
      *
-     * @param \Hris\FormBundle\Entity\Field $field
+     * @param Field $field
      * @return FieldOption
      */
-    public function setField(\Hris\FormBundle\Entity\Field $field = null)
+    public function setField(Field $field = null)
     {
         $this->field = $field;
     
@@ -358,7 +407,7 @@ class FieldOption
     /**
      * Get field
      *
-     * @return \Hris\FormBundle\Entity\Field
+     * @return Field
      */
     public function getField()
     {
@@ -391,12 +440,12 @@ class FieldOption
     /**
      * Add relationalFilter
      *
-     * @param \Hris\FormBundle\Entity\RelationalFilter $relationalFilter
+     * @param RelationalFilter $relationalFilter
      * @return FieldOption
      */
-    public function addRelationalFilter(\Hris\FormBundle\Entity\RelationalFilter $relationalFilter)
+    public function addRelationalFilter(RelationalFilter $relationalFilter)
     {
-        $this->relationalFilter[] = $relationalFilter;
+        $this->relationalFilter[$relationalFilter->getId()] = $relationalFilter;
     
         return $this;
     }
@@ -404,9 +453,9 @@ class FieldOption
     /**
      * Remove relationalFilter
      *
-     * @param \Hris\FormBundle\Entity\RelationalFilter $relationalFilter
+     * @param RelationalFilter $relationalFilter
      */
-    public function removeRelationalFilter(\Hris\FormBundle\Entity\RelationalFilter $relationalFilter)
+    public function removeRelationalFilter(RelationalFilter $relationalFilter)
     {
         $this->relationalFilter->removeElement($relationalFilter);
     }
@@ -424,12 +473,12 @@ class FieldOption
     /**
      * Add fieldOptionMerge
      *
-     * @param \Hris\FormBundle\Entity\FieldOptionMerge $fieldOptionMerge
+     * @param FieldOptionMerge $fieldOptionMerge
      * @return FieldOption
      */
-    public function addFieldOptionMerge(\Hris\FormBundle\Entity\FieldOptionMerge $fieldOptionMerge)
+    public function addFieldOptionMerge(FieldOptionMerge $fieldOptionMerge)
     {
-        $this->fieldOptionMerge[] = $fieldOptionMerge;
+        $this->fieldOptionMerge[$fieldOptionMerge->getId()] = $fieldOptionMerge;
     
         return $this;
     }
@@ -437,9 +486,9 @@ class FieldOption
     /**
      * Remove fieldOptionMerge
      *
-     * @param \Hris\FormBundle\Entity\FieldOptionMerge $fieldOptionMerge
+     * @param FieldOptionMerge $fieldOptionMerge
      */
-    public function removeFieldOptionMerge(\Hris\FormBundle\Entity\FieldOptionMerge $fieldOptionMerge)
+    public function removeFieldOptionMerge(FieldOptionMerge $fieldOptionMerge)
     {
         $this->fieldOptionMerge->removeElement($fieldOptionMerge);
     }
@@ -453,17 +502,51 @@ class FieldOption
     {
         return $this->fieldOptionMerge;
     }
+
+    /**
+     * Set sort
+     *
+     * @param integer $sort
+     * @return FormVisibleFields
+     */
+    public function setSort($sort)
+    {
+        $this->sort = $sort;
+
+        return $this;
+    }
+
+    /**
+     * Get sort
+     *
+     * @return integer
+     */
+    public function getSort()
+    {
+        return $this->sort;
+    }
+
     /**
      * Constructor
      */
     public function __construct()
     {
-        $this->parentFieldOption = new \Doctrine\Common\Collections\ArrayCollection();
-        $this->childFieldOption = new \Doctrine\Common\Collections\ArrayCollection();
-        $this->fieldOptionGroup = new \Doctrine\Common\Collections\ArrayCollection();
-        $this->relationalFilter = new \Doctrine\Common\Collections\ArrayCollection();
-        $this->fieldOptionMerge = new \Doctrine\Common\Collections\ArrayCollection();
+        $this->parentFieldOption = new ArrayCollection();
+        $this->childFieldOption = new ArrayCollection();
+        $this->fieldOptionGroup = new ArrayCollection();
+        $this->relationalFilter = new ArrayCollection();
+        $this->fieldOptionMerge = new ArrayCollection();
         $this->uid = uniqid();
+    }
+
+    /**
+     * Get Entity verbose name
+     *
+     * @return string
+     */
+    public function __toString()
+    {
+        return $this->value;
     }
     
 }

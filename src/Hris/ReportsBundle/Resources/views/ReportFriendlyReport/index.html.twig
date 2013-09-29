@@ -1,0 +1,80 @@
+{% extends '::base.html.twig' %}
+
+{% block javascripts %}
+    {{ parent() }}
+    <script type="text/javascript" language="javascript" src="{{ asset('commons/js/ext-all.js') }}"></script>
+    <script type="text/javascript">
+        var treeplaceholder="treeplaceholder";
+        var inputboxname="hris_reportsbundle_reportfriendlytype[organisationunit]";
+        var urlExtension="";
+        var selectedNode="";
+        Ext.define('OrganisationUnitTreeModel2', {
+            extend: 'Ext.data.Model',
+            idProperty: 'id',
+            fields: [{name: 'longname',type: 'string'},{name: 'id',type: 'int'},{ name: 'cls',type: 'string'},{name: 'leaf', type: 'boolean'}],
+            validations: [{type: 'exclusion', field: 'cls',list: ['file','folder']}]
+        });
+        Ext.onReady(function(){
+            var OrganisationUnitTreeStore2 = Ext.create('Ext.data.TreeStore', {
+                storeId: 'MyJsonOrganisationUnitTreeStore2',
+                model: 'OrganisationUnitTreeModel2',
+                proxy: {
+                    type: 'ajax',
+                    url: '{{ path('organisationunit_tree',{'_format':'json'}) }}'+urlExtension,
+                    reader: { type: 'json', root: 'organisationUnits'}
+                },
+                nodeParam: 'id',
+                root: {longname: 'Orgunits', id: 'src', expanded: true},
+                folderSort: true,
+                sorters: [{property: 'longname', direction: 'ASC'}]
+            });
+            var OrganisationUnitTreePanel2 = Ext.create('Ext.tree.Panel', {
+                id: 'organisationUnitTreePanel2',
+                store: OrganisationUnitTreeStore2,
+                displayField: 'longname',
+                rootVisible: false,
+                singleExpand: false,
+                height: 250,
+                viewConfig: {},
+                renderTo: treeplaceholder,
+                listeners: {
+                    select: function(selModel2, record, index, options) {
+                        var selectedOrgunits2 = selModel2.getSelection();
+                        var selectedId2 = selectedOrgunits2[0].get('id');
+                        $('input[name="'+inputboxname+'"]').val(selectedId2);
+                    },
+                    afterrender: function(treePanel,eOpts) {
+                        if(selectedNode){
+                            this.selectPath(selectedNode,'id','');
+                        };
+                    }
+                }
+            });
+        });
+    </script>
+{% endblock javascripts %}
+
+{% block stylesheets %}
+    {{ parent() }}
+    <link rel="stylesheet" type="text/css" media="all" href="{{ asset('commons/css/ext-standard.css') }}">
+{% endblock stylesheets %}
+
+{% block right_content -%}
+    <h1><small>Friendly Report</small></h1>
+
+    {{ form_start(friendlyReportForm, { 'method' : 'PUT' } ) }}
+
+    {{ form_row( friendlyReportForm.genericReport ) }}
+
+    <div>
+        <div id="treeplaceholder"></div>
+        {{ form_errors( friendlyReportForm.organisationunit ) }}
+        {{ form_widget( friendlyReportForm.organisationunit ) }}
+    </div>
+    <br/>
+    {{ form_row( friendlyReportForm.forms ) }}
+
+    {{ form_end(friendlyReportForm) }}
+
+
+{% endblock %}

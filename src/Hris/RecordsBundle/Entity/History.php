@@ -25,12 +25,15 @@
 namespace Hris\RecordsBundle\Entity;
 
 use Doctrine\ORM\Mapping as ORM;
+use Gedmo\Mapping\Annotation as Gedmo;
 
 use Hris\RecordsBundle\Entity\Record;
+use Symfony\Component\Validator\Constraints as Assert;
 
 /**
  * Hris\RecordsBundle\Entity\History
  *
+ * @Gedmo\Loggable
  * @ORM\Table(name="hris_record_history",uniqueConstraints={@ORM\UniqueConstraint(name="unique_recordhistory_idx",columns={"record_id", "history","startdate"}),@ORM\UniqueConstraint(name="unique_recordinstancehistory_idx",columns={"instance", "history","startdate"})})
  * @ORM\Entity(repositoryClass="Hris\RecordsBundle\Entity\HistoryRepository")
  */
@@ -48,16 +51,18 @@ class History
     /**
      * @var string $uid
      *
+     * @Gedmo\Versioned
      * @ORM\Column(name="uid", type="string", length=13, unique=true)
      */
     private $uid;
     
     /**
-     * @var Hris\RecordsBundle\Entity\Record $record
+     * @var Record $record
      *
+     * @Gedmo\Versioned
      * @ORM\ManyToOne(targetEntity="Hris\RecordsBundle\Entity\Record")
      * @ORM\JoinColumns({
-     *   @ORM\JoinColumn(name="record_id", referencedColumnName="id", nullable=true)
+     *   @ORM\JoinColumn(name="record_id", referencedColumnName="id", nullable=true, onDelete="CASCADE")
      * })
      */
     private $record;
@@ -65,6 +70,7 @@ class History
     /**
      * @var string $instance
      *
+     * @Gedmo\Versioned
      * @ORM\Column(name="instance", type="string", length=64)
      */
     private $instance;
@@ -72,6 +78,7 @@ class History
     /**
      * @var string $history
      *
+     * @Gedmo\Versioned
      * @ORM\Column(name="history", type="string", length=64)
      */
     private $history;
@@ -79,6 +86,7 @@ class History
     /**
      * @var \DateTime $startdate
      *
+     * @Gedmo\Versioned
      * @ORM\Column(name="startdate", type="datetime")
      */
     private $startdate;
@@ -86,6 +94,7 @@ class History
     /**
      * @var string $reason
      *
+     * @Gedmo\Versioned
      * @ORM\Column(name="reason", type="string", length=255, nullable=true)
      */
     private $reason;
@@ -93,20 +102,23 @@ class History
     /**
      * @var string $username
      *
+     * @Gedmo\Versioned
      * @ORM\Column(name="username", type="string", length=64)
      */
     private $username;
-    
+
     /**
      * @var \DateTime $datecreated
      *
-     * @ORM\Column(name="datecreated", type="datetime")
+     * @Gedmo\Timestampable(on="create")
+     * @ORM\Column(name="datecreated", type="datetime", nullable=false)
      */
     private $datecreated;
-    
+
     /**
      * @var \DateTime $lastupdated
      *
+     * @Gedmo\Timestampable(on="update")
      * @ORM\Column(name="lastupdated", type="datetime", nullable=true)
      */
     private $lastupdated;
@@ -317,10 +329,10 @@ class History
     /**
      * Set record
      *
-     * @param \Hris\RecordsBundle\Entity\Record $record
+     * @param Record $record
      * @return History
      */
-    public function setRecord(\Hris\RecordsBundle\Entity\Record $record = null)
+    public function setRecord(Record $record = null)
     {
         $this->record = $record;
     
@@ -330,10 +342,22 @@ class History
     /**
      * Get record
      *
-     * @return \Hris\RecordsBundle\Entity\Record
+     * @return Record
      */
     public function getRecord()
     {
         return $this->record;
     }
+
+    /**
+     * Get Entity verbose name
+     *
+     * @return string
+     */
+    public function __toString()
+    {
+        $recordHistory = 'Record:'.$this->getRecord()->__toString().' History:'.$this->getHistory();
+        return $recordHistory;
+    }
+
 }

@@ -1,0 +1,56 @@
+{% extends '::base.html.twig' %}
+
+{% block right_content -%}
+    <h1>Settings</h1>
+
+    <table class="record_properties dataTable table table-striped table-bordered table-hover">
+        <tbody>
+            <tr>
+                <th>Id</th>
+                <td>{{ entity.id }}</td>
+            </tr>
+            <tr>
+                <th>Uid</th>
+                <td>{{ entity.uid }}</td>
+            </tr>
+            <tr>
+                <th>Emailnotification</th>
+                <td>{{ entity.emailNotification }}</td>
+            </tr>
+            <tr>
+                <th>Smsnotification</th>
+                <td>{{ entity.smsNotification }}</td>
+            </tr>
+            <tr>
+                <th>Completenessalert</th>
+                <td>{{ entity.completenessAlert }}</td>
+            </tr>
+            <tr>
+                <th>Qualitycheckalert</th>
+                <td>{{ entity.qualityCheckAlert }}</td>
+            </tr>
+            <tr>
+                <th>Datecreated</th>
+                <td>{{ entity.datecreated|date('Y-m-d H:i:s') }}</td>
+            </tr>
+            <tr>
+                <th>Lastupdated</th>
+                <td>{{ entity.lastupdated|date('Y-m-d H:i:s') }}</td>
+            </tr>
+        </tbody>
+    </table>
+
+    <ul class="record_actions inline">
+        <li>
+            <a href="{{ path('settings') }}">
+                Back to the list
+            </a>
+        </li>
+        <li>
+            <a href="{{ path('settings_edit', { 'id': entity.id }) }}">
+                Edit
+            </a>
+        </li>
+        <li>{{ form(delete_form) }}</li>
+    </ul>
+{% endblock %}

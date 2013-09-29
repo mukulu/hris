@@ -24,13 +24,17 @@
  */
 namespace Hris\FormBundle\Entity;
 
+use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\ORM\Mapping as ORM;
+use Gedmo\Mapping\Annotation as Gedmo;
 
 use Hris\FormBundle\Entity\FieldOptionGroup;
+use Symfony\Component\Validator\Constraints as Assert;
 
 /**
  * Hris\FormBundle\Entity\FieldOptionGroupset
  *
+ * @Gedmo\Loggable
  * @ORM\Table(name="hris_fieldoptiongroupset")
  * @ORM\Entity(repositoryClass="Hris\FormBundle\Entity\FieldOptionGroupsetRepository")
  */
@@ -48,6 +52,7 @@ class FieldOptionGroupset
     /**
      * @var string $uid
      *
+     * @Gedmo\Versioned
      * @ORM\Column(name="uid", type="string", length=13, unique=true)
      */
     private $uid;
@@ -55,6 +60,7 @@ class FieldOptionGroupset
     /**
      * @var string $name
      *
+     * @Gedmo\Versioned
      * @ORM\Column(name="name", type="string", length=64, unique=true)
      */
     private $name;
@@ -62,12 +68,13 @@ class FieldOptionGroupset
     /**
      * @var string $description
      *
+     * @Gedmo\Versioned
      * @ORM\Column(name="description", type="text", nullable=true)
      */
     private $description;
     
     /**
-     * @var \Hris\FormBundle\Entity\FieldOptionGroup $fieldOptionGroup
+     * @var FieldOptionGroup $fieldOptionGroup
      *
      * @ORM\ManyToMany(targetEntity="Hris\FormBundle\Entity\FieldOptionGroup", inversedBy="fieldOptionGroupset")
      * @ORM\JoinTable(name="hris_fieldoptiongroupset_members",
@@ -81,20 +88,22 @@ class FieldOptionGroupset
      * @ORM\OrderBy({"name" = "ASC"})
      */
     private $fieldOptionGroup;
-    
+
     /**
      * @var \DateTime $datecreated
      *
+     * @Gedmo\Timestampable(on="create")
      * @ORM\Column(name="datecreated", type="datetime")
      */
     private $datecreated;
-    
+
     /**
-     * @var \DateTime $lastmodified
+     * @var \DateTime $lastupdated
      *
-     * @ORM\Column(name="lastmodified", type="datetime", nullable=true)
+     * @Gedmo\Timestampable(on="update")
+     * @ORM\Column(name="lastupdated", type="datetime", nullable=true)
      */
-    private $lastmodified;
+    private $lastupdated;
 
     /**
      * Get id
@@ -156,7 +165,7 @@ class FieldOptionGroupset
      */
     public function __construct()
     {
-        $this->fieldOptionGroup = new \Doctrine\Common\Collections\ArrayCollection();
+        $this->fieldOptionGroup = new ArrayCollection();
         $this->uid = uniqid();
     }
     
@@ -187,19 +196,19 @@ class FieldOptionGroupset
      * Set datecreated
      *
      * @param \DateTime $datecreated
-     * @return FieldOptionGroupset
+     * @return Field
      */
     public function setDatecreated($datecreated)
     {
         $this->datecreated = $datecreated;
-    
+
         return $this;
     }
 
     /**
      * Get datecreated
      *
-     * @return \DateTime 
+     * @return \DateTime
      */
     public function getDatecreated()
     {
@@ -207,37 +216,37 @@ class FieldOptionGroupset
     }
 
     /**
-     * Set lastmodified
+     * Set lastupdated
      *
-     * @param \DateTime $lastmodified
-     * @return FieldOptionGroupset
+     * @param \DateTime $lastupdated
+     * @return Field
      */
-    public function setLastmodified($lastmodified)
+    public function setLastupdated($lastupdated)
     {
-        $this->lastmodified = $lastmodified;
-    
+        $this->lastupdated = $lastupdated;
+
         return $this;
     }
 
     /**
-     * Get lastmodified
+     * Get lastupdated
      *
-     * @return \DateTime 
+     * @return \DateTime
      */
-    public function getLastmodified()
+    public function getLastupdated()
     {
-        return $this->lastmodified;
+        return $this->lastupdated;
     }
 
     /**
      * Add fieldOptionGroup
      *
-     * @param \Hris\FormBundle\Entity\FieldOptionGroup $fieldOptionGroup
+     * @param FieldOptionGroup $fieldOptionGroup
      * @return FieldOptionGroupset
      */
-    public function addFieldOptionGroup(\Hris\FormBundle\Entity\FieldOptionGroup $fieldOptionGroup)
+    public function addFieldOptionGroup(FieldOptionGroup $fieldOptionGroup)
     {
-        $this->fieldOptionGroup[] = $fieldOptionGroup;
+        $this->fieldOptionGroup[$fieldOptionGroup->getId()] = $fieldOptionGroup;
     
         return $this;
     }
@@ -245,9 +254,9 @@ class FieldOptionGroupset
     /**
      * Remove fieldOptionGroup
      *
-     * @param \Hris\FormBundle\Entity\FieldOptionGroup $fieldOptionGroup
+     * @param FieldOptionGroup $fieldOptionGroup
      */
-    public function removeFieldOptionGroup(\Hris\FormBundle\Entity\FieldOptionGroup $fieldOptionGroup)
+    public function removeFieldOptionGroup(FieldOptionGroup $fieldOptionGroup)
     {
         $this->fieldOptionGroup->removeElement($fieldOptionGroup);
     }
@@ -260,5 +269,15 @@ class FieldOptionGroupset
     public function getFieldOptionGroup()
     {
         return $this->fieldOptionGroup;
+    }
+
+    /**
+     * Get Entity verbose name
+     *
+     * @return string
+     */
+    public function __toString()
+    {
+        return $this->name;
     }
 }

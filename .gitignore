@@ -4,11 +4,14 @@ app/bootstrap.php.cache
 app/cache/*
 app/logs/*
 build/
-bin
+/vendor/
+/bin/
+/composer.phar
 app/config/parameters.yml
+.idea
 .project
 .buildpath
 .settings/
 phpunit.xml
 autoload.php
-/vendor/
+composer.lock

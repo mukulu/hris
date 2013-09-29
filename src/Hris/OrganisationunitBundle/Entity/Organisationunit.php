@@ -26,17 +26,20 @@ namespace Hris\OrganisationunitBundle\Entity;
 
 use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\ORM\Mapping as ORM;
+use Gedmo\Mapping\Annotation as Gedmo;
 
-use Hris\DashboardBundle\Entity\DashboardChart;
 use Hris\OrganisationunitBundle\Entity\OrganisationunitStructure;
-use Hris\UserBundle\Entity\UserInfo;
 use Hris\OrganisationunitBundle\Entity\OrganisationunitGroup;
+use Hris\UserBundle\Entity\User;
+use Symfony\Component\Validator\Constraints as Assert;
 
 /**
  * Hris\OrganisationunitBundle\Entity\Organisationunit
  *
  * @ORM\Table(name="hris_organisationunit",uniqueConstraints={@ORM\UniqueConstraint(name="organisationunits_with_one_parent_idx",columns={"longname", "parent_id"})})
  * @ORM\Entity(repositoryClass="Hris\OrganisationunitBundle\Entity\OrganisationunitRepository")
+ * @Gedmo\Loggable
+ * @Gedmo\SoftDeleteable(fieldName="deletedAt")
  */
 class Organisationunit
 {
@@ -52,6 +55,7 @@ class Organisationunit
     /**
      * @var string $uid
      *
+     * @Gedmo\Versioned
      * @ORM\Column(name="uid", type="string", length=13, unique=true)
      */
     private $uid;
@@ -59,47 +63,34 @@ class Organisationunit
     /**
      * @var string $dhisUid
      *
+     * @Gedmo\Versioned
      * @ORM\Column(name="dhisUid", type="string", length=11, unique=true, nullable=true)
      */
     private $dhisUid;
-    
+
     /**
-     * @var \Hris\UserBundle\Entity\UserInfo $userInfo
-     * 
-     * @ORM\ManyToMany(targetEntity="Hris\UserBundle\Entity\UserInfo", mappedBy="organisationunit")
-     * @ORM\OrderBy({"firstName" = "ASC"})
-     */
-    private $userInfo;
-    
-    /**
-     * @var \Hris\OrganisationunitBundle\Entity\OrganisationunitGroup $organisationunitGroup
-     * 
+     * @var OrganisationunitGroup $organisationunitGroup
+     *
      * @ORM\ManyToMany(targetEntity="Hris\OrganisationunitBundle\Entity\OrganisationunitGroup", mappedBy="organisationunit")
      * @ORM\OrderBy({"name" = "ASC"})
      */
     private $organisationunitGroup;
-    
-    /**
-     * @var \Hris\DashboardBundle\Entity\DashboardChart $dashboardChart
-     *
-     * @ORM\ManyToMany(targetEntity="Hris\DashboardBundle\Entity\DashboardChart", mappedBy="organisationunit")
-     * @ORM\OrderBy({"name" = "ASC"})
-     */
-    private $dashboardChart;
 
     /**
      * @var string $code
      *
+     * @Gedmo\Versioned
      * @ORM\Column(name="code", type="string", length=25, nullable=true, unique=true)
      */
     private $code;
-    
+
     /**
      * @var \Hris\OrganisationunitBundle\Entity\Organisationunit $parent
      *
+     * @Gedmo\Versioned
      * @ORM\ManyToOne(targetEntity="Hris\OrganisationunitBundle\Entity\Organisationunit")
      * @ORM\JoinColumns({
-     *   @ORM\JoinColumn(name="parent_id", referencedColumnName="id", nullable=true)
+     *   @ORM\JoinColumn(name="parent_id", referencedColumnName="id", nullable=true, onDelete="CASCADE")
      * })
      */
     private $parent;
@@ -107,6 +98,7 @@ class Organisationunit
     /**
      * @var string $shortname
      *
+     * @Gedmo\Versioned
      * @ORM\Column(name="shortname", type="string", length=20, unique=true)
      */
     private $shortname;
@@ -114,6 +106,7 @@ class Organisationunit
     /**
      * @var string $longname
      *
+     * @Gedmo\Versioned
      * @ORM\Column(name="longname", type="string", length=64)
      */
     private $longname;
@@ -121,13 +114,15 @@ class Organisationunit
     /**
      * @var boolean $active
      *
-     * @ORM\Column(name="active", type="boolean", nullable=false)
+     * @Gedmo\Versioned
+     * @ORM\Column(name="active", type="boolean", nullable=true)
      */
     private $active;
 
     /**
      * @var \DateTime $openingdate
      *
+     * @Gedmo\Versioned
      * @ORM\Column(name="openingdate", type="date", nullable=true)
      */
     private $openingdate;
@@ -135,6 +130,7 @@ class Organisationunit
     /**
      * @var \DateTime $closingdate
      *
+     * @Gedmo\Versioned
      * @ORM\Column(name="closingdate", type="date", nullable=true)
      */
     private $closingdate;
@@ -142,6 +138,7 @@ class Organisationunit
     /**
      * @var string $geocode
      *
+     * @Gedmo\Versioned
      * @ORM\Column(name="geocode", type="string", length=255, nullable=true)
      */
     private $geocode;
@@ -149,6 +146,7 @@ class Organisationunit
     /**
      * @var string $coordinates
      *
+     * @Gedmo\Versioned
      * @ORM\Column(name="coordinates", type="text", nullable=true)
      */
     private $coordinates;
@@ -156,6 +154,7 @@ class Organisationunit
     /**
      * @var string $featuretype
      *
+     * @Gedmo\Versioned
      * @ORM\Column(name="featuretype", type="string", length=20, nullable=true)
      */
     private $featuretype;
@@ -163,6 +162,7 @@ class Organisationunit
     /**
      * @var string $address
      *
+     * @Gedmo\Versioned
      * @ORM\Column(name="address", type="text", nullable=true)
      */
     private $address;
@@ -170,6 +170,7 @@ class Organisationunit
     /**
      * @var string $email
      *
+     * @Gedmo\Versioned
      * @ORM\Column(name="email", type="string", length=150, nullable=true)
      */
     private $email;
@@ -177,6 +178,7 @@ class Organisationunit
     /**
      * @var string $phonenumber
      *
+     * @Gedmo\Versioned
      * @ORM\Column(name="phonenumber", type="string", length=150, nullable=true)
      */
     private $phonenumber;
@@ -184,6 +186,7 @@ class Organisationunit
     /**
      * @var string $contactperson
      *
+     * @Gedmo\Versioned
      * @ORM\Column(name="contactperson", type="string", length=150, nullable=true)
      */
     private $contactperson;
@@ -191,90 +194,80 @@ class Organisationunit
     /**
      * @var string $description
      *
+     * @Gedmo\Versioned
      * @ORM\Column(name="description", type="text", nullable=true)
      */
     private $description;
-    
+
     /**
-     * @var \Hris\OrganisationunitBundle\Entity\OrganisationunitStructure $organisationunitStructure
+     * @var OrganisationunitCompleteness
      *
-     * @ORM\OneToOne(targetEntity="Hris\OrganisationunitBundle\Entity\OrganisationunitStructure", inversedBy="organisationunit")
+     * @ORM\OneToMany(targetEntity="Hris\OrganisationunitBundle\Entity\OrganisationunitCompleteness", mappedBy="organisationunit",cascade={"ALL"})
+     * @ORM\OrderBy({"expectation" = "ASC"})
+     */
+    private $organisationunitCompleteness;
+
+    /**
+     * @var User $user
+     *
+     * @ORM\OneToMany(targetEntity="Hris\UserBundle\Entity\User", mappedBy="organisationunit",cascade={"ALL"})
+     * @ORM\OrderBy({"longname" = "ASC"})
+     */
+    private $user;
+
+    /**
+     * @var OrganisationunitStructure $organisationunitStructure
+     *
+     * @ORM\OneToOne(targetEntity="Hris\OrganisationunitBundle\Entity\OrganisationunitStructure", mappedBy="organisationunit",cascade={"ALL"})
      */
     private $organisationunitStructure;
-    
+
     /**
-     * @var \Hris\OrganisationunitBundle\Entity\OrganisationunitStructure $level1OrganisationunitStructure
+     * @var OrganisationunitStructure $level1OrganisationunitStructure
      *
      * @ORM\OneToMany(targetEntity="Hris\OrganisationunitBundle\Entity\OrganisationunitStructure", mappedBy="level1Organisationunit",cascade={"ALL"})
      */
     private $level1OrganisationunitStructure;
-    
+
     /**
-     * @var \Hris\OrganisationunitBundle\Entity\OrganisationunitStructure $level2OrganisationunitStructure
+     * @var OrganisationunitStructure $level2OrganisationunitStructure
      *
      * @ORM\OneToMany(targetEntity="Hris\OrganisationunitBundle\Entity\OrganisationunitStructure", mappedBy="level2Organisationunit",cascade={"ALL"})
      */
     private $level2OrganisationunitStructure;
-    
+
     /**
-     * @var \Hris\OrganisationunitBundle\Entity\OrganisationunitStructure $level3OrganisationunitStructure
+     * @var OrganisationunitStructure $level3OrganisationunitStructure
      *
      * @ORM\OneToMany(targetEntity="Hris\OrganisationunitBundle\Entity\OrganisationunitStructure", mappedBy="level3Organisationunit",cascade={"ALL"})
      */
     private $level3OrganisationunitStructure;
-    
+
     /**
-     * @var \Hris\OrganisationunitBundle\Entity\OrganisationunitStructure $level4OrganisationunitStructure
+     * @var OrganisationunitStructure $level4OrganisationunitStructure
      *
      * @ORM\OneToMany(targetEntity="Hris\OrganisationunitBundle\Entity\OrganisationunitStructure", mappedBy="level4Organisationunit",cascade={"ALL"})
      */
     private $level4OrganisationunitStructure;
-    
+
     /**
-     * @var \Hris\OrganisationunitBundle\Entity\OrganisationunitStructure $level5OrganisationunitStructure
+     * @var OrganisationunitStructure $level5OrganisationunitStructure
      *
      * @ORM\OneToMany(targetEntity="Hris\OrganisationunitBundle\Entity\OrganisationunitStructure", mappedBy="level5Organisationunit",cascade={"ALL"})
      */
     private $level5OrganisationunitStructure;
-    
+
     /**
-     * @var \Hris\OrganisationunitBundle\Entity\OrganisationunitStructure $level6OrganisationunitStructure
+     * @var OrganisationunitStructure $level6OrganisationunitStructure
      *
      * @ORM\OneToMany(targetEntity="Hris\OrganisationunitBundle\Entity\OrganisationunitStructure", mappedBy="level6Organisationunit",cascade={"ALL"})
      */
     private $level6OrganisationunitStructure;
-    
-    /**
-     * @var \Hris\OrganisationunitBundle\Entity\OrganisationunitStructure $level7OrganisationunitStructure
-     *
-     * @ORM\OneToMany(targetEntity="Hris\OrganisationunitBundle\Entity\OrganisationunitStructure", mappedBy="level7Organisationunit",cascade={"ALL"})
-     */
-    private $level7OrganisationunitStructure;
-    
-    /**
-     * @var \Hris\OrganisationunitBundle\Entity\OrganisationunitStructure $level8OrganisationunitStructure
-     *
-     * @ORM\OneToMany(targetEntity="Hris\OrganisationunitBundle\Entity\OrganisationunitStructure", mappedBy="level8Organisationunit",cascade={"ALL"})
-     */
-    private $level8OrganisationunitStructure;
-    
-    /**
-     * @var \Hris\OrganisationunitBundle\Entity\OrganisationunitStructure $level9OrganisationunitStructure
-     *
-     * @ORM\OneToMany(targetEntity="Hris\OrganisationunitBundle\Entity\OrganisationunitStructure", mappedBy="level9Organisationunit",cascade={"ALL"})
-     */
-    private $level9OrganisationunitStructure;
-    
-    /**
-     * @var \Hris\OrganisationunitBundle\Entity\OrganisationunitStructure $level10OrganisationunitStructure
-     *
-     * @ORM\OneToMany(targetEntity="Hris\OrganisationunitBundle\Entity\OrganisationunitStructure", mappedBy="level10Organisationunit",cascade={"ALL"})
-     */
-    private $level10OrganisationunitStructure;
-    
+
     /**
      * @var \DateTime $datecreated
      *
+     * @Gedmo\Timestampable(on="create")
      * @ORM\Column(name="datecreated", type="datetime")
      */
     private $datecreated;
@@ -282,6 +275,7 @@ class Organisationunit
     /**
      * @var \DateTime $lastupdated
      *
+     * @Gedmo\Timestampable(on="update")
      * @ORM\Column(name="lastupdated", type="datetime", nullable=true)
      */
     private $lastupdated;
@@ -668,22 +662,22 @@ class Organisationunit
     /**
      * Add organisationunitGroup
      *
-     * @param \Hris\OrganisationunitBundle\Entity\OrganisationunitGroup $organisationunitGroup
+     * @param OrganisationunitGroup $organisationunitGroup
      * @return Organisationunit
      */
-    public function addOrganisationunitGroup(\Hris\OrganisationunitBundle\Entity\OrganisationunitGroup $organisationunitGroup)
+    public function addOrganisationunitGroup(OrganisationunitGroup $organisationunitGroup)
     {
-        $this->organisationunitGroup[] = $organisationunitGroup;
-    
+        $this->organisationunitGroup[$organisationunitGroup->getId()] = $organisationunitGroup;
+
         return $this;
     }
 
     /**
      * Remove organisationunitGroup
      *
-     * @param \Hris\OrganisationunitBundle\Entity\OrganisationunitGroup $organisationunitGroup
+     * @param OrganisationunitGroup $organisationunitGroup
      */
-    public function removeOrganisationunitGroup(\Hris\OrganisationunitBundle\Entity\OrganisationunitGroup $organisationunitGroup)
+    public function removeOrganisationunitGroup(OrganisationunitGroup $organisationunitGroup)
     {
         $this->organisationunitGroup->removeElement($organisationunitGroup);
     }
@@ -696,6 +690,222 @@ class Organisationunit
     public function getOrganisationunitGroup()
     {
         return $this->organisationunitGroup;
+    }
+
+    /**
+     * Set organisationunitStructure
+     *
+     * @param OrganisationunitStructure $organisationunitStructure
+     */
+    public function setOrganisationunitStructure(OrganisationunitStructure $organisationunitStructure) {
+        $this->organisationunitStructure = $organisationunitStructure;
+    }
+
+    /**
+     * Get organisationunitStructure
+     *
+     * @return OrganisationunitStructure
+     */
+    public function getOrganisationunitStructure() {
+        return $this->organisationunitStructure;
+    }
+
+    /**
+     * Add level1OrganisationunitStructure
+     *
+     * @param OrganisationunitStructure $level1OrganisationunitStructure
+     * @return Organisationunit
+     */
+    public function addLevel1OrganisationunitStructure(OrganisationunitStructure $level1OrganisationunitStructure)
+    {
+        $this->level1OrganisationunitStructure[$level1OrganisationunitStructure->getId()] = $level1OrganisationunitStructure;
+
+        return $this;
+    }
+
+    /**
+     * Remove level1OrganisationunitStructure
+     *
+     * @param OrganisationunitStructure $level1OrganisationunitStructure
+     */
+    public function removeLevel1OrganisationunitStructure(OrganisationunitStructure $level1OrganisationunitStructure)
+    {
+        $this->level1OrganisationunitStructure->removeElement($level1OrganisationunitStructure);
+    }
+
+    /**
+     * Get level1OrganisationunitStructure
+     *
+     * @return \Doctrine\Common\Collections\Collection
+     */
+    public function getLevel1OrganisationunitStructure()
+    {
+        return $this->level1OrganisationunitStructure;
+    }
+
+    /**
+     * Add level2OrganisationunitStructure
+     *
+     * @param OrganisationunitStructure $level2OrganisationunitStructure
+     * @return Organisationunit
+     */
+    public function addLevel2OrganisationunitStructure(OrganisationunitStructure $level2OrganisationunitStructure)
+    {
+        $this->level2OrganisationunitStructure[$level2OrganisationunitStructure->getId()] = $level2OrganisationunitStructure;
+
+        return $this;
+    }
+
+    /**
+     * Remove level2OrganisationunitStructure
+     *
+     * @param OrganisationunitStructure $level2OrganisationunitStructure
+     */
+    public function removeLevel2OrganisationunitStructure(OrganisationunitStructure $level2OrganisationunitStructure)
+    {
+        $this->level2OrganisationunitStructure->removeElement($level2OrganisationunitStructure);
+    }
+
+    /**
+     * Get level2OrganisationunitStructure
+     *
+     * @return \Doctrine\Common\Collections\Collection
+     */
+    public function getLevel2OrganisationunitStructure()
+    {
+        return $this->level2OrganisationunitStructure;
+    }
+
+    /**
+     * Add level3OrganisationunitStructure
+     *
+     * @param OrganisationunitStructure $level3OrganisationunitStructure
+     * @return Organisationunit
+     */
+    public function addLevel3OrganisationunitStructure(OrganisationunitStructure $level3OrganisationunitStructure)
+    {
+        $this->level3OrganisationunitStructure[$level3OrganisationunitStructure->getId()] = $level3OrganisationunitStructure;
+
+        return $this;
+    }
+
+    /**
+     * Remove level3OrganisationunitStructure
+     *
+     * @param OrganisationunitStructure $level3OrganisationunitStructure
+     */
+    public function removeLevel3OrganisationunitStructure(OrganisationunitStructure $level3OrganisationunitStructure)
+    {
+        $this->level3OrganisationunitStructure->removeElement($level3OrganisationunitStructure);
+    }
+
+    /**
+     * Get level3OrganisationunitStructure
+     *
+     * @return \Doctrine\Common\Collections\Collection
+     */
+    public function getLevel3OrganisationunitStructure()
+    {
+        return $this->level3OrganisationunitStructure;
+    }
+
+    /**
+     * Add level4OrganisationunitStructure
+     *
+     * @param OrganisationunitStructure $level4OrganisationunitStructure
+     * @return Organisationunit
+     */
+    public function addLevel4OrganisationunitStructure(OrganisationunitStructure $level4OrganisationunitStructure)
+    {
+        $this->level4OrganisationunitStructure[$level4OrganisationunitStructure->getId()] = $level4OrganisationunitStructure;
+
+        return $this;
+    }
+
+    /**
+     * Remove level4OrganisationunitStructure
+     *
+     * @param OrganisationunitStructure $level4OrganisationunitStructure
+     */
+    public function removeLevel4OrganisationunitStructure(OrganisationunitStructure $level4OrganisationunitStructure)
+    {
+        $this->level4OrganisationunitStructure->removeElement($level4OrganisationunitStructure);
+    }
+
+    /**
+     * Get level4OrganisationunitStructure
+     *
+     * @return \Doctrine\Common\Collections\Collection
+     */
+    public function getLevel4OrganisationunitStructure()
+    {
+        return $this->level4OrganisationunitStructure;
+    }
+
+    /**
+     * Add level5OrganisationunitStructure
+     *
+     * @param OrganisationunitStructure $level5OrganisationunitStructure
+     * @return Organisationunit
+     */
+    public function addLevel5OrganisationunitStructure(OrganisationunitStructure $level5OrganisationunitStructure)
+    {
+        $this->level5OrganisationunitStructure[$level5OrganisationunitStructure->getId()] = $level5OrganisationunitStructure;
+
+        return $this;
+    }
+
+    /**
+     * Remove level5OrganisationunitStructure
+     *
+     * @param OrganisationunitStructure $level5OrganisationunitStructure
+     */
+    public function removeLevel5OrganisationunitStructure(OrganisationunitStructure $level5OrganisationunitStructure)
+    {
+        $this->level5OrganisationunitStructure->removeElement($level5OrganisationunitStructure);
+    }
+
+    /**
+     * Get level5OrganisationunitStructure
+     *
+     * @return \Doctrine\Common\Collections\Collection
+     */
+    public function getLevel5OrganisationunitStructure()
+    {
+        return $this->level5OrganisationunitStructure;
+    }
+
+    /**
+     * Add level6OrganisationunitStructure
+     *
+     * @param OrganisationunitStructure $level6OrganisationunitStructure
+     * @return Organisationunit
+     */
+    public function addLevel6OrganisationunitStructure(OrganisationunitStructure $level6OrganisationunitStructure)
+    {
+        $this->level6OrganisationunitStructure[$level6OrganisationunitStructure->getId()] = $level6OrganisationunitStructure;
+
+        return $this;
+    }
+
+    /**
+     * Remove level6OrganisationunitStructure
+     *
+     * @param OrganisationunitStructure $level6OrganisationunitStructure
+     */
+    public function removeLevel6OrganisationunitStructure(OrganisationunitStructure $level6OrganisationunitStructure)
+    {
+        $this->level6OrganisationunitStructure->removeElement($level6OrganisationunitStructure);
+    }
+
+    /**
+     * Get level6OrganisationunitStructure
+     *
+     * @return \Doctrine\Common\Collections\Collection
+     */
+    public function getLevel6OrganisationunitStructure()
+    {
+        return $this->level6OrganisationunitStructure;
     }
 
     /**
@@ -745,62 +955,6 @@ class Organisationunit
     }
 
     /**
-     * Add dashboardChart
-     *
-     * @param \Hris\DashboardBundle\Entity\DashboardChart $dashboardChart
-     * @return Organisationunit
-     */
-    public function addDashboardChart(\Hris\DashboardBundle\Entity\DashboardChart $dashboardChart)
-    {
-        $this->dashboardChart[] = $dashboardChart;
-    
-        return $this;
-    }
-
-    /**
-     * Remove dashboardChart
-     *
-     * @param \Hris\DashboardBundle\Entity\DashboardChart $dashboardChart
-     */
-    public function removeDashboardChart(\Hris\DashboardBundle\Entity\DashboardChart $dashboardChart)
-    {
-        $this->dashboardChart->removeElement($dashboardChart);
-    }
-
-    /**
-     * Get dashboardChart
-     *
-     * @return \Doctrine\Common\Collections\Collection
-     */
-    public function getDashboardChart()
-    {
-        return $this->dashboardChart;
-    }
-
-    /**
-     * Set organisationunitStructure
-     *
-     * @param \Hris\OrganisationunitBundle\Entity\OrganisationunitStructure $organisationunitStructure
-     * @return Organisationunit
-     */
-    public function setOrganisationunitStructure(\Hris\OrganisationunitBundle\Entity\OrganisationunitStructure $organisationunitStructure = null)
-    {
-        $this->organisationunitStructure = $organisationunitStructure;
-    
-        return $this;
-    }
-
-    /**
-     * Get organisationunitStructure
-     *
-     * @return \Hris\OrganisationunitBundle\Entity\OrganisationunitStructure
-     */
-    public function getOrganisationunitStructure()
-    {
-        return $this->organisationunitStructure;
-    }
-
-    /**
      * Set dhisUid
      *
      * @param string $dhisUid
@@ -822,389 +976,93 @@ class Organisationunit
     {
         return $this->dhisUid;
     }
-    
-    /**
-     * Add userInfo
-     *
-     * @param \Hris\UserBundle\Entity\UserInfo $userInfo
-     * @return Organisationunit
-     */
-    public function addUserInfo(\Hris\UserBundle\Entity\UserInfo $userInfo)
-    {
-        $this->userInfo[] = $userInfo;
-    
-        return $this;
-    }
 
-    /**
-     * Remove userInfo
-     *
-     * @param \Hris\UserBundle\Entity\UserInfo $userInfo
-     */
-    public function removeUserInfo(\Hris\UserBundle\Entity\UserInfo $userInfo)
-    {
-        $this->userInfo->removeElement($userInfo);
-    }
 
-    /**
-     * Get userInfo
-     *
-     * @return \Doctrine\Common\Collections\Collection
-     */
-    public function getUserInfo()
-    {
-        return $this->userInfo;
-    }
 
-    /**
-     * Add level1OrganisationunitStructure
-     *
-     * @param \Hris\OrganisationunitBundle\Entity\OrganisationunitStructure $level1OrganisationunitStructure
-     * @return Organisationunit
-     */
-    public function addLevel1OrganisationunitStructure(\Hris\OrganisationunitBundle\Entity\OrganisationunitStructure $level1OrganisationunitStructure)
-    {
-        $this->level1OrganisationunitStructure[] = $level1OrganisationunitStructure;
-    
-        return $this;
-    }
-
-    /**
-     * Remove level1OrganisationunitStructure
-     *
-     * @param \Hris\OrganisationunitBundle\Entity\OrganisationunitStructure $level1OrganisationunitStructure
-     */
-    public function removeLevel1OrganisationunitStructure(\Hris\OrganisationunitBundle\Entity\OrganisationunitStructure $level1OrganisationunitStructure)
-    {
-        $this->level1OrganisationunitStructure->removeElement($level1OrganisationunitStructure);
-    }
-
-    /**
-     * Get level1OrganisationunitStructure
-     *
-     * @return Doctrine\Common\Collections\Collection 
-     */
-    public function getLevel1OrganisationunitStructure()
-    {
-        return $this->level1OrganisationunitStructure;
-    }
-
-    /**
-     * Add level2OrganisationunitStructure
-     *
-     * @param \Hris\OrganisationunitBundle\Entity\OrganisationunitStructure $level2OrganisationunitStructure
-     * @return Organisationunit
-     */
-    public function addLevel2OrganisationunitStructure(\Hris\OrganisationunitBundle\Entity\OrganisationunitStructure $level2OrganisationunitStructure)
-    {
-        $this->level2OrganisationunitStructure[] = $level2OrganisationunitStructure;
-    
-        return $this;
-    }
-
-    /**
-     * Remove level2OrganisationunitStructure
-     *
-     * @param \Hris\OrganisationunitBundle\Entity\OrganisationunitStructure $level2OrganisationunitStructure
-     */
-    public function removeLevel2OrganisationunitStructure(\Hris\OrganisationunitBundle\Entity\OrganisationunitStructure $level2OrganisationunitStructure)
-    {
-        $this->level2OrganisationunitStructure->removeElement($level2OrganisationunitStructure);
-    }
-
-    /**
-     * Get level2OrganisationunitStructure
-     *
-     * @return Doctrine\Common\Collections\Collection 
-     */
-    public function getLevel2OrganisationunitStructure()
-    {
-        return $this->level2OrganisationunitStructure;
-    }
-
-    /**
-     * Add level3OrganisationunitStructure
-     *
-     * @param \Hris\OrganisationunitBundle\Entity\OrganisationunitStructure $level3OrganisationunitStructure
-     * @return Organisationunit
-     */
-    public function addLevel3OrganisationunitStructure(\Hris\OrganisationunitBundle\Entity\OrganisationunitStructure $level3OrganisationunitStructure)
-    {
-        $this->level3OrganisationunitStructure[] = $level3OrganisationunitStructure;
-    
-        return $this;
-    }
-
-    /**
-     * Remove level3OrganisationunitStructure
-     *
-     * @param \Hris\OrganisationunitBundle\Entity\OrganisationunitStructure $level3OrganisationunitStructure
-     */
-    public function removeLevel3OrganisationunitStructure(\Hris\OrganisationunitBundle\Entity\OrganisationunitStructure $level3OrganisationunitStructure)
-    {
-        $this->level3OrganisationunitStructure->removeElement($level3OrganisationunitStructure);
-    }
-
-    /**
-     * Get level3OrganisationunitStructure
-     *
-     * @return Doctrine\Common\Collections\Collection 
-     */
-    public function getLevel3OrganisationunitStructure()
-    {
-        return $this->level3OrganisationunitStructure;
-    }
-
-    /**
-     * Add level4OrganisationunitStructure
-     *
-     * @param \Hris\OrganisationunitBundle\Entity\OrganisationunitStructure $level4OrganisationunitStructure
-     * @return Organisationunit
-     */
-    public function addLevel4OrganisationunitStructure(\Hris\OrganisationunitBundle\Entity\OrganisationunitStructure $level4OrganisationunitStructure)
-    {
-        $this->level4OrganisationunitStructure[] = $level4OrganisationunitStructure;
-    
-        return $this;
-    }
-
-    /**
-     * Remove level4OrganisationunitStructure
-     *
-     * @param \Hris\OrganisationunitBundle\Entity\OrganisationunitStructure $level4OrganisationunitStructure
-     */
-    public function removeLevel4OrganisationunitStructure(\Hris\OrganisationunitBundle\Entity\OrganisationunitStructure $level4OrganisationunitStructure)
-    {
-        $this->level4OrganisationunitStructure->removeElement($level4OrganisationunitStructure);
-    }
-
-    /**
-     * Get level4OrganisationunitStructure
-     *
-     * @return Doctrine\Common\Collections\Collection 
-     */
-    public function getLevel4OrganisationunitStructure()
-    {
-        return $this->level4OrganisationunitStructure;
-    }
-
-    /**
-     * Add level5OrganisationunitStructure
-     *
-     * @param \Hris\OrganisationunitBundle\Entity\OrganisationunitStructure $level5OrganisationunitStructure
-     * @return Organisationunit
-     */
-    public function addLevel5OrganisationunitStructure(\Hris\OrganisationunitBundle\Entity\OrganisationunitStructure $level5OrganisationunitStructure)
-    {
-        $this->level5OrganisationunitStructure[] = $level5OrganisationunitStructure;
-    
-        return $this;
-    }
-
-    /**
-     * Remove level5OrganisationunitStructure
-     *
-     * @param \Hris\OrganisationunitBundle\Entity\OrganisationunitStructure $level5OrganisationunitStructure
-     */
-    public function removeLevel5OrganisationunitStructure(\Hris\OrganisationunitBundle\Entity\OrganisationunitStructure $level5OrganisationunitStructure)
-    {
-        $this->level5OrganisationunitStructure->removeElement($level5OrganisationunitStructure);
-    }
-
-    /**
-     * Get level5OrganisationunitStructure
-     *
-     * @return Doctrine\Common\Collections\Collection 
-     */
-    public function getLevel5OrganisationunitStructure()
-    {
-        return $this->level5OrganisationunitStructure;
-    }
-
-    /**
-     * Add level6OrganisationunitStructure
-     *
-     * @param \Hris\OrganisationunitBundle\Entity\OrganisationunitStructure $level6OrganisationunitStructure
-     * @return Organisationunit
-     */
-    public function addLevel6OrganisationunitStructure(\Hris\OrganisationunitBundle\Entity\OrganisationunitStructure $level6OrganisationunitStructure)
-    {
-        $this->level6OrganisationunitStructure[] = $level6OrganisationunitStructure;
-    
-        return $this;
-    }
-
-    /**
-     * Remove level6OrganisationunitStructure
-     *
-     * @param \Hris\OrganisationunitBundle\Entity\OrganisationunitStructure $level6OrganisationunitStructure
-     */
-    public function removeLevel6OrganisationunitStructure(\Hris\OrganisationunitBundle\Entity\OrganisationunitStructure $level6OrganisationunitStructure)
-    {
-        $this->level6OrganisationunitStructure->removeElement($level6OrganisationunitStructure);
-    }
-
-    /**
-     * Get level6OrganisationunitStructure
-     *
-     * @return Doctrine\Common\Collections\Collection 
-     */
-    public function getLevel6OrganisationunitStructure()
-    {
-        return $this->level6OrganisationunitStructure;
-    }
-
-    /**
-     * Add level7OrganisationunitStructure
-     *
-     * @param \Hris\OrganisationunitBundle\Entity\OrganisationunitStructure $level7OrganisationunitStructure
-     * @return Organisationunit
-     */
-    public function addLevel7OrganisationunitStructure(\Hris\OrganisationunitBundle\Entity\OrganisationunitStructure $level7OrganisationunitStructure)
-    {
-        $this->level7OrganisationunitStructure[] = $level7OrganisationunitStructure;
-    
-        return $this;
-    }
-
-    /**
-     * Remove level7OrganisationunitStructure
-     *
-     * @param \Hris\OrganisationunitBundle\Entity\OrganisationunitStructure $level7OrganisationunitStructure
-     */
-    public function removeLevel7OrganisationunitStructure(\Hris\OrganisationunitBundle\Entity\OrganisationunitStructure $level7OrganisationunitStructure)
-    {
-        $this->level7OrganisationunitStructure->removeElement($level7OrganisationunitStructure);
-    }
-
-    /**
-     * Get level7OrganisationunitStructure
-     *
-     * @return Doctrine\Common\Collections\Collection 
-     */
-    public function getLevel7OrganisationunitStructure()
-    {
-        return $this->level7OrganisationunitStructure;
-    }
-
-    /**
-     * Add level8OrganisationunitStructure
-     *
-     * @param \Hris\OrganisationunitBundle\Entity\OrganisationunitStructure $level8OrganisationunitStructure
-     * @return Organisationunit
-     */
-    public function addLevel8OrganisationunitStructure(\Hris\OrganisationunitBundle\Entity\OrganisationunitStructure $level8OrganisationunitStructure)
-    {
-        $this->level8OrganisationunitStructure[] = $level8OrganisationunitStructure;
-    
-        return $this;
-    }
-
-    /**
-     * Remove level8OrganisationunitStructure
-     *
-     * @param \Hris\OrganisationunitBundle\Entity\OrganisationunitStructure $level8OrganisationunitStructure
-     */
-    public function removeLevel8OrganisationunitStructure(\Hris\OrganisationunitBundle\Entity\OrganisationunitStructure $level8OrganisationunitStructure)
-    {
-        $this->level8OrganisationunitStructure->removeElement($level8OrganisationunitStructure);
-    }
-
-    /**
-     * Get level8OrganisationunitStructure
-     *
-     * @return Doctrine\Common\Collections\Collection 
-     */
-    public function getLevel8OrganisationunitStructure()
-    {
-        return $this->level8OrganisationunitStructure;
-    }
-
-    /**
-     * Add level9OrganisationunitStructure
-     *
-     * @param \Hris\OrganisationunitBundle\Entity\OrganisationunitStructure $level9OrganisationunitStructure
-     * @return Organisationunit
-     */
-    public function addLevel9OrganisationunitStructure(\Hris\OrganisationunitBundle\Entity\OrganisationunitStructure $level9OrganisationunitStructure)
-    {
-        $this->level9OrganisationunitStructure[] = $level9OrganisationunitStructure;
-    
-        return $this;
-    }
-
-    /**
-     * Remove level9OrganisationunitStructure
-     *
-     * @param \Hris\OrganisationunitBundle\Entity\OrganisationunitStructure $level9OrganisationunitStructure
-     */
-    public function removeLevel9OrganisationunitStructure(\Hris\OrganisationunitBundle\Entity\OrganisationunitStructure $level9OrganisationunitStructure)
-    {
-        $this->level9OrganisationunitStructure->removeElement($level9OrganisationunitStructure);
-    }
-
-    /**
-     * Get level9OrganisationunitStructure
-     *
-     * @return \Doctrine\Common\Collections\Collection
-     */
-    public function getLevel9OrganisationunitStructure()
-    {
-        return $this->level9OrganisationunitStructure;
-    }
-
-    /**
-     * Add level10OrganisationunitStructure
-     *
-     * @param \Hris\OrganisationunitBundle\Entity\OrganisationunitStructure $level10OrganisationunitStructure
-     * @return Organisationunit
-     */
-    public function addLevel10OrganisationunitStructure(\Hris\OrganisationunitBundle\Entity\OrganisationunitStructure $level10OrganisationunitStructure)
-    {
-        $this->level10OrganisationunitStructure[] = $level10OrganisationunitStructure;
-    
-        return $this;
-    }
-
-    /**
-     * Remove level10OrganisationunitStructure
-     *
-     * @param \Hris\OrganisationunitBundle\Entity\OrganisationunitStructure $level10OrganisationunitStructure
-     */
-    public function removeLevel10OrganisationunitStructure(\Hris\OrganisationunitBundle\Entity\OrganisationunitStructure $level10OrganisationunitStructure)
-    {
-        $this->level10OrganisationunitStructure->removeElement($level10OrganisationunitStructure);
-    }
-
-    /**
-     * Get level10OrganisationunitStructure
-     *
-     * @return Doctrine\Common\Collections\Collection 
-     */
-    public function getLevel10OrganisationunitStructure()
-    {
-        return $this->level10OrganisationunitStructure;
-    }
     /**
      * Constructor
      */
     public function __construct()
     {
-        $this->userInfo = new \Doctrine\Common\Collections\ArrayCollection();
         $this->organisationunitGroup = new \Doctrine\Common\Collections\ArrayCollection();
-        $this->dashboardChart = new \Doctrine\Common\Collections\ArrayCollection();
         $this->active = FALSE;
         $this->uid = uniqid();
-        $this->level1OrganisationunitStructure = new \Doctrine\Common\Collections\ArrayCollection();
-        $this->level2OrganisationunitStructure = new \Doctrine\Common\Collections\ArrayCollection();
-        $this->level3OrganisationunitStructure = new \Doctrine\Common\Collections\ArrayCollection();
-        $this->level4OrganisationunitStructure = new \Doctrine\Common\Collections\ArrayCollection();
-        $this->level5OrganisationunitStructure = new \Doctrine\Common\Collections\ArrayCollection();
-        $this->level6OrganisationunitStructure = new \Doctrine\Common\Collections\ArrayCollection();
-        $this->level7OrganisationunitStructure = new \Doctrine\Common\Collections\ArrayCollection();
-        $this->level8OrganisationunitStructure = new \Doctrine\Common\Collections\ArrayCollection();
-        $this->level9OrganisationunitStructure = new \Doctrine\Common\Collections\ArrayCollection();
-        $this->level10OrganisationunitStructure = new \Doctrine\Common\Collections\ArrayCollection();
+    }
+
+    /**
+     * Get Entity verbose name
+     *
+     * @return string
+     */
+    public function __toString()
+    {
+        return $this->longname;
     }
     
+
+    /**
+     * Add organisationunitCompleteness
+     *
+     * @param OrganisationunitCompleteness $organisationunitCompleteness
+     * @return Organisationunit
+     */
+    public function addOrganisationunitCompletenes(OrganisationunitCompleteness $organisationunitCompleteness)
+    {
+        $this->organisationunitCompleteness[] = $organisationunitCompleteness;
+    
+        return $this;
+    }
+
+    /**
+     * Remove organisationunitCompleteness
+     *
+     * @param OrganisationunitCompleteness $organisationunitCompleteness
+     */
+    public function removeOrganisationunitCompletenes(OrganisationunitCompleteness $organisationunitCompleteness)
+    {
+        $this->organisationunitCompleteness->removeElement($organisationunitCompleteness);
+    }
+
+    /**
+     * Get organisationunitCompleteness
+     *
+     * @return \Doctrine\Common\Collections\Collection 
+     */
+    public function getOrganisationunitCompleteness()
+    {
+        return $this->organisationunitCompleteness;
+    }
+
+    /**
+     * Add user
+     *
+     * @param \Hris\UserBundle\Entity\User $user
+     * @return Organisationunit
+     */
+    public function addUser(\Hris\UserBundle\Entity\User $user)
+    {
+        $this->user[] = $user;
+    
+        return $this;
+    }
+
+    /**
+     * Remove user
+     *
+     * @param \Hris\UserBundle\Entity\User $user
+     */
+    public function removeUser(\Hris\UserBundle\Entity\User $user)
+    {
+        $this->user->removeElement($user);
+    }
+
+    /**
+     * Get user
+     *
+     * @return \Doctrine\Common\Collections\Collection 
+     */
+    public function getUser()
+    {
+        return $this->user;
+    }
 }

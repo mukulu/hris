@@ -24,13 +24,17 @@
  */
 namespace Hris\FormBundle\Entity;
 
+use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\ORM\Mapping as ORM;
+use Gedmo\Mapping\Annotation as Gedmo;
 
 use Hris\FormBundle\Entity\FieldGroup;
+use Symfony\Component\Validator\Constraints as Assert;
 
 /**
  * Hris\FormBundle\Entity\FieldGroupset
  *
+ * @Gedmo\Loggable
  * @ORM\Table(name="hris_fieldgroupset")
  * @ORM\Entity(repositoryClass="Hris\FormBundle\Entity\FieldGroupsetRepository")
  */
@@ -48,6 +52,7 @@ class FieldGroupset
     /**
      * @var string $uid
      *
+     * @Gedmo\Versioned
      * @ORM\Column(name="uid", type="string", length=13, unique=true)
      */
     private $uid;
@@ -55,6 +60,7 @@ class FieldGroupset
     /**
      * @var string $name
      *
+     * @Gedmo\Versioned
      * @ORM\Column(name="name", type="string", length=64, unique=true)
      */
     private $name;
@@ -62,12 +68,13 @@ class FieldGroupset
     /**
      * @var string $description
      *
+     * @Gedmo\Versioned
      * @ORM\Column(name="description", type="text", nullable=true)
      */
     private $description;
     
     /**
-     * @var \Hris\FormBundle\Entity\FieldGroup $fieldGroup
+     * @var FieldGroup $fieldGroup
      *
      * @ORM\ManyToMany(targetEntity="Hris\FormBundle\Entity\FieldGroup", inversedBy="fieldGroupset")
      * @ORM\JoinTable(name="hris_fieldgroupset_members",
@@ -85,6 +92,7 @@ class FieldGroupset
     /**
      * @var \DateTime $datecreated
      *
+     * @Gedmo\Timestampable(on="create")
      * @ORM\Column(name="datecreated", type="datetime")
      */
     private $datecreated;
@@ -92,6 +100,7 @@ class FieldGroupset
     /**
      * @var \DateTime $lastupdated
      *
+     * @Gedmo\Timestampable(on="update")
      * @ORM\Column(name="lastupdated", type="datetime", nullable=true)
      */
     private $lastupdated;
@@ -226,19 +235,19 @@ class FieldGroupset
      */
     public function __construct()
     {
-        $this->fieldGroup = new \Doctrine\Common\Collections\ArrayCollection();
+        $this->fieldGroup = new ArrayCollection();
         $this->uid = uniqid();
     }
     
     /**
      * Add fieldGroup
      *
-     * @param \Hris\FormBundle\Entity\FieldGroup $fieldGroup
+     * @param FieldGroup $fieldGroup
      * @return FieldGroupset
      */
-    public function addFieldGroup(\Hris\FormBundle\Entity\FieldGroup $fieldGroup)
+    public function addFieldGroup(FieldGroup $fieldGroup)
     {
-        $this->fieldGroup[] = $fieldGroup;
+        $this->fieldGroup[$fieldGroup->getId()] = $fieldGroup;
     
         return $this;
     }
@@ -246,9 +255,9 @@ class FieldGroupset
     /**
      * Remove fieldGroup
      *
-     * @param \Hris\FormBundle\Entity\FieldGroup $fieldGroup
+     * @param FieldGroup $fieldGroup
      */
-    public function removeFieldGroup(\Hris\FormBundle\Entity\FieldGroup $fieldGroup)
+    public function removeFieldGroup(FieldGroup $fieldGroup)
     {
         $this->fieldGroup->removeElement($fieldGroup);
     }
@@ -261,5 +270,15 @@ class FieldGroupset
     public function getFieldGroup()
     {
         return $this->fieldGroup;
+    }
+
+    /**
+     * Get Entity verbose name
+     *
+     * @return string
+     */
+    public function __toString()
+    {
+        return $this->name;
     }
 }

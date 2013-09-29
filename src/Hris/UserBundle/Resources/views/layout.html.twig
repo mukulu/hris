@@ -20,47 +20,17 @@
 
 {% extends '::base.html.twig' %}
 
-
-{% block title %}HRHIS{% endblock %}
-
 {% block stylesheets %}
-	{{ parent() }}
-	<style type="text/css">
-		#logo {float: left;width: 100%;height: 100%;margin: 0;padding:30px 0px 0px 0px;color: #000000;background: url("{{ asset('bundles/hrisassets/images/coat_of_arms_of_Tz.svg') }}");background-repeat:no-repeat;background-position:30px 0px;background-size:112px 117px;}
-	</style>
-	<link rel="stylesheet" href="{{ asset('bundles/hrisassets/css/login.css') }}" />
-	<link rel="stylesheet" href="{{ asset('bundles/hrisassets/css/style.css') }}" />
+    {{ parent() }}
+    <link rel="stylesheet" href="{{ asset('bundles/hrisuser/css/login.css') }}" /></style>
 {% endblock stylesheets %}
 
-{% block favicon %}
-	<link rel="icon" sizes="16x16" href="{{ asset('bundles/hrisassets/images/favicon.ico') }}" />
-{% endblock favicon %}
+{% block title %} {{ parent() }} - Login {% endblock %}
 
-{% block body %}
-	<div id="wrapper">
-		{% block banner %}
-			<div id="banner">
-			{% block banner_logo %}
-				<div id="logo">
-					<h1>Ministry of Health And Social Welfare(MoHSW)</h1>
-					<h2>Human Resource for Health Information System (HRHIS)</h2>
-				</div>
-				<!-- end #logo -->
-			{% endblock banner_logo %}
-			</div>
-		{% endblock banner %}
-		
-		{% block content %}
-			{{  block('fos_user_content') }}
-		{% endblock content %}
-		
-		<div style="clear: both;">&nbsp;</div>
-		
-		{% block footer %}
-			<div id="footer">
-				<p>Copyright © 2010  Ministry of Health and Social welfare - Human resource for Health Information System</p>
-			</div>
-		{% endblock footer %}
-		
-	</div>
-{% endblock body %}
+{% block navigation_bar %}
+
+{% endblock navigation_bar %}
+
+{% block content %}
+    {{  block('fos_user_content') }}
+{% endblock content %}

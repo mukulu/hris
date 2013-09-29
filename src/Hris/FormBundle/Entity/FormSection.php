@@ -24,14 +24,18 @@
  */
 namespace Hris\FormBundle\Entity;
 
+use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\ORM\Mapping as ORM;
+use Gedmo\Mapping\Annotation as Gedmo;
 
 use Hris\FormBundle\Entity\FormSectionFieldMember;
 use Hris\FormBundle\Entity\Form;
+use Symfony\Component\Validator\Constraints as Assert;
 
 /**
  * Hris\FormBundle\Entity\FormSection
  *
+ * @Gedmo\Loggable
  * @ORM\Table(name="hris_formsection")
  * @ORM\Entity(repositoryClass="Hris\FormBundle\Entity\FormSectionRepository")
  */
@@ -49,6 +53,7 @@ class FormSection
     /**
      * @var string $uid
      *
+     * @Gedmo\Versioned
      * @ORM\Column(name="uid", type="string", length=13, unique=true)
      */
     private $uid;
@@ -56,6 +61,7 @@ class FormSection
     /**
      * @var string $name
      *
+     * @Gedmo\Versioned
      * @ORM\Column(name="name", type="string", length=64, unique=true)
      */
     private $name;
@@ -63,38 +69,42 @@ class FormSection
     /**
      * @var string $description
      *
+     * @Gedmo\Versioned
      * @ORM\Column(name="description", type="text", nullable=true)
      */
     private $description;
     
     /**
-     * @var \Hris\FormBundle\Entity\Form $form
+     * @var Form $form
      *
+     * @Gedmo\Versioned
      * @ORM\ManyToOne(targetEntity="Hris\FormBundle\Entity\Form")
      * @ORM\JoinColumns({
-     *   @ORM\JoinColumn(name="form_id", referencedColumnName="id")
+     *   @ORM\JoinColumn(name="form_id", referencedColumnName="id", onDelete="CASCADE")
      * })
      */
     private $form;
     
     /**
-     * @var \Hris\FormBundle\Entity\FormSectionFieldMember $formSectionFieldMember
+     * @var FormSectionFieldMember $formSectionFieldMember
      *
      * @ORM\OneToMany(targetEntity="Hris\FormBundle\Entity\FormSectionFieldMember", mappedBy="formSection",cascade={"ALL"})
      * @ORM\OrderBy({"sort" = "ASC"})
      */
     private $formSectionFieldMember;
-    
+
     /**
      * @var \DateTime $datecreated
      *
+     * @Gedmo\Timestampable(on="create")
      * @ORM\Column(name="datecreated", type="datetime")
      */
     private $datecreated;
-    
+
     /**
      * @var \DateTime $lastupdated
      *
+     * @Gedmo\Timestampable(on="update")
      * @ORM\Column(name="lastupdated", type="datetime", nullable=true)
      */
     private $lastupdated;
@@ -228,10 +238,10 @@ class FormSection
     /**
      * Set form
      *
-     * @param \Hris\FormBundle\Entity\Form $form
+     * @param Form $form
      * @return FormSection
      */
-    public function setForm(\Hris\FormBundle\Entity\Form $form = null)
+    public function setForm(Form $form = null)
     {
         $this->form = $form;
     
@@ -241,7 +251,7 @@ class FormSection
     /**
      * Get form
      *
-     * @return \Hris\FormBundle\Entity\Form
+     * @return Form
      */
     public function getForm()
     {
@@ -257,7 +267,7 @@ class FormSection
     public function addSimpleField(\Hris\FormBundle\Entity\Field $field)
     {
     	$this->sort += 1;
-    	$this->formSectionFieldMember[] = new \Hris\FormBundle\Entity\FormSectionFieldMember($this, $field, $this->sort);
+    	$this->formSectionFieldMember[] = new FormSectionFieldMember($this, $field, $this->sort);
     
     	return $this;
     }
@@ -269,7 +279,7 @@ class FormSection
      */
     public function getSimpleField()
     {
-    	$simpleFields = new \Doctrine\Common\Collections\ArrayCollection();
+    	$simpleFields = new ArrayCollection();
     
     	if(!empty($this->formSectionFieldMember)) {
     		foreach( $this->formSectionFieldMember as $key => $formSectionFieldMember ) {
@@ -283,17 +293,17 @@ class FormSection
      */
     public function __construct()
     {
-        $this->formSectionFieldMember = new \Doctrine\Common\Collections\ArrayCollection();
+        $this->formSectionFieldMember = new ArrayCollection();
         $this->uid = uniqid();
     }
     
     /**
      * Add formSectionFieldMember
      *
-     * @param \Hris\FormBundle\Entity\FormSectionFieldMember $formSectionFieldMember
+     * @param FormSectionFieldMember $formSectionFieldMember
      * @return FormSection
      */
-    public function addFormSectionFieldMember(\Hris\FormBundle\Entity\FormSectionFieldMember $formSectionFieldMember)
+    public function addFormSectionFieldMember(FormSectionFieldMember $formSectionFieldMember)
     {
         $this->formSectionFieldMember[] = $formSectionFieldMember;
     
@@ -303,9 +313,9 @@ class FormSection
     /**
      * Remove formSectionFieldMember
      *
-     * @param \Hris\FormBundle\Entity\FormSectionFieldMember $formSectionFieldMember
+     * @param FormSectionFieldMember $formSectionFieldMember
      */
-    public function removeFormSectionFieldMember(\Hris\FormBundle\Entity\FormSectionFieldMember $formSectionFieldMember)
+    public function removeFormSectionFieldMember(FormSectionFieldMember $formSectionFieldMember)
     {
         $this->formSectionFieldMember->removeElement($formSectionFieldMember);
     }
@@ -318,5 +328,15 @@ class FormSection
     public function getFormSectionFieldMember()
     {
         return $this->formSectionFieldMember;
+    }
+
+    /**
+     * Get Entity verbose name
+     *
+     * @return string
+     */
+    public function __toString()
+    {
+        return $this->name;
     }
 }

@@ -1,5 +1,5 @@
 parameters:
-#    hris_user.example.class: Hris\UserBundle\Example
+    hris_user.model.user.class:
 
 services:
     admin.user:
@@ -8,7 +8,7 @@ services:
             - { name: sonata.admin, manager_type: orm, group: Users, label: Users }
         arguments: [ null, Hris\UserBundle\Entity\User, SonataAdminBundle:CRUD ]
 
-
-##    hris_user.example:
-#        class: %hris_user.example.class%
-#        arguments: [@service_id, "plain_value", %parameter%]
+    hris_user.configure_menu_listener:
+        class: Hris\UserBundle\EventListener\ConfigureMenuListener
+        tags:
+            - { name: kernel.event_listener, event: hris_user.menu_configure, method: onMenuConfigure }

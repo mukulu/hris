@@ -1,3 +1,43 @@
-hris_form_homepage:
-    pattern:  /hello/{name}
-    defaults: { _controller: HrisFormBundle:Default:index }
+arithmeticfilter:
+    resource: "@HrisFormBundle/Controller/ArithmeticFilterController.php"
+    type: annotation
+
+field:
+    resource: "@HrisFormBundle/Controller/FieldController.php"
+    type: annotation
+
+fieldgroup:
+    resource: "@HrisFormBundle/Controller/FieldGroupController.php"
+    type: annotation
+
+fieldoptiongroup:
+    resource: "@HrisFormBundle/Controller/FieldOptionGroupController.php"
+    type: annotation
+
+fieldoption:
+    resource: "@HrisFormBundle/Controller/FieldOptionController.php"
+    type: annotation
+
+fieldoptiongroupset:
+    resource: "@HrisFormBundle/Controller/FieldOptionGroupsetController.php"
+    type: annotation
+
+form:
+    resource: "@HrisFormBundle/Controller/FormController.php"
+    type: annotation
+
+friendlyreport:
+    resource: "@HrisFormBundle/Controller/FriendlyReportController.php"
+    type: annotation
+
+relationalfilter:
+    resource: "@HrisFormBundle/Controller/RelationalFilterController.php"
+    type: annotation
+
+resourcetable:
+    resource: "@HrisFormBundle/Controller/ResourceTableController.php"
+    type: annotation
+    
+designdataentryform:
+    resource: "@HrisFormBundle/Controller/DesignFormController.php"
+    type: annotation

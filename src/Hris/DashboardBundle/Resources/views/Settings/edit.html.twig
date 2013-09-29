@@ -1,0 +1,20 @@
+{% extends '::base.html.twig' %}
+
+{% block right_content -%}
+    <h1><small>Settings edit</small></h1>
+
+    {{ form(edit_form) }}
+
+	<br/>
+	<ul class="record_actions inline" style="float:left;">
+		<li>
+			<button type="submit" class="btn">Edit</button>
+		</li>
+		<li>
+			<a href="{{ path('settings') }}">
+				Back to the list
+			</a>
+		</li>
+		<li>{{ form(delete_form) }}</li>
+	</ul>
+{% endblock %}

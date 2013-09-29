@@ -1,21 +1,22 @@
-HrisUserBundle_homepage:
-    pattern:  /user/{name}
-    defaults: { _controller: "HrisUserBundle:Default:index" }
 fos_user_security:
-    resource: "@FOSUserBundle/Resources/config/routing/security.xml"
+    resource: "@HrisUserBundle/Resources/config/routing/security.xml"
 
 fos_user_profile:
-    resource: "@FOSUserBundle/Resources/config/routing/profile.xml"
+    resource: "@HrisUserBundle/Resources/config/routing/profile.xml"
     prefix: /profile
 
 fos_user_register:
-    resource: "@FOSUserBundle/Resources/config/routing/registration.xml"
+    resource: "@HrisUserBundle/Resources/config/routing/registration.xml"
     prefix: /register
 
 fos_user_resetting:
-    resource: "@FOSUserBundle/Resources/config/routing/resetting.xml"
+    resource: "@HrisUserBundle/Resources/config/routing/resetting.xml"
     prefix: /resetting
 
 fos_user_change_password:
-    resource: "@FOSUserBundle/Resources/config/routing/change_password.xml"
+    resource: "@HrisUserBundle/Resources/config/routing/change_password.xml"
     prefix: /profile
+    
+user:
+    resource: "@HrisUserBundle/Controller/UserController.php"
+    type: annotation

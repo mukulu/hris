@@ -28,6 +28,7 @@ use Doctrine\ORM\Mapping as ORM;
 
 use Hris\FormBundle\Entity\Field;
 use Hris\FormBundle\Entity\ResourceTable;
+use Symfony\Component\Validator\Constraints as Assert;
 
 /**
  * Hris\FormBundle\Entity\ResourceTableFieldMember
@@ -38,11 +39,11 @@ use Hris\FormBundle\Entity\ResourceTable;
 class ResourceTableFieldMember
 {
 	/**
-	 * @var \Hris\FormBundle\Entity\ResourceTable $resourceTable
+	 * @var ResourceTable $resourceTable
 	 *
 	 * @ORM\ManyToOne(targetEntity="Hris\FormBundle\Entity\ResourceTable",inversedBy="resourceTableFieldMember")
 	 * @ORM\JoinColumns({
-	 *   @ORM\JoinColumn(name="resourcetable_id", referencedColumnName="id",nullable=false)
+	 *   @ORM\JoinColumn(name="resourcetable_id", referencedColumnName="id",nullable=false, onDelete="CASCADE")
 	 * })
 	 * @ORM\Id
 	 * @ORM\GeneratedValue(strategy="NONE")
@@ -50,11 +51,11 @@ class ResourceTableFieldMember
 	private $resourceTable;
 	
 	/**
-	 * @var \Hris\FormBundle\Entity\Field $field
+	 * @var Field $field
 	 *
 	 * @ORM\ManyToOne(targetEntity="Hris\FormBundle\Entity\Field",inversedBy="resourceTableFieldMember")
 	 * @ORM\JoinColumns({
-	 *   @ORM\JoinColumn(name="field_id", referencedColumnName="id",nullable=false)
+	 *   @ORM\JoinColumn(name="field_id", referencedColumnName="id",nullable=false, onDelete="CASCADE")
 	 * })
 	 * @ORM\Id
 	 * @ORM\GeneratedValue(strategy="NONE")
@@ -95,10 +96,10 @@ class ResourceTableFieldMember
     /**
      * Set resourceTable
      *
-     * @param \Hris\FormBundle\Entity\ResourceTable $resourceTable
+     * @param ResourceTable $resourceTable
      * @return ResourceTableFieldMember
      */
-    public function setResourceTable(\Hris\FormBundle\Entity\ResourceTable $resourceTable)
+    public function setResourceTable(ResourceTable $resourceTable)
     {
         $this->resourceTable = $resourceTable;
     
@@ -108,7 +109,7 @@ class ResourceTableFieldMember
     /**
      * Get resourceTable
      *
-     * @return \Hris\FormBundle\Entity\ResourceTable
+     * @return ResourceTable
      */
     public function getResourceTable()
     {
@@ -118,10 +119,10 @@ class ResourceTableFieldMember
     /**
      * Set field
      *
-     * @param \Hris\FormBundle\Entity\Field $field
+     * @param Field $field
      * @return ResourceTableFieldMember
      */
-    public function setField(\Hris\FormBundle\Entity\Field $field)
+    public function setField(Field $field)
     {
         $this->field = $field;
     
@@ -131,10 +132,21 @@ class ResourceTableFieldMember
     /**
      * Get field
      *
-     * @return \Hris\FormBundle\Entity\Field
+     * @return Field
      */
     public function getField()
     {
         return $this->field;
+    }
+
+    /**
+     * Get Entity verbose name
+     *
+     * @return string
+     */
+    public function __toString()
+    {
+        $resourceTableMember = $this->getResourceTable()->__toString().':'.$this->getField()->__toString();
+        return $resourceTableMember;
     }
 }

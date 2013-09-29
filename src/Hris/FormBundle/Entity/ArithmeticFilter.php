@@ -24,13 +24,17 @@
  */
 namespace Hris\FormBundle\Entity;
 
+use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\ORM\Mapping as ORM;
+use Gedmo\Mapping\Annotation as Gedmo;
 
 use Hris\FormBundle\Entity\FriendlyReport;
+use Symfony\Component\Validator\Constraints as Assert;
 
 /**
  * Hris\FormBundle\Entity\ArithmeticFilter
  *
+ * @Gedmo\Loggable
  * @ORM\Table(name="hris_arithmeticfilter", uniqueConstraints={@ORM\UniqueConstraint(name="arithmetic_filter_idx",columns={"operator", "leftExpression","rightExpression"})})
  * @ORM\Entity(repositoryClass="Hris\FormBundle\Entity\ArithmeticFilterRepository")
  */
@@ -48,6 +52,7 @@ class ArithmeticFilter
     /**
      * @var string $uid
      *
+     * @Gedmo\Versioned
      * @ORM\Column(name="uid", type="string", length=13, unique=true)
      */
     private $uid;
@@ -55,6 +60,7 @@ class ArithmeticFilter
     /**
      * @var string $name
      *
+     * @Gedmo\Versioned
      * @ORM\Column(name="name", type="string", length=64, unique=true)
      */
     private $name;
@@ -62,6 +68,7 @@ class ArithmeticFilter
     /**
      * @var string $description
      *
+     * @Gedmo\Versioned
      * @ORM\Column(name="description", type="text", nullable=true)
      */
     private $description;
@@ -69,6 +76,7 @@ class ArithmeticFilter
     /**
      * @var string $operator
      *
+     * @Gedmo\Versioned
      * @ORM\Column(name="operator", type="string",length=10)
      */
     private $operator;
@@ -76,35 +84,39 @@ class ArithmeticFilter
     /**
      * @var string $leftExpression
      *
-     * @ORM\Column(name="leftExpression", type="text")
+     * @Gedmo\Versioned
+     * @ORM\Column(name="leftExpression", type="string", length=255)
      */
     private $leftExpression;
 
     /**
      * @var string $rightExpression
      *
-     * @ORM\Column(name="rightExpression", type="text")
+     * @Gedmo\Versioned
+     * @ORM\Column(name="rightExpression", type="string", length=255)
      */
     private $rightExpression;
     
     /**
-     * @var \Hris\FormBundle\Entity\FriendlyReport $friendlyReport
+     * @var FriendlyReport $friendlyReport
      *
      * @ORM\ManyToMany(targetEntity="Hris\FormBundle\Entity\FriendlyReport", mappedBy="arithmeticFilter")
      * @ORM\OrderBy({"name" = "ASC"})
      */
     private $friendlyReport;
-    
+
     /**
      * @var \DateTime $datecreated
      *
+     * @Gedmo\Timestampable(on="create")
      * @ORM\Column(name="datecreated", type="datetime")
      */
     private $datecreated;
-    
+
     /**
      * @var \DateTime $lastupdated
      *
+     * @Gedmo\Timestampable(on="update")
      * @ORM\Column(name="lastupdated", type="datetime", nullable=true)
      */
     private $lastupdated;
@@ -308,19 +320,19 @@ class ArithmeticFilter
      */
     public function __construct()
     {
-        $this->friendlyReport = new \Doctrine\Common\Collections\ArrayCollection();
+        $this->friendlyReport = new ArrayCollection();
         $this->uid = uniqid();
     }
     
     /**
      * Add friendlyReport
      *
-     * @param \Hris\FormBundle\Entity\FriendlyReport $friendlyReport
+     * @param FriendlyReport $friendlyReport
      * @return ArithmeticFilter
      */
-    public function addFriendlyReport(\Hris\FormBundle\Entity\FriendlyReport $friendlyReport)
+    public function addFriendlyReport(FriendlyReport $friendlyReport)
     {
-        $this->friendlyReport[] = $friendlyReport;
+        $this->friendlyReport[$friendlyReport->getId()] = $friendlyReport;
     
         return $this;
     }
@@ -328,9 +340,9 @@ class ArithmeticFilter
     /**
      * Remove friendlyReport
      *
-     * @param \Hris\FormBundle\Entity\FriendlyReport $friendlyReport
+     * @param FriendlyReport $friendlyReport
      */
-    public function removeFriendlyReport(\Hris\FormBundle\Entity\FriendlyReport $friendlyReport)
+    public function removeFriendlyReport(FriendlyReport $friendlyReport)
     {
         $this->friendlyReport->removeElement($friendlyReport);
     }
@@ -343,5 +355,15 @@ class ArithmeticFilter
     public function getFriendlyReport()
     {
         return $this->friendlyReport;
+    }
+
+    /**
+     * Get Entity verbose name
+     *
+     * @return string
+     */
+    public function __toString()
+    {
+        return $this->name;
     }
 }
