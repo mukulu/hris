@@ -53,9 +53,14 @@ class ResourceTableController extends Controller
         $em = $this->getDoctrine()->getManager();
 
         $entities = $em->getRepository('HrisFormBundle:ResourceTable')->findAll();
+        foreach($entities as $entity) {
+            $delete_form= $this->createDeleteForm($entity->getId());
+            $delete_forms[$entity->getId()] = $delete_form->createView();
+        }
 
         return array(
             'entities' => $entities,
+            'delete_forms' => $delete_forms,
         );
     }
     /**
@@ -129,9 +134,50 @@ class ResourceTableController extends Controller
     }
 
     /**
+     * Finds and generates a ResourceTable entity.
+     *
+     * @Route("/{id}/generate/{context}", requirements={"id"="\d+","context"="graceful|forced"}, defaults={"context"="graceful"}, name="resourcetable_generate")
+     * @Method("GET")
+     * @Template()
+     */
+    public function generateAction($id,$context)
+    {
+        $em = $this->getDoctrine()->getManager();
+
+        $entity = $em->getRepository('HrisFormBundle:ResourceTable')->find($id);
+
+        if (!$entity) {
+            throw $this->createNotFoundException('Unable to find ResourceTable entity.');
+        }
+        if($context=="forced") {
+            $entity->setIsgenerating(false);
+            $em->persist($entity);
+            $em->flush();
+        }
+
+        $deleteForm = $this->createDeleteForm($id);
+
+        $success = $entity->generateResourceTable($em);
+        $messageLog = rtrim($entity->getMessageLog(),"\n");
+        $messageLogArray = explode("\n",$messageLog);
+        $messages = NULL;
+        foreach($messageLogArray as $key=>$logLine) {
+            $logLineArray = explode(":",$logLine);
+            if(!empty($logLine)) $messages[] = $logLineArray;
+        }
+
+        return array(
+            'success'=> $success,
+            'messages'=>$messages,
+            'entity'=>$entity,
+            'delete_form' => $deleteForm->createView(),
+        );
+    }
+
+    /**
      * Displays a form to edit an existing ResourceTable entity.
      *
-     * @Route("/{id}/edit", name="resourcetable_edit")
+     * @Route("/{id}/edit", requirements={"id"="\d+"}, name="resourcetable_edit")
      * @Method("GET")
      * @Template()
      */
@@ -158,7 +204,7 @@ class ResourceTableController extends Controller
     /**
      * Edits an existing ResourceTable entity.
      *
-     * @Route("/{id}", name="resourcetable_update")
+     * @Route("/{id}", requirements={"id"="\d+"}, name="resourcetable_update")
      * @Method("PUT")
      * @Template("HrisFormBundle:ResourceTable:edit.html.twig")
      */
@@ -192,7 +238,7 @@ class ResourceTableController extends Controller
     /**
      * Deletes a ResourceTable entity.
      *
-     * @Route("/{id}", name="resourcetable_delete")
+     * @Route("/{id}", requirements={"id"="\d+"}, name="resourcetable_delete")
      * @Method("DELETE")
      */
     public function deleteAction(Request $request, $id)

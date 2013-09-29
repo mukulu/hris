@@ -45,6 +45,17 @@ class HierarchyOperationType extends AbstractType
                     )
                 ))->addModelTransformer($transformer)
             )
+            ->add($builder->create('organisationunitToMove','hidden',array(
+                    'constraints'=> array(
+                        new NotBlank(),
+                    )
+                ))->addModelTransformer($transformer)
+            )->add($builder->create('parentOrganisationunit','hidden',array(
+                    'constraints'=> array(
+                        new NotBlank(),
+                    )
+                ))->addModelTransformer($transformer)
+            )
             ->add('submit','submit')
         ;
     }

@@ -10,7 +10,12 @@
         var ajaxUrl = '{{- path('report_employeerecords_ajax',{'_format':'json'}) -}}';
         jQuery.fn.dataTableExt.oApi.fnSetFilteringDelay=function(a,b){var c=this,b=typeof b=="undefined"?500:b;this.each(function(a){$.fn.dataTableExt.iApiIndex=a;var d=this,e=null,f=null,g=$("input",c.fnSettings().aanFeatures.f);g.unbind("keyup").bind("keyup",function(){var h=d;if(f===null||f!=g.val()){window.clearTimeout(e);f=g.val();e=window.setTimeout(function(){$.fn.dataTableExt.iApiIndex=a;c.fnFilter(g.val())},b)}});return this});return this}
         $(document).ready( function () {
-            oTable = $('.dataTable').dataTable( {
+            oTable = $('.records_list').dataTable( {
+                "sDom": "<'row'<'span6'l><'span6'f>r>t<'row'<'span6'i><'span6'p>>",
+                "sPaginationType": "bootstrap",
+                "oLanguage": {
+                    "sLengthMenu": "_MENU_ records per page"
+                },
                 "bProcessing":true,
                 "bServerSide":true,
                 "sAjaxSource": ajaxUrl,
@@ -20,8 +25,7 @@
                 "sServerMethod":"POST",
                 "fnServerData": function ( sSource, aoData, fnCallback ) {$.ajax( {"dataType": "json", "type": "POST", "url": sSource, "data": aoData, "success": fnCallback} );},
                 "bJQueryUI": true,
-                "aLengthMenu": [[10, 25, 50,100,200, -1], [10, 25, 50,100,200, "All"]], "sPaginationType": "full_numbers","sPdfOrientation": "landscape",
-                "sDom": '<"H"Tpilfr>t<"F"ip>',
+                "aLengthMenu": [[10, 25, 50,100,200, -1], [10, 25, 50,100,200, "All"]],"sPdfOrientation": "landscape",
                 "oTableTools": {"aButtons": [ {"sExtends":"copy","mColumns":"visible","sTitle": "{{ title }}" }, {"sExtends":"xls","mColumns":"visible"}, {"sExtends":"pdf","mColumns":"visible"} ] }
             }).fnSetFilteringDelay().columnFilter({ aoColumns: {{ dataTableAjaxColumns|raw }} });
         });
@@ -43,11 +47,11 @@
                 <th>No.</th>
                 {% if visibleFields %}
                     {% for visibleField in visibleFields  %}
-                        <th>{{ visibleField.name }}</th>
+                        <th>{{ visibleField.caption }}</th>
                     {% endfor %}
                 {% else %}
                     {% for formField in formFields  %}
-                        <th>{{ formField.name }}</th>
+                        <th>{{ formField.caption }}</th>
                     {% endfor %}
                 {% endif %}
                 <th>Age</th>
