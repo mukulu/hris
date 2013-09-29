@@ -315,11 +315,20 @@ class RecordController extends Controller
         //$record = $this->createForm(new RecordType(), $entity);
         //$record->bind($request);
 
-        $formId = $this->get('request')->request->get('formId');
+        $formId = (int) $this->get('request')->request->get('formId');
 
-        $orgunit = $em->getRepository('HrisOrganisationunitBundle:Organisationunit')->find(1);
+        $user = $this->container->get('security.context')->getToken()->getUser();
 
-        $form = $em->getRepository('HrisFormBundle:Form')->find($formId);
+        $onrgunitParent = $this->get('request')->request->get('orgunitParent');
+        $orunitUid = $this->get('request')->request->get('unit');
+
+        if ( $orunitUid != null ){
+            $orgunit = $em->getRepository('HrisOrganisationunitBundle:Organisationunit')->findOneBy(array('uid' => $orunitUid));
+        }else{
+            $orgunit = $user->getOrganisationunit();
+        }
+
+        $form = $em->getRepository('HrisFormBundle:Form')->find(1);
         $uniqueFields = $form->getUniqueRecordFields();
         $fields = $form->getSimpleField();
 
@@ -343,11 +352,12 @@ class RecordController extends Controller
             $recordArray[$valueKey] = $recordValue;
         }
 
-        $user = $this->container->get('security.context')->getToken()->getUser();
+
+
 
         $entity->setValue($recordArray);
         $entity->setForm($form);
-        $entity->setInstance(md5(uniqid()));
+        $entity->setInstance(md5($instance));
         $entity->setOrganisationunit($orgunit);
         $entity->setUsername($user->getUsername());
         $entity->setComplete(True);

@@ -412,7 +412,7 @@ function getunits(parent){
                     console.log(decodeURIComponent(cursorOption.value.longname));
 
                     $("#units").append($('<option>', {
-                        value: cursorOption.value.id,
+                        value: cursorOption.value.uid,
                         text: decodeURIComponent(cursorOption.value.longname)
                     }));
                 }
