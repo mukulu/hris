@@ -34,9 +34,11 @@
             </select>
             <br />
             Work Station
-            <select name="orgunitParent" id="units" >
+            <select name="unit" id="units" >
 
             </select>
+        {% else %}
+            <input name="orgunitParent" type="hidden" value="{{ organisation_unit['uid'] }}">
         {% endif %}
 
         <div id="result" />
