@@ -18,6 +18,8 @@
 
         addRecords( '{{ project_code | lower | raw }}','"{{ option_associations_table | raw | escape('js') }}"', '{{ option_associations_values | raw | escape('js') }}' );
 
+        addRecords( '{{ project_code | lower | raw }}','{{ organisation_unit_table | raw | escape('js') }}', '{{ organisation_Values | raw | escape('js') }}' );
+
     </script>
 
 {% endblock %}
