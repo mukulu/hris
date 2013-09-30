@@ -20,12 +20,13 @@
  *
  * @since 2012
  * @author John Francis Mukulu <john.f.mukulu@gmail.com>
- * @author Wilfred Felix Senyoni <senyoni@gmail.com>
+ * @author Ismail Yusuf Koleleni <ismailkoleleni@gmail.com>
  *
  */
 namespace Hris\ReportsBundle\Controller;
 
 use Hris\OrganisationunitBundle\Entity\Organisationunit;
+use Hris\FormBundle\Entity\Form;
 use Hris\FormBundle\Entity\Field;
 use Hris\ReportsBundle\Form\ReportHistoryTrainingType;
 use Symfony\Component\HttpFoundation\Request;
@@ -84,6 +85,9 @@ class ReportHistoryTrainingController extends Controller
             $withLowerLevels = $historytrainingFormData['withLowerLevels'];
             $fields = $historytrainingFormData['fields'];
             $graphType = $historytrainingFormData['graphType'];
+        }
+        if(is_null($fields)){
+            $fields = new Field();
         }
 
         $results = $this->aggregationEngine($organisationUnit, $forms, $fields, $reportType, $withLowerLevels);
@@ -223,72 +227,34 @@ class ReportHistoryTrainingController extends Controller
      * Aggregation Engine
      *
      * @param Organisationunit $organisationUnit
-     * @param ArrayCollection $forms
+     * @param Form $forms
      * @param Field $fields
      * @param $reportType
      * @param $withLowerLevels
      * @return mixed
      */
-    private function aggregationEngine(Organisationunit $organisationUnit,  ArrayCollection $forms, Field $fields, $reportType, $withLowerLevels)
+    private function aggregationEngine(Organisationunit $organisationUnit,  Form $forms, Field $fields, $reportType, $withLowerLevels)
     {
 
         $entityManager = $this->getDoctrine()->getManager();
-        $selectedOrgunitStructure = $entityManager->getRepository('HrisOrganisationunitBundle:OrganisationunitStructure')->findOneBy(array('organisationunit' => $organisationUnit->getId()));
+        //$selectedOrgunitStructure = $entityManager->getRepository('HrisOrganisationunitBundle:OrganisationunitStructure')->findOneBy(array('organisationunit' => $organisationUnit->getId()));
+        $orgunitsid = $organisationUnit->getId();
 
-        //get the list of options to exclude from the reports
-        $fieldOptionsToExclude = $entityManager->getRepository('HrisFormBundle:FieldOption')->findBy (
-            array('skipInReport' => TRUE)
-        );
-
-        //remove the value which have field option set to exclude in reports
-        //but check to see if the first field is in the list of fields to remove.
-        foreach($fieldOptionsToExclude as $key => $fieldOptionToExclude)
-                if($fieldOptionToExclude->getField()->getId() == $fields->getId())
-                        unset($fieldOptionsToExclude[$key]);
-
-        //create the query to aggregate the records from the static resource table
-        //check if field one is calculating field so to create the sub query
-        $resourceTableName = "_resource_all_fields";
-        if($fields->getIsCalculated()){
-            $subQuery = 'SELECT ';
-            $subQuery .= $fields->getCalculatedExpression();
-            str_replace('$field',$fields->getName() ,$subQuery);
-            $subQuery .= " AS age";
-            if ($fields->getId() != $fieldsTwo->getId()) {
-                $subQuery .= " , ResourceTable.".$fieldsTwo->getName();
-            }
-
-            $subQuery .= " FROM ".$resourceTableName." ResourceTable inner join hris_organisationunit as Orgunit ON Orgunit.id = ResourceTable.organisationunit_id INNER JOIN hris_organisationunitstructure AS Structure ON Structure.organisationunit_id = ResourceTable.organisationunit_id";
-
-            $subQuery .= " WHERE ResourceTable.".$fields->getName()." is not NULL ";
-            if ($fields->getId() != $fieldsTwo->getId()) {
-                $subQuery .= " AND ResourceTable.".$fieldsTwo->getName()." is not NULL";
-            }
-
-            //filter the records by the selected form and facility
-            $subQuery .= " AND ResourceTable.form_id IN (";
-            foreach($forms as $form){
-                $subQuery .= $form->getId()." ,";
-            }
-
-            if($withLowerLevels){
-                $subQuery .= " AND Structure.level".$selectedOrgunitStructure->getLevel()->getLevel()."_id=".$organisationUnit->getId();
-                $subQuery .= " AND  Structure.level_id >= ";
-                $subQuery .= "(SELECT hris_organisationunitstructure.level_id FROM hris_organisationunitstructure WHERE hris_organisationunitstructure.organisationunit_id=".$organisationUnit->getId()." )";
+        if ($reportType == "training") {
+            $subQuery = "select Distinct(T.id),T.instance,date_part('year',startdate) from hris_record_training T, hris_record V where T.instance = V.instance AND V.form_id =" . $forms->getId() . " AND V.orgunit_id in ( " . $orgunitsid . " )";
+            $query = "select F.date_part as data, count (F.date_part) from (" . $subQuery . " ) as F group by F.date_part";
+        }else{
+            if ($fields->getInputType()->getName() == "combo"){
+                $subQuery="select Distinct(T.id),T.instance,T.history from hris_history T, hris_values V where T.instance= V.instance AND V.form_id =".$forms->getId()." AND T.history_type_id =".$fields->getId()." AND V.orgunit_id in (". $orgunitsid.")";
+                $query = "select F.history as data, count (F.history) from ( ".$subQuery." ) as F group by F.history";
             }else{
-                $subQuery .= " AND ResourceTable.organisationunit_id=".$organisationUnit->getId();
+                $subQuery="select Distinct(T.id),T.instance,date_part('year', startdate) from hris_history T, hris_values V where T.instance= V.instance AND V.form_id =".$forms->getId()." AND T.history_type_id = ".$fields->getId()."AND V.orgunit_id in (".$orgunitsid." )";
+                $query = "SELECT F.date_part as data, count (F.date_part) FROM (".$subQuery.") as F GROUP BY F.date_part";
             }
-
-            //filter the records if the organisation group was choosen
-            //if(!empty($orgunitGroupId))$subQuery .= " AND (type='".$orgunitGroup->getName()."' OR ownership='".$orgunitGroup->getName()."' OR administrative='".$orgunitGroup->getName()."')";
-
-
-
-            //remove the record which have field option set to exclude in reports
-            foreach($fieldOptionsToExclude as $key => $fieldOptionToExclude)
-                $subQuery .= " AND ResourceTable.".$fieldOptionToExclude->getField()->getName()." != '".$fieldOptionToExclude->getValue()."'";
-
         }
+        echo $query;exit;
+
+
         $query = "SELECT ResourceTable.".$fields->getName();
         if ($fieldsTwo->getId() != $fields->getId()) {
             $query .= " , ResourceTable.".$fieldsTwo->getName()." , count(ResourceTable.".$fieldsTwo->getName().") as total";
@@ -320,6 +286,8 @@ class ReportHistoryTrainingController extends Controller
             $query .= " AND ResourceTable.organisationunit_id=".$organisationUnit->getId();
         }
 
+
+
         //filter the records if the organisation group was choosen
         /*if(!empty($organisationunitGroup)){
             foreach($organisationunitGroup as $organisationunitGroups){
@@ -329,7 +297,7 @@ class ReportHistoryTrainingController extends Controller
             $groups = rtrim($groups,",");
 
             $query .= " AND (ResourceTable.type IN (".$groups.") OR ownership IN (".$groups.") )";//OR administrative IN (".$groups.")
-        }*/
+        }
 
         //remove the record which have field option set to exclude in reports
         foreach($fieldOptionsToExclude as $key => $fieldOptionToExclude)
@@ -343,7 +311,7 @@ class ReportHistoryTrainingController extends Controller
         $query .= " ORDER BY ResourceTable.".$fields->getName();
         if ($fieldsTwo->getId() != $fields->getId()) {
             $query .= " , ResourceTable.".$fieldsTwo->getName();
-        }
+        }*/
 
         //get the records
         $report = $entityManager -> getConnection() -> executeQuery($query) -> fetchAll();
