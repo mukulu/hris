@@ -68,14 +68,6 @@ class Training
     private $record;
 
     /**
-     * @var string $instance
-     *
-     * @Gedmo\Versioned
-     * @ORM\Column(name="instance", type="string", length=64)
-     */
-    private $instance;
-
-    /**
      * @var string $coursename
      *
      * @Gedmo\Versioned
@@ -100,18 +92,18 @@ class Training
     private $sponsor;
 
     /**
-     * @var string $startdate
+     * @var \DateTime $startdate
      *
-     * @Gedmo\Versioned
-     * @ORM\Column(name="startdate", type="string", length=255)
+     * @Gedmo\Timestampable(on="update")
+     * @ORM\Column(name="startdate", type="datetime", nullable=false)
      */
     private $startdate;
 
     /**
-     * @var string $enddate
+     * @var \DateTime $enddate
      *
-     * @Gedmo\Versioned
-     * @ORM\Column(name="enddate", type="string", length=255)
+     * @Gedmo\Timestampable(on="update")
+     * @ORM\Column(name="enddate", type="datetime", nullable=false)
      */
     private $enddate;
 
