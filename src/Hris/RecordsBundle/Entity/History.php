@@ -34,7 +34,7 @@ use Symfony\Component\Validator\Constraints as Assert;
  * Hris\RecordsBundle\Entity\History
  *
  * @Gedmo\Loggable
- * @ORM\Table(name="hris_record_history",uniqueConstraints={@ORM\UniqueConstraint(name="unique_recordhistory_idx",columns={"record_id", "history","startdate"}),@ORM\UniqueConstraint(name="unique_recordinstancehistory_idx",columns={"instance", "history","startdate"})})
+ * @ORM\Table(name="hris_record_history",uniqueConstraints={ @ORM\UniqueConstraint(name="unique_recordhistory_idx",columns={"record_id", "history","startdate"}) })
  * @ORM\Entity(repositoryClass="Hris\RecordsBundle\Entity\HistoryRepository")
  */
 class History
@@ -68,14 +68,6 @@ class History
     private $record;
 
     /**
-     * @var string $instance
-     *
-     * @Gedmo\Versioned
-     * @ORM\Column(name="instance", type="string", length=64)
-     */
-    private $instance;
-
-    /**
      * @var string $history
      *
      * @Gedmo\Versioned
@@ -84,20 +76,20 @@ class History
     private $history;
 
     /**
-     * @var \DateTime $startdate
-     *
-     * @Gedmo\Versioned
-     * @ORM\Column(name="startdate", type="datetime")
-     */
-    private $startdate;
-
-    /**
      * @var string $reason
      *
      * @Gedmo\Versioned
      * @ORM\Column(name="reason", type="string", length=255, nullable=true)
      */
     private $reason;
+
+    /**
+     * @var \DateTime $startdate
+     *
+     * @Gedmo\Versioned
+     * @ORM\Column(name="startdate", type="datetime")
+     */
+    private $startdate;
 
     /**
      * @var string $username
@@ -122,13 +114,14 @@ class History
      * @ORM\Column(name="lastupdated", type="datetime", nullable=true)
      */
     private $lastupdated;
-    
+
     /**
      * Constructor
      */
     public function __construct()
     {
-    	$this->uid = uniqid();
+        $this->uid = uniqid();
+        $this->datecreated = new \DateTime('now');
     }
 
 
@@ -140,29 +133,6 @@ class History
     public function getId()
     {
         return $this->id;
-    }
-
-    /**
-     * Set instance
-     *
-     * @param string $instance
-     * @return History
-     */
-    public function setInstance($instance)
-    {
-        $this->instance = $instance;
-    
-        return $this;
-    }
-
-    /**
-     * Get instance
-     *
-     * @return string 
-     */
-    public function getInstance()
-    {
-        return $this->instance;
     }
 
     /**

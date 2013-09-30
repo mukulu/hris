@@ -31,6 +31,7 @@ use Hris\OrganisationunitBundle\Entity\Organisationunit;
 use Hris\OrganisationunitBundle\Entity\OrganisationunitCompleteness;
 use Hris\OrganisationunitBundle\Entity\OrganisationunitLevel;
 use Hris\OrganisationunitBundle\Entity\OrganisationunitStructure;
+use Hris\UserBundle\Entity\User;
 
 class LoadOrganisationunitData extends AbstractFixture implements OrderedFixtureInterface
 {
@@ -7828,6 +7829,19 @@ class LoadOrganisationunitData extends AbstractFixture implements OrderedFixture
                 $manager->persist($organisationunitStructure);
             }
         }
+        // Once organisatinounits are in database, assign admin to ministry
+        // and district user to one of the districts
+        //admin user
+        $adminUserByReference = $manager->merge($this->getReference( 'admin-user' ));
+        $mohswByReference = $manager->merge($this->getReference( 'mohsw-organisationunit' ));
+        $adminUserByReference->setOrganisationunit($mohswByReference);
+        $manager->persist($adminUserByReference);
+        //district user
+        $districtUserByReference = $manager->merge($this->getReference( 'district-user' ));
+        $arushadcByReference = $manager->merge($this->getReference( 'arushadc-organisationunit' ));
+        $districtUserByReference->setOrganisationunit($arushadcByReference);
+        $manager->persist($districtUserByReference);
+
 
 		$manager->flush();
 	}

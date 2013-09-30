@@ -34,7 +34,7 @@ use Symfony\Component\Validator\Constraints as Assert;
  * Hris\RecordsBundle\Entity\Training
  *
  * @Gedmo\Loggable
- * @ORM\Table(name="hris_record_training")
+ * @ORM\Table(name="hris_record_training",uniqueConstraints={ @ORM\UniqueConstraint(name="unique_recordtraining_idx",columns={"record_id", "coursename", "courselocation", "startdate", "enddate"}) })
  * @ORM\Entity(repositoryClass="Hris\RecordsBundle\Entity\TrainingRepository")
  */
 class Training
@@ -68,14 +68,6 @@ class Training
     private $record;
 
     /**
-     * @var string $instance
-     *
-     * @Gedmo\Versioned
-     * @ORM\Column(name="instance", type="string", length=64)
-     */
-    private $instance;
-
-    /**
      * @var string $coursename
      *
      * @Gedmo\Versioned
@@ -100,18 +92,18 @@ class Training
     private $sponsor;
 
     /**
-     * @var string $startdate
+     * @var \DateTime $startdate
      *
      * @Gedmo\Versioned
-     * @ORM\Column(name="startdate", type="string", length=255)
+     * @ORM\Column(name="startdate", type="datetime", length=255)
      */
     private $startdate;
 
     /**
-     * @var string $enddate
+     * @var \DateTime $enddate
      *
      * @Gedmo\Versioned
-     * @ORM\Column(name="enddate", type="string", length=255)
+     * @ORM\Column(name="enddate", type="datetime", length=255)
      */
     private $enddate;
 
@@ -139,6 +131,15 @@ class Training
      */
     private $lastupdated;
 
+
+    /**
+     * Constructor
+     */
+    public function __construct()
+    {
+        $this->uid = uniqid();
+        $this->datecreated = new \DateTime('now');
+    }
 
     /**
      * Get id
@@ -171,29 +172,6 @@ class Training
     public function getUid()
     {
         return $this->uid;
-    }
-
-    /**
-     * Set instance
-     *
-     * @param string $instance
-     * @return Training
-     */
-    public function setInstance($instance)
-    {
-        $this->instance = $instance;
-    
-        return $this;
-    }
-
-    /**
-     * Get instance
-     *
-     * @return string 
-     */
-    public function getInstance()
-    {
-        return $this->instance;
     }
 
     /**
@@ -268,7 +246,7 @@ class Training
     /**
      * Set startdate
      *
-     * @param string $startdate
+     * @param \DateTime $startdate
      * @return Training
      */
     public function setStartdate($startdate)
@@ -281,7 +259,7 @@ class Training
     /**
      * Get startdate
      *
-     * @return string 
+     * @return \DateTime
      */
     public function getStartdate()
     {
@@ -291,7 +269,7 @@ class Training
     /**
      * Set enddate
      *
-     * @param string $enddate
+     * @param \DateTime $enddate
      * @return Training
      */
     public function setEnddate($enddate)
@@ -304,7 +282,7 @@ class Training
     /**
      * Get enddate
      *
-     * @return string 
+     * @return \DateTime
      */
     public function getEnddate()
     {

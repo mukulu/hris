@@ -34,7 +34,6 @@ class HistoryType extends AbstractType
     {
         $builder
             ->add('uid')
-            ->add('instance')
             ->add('history')
             ->add('startdate')
             ->add('reason')

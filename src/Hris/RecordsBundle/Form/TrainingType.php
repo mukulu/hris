@@ -34,7 +34,6 @@ class TrainingType extends AbstractType
     {
         $builder
             ->add('uid')
-            ->add('instance')
             ->add('coursename')
             ->add('courselocation')
             ->add('sponsor')
