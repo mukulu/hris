@@ -111,6 +111,8 @@ function addRecords(databaseName, tableName, dataValues) {
                     results += '"' + val + '" : "' + encodeURIComponent(dataValues[key][val]['date']) + '", ';
                 } else if (val == "field") {
                     results += '"' + val + '" : "' + encodeURIComponent(dataValues[key][val]['uid']) + '", ';
+                } else if (val == "parent") {
+                    results += '"' + val + '" : "' + encodeURIComponent(dataValues[key][val]['uid']) + '", ';
                 } else {
                     results += '"' + val + '" : "' + encodeURIComponent(dataValues[key][val]) + '", ';
                 }
@@ -323,4 +325,104 @@ function changeRelatedFieldOptions(field_uid) {
         }
     }
 
+}
+
+function isUnique(field_uid) {
+
+    var optionUid = $("#" + field_uid).val();
+
+    //getting all the field Combos
+
+    var openRequest = localDatabase.indexedDB.open("hrhis");
+
+    openRequest.onsuccess = function () {
+
+        var db = openRequest.result;
+
+        var fieldOptionTransaction = db.transaction("field_option_association", "readonly");
+        var fieldOptionStore = fieldOptionTransaction.objectStore("field_option_association");
+
+        var index = fieldOptionStore.index("fieldoption");
+
+        var request = index.openCursor(IDBKeyRange.only(optionUid));
+
+        var removeElement = false
+
+        request.onsuccess = function () {
+
+            var cursorOption = request.result;
+
+            if (cursorOption) {
+
+                if ( removeElement == false ){
+                    $("#" + cursorOption.value.fieldref).find('option').remove();
+                    removeElement = true;
+                }
+
+                console.log(decodeURIComponent(cursorOption.value.fieldoptionref) + " uid " + field_uid + " fieldoptionUID " + cursorOption.value.fieldoptionrefuid);
+
+                $("#" + cursorOption.value.fieldref).append($('<option>', {
+                    value: cursorOption.value.fieldoptionrefuid,
+                    text: decodeURIComponent(cursorOption.value.fieldoptionref)
+                }));
+                cursorOption.continue();
+            }
+            else {
+                console.log('No more Matching Fields Options');
+            }
+
+        }
+    }
+
+}
+
+function getunits(parent){
+
+    alert($(parent).val());
+    var parentUid = $(parent).val();
+
+    //getting all the field Combos
+
+    var openRequest = localDatabase.indexedDB.open('hrhis');
+
+    openRequest.onsuccess = function () {
+
+        var db = openRequest.result;
+
+        var orgunitTransaction = db.transaction("hris_organisationunit", "readonly");
+        var orgunitStore = orgunitTransaction.objectStore("hris_organisationunit");
+
+        var orgunitRequest = orgunitStore.openCursor();
+
+        $("#units").find('option').remove();
+
+        $("#units").append($('<option>', {
+            value: '',
+            text: '--'
+        }));
+
+        orgunitRequest.onsuccess = function () {
+
+            var cursorOption = orgunitRequest.result;
+
+
+            if (cursorOption) {
+
+                if (parentUid == cursorOption.value.parent) {
+                    console.log(decodeURIComponent(cursorOption.value.longname));
+
+                    $("#units").append($('<option>', {
+                        value: cursorOption.value.uid,
+                        text: decodeURIComponent(cursorOption.value.longname)
+                    }));
+                }
+
+                cursorOption.continue();
+            }
+            else {
+                console.log('No more Matching Fields Options');
+            }
+
+        }
+    }
 }

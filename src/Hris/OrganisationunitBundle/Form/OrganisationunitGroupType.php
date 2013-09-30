@@ -34,9 +34,9 @@ class OrganisationunitGroupType extends AbstractType
     {
         $builder
             ->add('name')
-            ->add('dhisUid')
             ->add('code')
-            ->add('organisationunit',null,array('expanded'=>true,'multiple'=>true))
+            ->add('description')
+            ->add('dhisUid')
         ;
     }
 

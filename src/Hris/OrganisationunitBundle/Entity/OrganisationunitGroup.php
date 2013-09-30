@@ -267,6 +267,7 @@ class OrganisationunitGroup
     public function addOrganisationunit(Organisationunit $organisationunit)
     {
         $this->organisationunit[$organisationunit->getId()] = $organisationunit;
+        $organisationunit->addOrganisationunitGroup($this);
     
         return $this;
     }
@@ -279,6 +280,7 @@ class OrganisationunitGroup
     public function removeOrganisationunit(Organisationunit $organisationunit)
     {
         $this->organisationunit->removeElement($organisationunit);
+        $organisationunit->removeOrganisationunitGroup($this);
     }
 
     /**

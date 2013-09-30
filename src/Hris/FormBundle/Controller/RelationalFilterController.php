@@ -106,7 +106,7 @@ class RelationalFilterController extends Controller
     /**
      * Finds and displays a RelationalFilter entity.
      *
-     * @Route("/{id}", requirements={"id"="\d+"}, name="relationalfilter_show")
+     * @Route("/{id}", requirements={"id"="\d+"}, requirements={"id"="\d+"}, name="relationalfilter_show")
      * @Method("GET")
      * @Template()
      */
@@ -131,7 +131,7 @@ class RelationalFilterController extends Controller
     /**
      * Displays a form to edit an existing RelationalFilter entity.
      *
-     * @Route("/{id}/edit", name="relationalfilter_edit")
+     * @Route("/{id}/edit", requirements={"id"="\d+"}, name="relationalfilter_edit")
      * @Method("GET")
      * @Template()
      */
@@ -158,7 +158,7 @@ class RelationalFilterController extends Controller
     /**
      * Edits an existing RelationalFilter entity.
      *
-     * @Route("/{id}", name="relationalfilter_update")
+     * @Route("/{id}", requirements={"id"="\d+"}, name="relationalfilter_update")
      * @Method("PUT")
      * @Template("HrisFormBundle:RelationalFilter:edit.html.twig")
      */
@@ -192,7 +192,7 @@ class RelationalFilterController extends Controller
     /**
      * Deletes a RelationalFilter entity.
      *
-     * @Route("/{id}", name="relationalfilter_delete")
+     * @Route("/{id}", requirements={"id"="\d+"}, name="relationalfilter_delete")
      * @Method("DELETE")
      */
     public function deleteAction(Request $request, $id)

@@ -131,7 +131,7 @@ class ArithmeticFilterController extends Controller
     /**
      * Displays a form to edit an existing ArithmeticFilter entity.
      *
-     * @Route("/{id}/edit", name="arithmeticfilter_edit")
+     * @Route("/{id}/edit", requirements={"id"="\d+"}, name="arithmeticfilter_edit")
      * @Method("GET")
      * @Template()
      */
@@ -158,7 +158,7 @@ class ArithmeticFilterController extends Controller
     /**
      * Edits an existing ArithmeticFilter entity.
      *
-     * @Route("/{id}", name="arithmeticfilter_update")
+     * @Route("/{id}", requirements={"id"="\d+"}, name="arithmeticfilter_update")
      * @Method("PUT")
      * @Template("HrisFormBundle:ArithmeticFilter:edit.html.twig")
      */
@@ -192,7 +192,7 @@ class ArithmeticFilterController extends Controller
     /**
      * Deletes a ArithmeticFilter entity.
      *
-     * @Route("/{id}", name="arithmeticfilter_delete")
+     * @Route("/{id}", requirements={"id"="\d+"}, name="arithmeticfilter_delete")
      * @Method("DELETE")
      */
     public function deleteAction(Request $request, $id)

@@ -170,7 +170,7 @@ class ValidationController extends Controller
     /**
      * Displays a form to edit an existing Validation entity.
      *
-     * @Route("/{id}/edit", name="validation_edit")
+     * @Route("/{id}/edit", requirements={"id"="\d+"}, name="validation_edit")
      * @Method("GET")
      * @Template()
      */
@@ -219,7 +219,7 @@ class ValidationController extends Controller
     /**
      * Edits an existing Validation entity.
      *
-     * @Route("/{id}", name="validation_update")
+     * @Route("/{id}", requirements={"id"="\d+"}, name="validation_update")
      * @Method("POST")
      * @Template()
      */
@@ -253,7 +253,7 @@ class ValidationController extends Controller
     /**
      * Deletes a Validation entity.
      *
-     * @Route("/{id}", name="validation_delete")
+     * @Route("/{id}", requirements={"id"="\d+"}, name="validation_delete")
      * @Method("DELETE")
      */
     public function deleteAction(Request $request, $id)

@@ -106,7 +106,7 @@ class HistoryController extends Controller
     /**
      * Finds and displays a History entity.
      *
-     * @Route("/{id}", requirements={"id"="\d+"}, name="history_show")
+     * @Route("/{id}", requirements={"id"="\d+"}, requirements={"id"="\d+"}, name="history_show")
      * @Method("GET")
      * @Template()
      */
@@ -131,7 +131,7 @@ class HistoryController extends Controller
     /**
      * Displays a form to edit an existing History entity.
      *
-     * @Route("/{id}/edit", name="history_edit")
+     * @Route("/{id}/edit", requirements={"id"="\d+"}, name="history_edit")
      * @Method("GET")
      * @Template()
      */
@@ -158,7 +158,7 @@ class HistoryController extends Controller
     /**
      * Edits an existing History entity.
      *
-     * @Route("/{id}", name="history_update")
+     * @Route("/{id}", requirements={"id"="\d+"}, name="history_update")
      * @Method("PUT")
      * @Template("HrisRecordsBundle:History:edit.html.twig")
      */
@@ -192,7 +192,7 @@ class HistoryController extends Controller
     /**
      * Deletes a History entity.
      *
-     * @Route("/{id}", name="history_delete")
+     * @Route("/{id}", requirements={"id"="\d+"}, name="history_delete")
      * @Method("DELETE")
      */
     public function deleteAction(Request $request, $id)

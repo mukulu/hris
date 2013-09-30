@@ -137,7 +137,7 @@ class FieldGroupController extends Controller
     /**
      * Displays a form to edit an existing FieldGroup entity.
      *
-     * @Route("/{id}/edit", name="fieldgroup_edit")
+     * @Route("/{id}/edit", requirements={"id"="\d+"}, name="fieldgroup_edit")
      * @Method("GET")
      * @Template()
      */
@@ -164,7 +164,7 @@ class FieldGroupController extends Controller
     /**
      * Edits an existing FieldGroup entity.
      *
-     * @Route("/{id}", name="fieldgroup_update")
+     * @Route("/{id}", requirements={"id"="\d+"}, name="fieldgroup_update")
      * @Method("PUT")
      * @Template("HrisFormBundle:FieldGroup:edit.html.twig")
      */
@@ -198,7 +198,7 @@ class FieldGroupController extends Controller
     /**
      * Deletes a FieldGroup entity.
      *
-     * @Route("/{id}", name="fieldgroup_delete")
+     * @Route("/{id}", requirements={"id"="\d+"}, name="fieldgroup_delete")
      * @Method("DELETE")
      */
     public function deleteAction(Request $request, $id)

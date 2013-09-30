@@ -189,7 +189,7 @@ class OrganisationunitStructure
     /**
      * Set level
      *
-     * @param integer $level
+     * @param OrganisationunitLevel $level
      * @return OrganisationunitStructure
      */
     public function setLevel($level)
@@ -202,7 +202,7 @@ class OrganisationunitStructure
     /**
      * Get level
      *
-     * @return integer 
+     * @return OrganisationunitLevel
      */
     public function getLevel()
     {

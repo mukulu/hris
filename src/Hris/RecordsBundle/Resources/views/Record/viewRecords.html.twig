@@ -1,0 +1,71 @@
+{% extends '::base.html.twig' %}
+{% block javascripts %}
+    {{ parent() }}
+    <script type="text/javascript" src="{{ asset('commons/js/jquery.dataTables.js') }}"></script>
+    <script type="text/javascript" src="{{ asset('commons/js/dt_settings.js') }}"></script>
+    <script>window["_GOOG_TRANS_EXT_VER"] = "1";</script>
+{% endblock javascripts %}
+
+{% block stylesheets %}
+    {{ parent() }}
+    <link rel="stylesheet" href="{{ asset('commons/css/dt_bootstrap.css') }}" />
+{% endblock stylesheets %}
+
+{% block right_content -%}
+<div class="container">
+    <h1><small>{{ title }}</small></h1>
+
+    <table class="records_list dataTable table table-striped table-bordered table-hover">
+        <thead>
+            <tr>
+                <th>Sn.</th>
+                {% for visibleField in visibleFields %}
+                    <th>{{ visibleField.caption }}</th>
+                {% endfor %}
+                <th>Age</th>
+                <th>Employment Duration</th>
+                <th>Retirement Date</th>
+                <th>Last updated</th>
+                <th>Duty Post</th>
+                <th>Actions</th>
+            </tr>
+        </thead>
+        <tbody>
+        {% set incr=0 %}
+        {% for record in records %}
+            {% set incr = incr+1 %}
+            <tr>
+                <td>{{ incr }}</td>
+                {% for visibleField in visibleFields %}
+                    {% if visibleField.getInputType == 'Select' %}
+                        <td>{{ optionMap[ record.getValue( visibleField.uid ) ] }}</td>
+                    {% elseif visibleField.getInputType == 'Date' %}
+                        <td>{{ record.getValue( visibleField.uid ) | date('d/m/Y') }}</td>
+                    {% else %}
+                        <td>{{ record.getValue( visibleField.uid ) }}</td>
+                    {% endif %}
+                {% endfor %}
+                <td>{{ "now"|date('Y') - record.getValue( fieldMap['Birthdate'] ) |date('Y') }} yrs</td>
+                <td>{{ "now"|date('Y') - record.getValue( fieldMap['DateofFirstAppointment'] ) |date('Y') }} yrs</td>
+                <td> {{ record.getValue( fieldMap['Birthdate'] )|date_modify("+60 year") | date('d/m/Y') }}</td>
+                <td>{{ record.lastupdated| date('d/m/Y') }}</td>
+                <td>{{ record.organisationunit.longname }}</td>
+                <td>
+                    <ul class="inline" style="width:100px;">
+                        <li>
+                            <a href="{{ path('record_show', { 'id': record.id }) }}"><i class="icon-info-sign icon-large" title="Show"></i></a>
+                        </li>
+                        <li>
+                            <a href="{{ path('record_edit', { 'id': record.id }) }}"><i class="icon-edit icon-large" title="Edit"></i></a>
+                        </li>
+                        <li>
+                            <a href="{{ path('record_delete', { 'id': record.id }) }}"><i class="icon-remove-sign icon-large" title="Delete"></i></a>
+                        </li>
+                    </ul>
+                </td>
+            </tr>
+        {% endfor %}
+        </tbody>
+    </table>
+</div>
+    {% endblock %}
