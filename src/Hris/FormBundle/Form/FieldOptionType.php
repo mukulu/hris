@@ -37,9 +37,9 @@ class FieldOptionType extends AbstractType
     public function buildForm(FormBuilderInterface $builder, array $options)
     {
         $builder
+            ->add('field')
             ->add('value')
-            ->add('description')
-            ->add('field');
+            ->add('description');
     }
 
     /**

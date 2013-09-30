@@ -12,8 +12,13 @@
                 <button type="submit" class="btn">Edit</button>
             </li>
             <li>
-                <a href="{{ path('fieldoption') }}" class="btn">
+                <a href="{{ path('fieldoption_list_byfield', { 'fieldid': entity.field.id }) }}" class="btn">
                     Back to the list
+                </a>
+            </li>
+            <li>
+                <a href="{{ path('fieldoption') }}" class="btn">
+                    Back to all Options list
                 </a>
             </li>
         </ul>

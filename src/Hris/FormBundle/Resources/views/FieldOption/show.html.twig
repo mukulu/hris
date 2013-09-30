@@ -34,10 +34,16 @@
 
     <ul class="record_actions inline">
         <li>
-            <a href="{{ path('fieldoption') }}" class="btn">
+            <a href="{{ path('fieldoption_list_byfield', { 'fieldid': entity.field.id }) }}" class="btn">
                 Back to the list
             </a>
         </li>
+        <li>
+            <a href="{{ path('fieldoption') }}" class="btn">
+                Back to all Options list
+            </a>
+        </li>
+
         <li>
             <a href="{{ path('fieldoption_edit', { 'id': entity.id }) }}" class="btn">
                 Edit

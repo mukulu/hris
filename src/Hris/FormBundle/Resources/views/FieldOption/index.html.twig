@@ -16,11 +16,24 @@
         <h1><small>FieldOption list</small></h1>
 
         <ul class="inline">
+            {% if field is empty %}
             <li>
                 <a class="btn" href="{{ path('fieldoption_new') }}">
                     Create a new entry
                 </a>
             </li>
+            {% else %}
+            <li>
+                <a class="btn" href="{{ path('fieldoption_new_byfield', { 'fieldid': field.id }) }}">
+                    Create a new entry
+                </a>
+            </li>
+            <li>
+                <a href="{{ path('fieldoption') }}" class="btn">
+                    Back to all Options list
+                </a>
+            </li>
+            {% endif %}
         </ul>
 
         <table class="records_list dataTable table table-striped table-bordered table-hover">
@@ -65,7 +78,11 @@
                                             {% endif %}
                                         </div>
                                         <div class="modal-footer">
+                                            {% if field is empty %}
                                             <form action="{{ path('fieldoption_delete', { 'id': entity.id }) }}" method="post">
+                                            {% else %}
+                                            <form action="{{ path('fieldoption_delete_byfield', { 'id': entity.id, 'fieldid': field.id }) }}" method="post">
+                                            {% endif %}
                                                 <input type="hidden" name="_method" value="DELETE" />
                                                 {{ form_widget(delete_forms[entity.id] ) }}
                                                 <button type="button" class="btn btn-default" data-dismiss="modal">Close</button>
