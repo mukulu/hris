@@ -68,6 +68,18 @@ class History
     private $record;
 
     /**
+     * @var Field $field
+     *
+     * @Gedmo\Versioned
+     * @ORM\ManyToOne(targetEntity="\Hris\FormBundle\Entity\Field",inversedBy="history")
+     * @ORM\JoinColumns({
+     *   @ORM\JoinColumn(name="field_id", referencedColumnName="id", onDelete="CASCADE")
+     * })
+     *
+     */
+    private $field;
+
+    /**
      * @var string $history
      *
      * @Gedmo\Versioned
@@ -133,6 +145,29 @@ class History
     public function getId()
     {
         return $this->id;
+    }
+
+    /**
+     * Set field
+     *
+     * @param Field $field
+     * @return History
+     */
+    public function setField(Field $field = null)
+    {
+        $this->field = $field;
+
+        return $this;
+    }
+
+    /**
+     * Get field
+     *
+     * @return Field
+     */
+    public function getField()
+    {
+        return $this->field;
     }
 
     /**
