@@ -655,7 +655,7 @@ class ResourceTable
             $schemaGenerationLap = $stopwatch->lap('resourceTableGeneration');
             $schemaGenerationDuration = round(($schemaGenerationLap->getDuration()/1000),2);
 
-            $this->messagelog .='Operation: '. $resourceTableName.' with '. $totalResourceTableFields ." Fields Generated in".$schemaGenerationDuration." seconds.\n";
+            $this->messagelog .='Operation: Table named '. $resourceTableName.' with '. $totalResourceTableFields ." Fields Generated in ".$schemaGenerationDuration." seconds.\n";
 
             // Populating data into created table
             $queryBuilder = $entityManager->createQueryBuilder()->select('record')->from('HrisRecordsBundle:Record', 'record')

@@ -39,7 +39,9 @@ class FieldOptionType extends AbstractType
         $builder
             ->add('field')
             ->add('value')
-            ->add('description');
+            ->add('description')
+            ->add('childFieldOption')
+        ;
     }
 
     /**

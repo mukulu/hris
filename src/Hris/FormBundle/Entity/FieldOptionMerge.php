@@ -58,6 +58,17 @@ class FieldOptionMerge
     private $uid;
 
     /**
+     * @var Field $field
+     *
+     * @Gedmo\Versioned
+     * @ORM\ManyToOne(targetEntity="Hris\FormBundle\Entity\Field", inversedBy="fieldOptionMerge")
+     * @ORM\JoinColumns({
+     *   @ORM\JoinColumn(name="field_id", referencedColumnName="id", onDelete="CASCADE")
+     * })
+     */
+    private $field;
+
+    /**
      * @var FieldOption $mergedFieldOption
      *
      * @Gedmo\Versioned
@@ -69,23 +80,20 @@ class FieldOptionMerge
     private $mergedFieldOption;
 
     /**
-     * @var Field $removedOptionField
+     * @var string $removedFieldOptionValue
      *
      * @Gedmo\Versioned
-     * @ORM\ManyToOne(targetEntity="Hris\FormBundle\Entity\Field", inversedBy="fieldOptionMerge")
-     * @ORM\JoinColumns({
-     *   @ORM\JoinColumn(name="removedoptionfield_id", referencedColumnName="id", onDelete="CASCADE")
-     * })
+     * @ORM\Column(name="removedFieldOptionValue", type="string", length=64)
      */
-    private $removedOptionField;
+    private $removedFieldOptionValue;
 
     /**
-     * @var string $removedoptionvalue
+     * @var string $removedFieldOptionUid
      *
      * @Gedmo\Versioned
-     * @ORM\Column(name="removedoptionvalue", type="string", length=64)
+     * @ORM\Column(name="removedFieldOptionUid", type="string", length=64)
      */
-    private $removedoptionvalue;
+    private $removedFieldOptionUid;
 
     /**
      * @var \DateTime $datecreated
@@ -115,26 +123,49 @@ class FieldOptionMerge
     }
 
     /**
-     * Set removedoptionvalue
+     * Set removedFieldOptionValue
      *
-     * @param string $removedoptionvalue
+     * @param string $removedFieldOptionValue
      * @return FieldOptionMerge
      */
-    public function setRemovedoptionvalue($removedoptionvalue)
+    public function setRemovedFieldOptionValue($removedFieldOptionValue)
     {
-        $this->removedoptionvalue = $removedoptionvalue;
+        $this->removedFieldOptionValue = $removedFieldOptionValue;
     
         return $this;
     }
 
     /**
-     * Get removedoptionvalue
+     * Get removedFieldOptionValue
      *
      * @return string 
      */
-    public function getRemovedoptionvalue()
+    public function getRemovedFieldOptionValue()
     {
-        return $this->removedoptionvalue;
+        return $this->removedFieldOptionValue;
+    }
+
+    /**
+     * Set removedFieldOptionUid
+     *
+     * @param string $removedFieldOptionUid
+     * @return FieldOptionMerge
+     */
+    public function setRemovedFieldOptionUid($removedFieldOptionUid)
+    {
+        $this->removedFieldOptionUid = $removedFieldOptionUid;
+
+        return $this;
+    }
+
+    /**
+     * Get removedFieldOptionUid
+     *
+     * @return string
+     */
+    public function getRemovedFieldOptionUid()
+    {
+        return $this->removedFieldOptionUid;
     }
 
     /**
@@ -184,26 +215,26 @@ class FieldOptionMerge
     }
 
     /**
-     * Set removedOptionField
+     * Set field
      *
-     * @param Field $removedOptionField
+     * @param Field $field
      * @return FieldOptionMerge
      */
-    public function setRemovedOptionField(Field $removedOptionField = null)
+    public function setField(Field $field = null)
     {
-        $this->removedOptionField = $removedOptionField;
+        $this->field = $field;
     
         return $this;
     }
 
     /**
-     * Get removedOptionField
+     * Get field
      *
      * @return Field
      */
-    public function getRemovedOptionField()
+    public function getField()
     {
-        return $this->removedOptionField;
+        return $this->field;
     }
 
     /**
@@ -259,7 +290,7 @@ class FieldOptionMerge
      */
     public function __toString()
     {
-        $fieldOptionMergeName = 'Merged Option:'.$this->getMergedFieldOption()->__toString().' Removed Option:'.$this->getRemovedOptionField()->__toString();
+        $fieldOptionMergeName = 'Merged Option:'.$this->getMergedFieldOption()->__toString().' Removed Option:'.$this->getField()->__toString();
         return $fieldOptionMergeName;
     }
 

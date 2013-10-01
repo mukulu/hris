@@ -81,7 +81,14 @@
                         </li>
                         <li>
                             {% if entity.inputType.name =='Select' %}
-                                <a href="{{ path('fieldoption_list_byfield', { 'fieldid': entity.id }) }}"><i class="icon-circle-arrow-down icon-large" title="Field Options"></i></a>
+                                <a href="{{ path('fieldoption_list_byfield', { 'fieldid': entity.id }) }}"><i class="icon-circle-arrow-down icon-large" title="List Field Options"></i></a>
+                            {% else %}
+                                &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+                            {% endif %}
+                        </li>
+                        <li>
+                            {% if entity.inputType.name =='Select' %}
+                                <a href="{{ path('fieldoption_list_byfield', { 'fieldid': entity.id }) }}"><i class="icon-fire icon-large" title="Merge Field Options"></i></a>
                             {% else %}
                                 &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
                             {% endif %}
