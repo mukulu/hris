@@ -567,15 +567,16 @@ class ResourceTable
             }else {
                 $this->messagelog = '';
             }
-            if( $schemaManager->tablesExist($resourceTableName) ) {
-                $schemaManager->dropTable($resourceTableName);
-                $this->messagelog .="Operation: Dropping existent resource table\n";
-            }
 
             /**
              * @var $resourceTable String
              */
-            $resourceTable = new Table($resourceTableName);//Create database table
+
+            // Cleanup any residue temporary resourcetable left
+            if( $schemaManager->tablesExist($resourceTableName.'_temporary') ) {
+                $schemaManager->dropTable($resourceTableName.'_temporary');
+            }
+            $resourceTable = new Table($resourceTableName.'_temporary');//Create database table
 
             // Create primary key
             $resourceTable->addColumn('id', "integer",array('nullable'=>true,'precision'=>0, 'scale'=>0));
@@ -594,7 +595,7 @@ class ResourceTable
                 }elseif($field->getDataType()->getName() == "Double") {
                     $resourceTable->addColumn($field->getName(), "float",array('notnull'=>false,'precision'=>0, 'scale'=>0));
                 }elseif($field->getDataType()->getName() == "Date") {
-                    $resourceTable->addColumn($field->getName(), "datetime",array('notnull'=>false,'precision'=>0, 'scale'=>0));
+                    $resourceTable->addColumn($field->getName(), "date",array('notnull'=>false,'precision'=>0, 'scale'=>0));
                     // Additional analysis columns
                     //$resourceTable->addColumn($field->getName().'_day', "string",array('length'=>64, 'notnull'=>false));
                     //$resourceTable->addColumn($field->getName().'_month_number', "integer",array('notnull'=>false,'precision'=>0, 'scale'=>0));
@@ -633,7 +634,7 @@ class ResourceTable
             $resourceTable->addColumn("Age", "integer",array('notnull'=>false,'precision'=>0, 'scale'=>0));
             $resourceTable->addColumn("Age_group", "string",array('length'=>64, 'notnull'=>false));
             $resourceTable->addColumn("Employment_duration", "string",array('length'=>64, 'notnull'=>false));
-            $resourceTable->addColumn("Retirement_date", "datetime",array('notnull'=>false,'precision'=>0, 'scale'=>0));
+            $resourceTable->addColumn("Retirement_date", "date",array('notnull'=>false,'precision'=>0, 'scale'=>0));
             //$resourceTable->addColumn('retirement_date_day', "string",array('length'=>64, 'notnull'=>false));
             //$resourceTable->addColumn('retirement_date_month_number', "integer",array('notnull'=>false,'precision'=>0, 'scale'=>0));
             $resourceTable->addColumn('Retirement_date_month_text', "string",array('length'=>64, 'notnull'=>false));
@@ -650,7 +651,11 @@ class ResourceTable
 
             // Creating table
             $schemaManager->createTable($resourceTable);
-            $this->messagelog .='Operation: '. $resourceTableName.' with '. $totalResourceTableFields ." Fields Generated Successfully.\n";
+            unset($resourceTable);
+            $schemaGenerationLap = $stopwatch->lap('resourceTableGeneration');
+            $schemaGenerationDuration = round(($schemaGenerationLap->getDuration()/1000),2);
+
+            $this->messagelog .='Operation: '. $resourceTableName.' with '. $totalResourceTableFields ." Fields Generated in".$schemaGenerationDuration." seconds.\n";
 
             // Populating data into created table
             $queryBuilder = $entityManager->createQueryBuilder()->select('record')->from('HrisRecordsBundle:Record', 'record')
@@ -841,11 +846,57 @@ class ResourceTable
                     $dataArray['Form_id'] = $record->getForm()->getId();
                     $dataArray['Lastupdated'] = trim($record->getLastupdated()->format('Y-m-d H:i:s.u'));
 
-                    $entityManager->getConnection()->insert($resourceTableName, $dataArray);
+                    $entityManager->getConnection()->insert($resourceTableName.'_temporary', $dataArray);
                     $totalInsertedRecords++;
                     unset($dataArray);
                 }
             }
+            $dataInsertionLap = $stopwatch->lap('resourceTableGeneration');
+            $dataInsertionDuration = round(($dataInsertionLap->getDuration()/1000),2) - $schemaGenerationDuration;
+            $singleDataInsertionDuration = round(($dataInsertionDuration/$totalInsertedRecords),2);
+            if( $dataInsertionDuration <60 ) {
+                $dataInsertionDurationMessage = round($dataInsertionDuration,2).' sec.';
+            }elseif( $dataInsertionDuration >= 60 && $dataInsertionDuration < 3600 ) {
+                $dataInsertionDurationMessage = round(($dataInsertionDuration/60),2) .' min.';
+            }elseif( $dataInsertionDuration >=3600 && $dataInsertionDuration < 216000) {
+                $dataInsertionDurationMessage = round(($dataInsertionDuration/3600),2) .' hrs';
+            }else {
+                $dataInsertionDurationMessage = round(($dataInsertionDuration/86400),2) .' days';
+            }
+            if( $singleDataInsertionDuration <60 ) {
+                $singleDataInsertionDurationMessage = "(".round($singleDataInsertionDuration,2).' sec./record)';
+            }elseif( $singleDataInsertionDuration >= 60 && $singleDataInsertionDuration < 3600 ) {
+                $singleDataInsertionDurationMessage = "(".round(($singleDataInsertionDuration/60),2) .' min./record)';
+            }elseif( $singleDataInsertionDuration >=3600 && $singleDataInsertionDuration < 216000) {
+                $singleDataInsertionDurationMessage = "(".round(($singleDataInsertionDuration/3600),2) .' hrs/record)';
+            }else {
+                $singleDataInsertionDurationMessage = "(".round(($singleDataInsertionDuration/86400),2) .' days/record)';
+            }
+            $this->messagelog .= "Operation: ".$totalInsertedRecords ." Records Inserted into ". $resourceTableName." in ". $dataInsertionDurationMessage.$singleDataInsertionDurationMessage .".\n";
+            /*
+             * Replace existing resource table with completely regenerated temporary resource table
+             */
+            // Drop table if it exists
+            if( $schemaManager->tablesExist($resourceTableName) ) {
+                $schemaManager->dropTable($resourceTableName);
+                $this->messagelog .="Operation: Dropping existent resource table\n";
+            }
+            $schemaManager->renameTable($resourceTableName.'_temporary', $resourceTableName);
+            unset($schemaManager);
+            $stopwatch->lap('resourceTableGeneration');
+            $offlineDuration = round(($dataInsertionLap->getDuration()/1000),2) - ($schemaGenerationDuration+$dataInsertionDuration);
+
+            if( $offlineDuration <60 ) {
+                $offlineDurationMessage = round($offlineDuration,2).' sec.';
+            }elseif( $offlineDuration >= 60 && $offlineDuration < 3600 ) {
+                $offlineDurationMessage = round(($offlineDuration/60),2) .' min.';
+            }elseif( $offlineDuration >=3600 && $offlineDuration < 216000) {
+                $offlineDurationMessage = round(($offlineDuration/3600),2) .' hrs';
+            }else {
+                $offlineDurationMessage = round(($offlineDuration/86400),2) .' days';
+            }
+            $this->messagelog .= "Reports Offline Time: Resourcetable was offline for ". $offlineDurationMessage ."\n";
+
             // Update last generated after running the script
             $this->setLastgenerated(new \DateTime('now'));
             $this->setIsgenerating(False);
@@ -859,17 +910,17 @@ class ResourceTable
              * Check Clock for time spent
             */
             $resourceTableGenerationTime = $stopwatch->stop('resourceTableGeneration');
-            $duration = $resourceTableGenerationTime->getDuration()/60;
-            $duration = round($duration, 2);
-
-            if( $duration < 1 ) {
-                $durationMessage = ($duration*60).' seconds';
-            }else if ( $duration >= 60 ) {
-                $durationMessage = ( $duration / 60 ) . " minutes";
+            $duration = $resourceTableGenerationTime->getDuration()/1000;
+            unset($stopwatch);
+            if( $duration <60 ) {
+                $durationMessage = round($duration,2).' seconds';
+            }elseif( $duration >= 60 && $duration < 3600 ) {
+                $durationMessage = round(($duration/60),2) .' minutes';
+            }elseif( $duration >=3600 && $duration < 216000) {
+                $durationMessage = round(($duration/3600),2) .' hours';
             }else {
-                $durationMessage = $duration . " hours";
+                $durationMessage = round(($duration/86400),2) .' hours';
             }
-            $this->messagelog .= "Operation: ".$totalInsertedRecords ." Records Inserted into ". $resourceTableName .".\n";
             $this->messagelog .= "Operation: Resource Table generation completeted in ". $durationMessage .".\n\n";
             return True;
         }else {
