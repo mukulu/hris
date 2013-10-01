@@ -93,11 +93,12 @@ class ReportHistoryTrainingController extends Controller
         $results = $this->aggregationEngine($organisationUnit, $forms, $fields, $reportType, $withLowerLevels);
 
         //print_r($results);exit;
+
         //Get the Id for the form
         $formsId = $forms->getId();
 
         //if only one field selected
-        if($reportType == "training"){
+        if( $reportType == "training" ){
 
             foreach($results as $result){
                 $categories[] = $result['year'];
@@ -114,10 +115,13 @@ class ReportHistoryTrainingController extends Controller
                     'data'  => $data,
                 ),
             );
+            if ($withLowerLevels){
+                $withLower = " with lower levels";
+            }
             $formatterLabel = 'Trainings';
             $subtitle = "Trainings";
 
-        }else if($reportType == "history"){
+        }else if( $reportType == "history" ){
             foreach($results as $result){
                 $keys[$result[strtolower($fieldsTwo->getName())]][] = $result['total'];
                 $categoryKeys[$result[strtolower($fields->getName())]] = $result['total'];
@@ -181,7 +185,7 @@ class ReportHistoryTrainingController extends Controller
         $dashboardchart->chart->renderTo('chart_placeholder_historytraining'); // The #id of the div where to render the chart
         $dashboardchart->chart->type($graph);
         $dashboardchart->title->text($title);
-        $dashboardchart->subtitle->text($organisationUnit->getLongname().' with lower levels');
+        $dashboardchart->subtitle->text($organisationUnit->getLongname().$withLower);
         $dashboardchart->xAxis->categories($categories);
         $dashboardchart->yAxis($yData);
         $dashboardchart->legend->enabled(true);
@@ -228,15 +232,16 @@ class ReportHistoryTrainingController extends Controller
 
         $entityManager = $this->getDoctrine()->getManager();
         //$selectedOrgunitStructure = $entityManager->getRepository('HrisOrganisationunitBundle:OrganisationunitStructure')->findOneBy(array('organisationunit' => $organisationUnit->getId()));
-        $orgunitsid = $organisationUnit->getId();
 
         if ($reportType == "training") {
             if($withLowerLevels){
-                $allChildrenIds = "SELECT hris_organisationunitlevel.id ";
+                $allChildrenIds = "SELECT hris_organisationunitlevel.level ";
                 $allChildrenIds .= "FROM hris_organisationunitlevel , hris_organisationunitstructure ";
                 $allChildrenIds .= "WHERE hris_organisationunitlevel.id = hris_organisationunitstructure.level_id AND hris_organisationunitstructure.organisationunit_id = ". $organisationUnit->getId();
-                $subQuery = "V.organisationunit_id = ". $organisationUnit->getId() . "OR";
-                $subQuery .= " L.id >= ( ". $allChildrenIds .")";
+                $subQuery = "V.organisationunit_id = ". $organisationUnit->getId() . " OR ";
+                $subQuery .= " ( L.level >= ( ". $allChildrenIds .") AND S.level".$organisationUnit->getOrganisationunitStructure()->getLevel()->getLevel()."_id =".$organisationUnit->getId()." )";
+            }else{
+                $subQuery = "V.organisationunit_id = ". $organisationUnit->getId();
             }
             //$subQuery = "select Distinct(T.id),date_part('year',startdate) from hris_record_training T, hris_record V where T.record_id = V.id AND V.form_id =" . $forms->getId() . " AND V.organisationunit_id in ( " . $orgunitsid . " )";
             $query = "SELECT date_part('year',startdate) as year, count(date_part('year',startdate)) as total ";
@@ -259,7 +264,6 @@ class ReportHistoryTrainingController extends Controller
             }
         }
         //echo $query;exit;
-
 
         //get the records
         $report = $entityManager -> getConnection() -> executeQuery($query) -> fetchAll();
