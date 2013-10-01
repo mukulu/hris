@@ -92,41 +92,32 @@ class ReportHistoryTrainingController extends Controller
 
         $results = $this->aggregationEngine($organisationUnit, $forms, $fields, $reportType, $withLowerLevels);
 
-        //Get the Id for the forms
-        $formsId = '';
-        foreach($forms as $form){
-            $formsId .= $form->getId().",";
-        }
-        $formsId = rtrim($formsId,",");
-
-        //Get the Id for the OrgansiationunitGoup
-        $organisationunitGroupId = '';
-        foreach($organisationunitGroup as $organisationunitGroups){
-            $organisationunitGroupId .= $organisationunitGroups->getId().",";
-        }
-        $organisationunitGroupId = rtrim($organisationunitGroupId,",");
+        //print_r($results);exit;
+        //Get the Id for the form
+        $formsId = $forms->getId();
 
         //if only one field selected
-        if($fieldsTwo->getId() == $fields->getId()){
+        if($reportType == "training"){
 
             foreach($results as $result){
-                $categories[] = $result[strtolower($fields->getName())];
+                $categories[] = $result['year'];
                 $data[] =  $result['total'];
 
                 if($graphType == 'pie'){
-                    $piedata[] = array('name' => $result[strtolower($fields->getName())],'y' => $result['total']);
+                    $piedata[] = array('name' => $result['year'],'y' => $result['total']);
                 }
             }
             if($graphType == 'pie') $data = $piedata;
             $series = array(
                 array(
-                    'name'  => $fields->getName(),
+                    'name'  => "Trainings",
                     'data'  => $data,
                 ),
             );
-            $formatterLabel = $fields->getCaption();
+            $formatterLabel = 'Trainings';
+            $subtitle = "Trainings";
 
-        }else{
+        }else if($reportType == "history"){
             foreach($results as $result){
                 $keys[$result[strtolower($fieldsTwo->getName())]][] = $result['total'];
                 $categoryKeys[$result[strtolower($fields->getName())]] = $result['total'];
@@ -139,7 +130,7 @@ class ReportHistoryTrainingController extends Controller
                     'data'  => $values,
                 );
             }
-            $formatterLabel = $fieldsTwo->getCaption();
+            $formatterLabel = $fields->getCaption();
             $categories = array_keys($categoryKeys);
         }
 
@@ -152,8 +143,8 @@ class ReportHistoryTrainingController extends Controller
             $graph = "pie";
         }
         //set the title and sub title
-        $title = $fields->getCaption()." Distribution";
-        if($fieldsTwo->getId() != $fields->getId()) $title .= " with ".$fieldsTwo->getCaption()." cross Tabulation ";
+        $title = $subtitle." Distribution Report";
+
         /*
         return array(
             'organisationunit' => $organisationunit,
@@ -168,7 +159,7 @@ class ReportHistoryTrainingController extends Controller
                     'style'     => array('color' => '#0D0DC1')
                 ),
                 'title' => array(
-                    'text'  => $fields->getCaption(),
+                    'text'  => $subtitle,
                     'style' => array('color' => '#0D0DC1')
                 ),
                 'opposite' => true,
@@ -180,20 +171,20 @@ class ReportHistoryTrainingController extends Controller
             ),
             'gridLineWidth' => 1,
             'title' => array(
-                'text'  => $fields->getCaption(),
+                'text'  => $subtitle,
                 'style' => array('color' => '#AA4643')
             ),
         ),
         );
 
         $dashboardchart = new Highchart();
-        $dashboardchart->chart->renderTo('chart_placeholder'); // The #id of the div where to render the chart
+        $dashboardchart->chart->renderTo('chart_placeholder_historytraining'); // The #id of the div where to render the chart
         $dashboardchart->chart->type($graph);
         $dashboardchart->title->text($title);
         $dashboardchart->subtitle->text($organisationUnit->getLongname().' with lower levels');
         $dashboardchart->xAxis->categories($categories);
         $dashboardchart->yAxis($yData);
-        if($fieldsTwo->getId() == $fields->getId())$dashboardchart->legend->enabled(true); else $dashboardchart->legend->enabled(true);
+        $dashboardchart->legend->enabled(true);
 
         $formatter = new Expr('function () {
                  var unit = {
@@ -208,17 +199,16 @@ class ReportHistoryTrainingController extends Controller
                  }
              }');
         $dashboardchart->tooltip->formatter($formatter);
-        if($graphType == 'pie')$dashboardchart->plotOptions->pie(array('allowPointSelect'=> true,'dataLabels'=> array ('format'=> '<b>{point.name}</b>: {point.percentage:.1f} %')));
+        if($graphType == 'pie') $dashboardchart->plotOptions->pie(array('allowPointSelect'=> true,'dataLabels'=> array ('format'=> '<b>{point.name}</b>: {point.percentage:.1f} %')));
         $dashboardchart->series($series);
 
         return array(
             'chart'=>$dashboardchart,
             'organisationUnit' => $organisationUnit,
             'formsId' => $formsId,
-            'organisationunitGroupId' => $organisationunitGroupId,
+            'reportType' => $reportType,
             'withLowerLevels' => $withLowerLevels,
             'fields' => $fields,
-            'fieldsTwo' => $fieldsTwo,
         );
     }
 
@@ -241,8 +231,24 @@ class ReportHistoryTrainingController extends Controller
         $orgunitsid = $organisationUnit->getId();
 
         if ($reportType == "training") {
-            $subQuery = "select Distinct(T.id),T.instance,date_part('year',startdate) from hris_record_training T, hris_record V where T.instance = V.instance AND V.form_id =" . $forms->getId() . " AND V.orgunit_id in ( " . $orgunitsid . " )";
-            $query = "select F.date_part as data, count (F.date_part) from (" . $subQuery . " ) as F group by F.date_part";
+            if($withLowerLevels){
+                $allChildrenIds = "SELECT hris_organisationunitlevel.id ";
+                $allChildrenIds .= "FROM hris_organisationunitlevel , hris_organisationunitstructure ";
+                $allChildrenIds .= "WHERE hris_organisationunitlevel.id = hris_organisationunitstructure.level_id AND hris_organisationunitstructure.organisationunit_id = ". $organisationUnit->getId();
+                $subQuery = "V.organisationunit_id = ". $organisationUnit->getId() . "OR";
+                $subQuery .= " L.id >= ( ". $allChildrenIds .")";
+            }
+            //$subQuery = "select Distinct(T.id),date_part('year',startdate) from hris_record_training T, hris_record V where T.record_id = V.id AND V.form_id =" . $forms->getId() . " AND V.organisationunit_id in ( " . $orgunitsid . " )";
+            $query = "SELECT date_part('year',startdate) as year, count(date_part('year',startdate)) as total ";
+            $query .= "FROM hris_record_training T ";
+            $query .= "INNER JOIN hris_record as V on V.id = T.record_id ";
+            $query .= "INNER JOIN hris_organisationunitstructure as S on S.organisationunit_id = V.organisationunit_id ";
+            $query .= "INNER JOIN hris_organisationunitlevel as L on L.id = S.level_id ";
+            $query .= "WHERE V.form_id = ". $forms->getId();
+            $query .= " AND (". $subQuery .") ";
+            $query .= " GROUP BY date_part('year',startdate) ";
+            $query .= "ORDER BY year ASC";
+
         }else{
             if ($fields->getInputType()->getName() == "combo"){
                 $subQuery="select Distinct(T.id),T.instance,T.history from hris_history T, hris_values V where T.instance= V.instance AND V.form_id =".$forms->getId()." AND T.history_type_id =".$fields->getId()." AND V.orgunit_id in (". $orgunitsid.")";
@@ -252,111 +258,12 @@ class ReportHistoryTrainingController extends Controller
                 $query = "SELECT F.date_part as data, count (F.date_part) FROM (".$subQuery.") as F GROUP BY F.date_part";
             }
         }
-        echo $query;exit;
+        //echo $query;exit;
 
-
-        $query = "SELECT ResourceTable.".$fields->getName();
-        if ($fieldsTwo->getId() != $fields->getId()) {
-            $query .= " , ResourceTable.".$fieldsTwo->getName()." , count(ResourceTable.".$fieldsTwo->getName().") as total";
-       }else{
-            $query .= " , count(ResourceTable.".$fields->getName().") as total";
-       }
-
-        $query .= " FROM ".$resourceTableName." ResourceTable inner join hris_organisationunit as Orgunit ON Orgunit.id = ResourceTable.organisationunit_id INNER JOIN hris_organisationunitstructure AS Structure ON Structure.organisationunit_id = ResourceTable.organisationunit_id";
-
-        $query .= " WHERE ResourceTable.".$fields->getName()." is not NULL ";
-        if ($fieldsTwo->getId() != $fields->getId()) {
-            $query .= " AND ResourceTable.".$fieldsTwo->getName()." is not NULL";
-        }
-
-        //filter the records by the selected form and facility
-        $query .= " AND ResourceTable.form_id IN (";
-        foreach($forms as $form){
-            $query .= $form->getId()." ,";
-        }
-
-        //remove the last comma in the query
-        $query = rtrim($query,",").")";
-
-        if($withLowerLevels){
-            $query .= " AND Structure.level".$selectedOrgunitStructure->getLevel()->getLevel()."_id=".$organisationUnit->getId();
-            $query .= " AND  Structure.level_id >= ";
-            $query .= "(SELECT hris_organisationunitstructure.level_id FROM hris_organisationunitstructure WHERE hris_organisationunitstructure.organisationunit_id=".$organisationUnit->getId()." )";
-        }else{
-            $query .= " AND ResourceTable.organisationunit_id=".$organisationUnit->getId();
-        }
-
-
-
-        //filter the records if the organisation group was choosen
-        /*if(!empty($organisationunitGroup)){
-            foreach($organisationunitGroup as $organisationunitGroups){
-                $groups .= "'".$organisationunitGroups->getName()."',";
-            }
-            //remove the last comma in the query
-            $groups = rtrim($groups,",");
-
-            $query .= " AND (ResourceTable.type IN (".$groups.") OR ownership IN (".$groups.") )";//OR administrative IN (".$groups.")
-        }
-
-        //remove the record which have field option set to exclude in reports
-        foreach($fieldOptionsToExclude as $key => $fieldOptionToExclude)
-            $query .= " AND ResourceTable.".$fieldOptionToExclude->getField()->getName()." != '".$fieldOptionToExclude->getValue()."'";
-
-        $query .= " GROUP BY ResourceTable.".$fields->getName();
-        if ($fieldsTwo->getId() != $fields->getId()) {
-            $query .= " , ResourceTable.".$fieldsTwo->getName();
-        }
-
-        $query .= " ORDER BY ResourceTable.".$fields->getName();
-        if ($fieldsTwo->getId() != $fields->getId()) {
-            $query .= " , ResourceTable.".$fieldsTwo->getName();
-        }*/
 
         //get the records
         $report = $entityManager -> getConnection() -> executeQuery($query) -> fetchAll();
         return $report;
-        /*
-        $tabulationValues = '';
-        $tempFieldOption = '';
-        if ($fieldsTwo->getId() != $fields->getId()) {//when two fields are  selected
-            foreach ($report as $key => $reportValue) {
-
-                if($tempFieldOption != $reportValue[$fieldOne->getName()]){
-                    if($key != 0){ //first time of the loop or the last time of the loop
-                        foreach ($fieldTwoOption as $keys => $fieldTwoOptions) {
-                            if (!array_key_exists($fieldTwoOptions, $tempArray)) {
-                                $tempArray[$fieldTwoOptions] = 0;
-                            }
-                        }
-                        ksort($tempArray);
-                        $tabulationValues[$tempFieldOption] = $tempArray;
-
-                    }
-                    $tempFieldOption = $reportValue[$fieldOne->getName()];
-                    $tempArray = '';
-                    $tempArray[$reportValue[$fieldTwo->getName()]] = $reportValue['total'];
-
-                }else{
-                    $tempArray[$reportValue[$fieldTwo->getName()]] = $reportValue['total'];
-                }
-
-                if($key == count($report)-1){//deal with the last record
-                    foreach ($fieldTwoOption as $keys => $fieldTwoOptions) {
-                        if (!array_key_exists($fieldTwoOptions, $tempArray)) {
-                            $tempArray[$fieldTwoOptions] = 0;
-                        }
-                    }
-                    ksort($tempArray);
-                    $tabulationValues[$tempFieldOption] = $tempArray;
-                }
-            }
-
-        }else{//when one field is  selected
-            foreach ($report as $key => $reportValue) {
-                $tabulationValues[$reportValue[$fieldOne->getName()]] = $reportValue['total'];
-            }
-        }*/
     }
 
     /**
