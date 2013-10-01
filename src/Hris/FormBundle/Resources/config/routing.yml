@@ -18,6 +18,10 @@ fieldoption:
     resource: "@HrisFormBundle/Controller/FieldOptionController.php"
     type: annotation
 
+fieldoptionmerge:
+    resource: "@HrisFormBundle/Controller/FieldOptionMergeController.php"
+    type: annotation
+
 fieldoptiongroupset:
     resource: "@HrisFormBundle/Controller/FieldOptionGroupsetController.php"
     type: annotation

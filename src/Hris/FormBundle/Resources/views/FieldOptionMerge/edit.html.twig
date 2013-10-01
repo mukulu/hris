@@ -1,32 +1,26 @@
 {% extends '::base.html.twig' %}
 
 {% block right_content -%}
-    <h1><i class="icon-edit icon-largest" title="Edit"></i><small>FieldOption edit</small></h1>
+    <h1><i class="icon-edit icon-largest" title="Edit"></i><small>FieldOptionMerge edit</small></h1>
 
-    <form action="{{ path('fieldoption_update', { 'id': entity.id }) }}" method="post" {{ form_enctype(edit_form) }}>
+    <form action="{{ path('fieldoptionmerge_update', { 'id': entity.id }) }}" method="post" {{ form_enctype(edit_form) }}>
         <input type="hidden" name="_method" value="PUT" />
         {{ form_widget(edit_form) }}
         <br/>
         <ul class="record_actions inline" style="float:left;">
             <li>
-                <button type="submit" class="btn">Edit</button>
+                {{ form_widget(edit_form.submit, {'attr': {'class': 'btn'} }) }}
             </li>
             <li>
-                <a href="{{ path('fieldoption_list_byfield', { 'fieldid': entity.field.id }) }}" class="btn">
-                    Back to {{ entity.field.caption }} option list
-                </a>
-            </li>
-            <li>
-                <a href="{{ path('fieldoption') }}" class="btn">
-                    Back to all Options list
+                <a href="{{ path('fieldoptionmerge') }}" class="btn">
+                    Back to the list
                 </a>
             </li>
         </ul>
     </form>
-
     <ul class="inline" style="float:left;margin-top:-20px;">
         <li>
-            <a data-toggle="modal" href="#deleteModalFor{{ entity.uid }}" class="btn btn-danger">Delete {{ entity.value | capitalize }}</a>
+            <a data-toggle="modal" href="#deleteModalFor{{ entity.uid }}" class="btn btn-danger">Delete {{ entity.field.name | capitalize }}'s {{ entity.mergedFieldOption.value }}</a>
 
             <!-- Modal -->
             <div class="modal fade" id="deleteModalFor{{ entity.uid }}">
@@ -34,10 +28,10 @@
                     <div class="modal-content">
                         <div class="modal-header">
                             <button type="button" class="close" data-dismiss="modal" aria-hidden="true">×</button>
-                            <h4 class="modal-title"><i class="icon-circle-remove icon-largest" title="Delete"></i>Deleting {{ entity.value | capitalize }} of {{ entity.field }}</h4>
+                            <h4 class="modal-title"><i class="icon-circle-remove icon-largest" title="Delete"></i>Deleting {{ entity.field.name | capitalize }}'s {{ entity.mergedFieldOption.value }}</h4>
                         </div>
                         <div class="modal-body">
-                            Are you sure you want to delete <strong>{{ entity.value | capitalize }}</strong> value of <strong>{{ entity.field }}</strong> field that was created on {{ entity.datecreated|date('d/m/Y') }}
+                            Are you sure you want to delete <strong>{{ entity.field.name | capitalize }}'s {{ entity.mergedFieldOption.value }}</strong> that was created on {{ entity.datecreated|date('d/m/Y') }}
                             {% if entity.lastUpdated %}
                                 and last updated on {{ entity.lastUpdated|date('H:i:s d/m/Y') }} ??
                             {% else %}
@@ -45,7 +39,7 @@
                             {% endif %}
                         </div>
                         <div class="modal-footer">
-                            <form action="{{ path('fieldoption_delete', { 'id': entity.id }) }}" method="post">
+                            <form action="{{ path('fieldoptionmerge_delete', { 'id': entity.id }) }}" method="post">
                                 <input type="hidden" name="_method" value="DELETE" />
                                 {{ form_widget(delete_form) }}
                                 <button type="button" class="btn btn-default" data-dismiss="modal">Close</button>
@@ -57,7 +51,5 @@
             </div><!-- /.modal -->
 
         </li>
-
-
     </ul>
 {% endblock %}

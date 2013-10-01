@@ -108,6 +108,7 @@ class FieldOptionController extends Controller
         return array(
             'entity' => $entity,
             'form'   => $form->createView(),
+            'field'  => $field,
         );
     }
 
@@ -137,6 +138,7 @@ class FieldOptionController extends Controller
         return array(
             'entity' => $entity,
             'form'   => $form->createView(),
+            'field' => $field,
         );
     }
 
