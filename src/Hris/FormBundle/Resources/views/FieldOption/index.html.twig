@@ -34,6 +34,11 @@
                 </a>
             </li>
             {% endif %}
+            <li>
+                <a class="btn" href="{{ path('fieldoptionmerge') }}">
+                    Merged Field Options
+                </a>
+            </li>
         </ul>
 
         <table class="records_list dataTable table table-striped table-bordered table-hover">
@@ -60,7 +65,7 @@
                             <a href="{{ path('fieldoption_edit', { 'id': entity.id }) }}"><i class="icon-edit icon-large" title="Edit"></i></a>
                         </li>
                         <li>
-                                <a href="{{ path('fieldoption_list_byfield', { 'fieldid': entity.field.id }) }}"><i class="icon-fire icon-large" title="Merge Field Options"></i></a>
+                                <a href="{{ path('fieldoptionmerge_new_byfield_and_fieldoption', { 'fieldid': entity.field.id,'fieldoptionid': entity.id }) }}"><i class="icon-fire icon-large" title="Merge Field Options"></i></a>
                         </li>
                         <li>
                             <a data-toggle="modal" href="#deleteModalFor{{ entity.uid }}"><i class="icon-remove-sign icon-large" title="Delete"></i></a>

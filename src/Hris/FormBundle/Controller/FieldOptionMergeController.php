@@ -2,6 +2,7 @@
 
 namespace Hris\FormBundle\Controller;
 
+use Hris\FormBundle\Form\FieldOptionMergeVisibleType;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Bundle\FrameworkBundle\Controller\Controller;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Method;
@@ -31,8 +32,14 @@ class FieldOptionMergeController extends Controller
 
         $entities = $em->getRepository('HrisFormBundle:FieldOptionMerge')->findAll();
 
+        foreach($entities as $entity) {
+            $delete_form= $this->createDeleteForm($entity->getId());
+            $delete_forms[$entity->getId()] = $delete_form->createView();
+        }
+
         return array(
             'entities' => $entities,
+            'delete_forms' => $delete_forms,
         );
     }
     /**
@@ -76,8 +83,6 @@ class FieldOptionMergeController extends Controller
             'method' => 'POST',
         ));
 
-        $form->add('submit', 'submit', array('label' => 'Create'));
-
         return $form;
     }
 
@@ -85,17 +90,45 @@ class FieldOptionMergeController extends Controller
      * Displays a form to create a new FieldOptionMerge entity.
      *
      * @Route("/new", name="fieldoptionmerge_new")
+     * @Route("/new/{fieldid}/field", requirements={"fieldid"="\d+"}, name="fieldoptionmerge_new_byfield")
+     * @Route("/new/{fieldid}/field/{fieldoptionid}/fieldoption", requirements={"fieldid"="\d+","fieldoptionid"="\d+"}, name="fieldoptionmerge_new_byfield_and_fieldoption")
      * @Method("GET")
      * @Template()
      */
-    public function newAction()
+    public function newAction($fieldid=NULL,$fieldoptionid=NULL)
     {
         $entity = new FieldOptionMerge();
-        $form   = $this->createCreateForm($entity);
+        if(empty($fieldid) && empty($fieldoptionid)) {
+            $form = $this->createForm(new FieldOptionMergeVisibleType(), $entity, array(
+                'action' => $this->generateUrl('fieldoptionmerge_create'),
+                'method' => 'POST',
+            ));
+        }else {
+            $form   = $this->createCreateForm($entity);
+        }
+
+        // Set default field value
+        if(!empty($fieldid)) {
+            $em = $this->getDoctrine()->getManager();
+            $field = $em->getRepository('HrisFormBundle:Field')->findOneBy(array('id'=>$fieldid));
+            $form->get('field')->setData($field);
+        }else {
+            $field=NULL;
+        }
+        // Set default field value
+        if(!empty($fieldoptionid)) {
+            $em = $this->getDoctrine()->getManager();
+            $fieldoption = $em->getRepository('HrisFormBundle:FieldOption')->findOneBy(array('id'=>$fieldoptionid));
+            $form->get('mergedFieldOption')->setData($fieldoption);
+        }else {
+            $fieldoptionid=NULL;
+        }
 
         return array(
             'entity' => $entity,
             'form'   => $form->createView(),
+            'field'=>$field,
+            'fieldoptionid'=>$fieldoptionid,
         );
     }
 
@@ -164,8 +197,6 @@ class FieldOptionMergeController extends Controller
             'action' => $this->generateUrl('fieldoptionmerge_update', array('id' => $entity->getId())),
             'method' => 'PUT',
         ));
-
-        $form->add('submit', 'submit', array('label' => 'Update'));
 
         return $form;
     }
@@ -240,7 +271,6 @@ class FieldOptionMergeController extends Controller
         return $this->createFormBuilder()
             ->setAction($this->generateUrl('fieldoptionmerge_delete', array('id' => $id)))
             ->setMethod('DELETE')
-            ->add('submit', 'submit', array('label' => 'Delete'))
             ->getForm()
         ;
     }

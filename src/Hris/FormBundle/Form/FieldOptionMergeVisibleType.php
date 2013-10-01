@@ -8,7 +8,7 @@ use Symfony\Component\Form\FormBuilderInterface;
 use Symfony\Component\OptionsResolver\OptionsResolverInterface;
 use Symfony\Component\Validator\Constraints\NotBlank;
 
-class FieldOptionMergeType extends AbstractType
+class FieldOptionMergeVisibleType extends AbstractType
 {
         /**
      * @param FormBuilderInterface $builder
@@ -31,8 +31,8 @@ class FieldOptionMergeType extends AbstractType
                 )
             ))
             ->add('mergedFieldOption')
-            ->add('removedFieldOptionValue','hidden')
-            ->add('removedFieldOptionUid','hidden')
+            ->add('removedFieldOptionValue')
+            ->add('removedFieldOptionUid')
         ;
     }
     

@@ -35,7 +35,7 @@ use Symfony\Component\Validator\Constraints as Assert;
  * Hris\FormBundle\Entity\FieldOptionMerge
  *
  * @Gedmo\Loggable
- * @ORM\Table(name="hris_fieldoptionmerge")
+ * @ORM\Table(name="hris_fieldoptionmerge",uniqueConstraints={ @ORM\UniqueConstraint(name="unique_fieldoptionmerge_idx",columns={"field_id", "mergedfieldoption_id","removedFieldOptionValue"}) })
  * @ORM\Entity(repositoryClass="Hris\FormBundle\Entity\FieldOptionMergeRepository")
  */
 class FieldOptionMerge
@@ -53,7 +53,7 @@ class FieldOptionMerge
      * @var string $uid
      *
      * @Gedmo\Versioned
-     * @ORM\Column(name="uid", type="string", length=13)
+     * @ORM\Column(name="uid", type="string", length=13, unique=true)
      */
     private $uid;
 
@@ -91,7 +91,7 @@ class FieldOptionMerge
      * @var string $removedFieldOptionUid
      *
      * @Gedmo\Versioned
-     * @ORM\Column(name="removedFieldOptionUid", type="string", length=64)
+     * @ORM\Column(name="removedFieldOptionUid", type="string", length=13, unique=true)
      */
     private $removedFieldOptionUid;
 
