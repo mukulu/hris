@@ -473,6 +473,7 @@ class LoadRecordData extends AbstractFixture implements OrderedFixtureInterface
                                     }
                                 }
                                 $reason = $historyField->getCaption() . " changed.";
+                                $history->setField($historyField);
                                 $history->setHistory($historyValue);
                                 $history->setReason($reason);
                                 $manager->persist($history);
