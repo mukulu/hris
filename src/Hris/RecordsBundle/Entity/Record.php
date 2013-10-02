@@ -83,7 +83,7 @@ class Record
      * @Gedmo\Versioned
      * @ORM\ManyToOne(targetEntity="Hris\OrganisationunitBundle\Entity\Organisationunit")
      * @ORM\JoinColumns({
-     *   @ORM\JoinColumn(name="organisationunit_id", referencedColumnName="id", nullable=true, onDelete="CASCADE")
+     *   @ORM\JoinColumn(name="organisationunit_id", referencedColumnName="id", nullable=false, onDelete="CASCADE")
      * })
      */
     private $organisationunit;

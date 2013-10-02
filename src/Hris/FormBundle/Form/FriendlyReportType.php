@@ -27,7 +27,6 @@ namespace Hris\FormBundle\Form;
 use Doctrine\Common\Collections\ArrayCollection;
 use Hris\FieldOptionGroupToIdTransformer;
 use Hris\FormBundle\Entity\FriendlyReportCategory;
-use Hris\FormBundle\Form\EventListener\AddFriendlyReportCategorySubscriber;
 use Symfony\Component\Form\AbstractType;
 use Symfony\Component\Form\FormBuilderInterface;
 use Symfony\Component\Form\FormEvent;

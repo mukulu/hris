@@ -20,6 +20,7 @@
  *
  * @since 2012
  * @author John Francis Mukulu <john.f.mukulu@gmail.com>
+ * @author Ismail Yusuf Koleleni <ismailkoleleni@gmail.com>
  *
  */
 namespace Hris\ReportsBundle\Form;
@@ -50,7 +51,7 @@ class ReportHistoryTrainingType extends AbstractType
             ))
             ->add('reportType','choice',array(
                 'choices'=>array(
-                    ''=>'--SELECT--',
+                    'empty_value' => '--SELECT--',
                     'history'=>'History Report',
                     'training'=>'In Service Training Report'
                 ),
@@ -60,7 +61,6 @@ class ReportHistoryTrainingType extends AbstractType
             ))
             ->add('forms','entity', array(
                 'class'=>'HrisFormBundle:Form',
-                //'multiple'=>true,
                 'constraints'=>array(
                     new NotBlank(),
                 )
@@ -72,10 +72,7 @@ class ReportHistoryTrainingType extends AbstractType
                     return $er->createQueryBuilder('field')
                         ->where('field.hashistory=True')
                         ->orderBy('field.name','ASC');
-                },
-                'constraints'=> array(
-                    new NotBlank(),
-                )
+                }
             ))
             ->add('graphType','choice',array(
                 'choices'=>array(

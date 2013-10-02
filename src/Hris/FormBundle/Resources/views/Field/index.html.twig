@@ -80,6 +80,20 @@
                             <a href="{{ path('field_edit', { 'id': entity.id }) }}"><i class="icon-edit icon-large" title="Edit"></i></a>
                         </li>
                         <li>
+                            {% if entity.inputType.name =='Select' %}
+                                <a href="{{ path('fieldoption_list_byfield', { 'fieldid': entity.id }) }}"><i class="icon-circle-arrow-down icon-large" title="List Field Options"></i></a>
+                            {% else %}
+                                &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+                            {% endif %}
+                        </li>
+                        <li>
+                            {% if entity.inputType.name =='Select' %}
+                                <a href="{{ path('fieldoptionmerge_new_byfield', { 'fieldid': entity.id }) }}"><i class="icon-fire icon-large" title="Merge Field Options"></i></a>
+                            {% else %}
+                                &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+                            {% endif %}
+                        </li>
+                        <li>
                             <a data-toggle="modal" href="#deleteModalFor{{ entity.uid }}"><i class="icon-remove-sign icon-large" title="Delete"></i></a>
                             <!-- Modal -->
                             <div class="modal fade" id="deleteModalFor{{ entity.uid }}">

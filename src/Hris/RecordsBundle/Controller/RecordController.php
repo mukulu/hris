@@ -411,7 +411,7 @@ class RecordController extends Controller
 
         $entity->setValue($recordArray);
         $entity->setForm($form);
-        $entity->setInstance(md5(uniqid()));
+        $entity->setInstance(md5($instance));
         $entity->setOrganisationunit($orgunit);
         $entity->setUsername($user->getUsername());
         $entity->setComplete(True);

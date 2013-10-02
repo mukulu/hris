@@ -1,7 +1,7 @@
 {% extends '::base.html.twig' %}
 
 {% block right_content -%}
-    <h1><i class="icon-circle-info icon-largest" title="Show"></i> <small>{{ entity.value }}'s Details</small></h1>
+    <h1><small>FieldOptionMerge</small></h1>
 
     <table class="record_properties table table-striped table-bordered table-hover">
         <tbody>
@@ -14,12 +14,20 @@
                 <td>{{ entity.uid }}</td>
             </tr>
             <tr>
-                <th>Value</th>
-                <td>{{ entity.value }}</td>
+                <th>Field</th>
+                <td>{{ entity.field }}</td>
             </tr>
             <tr>
-                <th>Description</th>
-                <td>{{ entity.description }}</td>
+                <th>Field Option</th>
+                <td>{{ entity.mergedFieldOption }}</td>
+            </tr>
+            <tr>
+                <th>Removedfieldoptionvalue</th>
+                <td>{{ entity.removedFieldOptionValue }}</td>
+            </tr>
+            <tr>
+                <th>Removedfieldoptionuid</th>
+                <td>{{ entity.removedFieldOptionUid }}</td>
             </tr>
             <tr>
                 <th>Datecreated</th>
@@ -34,24 +42,17 @@
 
     <ul class="record_actions inline">
         <li>
-            <a href="{{ path('fieldoption_list_byfield', { 'fieldid': entity.field.id }) }}" class="btn">
-                Back to {{ entity.field.caption }} option list
+            <a href="{{ path('fieldoptionmerge') }}" class="btn">
+                Back to the list
             </a>
         </li>
         <li>
-            <a href="{{ path('fieldoption') }}" class="btn">
-                Back to all Options list
-            </a>
-        </li>
-
-        <li>
-            <a href="{{ path('fieldoption_edit', { 'id': entity.id }) }}" class="btn">
+            <a href="{{ path('fieldoptionmerge_edit', { 'id': entity.id }) }}" class="btn">
                 Edit
             </a>
         </li>
         <li>
-
-            <a data-toggle="modal" href="#deleteModalFor{{ entity.uid }}" class="btn btn-danger">Delete {{ entity.value | capitalize }}</a>
+            <a data-toggle="modal" href="#deleteModalFor{{ entity.uid }}" class="btn btn-danger">Delete {{ entity.field.name | capitalize }}'s {{ entity.mergedFieldOption.value }}</a>
 
             <!-- Modal -->
             <div class="modal fade" id="deleteModalFor{{ entity.uid }}">
@@ -59,10 +60,10 @@
                     <div class="modal-content">
                         <div class="modal-header">
                             <button type="button" class="close" data-dismiss="modal" aria-hidden="true">×</button>
-                            <h4 class="modal-title"><i class="icon-circle-remove icon-largest" title="Delete"></i>Deleting {{ entity.value | capitalize }}</h4>
+                            <h4 class="modal-title"><i class="icon-circle-remove icon-largest" title="Delete"></i>Deleting {{ entity.field.name | capitalize }}'s {{ entity.mergedFieldOption.value }}</h4>
                         </div>
                         <div class="modal-body">
-                            Are you sure you want to delete <strong>{{ entity.value | capitalize }}</strong> value of <strong>{{ entity.field }}</strong> field that was created on <em>{{ entity.datecreated|date('d/m/Y') }}</em>
+                            Are you sure you want to delete <strong>{{ entity.field.name | capitalize }}'s {{ entity.mergedFieldOption.value }}</strong> that was created on <em>{{ entity.datecreated|date('d/m/Y') }}</em>
                             {% if entity.lastUpdated %}
                                 and last updated on {{ entity.lastUpdated|date('H:i:s d/m/Y') }} ??
                             {% else %}
@@ -70,7 +71,7 @@
                             {% endif %}
                         </div>
                         <div class="modal-footer">
-                            <form action="{{ path('fieldoption_delete', { 'id': entity.id }) }}" method="post">
+                            <form action="{{ path('fieldoptionmerge_delete', { 'id': entity.id }) }}" method="post">
                                 <input type="hidden" class="btn btn-danger" name="_method" value="DELETE" />
                                 {{ form_widget(delete_form) }}
                                 <button type="button" class="btn btn-default" data-dismiss="modal">Close</button>
@@ -83,5 +84,4 @@
             </div><!-- /.modal -->
         </li>
     </ul>
-
 {% endblock %}

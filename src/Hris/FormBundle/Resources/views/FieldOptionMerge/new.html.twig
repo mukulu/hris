@@ -1,0 +1,119 @@
+{% extends '::base.html.twig' %}
+{% block javascripts %}
+    {{ parent() }}
+    <script type="text/javascript">
+        $( document ).ready(function() {
+            // Populate avaiable options for field
+            // and merged field options is already filled
+
+//            var withLowerLevels='#hris_reportsbundle_reportaggregationtype_withLowerLevels';
+//            var organisationunitGroup='#hris_reportsbundle_reportaggregationtype_organisationunitGroup';
+//            var fieldOneId='#hris_reportsbundle_reportaggregationtype_fields';
+//            var fieldTwoId='#hris_reportsbundle_reportaggregationtype_fieldsTwo';
+//            var graphTypeId='#hris_reportsbundle_reportaggregationtype_graphType';
+//
+//            // Disable second field and organisationunitGroup
+//            $(organisationunitGroup).attr('disabled', 'true');
+//            $(fieldTwoId).attr('disabled', 'true');
+//
+//            // On checking the withLowerLevels fields enable organisationunitGroup
+//            $(withLowerLevels).on('change', function() {
+//                // enable organisationunitGroup
+//                if( $(withLowerLevels).is(':checked')) {
+//                    $(organisationunitGroup).removeAttr('disabled');
+//                }else{
+//                    $(organisationunitGroup).attr('disabled', 'true');
+//                }
+//            });
+//            $(fieldOneId).on('change', function() {
+//                $(fieldTwoId).find('option[value=""]').remove();
+//                // enable field two when the field field value  is not empty
+//                if( $(fieldOneId).val() != '' ) {
+//                    $(fieldTwoId).removeAttr('disabled');
+//                    // On change of first field, trim selected option
+//                    // from first field on second.
+//                    $(fieldTwoId+' option').each(function(){
+//                        if( $(fieldOneId).val() == $(this).val() ) {
+//                            //alert($(fieldTwoId).text());
+//                            $(this).text('Use one Field')
+//                            //$(fieldTwoId).append(new Option($(this).text(), $(this).val()));
+//                        }else{
+//                            //alert($(fieldOneId).find('option[value="'+$(this).val()+'"]').text());
+//                            $(this).text($(fieldOneId).find('option[value="'+$(this).val()+'"]').text());
+//                        }
+//                    });
+//                }else{
+//                    $(fieldTwoId).attr('disabled', 'true');
+//                }
+//            });
+//            // On entering value of second field remove pie chart option
+//            $(fieldTwoId).on('change', function() {
+//                if($(this).val() != ''){
+//                    if($(this).val() != $(fieldOneId).val())
+//                    //alert($(fieldTwoId).val());
+//                        $(graphTypeId).find('option[value="pie"]').remove();
+//                    //add the pie chart option in the select if removed
+//                }else if ($(graphTypeId).find( 'option[value="' + "pie" + '"]').length === 0) {
+//                    $(graphTypeId).append(new Option('Pie Chart', 'pie'));
+//                }
+//            });
+        });
+    </script>
+{% endblock javascripts %}
+
+{% block right_content -%}
+    <h1><small>FieldOptionMerge creation</small></h1>
+
+    <form action="{{ path('fieldoptionmerge_create') }}" method="post" {{ form_enctype(form) }}>
+        {{ form_widget(form) }}
+        {% if (field is not empty) or (fieldoptionid is not empty) %}
+        <div>
+            <table cellpadding="5" cellspacing="5">
+                <tr>
+                    <td colspan="3">Available Options</td>
+                </tr>
+                <tr>
+                    <td>
+                        <select name="left_field" size="12" id="left_field" class="left_field" multiple="multiple" style="width:250px;height:170px;" ondblclick="copySelectedLeft()">
+                        {% for fieldOption in field.getFieldOption %}
+                            <option value="{{ fieldOption.id }}">{{ fieldOption.value }}</option>
+                        {% endfor %}
+                        </select>
+                    </td>
+                    <td width="35"><input type="button" value="--&gt;" class="btn">
+                        <input type="button" value="&lt;--" class="btn">
+                        <input type="button" value="&gt;&gt;" class="btn">
+                        <input type="button" value="&lt;&lt;" class="btn">
+                    </td>
+                    <td>
+                        <select name="left_field" size="12" id="left_field" class="left_field" multiple="multiple" style="width:250px;height:170px;" ondblclick="copySelectedLeft()">
+
+                        </select>
+                    </td>
+                </tr>
+            </table>
+        </div>
+        {% endif %}
+        <br/>
+        <ul class="record_actions inline" style="float:left;">
+            <li>
+                <button type="submit" class="btn">Create</button>
+            </li>
+            <li>
+            {% if (field is empty) and (fieldoptionid is empty) %}
+                <a href="{{ path('fieldoptionmerge') }}" class="btn">
+                    Back to the list
+                </a>
+            {% elseif fieldoptionid is empty %}
+                <a href="{{ path('field_list') }}" class="btn">
+                    Back to the list
+                </a>
+            {% else %}
+                <a href="{{ path('fieldoption_byfield', { 'fieldid': field.id }) }}" class="btn">
+                    Back to the list
+                </a>
+            {% endif %}
+            </li>
+        </ul>
+    </form>
+{% endblock %}
