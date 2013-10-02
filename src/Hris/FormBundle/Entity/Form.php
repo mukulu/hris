@@ -33,6 +33,7 @@ use Hris\FormBundle\Entity\FormFieldMember;
 use Hris\FormBundle\Entity\FormVisibleFields;
 use Hris\FormBundle\Entity\Field;
 use Hris\RecordsBundle\Entity\Record;
+use Hris\UserBundle\Entity\User;
 use Symfony\Component\Validator\Constraints as Assert;
 
 /**
@@ -133,6 +134,14 @@ class Form
      * @ORM\OrderBy({"name" = "ASC"})
      */
     private $dashboardChart;
+
+    /**
+     * @var User $user
+     *
+     * @ORM\ManyToMany(targetEntity="Hris\UserBundle\Entity\User", mappedBy="form")
+     * @ORM\OrderBy({"username" = "ASC"})
+     */
+    private $user;
 
     /**
      * @var \DateTime $datecreated
@@ -454,6 +463,39 @@ class Form
     public function getDashboardChart()
     {
         return $this->dashboardChart;
+    }
+
+    /**
+     * Add user
+     *
+     * @param User $user
+     * @return Form
+     */
+    public function addUser(User $user)
+    {
+        $this->user[$user->getId()] = $user;
+
+        return $this;
+    }
+
+    /**
+     * Remove user
+     *
+     * @param User $user
+     */
+    public function removeUser(User $user)
+    {
+        $this->user->removeElement($user);
+    }
+
+    /**
+     * Get user
+     *
+     * @return \Doctrine\Common\Collections\Collection
+     */
+    public function getUser()
+    {
+        return $this->user;
     }
     
 

@@ -7841,6 +7841,11 @@ class LoadOrganisationunitData extends AbstractFixture implements OrderedFixture
         $arushadcByReference = $manager->merge($this->getReference( 'arushadc-organisationunit' ));
         $districtUserByReference->setOrganisationunit($arushadcByReference);
         $manager->persist($districtUserByReference);
+        //hospital user
+        $hospitalUserByReference = $manager->merge($this->getReference( 'hospital-user' ));
+        $bugandorefhspByReference = $manager->merge($this->getReference( 'bugandorefhsp-organisationunit' ));
+        $hospitalUserByReference->setOrganisationunit($bugandorefhspByReference);
+        $manager->persist($hospitalUserByReference);
 
 
 		$manager->flush();

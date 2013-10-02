@@ -88,6 +88,7 @@ class UserController extends Controller
 
             return $this->redirect($this->generateUrl('user_list', array('id' => $entity->getId())));
         }else {
+            print_r($form->getErrors());
             return $this->redirect($this->generateUrl('user_new'));
         }
 

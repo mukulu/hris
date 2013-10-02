@@ -24,9 +24,11 @@
  */
 namespace Hris\UserBundle\Entity;
 
+use Doctrine\Common\Collections\ArrayCollection;
 use Gedmo\Mapping\Annotation as Gedmo;
 use FOS\UserBundle\Entity\User as BaseUser;
 use Doctrine\ORM\Mapping as ORM;
+use Hris\FormBundle\Entity\Form;
 use Symfony\Component\Validator\Constraints as Assert;
 
 use Hris\OrganisationunitBundle\Entity\Organisationunit;
@@ -159,6 +161,22 @@ class User extends BaseUser
     private $organisationunit;
 
     /**
+     * @var Form $form
+     *
+     * @ORM\ManyToMany(targetEntity="Hris\FormBundle\Entity\Form", inversedBy="user")
+     * @ORM\JoinTable(name="hris_user_forms",
+     *   joinColumns={
+     *     @ORM\JoinColumn(name="user_id", referencedColumnName="id", onDelete="CASCADE")
+     *   },
+     *   inverseJoinColumns={
+     *     @ORM\JoinColumn(name="form_id", referencedColumnName="id", onDelete="CASCADE")
+     *   }
+     * )
+     * @ORM\OrderBy({"name" = "ASC"})
+     */
+    private $form;
+
+    /**
      * @var \DateTime $datecreated
      * @Gedmo\Timestampable(on="create")
      * @ORM\Column(name="datecreated", type="datetime")
@@ -184,6 +202,7 @@ class User extends BaseUser
     {
         parent::__construct();
         $this->uid = uniqid();
+        $this->form = new ArrayCollection();
         if(empty($this->datecreated))
         {
             $this->datecreated = new \DateTime('now');
@@ -342,6 +361,41 @@ class User extends BaseUser
     public function getOrganisationunit()
     {
         return $this->organisationunit;
+    }
+
+    /**
+     * Add form
+     *
+     * @param Form $form
+     * @return User
+     */
+    public function addForm(Form $form)
+    {
+        $this->form[$form->getId()] = $form;
+        $form->addUser($this);
+
+        return $this;
+    }
+
+    /**
+     * Remove form
+     *
+     * @param Form $form
+     */
+    public function removeForm(Form $form)
+    {
+        $this->form->removeElement($form);
+        $form->removeFormGroup($this);
+    }
+
+    /**
+     * Get form
+     *
+     * @return \Doctrine\Common\Collections\Collection
+     */
+    public function getForm()
+    {
+        return $this->form;
     }
 
     /**

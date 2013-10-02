@@ -74,6 +74,18 @@ class LoadUserData extends AbstractFixture implements OrderedFixtureInterface
                 'firstname'=>'Hris',
                 'middlename'=>'Data',
                 'surname'=>'Manager',
+            ),
+            2=> Array(
+                'username'=>'hospital',
+                'password'=>'district',
+                'email'=>'hospital@localhost.local',
+                'role'=>'ROLE_USER',
+                'enabled'=>True,
+                'phonenumber'=>'+255715000000',
+                'jobtitle'=>'Data Manager',
+                'firstname'=>'Hris',
+                'middlename'=>'Hospital',
+                'surname'=>'Manager',
             )
         );
         return $this->users;

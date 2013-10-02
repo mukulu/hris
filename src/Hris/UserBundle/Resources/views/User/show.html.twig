@@ -23,7 +23,13 @@
             </tr>
             <tr>
                 <th>Enabled</th>
-                <td>{{ entity.enabled }}</td>
+                <td>
+                    {% if entity.enabled %}
+                        True
+                    {% else %}
+                        False
+                    {% endif %}
+                </td>
             </tr>
             <tr>
                 <th>Salt</th>
@@ -39,11 +45,23 @@
             </tr>
             <tr>
                 <th>Locked</th>
-                <td>{{ entity.locked }}</td>
+                <td>
+                    {% if entity.locked %}
+                        True
+                    {% else %}
+                        False
+                    {% endif %}
+                </td>
             </tr>
             <tr>
                 <th>Expired</th>
-                <td>{{ entity.expired }}</td>
+                <td>
+                    {% if entity.expired %}
+                        True
+                    {% else %}
+                        False
+                    {% endif %}
+                </td>
             </tr>
             <tr>
                 <th>Expiresat</th>
@@ -59,11 +77,21 @@
             </tr>
             <tr>
                 <th>Roles</th>
-                <td>{{ entity.roles }}</td>
+                <td>{{ entity.roles | join(', ') }}</td>
+            </tr>
+            <tr>
+                <th>Forms</th>
+                <td>{{ entity.form | join(', ') }}</td>
             </tr>
             <tr>
                 <th>Credentialsexpired</th>
-                <td>{{ entity.credentialsExpired }}</td>
+                <td>
+                    {% if entity.credentialsExpired %}
+                        True
+                    {% else %}
+                        False
+                    {% endif %}
+                </td>
             </tr>
             <tr>
                 <th>Credentialsexpireat</th>
@@ -74,16 +102,16 @@
                 <td>{{ entity.id }}</td>
             </tr>
             <tr>
+                <th>Uid</th>
+                <td>{{ entity.uid }}</td>
+            </tr>
+            <tr>
                 <th>Datecreated</th>
                 <td>{{ entity.datecreated|date('Y-m-d H:i:s') }}</td>
             </tr>
             <tr>
                 <th>Lastupdated</th>
                 <td>{{ entity.lastupdated|date('Y-m-d H:i:s') }}</td>
-            </tr>
-            <tr>
-                <th>Deletedat</th>
-                <td>{{ entity.deletedAt|date('Y-m-d H:i:s') }}</td>
             </tr>
         </tbody>
     </table>

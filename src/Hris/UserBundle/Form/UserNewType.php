@@ -59,6 +59,7 @@ class UserNewType extends AbstractType
             ->add('firstName')
             ->add('middleName')
             ->add('surname')
+            ->add('form')
             ->add('enabled',null,array(
                 'required'=>false,
             ))
