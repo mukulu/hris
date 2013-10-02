@@ -1,0 +1,3 @@
+hris_message_homepage:
+    resource: "@HrisMessageBundle/Controller/DefaultController.php"
+    type: annotation
