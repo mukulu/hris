@@ -418,12 +418,13 @@ class LoadRecordData extends AbstractFixture implements OrderedFixtureInterface
                                 $startDate = new \DateTime($this->getRandDate(array($beginDateStart,$beginDateStop),array($endDateStart,$endDateStop)));
                                 $history->setStartdate($startDate);
                                 $historyField = $historyFields[array_rand($historyFields,1)];
+                                //echo get_class($historyField);exit;
                                 // If history field is Combo assign combo if text assign text
                                 if($historyField->getInputType()=="Select") {
                                     $historyFieldOptions = $historyField->getFieldOption();
                                     $historyFieldOptions = $historyFieldOptions->getValues();
                                     $selectedHistoryOption = $historyFieldOptions[array_rand($historyFieldOptions,1)];
-                                    $historyValue = $selectedHistoryOption->getUid();
+                                    $historyValue = $selectedHistoryOption->getValue();
                                 }elseif($historyField->getInputType()=="Date") {
                                     //Calculate start date ranging starting form 1-3yrs back and and stopping between 5-8 years back
                                     $beginDateStart=5;$beginDateStop=8;
