@@ -28,9 +28,9 @@ use Doctrine\Common\Collections\ArrayCollection;
 use Gedmo\Mapping\Annotation as Gedmo;
 use FOS\UserBundle\Entity\User as BaseUser;
 use Doctrine\ORM\Mapping as ORM;
-use Hris\FormBundle\Entity\Form;
 use Symfony\Component\Validator\Constraints as Assert;
-
+use FOS\MessageBundle\Model\ParticipantInterface;
+use Hris\FormBundle\Entity\Form;
 use Hris\OrganisationunitBundle\Entity\Organisationunit;
 
 /**
@@ -41,7 +41,7 @@ use Hris\OrganisationunitBundle\Entity\Organisationunit;
  * @Gedmo\Loggable
  * @Gedmo\SoftDeleteable(fieldName="deletedAt")
  */
-class User extends BaseUser
+class User extends BaseUser implements ParticipantInterface
 {
     /**
      * @var integer $id

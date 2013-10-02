@@ -75,8 +75,6 @@ class MessageMetadata extends BaseMessageMetadata
      */
     public function __construct()
     {
-        parent::__construct();
-
         $this->uid = uniqid();
         $this->datecreated = new \DateTime('now');
     }
