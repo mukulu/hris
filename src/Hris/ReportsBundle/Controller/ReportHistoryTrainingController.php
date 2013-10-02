@@ -97,7 +97,7 @@ class ReportHistoryTrainingController extends Controller
         //Get the Id for the form
         $formsId = $forms->getId();
 
-        //if only one field selected
+        //If training report generation
         if( $reportType == "training" ){
 
             foreach($results as $result){
@@ -122,20 +122,27 @@ class ReportHistoryTrainingController extends Controller
             $subtitle = "Trainings";
 
         }else if( $reportType == "history" ){
+
             foreach($results as $result){
-                $keys[$result[strtolower($fieldsTwo->getName())]][] = $result['total'];
-                $categoryKeys[$result[strtolower($fields->getName())]] = $result['total'];
+                $categories[] = $result['data'];
+                $data[] =  $result['total'];
+
+                if($graphType == 'pie'){
+                    $piedata[] = array('name' => $result['data'],'y' => $result['total']);
+                }
             }
-            $series = array();
-            foreach($keys as $key => $values){
-                $series[] = array(
-                    'name'  => $key,
-                    'yAxis' => 1,
-                    'data'  => $values,
-                );
+            if($graphType == 'pie') $data = $piedata;
+            $series = array(
+                array(
+                    'name'  => $fields->getCaption(),
+                    'data'  => $data,
+                ),
+            );
+            if ($withLowerLevels){
+                $withLower = " with lower levels";
             }
             $formatterLabel = $fields->getCaption();
-            $categories = array_keys($categoryKeys);
+            $subtitle = $fields->getCaption()." History";
         }
 
         //check which type of chart to display
@@ -234,6 +241,7 @@ class ReportHistoryTrainingController extends Controller
         //$selectedOrgunitStructure = $entityManager->getRepository('HrisOrganisationunitBundle:OrganisationunitStructure')->findOneBy(array('organisationunit' => $organisationUnit->getId()));
 
         if ($reportType == "training") {
+            //Query all lower levels units from the passed orgunit
             if($withLowerLevels){
                 $allChildrenIds = "SELECT hris_organisationunitlevel.level ";
                 $allChildrenIds .= "FROM hris_organisationunitlevel , hris_organisationunitstructure ";
@@ -243,7 +251,8 @@ class ReportHistoryTrainingController extends Controller
             }else{
                 $subQuery = "V.organisationunit_id = ". $organisationUnit->getId();
             }
-            //$subQuery = "select Distinct(T.id),date_part('year',startdate) from hris_record_training T, hris_record V where T.record_id = V.id AND V.form_id =" . $forms->getId() . " AND V.organisationunit_id in ( " . $orgunitsid . " )";
+
+            //Query all training data and count by start date year
             $query = "SELECT date_part('year',startdate) as year, count(date_part('year',startdate)) as total ";
             $query .= "FROM hris_record_training T ";
             $query .= "INNER JOIN hris_record as V on V.id = T.record_id ";
@@ -255,12 +264,56 @@ class ReportHistoryTrainingController extends Controller
             $query .= "ORDER BY year ASC";
 
         }else{
-            if ($fields->getInputType()->getName() == "combo"){
-                $subQuery="select Distinct(T.id),T.instance,T.history from hris_history T, hris_values V where T.instance= V.instance AND V.form_id =".$forms->getId()." AND T.history_type_id =".$fields->getId()." AND V.orgunit_id in (". $orgunitsid.")";
-                $query = "select F.history as data, count (F.history) from ( ".$subQuery." ) as F group by F.history";
-            }else{
-                $subQuery="select Distinct(T.id),T.instance,date_part('year', startdate) from hris_history T, hris_values V where T.instance= V.instance AND V.form_id =".$forms->getId()." AND T.history_type_id = ".$fields->getId()."AND V.orgunit_id in (".$orgunitsid." )";
-                $query = "SELECT F.date_part as data, count (F.date_part) FROM (".$subQuery.") as F GROUP BY F.date_part";
+            if ($fields->getInputType()->getName() == "Select"){
+
+                //Query all lower levels units from the passed orgunit
+                if($withLowerLevels){
+                    $allChildrenIds = "SELECT hris_organisationunitlevel.level ";
+                    $allChildrenIds .= "FROM hris_organisationunitlevel , hris_organisationunitstructure ";
+                    $allChildrenIds .= "WHERE hris_organisationunitlevel.id = hris_organisationunitstructure.level_id AND hris_organisationunitstructure.organisationunit_id = ". $organisationUnit->getId();
+                    $subQuery = "V.organisationunit_id = ". $organisationUnit->getId() . " OR ";
+                    $subQuery .= " ( L.level >= ( ". $allChildrenIds .") AND S.level".$organisationUnit->getOrganisationunitStructure()->getLevel()->getLevel()."_id =".$organisationUnit->getId()." )";
+                }else{
+                    $subQuery = "V.organisationunit_id = ". $organisationUnit->getId();
+                }
+
+                //Query all history data and count by field option
+                $query = "SELECT H.history as data, count (H.history) as total ";
+                $query .= "FROM hris_record_history H ";
+                $query .= "INNER JOIN hris_record as V on V.id = H.record_id ";
+                $query .= "INNER JOIN hris_organisationunitstructure as S on S.organisationunit_id = V.organisationunit_id ";
+                $query .= "INNER JOIN hris_organisationunitlevel as L on L.id = S.level_id ";
+                $query .= "WHERE V.form_id = ". $forms->getId()." AND H.field_id = ". $fields->getId();
+                $query .= " AND (". $subQuery .") ";
+                $query .= " GROUP BY H.history";
+
+
+            }else{  //For other fields which are not combo box, report is based on history dates
+
+                //$subQuery="select Distinct(T.id),T.instance,date_part('year', startdate) from hris_history T, hris_values V where T.instance= V.instance AND V.form_id =".$forms->getId()." AND T.history_type_id = ".$fields->getId()."AND V.orgunit_id in (".$orgunitsid." )";
+                //$query = "SELECT F.date_part as data, count (F.date_part) FROM (".$subQuery.") as F GROUP BY F.date_part";
+
+                //Query all lower levels units from the passed orgunit
+                if($withLowerLevels){
+                    $allChildrenIds = "SELECT hris_organisationunitlevel.level ";
+                    $allChildrenIds .= "FROM hris_organisationunitlevel , hris_organisationunitstructure ";
+                    $allChildrenIds .= "WHERE hris_organisationunitlevel.id = hris_organisationunitstructure.level_id AND hris_organisationunitstructure.organisationunit_id = ". $organisationUnit->getId();
+                    $subQuery = "V.organisationunit_id = ". $organisationUnit->getId() . " OR ";
+                    $subQuery .= " ( L.level >= ( ". $allChildrenIds .") AND S.level".$organisationUnit->getOrganisationunitStructure()->getLevel()->getLevel()."_id =".$organisationUnit->getId()." )";
+                }else{
+                    $subQuery = "V.organisationunit_id = ". $organisationUnit->getId();
+                }
+
+                //Query all history data and history year
+                $query = "SELECT date_part('year',startdate) as data, count(date_part('year',startdate)) as total ";
+                $query .= "FROM hris_record_history H ";
+                $query .= "INNER JOIN hris_record as V on V.id = H.record_id ";
+                $query .= "INNER JOIN hris_organisationunitstructure as S on S.organisationunit_id = V.organisationunit_id ";
+                $query .= "INNER JOIN hris_organisationunitlevel as L on L.id = S.level_id ";
+                $query .= "WHERE V.form_id = ". $forms->getId()." AND H.field_id = ". $fields->getId();
+                $query .= " AND (". $subQuery .") ";
+                $query .= " GROUP BY date_part('year',startdate)";
+                $query .= "ORDER BY data ASC";
             }
         }
         //echo $query;exit;
@@ -271,7 +324,7 @@ class ReportHistoryTrainingController extends Controller
     }
 
     /**
-     * Download aggregated reports
+     * Download History reports
      *
      * @Route("/download", name="report_historytraining_download")
      * @Method("GET")
@@ -487,7 +540,7 @@ class ReportHistoryTrainingController extends Controller
     }
 
     /**
-     * Download aggregated reports by Cadre
+     * Download history reports by Cadre
      *
      * @Route("/records", name="report_historytraining_download_records")
      * @Method("GET")

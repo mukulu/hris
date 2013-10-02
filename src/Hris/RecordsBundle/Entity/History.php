@@ -28,6 +28,7 @@ use Doctrine\ORM\Mapping as ORM;
 use Gedmo\Mapping\Annotation as Gedmo;
 
 use Hris\RecordsBundle\Entity\Record;
+use Hris\FormBundle\Entity\Field;
 use Symfony\Component\Validator\Constraints as Assert;
 
 /**
@@ -71,7 +72,7 @@ class History
      * @var Field $field
      *
      * @Gedmo\Versioned
-     * @ORM\ManyToOne(targetEntity="\Hris\FormBundle\Entity\Field",inversedBy="history")
+     * @ORM\ManyToOne(targetEntity="Hris\FormBundle\Entity\Field",inversedBy="history")
      * @ORM\JoinColumns({
      *   @ORM\JoinColumn(name="field_id", referencedColumnName="id", nullable=true, onDelete="CASCADE")
      * })
