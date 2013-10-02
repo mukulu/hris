@@ -983,7 +983,6 @@ class LoadFormData extends AbstractFixture implements OrderedFixtureInterface
                     $humanResourceForm['hypertext'] = str_replace("loadFieldOptions('".$dummyField."')","loadFieldOptions('".$fieldByReference->getUid()."')",$humanResourceForm['hypertext']);
                 }
             }
-            echo $humanResourceForm['hypertext']."\n";
             $sort=1;
             foreach($humanResourceForm['visibleFields'] as $key => $dummyField)
             {
@@ -1002,7 +1001,6 @@ class LoadFormData extends AbstractFixture implements OrderedFixtureInterface
             }
             $form->setHypertext($humanResourceForm['hypertext']);
         }
-        die();
 
 		$manager->flush();
 	}
