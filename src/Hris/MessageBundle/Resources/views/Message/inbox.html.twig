@@ -12,12 +12,14 @@
     <link rel="stylesheet" href="{{ asset('commons/css/dt_bootstrap.css') }}" />
 {% endblock stylesheets %}
 
+{% block fos_message_header %}
+    {% trans from 'FOSMessageBundle' %}Inbox{% endtrans %}
+{% endblock fos_message_header %}
+
+{% block fos_message_links %}
+    <a href="{{ url('message_thread_new' )}}" class="btn">{% trans from 'FOSMessageBundle' %}Send a new message{% endtrans %}</a>
+{% endblock fos_message_links %}
+
 {% block fos_message_content %}
-
-<h2><small>{% trans from 'FOSMessageBundle' %}Inbox{% endtrans %}</small></h2>
-
-<a href="{{ url('message_thread_new' )}}">{% trans from 'FOSMessageBundle' %}send_new{% endtrans %}</a>
-
-{% include 'HrisMessageBundle:Message:threads_list.html.twig' with {'threads': threads} %}
-
+    {% include 'HrisMessageBundle:Message:threads_list.html.twig' with {'threads': threads} %}
 {% endblock %}

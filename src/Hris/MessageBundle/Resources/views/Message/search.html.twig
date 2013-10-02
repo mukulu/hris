@@ -1,12 +1,18 @@
 {% extends 'HrisMessageBundle::layout.html.twig' %}
 
+{% block fos_message_header %}
+    {% trans from 'FOSMessageBundle' %}Search{% endtrans %}
+{% endblock fos_message_header %}
+
+{% block fos_message_links %}
+    <p>
+        {% transchoice threads|length with {'%num%': threads|length } from 'FOSMessageBundle' %}
+        threads_found
+        {% endtranschoice %}
+    </p>
+{% endblock fos_message_links %}
+
 {% block fos_message_content %}
-
-<h2>{% trans from 'FOSMessageBundle' %}search{% endtrans %}</h2>
-
-<p>{% transchoice threads|length with {'%num%': threads|length } from 'FOSMessageBundle' %}
-    threads_found
-{% endtranschoice %}</p>
 
 {% include 'HrisMessageBundle:Message:threads_list.html.twig' with {'threads': threads} %}
 

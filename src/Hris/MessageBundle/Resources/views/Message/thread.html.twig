@@ -1,13 +1,20 @@
 {% extends 'HrisMessageBundle::layout.html.twig' %}
 
+{% block fos_message_header %}
+    {{ thread.subject }}
+{% endblock fos_message_header %}
+
+{% block fos_message_links %}
+    <a href="{{ url('message_thread_new' )}}" class="btn">{% trans from 'FOSMessageBundle' %}Send a new message{% endtrans %}</a>
+{% endblock fos_message_links %}
+
+
 {% block fos_message_content %}
 
-<h2>{{ thread.subject }}</h2>
-
 {% for message in thread.messages %}
-    <div class="messenger_thread_message">
+    <div class="messenger_thread_message highlight">
         <div class="messenger_thread_message_info">
-            {% trans with {'%sender%': message.sender|e, '%date%': message.createdAt|date} from 'FOSMessageBundle' %}by{% endtrans %}
+            <strong>{{ message.sender.firstname| capitalize }} {{ message.sender.surname }}</strong> <em class="pull-right">{{  message.createdAt|date }}</em>
         </div>
 
         <div class="messenger_thread_message_body" id="message_{{ message.id }}">
@@ -16,12 +23,21 @@
     </div>
 {% endfor %}
 
-<h3>{% trans from 'FOSMessageBundle' %}reply{% endtrans %}</h3>
-
-<form action="{{ url('message_thread_view', {'threadId': thread.id}) }}" method="post">
-    {{ form_widget(form) }}
-
-    <input type="submit" />
-</form>
+    {{ form_start(form, {'action': path('message_thread_view', {'threadId': thread.id}), 'method': 'POST'}) }}
+    <div id="message">
+        {{ form_widget(form.body, {'attr': {'style': 'width:295px;'}}) }}
+    </div>
+    <br/>
+    <ul class="record_actions inline" style="float:left;">
+        <li>
+            <input type="submit" value="Reply" class="btn"/>
+        </li>
+        <li>
+            <a href="{{ path('message_inbox') }}" class="btn">
+                Back converstaions
+            </a>
+        </li>
+    </ul>
+    {{ form_end(form)  }}
 
 {% endblock %}

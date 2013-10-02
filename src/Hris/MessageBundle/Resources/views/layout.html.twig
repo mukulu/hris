@@ -5,13 +5,13 @@
 {% block right_content -%}
 
     <div class="container">
-        <h1><small>{% trans from 'FOSMessageBundle' %}Messenger{% endtrans %}</small></h1>
+        <h1><small>{% trans from 'FOSMessageBundle' %}Messaging{% endtrans %} - {% block fos_message_header %}{% endblock fos_message_header %}</small></h1>
 
         <ul class="inline">
-            <li><a href="{{ url('message_inbox') }}" class="btn">{% trans from 'FOSMessageBundle' %}inbox{% endtrans %}</a></li>
-            <li><a href="{{ url('message_sent') }}" class="btn">{% trans from 'FOSMessageBundle' %}sent{% endtrans %}</a></li>
+            <li><a href="{{ url('message_inbox') }}" class="btn">{% trans from 'FOSMessageBundle' %}Inbox{% endtrans %}</a></li>
+            <li><a href="{{ url('message_sent') }}" class="btn">{% trans from 'FOSMessageBundle' %}Sent{% endtrans %}</a></li>
+            {% block fos_message_links %}{% endblock fos_message_links %}
         </ul>
-
         {% block fos_message_content %}{% endblock %}
     </div>
 

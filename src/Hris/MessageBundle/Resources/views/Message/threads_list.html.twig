@@ -36,17 +36,47 @@
                         <a href="{{ url('message_thread_view', {'threadId': thread.id}) }}#message_{{ thread.lastMessage.id }}" title="{% trans from 'FOSMessageBundle' %}goto_last{% endtrans %}">
                             →
                         </a>
-                        {% trans with {'%date%': thread.lastMessage.createdAt|date} from 'FOSMessageBundle' %}on{% endtrans %}
-                        <br />
-                        {% trans with {'%sender%': thread.lastMessage.sender|e } from 'FOSMessageBundle' %}by{% endtrans %}
+                        on {{ thread.lastMessage.createdAt|date("jS F") }}
+                        by {{ thread.lastMessage.sender.firstname }} {{ thread.lastMessage.sender.surname }}
                     {% else %}
                         ----
                     {% endif %}
                 </td>
                 <td>
-                    <form action="{{ url('message_thread_delete', {'threadId': thread.id}) }}" method="post">
-                        <input type="submit" value="{% trans from 'FOSMessageBundle' %}delete{% endtrans %}" />
-                    </form>
+                    <ul class="inline">
+                        <li>
+                            <a href="{{ path('message_thread_view', {'threadId': thread.id}) }}"><i class="icon-info-sign icon-large" title="Show"></i></a>
+                        </li>
+                        <li>
+                            <a data-toggle="modal" href="#deleteModalFor{{ thread.uid }}"><i class="icon-remove-sign icon-large" title="Delete"></i></a>
+                            <!-- Modal -->
+                            <div class="modal fade" id="deleteModalFor{{ thread.uid }}">
+                                <div class="modal-dialog">
+                                    <div class="modal-content">
+                                        <div class="modal-header">
+                                            <button type="button" class="close" data-dismiss="modal" aria-hidden="true">×</button>
+                                            <h4 class="modal-title"><i class="icon-circle-remove icon-largest" title="Delete"></i>Deleting <strong>Conversation: {{ thread.subject | capitalize }}</strong></h4>
+                                        </div>
+                                        <div class="modal-body">
+                                            Are you sure you want to delete <strong>Conversation: {{ thread.subject | capitalize }}</strong> that was created on <em>{{ thread.datecreated|date('d/m/Y') }}</em>
+                                            {% if thread.lastUpdated %}
+                                                and last updated on {{ thread.lastUpdated|date('H:i:s d/m/Y') }} ??
+                                            {% else %}
+                                                and never updated ??
+                                            {% endif %}
+                                        </div>
+                                        <div class="modal-footer">
+                                            <form action="{{ url('message_thread_delete', {'threadId': thread.id}) }}" method="post">
+                                                <input type="hidden" name="_method" value="DELETE" />
+                                                <button type="button" class="btn btn-default" data-dismiss="modal">Close</button>
+                                                <input type="submit" value="Delete" class="btn"/>
+                                            </form>
+                                        </div>
+                                    </div><!-- /.modal-content -->
+                                </div><!-- /.modal-dialog -->
+                            </div><!-- /.modal -->
+                        </li>
+                    </ul>
                 </td>
             </tr>
         {% endfor %}

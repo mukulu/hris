@@ -78,7 +78,7 @@ class MessageController extends ContainerAware
      * Displays a thread, also allows to reply to it
      *
      * @Route("/{threadId}", requirements={"threadId"="\d+"}, name="message_thread_view")
-     * @Method("GET")
+     * @Method("GET|POST")
      * @Template()
      * @param string $threadId the thread id
      * @return Response

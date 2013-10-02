@@ -1,8 +1,10 @@
 {% extends 'HrisMessageBundle::layout.html.twig' %}
 
-{% block fos_message_content %}
+{% block fos_message_header %}
+    {% trans from 'FOSMessageBundle' %}Sent{% endtrans %}
+{% endblock fos_message_header %}
 
-<h2>{% trans from 'FOSMessageBundle' %}messenger{% endtrans %}</h2>
+{% block fos_message_content %}
 
 {% include 'HrisMessageBundle:Message:threads_list.html.twig' with {'threads': threads} %}
 
