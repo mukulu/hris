@@ -112,14 +112,14 @@ class LoadOrganisationunitData extends AbstractFixture implements OrderedFixture
     {
         $this->index = 0;
         // Dispensaries
-        $this->minDispensaryCount=1;
-        $this->maxDispensaryCount=5;
+        $this->minDispensaryCount=10;
+        $this->maxDispensaryCount=15;
         // Health centres
-        $this->minHealthCentreCount=1;
-        $this->maxHealthCentreCount=2;
+        $this->minHealthCentreCount=5;
+        $this->maxHealthCentreCount=10;
         // Hospitals
-        $this->minHospitalCount=1;
-        $this->maxHospitalCount=2;
+        $this->minHospitalCount=2;
+        $this->maxHospitalCount=5;
 
         $this->indexedOrganisationunits = Array();
     }
@@ -1445,7 +1445,7 @@ class LoadOrganisationunitData extends AbstractFixture implements OrderedFixture
                         $dispensaryShortname = substr(strtolower(str_replace(' ','',str_replace(' Dispensary','',$dispensaryName))),0,12).substr($parentOrganisationunit->getShortname(),0,5).'dsp';
                         $dispensaryReference = strtolower(str_replace(' ','',$dispensaryShortname.substr($parentOrganisationunit->getShortname(),0,5))).'-organisationunit';
                         $parentorgunitreference=array('longname'=>$dispensaryName,'parent'=>$parentOrganisationunit->getId());
-                    }while( $this->hasReference($dispensaryReference) && in_array($parentorgunitreference,$distinctLongnameAndParent) );
+                    }while( $this->hasReference($dispensaryReference) || in_array($parentorgunitreference,$distinctLongnameAndParent) );
 
                     $dispensary->setCode( $dispensaryShortname );
                     $dispensary->setShortname($dispensaryShortname);
@@ -1484,7 +1484,7 @@ class LoadOrganisationunitData extends AbstractFixture implements OrderedFixture
                         $healthCentreShortname = substr(strtolower(str_replace(' ','',str_replace(' Health Centre','',$healthCentreName))),0,12).substr($parentOrganisationunit->getShortname(),0,5).'htc';
                         $healthCentreReference = strtolower(str_replace(' ','',$healthCentreShortname.substr($parentOrganisationunit->getShortname(),0,5))).'-organisationunit';
                         $parentorgunitreference=array('longname'=>$healthCentreName,'parent'=>$parentOrganisationunit->getId());
-                    }while( $this->hasReference($healthCentreReference) && in_array($parentorgunitreference,$distinctLongnameAndParent) );
+                    }while( $this->hasReference($healthCentreReference) || in_array($parentorgunitreference,$distinctLongnameAndParent) );
 
                     $healthCentre->setCode( $healthCentreShortname );
                     $healthCentre->setShortname($healthCentreShortname);
@@ -1521,9 +1521,7 @@ class LoadOrganisationunitData extends AbstractFixture implements OrderedFixture
                         $hospitalShortname = substr(strtolower(str_replace(' ','',str_replace(' Hospital','',$hospitalName))),0,12).substr($parentOrganisationunit->getShortname(),0,5).'hsp';
                         $hospitalReference = strtolower(str_replace(' ','',$hospitalShortname.substr($parentOrganisationunit->getShortname(),0,5))).'-organisationunit';
                         $parentorgunitreference=array('longname'=>$hospitalName,'parent'=>$parentOrganisationunit->getId());
-                        //if(in_array($parentorgunitreference,$distinctLongnameAndParent)) echo $parentOrganisationunit->getLongname().":".$hospitalName ." of ".$parentOrganisationunit->getLongname().':'.$parentOrganisationunit->getId()." exists!\n" ;
-                    }while( $this->hasReference($hospitalReference) && in_array($parentorgunitreference,$distinctLongnameAndParent) );
-                    //echo $parentOrganisationunit->getLongname()."=>Pass with hospname:".$hospitalName." and ref:".$hospitalReference."\n";
+                    }while( $this->hasReference($hospitalReference) || in_array($parentorgunitreference,$distinctLongnameAndParent) );
 
                     $hospital->setCode( $hospitalShortname );
                     $hospital->setShortname($hospitalShortname);

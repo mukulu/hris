@@ -28,6 +28,10 @@ use Doctrine\Common\DataFixtures\OrderedFixtureInterface;
 use Doctrine\Common\DataFixtures\AbstractFixture;
 use Doctrine\Common\Persistence\ObjectManager;
 
+use Hris\MessageBundle\Entity\Message;
+use Hris\MessageBundle\Entity\MessageMetadata;
+use Hris\MessageBundle\Entity\Thread;
+use Hris\MessageBundle\Entity\ThreadMetadata;
 use Hris\UserBundle\Entity\User;
 
 class LoadUserData extends AbstractFixture implements OrderedFixtureInterface 
@@ -114,6 +118,38 @@ class LoadUserData extends AbstractFixture implements OrderedFixtureInterface
 
             $manager->persist($user);
 
+            // Send welcome message to user
+
+            $messageThread = new Thread();
+            $messageThread->setSubject('Welcome');
+            $messageThread->setIsSpam(False);
+            $messageThread->setCreatedAt(new \DateTime('now'));
+            $messageThread->getCreatedBy($user);
+            $manager->persist($messageThread);
+            $messageThreadMetadata = new ThreadMetadata();
+            $messageThreadMetadata->setThread($messageThread);
+            $messageThreadMetadata->setDatecreated(new \DateTime('now'));
+            $messageThreadMetadata->setLastMessageDate(new \DateTime('now'));
+            $messageThreadMetadata->setIsDeleted(False);
+            $messageThreadMetadata->setLastParticipantMessageDate(new \DateTime('now'));
+            $messageThreadMetadata->setParticipant($user);
+            $manager->persist($messageThreadMetadata);
+
+            $message = new Message();
+            $message->setBody("Welcome to HRIS 3!! Feel free to explore the new features!!\n Yours Truly ".$user->getFirstName()." ".$user->getSurname());
+            $message->setSender($user);
+            $message->setThread($messageThread);
+            $manager->persist($message);
+            $messageMetadata = new MessageMetadata();
+            $messageMetadata->setMessage($message);
+            $messageMetadata->setParticipant($user);
+            $messageMetadata->setIsRead(False);
+            $manager->persist($messageMetadata);
+            unset($user);
+            unset($messageThread);
+            unset($messageThreadMetadata);
+            unset($message);
+            unset($messageMetadata);
         }
 
 		$manager->flush();
