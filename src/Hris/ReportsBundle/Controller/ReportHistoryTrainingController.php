@@ -86,6 +86,8 @@ class ReportHistoryTrainingController extends Controller
             $fields = $historytrainingFormData['fields'];
             $graphType = $historytrainingFormData['graphType'];
         }
+
+        //Create fields object is not passed from form
         if(is_null($fields)){
             $fields = new Field();
         }
@@ -101,11 +103,11 @@ class ReportHistoryTrainingController extends Controller
         if( $reportType == "training" ){
 
             foreach($results as $result){
-                $categories[] = $result['year'];
+                $categories[] = $result['data'];
                 $data[] =  $result['total'];
 
                 if($graphType == 'pie'){
-                    $piedata[] = array('name' => $result['year'],'y' => $result['total']);
+                    $piedata[] = array('name' => $result['data'],'y' => $result['total']);
                 }
             }
             if($graphType == 'pie') $data = $piedata;
@@ -215,11 +217,14 @@ class ReportHistoryTrainingController extends Controller
 
         return array(
             'chart'=>$dashboardchart,
+            'data'=>$data,
+            'categories'=>$categories,
             'organisationUnit' => $organisationUnit,
             'formsId' => $formsId,
             'reportType' => $reportType,
             'withLowerLevels' => $withLowerLevels,
             'fields' => $fields,
+            'title'=> $title,
         );
     }
 
@@ -253,7 +258,7 @@ class ReportHistoryTrainingController extends Controller
             }
 
             //Query all training data and count by start date year
-            $query = "SELECT date_part('year',startdate) as year, count(date_part('year',startdate)) as total ";
+            $query = "SELECT date_part('year',startdate) as data, count(date_part('year',startdate)) as total ";
             $query .= "FROM hris_record_training T ";
             $query .= "INNER JOIN hris_record as V on V.id = T.record_id ";
             $query .= "INNER JOIN hris_organisationunitstructure as S on S.organisationunit_id = V.organisationunit_id ";
@@ -261,7 +266,7 @@ class ReportHistoryTrainingController extends Controller
             $query .= "WHERE V.form_id = ". $forms->getId();
             $query .= " AND (". $subQuery .") ";
             $query .= " GROUP BY date_part('year',startdate) ";
-            $query .= "ORDER BY year ASC";
+            $query .= "ORDER BY data ASC";
 
         }else{
             if ($fields->getInputType()->getName() == "Select"){
@@ -335,28 +340,22 @@ class ReportHistoryTrainingController extends Controller
         $em = $this->getDoctrine()->getManager();
 
         $organisationUnitid =$request->query->get('organisationUnit');
-        $formsId = explode(",",$request->query->get('formsId'));
-        $organisationunitGroupsId = explode(",",$request->query->get('organisationunitGroupsId'));
+        $formsId = $request->query->get('formsId');
+        $reportType = $request->query->get('reportType');
         $withLowerLevels =$request->query->get('withLowerLevels');
         $fieldsId =$request->query->get('fields');
-        $fieldsTwoId =$request->query->get('fieldsTwo');
-        $forms = new ArrayCollection();
-        $organisationunitGroups = new ArrayCollection();
 
         //Get the objects from the the variables
 
         $organisationUnit = $em->getRepository('HrisOrganisationunitBundle:Organisationunit')->find($organisationUnitid);
         $fields = $em->getRepository('HrisFormBundle:Field')->find($fieldsId);
-        $fieldsTwo = $em->getRepository('HrisFormBundle:Field')->find($fieldsTwoId);
-        foreach($formsId as $formId){
-            $forms->add($em->getRepository('HrisFormBundle:Form')->find($formId)) ;
+        $forms = $em->getRepository('HrisFormBundle:Form')->find($formsId);
+
+        if(is_null($fields)){
+            $fields = new Field();
         }
 
-        foreach($organisationunitGroupsId as $organisationunitGroupId){
-            $organisationunitGroups->add($em->getRepository('HrisOrganisationunitBundle:OrganisationunitGroup')->find($organisationunitGroupId));
-        }
-
-        $results = $this->aggregationEngine($organisationUnit, $forms, $fields, $organisationunitGroups, $withLowerLevels, $fieldsTwo);
+        $results = $this->aggregationEngine($organisationUnit, $forms, $fields, $reportType, $withLowerLevels );
 
 
         //create the title
