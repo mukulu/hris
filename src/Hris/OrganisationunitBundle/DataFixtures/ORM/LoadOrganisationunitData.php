@@ -7566,6 +7566,7 @@ class LoadOrganisationunitData extends AbstractFixture implements OrderedFixture
                 // Keep reference index for senquential generation of organisation unit structure
                 $this->addToIndexedOrganisationunit($organisationunitReference);
             }
+            unset($organisationunit);
 
             // Randomly populate dispensaries, health centres & hospitals under municipal & district councils
 
@@ -7791,6 +7792,7 @@ class LoadOrganisationunitData extends AbstractFixture implements OrderedFixture
 
                     // Use reference of created/re-used level
                     $organisationunitStructure->setLevel( $organisationunitLevel );
+                    unset($organisationunitLevel);
 
                     /*
                      * Append Level organisation units based on their parent level.
@@ -7827,6 +7829,7 @@ class LoadOrganisationunitData extends AbstractFixture implements OrderedFixture
                 $organisationunitStructureReference = strtolower(str_replace(' ','',$organisationunit->getShortname())).'-organisationunitstructure';
                 $this->addReference($organisationunitStructureReference, $organisationunitStructure);
                 $manager->persist($organisationunitStructure);
+                unset($organisationunitStructure);
             }
         }
         // Once organisatinounits are in database, assign admin to ministry
@@ -7841,6 +7844,11 @@ class LoadOrganisationunitData extends AbstractFixture implements OrderedFixture
         $arushadcByReference = $manager->merge($this->getReference( 'arushadc-organisationunit' ));
         $districtUserByReference->setOrganisationunit($arushadcByReference);
         $manager->persist($districtUserByReference);
+        //hospital user
+        $hospitalUserByReference = $manager->merge($this->getReference( 'hospital-user' ));
+        $bugandorefhspByReference = $manager->merge($this->getReference( 'bugandorefhsp-organisationunit' ));
+        $hospitalUserByReference->setOrganisationunit($bugandorefhspByReference);
+        $manager->persist($hospitalUserByReference);
 
 
 		$manager->flush();

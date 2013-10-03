@@ -138,8 +138,17 @@ class DashboardController extends Controller
         $dashboardchart->tooltip->formatter($formatter);
         $dashboardchart->series($series);
 
+        /*
+         * Messaging
+         */
+        $provider = $this->get('fos_message.provider');
+
+        $unreadMessages = $provider->getNbUnreadMessages();
+        if(empty($unreadMessages)) $unreadMessages= 0;
+
         return array(
-            'chart'=>$dashboardchart
+            'chart'=>$dashboardchart,
+            'unreadmessages'=>$unreadMessages
         );
     }
 }

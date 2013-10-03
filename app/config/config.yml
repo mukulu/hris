@@ -231,3 +231,8 @@ jms_security_extra:
     # Allows you to specify access control rules for specific methods, such
     # as controller actions
     method_access_control: { }
+
+fos_message:
+    db_driver: orm
+    thread_class: Hris\MessageBundle\Entity\Thread
+    message_class: Hris\MessageBundle\Entity\Message

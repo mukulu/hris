@@ -1,0 +1,13 @@
+{% extends 'HrisMessageBundle::layout.html.twig' %}
+
+{% block fos_message_header %}
+    {% trans from 'FOSMessageBundle' %}Send a new message{% endtrans %}
+{% endblock fos_message_header %}
+
+{% block fos_message_content %}
+    <form action="{{ url('message_thread_new') }}" method="post">
+        {{ form_widget(form) }}
+
+        <input type="submit" class="btn"/>
+    </form>
+{% endblock %}

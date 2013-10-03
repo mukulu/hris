@@ -58,31 +58,47 @@ class LoadInputTypeData extends AbstractFixture implements OrderedFixtureInterfa
             0=>Array(
                 'name'=>'Text',
                 'description'=>'Textbox HTML Tag',
-                'htmltag'=>'<input type="text" name="fieldName" id="fieldId"/>'),
+                'htmltag'=>'<input type="text" name="fieldName" id="fieldId" required="required"/>'),
             1=>Array(
                 'name'=>'Password',
                 'description'=>'Password HTML Input Tag',
-                'htmltag'=>'<input type="password" name="fieldName" id="fieldId"/>'),
+                'htmltag'=>'<input type="password" name="fieldName" id="fieldId" required="required"/>'),
             2=>Array(
                 'name'=>'Radio',
                 'description'=>'Radio HTML Input Tag',
-                'htmltag'=>'<input type="radio" name="fieldName" id="fieldId"/>'),
+                'htmltag'=>'<input type="radio" name="fieldName" id="fieldId" required="required"/>'),
             3=>Array(
                 'name'=>'Checkbox',
                 'description'=>'Checkbox HTML Input Tag',
-                'htmltag'=>'<input type="checkbox" name="fieldName" id="fieldId"/>'),
+                'htmltag'=>'<input type="checkbox" name="fieldName" id="fieldId" required="required"/>'),
             4=>Array(
                 'name'=>'TextArea',
                 'description'=>'TextArea HTML Tag',
-                'htmltag'=>'<textarea name="fieldName" id="fieldId"></textarea>'),
+                'htmltag'=>'<textarea name="fieldName" id="fieldId" required="required"></textarea>'),
             5=>Array(
                 'name'=>'Date',
                 'description'=>'Date HTML Input Tag',
-                'htmltag'=>'<input type="date" name="fieldName" id="fieldId" />'),
+                'htmltag'=>'<input type="date" name="fieldName" id="fieldId" required="required" />'),
             6=>Array(
                 'name'=>'Select',
                 'description'=>'Select Options HTML Tag',
-                'htmltag'=>'<select name="fieldName" id="fieldId" onload="loadFieldOptions(fieldId)" onchange="changeRelatedFieldOptions(fieldId)"></select>'),
+                'htmltag'=>'<select name="fieldName" id="fieldId" onload="loadFieldOptions(fieldId)" onchange="changeRelatedFieldOptions(fieldId)" required="required"></select>'),
+            7=>Array(
+                'name'=>'Email',
+                'description'=>'Email HTML Tag',
+                'htmltag'=>'<input type="email" name="fieldName" id="fieldId" required="required" />'),
+            8=>Array(
+                'name'=>'Telephone',
+                'description'=>'Telephonw HTML Tag',
+                'htmltag'=>'<input type="tel" name="fieldName" id="fieldId" required="required" />'),
+            9=>Array(
+                'name'=>'Number',
+                'description'=>'Number HTML Tag',
+                'htmltag'=>'<input type="number" name="fieldName" id="fieldId" required="required" />'),
+            10=>Array(
+                'name'=>'Double',
+                'description'=>'Double HTML Tag',
+                'htmltag'=>'<input type="number" name="fieldName" id="fieldId" step="any" required="required" />'),
         );
         return $this->inputTypes;
     }

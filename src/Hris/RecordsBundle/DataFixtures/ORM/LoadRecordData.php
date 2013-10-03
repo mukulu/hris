@@ -407,7 +407,7 @@ class LoadRecordData extends AbstractFixture implements OrderedFixtureInterface
                         if($outcomes[array_rand($outcomes,1)]) {
 
                             // Assign randomly between 2 to 4 histories per record
-                            $numberofHistoriesToAssign=Array(2,3,4);
+                            $numberofHistoriesToAssign=Array(1,2);
                             for($incr=0; $incr< $numberofHistoriesToAssign[array_rand($numberofHistoriesToAssign,1)]; $incr++ ) {
                                 $history = new History();
                                 $history->setRecord($record);
@@ -478,13 +478,14 @@ class LoadRecordData extends AbstractFixture implements OrderedFixtureInterface
                                 $history->setHistory($historyValue);
                                 $history->setReason($reason);
                                 $manager->persist($history);
+                                unset($history);
                             }
                             $record->setHashistory(True);
                             $manager->persist($record);
                         }
                         if($outcomes[array_rand($outcomes,1)]) {
                             // Assign randomly between 2 to 4 trainings per record
-                            $numberofTrainingsToAssign=Array(2,3,4);
+                            $numberofTrainingsToAssign=Array(1,2);
                             for($incr=0; $incr< $numberofTrainingsToAssign[array_rand($numberofTrainingsToAssign,1)]; $incr++ ) {
                                 $training = new Training();
                                 $training->setRecord($record);
@@ -505,10 +506,12 @@ class LoadRecordData extends AbstractFixture implements OrderedFixtureInterface
                                 $training->setEnddate($endDate);
                                 $training->setUsername($record->getUsername());
                                 $manager->persist($training);
+                                unset($training);
                             }
                             $record->setHastraining(True);
                             $manager->persist($record);
                         }
+                        unset($record);
 
                     }
                 }
