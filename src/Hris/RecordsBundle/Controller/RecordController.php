@@ -485,17 +485,52 @@ class RecordController extends Controller
 
         $entity = $em->getRepository('HrisRecordsBundle:Record')->find($id);
 
-        if (!$entity) {
-            throw $this->createNotFoundException('Unable to find Record entity.');
+        $formEntity = $entity->getForm();
+        $tableName = json_encode($em->getClassMetadata('HrisFormBundle:Form')->getTableName());
+
+        $fields = $formEntity->getSimpleField();
+
+        $user = $this->container->get('security.context')->getToken()->getUser();
+
+        //Getting the Object of User Organisation unit
+        $orgUnit = $em->getRepository( 'HrisOrganisationunitBundle:Organisationunit' )
+            ->createQueryBuilder('o')
+            ->select('o')
+            ->where('o.uid = :uid')
+            ->setParameters(array('uid' => $user->getOrganisationunit()->getUid()))
+            ->getQuery()
+            ->getArrayResult();
+
+        //Getting the Object of User Organisation unit
+        $selectedOrgunit = $em->getRepository( 'HrisOrganisationunitBundle:Organisationunit' )
+            ->createQueryBuilder('o')
+            ->select('o')
+            ->where('o.uid = :uid')
+            ->setParameters(array('uid' => $entity->getOrganisationunit()->getUid()))
+            ->getQuery()
+            ->getArrayResult();
+
+        $isEntryLevel = $user->getOrganisationunit()->getOrganisationunitStructure()->getLevel()->getDataentrylevel();
+        $selectFields = array();
+        $key = NULL;
+
+        foreach ($fields as $key => $field){
+            if($field->getInputType()->getName() == 'Select'){
+                $selectFields[] = $field->getUid();
+            }
         }
 
-        $editForm = $this->createForm(new RecordType(), $entity);
-        $deleteForm = $this->createDeleteForm($id);
-
         return array(
-            'entity'      => $entity,
-            'edit_form'   => $editForm->createView(),
-            'delete_form' => $deleteForm->createView(),
+
+            'formUid' => $formEntity->getUid(),
+            'title' => $formEntity->getTitle(),
+            'id' => $formEntity->getId(),
+            'table_name' => $tableName,
+            'fields' => json_encode($selectFields),
+            'entryLevel' => $isEntryLevel,
+            'organisation_unit' => array_shift($orgUnit),
+            'dataValues'=> json_encode($entity->getValue()),
+            'selectedUnit'=> array_shift($selectedOrgunit),
         );
     }
 
