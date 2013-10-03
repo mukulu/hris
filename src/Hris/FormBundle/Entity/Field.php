@@ -202,6 +202,14 @@ class Field
      * @ORM\Column(name="skipInReport", type="boolean", nullable=true)
      */
     private $skipInReport;
+
+    /**
+     * @var FieldOption $fieldOption
+     *
+     * @ORM\OneToMany(targetEntity="Hris\FormBundle\Entity\FieldOption", mappedBy="field",cascade={"ALL"})
+     * @ORM\OrderBy({"value" = "ASC"})
+     */
+    private $fieldOption;
     
     /**
      * @var FormVisibleFields $formVisibleFields

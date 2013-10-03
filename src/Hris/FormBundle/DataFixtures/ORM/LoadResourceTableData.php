@@ -112,9 +112,11 @@ class LoadResourceTableData extends AbstractFixture implements OrderedFixtureInt
                     $this->addReference($referenceName, $resourceTableMember);
                     $manager->persist($resourceTableMember);
                     $resourceTable->addResourceTableFieldMember($resourceTableMember);
+                    unset($resourceTableMember);
                 }
             }
             $manager->persist($resourceTable);
+            unset($resourceTable);
         }
 		$manager->flush();
 
@@ -137,6 +139,7 @@ class LoadResourceTableData extends AbstractFixture implements OrderedFixtureInt
 	 */
 	public function getOrder()
 	{
+        //LoadRecordData preceeds
 		return 12;
 	}
 

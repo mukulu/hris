@@ -1,7 +1,7 @@
 {% extends '::base.html.twig' %}
 
 {% block right_content -%}
-    <h1><i class="icon-circle-info icon-largest" title="Show"></i> <small>{{ entity.value | capitalize }}'s Details</small></h1>
+    <h1><i class="icon-circle-info icon-largest" title="Show"></i> <small>{{ entity.value }}'s Details</small></h1>
 
     <table class="record_properties table table-striped table-bordered table-hover">
         <tbody>
@@ -34,10 +34,16 @@
 
     <ul class="record_actions inline">
         <li>
-            <a href="{{ path('fieldoption') }}" class="btn">
-                Back to the list
+            <a href="{{ path('fieldoption_list_byfield', { 'fieldid': entity.field.id }) }}" class="btn">
+                Back to {{ entity.field.caption }} option list
             </a>
         </li>
+        <li>
+            <a href="{{ path('fieldoption') }}" class="btn">
+                Back to all Options list
+            </a>
+        </li>
+
         <li>
             <a href="{{ path('fieldoption_edit', { 'id': entity.id }) }}" class="btn">
                 Edit

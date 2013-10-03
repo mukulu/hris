@@ -38,7 +38,7 @@ class LoadDataTypeData extends AbstractFixture implements OrderedFixtureInterfac
 	public function load(ObjectManager $manager)
 	{
 		// Load Public Data
-		$dataTypeNames = Array('String','Integer','Double','Date');
+		$dataTypeNames = Array('String','Integer','Double','Date','Telephone','Email');
 		foreach($dataTypeNames as $key=>$dataTypeName) {
 			$dataType = new DataType();
 			$dataType->setName($dataTypeName);

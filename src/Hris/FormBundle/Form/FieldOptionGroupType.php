@@ -24,9 +24,11 @@
  */
 namespace Hris\FormBundle\Form;
 
+use Doctrine\ORM\EntityRepository;
 use Symfony\Component\Form\AbstractType;
 use Symfony\Component\Form\FormBuilderInterface;
 use Symfony\Component\OptionsResolver\OptionsResolverInterface;
+use Symfony\Component\Validator\Constraints\NotBlank;
 
 class FieldOptionGroupType extends AbstractType
 {
@@ -35,7 +37,19 @@ class FieldOptionGroupType extends AbstractType
         $builder
             ->add('name')
             ->add('description')
-            ->add('field')
+            ->add('field','entity',array(
+                'class'=>'HrisFormBundle:Field',
+                'query_builder'=>function(EntityRepository $er) {
+                    return $er->createQueryBuilder('field')
+                        ->innerJoin('field.inputType','inputType')
+                        ->where('inputType.name=:inputTypeName')
+                        ->setParameter('inputTypeName',"Select")
+                        ->orderBy('field.isCalculated,field.name','ASC');
+                },
+                'constraints'=> array(
+                    new NotBlank(),
+                )
+            ))
             ->add('fieldOption')
         ;
     }

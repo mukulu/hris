@@ -16,9 +16,27 @@
         <h1><small>FieldOption list</small></h1>
 
         <ul class="inline">
+            {% if field is empty %}
             <li>
                 <a class="btn" href="{{ path('fieldoption_new') }}">
                     Create a new entry
+                </a>
+            </li>
+            {% else %}
+            <li>
+                <a class="btn" href="{{ path('fieldoption_new_byfield', { 'fieldid': field.id }) }}">
+                    Create a new entry
+                </a>
+            </li>
+            <li>
+                <a href="{{ path('fieldoption') }}" class="btn">
+                    Back to all Options list
+                </a>
+            </li>
+            {% endif %}
+            <li>
+                <a class="btn" href="{{ path('fieldoptionmerge') }}">
+                    Merged Field Options
                 </a>
             </li>
         </ul>
@@ -47,6 +65,9 @@
                             <a href="{{ path('fieldoption_edit', { 'id': entity.id }) }}"><i class="icon-edit icon-large" title="Edit"></i></a>
                         </li>
                         <li>
+                                <a href="{{ path('fieldoptionmerge_new_byfield_and_fieldoption', { 'fieldid': entity.field.id,'fieldoptionid': entity.id }) }}"><i class="icon-fire icon-large" title="Merge Field Options"></i></a>
+                        </li>
+                        <li>
                             <a data-toggle="modal" href="#deleteModalFor{{ entity.uid }}"><i class="icon-remove-sign icon-large" title="Delete"></i></a>
                             <!-- Modal -->
                             <div class="modal fade" id="deleteModalFor{{ entity.uid }}">
@@ -65,7 +86,11 @@
                                             {% endif %}
                                         </div>
                                         <div class="modal-footer">
+                                            {% if field is empty %}
                                             <form action="{{ path('fieldoption_delete', { 'id': entity.id }) }}" method="post">
+                                            {% else %}
+                                            <form action="{{ path('fieldoption_delete_byfield', { 'id': entity.id, 'fieldid': field.id }) }}" method="post">
+                                            {% endif %}
                                                 <input type="hidden" name="_method" value="DELETE" />
                                                 {{ form_widget(delete_forms[entity.id] ) }}
                                                 <button type="button" class="btn btn-default" data-dismiss="modal">Close</button>

@@ -1,3 +1,7 @@
+hris_message:
+    resource: "@HrisMessageBundle/Resources/config/routing.yml"
+    prefix:   /
+
 hris_import_export:
     resource: "@HrisImportExportBundle/Resources/config/routing.yml"
     prefix:   /

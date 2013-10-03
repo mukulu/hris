@@ -45,14 +45,22 @@ class FieldOptionController extends Controller
      *
      * @Route("/", name="fieldoption")
      * @Route("/list", name="fieldoption_list")
+     * @Route("/{fieldid}/field", requirements={"fieldid"="\d+"}, name="fieldoption_byfield")
+     * @Route("/list/{fieldid}/field", requirements={"fieldid"="\d+"}, name="fieldoption_list_byfield")
      * @Method("GET")
      * @Template()
      */
-    public function indexAction()
+    public function indexAction($fieldid=NULL)
     {
         $em = $this->getDoctrine()->getManager();
 
-        $entities = $em->getRepository('HrisFormBundle:FieldOption')->findAll();
+        if(empty($fieldid)) {
+            $entities = $em->getRepository('HrisFormBundle:FieldOption')->findAll();
+            $field=NULL;
+        }else {
+            $entities = $em->getRepository('HrisFormBundle:FieldOption')->findBy(array('field'=>$fieldid));
+            $field = $em->getRepository('HrisFormBundle:Field')->findOneBy(array('id'=>$fieldid));
+        }
 
         foreach($entities as $entity) {
             $delete_form= $this->createDeleteForm($entity->getId());
@@ -62,32 +70,45 @@ class FieldOptionController extends Controller
         return array(
             'entities' => $entities,
             'delete_forms' => $delete_forms,
+            'field' => $field,
         );
     }
+
     /**
      * Creates a new FieldOption entity.
      *
      * @Route("/", name="fieldoption_create")
+     * @Route("/{fieldid}/field", requirements={"fieldid"="\d+"}, name="fieldoption_create_byfield")
      * @Method("POST")
      * @Template("HrisFormBundle:FieldOption:new.html.twig")
      */
-    public function createAction(Request $request)
+    public function createAction(Request $request,$fieldid=NULL)
     {
         $entity  = new FieldOption();
         $form = $this->createForm(new FieldOptionType(), $entity);
         $form->submit($request);
+
+        // Serve to redirect page to filtered options by field
+        if(!empty($fieldid)) {
+            $em = $this->getDoctrine()->getManager();
+            $field = $em->getRepository('HrisFormBundle:Field')->findOneBy(array('id'=>$fieldid));
+        }else {
+            $field=NULL;
+        }
 
         if ($form->isValid()) {
             $em = $this->getDoctrine()->getManager();
             $em->persist($entity);
             $em->flush();
 
-            return $this->redirect($this->generateUrl('fieldoption_show', array('id' => $entity->getId())));
+            return $this->redirect($this->generateUrl('fieldoption_show', array( 'id' => $entity->getId() )));
         }
+
 
         return array(
             'entity' => $entity,
             'form'   => $form->createView(),
+            'field'  => $field,
         );
     }
 
@@ -95,24 +116,36 @@ class FieldOptionController extends Controller
      * Displays a form to create a new FieldOption entity.
      *
      * @Route("/new", name="fieldoption_new")
+     * @Route("/new/{fieldid}/field", requirements={"fieldid"="\d+"}, name="fieldoption_new_byfield")
      * @Method("GET")
      * @Template()
      */
-    public function newAction()
+    public function newAction($fieldid=NULL)
     {
         $entity = new FieldOption();
         $form   = $this->createForm(new FieldOptionType(), $entity);
 
+        // Serve requests from field option page filtered by field
+        if(!empty($fieldid)) {
+            $em = $this->getDoctrine()->getManager();
+            $field = $em->getRepository('HrisFormBundle:Field')->findOneBy(array('id'=>$fieldid));
+            $form->get('field')->setData($field);
+            $form->get('description')->setData("Employee's ".$field->getCaption());
+        }else {
+            $field=NULL;
+        }
+
         return array(
             'entity' => $entity,
             'form'   => $form->createView(),
+            'field' => $field,
         );
     }
 
     /**
      * Finds and displays a FieldOption entity.
      *
-     * @Route("/{id}", requirements={"id"="\d+"}, requirements={"id"="\d+"}, name="fieldoption_show")
+     * @Route("/{id}", requirements={"id"="\d+"}, name="fieldoption_show")
      * @Method("GET")
      * @Template()
      */
@@ -199,9 +232,10 @@ class FieldOptionController extends Controller
      * Deletes a FieldOption entity.
      *
      * @Route("/{id}", requirements={"id"="\d+"}, name="fieldoption_delete")
+     * @Route("/{id}/field/{fieldid}", requirements={"fieldid"="\d+"}, name="fieldoption_delete_byfield")
      * @Method("DELETE")
      */
-    public function deleteAction(Request $request, $id)
+    public function deleteAction(Request $request, $id,$fieldid=NULL)
     {
         $form = $this->createDeleteForm($id);
         $form->submit($request);
@@ -218,7 +252,9 @@ class FieldOptionController extends Controller
             $em->flush();
         }
 
-        return $this->redirect($this->generateUrl('fieldoption'));
+        // $fieldid Serve requests from field option page filtered by field
+
+        return empty($fieldid) ? $this->redirect($this->generateUrl('fieldoption')) : $this->redirect($this->generateUrl('fieldoption_byfield', array('fieldid' => $fieldid)));
     }
 
     /**
