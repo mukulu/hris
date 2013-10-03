@@ -2430,6 +2430,8 @@ class LoadFieldData extends AbstractFixture implements OrderedFixtureInterface
 
                 $manager->persist($fieldOptionGroup);
             }
+            unset($field);
+            unset($fieldOptionGroup);
 		}
 		// Create FieldOptionGroups specific for indicators
         foreach($this->fieldOptionGroups as $fieldOptionGroupKey=>$humanResourceFieldOptionGroup) {
@@ -2446,6 +2448,7 @@ class LoadFieldData extends AbstractFixture implements OrderedFixtureInterface
             }
             $this->addReference($fieldOptionGroupReference, $fieldOptionGroup);
             $manager->persist($fieldOptionGroup);
+            unset($fieldOptionGroup);
         }
 
         // Populate dummy field Groups
@@ -2487,6 +2490,7 @@ class LoadFieldData extends AbstractFixture implements OrderedFixtureInterface
             }
 
             $manager->persist($fieldGroup);
+            unset($fieldGroup);
         }
 		$manager->flush();
 	}

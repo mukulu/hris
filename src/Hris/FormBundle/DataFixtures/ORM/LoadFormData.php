@@ -982,6 +982,7 @@ class LoadFormData extends AbstractFixture implements OrderedFixtureInterface
                     $humanResourceForm['hypertext'] = str_replace("changeRelatedFieldOptions('".$dummyField."')","changeRelatedFieldOptions('".$fieldByReference->getUid()."')",$humanResourceForm['hypertext']);
                     $humanResourceForm['hypertext'] = str_replace("loadFieldOptions('".$dummyField."')","loadFieldOptions('".$fieldByReference->getUid()."')",$humanResourceForm['hypertext']);
                 }
+                unset($formMember);
             }
             $sort=1;
             foreach($humanResourceForm['visibleFields'] as $key => $dummyField)
@@ -993,6 +994,7 @@ class LoadFormData extends AbstractFixture implements OrderedFixtureInterface
                 $visibleFieldMember->setForm( $formByReference );
                 $visibleFieldMember->setSort($sort++);
                 $manager->persist($visibleFieldMember);
+                unset($visibleFieldMember);
             }
             foreach($humanResourceForm['uniqueFields'] as $key => $dummyField)
             {
@@ -1000,6 +1002,8 @@ class LoadFormData extends AbstractFixture implements OrderedFixtureInterface
                 $form->addUniqueRecordField($fieldByReference);
             }
             $form->setHypertext($humanResourceForm['hypertext']);
+            $manager->persist($form);
+            unset($form);
         }
 
 		$manager->flush();
