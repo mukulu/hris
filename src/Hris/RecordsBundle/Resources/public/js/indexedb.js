@@ -378,7 +378,6 @@ function isUnique(field_uid) {
 
 function getunits(parent){
 
-    alert($(parent).val());
     var parentUid = $(parent).val();
 
     //getting all the field Combos
