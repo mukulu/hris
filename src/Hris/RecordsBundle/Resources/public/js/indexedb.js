@@ -236,7 +236,6 @@ function loadFieldOptions(fieldUIDS, databaseName) {
 
         var field_uid = value;
 
-
         //getting all the field Combos
 
         var openRequest = localDatabase.indexedDB.open(databaseName);
@@ -250,12 +249,26 @@ function loadFieldOptions(fieldUIDS, databaseName) {
 
             var fielOptiondRequest = fieldOptionStore.openCursor();
 
+            var emptyElement = false
+
             fielOptiondRequest.onsuccess = function () {
 
                 var cursorOption = fielOptiondRequest.result;
 
 
                 if (cursorOption) {
+
+                    //Setting the first empty Option
+
+                    if ( emptyElement == false ){
+
+                        $("#" + field_uid).append($('<option>', {
+                            value: '',
+                            text: '--'
+                        }));
+
+                        emptyElement = true;
+                    }
 
                     if (field_uid == cursorOption.value.field) {
                         console.log(decodeURIComponent(cursorOption.value.value) + " uid " + field_uid + " field_id " + cursorOption.value.uid);
@@ -307,6 +320,12 @@ function changeRelatedFieldOptions(field_uid) {
 
                 if ( removeElement == false ){
                     $("#" + cursorOption.value.fieldref).find('option').remove();
+
+                    $("#" + cursorOption.value.fieldref).append($('<option>', {
+                        value: '',
+                        text: '--'
+                    }));
+
                     removeElement = true;
                 }
 
