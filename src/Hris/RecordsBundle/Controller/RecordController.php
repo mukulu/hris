@@ -544,7 +544,7 @@ class RecordController extends Controller
             'entryLevel' => $isEntryLevel,
             'organisation_unit' => array_shift($orgUnit),
             'dataValues'=> json_encode($entity->getValue()),
-            'selectedUnit'=> array_shift($selectedOrgunit),
+            'selectedUnit'=> json_encode($selectedOrgunit),
         );
     }
 

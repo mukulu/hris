@@ -12,7 +12,7 @@
         $(window).load(function(){
 
             //Populating field Options
-            populateForm( '{{ fields | raw | escape('js') }}', '{{ project_code | lower | raw }}', '{{ dataValues | raw }}', '{{ otherFields | raw | escape('js') }}' );
+            populateForm( '{{ fields | raw | escape('js') }}', '{{ project_code | lower | raw }}', '{{ dataValues | raw }}', '{{ otherFields | raw | escape('js') }}', '{{ selectedUnit | raw | escape('js') }}' );
 
         });
 

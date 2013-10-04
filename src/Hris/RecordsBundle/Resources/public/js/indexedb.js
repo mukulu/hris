@@ -445,14 +445,23 @@ function getunits(parent){
     }
 }
 
-function populateForm(fieldUIDS, databaseName, dataValues, otherFields) {
+function populateForm(fieldUIDS, databaseName, dataValues, otherFields, orgunit) {
 
     dataValues = JSON.parse(dataValues);
     otherFields = JSON.parse(otherFields);
+    orgunit = JSON.parse(orgunit);
 
     var fieldUid = JSON.parse(fieldUIDS);
 
-    //Setting values for non Select fields
+    //Setting Organizationunit
+    $.each(orgunit, function (key, value) {
+        $("#units").append($('<option>', {
+            value: value["uid"],
+            text: value["longname"],
+            selected: "selected"
+        }));
+
+    });
 
     console.log('other fields' + otherFields);
 
