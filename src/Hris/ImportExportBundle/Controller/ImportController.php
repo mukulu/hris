@@ -52,7 +52,7 @@ class ImportController extends Controller
      */
     public function indexAction()
     {
-        $importForm = $this->createForm(new ImportType(),null,array('em'=>$this->getDoctrine()->getManager()));
+        $importForm = $this->createForm(new ImportType(),null);
 
         return array(
             'importForm'=>$importForm->createView(),
@@ -69,20 +69,16 @@ class ImportController extends Controller
     {
         $serializer = $this->container->get('serializer');
 
-        $importForm = $this->createForm(new ImportType(),null,array('em'=>$this->getDoctrine()->getManager()));
+        $importForm = $this->createForm(new ImportType(),null);
         $importForm->bind($request);
 
         if ($importForm->isValid()) {
             $importFormData = $importForm->getData();
-            $organisationunit = $importFormData['organisationunit'];
-            $forms = $importFormData['forms'];
-            $withLowerLevels = $importFormData['withLowerLevels'];
+            $file = $importFormData['file'];
         }
 
         $serializer = $this->container->get('serializer');
         return array(
-            'forms'=>$forms,
-            'withLowerLevels'=>$withLowerLevels
         );
     }
 

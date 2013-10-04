@@ -124,7 +124,7 @@ class LoadUserData extends AbstractFixture implements OrderedFixtureInterface
             $messageThread->setSubject('Welcome');
             $messageThread->setIsSpam(False);
             $messageThread->setCreatedAt(new \DateTime('now'));
-            $messageThread->getCreatedBy($user);
+            $messageThread->setCreatedBy($user);
             $manager->persist($messageThread);
             $messageThreadMetadata = new ThreadMetadata();
             $messageThreadMetadata->setThread($messageThread);

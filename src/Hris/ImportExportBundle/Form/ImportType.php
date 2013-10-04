@@ -34,25 +34,12 @@ class ImportType extends AbstractType
 {
     public function buildForm(FormBuilderInterface $builder, array $options)
     {
-        // assuming $entityManager is passed in options
-        $em = $options['em'];
-        $transformer = new OrganisationunitToIdTransformer($em);
         $builder
-            ->add('File','file',array(
+            ->add('file','file',array(
                 'required'=>False,
             ))
             ->add('submit','submit')
         ;
-    }
-
-    public function setDefaultOptions(OptionsResolverInterface $resolver)
-    {
-        $resolver->setRequired(
-            array('em')
-        );
-        $resolver->setAllowedTypes(array(
-            'em'=>'Doctrine\Common\Persistence\ObjectManager',
-        ));
     }
 
     public function getName()
