@@ -175,11 +175,11 @@ function getSingleRecord(databaseName, uid, tableName) {
 
 }
 
-function getDataEntryForm(databaseName, uid, tableName) {
+function getDataEntryForm(databaseName, formUid, tableName) {
 
     tableName = JSON.parse(tableName);
 
-    console.log(uid);
+    console.log(formUid);
 
     var result = document.getElementById("result");
     result.innerHTML = "";
@@ -197,7 +197,7 @@ function getDataEntryForm(databaseName, uid, tableName) {
             var store = transaction.objectStore(tableName);
             var index = store.index("uid");
 
-            var request = index.get(uid);
+            var request = index.get(formUid);
             request.onsuccess = function () {
                 var matching = request.result;
                 if (matching !== undefined) {
@@ -236,7 +236,6 @@ function loadFieldOptions(fieldUIDS, databaseName) {
 
         var field_uid = value;
 
-
         //getting all the field Combos
 
         var openRequest = localDatabase.indexedDB.open(databaseName);
@@ -250,12 +249,26 @@ function loadFieldOptions(fieldUIDS, databaseName) {
 
             var fielOptiondRequest = fieldOptionStore.openCursor();
 
+            var emptyElement = false
+
             fielOptiondRequest.onsuccess = function () {
 
                 var cursorOption = fielOptiondRequest.result;
 
 
                 if (cursorOption) {
+
+                    //Setting the first empty Option
+
+                    if ( emptyElement == false ){
+
+                        $("#" + field_uid).append($('<option>', {
+                            value: '',
+                            text: '--'
+                        }));
+
+                        emptyElement = true;
+                    }
 
                     if (field_uid == cursorOption.value.field) {
                         console.log(decodeURIComponent(cursorOption.value.value) + " uid " + field_uid + " field_id " + cursorOption.value.uid);
@@ -307,6 +320,12 @@ function changeRelatedFieldOptions(field_uid) {
 
                 if ( removeElement == false ){
                     $("#" + cursorOption.value.fieldref).find('option').remove();
+
+                    $("#" + cursorOption.value.fieldref).append($('<option>', {
+                        value: '',
+                        text: '--'
+                    }));
+
                     removeElement = true;
                 }
 
@@ -378,7 +397,6 @@ function isUnique(field_uid) {
 
 function getunits(parent){
 
-    alert($(parent).val());
     var parentUid = $(parent).val();
 
     //getting all the field Combos
@@ -425,4 +443,81 @@ function getunits(parent){
 
         }
     }
+}
+
+function populateForm(fieldUIDS, databaseName, dataValues) {
+
+    dataValues = JSON.parse(dataValues);
+
+    var fieldUid = JSON.parse(fieldUIDS);
+
+    console.log(fieldUid);
+
+    $.each(fieldUid, function (key, value) {
+        console.log(key + ": " + value);
+
+        var field_uid = value;
+
+        //getting all the field Combos
+
+        var openRequest = localDatabase.indexedDB.open(databaseName);
+
+        openRequest.onsuccess = function () {
+
+            var db = openRequest.result;
+
+            var fieldOptionTransaction = db.transaction("hris_fieldoption", "readonly");
+            var fieldOptionStore = fieldOptionTransaction.objectStore("hris_fieldoption");
+
+            var fielOptiondRequest = fieldOptionStore.openCursor();
+
+            var emptyElement = false
+
+            fielOptiondRequest.onsuccess = function () {
+
+                var cursorOption = fielOptiondRequest.result;
+
+
+                if (cursorOption) {
+
+                    //Setting the first empty Option
+
+
+
+                    if (field_uid == cursorOption.value.field) {
+                        console.log(decodeURIComponent(cursorOption.value.value) + " uid " + field_uid + " field_id " + cursorOption.value.uid);
+
+                        $("#" + field_uid).append($('<option>', {
+                            value: cursorOption.value.uid,
+                            text: decodeURIComponent(cursorOption.value.value)
+                        }));
+
+                        if ( emptyElement == false ){
+
+                            for (key in dataValues){
+
+                                if (field_uid == key && cursorOption.value.uid == dataValues[key]){
+
+                                $("#" + field_uid).append($('<option>', {
+                                    value: cursorOption.value.uid,
+                                    text: decodeURIComponent(cursorOption.value.value),
+                                    selected: "selected"
+                                }))
+
+                                emptyElement = true;
+                                }
+                            }
+                        }
+                    }
+
+                    cursorOption.continue();
+                }
+                else {
+                    console.log('No more Matching Fields Options');
+                }
+
+            }
+        }
+    });
+
 }
