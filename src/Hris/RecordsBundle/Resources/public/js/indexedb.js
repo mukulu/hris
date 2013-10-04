@@ -445,13 +445,16 @@ function getunits(parent){
     }
 }
 
-function populateForm(fieldUIDS, databaseName, dataValues) {
+function populateForm(fieldUIDS, databaseName, dataValues, otherFields) {
 
     dataValues = JSON.parse(dataValues);
+    otherFields = JSON.parse(otherFields);
 
     var fieldUid = JSON.parse(fieldUIDS);
 
-    console.log(fieldUid);
+    //Setting values for non Select fields
+
+    console.log('other fields' + otherFields);
 
     $.each(fieldUid, function (key, value) {
         console.log(key + ": " + value);
@@ -494,9 +497,9 @@ function populateForm(fieldUIDS, databaseName, dataValues) {
 
                         if ( emptyElement == false ){
 
-                            for (key in dataValues){
+                            for (var keys in dataValues){
 
-                                if (field_uid == key && cursorOption.value.uid == dataValues[key]){
+                                if (field_uid == keys && cursorOption.value.uid == dataValues[keys]){
 
                                 $("#" + field_uid).append($('<option>', {
                                     value: cursorOption.value.uid,
@@ -514,6 +517,23 @@ function populateForm(fieldUIDS, databaseName, dataValues) {
                 }
                 else {
                     console.log('No more Matching Fields Options');
+
+                    $.each(otherFields, function (key, value) {
+                        for ( var keyValue in dataValues){
+                            if(value == keyValue){
+
+                                if (Object.prototype.toString.call(dataValues[keyValue]) == "[object Object]"){
+
+                                    var date = dataValues[keyValue]["date"].split(" ");
+                                    $('#' + value).val(date[0]);
+                                    //alert(dataValues[keyValue]["date"]);
+                                }else{
+                                    $('#' + value).val(dataValues[keyValue]);
+                                }
+
+                            }
+                        }
+                    });
                 }
 
             }

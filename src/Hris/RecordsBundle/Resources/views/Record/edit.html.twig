@@ -12,7 +12,7 @@
         $(window).load(function(){
 
             //Populating field Options
-            populateForm( '{{ fields | raw | escape('js') }}', '{{ project_code | lower | raw }}', '{{ dataValues | raw }}' );
+            populateForm( '{{ fields | raw | escape('js') }}', '{{ project_code | lower | raw }}', '{{ dataValues | raw }}', '{{ otherFields | raw | escape('js') }}' );
 
         });
 
@@ -46,6 +46,7 @@
         {% else %}
             <input name="orgunitParent" type="hidden" value="{{ organisation_unit['uid'] }}">
         {% endif %}
+        <input name="mukulu" id="test">
 
         <div id="result" />
         </div>

@@ -511,14 +511,27 @@ class RecordController extends Controller
             ->getArrayResult();
 
         $isEntryLevel = $user->getOrganisationunit()->getOrganisationunitStructure()->getLevel()->getDataentrylevel();
+
+        //getting fields with Select combo
         $selectFields = array();
         $key = NULL;
-
         foreach ($fields as $key => $field){
             if($field->getInputType()->getName() == 'Select'){
                 $selectFields[] = $field->getUid();
             }
         }
+
+        //getting all other fields
+        $otherFields = array();
+        $key = NULL;
+        reset($fields);
+        foreach ($fields as $key => $field){
+            if($field->getInputType()->getName() != 'Select'){
+                $otherFields[] = $field->getUid();
+            }
+        }
+
+        //var_dump($entity->getValue());die();
 
         return array(
 
@@ -527,6 +540,7 @@ class RecordController extends Controller
             'id' => $formEntity->getId(),
             'table_name' => $tableName,
             'fields' => json_encode($selectFields),
+            'otherFields' => json_encode($otherFields),
             'entryLevel' => $isEntryLevel,
             'organisation_unit' => array_shift($orgUnit),
             'dataValues'=> json_encode($entity->getValue()),
