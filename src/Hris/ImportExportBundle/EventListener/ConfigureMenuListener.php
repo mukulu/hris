@@ -54,7 +54,7 @@ class ConfigureMenuListener
             )
         );
         $importexportModule->addChild('Export Data',
-            array('uri'=>'#exportdata',
+            array('route'=>'importexport_export',
                 'extras'=>array('tag'=>'div'),
                 'name'=>'Export Data',
                 'attributes'=> array('class'=>'accordion-group'),

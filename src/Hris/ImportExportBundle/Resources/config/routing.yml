@@ -1,3 +1,7 @@
 import_export_history:
     resource: "@HrisImportExportBundle/Controller/HistoryController.php"
     type: annotation
+
+import_export_export:
+    resource: "@HrisImportExportBundle/Controller/ExportController.php"
+    type: annotation
