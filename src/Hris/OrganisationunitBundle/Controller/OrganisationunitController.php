@@ -298,7 +298,7 @@ class OrganisationunitController extends Controller
      *
      * @Secure(roles="ROLE_ORGANISATIONUNIT_ORGANISATIONUNIT_TREE,ROLE_USER")
      *
-     * @Route("/tree.{_format}", requirements={"_format"="yml|xml|json"}, defaults={"format"="json"}, name="organisationunit_tree")
+     * @Route("/tree.{_format}", requirements={"_format"="yml|xml|json"}, defaults={"_format"="json"}, name="organisationunit_tree")
      * @Method("GET")
      * @Template()
      */

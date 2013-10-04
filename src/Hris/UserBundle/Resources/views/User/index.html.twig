@@ -31,9 +31,8 @@
                     <th>Username</th>
                     <th>Firstname</th>
                     <th>Surname</th>
-                    <th>Email</th>
-                    <th>Lastlogin</th>
                     <th>Roles</th>
+                    <th>Forms</th>
                     <th>Organisationunit</th>
                     <th>Actions</th>
                 </tr>
@@ -44,12 +43,8 @@
                     <td><a href="{{ path('user_show', { 'id': entity.id }) }}">{{ entity.username }}</a></td>
                     <td>{{ entity.firstname }}</td>
                     <td>{{ entity.surname }}</td>
-                    <td>{{ entity.email }}</td>
-                    <td>{% if entity.lastLogin %}{{ entity.lastLogin|date('H:i:s d/m/Y') }}{% endif %}</td>
-                    <td>{% for role in entity.roles %}
-                            {{ role }},
-                        {% endfor %}
-                    </td>
+                    <td>{{ entity.roles | join(', ') }}</td>
+                    <td>{{ entity.form | join(', ') | replace({'Employee Form':''}) }}</td>
                     <td>{{ entity.organisationunit }}</td>
                     <td>
                     <ul class="inline">

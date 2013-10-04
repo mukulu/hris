@@ -176,7 +176,7 @@ class ReportEmployeeRecordsController extends Controller
      *
      * @Secure(roles="ROLE_RECORDS_EMPLOYEE_RECORDS,ROLE_USER")
      *
-     * @Route("/{_format}", requirements={"_format"="json|"}, defaults={"format"="json"}, name="report_employeerecords_ajax")
+     * @Route("/{_format}", requirements={"_format"="json|"}, defaults={"_format"="json"}, name="report_employeerecords_ajax")
      * @Method("POST")
      * @Template()
      */
@@ -345,6 +345,7 @@ class ReportEmployeeRecordsController extends Controller
                 $selectColumnClause .=",ResourceTable.birthdate as birthdate";
             }
         }
+        // Constructing where clause
         $whereClause=NULL;
         if(!empty($onlyActiveEmployeeWhereClause)) {
             $whereClause=" WHERE $organisationunitLevelsWhereClause AND $onlyActiveEmployeeWhereClause AND $formsWhereClause";
