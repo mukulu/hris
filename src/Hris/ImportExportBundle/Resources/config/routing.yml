@@ -5,3 +5,7 @@ import_export_history:
 import_export_export:
     resource: "@HrisImportExportBundle/Controller/ExportController.php"
     type: annotation
+
+import_export_exportmetadata:
+    resource: "@HrisImportExportBundle/Controller/ExportMetadataController.php"
+    type: annotation

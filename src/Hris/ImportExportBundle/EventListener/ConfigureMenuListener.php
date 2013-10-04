@@ -61,7 +61,7 @@ class ConfigureMenuListener
             )
         );
         $importexportModule->addChild('Export Metadata',
-            array('uri'=>'#metadata',
+            array('route'=>'importexport_exportmetadata',
                 'extras'=>array('tag'=>'div'),
                 'name'=>'Export Metadata',
                 'attributes'=> array('class'=>'accordion-group'),
