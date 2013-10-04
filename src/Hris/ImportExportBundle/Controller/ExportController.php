@@ -30,7 +30,6 @@ use Symfony\Bundle\FrameworkBundle\Controller\Controller;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Method;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Route;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Template;
-use Hris\ImportExportBundle\Entity\Export;
 use Hris\ImportExportBundle\Form\ExportType;
 
 /**
@@ -312,7 +311,7 @@ class ExportController extends Controller
         $form = $this->createDeleteForm($id);
         $form->bind($request);
 
-        return $this->redirect($this->generateUrl('export'));
+        return $this->redirect($this->generateUrl('importexport_export'));
     }
 
     /**

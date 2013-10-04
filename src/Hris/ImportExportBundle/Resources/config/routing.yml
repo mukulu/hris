@@ -9,3 +9,7 @@ import_export_export:
 import_export_exportmetadata:
     resource: "@HrisImportExportBundle/Controller/ExportMetadataController.php"
     type: annotation
+
+import_export_import:
+    resource: "@HrisImportExportBundle/Controller/ImportController.php"
+    type: annotation
