@@ -24,35 +24,52 @@
  */
 namespace Hris\ImportExportBundle\Form;
 
+use Hris\ReportsBundle\Form\OrganisationunitToIdTransformer;
 use Symfony\Component\Form\AbstractType;
 use Symfony\Component\Form\FormBuilderInterface;
 use Symfony\Component\OptionsResolver\OptionsResolverInterface;
+use Symfony\Component\Validator\Constraints\NotBlank;
 
-class HistoryType extends AbstractType
+class ExportType extends AbstractType
 {
     public function buildForm(FormBuilderInterface $builder, array $options)
     {
+        // assuming $entityManager is passed in options
+        $em = $options['em'];
+        $transformer = new OrganisationunitToIdTransformer($em);
         $builder
-            ->add('session_type')
-            ->add('uid')
-            ->add('object')
-            ->add('status')
-            ->add('count')
-            ->add('username')
-            ->add('starttime')
-            ->add('finishtime')
+            ->add($builder->create('organisationunit','hidden',array(
+                    'constraints'=> array(
+                        new NotBlank(),
+                    )
+                ))->addModelTransformer($transformer)
+            )
+            ->add('withLowerLevels','checkbox',array(
+                'required'=>False,
+            ))
+            ->add('forms','entity', array(
+                'class'=>'HrisFormBundle:Form',
+                'multiple'=>true,
+                'constraints'=>array(
+                    new NotBlank(),
+                )
+            ))
+            ->add('submit','submit')
         ;
     }
 
     public function setDefaultOptions(OptionsResolverInterface $resolver)
     {
-        $resolver->setDefaults(array(
-            'data_class' => 'Hris\ImportExportBundle\Entity\History'
+        $resolver->setRequired(
+            array('em')
+        );
+        $resolver->setAllowedTypes(array(
+            'em'=>'Doctrine\Common\Persistence\ObjectManager',
         ));
     }
 
     public function getName()
     {
-        return 'hris_importexportbundle_historytype';
+        return 'hris_importexportbundle_exporttype';
     }
 }

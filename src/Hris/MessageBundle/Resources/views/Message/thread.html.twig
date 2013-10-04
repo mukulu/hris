@@ -18,7 +18,7 @@
         </div>
 
         <div class="messenger_thread_message_body" id="message_{{ message.id }}">
-            {{ message.body }}
+            {{ message.body | nl2br }}
         </div>
     </div>
 {% endfor %}

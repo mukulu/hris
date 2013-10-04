@@ -24,35 +24,26 @@
  */
 namespace Hris\ImportExportBundle\Form;
 
+use Hris\ReportsBundle\Form\OrganisationunitToIdTransformer;
 use Symfony\Component\Form\AbstractType;
 use Symfony\Component\Form\FormBuilderInterface;
 use Symfony\Component\OptionsResolver\OptionsResolverInterface;
+use Symfony\Component\Validator\Constraints\NotBlank;
 
-class HistoryType extends AbstractType
+class ImportType extends AbstractType
 {
     public function buildForm(FormBuilderInterface $builder, array $options)
     {
         $builder
-            ->add('session_type')
-            ->add('uid')
-            ->add('object')
-            ->add('status')
-            ->add('count')
-            ->add('username')
-            ->add('starttime')
-            ->add('finishtime')
+            ->add('file','file',array(
+                'required'=>False,
+            ))
+            ->add('submit','submit')
         ;
-    }
-
-    public function setDefaultOptions(OptionsResolverInterface $resolver)
-    {
-        $resolver->setDefaults(array(
-            'data_class' => 'Hris\ImportExportBundle\Entity\History'
-        ));
     }
 
     public function getName()
     {
-        return 'hris_importexportbundle_historytype';
+        return 'hris_importexportbundle_importtype';
     }
 }

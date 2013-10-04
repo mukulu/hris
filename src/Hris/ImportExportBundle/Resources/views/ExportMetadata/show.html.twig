@@ -1,0 +1,66 @@
+{% extends '::base.html.twig' %}
+
+{% block right_content -%}
+    <h1>History</h1>
+
+    <table class="record_properties">
+        <tbody>
+            <tr>
+                <th>Id</th>
+                <td>{{ entity.id }}</td>
+            </tr>
+            <tr>
+                <th>Session_type</th>
+                <td>{{ entity.sessiontype }}</td>
+            </tr>
+            <tr>
+                <th>Uid</th>
+                <td>{{ entity.uid }}</td>
+            </tr>
+            <tr>
+                <th>Object</th>
+                <td>{{ entity.object }}</td>
+            </tr>
+            <tr>
+                <th>Status</th>
+                <td>{{ entity.status }}</td>
+            </tr>
+            <tr>
+                <th>Count</th>
+                <td>{{ entity.count }}</td>
+            </tr>
+            <tr>
+                <th>User</th>
+                <td>{{ entity.user }}</td>
+            </tr>
+            <tr>
+                <th>Starttime</th>
+                <td>{{ entity.starttime|date('Y-m-d H:i:s') }}</td>
+            </tr>
+            <tr>
+                <th>Finishtime</th>
+                <td>{{ entity.finishtime|date('Y-m-d H:i:s') }}</td>
+            </tr>
+        </tbody>
+    </table>
+
+        <ul class="record_actions">
+    <li>
+        <a href="{{ path('history') }}">
+            Back to the list
+        </a>
+    </li>
+    <li>
+        <a href="{{ path('history_edit', { 'id': entity.id }) }}">
+            Edit
+        </a>
+    </li>
+    <li>
+        <form action="{{ path('history_delete', { 'id': entity.id }) }}" method="post">
+            <input type="hidden" name="_method" value="DELETE" />
+            {{ form_widget(delete_form) }}
+            <button type="submit">Delete</button>
+        </form>
+    </li>
+</ul>
+{% endblock %}
