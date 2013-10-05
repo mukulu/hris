@@ -583,7 +583,7 @@ class LoadFieldData extends AbstractFixture implements OrderedFixtureInterface
                 'history'=>true),
             33=>Array(
                 'dataType'=>'String',
-                'inputType'=>'TextArea',
+                'inputType'=>'Date',
                 'name'=>'EmploymentDistribution',
                 'caption'=>'Employment Distribution',
                 'compulsory'=>false,
@@ -597,7 +597,7 @@ class LoadFieldData extends AbstractFixture implements OrderedFixtureInterface
                 'history'=>true),
             34=>Array(
                 'dataType'=>'String',
-                'inputType'=>'TextArea',
+                'inputType'=>'Date',
                 'name'=>'RetirementDistribution',
                 'caption'=>'Retirement Distribution',
                 'compulsory'=>false,
@@ -611,7 +611,7 @@ class LoadFieldData extends AbstractFixture implements OrderedFixtureInterface
                 'history'=>true),
             35=>Array(
                 'dataType'=>'String',
-                'inputType'=>'TextArea',
+                'inputType'=>'Date',
                 'name'=>'AgeDistribution',
                 'caption'=>'Age Distribution',
                 'compulsory'=>false,
