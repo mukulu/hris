@@ -31,10 +31,7 @@
         {% if entryLevel %}
             Duty Post
             <select name="orgunitParent" onchange="getunits(this)" required>
-                <option value="">
-                    --
-                </option>
-                <option value="{{ organisation_unit['uid'] }}">
+                <option value="{{ organisation_unit['uid'] }}" selected>
                     {{ organisation_unit['longname'] }}
                 </option>
             </select>

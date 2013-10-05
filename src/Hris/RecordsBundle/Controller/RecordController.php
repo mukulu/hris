@@ -581,8 +581,6 @@ class RecordController extends Controller
             /**
              * Made dynamic, on which field column is used as key, i.e. uid, name or id.
              */
-            // Translates to $field->getUid()
-            // or $field->getUid() depending on value of $recordKeyName
             $recordFieldKey = ucfirst(Record::getFieldKey());
             $valueKey = call_user_func_array(array($field, "get${recordFieldKey}"),array());
 
