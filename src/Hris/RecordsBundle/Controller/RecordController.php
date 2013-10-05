@@ -328,7 +328,7 @@ class RecordController extends Controller
             $orgunit = $user->getOrganisationunit();
         }
 
-        $form = $em->getRepository('HrisFormBundle:Form')->find(1);
+        $form = $em->getRepository('HrisFormBundle:Form')->find($formId);
         $uniqueFields = $form->getUniqueRecordFields();
         $fields = $form->getSimpleField();
 
@@ -352,9 +352,6 @@ class RecordController extends Controller
             $recordArray[$valueKey] = $recordValue;
         }
 
-
-
-
         $entity->setValue($recordArray);
         $entity->setForm($form);
         $entity->setInstance(md5($instance));
@@ -375,12 +372,7 @@ class RecordController extends Controller
         var_dump("this is done without any doubt");
 
         return $this->redirect($this->generateUrl('record_new', array('id' => $form->getId())));
-        //}
 
-        return array(
-            'entity' => $entity,
-            'form'   => $form->createView(),
-        );
     }
 
 
@@ -545,42 +537,77 @@ class RecordController extends Controller
             'organisation_unit' => array_shift($orgUnit),
             'dataValues'=> json_encode($entity->getValue()),
             'selectedUnit'=> json_encode($selectedOrgunit),
+            'instance'=>$entity->getInstance(),
         );
     }
 
     /**
      * Edits an existing Record entity.
      *
-     * @Route("/{id}", requirements={"id"="\d+"}, name="record_update")
-     * @Method("PUT")
-     * @Template("HrisRecordsBundle:Record:new.html.twig")
+     * @Route("/update", name="record_update")
+     * @Method("POST")
+     * @Template("HrisRecordsBundle:Record:viewRecords.html.twig")
      */
-    public function updateAction(Request $request, $id)
+
+    public function updateAction(Request $request)
     {
+
         $em = $this->getDoctrine()->getManager();
 
-        $entity = $em->getRepository('HrisRecordsBundle:Record')->find($id);
+        $instance = $this->get('request')->request->get('instance');
 
-        if (!$entity) {
-            throw $this->createNotFoundException('Unable to find Record entity.');
+        $entity = $em->getRepository('HrisRecordsBundle:Record')->findOneBy(array('instance' => $instance ));
+
+        $formId = (int) $this->get('request')->request->get('formId');
+
+        $user = $this->container->get('security.context')->getToken()->getUser();
+
+        $onrgunitParent = $this->get('request')->request->get('orgunitParent');
+        $orunitUid = $this->get('request')->request->get('unit');
+
+        if ( $orunitUid != null ){
+            $orgunit = $em->getRepository('HrisOrganisationunitBundle:Organisationunit')->findOneBy(array('uid' => $orunitUid));
+        }else{
+            $orgunit = $user->getOrganisationunit();
         }
 
-        $deleteForm = $this->createDeleteForm($id);
-        $editForm = $this->createForm(new RecordType(), $entity);
-        $editForm->bind($request);
+        $form = $em->getRepository('HrisFormBundle:Form')->find($formId);
+        $uniqueFields = $form->getUniqueRecordFields();
+        $fields = $form->getSimpleField();
 
-        if ($editForm->isValid()) {
-            $em->persist($entity);
-            $em->flush();
+        foreach ($fields as $key => $field){
+            $recordValue = $this->get('request')->request->get($field->getName());
 
-            return $this->redirect($this->generateUrl('record_edit', array('id' => $id)));
+            /**
+             * Made dynamic, on which field column is used as key, i.e. uid, name or id.
+             */
+            // Translates to $field->getUid()
+            // or $field->getUid() depending on value of $recordKeyName
+            $recordFieldKey = ucfirst(Record::getFieldKey());
+            $valueKey = call_user_func_array(array($field, "get${recordFieldKey}"),array());
+
+            $recordArray[$valueKey] = $recordValue;
         }
 
-        return array(
-            'entity'      => $entity,
-            'edit_form'   => $editForm->createView(),
-            'delete_form' => $deleteForm->createView(),
-        );
+        $entity->setValue($recordArray);
+        $entity->setForm($form);
+        $entity->setInstance($instance);
+        $entity->setOrganisationunit($orgunit);
+        $entity->setUsername($user->getUsername());
+        $entity->setComplete(True);
+        $entity->setCorrect(True);
+        $entity->setHashistory(False);
+        $entity->setHastraining(False);
+
+
+
+        //if ($entity->isValid()) {
+        $em = $this->getDoctrine()->getManager();
+        $em->persist($entity);
+        $em->flush();
+
+        return $this->redirect($this->generateUrl('record_viewrecords', array('formid' => $form->getId())));
+
     }
 
     /**

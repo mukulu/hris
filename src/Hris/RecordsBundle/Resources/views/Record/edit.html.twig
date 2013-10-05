@@ -27,7 +27,7 @@
 
     <h1>{{ title | raw }}</h1>
 
-    <form action="{{ path('record_create') }}" method="post">
+    <form action="{{ path('record_update') }}" method="post">
         {% if entryLevel %}
             Duty Post
             <select name="orgunitParent" onchange="getunits(this)" required>
@@ -52,6 +52,7 @@
         </div>
         <p>
             <input type="hidden" name="formId" value="{{ id }}">
+            <input type="hidden" name="instance" value="{{ instance }}">
             <button name='Save' class="btn"> Save Records</button>
         </p>
     </form>
