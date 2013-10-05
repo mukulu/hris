@@ -86,13 +86,15 @@ class DashboardController extends Controller
             (array('name'=> "Sex"));
 
         //get the data from the aggregation engine
-        $dashboardEmplyomentChart = $reportAggregationController::aggregationEngine($user->getOrganisationunit(), $forms,$dashboardEmplyomentField, $organisationunitGroups, TRUE, $dashboardEmplyomentField);
+        $organisationunit = $user->getOrganisationunit();
+        if(empty($organisationunit)) $organisationunit =  $this->getDoctrine()->getManager()->createQuery('SELECT organisationunit FROM HrisOrganisationunitBundle:Organisationunit organisationunit WHERE organisationunit.parent IS NULL')->getSingleResult();
+        $dashboardEmplyomentChart = $reportAggregationController::aggregationEngine($organisationunit, $forms,$dashboardEmplyomentField, $organisationunitGroups, TRUE, $dashboardEmplyomentField);
 
-        $dashboardRetirementChart = $reportAggregationController::aggregationEngine($user->getOrganisationunit(), $forms,$dashboardRetirementField, $organisationunitGroups, TRUE, $dashboardRetirementField);
+        $dashboardRetirementChart = $reportAggregationController::aggregationEngine($organisationunit, $forms,$dashboardRetirementField, $organisationunitGroups, TRUE, $dashboardRetirementField);
 
-        $dashboardAgeChart = $reportAggregationController::aggregationEngine($user->getOrganisationunit(), $forms,$dashboardAgeField, $organisationunitGroups, TRUE, $dashboardAgeField);
+        $dashboardAgeChart = $reportAggregationController::aggregationEngine($organisationunit, $forms,$dashboardAgeField, $organisationunitGroups, TRUE, $dashboardAgeField);
 
-        $dashboardGenderChart = $reportAggregationController::aggregationEngine($user->getOrganisationunit(), $forms, $dashboardGenderField, $organisationunitGroups, TRUE, $dashboardGenderField);
+        $dashboardGenderChart = $reportAggregationController::aggregationEngine($organisationunit, $forms, $dashboardGenderField, $organisationunitGroups, TRUE, $dashboardGenderField);
 
         /*
          * Prepare the combinationdashboardchart Chart
@@ -184,7 +186,7 @@ class DashboardController extends Controller
         $combinationdashboardchart->chart->renderTo('chart_placeholder'); // The #id of the div where to render the chart
         $combinationdashboardchart->chart->type('column');
         $combinationdashboardchart->title->text('Employment Distribution, Retirement Distribution with Gender Report');
-        $combinationdashboardchart->subtitle->text($user->getOrganisationunit()->getLongname().' with lower levels');
+        $combinationdashboardchart->subtitle->text($organisationunit->getLongname().' with lower levels');
         $combinationdashboardchart->xAxis->categories($categories);
         $combinationdashboardchart->yAxis($yData);
         $combinationdashboardchart->legend->enabled(false);
@@ -217,7 +219,7 @@ class DashboardController extends Controller
             }
         }
 
-        $retirementChart = $this->constructChartAction($dashboardRetirementField,$retirementData,$user->getOrganisationunit(),$categories,'column','Retirement Distribution','retirementdistribution');
+        $retirementChart = $this->constructChartAction($dashboardRetirementField,$retirementData,$organisationunit,$categories,'column','Retirement Distribution','retirementdistribution');
 
         /*
         * Prepare the Age Distribution Chart
@@ -226,7 +228,7 @@ class DashboardController extends Controller
             $categories[] = $dashboardAgeCharts[strtolower($dashboardAgeField->getName())];
             $data[] =  $dashboardAgeCharts['total'];
         }
-        $ageChart = $this->constructChartAction($dashboardAgeField,$data,$user->getOrganisationunit(),$categories,'column','Age Distribution','agedistribution');
+        $ageChart = $this->constructChartAction($dashboardAgeField,$data,$organisationunit,$categories,'column','Age Distribution','agedistribution');
 
         /*
          * Messaging
