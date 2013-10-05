@@ -9,7 +9,7 @@
         <div id="hris_organisationunitbundle_organisationunittype_completeness">
             {% for completenessForm in completenessForms %}
                 <label for="hris_organisationunitbundle_organisationunittype_completeness{{ completenessForm.uid }}">{{ completenessForm.name }} Expectation</label>
-                <input type="text" name="hris_organisationunitbundle_organisationunittype_completeness[{{ completenessForm.uid }}]"
+                <input type="number" name="hris_organisationunitbundle_organisationunittype_completeness[{{ completenessForm.uid }}]"
                        id="hris_organisationunitbundle_organisationunittype_completeness{{ completenessForm.uid }}"
                        value="{{ completenessExpectation[completenessForm.uid] }}"/>
             {% endfor %}

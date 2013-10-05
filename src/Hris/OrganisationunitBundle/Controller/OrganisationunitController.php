@@ -27,6 +27,7 @@ namespace Hris\OrganisationunitBundle\Controller;
 use Doctrine\ORM\NoResultException;
 use Doctrine\Tests\Common\Annotations\Null;
 use Hris\OrganisationunitBundle\Entity\OrganisationunitCompleteness;
+use Hris\OrganisationunitBundle\Entity\OrganisationunitStructure;
 use Hris\OrganisationunitBundle\Form\HierarchyOperationType;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Bundle\FrameworkBundle\Controller\Controller;
@@ -117,14 +118,23 @@ class OrganisationunitController extends Controller
             // Persist completeness figures too
             $completenessFigures = $request->request->get('hris_organisationunitbundle_organisationunittype_completeness');
             foreach($completenessForms as $completenessFormKey=>$completenessForm) {
-                $organisationunitCompleteness = new OrganisationunitCompleteness();
-                $organisationunitCompleteness->setOrganisationunit($entity);
-                $organisationunitCompleteness->setForm($completenessForm);
-                $organisationunitCompleteness->setExpectation($completenessFigures[$completenessForm->getUid()]);
-                $entity->addOrganisationunitCompletenes($organisationunitCompleteness);
-                unset($organisationunitCompleteness);
+                if(isset($completenessFigures[$completenessForm->getUid()]) && !empty($completenessFigures[$completenessForm->getUid()])) {
+                    $organisationunitCompleteness = new OrganisationunitCompleteness();
+                    $organisationunitCompleteness->setOrganisationunit($entity);
+                    $organisationunitCompleteness->setForm($completenessForm);
+                    $organisationunitCompleteness->setExpectation($completenessFigures[$completenessForm->getUid()]);
+                    $entity->addOrganisationunitCompletenes($organisationunitCompleteness);
+                    unset($organisationunitCompleteness);
+                }
             }
+
+
             $em->persist($entity);
+
+            // Add to organisationunit structure too
+            // Regenerate Orgunit Structure
+            $organisationunitStructure = new OrganisationunitStructureController();
+            $organisationunitStructure->persistInOrganisationunitStructure($em,$entity);
             $em->flush();
 
             return $this->redirect($this->generateUrl('organisationunit_show', array('id' => $entity->getId())));
@@ -266,13 +276,16 @@ class OrganisationunitController extends Controller
             // Persist completeness figures too
             $completenessFigures = $request->request->get('hris_organisationunitbundle_organisationunittype_completeness');
             foreach($completenessForms as $completenessFormKey=>$completenessForm) {
-                $organisationunitCompleteness = new OrganisationunitCompleteness();
-                $organisationunitCompleteness->setOrganisationunit($entity);
-                $organisationunitCompleteness->setForm($completenessForm);
-                $organisationunitCompleteness->setExpectation($completenessFigures[$completenessForm->getUid()]);
-                $entity->addOrganisationunitCompletenes($organisationunitCompleteness);
-                unset($organisationunitCompleteness);
+                if(isset($completenessFigures[$completenessForm->getUid()]) && !empty($completenessFigures[$completenessForm->getUid()])) {
+                    $organisationunitCompleteness = new OrganisationunitCompleteness();
+                    $organisationunitCompleteness->setOrganisationunit($entity);
+                    $organisationunitCompleteness->setForm($completenessForm);
+                    $organisationunitCompleteness->setExpectation((int)$completenessFigures[$completenessForm->getUid()]);
+                    $entity->addOrganisationunitCompletenes($organisationunitCompleteness);
+                    unset($organisationunitCompleteness);
+                }
             }
+
             $em->persist($entity);
             $em->flush();
 
@@ -584,6 +597,10 @@ class OrganisationunitController extends Controller
             // Change parent
             $organisationunitToMove->setParent($parentOrganisationunit);
             $em->persist($organisationunitToMove);
+            // Add to organisationunit structure too
+            // Regenerate Orgunit Structure
+            $organisationunitStructure = new OrganisationunitStructureController();
+            $organisationunitStructure->persistInOrganisationunitStructure($em,$organisationunitToMove);
             $em->flush();
         }
 
