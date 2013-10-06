@@ -28,6 +28,7 @@ use Doctrine\ORM\Mapping as ORM;
 use Gedmo\Mapping\Annotation as Gedmo;
 use FOS\UserBundle\Model\Group as BaseGroup;
 use Symfony\Component\Validator\Constraints as Assert;
+use Hris\UserBundle\Entity\User;
 
 /**
  * Group
@@ -57,6 +58,14 @@ class Group extends BaseGroup
     protected $name;
 
     /**
+     * @var string $description
+     *
+     * @Gedmo\Versioned
+     * @ORM\Column(name="description", type="text", nullable=true)
+     */
+    private $description;
+
+    /**
      *
      * @var array $value
      *
@@ -64,6 +73,14 @@ class Group extends BaseGroup
      * @ORM\Column(name="roles", type="array", nullable=false)
      */
     protected $roles;
+
+    /**
+     * @var User $user
+     *
+     * @ORM\ManyToMany(targetEntity="Hris\UserBundle\Entity\User", mappedBy="group")
+     * @ORM\OrderBy({"name" = "ASC"})
+     */
+    private $user;
 
     /**
      * @var string $uid
@@ -183,6 +200,29 @@ class Group extends BaseGroup
     }
 
     /**
+     * Set description
+     *
+     * @param string $description
+     * @return Group
+     */
+    public function setDescription($description)
+    {
+        $this->description = $description;
+
+        return $this;
+    }
+
+    /**
+     * Get description
+     *
+     * @return string
+     */
+    public function getDescription()
+    {
+        return $this->description;
+    }
+
+    /**
      * Get Entity verbose name
      *
      * @return string
@@ -190,5 +230,38 @@ class Group extends BaseGroup
     public function __toString()
     {
         return $this->name;
+    }
+
+    /**
+     * Add user
+     *
+     * @param User $user
+     * @return Group
+     */
+    public function addUser(User $user)
+    {
+        $this->user[$user->getId()] = $user;
+
+        return $this;
+    }
+
+    /**
+     * Remove user
+     *
+     * @param User $user
+     */
+    public function removeUser(User $user)
+    {
+        $this->user->removeElement($user);
+    }
+
+    /**
+     * Get user
+     *
+     * @return \Doctrine\Common\Collections\Collection
+     */
+    public function getUser()
+    {
+        return $this->user;
     }
 }

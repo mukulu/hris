@@ -24,6 +24,7 @@
  */
 namespace Hris\UserBundle\Entity;
 
+use Doctrine\Common\Collections\ArrayCollection;
 use Gedmo\Mapping\Annotation as Gedmo;
 use FOS\UserBundle\Entity\User as BaseUser;
 use Doctrine\ORM\Mapping as ORM;
@@ -179,14 +180,14 @@ class User extends BaseUser
      * @ORM\Column(name="datecreated", type="datetime")
      */
     private $datecreated;
-    
+
     /**
      * @var \DateTime $lastupdated
      * @Gedmo\Timestampable(on="update")
      * @ORM\Column(name="lastupdated", type="datetime", nullable=true)
      */
     private $lastupdated;
-    
+
     /**
      * @ORM\Column(name="deletedAt", type="datetime", nullable=true)
      */
@@ -199,16 +200,17 @@ class User extends BaseUser
     {
         parent::__construct();
         $this->uid = uniqid();
+        $this->groups = new ArrayCollection();
         if(empty($this->datecreated))
         {
             $this->datecreated = new \DateTime('now');
         }
     }
-    
+
     /**
      * Get id
      *
-     * @return integer 
+     * @return integer
      */
     public function getId()
     {
@@ -247,14 +249,14 @@ class User extends BaseUser
     public function setLastupdated($lastupdated)
     {
         $this->lastupdated = $lastupdated;
-    
+
         return $this;
     }
 
     /**
      * Get lastupdated
      *
-     * @return \DateTime 
+     * @return \DateTime
      */
     public function getLastupdated()
     {
@@ -270,20 +272,20 @@ class User extends BaseUser
     public function setDatecreated($datecreated)
     {
         $this->datecreated = $datecreated;
-    
+
         return $this;
     }
 
     /**
      * Get datecreated
      *
-     * @return \DateTime 
+     * @return \DateTime
      */
     public function getDatecreated()
     {
         return $this->datecreated;
     }
-    
+
     /**
      * Get deletedAt
      *
@@ -293,7 +295,7 @@ class User extends BaseUser
     {
     	return $this->deletedAt;
     }
-    
+
     /**
      * Set deletedAt
      *
@@ -345,14 +347,14 @@ class User extends BaseUser
         $this->organisationunit = $organisationunit;
 
         $organisationunit->addUser($this);
-    
+
         return $this;
     }
 
     /**
      * Get organisationunit
      *
-     * @return \Hris\OrganisationunitBundle\Entity\Organisationunit 
+     * @return \Hris\OrganisationunitBundle\Entity\Organisationunit
      */
     public function getOrganisationunit()
     {
@@ -368,14 +370,14 @@ class User extends BaseUser
     public function setPhonenumber($phonenumber)
     {
         $this->phonenumber = $phonenumber;
-    
+
         return $this;
     }
 
     /**
      * Get phonenumber
      *
-     * @return string 
+     * @return string
      */
     public function getPhonenumber()
     {
@@ -391,14 +393,14 @@ class User extends BaseUser
     public function setJobTitle($jobTitle)
     {
         $this->jobTitle = $jobTitle;
-    
+
         return $this;
     }
 
     /**
      * Get jobTitle
      *
-     * @return string 
+     * @return string
      */
     public function getJobTitle()
     {
@@ -414,14 +416,14 @@ class User extends BaseUser
     public function setFirstName($firstName)
     {
         $this->firstName = $firstName;
-    
+
         return $this;
     }
 
     /**
      * Get firstName
      *
-     * @return string 
+     * @return string
      */
     public function getFirstName()
     {
@@ -437,14 +439,14 @@ class User extends BaseUser
     public function setMiddleName($middleName)
     {
         $this->middleName = $middleName;
-    
+
         return $this;
     }
 
     /**
      * Get middleName
      *
-     * @return string 
+     * @return string
      */
     public function getMiddleName()
     {
@@ -460,14 +462,14 @@ class User extends BaseUser
     public function setSurname($surname)
     {
         $this->surname = $surname;
-    
+
         return $this;
     }
 
     /**
      * Get surname
      *
-     * @return string 
+     * @return string
      */
     public function getSurname()
     {

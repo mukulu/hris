@@ -1,5 +1,21 @@
-{% extends "HrisUserBundle:Group:layout.html.twig" %}
+{% extends '::base.html.twig' %}
 
-{% block fos_user_content %}
-{% include "HrisUserBundle:Group:new_content.html.twig" %}
-{% endblock fos_user_content %}
+{% block right_content -%}
+
+    <h1><small>User Group creation</small></h1>
+
+    <form action="{{ path('user_group_new') }}" method="POST" {{ form_enctype(form) }}>
+        {{ form_widget(form) }}
+        <br/>
+        <ul class="record_actions inline" style="float:left;">
+            <li>
+                <button type="submit" class="btn">{{ 'group.new.submit'|trans([], 'FOSUserBundle') }}</button>
+            </li>
+            <li>
+                <a href="{{ path('user_group_list') }}" class="btn">
+                    Back to the list
+                </a>
+            </li>
+        </ul>
+    </form>
+{% endblock %}

@@ -54,19 +54,19 @@ class GroupController extends ContainerAware
     {
         $groups = $this->container->get('fos_user.group_manager')->findGroups();
 
-        return $this->container->get('templating')->renderResponse('FOSUserBundle:Group:list.html.'.$this->getEngine(), array('groups' => $groups));
+        return $this->container->get('templating')->renderResponse('HrisUserBundle:Group:list.html.'.$this->getEngine(), array('groups' => $groups));
     }
 
     /**
      * Finds and displays a Group.
      *
-     * @Route("/{groupname}", requirements={"id"="\d+"}, name="user_group_show")
+     * @Route("/{id}", requirements={"id"="\d+"}, name="user_group_show")
      * @Method("GET")
      * @Template()
      */
-    public function showAction($groupname)
+    public function showAction($id)
     {
-        $group = $this->findGroupBy('name', $groupname);
+        $group = $this->findGroupBy('id', $id);
 
         return $this->container->get('templating')->renderResponse('FOSUserBundle:Group:show.html.'.$this->getEngine(), array('group' => $group));
     }
@@ -74,27 +74,27 @@ class GroupController extends ContainerAware
     /**
      * Displays a form to edit an existing Group.
      *
-     * @Route("/{groupname}/edit", requirements={"id"="\d+"}, name="user_group_edit")
-     * @Method("GET")
+     * @Route("/{id}/edit", requirements={"id"="\d+"}, name="user_group_edit")
+     * @Method("GET|PUT")
      * @Template()
      */
-    public function editAction($groupname)
+    public function editAction($id)
     {
-        $group = $this->findGroupBy('name', $groupname);
+        $group = $this->findGroupBy('id', $id);
         $form = $this->container->get('fos_user.group.form');
         $formHandler = $this->container->get('fos_user.group.form.handler');
 
         $process = $formHandler->process($group);
         if ($process) {
             $this->setFlash('fos_user_success', 'group.flash.updated');
-            $groupUrl =  $this->container->get('router')->generate('fos_user_group_show', array('groupname' => $group->getName()));
+            $groupUrl =  $this->container->get('router')->generate('user_group_show', array('id' => $group->getId()));
 
             return new RedirectResponse($groupUrl);
         }
 
         return $this->container->get('templating')->renderResponse('FOSUserBundle:Group:edit.html.'.$this->getEngine(), array(
             'form'      => $form->createview(),
-            'groupname'  => $group->getName(),
+            'group'     =>$group,
         ));
     }
 
@@ -102,7 +102,7 @@ class GroupController extends ContainerAware
      * Displays a form to create a new Group.
      *
      * @Route("/new", name="user_group_new")
-     * @Method("GET")
+     * @Method("GET|POST")
      * @Template()
      */
     public function newAction()
@@ -114,7 +114,7 @@ class GroupController extends ContainerAware
         if ($process) {
             $this->setFlash('fos_user_success', 'group.flash.created');
             $parameters = array('groupname' => $form->getData('group')->getName());
-            $url = $this->container->get('router')->generate('fos_user_group_show', $parameters);
+            $url = $this->container->get('router')->generate('user_group_show', $parameters);
 
             return new RedirectResponse($url);
         }
@@ -127,12 +127,12 @@ class GroupController extends ContainerAware
     /**
      * Deletes a Group.
      *
-     * @Route("/{groupname}/delete", requirements={"id"="\d+"}, name="user_group_delete")
+     * @Route("/{id}/delete", requirements={"id"="\d+"}, name="user_group_delete")
      * @Method("GET")
      */
-    public function deleteAction($groupname)
+    public function deleteAction($id)
     {
-        $group = $this->findGroupBy('name', $groupname);
+        $group = $this->findGroupBy('id', $id);
         $this->container->get('fos_user.group_manager')->deleteGroup($group);
         $this->setFlash('fos_user_success', 'group.flash.deleted');
 
@@ -151,7 +151,7 @@ class GroupController extends ContainerAware
     protected function findGroupBy($key, $value)
     {
         if (!empty($value)) {
-            $group = $this->container->get('fos_user.group_manager')->{'findGroupBy'.ucfirst($key)}($value);
+            $group = $this->container->get('fos_user.group_manager')->{'findGroupBy'}(array("$key"=>$value));
         }
 
         if (empty($group)) {

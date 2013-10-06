@@ -1,5 +1,52 @@
-{% extends "HrisUserBundle:Group:layout.html.twig" %}
+{% extends '::base.html.twig' %}
 
-{% block fos_user_content %}
-{% include "HrisUserBundle:Group:edit_content.html.twig" %}
-{% endblock fos_user_content %}
+{% block right_content -%}
+    <h1><i class="icon-edit icon-largest" title="Edit"></i><small>Group edit</small></h1>
+
+    <form action="{{ path('user_group_edit', { 'id': group.id }) }}" method="POST" {{ form_enctype(form) }}>
+        <input type="hidden" name="_method" value="PUT" />
+        {{ form_widget(form) }}
+        <br/>
+        <ul class="record_actions inline" style="float:left;">
+            <li>
+                <button type="submit" class="btn">Edit</button>
+            </li>
+            <li>
+                <a href="{{ path('user_group_list') }}" class="btn">
+                    Back to the list
+                </a>
+            </li>
+        </ul>
+    </form>
+
+    <ul class="inline" style="float:left;margin-top:-20px;">
+        <li>
+            <a data-toggle="modal" href="#deleteModalFor{{ group.uid }}" class="btn btn-danger">Delete {{ group.name | capitalize }}</a>
+
+            <!-- Modal -->
+            <div class="modal fade" id="deleteModalFor{{ group.uid }}">
+                <div class="modal-dialog">
+                    <div class="modal-content">
+                        <div class="modal-header">
+                            <button type="button" class="close" data-dismiss="modal" aria-hidden="true">×</button>
+                            <h4 class="modal-title"><i class="icon-circle-remove icon-largest" title="Delete"></i>Deleting {{ group.name | capitalize }}</h4>
+                        </div>
+                        <div class="modal-body">
+                            Are you sure you want to delete <strong>{{ group.name | capitalize }}</strong> that was created on {{ group.datecreated|date('d/m/Y') }}
+                            {% if group.lastUpdated %}
+                                and last updated on {{ group.lastUpdated|date('H:i:s d/m/Y') }} ??
+                            {% else %}
+                                and never updated ??
+                            {% endif %}
+                        </div>
+                        <div class="modal-footer">
+                            <button type="button" class="btn btn-default" data-dismiss="modal">Close</button>
+                            <a href="{{ path('user_group_delete', { 'id': group.id }) }}"  class="btn btn-danger">Delete {{ group.name | capitalize }}</a>
+                        </div>
+                    </div><!-- /.modal-content -->
+                </div><!-- /.modal-dialog -->
+            </div><!-- /.modal -->
+
+        </li>
+    </ul>
+{% endblock %}
