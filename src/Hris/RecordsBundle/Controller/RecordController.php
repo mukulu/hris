@@ -299,12 +299,66 @@ class RecordController extends Controller
             'field_option_table_name' => $filed_Option_Table_Name,
             'option_associations_values' => json_encode($fieldOptions),
             'option_associations_table' => $fieldOptionAssocitiontablename,
-            'organisation_Values' => $orgunit_Values,
-            'organisation_unit_table' => $orgunit_table,
-            'channel'=>$channel,
+
         );
     }
 
+    /**
+     * List Forms Available for Update Record.
+     *
+     * @Route("/formlistupdate", name="record_form_list_update")
+     * @Method("GET")
+     * @Template("HrisRecordsBundle:Record:formlistupdate.html.twig")
+     */
+    public function formlistupdateAction()
+    {
+        $em = $this->getDoctrine()->getManager();
+
+        $entities = $em->getRepository( 'HrisFormBundle:Form' )->createQueryBuilder('p')->getQuery()->getArrayResult();
+
+        return array(
+            'entities' => $entities,
+        );
+    }
+
+    /**
+     * List Records Available for Updating.
+     *
+     * @Route("/{id}", name="record_update_list")
+     * @Method("GET")
+     * @Template("")
+     */
+    public function updatelistAction(Request $request, $id)
+    {
+
+        $em = $this->getDoctrine()->getManager();
+        $forms = $em->getRepository('HrisFormBundle:Form')->find($id);
+
+        $user = $this->container->get('security.context')->getToken()->getUser();
+        $searchString = $this->getRequest()->request->get('sSearch');
+        $sEcho = $this->getRequest()->request->get('sEcho');
+
+        if(!isset($searchString)) $searchString=NULL;
+
+        if ($user->getOrganisationunit()->getOrganisationunitStructure()->getLevel()->getDataentrylevel()) {
+            $oganisationunitObjects = $em->getRepository('HrisOrganisationunitBundle:Organisationunit')->findBy(array('parent' => $user->getOrganisationunit()->getId()));
+            foreach ($oganisationunitObjects as $key => $oganisationunit) {
+                $oganisationunitids[] = $oganisationunit->getId();
+            }
+            $oganisationunitids[] = $user->getOrganisationunit()->getId();
+        } else {
+            $oganisationunitids = $user->getOrganisationunit()->getId();
+        }
+
+        //preparing array of Fields
+        //mukulu continue from here
+
+
+
+        return array(
+
+        );
+    }
     /**
      * Creates a new Record entity.
      *

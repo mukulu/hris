@@ -632,9 +632,9 @@ class ResourceTable
             // Calculated fields
             // @todo implement calculated fields feature and remove hard-coding
             $resourceTable->addColumn("Age", "integer",array('notnull'=>false,'precision'=>0, 'scale'=>0));
-            $resourceTable->addColumn("Age_group", "string",array('length'=>64, 'notnull'=>false));
+            //$resourceTable->addColumn("Age_group", "string",array('length'=>64, 'notnull'=>false));
             $resourceTable->addColumn("Employment_duration", "string",array('length'=>64, 'notnull'=>false));
-            $resourceTable->addColumn("Retirement_date", "date",array('notnull'=>false,'precision'=>0, 'scale'=>0));
+            //$resourceTable->addColumn("Retirement_date", "date",array('notnull'=>false,'precision'=>0, 'scale'=>0));
             //$resourceTable->addColumn('retirement_date_day', "string",array('length'=>64, 'notnull'=>false));
             //$resourceTable->addColumn('retirement_date_month_number', "integer",array('notnull'=>false,'precision'=>0, 'scale'=>0));
             $resourceTable->addColumn('Retirement_date_month_text', "string",array('length'=>64, 'notnull'=>false));
@@ -698,9 +698,21 @@ class ResourceTable
                         $recordFieldKey = ucfirst(Record::getFieldKey());
                         $valueKey = call_user_func_array(array($field, "get${recordFieldKey}"),array());
 
+                        if($field->getIsCalculated()){
+
+                            if(preg_match_all('/\#{([^\}]+)\}/',$field->getCalculatedExpression(),$match)) {
+                                $fields = $entityManager->getRepository('HrisFormBundle:Field')->findOneBy (
+                                    array('name' => $match[1][0])
+                                );
+                                $valueKey = call_user_func_array(array($fields, "get${recordFieldKey}"),array());
+                            }
+                        }
+
                         if(isset($dataValue[$valueKey])) {
+
                             $dataArray[$field->getName()]=$dataValue[$valueKey];
                             if ($field->getInputType()->getName() == 'Select') {
+
                                 if (!empty($dataValue[$valueKey])){
                                     // Resolve actual value from stored key
                                     $dataArray[$field->getName()] = trim($fieldOptionMap[$dataValue[$valueKey]]);
@@ -708,16 +720,34 @@ class ResourceTable
                                     $dataArray[$field->getName()] = NULL;
                                 }
                             }else if ($field->getInputType()->getName() == 'Date') {
-                                if(!empty($dataValue[$valueKey])) {
-                                    $displayValue = new \DateTime($dataValue[$valueKey]['date'],new \DateTimeZone ($dataValue[$valueKey]['timezone']));
-                                    $dataArray[$field->getName()] = trim($displayValue->format('Y-m-d H:i:s.u')); //working on date format fix
-                                    //$dataArray[$field->getName().'_day'] = trim($displayValue->format('l'));
-                                    //$dataArray[$field->getName().'_month_number'] = trim($displayValue->format('m'));
-                                    $dataArray[$field->getName().'_month_text'] = trim($displayValue->format('F'));
-                                    $dataArray[$field->getName().'_year'] = trim($displayValue->format('Y'));
-                                    //$dataArray[$field->getName().'_month_and_year'] = trim($displayValue->format('F Y'));
+
+                                if($field->getIsCalculated() == true){
+
+                                        if(!empty($dataValue[$valueKey])) {
+                                            $displayValue = new \DateTime($dataValue[$valueKey]['date'],new \DateTimeZone ($dataValue[$valueKey]['timezone']));
+                                            //var_dump($field->getCalculatedExpression());
+                                            $datavalue = str_replace($match[0][0],$displayValue->format('Y-m-d'),$field->getCalculatedExpression());
+
+                                            $dataArray[$field->getName()] = eval("return $datavalue;");
+                                            //$dataArray[$field->getName()] = trim($displayValue->format('Y-m-d H:i:s.u')); //working on date format fix
+                                            //$dataArray[$field->getName().'_month_text'] = trim($displayValue->format('F'));
+                                            //$dataArray[$field->getName().'_year'] = trim($displayValue->format('Y'));
+                                        }else{
+                                        $dataArray[$field->getName()] = NULL;
+                                    }
+
                                 }else{
-                                    $dataArray[$field->getName()] = NULL;
+                                    if(!empty($dataValue[$valueKey])) {
+                                        $displayValue = new \DateTime($dataValue[$valueKey]['date'],new \DateTimeZone ($dataValue[$valueKey]['timezone']));
+                                        $dataArray[$field->getName()] = trim($displayValue->format('Y-m-d')); //working on date format fix
+                                        //$dataArray[$field->getName().'_day'] = trim($displayValue->format('l'));
+                                        //$dataArray[$field->getName().'_month_number'] = trim($displayValue->format('m'));
+                                        $dataArray[$field->getName().'_month_text'] = trim($displayValue->format('F'));
+                                        $dataArray[$field->getName().'_year'] = trim($displayValue->format('Y'));
+                                        //$dataArray[$field->getName().'_month_and_year'] = trim($displayValue->format('F Y'));
+                                    }else{
+                                        $dataArray[$field->getName()] = NULL;
+                                    }
                                 }
 
                                 // @todo implement calculated fields feature and remove hard-coding
@@ -795,19 +825,19 @@ class ResourceTable
                     // Calculated Fields
                     if(!empty($age)) {
                         $dataArray['Age'] = $age;
-                        $dataArray['Age_group'] = ((floor($age/5))*5) .'-'.(((floor($age/5))*5)+4);
+                        //$dataArray['Age_group'] = ((floor($age/5))*5) .'-'.(((floor($age/5))*5)+4);
                     }else {
                         $dataArray['Age']=NULL;
                     }
                     if(!empty($retirementDate)) {
-                        $dataArray['Retirement_date'] = trim($retirementDate->format('Y-m-d H:i:s.u'));
+                        //$dataArray['Retirement_date'] = trim($retirementDate->format('Y-m-d H:i:s.u'));
                         //$dataArray['retirement_date_day'] = trim($retirementDate->format('l'));
                         //$dataArray['retirement_date_month_number'] = trim($retirementDate->format('m'));
                         $dataArray['Retirement_date_month_text'] = trim($retirementDate->format('F'));
                         $dataArray['Retirement_date_year'] = trim($retirementDate->format('Y'));
                         //$dataArray['retirement_date_month_and_year'] = trim($retirementDate->format('F Y'));
                     }else {
-                        $dataArray['Retirement_date'] =NULL;
+                        //$dataArray['Retirement_date'] =NULL;
                     }
                     if(!empty($employmentDuration)) {
                         $dataArray['Employment_duration'] = $employmentDuration;
