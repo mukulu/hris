@@ -35,7 +35,7 @@
         {% set incr=0 %}
         {% for record in records %}
             {% set incr = incr+1 %}
-            <tr>
+            <tr id = {{ record.uid }}>
                 <td>{{ incr }}</td>
                 {% for visibleField in visibleFields %}
                     {% if visibleField.getInputType == 'Select' %}
@@ -69,7 +69,7 @@
                             <a href="{{ path('record_delete', { 'id': record.id }) }}"><i class="icon-remove-sign icon-large" title="Delete"></i></a>
                         </li>
                         <li>
-                            <button onclick="changeForm();">Form</button>
+                            <button onclick="changeForm('{{ record.uid }}');">Form</button>
                         </li>
                     </ul>
                 </td>

@@ -708,4 +708,36 @@ class RecordController extends Controller
         array_walk_recursive($arr, function($v, $k) use($key, &$val){if($k == $key) array_push($val, $v);});
         return count($val) > 1 ? $val : array_pop($val);
     }
+
+    /**
+     * Change the Forms for the Employee.
+     *
+     * @Route("/changeform", name="record_form_change")
+     * @Method("POST")
+     */
+
+    public function updateFormAction(Request $request)
+    {
+
+        $em = $this->getDoctrine()->getManager();
+
+        $uid = $this->get('request')->request->get('record_uid');
+
+        $formId = $this->get('request')->request->get('form_id');
+
+        $entity = $em->getRepository('HrisRecordsBundle:Record')->findOneBy(array('uid' => $uid ));
+
+        $form = $em->getRepository('HrisFormBundle:Form')->find($formId);
+
+        $entity->setForm($form);
+
+        $em = $this->getDoctrine()->getManager();
+        $em->persist($entity);
+        $em->flush();
+
+        return new Response('success');
+
+    }
 }
+
+
