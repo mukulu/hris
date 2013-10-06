@@ -37,7 +37,7 @@ class ConfigureMenuListener
         $menu = $event->getMenu();
 
         $menu->addChild('ImportExport Module', array(
-                'route'=>'importexport_import',
+                'uri'=>'#importexport',
                 'extras'=>array('tag'=>'div'),
                 'name'=>'Import-Export Management',
                 'attributes'=> array('class'=>'accordion-group'),
@@ -47,7 +47,7 @@ class ConfigureMenuListener
         $importexportModule = $menu->getChild('ImportExport Module');
 
         $importexportModule->addChild('Import Data',
-            array('uri'=>'#importdata',
+            array('route'=>'importexport_import',
                 'extras'=>array('tag'=>'div'),
                 'name'=>'Import Data',
                 'attributes'=> array('class'=>'accordion-group'),

@@ -294,6 +294,9 @@ class RecordController extends Controller
             'field_option_table_name' => $filed_Option_Table_Name,
             'option_associations_values' => json_encode($fieldOptions),
             'option_associations_table' => $fieldOptionAssocitiontablename,
+            'organisation_Values' => $orgunit_Values,
+            'organisation_unit_table' => $orgunit_table,
+            'channel'=>$channel,
 
         );
     }

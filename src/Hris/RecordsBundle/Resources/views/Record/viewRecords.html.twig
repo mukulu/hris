@@ -51,12 +51,18 @@
                 <td>{{ record.lastupdated| date('d/m/Y') }}</td>
                 <td>{{ record.organisationunit.longname }}</td>
                 <td>
-                    <ul class="inline" style="width:100px;">
-                        <li>
-                            <a href="{{ path('record_show', { 'id': record.id }) }}"><i class="icon-info-sign icon-large" title="Show"></i></a>
-                        </li>
+                    <ul class="inline" style="width:170px;">
                         <li>
                             <a href="{{ path('record_edit', { 'id': record.id }) }}"><i class="icon-edit icon-large" title="Edit"></i></a>
+                        </li>
+                        <li>
+                            <a href="{{ path('record_show', { 'id': record.id }) }}"><i class="icon-list icon-large" title="History"></i></a>
+                        </li>
+                        <li>
+                            <a href="{{ path('record_show', { 'id': record.id }) }}"><i class="icon-folder-open icon-large" title="In service Training"></i></a>
+                        </li>
+                        <li>
+                            <a href="{{ path('record_show', { 'id': record.id }) }}"><i class="icon-user icon-large" title="Profile"></i></a>
                         </li>
                         <li>
                             <a href="{{ path('record_delete', { 'id': record.id }) }}"><i class="icon-remove-sign icon-large" title="Delete"></i></a>
