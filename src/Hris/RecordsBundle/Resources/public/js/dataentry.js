@@ -21,8 +21,6 @@ function changeForm(record_uid) {
 
     $('#showPopupModal').one('hide', function(e) {
 
-        alert($('#content_field').val() + " = " + record_uid);
-
         var form_id = $('#content_field').val();
 
         $.ajax({//Make the Ajax Request
