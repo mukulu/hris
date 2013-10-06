@@ -53,6 +53,7 @@ class IndicatorController extends Controller
         $em = $this->getDoctrine()->getManager();
 
         $entities = $em->getRepository('HrisIndicatorBundle:Indicator')->findAll();
+        $delete_forms = NULL;
         foreach($entities as $entity) {
             $delete_form= $this->createDeleteForm($entity->getId());
             $delete_forms[$entity->getId()] = $delete_form->createView();

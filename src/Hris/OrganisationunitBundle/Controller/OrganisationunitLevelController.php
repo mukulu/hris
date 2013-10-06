@@ -68,6 +68,7 @@ class OrganisationunitLevelController extends Controller
             $regenerationRequired=False;
         }
 
+        $delete_forms = NULL;
         foreach($entities as $entity) {
             $delete_form= $this->createDeleteForm($entity->getId());
             $delete_forms[$entity->getId()] = $delete_form->createView();

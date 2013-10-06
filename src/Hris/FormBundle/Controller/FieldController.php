@@ -54,6 +54,7 @@ class FieldController extends Controller
 
         $entities = $em->getRepository('HrisFormBundle:Field')->findAll();
 
+        $delete_forms = NULL;
         foreach($entities as $entity) {
             $delete_form= $this->createDeleteForm($entity->getId());
             $delete_forms[$entity->getId()] = $delete_form->createView();

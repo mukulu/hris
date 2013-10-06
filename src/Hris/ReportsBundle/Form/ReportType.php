@@ -34,10 +34,7 @@ class ReportType extends AbstractType
     {
         $builder
             ->add('name')
-            ->add('uid')
             ->add('createdby')
-            ->add('datecreated')
-            ->add('lastupdated')
             ->add('uri')
             ->add('parameters')
         ;

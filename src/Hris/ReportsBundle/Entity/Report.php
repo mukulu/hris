@@ -104,6 +104,15 @@ class Report
 
 
     /**
+     * Constructor
+     */
+    public function __construct()
+    {
+        $this->uid = uniqid();
+        $this->datecreated = new \DateTime('now');
+    }
+
+    /**
      * Get id
      *
      * @return integer 

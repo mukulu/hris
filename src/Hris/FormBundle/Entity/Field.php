@@ -876,6 +876,7 @@ class Field
     {
         return $this->uniqueRecordForms;
     }
+
     /**
      * Constructor
      */
