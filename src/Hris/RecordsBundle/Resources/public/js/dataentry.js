@@ -14,3 +14,14 @@ function recordSet(data_record){
 
     })
 }
+
+function changeForm() {
+
+    $('#showPopupModal').modal('show')
+
+    $('#showPopupModal').one('hide', function(e) {
+
+        alert($('#content_field').val());
+
+    })
+}

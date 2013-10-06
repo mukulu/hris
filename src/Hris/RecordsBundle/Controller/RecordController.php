@@ -164,6 +164,10 @@ class RecordController extends Controller
         $title .= " for ".$formNames;
         if(empty($visibleFields)) $visibleFields=$formFields;
 
+        //getting all User Forms for User Migration
+
+        $user = $this->container->get('security.context')->getToken()->getUser();
+        $userForms = $user->getForm();
 
         return array(
             'title'=>$title,
@@ -171,6 +175,7 @@ class RecordController extends Controller
             'records'=>$records,
             'optionMap'=>$fieldOptionMap,
             'fieldMap'=>$fieldMap,
+            'userForms'=>$userForms,
         );
     }
 
