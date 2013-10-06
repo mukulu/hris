@@ -44,8 +44,8 @@ class ConfigureMenuListener
                 'attributes'=> array('class'=>'accordion-group'),
             )
         );
-        $userModule = $menu->getChild('User Module');
 
+        $userModule = $menu->getChild('User Module');
 
         $userModule->addChild('System Users',
             array('route'=>'user_list',
@@ -54,12 +54,13 @@ class ConfigureMenuListener
                   'attributes'=> array('class'=>'accordion-group'),
             )
         );
-//        $userModule->addChild('System Roles',
-//            array('uri'=>'#systemroles',
-//                  'extras'=>array('tag'=>'div'),
-//                  'name'=>'System Roles',
-//                  'attributes'=> array('class'=>'accordion-group'),
-//            )
-//        );
+
+        $userModule->addChild('User Groups',
+            array('route'=>'user_group_list',
+                'extras'=>array('tag'=>'div'),
+                'name'=>'User Groups',
+                'attributes'=> array('class'=>'accordion-group'),
+            )
+        );
     }
 }

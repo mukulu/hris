@@ -28,7 +28,7 @@ use Gedmo\Mapping\Annotation as Gedmo;
 use FOS\UserBundle\Entity\User as BaseUser;
 use Doctrine\ORM\Mapping as ORM;
 use Symfony\Component\Validator\Constraints as Assert;
-
+use Hris\UserBundle\Entity\Group;
 use Hris\OrganisationunitBundle\Entity\Organisationunit;
 
 /**
@@ -157,6 +157,21 @@ class User extends BaseUser
      * })
      */
     private $organisationunit;
+
+    /**
+     * @var Group $groups
+     *
+     * @ORM\ManyToMany(targetEntity="Hris\UserBundle\Entity\Group", inversedBy="user")
+     * @ORM\JoinTable(name="hris_user_group_members",
+     *   joinColumns={
+     *     @ORM\JoinColumn(name="user_id", referencedColumnName="id", onDelete="CASCADE")
+     *   },
+     *   inverseJoinColumns={
+     *     @ORM\JoinColumn(name="group_id", referencedColumnName="id", onDelete="CASCADE")
+     *   }
+     * )
+     */
+    protected $groups;
 
     /**
      * @var \DateTime $datecreated
