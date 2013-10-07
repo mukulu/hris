@@ -25,6 +25,7 @@
  */
 namespace Hris\IndicatorBundle\Controller;
 
+use Hris\IndicatorBundle\Entity\TargetFieldOption;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Bundle\FrameworkBundle\Controller\Controller;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Method;
@@ -55,6 +56,7 @@ class TargetController extends Controller
         $em = $this->getDoctrine()->getManager();
 
         $entities = $em->getRepository('HrisIndicatorBundle:Target')->findAll();
+        $delete_forms=NULL;
         foreach($entities as $entity) {
             $delete_form= $this->createDeleteForm($entity->getId());
             $delete_forms[$entity->getId()] = $delete_form->createView();
@@ -80,6 +82,21 @@ class TargetController extends Controller
 
         if ($form->isValid()) {
             $em = $this->getDoctrine()->getManager();
+
+            // Persist completeness figures too
+            $targettypeform = $request->request->get('hris_indicatorbundle_targettype');
+            $fieldOptions = $this->getDoctrine()->getManager()->getRepository('HrisFormBundle:FieldOption')->findBy(array('field'=>$targettypeform['fields']));
+            $fieldOptionTargets = $request->request->get('hris_indicatorbundle_targettype_fieldoptiontarget');
+            foreach($fieldOptions as $fieldOptionKey=>$fieldOption) {
+                if(isset($fieldOptionTargets[$fieldOption->getId()]) && !empty($fieldOptionTargets[$fieldOption->getId()])) {
+                    $fieldOptionTarget = new TargetFieldOption();
+                    $fieldOptionTarget->setFieldOption($fieldOption);
+                    $fieldOptionTarget->setTarget($entity);
+                    $fieldOptionTarget->setValue((int)$fieldOptionTargets[$fieldOption->getId()]);
+                    $entity->addTargetFieldOption($fieldOptionTarget);
+                    unset($fieldOptionTarget);
+                }
+            }
             $em->persist($entity);
             $em->flush();
 
@@ -184,10 +201,33 @@ class TargetController extends Controller
         $editForm->submit($request);
 
         if ($editForm->isValid()) {
+            //Get rid of current expectations
+            $em->createQueryBuilder('targetFieldOption')
+                ->delete('HrisIndicatorBundle:TargetFieldOption','targetFieldOption')
+                ->where('targetFieldOption.target= :targetId')
+                ->setParameter('targetId',$entity->getId())
+                ->getQuery()->getResult();
+            $em->flush();
+
+            // Persist completeness figures too
+            $targettypeform = $request->request->get('hris_indicatorbundle_targettype');
+            $fieldOptions = $this->getDoctrine()->getManager()->getRepository('HrisFormBundle:FieldOption')->findBy(array('field'=>$targettypeform['fields']));
+            $fieldOptionTargets = $request->request->get('hris_indicatorbundle_targettype_fieldoptiontarget');
+            foreach($fieldOptions as $fieldOptionKey=>$fieldOption) {
+                if(isset($fieldOptionTargets[$fieldOption->getId()]) && !empty($fieldOptionTargets[$fieldOption->getId()])) {
+                    $fieldOptionTarget = new TargetFieldOption();
+                    $fieldOptionTarget->setFieldOption($fieldOption);
+                    $fieldOptionTarget->setTarget($entity);
+                    $fieldOptionTarget->setValue((int)$fieldOptionTargets[$fieldOption->getId()]);
+                    $entity->addTargetFieldOption($fieldOptionTarget);
+                    unset($fieldOptionTarget);
+                }
+            }
+
             $em->persist($entity);
             $em->flush();
 
-            return $this->redirect($this->generateUrl('target_edit', array('id' => $id)));
+            return $this->redirect($this->generateUrl('target_show', array('id' => $id)));
         }
 
         return array(
@@ -228,23 +268,16 @@ class TargetController extends Controller
                 ->getQuery()->getResult();
             if(!empty($targetFieldOptions)) {
                 foreach($targetFieldOptions as $targetFieldOptionKey=>$targetFieldOption) {
-                    $fieldOptionTargetNodes[] = Array(
+                    $fieldOptionTargetNodes[$targetFieldOption->getFieldOption()->getId()] = Array(
                         'name' => $targetFieldOption->getFieldOption()->getValue(),
                         'id' => $targetFieldOption->getFieldOption()->getId(),
                         'value' => $targetFieldOption->getValue()
                     );
                 }
-            }else {
-                foreach($fieldOptions as $fieldOptionKey=>$fieldOption) {
-                    $fieldOptionTargetNodes[] = Array(
-                        'name' => $fieldOption->getValue(),
-                        'id' => $fieldOption->getId(),
-                        'value' => ''
-                    );
-                }
             }
-        }else {
-            foreach($fieldOptions as $fieldOptionKey=>$fieldOption) {
+        }
+        foreach($fieldOptions as $fieldOptionKey=>$fieldOption) {
+            if(!isset($fieldOptionTargetNodes[$fieldOption->getId()])) {
                 $fieldOptionTargetNodes[] = Array(
                     'name' => $fieldOption->getValue(),
                     'id' => $fieldOption->getId(),
@@ -279,7 +312,11 @@ class TargetController extends Controller
                 throw $this->createNotFoundException('Unable to find Target entity.');
             }
 
-            $em->remove($entity);
+            $em->createQueryBuilder('target')
+                ->delete('HrisIndicatorBundle:Target','target')
+                ->where('target.id= :targetId')
+                ->setParameter('targetId',$id)
+                ->getQuery()->getResult();
             $em->flush();
         }
 

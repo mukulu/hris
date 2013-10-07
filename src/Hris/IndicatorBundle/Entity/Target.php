@@ -197,6 +197,8 @@ class Target
     {
         $this->targetFieldOption[] = $targetFieldOption;
 
+        $targetFieldOption->setTarget($this);
+
         return $this;
     }
 
