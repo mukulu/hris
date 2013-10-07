@@ -30,6 +30,7 @@ use Symfony\Bundle\FrameworkBundle\Controller\Controller;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Method;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Route;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Template;
+use JMS\SecurityExtraBundle\Annotation\Secure;
 use Hris\IndicatorBundle\Entity\Target;
 use Hris\IndicatorBundle\Form\TargetType;
 
@@ -195,6 +196,70 @@ class TargetController extends Controller
             'delete_form' => $deleteForm->createView(),
         );
     }
+
+    /**
+     * Returns TargetFieldOptions json.
+     *
+     * @Secure(roles="ROLE_INDICATOR_TARGETFIELDOPTION_AJAX,ROLE_USER")
+     *
+     * @Route("/targetFieldOption.{_format}", requirements={"_format"="yml|xml|json"}, defaults={"_format"="json"}, name="target_targetfieldption")
+     * @Method("POST")
+     * @Template()
+     */
+    public function targetFieldOptionAction($_format)
+    {
+        $em = $this->getDoctrine()->getManager();
+        $fieldid = $this->getRequest()->request->get('fieldid');
+        $targetid = $this->getRequest()->request->get('targetid');
+        $fieldOptionTargetNodes = NULL;
+
+        // Fetch existing targets and field options belonging to target
+        $fieldOptions = $em->getRepository('HrisFormBundle:FieldOption')->findBy(array('field'=>$fieldid));
+
+        if(!empty($targetid) && !empty($fieldid)) {
+            $queryBuilder = $this->getDoctrine()->getManager()->createQueryBuilder();
+            $targetFieldOptions = $queryBuilder->select('targetFieldOption')
+                ->from('HrisIndicatorBundle:TargetFieldOption','targetFieldOption')
+                ->join('targetFieldOption.fieldOption','fieldOption')
+                ->join('fieldOption.field','field')
+                ->where('targetFieldOption.target=:targetid')
+                ->andWhere('field.id=:fieldid')
+                ->setParameters(array('targetid'=>$targetid,'fieldid'=>$fieldid))
+                ->getQuery()->getResult();
+            if(!empty($targetFieldOptions)) {
+                foreach($targetFieldOptions as $targetFieldOptionKey=>$targetFieldOption) {
+                    $fieldOptionTargetNodes[] = Array(
+                        'name' => $targetFieldOption->getFieldOption()->getValue(),
+                        'id' => $targetFieldOption->getFieldOption()->getId(),
+                        'value' => $targetFieldOption->getValue()
+                    );
+                }
+            }else {
+                foreach($fieldOptions as $fieldOptionKey=>$fieldOption) {
+                    $fieldOptionTargetNodes[] = Array(
+                        'name' => $fieldOption->getValue(),
+                        'id' => $fieldOption->getId(),
+                        'value' => ''
+                    );
+                }
+            }
+        }else {
+            foreach($fieldOptions as $fieldOptionKey=>$fieldOption) {
+                $fieldOptionTargetNodes[] = Array(
+                    'name' => $fieldOption->getValue(),
+                    'id' => $fieldOption->getId(),
+                    'value' => ''
+                );
+            }
+        }
+
+        $serializer = $this->container->get('serializer');
+
+        return array(
+            'entities' => $serializer->serialize($fieldOptionTargetNodes,$_format)
+        );
+    }
+
     /**
      * Deletes a Target entity.
      *

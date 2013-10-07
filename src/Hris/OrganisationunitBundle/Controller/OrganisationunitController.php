@@ -299,13 +299,13 @@ class OrganisationunitController extends Controller
      * @Secure(roles="ROLE_ORGANISATIONUNIT_ORGANISATIONUNIT_TREE,ROLE_USER")
      *
      * @Route("/tree.{_format}", requirements={"_format"="yml|xml|json"}, defaults={"_format"="json"}, name="organisationunit_tree")
-     * @Method("GET|POST")
+     * @Method("GET")
      * @Template()
      */
     public function treeAction($_format)
     {
         $em = $this->getDoctrine()->getManager();
-        $id = $this->getRequest()->get('id');
+        $id = $this->getRequest()->query->get('id');
 
         if($id == NULL || $id==0) {
             // Root organisationunits called
