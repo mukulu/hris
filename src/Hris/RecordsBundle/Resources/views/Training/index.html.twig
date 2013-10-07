@@ -14,9 +14,9 @@
 {% block right_content -%}
     <div class="container">
         <h1><small>Training list</small></h1>
-        <ul>
-            <li class="inline">
-                <a href="{{ path('training_new') }}">
+        <ul class="inline">
+            <li>
+                <a class="btn" href="{{ path('training_new') }}">
                     Add Training
                 </a>
             </li>
@@ -25,27 +25,32 @@
        <table class="records_list dataTable table table-striped table-bordered table-hover">
         <thead>
             <tr>
-                <th>Id</th>
-                <th>Coursename</th>
-                <th>Courselocation</th>
+                <th>SN</th>
+                <th>Course Name</th>
+                <th>Course Location</th>
                 <th>Sponsor</th>
                 <th>Actions</th>
             </tr>
         </thead>
         <tbody>
+        {% set incr=0 %}
         {% for entity in entities %}
+            {% set incr = incr+1 %}
             <tr>
-                <td><a href="{{ path('training_show', { 'id': entity.id }) }}">{{ entity.id }}</a></td>
+                <td>{{ incr }}</td>
                 <td>{{ entity.coursename }}</td>
                 <td>{{ entity.courselocation }}</td>
                 <td>{{ entity.sponsor }}</td>
                 <td>
-                <ul>
+                <ul class="inline">
                     <li>
-                        <a href="{{ path('training_show', { 'id': entity.id }) }}">show</a>
+                        <a href="{{ path('training_show', { 'id': entity.id }) }}"><i class="icon-info-sign icon-large" title="Show"></i></a>
                     </li>
                     <li>
-                        <a href="{{ path('training_edit', { 'id': entity.id }) }}">edit</a>
+                        <a href="{{ path('training_edit', { 'id': entity.id }) }}"><i class="icon-edit icon-large" title="Edit"></i></a>
+                    </li>
+                    <li>
+                        <a href="{{ path('training_delete', { 'id': entity.id }) }}"><i class="icon-remove-sign icon-large" title="Delete"></i></a>
                     </li>
                 </ul>
                 </td>

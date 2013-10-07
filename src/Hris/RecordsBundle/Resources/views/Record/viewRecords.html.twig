@@ -60,7 +60,7 @@
                             <a href="{{ path('record_show', { 'id': record.id }) }}"><i class="icon-list icon-large" title="History"></i></a>
                         </li>
                         <li>
-                            <a href="{{ path('record_show', { 'id': record.id }) }}"><i class="icon-folder-open icon-large" title="In service Training"></i></a>
+                            <a href="{{ path('training_list_byrecord', { 'recordid': record.id }) }}"><i class="icon-folder-open icon-large" title="In service Training"></i></a>
                         </li>
                         <li>
                             <a href="{{ path('record_show', { 'id': record.id }) }}"><i class="icon-user icon-large" title="Profile"></i></a>

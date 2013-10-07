@@ -30,6 +30,7 @@ use Sensio\Bundle\FrameworkExtraBundle\Configuration\Method;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Route;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Template;
 use Hris\RecordsBundle\Entity\Training;
+use Hris\RecordsBundle\Entity\Record;
 use Hris\RecordsBundle\Form\TrainingType;
 
 /**
@@ -46,17 +47,21 @@ class TrainingController extends Controller
      * @Route("/", name="training")
      * @Route("/list", name="training_list")
      * @Route("/{recordid}/training", requirements={"recordid"="\d+"}, name="training_byrecord")
-     * @Route("/list/{recordid}/record", requirements={"recordid"="\d+"}, name="training_list_byrecord")
+     * @Route("/list/{recordid}/", requirements={"recordid"="\d+"}, name="training_list_byrecord")
      * @Method("GET")
      * @Template()
      */
     public function indexAction( $recordid=NULL )
     {
         //echo "Welome to Training Module";exit;
-        //echo $_GET['recordId'];exit;
+        //echo $recordid;exit;
         $em = $this->getDoctrine()->getManager();
 
-        $entities = $em->getRepository('HrisRecordsBundle:Training')->findAll();
+        if(!empty($recordid)){
+            $entities = $em->getRepository('HrisRecordsBundle:Training')->findBy(array('record'=>$recordid));
+            $record = $em->getRepository('HrisRecordsBundle:Record')->findOneBy(array('id'=>$recordid));
+        }
+        //print_r($record->getValue());exit;
 
         return array(
             'entities' => $entities,
