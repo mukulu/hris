@@ -1,3 +1,7 @@
-hris_help_centre_homepage:
-    pattern:  /hello/{name}
-    defaults: { _controller: HrisHelpCentreBundle:Default:index }
+help_helpcentre_chapter:
+    resource: "@HrisHelpCentreBundle/Controller/ChapterController.php"
+    type: annotation
+    
+designdataentryform:
+    resource: "@HrisHelpCentreBundle/Controller/TopicController.php"
+    type: annotation

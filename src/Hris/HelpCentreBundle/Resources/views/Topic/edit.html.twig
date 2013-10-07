@@ -1,0 +1,59 @@
+{% extends '::base.html.twig' %}
+
+{% block right_content -%}
+    <h1><i class="icon-edit icon-largest" title="Edit"></i><small>Topic edit</small></h1>
+
+    <form action="{{ path('topic_update', { 'id': entity.id }) }}" method="post" {{ form_enctype(edit_form) }}>
+        <input type="hidden" name="_method" value="PUT" />
+        {{ form_widget(edit_form) }}
+        <br/>
+        <ul class="record_actions inline" style="float:left;">
+            <li>
+                <button type="submit" class="btn">Edit</button>
+            </li>
+            <li>
+                <a href="{{ path('topic') }}" class="btn">
+                    Back to the list
+                </a>
+            </li>
+        </ul>
+    </form>
+
+    <ul class="inline" style="float:left;margin-top:-20px;">
+        <li>
+            <a data-toggle="modal" href="#deleteModalFor{{ entity.uid }}" class="btn btn-danger">Delete {{ entity.name | capitalize }}</a>
+
+            <!-- Modal -->
+            <div class="modal fade" id="deleteModalFor{{ entity.uid }}">
+                <div class="modal-dialog">
+                    <div class="modal-content">
+                        <div class="modal-header">
+                            <button type="button" class="close" data-dismiss="modal" aria-hidden="true">×</button>
+                            <h4 class="modal-title"><i class="icon-circle-remove icon-largest" title="Delete"></i>Deleting {{ entity.name | capitalize }}</h4>
+                        </div>
+                        <div class="modal-body">
+                            Are you sure you want to delete <strong>{{ entity.name | capitalize }}</strong> that was created on {{ entity.datecreated|date('d/m/Y') }}
+                            {% if entity.lastUpdated %}
+                                and last updated on {{ entity.lastUpdated|date('H:i:s d/m/Y') }} ??
+                            {% else %}
+                                and never updated ??
+                            {% endif %}
+                        </div>
+                        <div class="modal-footer">
+                            <form action="{{ path('field_delete', { 'id': entity.id }) }}" method="post">
+                                <input type="hidden" name="_method" value="DELETE" />
+                                {{ form_widget(delete_form) }}
+                                <button type="button" class="btn btn-default" data-dismiss="modal">Close</button>
+                                <button type="submit" class="btn btn-danger">Delete</button>
+                            </form>
+                        </div>
+                    </div><!-- /.modal-content -->
+                </div><!-- /.modal-dialog -->
+            </div><!-- /.modal -->
+
+        </li>
+
+
+    </ul>
+
+{% endblock %}
