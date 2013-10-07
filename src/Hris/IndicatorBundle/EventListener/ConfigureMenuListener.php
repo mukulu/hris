@@ -38,7 +38,7 @@ class ConfigureMenuListener
 
         $menu->addChild('Target Module',
             array(
-                'uri'=>'#indicatormodule',
+                'uri'=>'#targetmodule',
                 'extras'=>array('tag'=>'div'),
                 'name'=>'Target Module',
                 'attributes'=> array('class'=>'accordion-group'),
@@ -47,7 +47,7 @@ class ConfigureMenuListener
         $indicatorModule = $menu->getChild('Target Module');
 
         $indicatorModule->addChild('Targets',
-            array('route'=>'indicator_list',
+            array('route'=>'target_list',
                   'extras'=>array('tag'=>'div'),
                   'name' =>'Targets',
                   'attributes'=> array('class'=>'accordion-group')

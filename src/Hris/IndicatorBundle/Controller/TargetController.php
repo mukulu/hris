@@ -30,22 +30,22 @@ use Symfony\Bundle\FrameworkBundle\Controller\Controller;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Method;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Route;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Template;
-use Hris\IndicatorBundle\Entity\Indicator;
-use Hris\IndicatorBundle\Form\IndicatorType;
+use Hris\IndicatorBundle\Entity\Target;
+use Hris\IndicatorBundle\Form\TargetType;
 
 /**
- * Indicator controller.
+ * Target controller.
  *
- * @Route("/indicator")
+ * @Route("/target")
  */
-class IndicatorController extends Controller
+class TargetController extends Controller
 {
 
     /**
-     * Lists all Indicator entities.
+     * Lists all Target entities.
      *
-     * @Route("/", name="indicator")
-     * @Route("/list", name="indicator_list")
+     * @Route("/", name="target")
+     * @Route("/list", name="target_list")
      * @Method("GET")
      * @Template()
      */
@@ -53,7 +53,7 @@ class IndicatorController extends Controller
     {
         $em = $this->getDoctrine()->getManager();
 
-        $entities = $em->getRepository('HrisIndicatorBundle:Indicator')->findAll();
+        $entities = $em->getRepository('HrisIndicatorBundle:Target')->findAll();
         foreach($entities as $entity) {
             $delete_form= $this->createDeleteForm($entity->getId());
             $delete_forms[$entity->getId()] = $delete_form->createView();
@@ -65,16 +65,16 @@ class IndicatorController extends Controller
         );
     }
     /**
-     * Creates a new Indicator entity.
+     * Creates a new Target entity.
      *
-     * @Route("/", name="indicator_create")
+     * @Route("/", name="target_create")
      * @Method("POST")
-     * @Template("HrisIndicatorBundle:Indicator:new.html.twig")
+     * @Template("HrisIndicatorBundle:Target:new.html.twig")
      */
     public function createAction(Request $request)
     {
-        $entity  = new Indicator();
-        $form = $this->createForm(new IndicatorType(), $entity);
+        $entity  = new Target();
+        $form = $this->createForm(new TargetType(), $entity);
         $form->submit($request);
 
         if ($form->isValid()) {
@@ -82,7 +82,7 @@ class IndicatorController extends Controller
             $em->persist($entity);
             $em->flush();
 
-            return $this->redirect($this->generateUrl('indicator_show', array('id' => $entity->getId())));
+            return $this->redirect($this->generateUrl('target_show', array('id' => $entity->getId())));
         }
 
         return array(
@@ -92,16 +92,16 @@ class IndicatorController extends Controller
     }
 
     /**
-     * Displays a form to create a new Indicator entity.
+     * Displays a form to create a new Target entity.
      *
-     * @Route("/new", name="indicator_new")
+     * @Route("/new", name="target_new")
      * @Method("GET")
      * @Template()
      */
     public function newAction()
     {
-        $entity = new Indicator();
-        $form   = $this->createForm(new IndicatorType(), $entity);
+        $entity = new Target();
+        $form   = $this->createForm(new TargetType(), $entity);
 
         return array(
             'entity' => $entity,
@@ -110,9 +110,9 @@ class IndicatorController extends Controller
     }
 
     /**
-     * Finds and displays a Indicator entity.
+     * Finds and displays a Target entity.
      *
-     * @Route("/{id}", requirements={"id"="\d+"}, name="indicator_show")
+     * @Route("/{id}", requirements={"id"="\d+"}, name="target_show")
      * @Method("GET")
      * @Template()
      */
@@ -120,10 +120,10 @@ class IndicatorController extends Controller
     {
         $em = $this->getDoctrine()->getManager();
 
-        $entity = $em->getRepository('HrisIndicatorBundle:Indicator')->find($id);
+        $entity = $em->getRepository('HrisIndicatorBundle:Target')->find($id);
 
         if (!$entity) {
-            throw $this->createNotFoundException('Unable to find Indicator entity.');
+            throw $this->createNotFoundException('Unable to find Target entity.');
         }
 
         $deleteForm = $this->createDeleteForm($id);
@@ -135,9 +135,9 @@ class IndicatorController extends Controller
     }
 
     /**
-     * Displays a form to edit an existing Indicator entity.
+     * Displays a form to edit an existing Target entity.
      *
-     * @Route("/{id}/edit", name="indicator_edit")
+     * @Route("/{id}/edit", name="target_edit")
      * @Method("GET")
      * @Template()
      */
@@ -145,13 +145,13 @@ class IndicatorController extends Controller
     {
         $em = $this->getDoctrine()->getManager();
 
-        $entity = $em->getRepository('HrisIndicatorBundle:Indicator')->find($id);
+        $entity = $em->getRepository('HrisIndicatorBundle:Target')->find($id);
 
         if (!$entity) {
-            throw $this->createNotFoundException('Unable to find Indicator entity.');
+            throw $this->createNotFoundException('Unable to find Target entity.');
         }
 
-        $editForm = $this->createForm(new IndicatorType(), $entity);
+        $editForm = $this->createForm(new TargetType(), $entity);
         $deleteForm = $this->createDeleteForm($id);
 
         return array(
@@ -162,31 +162,31 @@ class IndicatorController extends Controller
     }
 
     /**
-     * Edits an existing Indicator entity.
+     * Edits an existing Target entity.
      *
-     * @Route("/{id}", name="indicator_update")
+     * @Route("/{id}", name="target_update")
      * @Method("PUT")
-     * @Template("HrisIndicatorBundle:Indicator:edit.html.twig")
+     * @Template("HrisIndicatorBundle:Target:edit.html.twig")
      */
     public function updateAction(Request $request, $id)
     {
         $em = $this->getDoctrine()->getManager();
 
-        $entity = $em->getRepository('HrisIndicatorBundle:Indicator')->find($id);
+        $entity = $em->getRepository('HrisIndicatorBundle:Target')->find($id);
 
         if (!$entity) {
-            throw $this->createNotFoundException('Unable to find Indicator entity.');
+            throw $this->createNotFoundException('Unable to find Target entity.');
         }
 
         $deleteForm = $this->createDeleteForm($id);
-        $editForm = $this->createForm(new IndicatorType(), $entity);
+        $editForm = $this->createForm(new TargetType(), $entity);
         $editForm->submit($request);
 
         if ($editForm->isValid()) {
             $em->persist($entity);
             $em->flush();
 
-            return $this->redirect($this->generateUrl('indicator_edit', array('id' => $id)));
+            return $this->redirect($this->generateUrl('target_edit', array('id' => $id)));
         }
 
         return array(
@@ -196,9 +196,9 @@ class IndicatorController extends Controller
         );
     }
     /**
-     * Deletes a Indicator entity.
+     * Deletes a Target entity.
      *
-     * @Route("/{id}", name="indicator_delete")
+     * @Route("/{id}", name="target_delete")
      * @Method("DELETE")
      */
     public function deleteAction(Request $request, $id)
@@ -208,21 +208,21 @@ class IndicatorController extends Controller
 
         if ($form->isValid()) {
             $em = $this->getDoctrine()->getManager();
-            $entity = $em->getRepository('HrisIndicatorBundle:Indicator')->find($id);
+            $entity = $em->getRepository('HrisIndicatorBundle:Target')->find($id);
 
             if (!$entity) {
-                throw $this->createNotFoundException('Unable to find Indicator entity.');
+                throw $this->createNotFoundException('Unable to find Target entity.');
             }
 
             $em->remove($entity);
             $em->flush();
         }
 
-        return $this->redirect($this->generateUrl('indicator'));
+        return $this->redirect($this->generateUrl('target'));
     }
 
     /**
-     * Creates a form to delete a Indicator entity by id.
+     * Creates a form to delete a Target entity by id.
      *
      * @param mixed $id The entity id
      *

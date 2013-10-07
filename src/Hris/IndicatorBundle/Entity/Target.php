@@ -24,21 +24,21 @@
  */
 namespace Hris\IndicatorBundle\Entity;
 
+use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\ORM\Mapping as ORM;
 use Gedmo\Mapping\Annotation as Gedmo;
-
-use Hris\FormBundle\Entity\FieldOptionGroup;
+use Hris\FormBundle\Entity\FieldOption;
 use Hris\OrganisationunitBundle\Entity\OrganisationunitGroup;
 use Symfony\Component\Validator\Constraints as Assert;
 
 /**
- * Indicator
+ * Target
  *
- * @ORM\Table(name="hris_indicator")
+ * @ORM\Table(name="hris_indicator_target")
  * @Gedmo\Loggable
- * @ORM\Entity(repositoryClass="Hris\IndicatorBundle\Entity\IndicatorRepository")
+ * @ORM\Entity(repositoryClass="Hris\IndicatorBundle\Entity\TargetRepository")
  */
-class Indicator
+class Target
 {
     /**
      * @var integer
@@ -75,38 +75,18 @@ class Indicator
     private $description;
 
     /**
-     * @var float
+     * @var TargetFieldOption $targetFieldOption
      *
-     * @Gedmo\Versioned
-     * @ORM\Column(name="value", type="float")
+     * @ORM\OneToMany(targetEntity="Hris\IndicatorBundle\Entity\TargetFieldOption", mappedBy="form",cascade={"ALL"})
+     * @ORM\OrderBy({"sort" = "ASC"})
      */
-    private $value;
-
-    /**
-     * @var integer
-     *
-     * @Gedmo\Versioned
-     * @ORM\Column(name="year", type="integer")
-     */
-    private $year;
-
-    /**
-     * @var FieldOption $fieldOption
-     *
-     * @Gedmo\Versioned
-     * @ORM\ManyToOne(targetEntity="\Hris\FormBundle\Entity\FieldOption",inversedBy="indicator")
-     * @ORM\JoinColumns({
-     *   @ORM\JoinColumn(name="fieldoption_id", referencedColumnName="id", onDelete="CASCADE")
-     * })
-     *
-     */
-    private $fieldOption;
+    private $targetFieldOption;
 
     /**
      * @var OrganisationunitGroup $organisationunitGroup
      *
      * @Gedmo\Versioned
-     * @ORM\ManyToOne(targetEntity="\Hris\OrganisationunitBundle\Entity\OrganisationunitGroup",inversedBy="indicator")
+     * @ORM\ManyToOne(targetEntity="\Hris\OrganisationunitBundle\Entity\OrganisationunitGroup",inversedBy="target")
      * @ORM\JoinColumns({
      *   @ORM\JoinColumn(name="organisationunit_id", referencedColumnName="id", onDelete="CASCADE")
      * })
@@ -142,7 +122,7 @@ class Indicator
      * Set uid
      *
      * @param string $uid
-     * @return Indicator
+     * @return Target
      */
     public function setUid($uid)
     {
@@ -165,7 +145,7 @@ class Indicator
      * Set name
      *
      * @param string $name
-     * @return Indicator
+     * @return Target
      */
     public function setName($name)
     {
@@ -188,7 +168,7 @@ class Indicator
      * Set description
      *
      * @param string $description
-     * @return Field
+     * @return Target
      */
     public function setDescription($description)
     {
@@ -208,82 +188,55 @@ class Indicator
     }
 
     /**
-     * Set value
+     * Add targetFieldOption
      *
-     * @param float $value
-     * @return Indicator
+     * @param TargetFieldOption $targetFieldOption
+     * @return Target
      */
-    public function setValue($value)
+    public function addTargetFieldOption(TargetFieldOption $targetFieldOption)
     {
-        $this->value = $value;
-    
-        return $this;
-    }
-
-    /**
-     * Get value
-     *
-     * @return float 
-     */
-    public function getValue()
-    {
-        return $this->value;
-    }
-
-    /**
-     * Set year
-     *
-     * @param integer $year
-     * @return Indicator
-     */
-    public function setYear($year)
-    {
-        $this->year = $year;
-    
-        return $this;
-    }
-
-    /**
-     * Get year
-     *
-     * @return integer 
-     */
-    public function getYear()
-    {
-        return $this->year;
-    }
-
-    /**
-     * Set fieldOption
-     *
-     * @param FieldOption $fieldOption
-     * @return Indicator
-     */
-    public function setFieldOptionGroup(FieldOption $fieldOption = null)
-    {
-        $this->fieldOption = $fieldOption;
+        $this->targetFieldOption[] = $targetFieldOption;
 
         return $this;
     }
 
     /**
-     * Get fieldOption
+     * Remove targetFieldOption
      *
-     * @return FieldOption
+     * @param TargetFieldOption $targetFieldOption
      */
-    public function getFieldOption()
+    public function removeTargetFieldOption(TargetFieldOption $targetFieldOption)
     {
-        return $this->fieldOption;
+        $this->targetFieldOption->removeElement($targetFieldOption);
     }
 
+    /**
+     * Remove All targetFieldOption
+     *
+     * @internal param \Hris\FormBundle\Entity\TargetFieldOption $targetFieldOption
+     */
+    public function removeAllTargetFieldOption()
+    {
+        foreach($this->targetFieldOption as $key=>$targetFieldOption) {
+            $this->targetFieldOption->removeElement($targetFieldOption);
+        }
+    }
 
-
+    /**
+     * Get targetFieldOption
+     *
+     * @return \Doctrine\Common\Collections\Collection
+     */
+    public function getTargetFieldOption()
+    {
+        return $this->targetFieldOption;
+    }
 
     /**
      * Set organisationunitGroup
      *
      * @param OrganisationunitGroup $organisationunitGroup
-     * @return Indicator
+     * @return Target
      */
     public function setOrganisationunitGroup(OrganisationunitGroup $organisationunitGroup = null)
     {
@@ -306,7 +259,7 @@ class Indicator
      * Set lastupdated
      *
      * @param \DateTime $lastupdated
-     * @return Indicator
+     * @return Target
      */
     public function setLastupdated($lastupdated)
     {
@@ -329,7 +282,7 @@ class Indicator
      * Set datecreated
      *
      * @param \DateTime $datecreated
-     * @return Indicator
+     * @return Target
      */
     public function setDatecreated($datecreated)
     {
@@ -364,5 +317,7 @@ class Indicator
     public function __construct()
     {
         $this->uid = uniqid();
+
+        $this->targetFieldOption = new ArrayCollection();
     }
 }
