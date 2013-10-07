@@ -1,0 +1,102 @@
+{% extends '::base.html.twig' %}
+{% block javascripts %}
+    {{ parent() }}
+    <script type="text/javascript" src="{{ asset('commons/js/jquery.dataTables.js') }}"></script>
+    <script type="text/javascript" src="{{ asset('commons/js/dt_settings.ajax.js') }}"></script>
+    <script type="text/javascript" language="javascript" src="{{ asset('commons/js/jquery.dataTables.columnFilter.js') }}"></script>
+    <script>window["_GOOG_TRANS_EXT_VER"] = "1";</script>
+
+{% endblock javascripts %}
+
+{% block stylesheets %}
+    {{ parent() }}
+    <link rel="stylesheet" href="{{ asset('commons/css/dt_bootstrap.css') }}" />
+{% endblock stylesheets %}
+
+{% block right_content -%}
+    <div class="container">
+        <h1><small>{{ title }}</small></h1>
+
+
+        <table class="records_list dataTable table table-striped table-bordered table-hover" cellpadding="0" cellspacing="0" border="0">
+            <thead>
+            <tr><h3>Name Validation</h3></tr>
+{% if dupArray is not null %}
+
+            <tr>
+                <td><b>SN<b/></td>
+                <td><b>Name<b/></td>
+                <td><b>Date of Birth<b/></td>
+                <td><b>Form</b></td>
+                <td><b>OrgUnit</b></td>
+                <td><b>Repeated Name<b/></td>
+                <td><b>Date of Birth<b/></td>
+                <td><b>Form<b/></td>
+                <td><b>OrgUnit<b/></td>
+            </tr>
+
+    {% set index=0 %}
+    {% for value in dupArray  %}
+            <tr>
+                   <td> {{ index+1 }}</td>
+                   <td> {{ dupArray[index].name }}</td>
+                    <td> {{ dupArray[index].dBirth }}</td>
+                     <td>{{ dupArray[index].form }}</td>
+                <td>{{ dupArray[index].orgunit }}</td>
+                <td> {{ dupArray[index].name }}</td>
+                <td> {{ dupArray[index].dBirth }}</td>
+                <td>{{ dupArray[index].form }}</td>
+                <td>{{ dupArray[index].orgunit }}</td>
+                        {% set index=index+1 %}
+                       </tr>
+            {% endfor %}
+
+{% else %}
+           <h5>No duplicate records found</h5>
+            {% endif %}
+            </thead>
+            <tbody>
+            </tbody>
+        </table>
+    </div>
+
+    <div>
+
+        {% if specificTitle is not null %}
+
+        <table class="records_list dataTable table table-striped table-bordered table-hover" cellpadding="0" cellspacing="0" border="0">
+            <thead>
+            <tr><h3>{{ specificTitle }}</h3></tr>
+            {% if validationFault is not null %}
+
+                <tr>
+                    <td><b>SN<b/></td>
+                    <td><b>Name<b/></td>
+                    <td><b>First Date<b/></td>
+                    <td><b>Second Date</b></td>
+
+                </tr>
+
+                {% set index=0 %}
+                {% for value in validationFault  %}
+
+                    <tr>
+                        <td> {{ index+1 }}</td>
+                        <td> {{ validationFault.name }}</td>
+                        <td> {{ validationFault.leftSide }}</td>
+                        <td> {{ validationFault.rightSide }}</td>
+                        {% set index=index+1 %}
+                        </tr>
+                       {% endfor %}
+            {%else  %}
+                <h5>No invalid records found</h5>
+            {% endif %}
+
+            </thead>
+            <tbody>
+            </tbody>
+        </table>
+          {% endif %}
+
+        </div>
+{% endblock %}

@@ -29,3 +29,4 @@ recordsReport:
 friendlyReport:
     resource: "@HrisReportsBundle/Controller/ReportFriendlyReportController.php"
     type: annotation
+

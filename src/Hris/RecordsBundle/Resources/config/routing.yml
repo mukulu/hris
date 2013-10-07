@@ -9,3 +9,11 @@ record:
 training:
     resource: "@HrisRecordsBundle/Controller/TrainingController.php"
     type: annotation
+
+validation_run:
+    resource: "@HrisRecordsBundle/Controller/ValidationRunController.php"
+    type: annotation
+
+validation_result:
+    resource: "@HrisRecordsBundle/Controller/ValidationRunController.php"
+    type: annotation
