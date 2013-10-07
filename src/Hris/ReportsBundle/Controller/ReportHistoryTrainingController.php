@@ -290,7 +290,8 @@ class ReportHistoryTrainingController extends Controller
                 $query .= "INNER JOIN hris_organisationunitlevel as L on L.id = S.level_id ";
                 $query .= "WHERE V.form_id = ". $forms->getId()." AND H.field_id = ". $fields->getId();
                 $query .= " AND (". $subQuery .") ";
-                $query .= " GROUP BY H.history";
+                $query .= " GROUP BY H.history ";
+                $query .= " ORDER BY data ASC";
 
 
             }else{  //For other fields which are not combo box, report is based on history dates
@@ -317,8 +318,8 @@ class ReportHistoryTrainingController extends Controller
                 $query .= "INNER JOIN hris_organisationunitlevel as L on L.id = S.level_id ";
                 $query .= "WHERE V.form_id = ". $forms->getId()." AND H.field_id = ". $fields->getId();
                 $query .= " AND (". $subQuery .") ";
-                $query .= " GROUP BY date_part('year',startdate)";
-                $query .= "ORDER BY data ASC";
+                $query .= " GROUP BY date_part('year',startdate) ";
+                $query .= " ORDER BY data ASC";
             }
         }
         //echo $query;exit;
@@ -348,21 +349,31 @@ class ReportHistoryTrainingController extends Controller
         //Get the objects from the the variables
 
         $organisationUnit = $em->getRepository('HrisOrganisationunitBundle:Organisationunit')->find($organisationUnitid);
-        $fields = $em->getRepository('HrisFormBundle:Field')->find($fieldsId);
         $forms = $em->getRepository('HrisFormBundle:Form')->find($formsId);
 
-        if(is_null($fields)){
+        if(is_null($fieldsId)){
             $fields = new Field();
+        }
+        else{
+            $fields = $em->getRepository('HrisFormBundle:Field')->find($fieldsId);
         }
 
         $results = $this->aggregationEngine($organisationUnit, $forms, $fields, $reportType, $withLowerLevels );
 
 
         //create the title
-        $title = $fields->getCaption()." Aggregate Report ";
-        if($fieldsId != $fieldsTwoId) $title .= "with ".$fieldsTwo->getCaption()." Sex cross tabulation ";
-        $title .= "- ".$organisationUnit->getLongname();
-        if($withLowerLevels == 1) $title .= " with lower levels";
+        if ($reportType == "training"){
+            $subtitle = "Training";
+        }
+        elseif( $reportType = "history"){
+            $subtitle = $fields->getCaption()." History";
+        }
+
+        $title = $subtitle. " Distribution Report ".$organisationUnit->getLongname();
+
+        if($withLowerLevels){
+            $title .= " with lower levels";
+        }
 
         // ask the service for a Excel5
         $excelService = $this->get('xls.service_xls5');
@@ -444,12 +455,15 @@ class ReportHistoryTrainingController extends Controller
         $row += 2;
 
         //work with cross tabulation report
-        if ($fields->getId() != $fieldsTwo->getId()) {
+        if ($reportType == "history") {
+
+            /*print_r($results);exit;
             foreach($results as $result){
                 $keys[$result[strtolower($fields->getName())]][$result[strtolower($fieldsTwo->getName())]] = $result['total'];
                 //$categoryKeys[$result[strtolower($fields->getName())]] = $result['total'];
 
-            }
+            }*/
+
             //apply the styles
             $excelService->excelObj->getActiveSheet()->getStyle('A1:D2')->applyFromArray($heading_format);
             $excelService->excelObj->getActiveSheet()->mergeCells('A1:D1');
@@ -459,16 +473,18 @@ class ReportHistoryTrainingController extends Controller
             $excelService->excelObj->getActiveSheet()->getStyle('A4:D4')->applyFromArray($header_format);
             $excelService->excelObj->setActiveSheetIndex(0)
                 ->setCellValue($column++.$row, 'SN')
-                ->setCellValue($column++.$row, $fields->getCaption());
-            $fieldOptions = $em->getRepository('HrisFormBundle:FieldOption')->findBy(array('field'=>$fieldsTwo));
+                ->setCellValue($column++.$row, $fields->getCaption())
+                ->setCellValue($column.$row, 'Value');
+
+            /*$fieldOptions = $em->getRepository('HrisFormBundle:FieldOption')->findBy(array('field'=>$fieldsTwo));
 
             foreach ($fieldOptions as $fieldOption) {
                 $excelService->excelObj->setActiveSheetIndex(0)->setCellValue($column++.$row, $fieldOption->getValue());
-            }
+            }*/
 
             //write the values
             $i =1; //count the row
-            foreach($keys as $key => $items){
+            foreach($results as $result){
                 $column = 'A';//return to the 1st column
                 $row++; //increment one row
 
@@ -479,14 +495,15 @@ class ReportHistoryTrainingController extends Controller
                     $excelService->excelObj->getActiveSheet()->getStyle($column.$row.':D'.$row)->applyFromArray($text_format2);
                 $excelService->excelObj->setActiveSheetIndex(0)
                     ->setCellValue($column++.$row, $i++)
-                    ->setCellValue($column++.$row, $key);
+                    ->setCellValue($column++.$row, $result['data'])
+                    ->setCellValue($column++.$row, $result['total']);
 
-                foreach ($items as $item) {
+                /*foreach ($items as $item) {
                     $excelService->excelObj->setActiveSheetIndex(0)->setCellValue($column++.$row, $item);
-                }
+                }*/
             }
 
-        }else{
+        }elseif ($reportType == "training" ){
             //apply the styles
             $excelService->excelObj->getActiveSheet()->getStyle('A1:C2')->applyFromArray($heading_format);
             $excelService->excelObj->getActiveSheet()->mergeCells('A1:C1');
@@ -496,7 +513,7 @@ class ReportHistoryTrainingController extends Controller
             $excelService->excelObj->getActiveSheet()->getStyle('A4:C4')->applyFromArray($header_format);
             $excelService->excelObj->setActiveSheetIndex(0)
                 ->setCellValue($column++.$row, 'SN')
-                ->setCellValue($column++.$row, $fields->getCaption())
+                ->setCellValue($column++.$row, 'Year')
                 ->setCellValue($column.$row, 'Value');
 
             //write the values
@@ -510,15 +527,15 @@ class ReportHistoryTrainingController extends Controller
                     $excelService->excelObj->getActiveSheet()->getStyle($column.$row.':C'.$row)->applyFromArray($text_format1);
                 else
                     $excelService->excelObj->getActiveSheet()->getStyle($column.$row.':C'.$row)->applyFromArray($text_format2);
-                $excelService->excelObj->setActiveSheetIndex(0)
+                    $excelService->excelObj->setActiveSheetIndex(0)
                     ->setCellValue($column++.$row, $i++)
-                    ->setCellValue($column++.$row, $result[strtolower($fields->getName())])
+                    ->setCellValue($column++.$row, $result['data'])
                     ->setCellValue($column.$row, $result['total']);
 
             }
         }
 
-        $excelService->excelObj->getActiveSheet()->setTitle('Aggregate Report');
+        $excelService->excelObj->getActiveSheet()->setTitle('Training-History Report');
 
 
         // Set active sheet index to the first sheet, so Excel opens this as the first sheet

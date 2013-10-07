@@ -45,11 +45,15 @@ class TrainingController extends Controller
      *
      * @Route("/", name="training")
      * @Route("/list", name="training_list")
+     * @Route("/{recordid}/training", requirements={"recordid"="\d+"}, name="training_byrecord")
+     * @Route("/list/{recordid}/record", requirements={"recordid"="\d+"}, name="training_list_byrecord")
      * @Method("GET")
      * @Template()
      */
-    public function indexAction()
+    public function indexAction( $recordid=NULL )
     {
+        //echo "Welome to Training Module";exit;
+        //echo $_GET['recordId'];exit;
         $em = $this->getDoctrine()->getManager();
 
         $entities = $em->getRepository('HrisRecordsBundle:Training')->findAll();
