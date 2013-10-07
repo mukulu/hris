@@ -1,0 +1,7 @@
+parameters:
+#    hris_help_centre.example.class: Hris\HelpCentreBundle\Example
+
+services:
+#    hris_help_centre.example:
+#        class: %hris_help_centre.example.class%
+#        arguments: [@service_id, "plain_value", %parameter%]

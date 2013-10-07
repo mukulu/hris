@@ -1,0 +1,3 @@
+hris_help_centre_homepage:
+    pattern:  /hello/{name}
+    defaults: { _controller: HrisHelpCentreBundle:Default:index }
