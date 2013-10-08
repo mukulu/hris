@@ -18,6 +18,59 @@
    MA 02110-1301, USA.
 #}
 {% extends "FOSUserBundle::layout.html.twig" %}
+{% block javascripts %}
+    {{ parent() }}
+    <script type="text/javascript" src="{{ asset('commons/js/jquery.validate.min.js') }}"></script>
+    <script type="text/javascript">
+        $(document).ready(function(){
+            // validate the comment form when it is submitted
+            $("#fos_user_registration_register").validate();
+            var response;
+            $.validator.addMethod(
+                    "uniqueUserName",
+                    function(value, element) {
+                        $.ajax({type: "POST",url: "{{ path("user_isusernameunique") }}",data: "username="+value,dataType:"html",
+                            success: function(msg){ response = ( msg == 'true' ) ? true : false;}
+                        });
+                        return response;
+                    },
+                    "Username is Already Taken"
+            );
+            $.validator.addMethod(
+                    "uniqueEmail",
+                    function(value, element) {
+                        $.ajax({type: "POST", url: "{{ path("user_isemailunique") }}",data: "email="+value,dataType:"html",
+                            success: function(msg){response = ( msg == 'true' ) ? true : false;}
+                        });
+                        return response;
+                    },
+                    "This Email already Exists"
+            );
+
+            // validate signup form on keyup and submit
+            $("#fos_user_registration_register").validate({
+                rules: {
+                    username: {
+                        required: true,
+                        minlength: 8,
+                        uniqueUserName: true
+                    },
+                    fos_user_registration_form_email: {
+                        required: true,
+                        email : true,
+                        uniqueEmail: true
+                    }
+                },
+                messages: {
+                    username: {
+                        required: "Email is required",
+                        uniqueEmail: "This Email already exists"
+                    }
+                }
+            });
+        });
+    </script>
+{% endblock javascripts %}
 {% block fos_user_content %}
 	<div class="form-signin">
 		<div class="well">
@@ -55,7 +108,7 @@
 			  </form>                
 			</div>
 			<div class="tab-pane fade" id="create">
-                <form action="{{ path('fos_user_registration_register') }}" {{ form_enctype(form) }}id="tab" method="POST" class="fos_user_registration_register">
+                <form action="{{ path('fos_user_registration_register') }}" {{ form_enctype(form) }}id="fos_user_registration_register" method="POST" class="fos_user_registration_register">
                     {{ form_widget(form) }}
                     {% if error %}
                         <div class="alert alert-error">
