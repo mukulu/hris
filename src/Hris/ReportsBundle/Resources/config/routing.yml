@@ -6,6 +6,10 @@ aggregation:
     resource: "@HrisReportsBundle/Controller/ReportAggregationController.php"
     type: annotation
 
+historytrainingreport:
+    resource: "@HrisReportsBundle/Controller/ReportHistoryTrainingController.php"
+    type: annotation
+
 organisationunitByLevels:
     resource: "@HrisReportsBundle/Controller/ReportOrganisationunitByLevelsController.php"
     type: annotation
@@ -25,3 +29,4 @@ recordsReport:
 friendlyReport:
     resource: "@HrisReportsBundle/Controller/ReportFriendlyReportController.php"
     type: annotation
+

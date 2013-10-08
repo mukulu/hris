@@ -1,0 +1,40 @@
+{% extends '::base.html.twig' %}
+
+    {% block javascripts %}
+        {{ parent() }}
+        <script src="{{ asset('bundles/obhighcharts/js/highcharts/highcharts.js') }}"></script>
+        <script src="{{ asset('bundles/obhighcharts/js/highcharts/modules/exporting.js') }}"></script>
+        <script type="text/javascript">
+            {{ chart(chart) }}
+        </script>
+    {%  endblock %}
+
+{% block right_content -%}
+
+    <div class="container">
+        <h1><small> {{ title  }} </small></h1>
+
+        <table class="records_list dataTable table table-striped table-bordered table-hover" cellpadding="0" cellspacing="0" border="0">
+            <tr>
+                {% for category in categories %}
+                    <th>{{ category }}</th>
+                {% endfor %}
+            </tr>
+            <tr>
+                {% for total in data %}
+                    <td>{{ total }}</td>
+                {% endfor %}
+            </tr>
+        </table>
+    </div>
+
+    <div id="chart_placeholder_historytraining" style="min-width: 400px; height: 400px; margin: 0 auto"></div>
+    <div style="text-align: right">
+        <a class="btn" href="{{ path('report_historytraining_download', { 'organisationUnit': organisationUnit.id, 'formsId': formsId, 'reportType': reportType, 'withLowerLevels': withLowerLevels, 'fields': fields.id }) }}">
+            Export Statistics to Excel
+        </a>
+        <a class="btn" href="{{ path('report_historytraining_download_records', { 'organisationUnit': organisationUnit.id, 'formsId': formsId, 'reportType': reportType, 'withLowerLevels': withLowerLevels, 'fields': fields.id }) }}">
+            Export Records By Cadre
+        </a>
+    </div>
+{% endblock %}

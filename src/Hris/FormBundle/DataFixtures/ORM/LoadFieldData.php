@@ -293,7 +293,7 @@ class LoadFieldData extends AbstractFixture implements OrderedFixtureInterface
                 'name'=>'CheckNumber',
                 'caption'=>'Check Number',
                 'compulsory'=>true,
-                'isUnique'=>false,
+                'isUnique'=>true,
                 'isCalculated'=>false,
                 'skipInReport'=>false,
                 'calculatedExpression'=>'',
@@ -582,46 +582,46 @@ class LoadFieldData extends AbstractFixture implements OrderedFixtureInterface
                 'description'=>"Employee's Contacts of Next of Kin(Optional)",
                 'history'=>true),
             33=>Array(
-                'dataType'=>'String',
-                'inputType'=>'TextArea',
+                'dataType'=>'Integer',
+                'inputType'=>'Date',
                 'name'=>'EmploymentDistribution',
                 'caption'=>'Employment Distribution',
                 'compulsory'=>false,
                 'isUnique'=>false,
                 'isCalculated'=>true,
                 'skipInReport'=>false,
-                'calculatedExpression'=>'range( date_format(#{DateofFirstAppointment},"Y"), date_format("now","Y")-10 ) ',
+                'calculatedExpression'=>"date('Y', strtotime(#{DateofFirstAppointment}))",
                 'fieldRelation'=>False,
                 'parentField'=>Null,
-                'description'=>"Employee's Contacts of Next of Kin(Optional)",
+                'description'=>"Annual employment distrubtion based on Employee's Employment date",
                 'history'=>true),
             34=>Array(
-                'dataType'=>'String',
-                'inputType'=>'TextArea',
+                'dataType'=>'Integer',
+                'inputType'=>'Date',
                 'name'=>'RetirementDistribution',
                 'caption'=>'Retirement Distribution',
                 'compulsory'=>false,
                 'isUnique'=>false,
                 'isCalculated'=>true,
                 'skipInReport'=>false,
-                'calculatedExpression'=>'range( date_format(#{Birthdate},"Y"), date_format("now","Y")-10 ) ',
+                'calculatedExpression'=>"date('Y', strtotime('#{Birthdate}'))+60",
                 'fieldRelation'=>False,
                 'parentField'=>Null,
-                'description'=>"Employee's Contacts of Next of Kin(Optional)",
+                'description'=>"Annual retirement distribution based on Employee's birthdate",
                 'history'=>true),
             35=>Array(
                 'dataType'=>'String',
-                'inputType'=>'TextArea',
+                'inputType'=>'Date',
                 'name'=>'AgeDistribution',
                 'caption'=>'Age Distribution',
                 'compulsory'=>false,
                 'isUnique'=>false,
                 'isCalculated'=>true,
                 'skipInReport'=>false,
-                'calculatedExpression'=>'range( date_format(#{Birthdate},"Y"), date_format("now","Y")-10 ) ',
+                'calculatedExpression'=>"((floor(floor((time() - strtotime('#{Birthdate}')) / 31556926)/5))*5) .'-'.(((floor(floor((time() - strtotime('#{Birthdate}')) / 31556926)/5))*5)+4)",
                 'fieldRelation'=>False,
                 'parentField'=>Null,
-                'description'=>"Employee's Contacts of Next of Kin(Optional)",
+                'description'=>"Distribution by age group based on Employee's birthdate",
                 'history'=>true),
         );
         return $this->fields;
@@ -2430,6 +2430,8 @@ class LoadFieldData extends AbstractFixture implements OrderedFixtureInterface
 
                 $manager->persist($fieldOptionGroup);
             }
+            unset($field);
+            unset($fieldOptionGroup);
 		}
 		// Create FieldOptionGroups specific for indicators
         foreach($this->fieldOptionGroups as $fieldOptionGroupKey=>$humanResourceFieldOptionGroup) {
@@ -2446,6 +2448,7 @@ class LoadFieldData extends AbstractFixture implements OrderedFixtureInterface
             }
             $this->addReference($fieldOptionGroupReference, $fieldOptionGroup);
             $manager->persist($fieldOptionGroup);
+            unset($fieldOptionGroup);
         }
 
         // Populate dummy field Groups
@@ -2487,6 +2490,7 @@ class LoadFieldData extends AbstractFixture implements OrderedFixtureInterface
             }
 
             $manager->persist($fieldGroup);
+            unset($fieldGroup);
         }
 		$manager->flush();
 	}

@@ -14,3 +14,24 @@ function recordSet(data_record){
 
     })
 }
+
+function changeForm(record_uid) {
+
+    $('#showPopupModal').modal('show')
+
+    $('#showPopupModal').one('hide', function(e) {
+
+        var form_id = $('#content_field').val();
+
+        $.ajax({//Make the Ajax Request
+            type: "POST",
+            url: "../../changeform",
+            data: "record_uid="+ record_uid + "&form_id=" + form_id,
+            success: function(html){
+                $("#" + record_uid).remove();//Remove the div with id=more
+
+            }
+        });
+
+    })
+}

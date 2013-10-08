@@ -155,6 +155,7 @@ class ReportEmployeeRecordsController extends Controller
             $employeeRecordsParameters .= ','.$serializer->serialize($withLowerLevelsParameters,'json');
         }
 
+
         // Create dataTable ajax placeholders
         $dataTableAjaxColumns = "[null,".$individualSearchClause."null,null]";
 
@@ -163,7 +164,10 @@ class ReportEmployeeRecordsController extends Controller
             'formFields'=>$formFields,
             'title'=>$title,
             'employeeRecordsParameters'=>$employeeRecordsParameters,
-            'dataTableAjaxColumns'=>$dataTableAjaxColumns
+            'dataTableAjaxColumns'=>$dataTableAjaxColumns,
+            'formsIds'=>$formIds,
+            'organisationUnit' => $organisationUnit,
+            'withLowerLevels' => $withLowerLevels,
         );
     }
 
@@ -172,7 +176,7 @@ class ReportEmployeeRecordsController extends Controller
      *
      * @Secure(roles="ROLE_RECORDS_EMPLOYEE_RECORDS,ROLE_USER")
      *
-     * @Route("/{_format}", requirements={"_format"="json|"}, defaults={"format"="json"}, name="report_employeerecords_ajax")
+     * @Route("/{_format}", requirements={"_format"="json|"}, defaults={"_format"="json"}, name="report_employeerecords_ajax")
      * @Method("POST")
      * @Template()
      */
@@ -341,6 +345,7 @@ class ReportEmployeeRecordsController extends Controller
                 $selectColumnClause .=",ResourceTable.birthdate as birthdate";
             }
         }
+        // Constructing where clause
         $whereClause=NULL;
         if(!empty($onlyActiveEmployeeWhereClause)) {
             $whereClause=" WHERE $organisationunitLevelsWhereClause AND $onlyActiveEmployeeWhereClause AND $formsWhereClause";
@@ -544,4 +549,567 @@ class ReportEmployeeRecordsController extends Controller
         $end_date = gregoriantojd($date_parts2[1], $date_parts2[2], $date_parts2[0]);
         return $end_date - $start_date;
     }
+
+    /**
+     * Download records reports
+     *
+     * @Route("/download", name="report_employeerecords_download")
+     * @Method("GET")
+     * @Template()
+     */
+    public function downloadAction(Request $request)
+    {
+        $em = $this->getDoctrine()->getManager();
+
+        $organisationUnitid =$request->query->get('organisationUnit');
+        $withLowerLevels =$request->query->get('withLowerLevels');
+        $forms = new ArrayCollection();
+
+        //Get the objects from the the variables
+        $formNames = '';
+        $formid = '';
+        $organisationUnit = $em->getRepository('HrisOrganisationunitBundle:Organisationunit')->find($organisationUnitid);
+        foreach($request->query->get('formsId') as $formIds){
+            $form = $em->getRepository('HrisFormBundle:Form')->find($formIds);
+            $formNames .= $form->getName().',';
+            $forms->add($form);
+            $formid .= $formIds.',';
+        }
+        $formNames = rtrim($formNames,",");
+        $formid = rtrim($formid,",");
+
+        $title = "Records Report for ".$organisationUnit->getLongname();
+        if($withLowerLevels) {
+            $title .=" with Lower Levels";
+        }
+        $title .= " for ".$formNames;
+
+        $selectedOrgunitStructure = $em->getRepository('HrisOrganisationunitBundle:OrganisationunitStructure')->findOneBy(array('organisationunit' => $organisationUnit->getId()));
+
+        $resourceTableName = ResourceTable::getStandardResourceTableName();
+
+        $sql = "SELECT * FROM (SELECT DISTINCT ON (field_id) field_id, form_id, sort, name,caption FROM hris_form_fieldmembers inner join hris_field ON hris_field.id=hris_form_fieldmembers.field_id WHERE form_id in ($formid)) as T order by T.sort";
+
+        $results = $em -> getConnection() -> executeQuery($sql) -> fetchAll();
+
+        //get the list of options to exclude from the reports
+        $fieldOptionsToExclude = $em->getRepository('HrisFormBundle:FieldOption')->findBy (
+            array('skipInReport' => "YES")
+        );
+
+        //create the query to select the records from the resource table
+        $query ="SELECT ";
+
+        foreach ($results as $key => $value) {
+            $query .= "ResourceTable.".strtolower($value['name'])." ,";
+        }
+        // Make Levels of orgunit
+        $orgunitLevels = $em->createQuery('SELECT DISTINCT ol FROM HrisOrganisationunitBundle:OrganisationunitLevel ol ORDER BY ol.level ')->getResult();
+
+        foreach($orgunitLevels as $orgunitLevelLevelKey=>$orgunitLevel) {
+            $orgunitLevelName = "level".$orgunitLevel->getLevel()."_".str_replace(' ','_',str_replace('.','_',str_replace('/','_',$orgunitLevel->getName()))) ;
+            $query .= "ResourceTable.".$orgunitLevelName." ,";
+        }
+        // Make Groupset Column
+        $groupsets = $em->getRepository('HrisOrganisationunitBundle:OrganisationunitGroupset')->findAll();
+        foreach($groupsets as $groupsetKey=>$groupset) {
+            $query .= "ResourceTable.".$groupset->getName()." ,";
+        }
+
+        // Calculated fields
+        $query .= "ResourceTable.age ,";
+        $query .= "ResourceTable.age_group ,";
+        $query .= "ResourceTable.employment_duration ,";
+        $query .= "ResourceTable.retirement_date ,";
+        $query .= "ResourceTable.retirement_date_year ,";
+        $query .= "ResourceTable.form_name ,";
+
+        $query .= " Orgunit.longname FROM ".$resourceTableName." ResourceTable inner join hris_organisationunit as Orgunit ON Orgunit.id = ResourceTable.organisationunit_id INNER JOIN hris_organisationunitstructure AS Structure ON Structure.organisationunit_id = ResourceTable.organisationunit_id";
+        $query .= " WHERE ResourceTable.form_id in (".$formid.")";
+        if($withLowerLevels){
+            $query .= " AND Structure.level".$selectedOrgunitStructure->getLevel()->getLevel()."_id=".$organisationUnit->getId();
+            $query .= " AND  Structure.level_id >= ";
+            $query .= "(SELECT hris_organisationunitstructure.level_id FROM hris_organisationunitstructure WHERE hris_organisationunitstructure.organisationunit_id=".$organisationUnit->getId()." )";
+        }else{
+            $query .= " AND ResourceTable.organisationunit_id=".$organisationUnit->getId();
+        }
+
+        //filter the records with exclude report tag
+        foreach($fieldOptionsToExclude as $key => $fieldOptionToExclude){
+            $query .= " AND ".$fieldOptionToExclude->getField()->getName()." !='".$fieldOptionToExclude->getValue()."'";
+        }
+
+        $report = $em -> getConnection() -> executeQuery($query) -> fetchAll();
+
+        // ask the service for a Excel5
+        $excelService = $this->get('xls.service_xls5');
+        $excelService->excelObj->getProperties()->setCreator("HRHIS3")
+            ->setLastModifiedBy("HRHIS3")
+            ->setTitle($title)
+            ->setSubject("Office 2005 XLSX Test Document")
+            ->setDescription("Test document for Office 2005 XLSX, generated using PHP classes.")
+            ->setKeywords("office 2005 openxml php")
+            ->setCategory("Test result file");
+
+        //write the header of the report
+        $column = 'A';
+        $row  = 1;
+        $date = "Date: ".date("jS F Y");
+        $excelService->excelObj->getActiveSheet()->getDefaultRowDimension()->setRowHeight(15);
+        $excelService->excelObj->getActiveSheet()->getDefaultColumnDimension()->setWidth(15);
+        $excelService->excelObj->setActiveSheetIndex(0)
+            ->setCellValue($column.$row++, $title)
+            ->setCellValue($column.$row, $date);
+        //add style to the header
+        $heading_format = array(
+            'font' => array(
+                'bold' => true,
+                'color' => array('rgb' => '3333FF'),
+            ),
+            'alignment' => array(
+                'wrap'       => true,
+                'horizontal' => \PHPExcel_Style_Alignment::HORIZONTAL_CENTER,
+            ),
+        );
+        //add style to the Value header
+        $header_format = array(
+            'font' => array(
+                'bold' => true,
+                'color' => array('rgb' => 'FFFFFF'),
+            ),
+            'alignment' => array(
+                'wrap'       => true,
+                'horizontal' => \PHPExcel_Style_Alignment::HORIZONTAL_CENTER,
+            ),
+            'fill' => array(
+                'type' => \PHPExcel_Style_Fill::FILL_SOLID,
+                'startcolor' => array('rgb' => '000099') ,
+            ),
+        );
+        //add style to the text to display
+        $text_format1 = array(
+            'font' => array(
+                'bold' => false,
+                'color' => array('rgb' => '000000'),
+            ),
+            'alignment' => array(
+                'wrap'       => true,
+                'horizontal' => \PHPExcel_Style_Alignment::HORIZONTAL_LEFT,
+            ),
+        );
+        //add style to the Value header
+        $text_format2 = array(
+            'font' => array(
+                'bold' => false,
+                'color' => array('rgb' => '000000'),
+            ),
+            'alignment' => array(
+                'wrap'       => true,
+                'horizontal' => \PHPExcel_Style_Alignment::HORIZONTAL_LEFT,
+            ),
+            'fill' => array(
+                'type' => \PHPExcel_Style_Fill::FILL_SOLID,
+                'startcolor' => array('rgb' => 'E0E0E0') ,
+            ),
+        );
+
+        $excelService->excelObj->getActiveSheet()->getRowDimension('1')->setRowHeight(30);
+        $excelService->excelObj->getActiveSheet()->getRowDimension('2')->setRowHeight(20);
+
+        //reset the colomn and row number
+        $column == 'A';
+        $columnmerge = 'A';
+        $row += 2;
+
+        //calculate the width of the styles
+        for ($i = 1; $i < (count($results)+2+sizeof($orgunitLevels)+sizeof($groupsets)+6); $i++) {
+            $columnmerge++;
+        }
+
+        //apply the styles
+        $excelService->excelObj->getActiveSheet()->getStyle('A1:'.$columnmerge.'2')->applyFromArray($heading_format);
+        $excelService->excelObj->getActiveSheet()->mergeCells('A1:'.$columnmerge.'1');
+        $excelService->excelObj->getActiveSheet()->mergeCells('A2:'.$columnmerge.'2');
+
+        //write the table heading of the values
+        $excelService->excelObj->getActiveSheet()->getStyle('A4:'.$columnmerge.'4')->applyFromArray($header_format);
+        $excelService->excelObj->setActiveSheetIndex(0)
+            ->setCellValue($column++.$row, 'SN');
+        foreach ($results as $key => $value) {
+            $excelService->excelObj->setActiveSheetIndex(0)
+                ->setCellValue($column++.$row, $value['caption']);
+        }
+        // Make Levels of orgunit
+        foreach($orgunitLevels as $orgunitLevelLevelKey=>$orgunitLevel) {
+            $excelService->excelObj->setActiveSheetIndex(0)
+                ->setCellValue($column++.$row, $orgunitLevel->getName());
+        }
+        // Make Groupset Column
+        foreach($groupsets as $groupsetKey=>$groupset) {
+            $excelService->excelObj->setActiveSheetIndex(0)
+                ->setCellValue($column++.$row, $groupset->getName());
+        }
+        // Calculated fields
+        $excelService->excelObj->setActiveSheetIndex(0)
+            ->setCellValue($column++.$row, 'Age')
+            ->setCellValue($column++.$row, 'Age Group')
+            ->setCellValue($column++.$row, 'Employment Duration')
+            ->setCellValue($column++.$row, 'Retirement Date')
+            ->setCellValue($column++.$row, 'Retirement Date Year')
+            ->setCellValue($column++.$row, 'Form Name')
+            ->setCellValue($column.$row, 'Duty Post');
+
+        //write the values
+        $i =1; //count the row
+        foreach($report as $rows){
+            $column = 'A';//return to the 1st column
+            $row++; //increment one row
+
+            //format of the row
+            if (($row % 2) == 1)
+                $excelService->excelObj->getActiveSheet()->getStyle($column.$row.':'.$columnmerge.$row)->applyFromArray($text_format1);
+            else
+                $excelService->excelObj->getActiveSheet()->getStyle($column.$row.':'.$columnmerge.$row)->applyFromArray($text_format2);
+
+            //Display the serial number
+            $excelService->excelObj->setActiveSheetIndex(0)
+                ->setCellValue($column++.$row, $i++);
+
+            foreach ($results as $key => $value) {
+                $excelService->excelObj->setActiveSheetIndex(0)
+                    ->setCellValue($column++.$row, $rows[strtolower($value['name'])]);
+            }
+
+            // Make Levels of orgunit
+            foreach($orgunitLevels as $orgunitLevelLevelKey=>$orgunitLevel) {
+                $orgunitLevelName = "level".$orgunitLevel->getLevel()."_".str_replace(' ','_',str_replace('.','_',str_replace('/','_',$orgunitLevel->getName()))) ;
+                $excelService->excelObj->setActiveSheetIndex(0)
+                    ->setCellValue($column++.$row,  $rows[strtolower($orgunitLevelName)]);
+            }
+
+            // Make Groupset Column
+            foreach($groupsets as $groupsetKey=>$groupset) {
+                $excelService->excelObj->setActiveSheetIndex(0)
+                    ->setCellValue($column++.$row,  $rows[strtolower($groupset->getName())]);
+            }
+            // Calculated fields
+            $excelService->excelObj->setActiveSheetIndex(0)
+                ->setCellValue($column++.$row,  $rows["age"])
+                ->setCellValue($column++.$row,  $rows["age_group"])
+                ->setCellValue($column++.$row,  $rows["employment_duration"])
+                ->setCellValue($column++.$row,  $rows["retirement_date"])
+                ->setCellValue($column++.$row,  $rows["retirement_date_year"])
+                ->setCellValue($column++.$row,  $rows["form_name"])
+                ->setCellValue($column.$row,  $rows["longname"]);
+
+        }
+        $excelService->excelObj->getActiveSheet()->setTitle('List of Records');
+
+
+        // Set active sheet index to the first sheet, so Excel opens this as the first sheet
+        $excelService->excelObj->setActiveSheetIndex(0);
+
+        //create the response
+
+        $response = $excelService->getResponse();
+        $response->headers->set('Content-Type', 'application/vnd.ms-excel; charset=utf-8');
+        $response->headers->set('Content-Disposition', 'attachment; filename='.$title.'.xls');
+
+        // If you are using a https connection, you have to set those two headers and use sendHeaders() for compatibility with IE <9
+        $response->headers->set('Pragma', 'public');
+        $response->headers->set('Cache-Control', 'maxage=1');
+        $response->sendHeaders();
+        return $response;
+
+    }
+    /**
+     * Download records reports
+     *
+     * @Route("/download_bycarde", name="report_employeerecords_download_bycarde")
+     * @Method("GET")
+     * @Template()
+     */
+    public function downloadByCardeAction(Request $request)
+    {
+        $em = $this->getDoctrine()->getManager();
+
+        $organisationUnitid =$request->query->get('organisationUnit');
+        $withLowerLevels =$request->query->get('withLowerLevels');
+        $forms = new ArrayCollection();
+
+        //Get the objects from the the variables
+        $formNames = '';
+        $formid = '';
+        $organisationUnit = $em->getRepository('HrisOrganisationunitBundle:Organisationunit')->find($organisationUnitid);
+        foreach($request->query->get('formsId') as $formIds){
+            $form = $em->getRepository('HrisFormBundle:Form')->find($formIds);
+            $formNames .= $form->getName().',';
+            $forms->add($form);
+            $formid .= $formIds.',';
+        }
+        $formNames = rtrim($formNames,",");
+        $formid = rtrim($formid,",");
+
+        $title = "Records Report for ".$organisationUnit->getLongname();
+        if($withLowerLevels) {
+            $title .=" with Lower Levels";
+        }
+        $title .= " for ".$formNames;
+        $title .= ' Order by Cadre';
+
+        $selectedOrgunitStructure = $em->getRepository('HrisOrganisationunitBundle:OrganisationunitStructure')->findOneBy(array('organisationunit' => $organisationUnit->getId()));
+
+        $resourceTableName = ResourceTable::getStandardResourceTableName();
+
+        $sql = "SELECT * FROM (SELECT DISTINCT ON (field_id) field_id, form_id, sort, name,caption FROM hris_form_fieldmembers inner join hris_field ON hris_field.id=hris_form_fieldmembers.field_id WHERE form_id in ($formid)) as T order by T.sort";
+
+        $results = $em -> getConnection() -> executeQuery($sql) -> fetchAll();
+
+        //get the list of options to exclude from the reports
+        $fieldOptionsToExclude = $em->getRepository('HrisFormBundle:FieldOption')->findBy (
+            array('skipInReport' => "YES")
+        );
+
+        //create the query to select the records from the resource table
+        $query ="SELECT ";
+
+        foreach ($results as $key => $value) {
+            $query .= "ResourceTable.".strtolower($value['name'])." ,";
+        }
+        // Make Levels of orgunit
+        $orgunitLevels = $em->createQuery('SELECT DISTINCT ol FROM HrisOrganisationunitBundle:OrganisationunitLevel ol ORDER BY ol.level ')->getResult();
+
+        foreach($orgunitLevels as $orgunitLevelLevelKey=>$orgunitLevel) {
+            $orgunitLevelName = "level".$orgunitLevel->getLevel()."_".str_replace(' ','_',str_replace('.','_',str_replace('/','_',$orgunitLevel->getName()))) ;
+            $query .= "ResourceTable.".$orgunitLevelName." ,";
+        }
+        // Make Groupset Column
+        $groupsets = $em->getRepository('HrisOrganisationunitBundle:OrganisationunitGroupset')->findAll();
+        foreach($groupsets as $groupsetKey=>$groupset) {
+            $query .= "ResourceTable.".$groupset->getName()." ,";
+        }
+
+        // Calculated fields
+        $query .= "ResourceTable.age ,";
+        $query .= "ResourceTable.age_group ,";
+        $query .= "ResourceTable.employment_duration ,";
+        $query .= "ResourceTable.retirement_date ,";
+        $query .= "ResourceTable.retirement_date_year ,";
+        $query .= "ResourceTable.form_name ,";
+
+        $query .= " Orgunit.longname FROM ".$resourceTableName." ResourceTable inner join hris_organisationunit as Orgunit ON Orgunit.id = ResourceTable.organisationunit_id INNER JOIN hris_organisationunitstructure AS Structure ON Structure.organisationunit_id = ResourceTable.organisationunit_id";
+        $query .= " WHERE ResourceTable.form_id in (".$formid.")";
+        if($withLowerLevels){
+            $query .= " AND Structure.level".$selectedOrgunitStructure->getLevel()->getLevel()."_id=".$organisationUnit->getId();
+            $query .= " AND  Structure.level_id >= ";
+            $query .= "(SELECT hris_organisationunitstructure.level_id FROM hris_organisationunitstructure WHERE hris_organisationunitstructure.organisationunit_id=".$organisationUnit->getId()." )";
+        }else{
+            $query .= " AND ResourceTable.organisationunit_id=".$organisationUnit->getId();
+        }
+
+        //filter the records with exclude report tag
+        foreach($fieldOptionsToExclude as $key => $fieldOptionToExclude){
+            $query .= " AND ".$fieldOptionToExclude->getField()->getName()." !='".$fieldOptionToExclude->getValue()."'";
+        }
+
+        $query .= " ORDER BY ResourceTable.profession, ResourceTable.dateoffirstappointment";
+        $report = $em -> getConnection() -> executeQuery($query) -> fetchAll();
+
+        // ask the service for a Excel5
+        $excelService = $this->get('xls.service_xls5');
+        $excelService->excelObj->getProperties()->setCreator("HRHIS3")
+            ->setLastModifiedBy("HRHIS3")
+            ->setTitle($title)
+            ->setSubject("Office 2005 XLSX Test Document")
+            ->setDescription("Test document for Office 2005 XLSX, generated using PHP classes.")
+            ->setKeywords("office 2005 openxml php")
+            ->setCategory("Test result file");
+
+        //write the header of the report
+        $column = 'A';
+        $row  = 1;
+        $date = "Date: ".date("jS F Y");
+        $excelService->excelObj->getActiveSheet()->getDefaultRowDimension()->setRowHeight(15);
+        $excelService->excelObj->getActiveSheet()->getDefaultColumnDimension()->setWidth(15);
+        $excelService->excelObj->setActiveSheetIndex(0)
+            ->setCellValue($column.$row++, $title)
+            ->setCellValue($column.$row, $date);
+        //add style to the header
+        $heading_format = array(
+            'font' => array(
+                'bold' => true,
+                'color' => array('rgb' => '3333FF'),
+            ),
+            'alignment' => array(
+                'wrap'       => true,
+                'horizontal' => \PHPExcel_Style_Alignment::HORIZONTAL_CENTER,
+            ),
+        );
+        //add style to the Value header
+        $header_format = array(
+            'font' => array(
+                'bold' => true,
+                'color' => array('rgb' => 'FFFFFF'),
+            ),
+            'alignment' => array(
+                'wrap'       => true,
+                'horizontal' => \PHPExcel_Style_Alignment::HORIZONTAL_CENTER,
+            ),
+            'fill' => array(
+                'type' => \PHPExcel_Style_Fill::FILL_SOLID,
+                'startcolor' => array('rgb' => '000099') ,
+            ),
+        );
+        //add style to the text to display
+        $text_format1 = array(
+            'font' => array(
+                'bold' => false,
+                'color' => array('rgb' => '000000'),
+            ),
+            'alignment' => array(
+                'wrap'       => true,
+                'horizontal' => \PHPExcel_Style_Alignment::HORIZONTAL_LEFT,
+            ),
+        );
+        //add style to the Value header
+        $text_format2 = array(
+            'font' => array(
+                'bold' => false,
+                'color' => array('rgb' => '000000'),
+            ),
+            'alignment' => array(
+                'wrap'       => true,
+                'horizontal' => \PHPExcel_Style_Alignment::HORIZONTAL_LEFT,
+            ),
+            'fill' => array(
+                'type' => \PHPExcel_Style_Fill::FILL_SOLID,
+                'startcolor' => array('rgb' => 'E0E0E0') ,
+            ),
+        );
+
+        $excelService->excelObj->getActiveSheet()->getRowDimension('1')->setRowHeight(30);
+        $excelService->excelObj->getActiveSheet()->getRowDimension('2')->setRowHeight(20);
+
+        //reset the colomn and row number
+        $column == 'A';
+        $columnmerge = 'A';
+        $row += 2;
+
+        //calculate the width of the styles
+        for ($i = 1; $i < (count($results)+2+sizeof($orgunitLevels)+sizeof($groupsets)+6); $i++) {
+            $columnmerge++;
+        }
+
+        //apply the styles
+        $excelService->excelObj->getActiveSheet()->getStyle('A1:'.$columnmerge.'2')->applyFromArray($heading_format);
+        $excelService->excelObj->getActiveSheet()->mergeCells('A1:'.$columnmerge.'1');
+        $excelService->excelObj->getActiveSheet()->mergeCells('A2:'.$columnmerge.'2');
+
+        //write the values
+        $i =1; //count the row
+        $currentProfessional = null;
+        foreach($report as $rows){
+            $column = 'A';//return to the 1st column
+            $row++; //increment one row
+            if($currentProfessional != $rows['profession'] ){
+                //write the heading for the professional
+                $row++;
+                $excelService->excelObj->getActiveSheet()->getStyle($column.$row.':D'.$row)->applyFromArray($heading_format);
+                $excelService->excelObj->getActiveSheet()->mergeCells($column.$row.':D'.$row);
+                $excelService->excelObj->setActiveSheetIndex(0)
+                    ->setCellValue($column.$row, $rows['profession']);
+
+                //Write the heading for the data
+                $row++;
+                $column = 'A';//reset to the first column
+                $excelService->excelObj->getActiveSheet()->getStyle($column.$row.':'.$columnmerge.$row)->applyFromArray($header_format);
+                $excelService->excelObj->setActiveSheetIndex(0)
+                    ->setCellValue($column++.$row, 'SN');
+                foreach ($results as $key => $value) {
+                    $excelService->excelObj->setActiveSheetIndex(0)
+                        ->setCellValue($column++.$row, $value['caption']);
+                }
+                // Make Levels of orgunit
+                foreach($orgunitLevels as $orgunitLevelLevelKey=>$orgunitLevel) {
+                    $excelService->excelObj->setActiveSheetIndex(0)
+                        ->setCellValue($column++.$row, $orgunitLevel->getName());
+                }
+                // Make Groupset Column
+                foreach($groupsets as $groupsetKey=>$groupset) {
+                    $excelService->excelObj->setActiveSheetIndex(0)
+                        ->setCellValue($column++.$row, $groupset->getName());
+                }
+                // Calculated fields
+                $excelService->excelObj->setActiveSheetIndex(0)
+                    ->setCellValue($column++.$row, 'Age')
+                    ->setCellValue($column++.$row, 'Age Group')
+                    ->setCellValue($column++.$row, 'Employment Duration')
+                    ->setCellValue($column++.$row, 'Retirement Date')
+                    ->setCellValue($column++.$row, 'Retirement Date Year')
+                    ->setCellValue($column++.$row, 'Form Name')
+                    ->setCellValue($column.$row, 'Duty Post');
+
+                $i =0;//reset the serial number
+            }
+
+            //format of the row
+            if (($row % 2) == 1)
+                $excelService->excelObj->getActiveSheet()->getStyle($column.$row.':'.$columnmerge.$row)->applyFromArray($text_format1);
+            else
+                $excelService->excelObj->getActiveSheet()->getStyle($column.$row.':'.$columnmerge.$row)->applyFromArray($text_format2);
+
+            //Display the serial number
+            $excelService->excelObj->setActiveSheetIndex(0)
+                ->setCellValue($column++.$row, $i++);
+
+            foreach ($results as $key => $value) {
+                $excelService->excelObj->setActiveSheetIndex(0)
+                    ->setCellValue($column++.$row, $rows[strtolower($value['name'])]);
+            }
+
+            // Make Levels of orgunit
+            foreach($orgunitLevels as $orgunitLevelLevelKey=>$orgunitLevel) {
+                $orgunitLevelName = "level".$orgunitLevel->getLevel()."_".str_replace(' ','_',str_replace('.','_',str_replace('/','_',$orgunitLevel->getName()))) ;
+                $excelService->excelObj->setActiveSheetIndex(0)
+                    ->setCellValue($column++.$row,  $rows[strtolower($orgunitLevelName)]);
+            }
+
+            // Make Groupset Column
+            foreach($groupsets as $groupsetKey=>$groupset) {
+                $excelService->excelObj->setActiveSheetIndex(0)
+                    ->setCellValue($column++.$row,  $rows[strtolower($groupset->getName())]);
+            }
+            // Calculated fields
+            $excelService->excelObj->setActiveSheetIndex(0)
+                ->setCellValue($column++.$row,  $rows["age"])
+                ->setCellValue($column++.$row,  $rows["age_group"])
+                ->setCellValue($column++.$row,  $rows["employment_duration"])
+                ->setCellValue($column++.$row,  $rows["retirement_date"])
+                ->setCellValue($column++.$row,  $rows["retirement_date_year"])
+                ->setCellValue($column++.$row,  $rows["form_name"])
+                ->setCellValue($column.$row,  $rows["longname"]);
+
+            $currentProfessional = $rows['profession'];
+
+        }
+        $excelService->excelObj->getActiveSheet()->setTitle('List of Records');
+
+
+        // Set active sheet index to the first sheet, so Excel opens this as the first sheet
+        $excelService->excelObj->setActiveSheetIndex(0);
+
+        //create the response
+
+        $response = $excelService->getResponse();
+        $response->headers->set('Content-Type', 'application/vnd.ms-excel; charset=utf-8');
+        $response->headers->set('Content-Disposition', 'attachment; filename='.$title.'.xls');
+
+        // If you are using a https connection, you have to set those two headers and use sendHeaders() for compatibility with IE <9
+        $response->headers->set('Pragma', 'public');
+        $response->headers->set('Cache-Control', 'maxage=1');
+        $response->sendHeaders();
+        return $response;
+
+    }
+
 }

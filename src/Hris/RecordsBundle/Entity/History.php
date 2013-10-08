@@ -28,13 +28,14 @@ use Doctrine\ORM\Mapping as ORM;
 use Gedmo\Mapping\Annotation as Gedmo;
 
 use Hris\RecordsBundle\Entity\Record;
+use Hris\FormBundle\Entity\Field;
 use Symfony\Component\Validator\Constraints as Assert;
 
 /**
  * Hris\RecordsBundle\Entity\History
  *
  * @Gedmo\Loggable
- * @ORM\Table(name="hris_record_history",uniqueConstraints={@ORM\UniqueConstraint(name="unique_recordhistory_idx",columns={"record_id", "history","startdate"}),@ORM\UniqueConstraint(name="unique_recordinstancehistory_idx",columns={"instance", "history","startdate"})})
+ * @ORM\Table(name="hris_record_history",uniqueConstraints={ @ORM\UniqueConstraint(name="unique_recordhistory_idx",columns={"record_id", "history","startdate"}) })
  * @ORM\Entity(repositoryClass="Hris\RecordsBundle\Entity\HistoryRepository")
  */
 class History
@@ -68,12 +69,16 @@ class History
     private $record;
 
     /**
-     * @var string $instance
+     * @var Field $field
      *
      * @Gedmo\Versioned
-     * @ORM\Column(name="instance", type="string", length=64)
+     * @ORM\ManyToOne(targetEntity="Hris\FormBundle\Entity\Field",inversedBy="history")
+     * @ORM\JoinColumns({
+     *   @ORM\JoinColumn(name="field_id", referencedColumnName="id", nullable=true, onDelete="CASCADE")
+     * })
+     *
      */
-    private $instance;
+    private $field;
 
     /**
      * @var string $history
@@ -84,20 +89,20 @@ class History
     private $history;
 
     /**
-     * @var \DateTime $startdate
-     *
-     * @Gedmo\Versioned
-     * @ORM\Column(name="startdate", type="datetime")
-     */
-    private $startdate;
-
-    /**
      * @var string $reason
      *
      * @Gedmo\Versioned
      * @ORM\Column(name="reason", type="string", length=255, nullable=true)
      */
     private $reason;
+
+    /**
+     * @var \DateTime $startdate
+     *
+     * @Gedmo\Versioned
+     * @ORM\Column(name="startdate", type="datetime")
+     */
+    private $startdate;
 
     /**
      * @var string $username
@@ -122,13 +127,14 @@ class History
      * @ORM\Column(name="lastupdated", type="datetime", nullable=true)
      */
     private $lastupdated;
-    
+
     /**
      * Constructor
      */
     public function __construct()
     {
-    	$this->uid = uniqid();
+        $this->uid = uniqid();
+        $this->datecreated = new \DateTime('now');
     }
 
 
@@ -143,26 +149,26 @@ class History
     }
 
     /**
-     * Set instance
+     * Set field
      *
-     * @param string $instance
+     * @param Field $field
      * @return History
      */
-    public function setInstance($instance)
+    public function setField(Field $field = null)
     {
-        $this->instance = $instance;
-    
+        $this->field = $field;
+
         return $this;
     }
 
     /**
-     * Get instance
+     * Get field
      *
-     * @return string 
+     * @return Field
      */
-    public function getInstance()
+    public function getField()
     {
-        return $this->instance;
+        return $this->field;
     }
 
     /**

@@ -1,0 +1,34 @@
+{% extends '::base.html.twig' %}
+
+{% block javascripts %}
+    {{ parent() }}
+    <script type="text/javascript" language="javascript" src="{{ asset('commons/js/ext-all.js') }}"></script>
+    <script type="text/javascript" language="javascript" src="{{ asset('commons/js/bootstrap.file-input.js') }}"></script>
+    <script type="text/javascript">
+        $( document ).ready(function() {
+            $('input[type=file]').bootstrapFileInput();
+            $('.file-inputs').bootstrapFileInput();
+        });
+    </script>
+{% endblock javascripts %}
+
+{% block stylesheets %}
+    {{ parent() }}
+    <link rel="stylesheet" type="text/css" media="all" href="{{ asset('commons/css/ext-standard.css') }}">
+{% endblock stylesheets %}
+
+{% block right_content -%}
+    <h1><small>Import Data into the system</small></h1>
+
+    {{ form_start(importForm, { 'method' : 'POST' } ) }}
+    <a class="file-input-wrapper btn">
+        Search Files From Your Computer
+        {{ form_widget( importForm.file, {'attr': {'title': 'Choose File'} } ) }}
+    </a>
+    <br/>
+    <div>
+        {{ form_widget(importForm.submit, {'attr': {'class': 'btn'} }) }}
+    </div>
+    {{ form_end(importForm) }}
+
+{% endblock %}

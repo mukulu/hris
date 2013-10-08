@@ -33,7 +33,9 @@ use Hris\FormBundle\DataFixtures\ORM\LoadOrganisationunitData;
 use Hris\FormBundle\Entity\Field;
 use Hris\FormBundle\Entity\FieldOption;
 use Hris\FormBundle\Entity\FormFieldMember;
+use Hris\RecordsBundle\Entity\History;
 use Hris\RecordsBundle\Entity\Record;
+use Hris\RecordsBundle\Entity\Training;
 use Hris\UserBundle\DataFixtures\ORM\LoadUserData;
 
 class LoadRecordData extends AbstractFixture implements OrderedFixtureInterface
@@ -45,14 +47,29 @@ class LoadRecordData extends AbstractFixture implements OrderedFixtureInterface
     private $maleNames;
 
     /**
-     * @var $femaleNames;
+     * @var array;
      */
     private $femaleNames;
 
     /**
-     * @var $recordsPerOrganisationunit;
+     * @var integer;
      */
     private $recordsPerOrganisationunit;
+
+    /**
+     * @var array
+     */
+    private $courseNames;
+
+    /**
+     * @var array
+     */
+    private $courseLocations;
+
+    /**
+     * @var array
+     */
+    private $sponsor;
 
     /**
      * Constructor
@@ -80,6 +97,36 @@ class LoadRecordData extends AbstractFixture implements OrderedFixtureInterface
     public function getFemaleNames()
     {
         return $this->femaleNames;
+    }
+
+    /**
+     * Returns array of coursenames fixtures.
+     *
+     * @return mixed
+     */
+    public function getCourseNames()
+    {
+        return $this->courseNames;
+    }
+
+    /**
+     * Returns array of course locations fixtures.
+     *
+     * @return mixed
+     */
+    public function getCourseLocations()
+    {
+        return $this->courseLocations;
+    }
+
+    /**
+     * Returns array of sponsoros fixtures.
+     *
+     * @return mixed
+     */
+    public function getSponsors()
+    {
+        return $this->sponsor;
     }
 
     /**
@@ -125,12 +172,54 @@ class LoadRecordData extends AbstractFixture implements OrderedFixtureInterface
         return $this->femaleNames;
     }
 
+    /**
+     * Returns array of dummy course names
+     * @return array
+     */
+    public function addDummyCourseNames()
+    {
+        // Load Public Data
+        $this->courseNames = Array(
+            'Advanced adherence counselling','Computer applications','HIV/AIDS care & treatment','Management of HIV/AIDS','Adolescent reproducctive health','Advanced quality improvement','Advance trauma life support','Clinical skills training','Collaborative tb/HIV activities','Commodities management','Quality improvement','Corruption and ethics infrastructure','Counseling & testing','Data base management','Demographic health survey','Diabetes management','Disaster management','District health  management','Driving certificate','Drug inspection','Early infant diagnosis','Electronic data base','Emergency oral care','Human resource mnagement','Icu management','Rotavirus and pneumonia vaccine ','Management of obstetrict fistula','Management of stds','Management of tanzania fp and AIDS logistics systems','Maralia rapid diagnostic test','Maralia  parasites identification.','Maternal mortality reduction','Medical attendant course','Mentorship on HIV/AIDS','Midwifery child health','Monitoring and evaluation','Mother and child health care','Motor vehicle maintanance','Mtuha ( HMIS )','Multi drug resistance','National HIV care and treatment','Nursing care of malaria  patients','Ophthalmical asstistant','Orientation of service providers on tracer medicines','Personal management skills','Quality assurance and assessment','Quality improvement for HIV/AIDS','Rapid syphilis testing','Record management','Reproductive and child health','Rhmt plannig and reporting'
+        );
+        return $this->maleNames;
+    }
+
+    /**
+     * Returns array of dummy course locations
+     * @return array
+     */
+    public function addDummyCourseLocations()
+    {
+        // Load Public Data
+        $this->courseLocations = Array(
+            'Arusha, Arumeru','Arusha, Karatu','Arusha, Arusha Mjini','Arusha, Ngorongoro','Dar es salaam, Kinondoni','Dar es salaam, Temeke','Dar es salaam, Ilala','Dodoma, Dodoma Mjini','Dodoma, Chamwino','Dodoma, Kongwa','Dodoma, Mpwapwa','Iringa, Iringa Mjini','Iringa, Njombe Mjini','Iringa, Kilolo','Iringa, Makete','Kagera, Bukoba','Kagera, Chato','Kagera, Ngara','Kagera, Misenyi','Kagera, Ngara','Kigoma, Kigoma Mjini','Kigoma, Kibondo','Kigoma, Kasulu','Kilimanjaro, Moshi','Kilimanjaro, Rombo','Kilimanjaro, Same','Kilimanjaro, Mwanga','Lindi, Kilwa','Lindi, Lindi Mjini','Lindi, Nachingwea','Lindi, Liwale','Manyara, Babati','Manyara, Simanjiro','Manyara, Hanang','Manyara, Mbulu','Mara, Bunda','Mara, Musoma','Mara, Tarime','Mbeya, Chunya','Mbeya, Ileje','Mbeya, Mbeya Mjini','Mbeya, Mbozi','Morogoro, Morogoro Mjini','Morogoro, Mvomero','Morogoro, Kilombero','Morogoro, Ulanga','Morogoro, Kilombero','Morogoro, Kilosa','Mtwara, Mtwara Mjini','Mtwara, Nanyumbu','Mtwara, Newala','Mtwara, Tandahimba','Mwanza, Sengerema','Mwanza, Ilemela','Mwanza, Geita','Mwanza, Sengerema','Mwanza, Ukerewe','Mwanza, Kwimba','Pwani, Bagamoyo','Pwani, Kibaha','Pwani, Kisarawe','Pwani, Mafia','Pwani, Mkuranga','Pwani, Rufiji','Rukwa, Mpanda','Rukwa, Sumbawanga','Rukwa, Nkasi','Ruvuma, Songea','Ruvuma, Mbinga','Ruvuma, Namtumbo','Ruvuma, Tunduru','Shinyanga, Bariadi','Shinyanga, Shinyanga Mjini','Shinyanga, Kahama','Shinyanga, Meatu','Shinyanga, Maswa','Singida, Iramba','Singida, Manyoni','Singida, Singida Mjini','Tabora, Igunga','Tabora, Nzega','Tabora, Tabora Mjini','Tabora, Urambo','Tabora, Uyui','Tanga, Handeni','Tanga, Kilindi','Tanga, Korogwe','Tanga, Lushoto','Tanga, Mkinga','Tanga, Muheza','Tanga, Pangani','Tanga, Tanga Mjini'
+        );
+        return $this->courseLocations;
+    }
+
+    /**
+     * Returns array of dummy sponsor
+     * @return array
+     */
+    public function addDummySponsors()
+    {
+        // Load Public Data
+        $this->sponsor = Array(
+            'Development Partner','Employer','Ministry of Health and Social Welfare','Other','Self Sponsored'
+        );
+        return $this->sponsor;
+    }
+
 
 	public function load(ObjectManager $manager)
 	{
         // Populate dummy forms
         $this->addDummyFemaleNames();
         $this->addDummyMaleNmes();
+        $this->addDummyCourseNames();
+        $this->addDummyCourseLocations();
+        $this->addDummySponsors();
 
         $loadUserData = new LoadUserData();
         $loadUserData->addDummyUsers();
@@ -165,6 +254,17 @@ class LoadRecordData extends AbstractFixture implements OrderedFixtureInterface
                         $formName=$formNames[array_rand($formNames,1)];
                         if(empty($formName)) $formName='Public Employee Form';
                         $form = $manager->getRepository('HrisFormBundle:Form')->findOneBy(array('name'=>$formName));
+
+                        // Find history fields belonging to this form for population of data
+                        $queryBuilder = $manager->createQueryBuilder();
+                        $historyFields = $queryBuilder->select('field')
+                            ->from('HrisFormBundle:Field','field')
+                            ->join('field.formFieldMember','formFieldMember')
+                            ->join('formFieldMember.form','form')
+                            ->where('form.id=:formId')
+                            ->andWhere('field.hashistory=True')
+                            ->setParameter('formId',$form->getId())
+                            ->getQuery()->getResult();
 
                         $record->setForm($form);
                         $record->setComplete(True);
@@ -208,6 +308,7 @@ class LoadRecordData extends AbstractFixture implements OrderedFixtureInterface
                                     $value[$valueKey] .= ' '.$this->maleNames[array_rand($this->maleNames,1)];
                                 }
                                 //@todo remove hard-coding of instance
+                                // used later for instance formulation
                                 if($formFieldMember->getField()->getName()=="Firstname") $firstName =$value[$valueKey];
                                 if($formFieldMember->getField()->getName()=="Middlename") $middleName =$value[$valueKey];
                                 if($formFieldMember->getField()->getName()=="Surname") $surname =$value[$valueKey];
@@ -240,15 +341,15 @@ class LoadRecordData extends AbstractFixture implements OrderedFixtureInterface
                                 // If employment data set it to birth date range+18
                                 // If confirmation date, set it to employment date+1
                                 // If promotion date, set it to confirmation+3
-                                $beginDateStart=30;
-                                $beginDateStop=55;
-                                $endDateStart=20;
-                                $endDateStop=30;
+                                $beginDateStart=50;
+                                $beginDateStop=75;
+                                $endDateStart=40;
+                                $endDateStop=50;
                                 if($formFieldMember->getField()->getName()=="Birthdate") {
-                                    $beginDateStart=30;
-                                    $beginDateStop=55;
-                                    $endDateStart=20;
-                                    $endDateStop=30;
+                                    $beginDateStart=50;
+                                    $beginDateStop=75;
+                                    $endDateStart=40;
+                                    $endDateStop=50;
                                 }elseif($formFieldMember->getField()->getName()=="DateofFirstAppointment") {
                                     $beginDateStart-=18;
                                     $beginDateStop-=18;
@@ -300,17 +401,120 @@ class LoadRecordData extends AbstractFixture implements OrderedFixtureInterface
                         $recordReference = strtolower(str_replace(' ','',$record->getInstance())).'-record';
                         $this->addReference($recordReference, $record);
                         $manager->persist($record);
+
+                        // Randomly on flip of a coin assign history & training data
+                        $outcomes=Array(True,False);
+                        if($outcomes[array_rand($outcomes,1)]) {
+
+                            // Assign randomly between 2 to 4 histories per record
+                            $numberofHistoriesToAssign=Array(1,2);
+                            for($incr=0; $incr< $numberofHistoriesToAssign[array_rand($numberofHistoriesToAssign,1)]; $incr++ ) {
+                                $history = new History();
+                                $history->setRecord($record);
+                                $history->setUsername($record->getUsername());
+                                //Calculate start date ranging starting form now-2yrs back and and stopping between 3-5 years back
+                                $beginDateStart=3;$beginDateStop=5;
+                                $endDateStart=0;$endDateStop=2;
+                                $startDate = new \DateTime($this->getRandDate(array($beginDateStart,$beginDateStop),array($endDateStart,$endDateStop)));
+                                $history->setStartdate($startDate);
+                                $historyField = $historyFields[array_rand($historyFields,1)];
+                                //echo get_class($historyField);exit;
+                                // If history field is Combo assign combo if text assign text
+                                if($historyField->getInputType()=="Select") {
+                                    $historyFieldOptions = $historyField->getFieldOption();
+                                    $historyFieldOptions = $historyFieldOptions->getValues();
+                                    $selectedHistoryOption = $historyFieldOptions[array_rand($historyFieldOptions,1)];
+                                    $historyValue = $selectedHistoryOption->getValue();
+                                }elseif($historyField->getInputType()=="Date") {
+                                    //Calculate start date ranging starting form 1-3yrs back and and stopping between 5-8 years back
+                                    $beginDateStart=5;$beginDateStop=8;
+                                    $endDateStart=1;$endDateStop=3;
+                                    $historyDateObject = new \DateTime($this->getRandDate(array($beginDateStart,$beginDateStop),array($endDateStart,$endDateStop)));
+                                    $historyValue = $historyDateObject->format('Y-m-d');
+                                }else {
+                                    // Deal with string history fields
+                                    if(
+                                        $historyField->getName()=="Firstname" ||
+                                        $historyField->getName()=="Middlename" ||
+                                        $historyField->getName()=="Surname" ||
+                                        $historyField->getName()=="NextofKin"
+                                    ) {
+                                        // Deal with names
+                                        if($gender_picked=="Female" && ( $historyField->getName()=="Firstname" || $historyField->getName()=="NextofKin") ) {
+                                            $historyValue = $this->femaleNames[array_rand($this->femaleNames,1)];
+                                        }else {
+                                            $historyValue = $this->maleNames[array_rand($this->maleNames,1)];
+                                        }
+                                        if($historyField->getName()=="NextofKin" ) {
+                                            $historyValue .= ' '.$this->maleNames[array_rand($this->maleNames,1)];
+                                        }
+                                    }else if($historyField->getInputType()->getName()=="Text") {
+                                        // Deal with numbers
+                                        if($historyField->getName()=="NumberofChildrenDependants" ) {
+                                            $historyValue = rand(0,10);
+                                        }elseif($historyField->getName()=="CheckNumber" ) {
+                                            $historyValue = rand(9999999,9999999999);
+                                        }elseif($historyField->getName()=="EmployersFileNumber") {
+                                            $historyValue = "FN/".rand(100,100000);
+                                        }elseif($historyField->getName()=="RegistrationNumber") {
+                                            $historyValue = "RB/".rand(10,10000);
+                                        }elseif($historyField->getName()=="MonthlyBasicSalary") {
+                                            $historyValue = rand(100,1500).'000';
+                                        }else {
+                                            $historyValue = $this->maleNames[array_rand($this->maleNames,1)]." Street";
+                                        }
+                                    }else if($historyField->getInputType()->getName()=="TextArea") {
+                                        // Deal with domicile, contact
+                                        if(
+                                            $historyField->getName()=="ContactsofEmployee" ||
+                                            $historyField->getName()=="ContactsofNextofKin"
+                                        ) {
+                                            $historyValue = "+255".rand(6,7).rand(53,69).rand(001,998).rand(001,998);
+                                        }
+                                    }
+                                }
+                                $reason = $historyField->getCaption() . " changed.";
+                                $history->setField($historyField);
+                                $history->setHistory($historyValue);
+                                $history->setReason($reason);
+                                $manager->persist($history);
+                                unset($history);
+                            }
+                            $record->setHashistory(True);
+                            $manager->persist($record);
+                        }
+                        if($outcomes[array_rand($outcomes,1)]) {
+                            // Assign randomly between 2 to 4 trainings per record
+                            $numberofTrainingsToAssign=Array(1,2);
+                            for($incr=0; $incr< $numberofTrainingsToAssign[array_rand($numberofTrainingsToAssign,1)]; $incr++ ) {
+                                $training = new Training();
+                                $training->setRecord($record);
+                                $training->setCoursename($this->courseNames[array_rand($this->courseNames,1)]);
+                                $training->setCourselocation($this->courseLocations[array_rand($this->courseLocations,1)]);
+                                $training->setSponsor($this->sponsor[array_rand($this->sponsor,1)]);
+
+                                //Calculate start date ranging starting form 9-10yrs back and and stopping between 10-12 years back
+                                $beginDateStart=10;$beginDateStop=12;
+                                $endDateStart=9;$endDateStop=10;
+                                $startDate = new \DateTime($this->getRandDate(array($beginDateStart,$beginDateStop),array($endDateStart,$endDateStop)));
+                                //Calculate end date ranging starting form 11-13yrs back and and stopping between 13-15 years back
+                                $beginDateStart=13;$beginDateStop=15;
+                                $endDateStart=11;$endDateStop=13;
+                                $endDate = new \DateTime($this->getRandDate(array($beginDateStart,$beginDateStop),array($endDateStart,$endDateStop)));
+
+                                $training->setStartdate($startDate);
+                                $training->setEnddate($endDate);
+                                $training->setUsername($record->getUsername());
+                                $manager->persist($training);
+                                unset($training);
+                            }
+                            $record->setHastraining(True);
+                            $manager->persist($record);
+                        }
+                        unset($record);
+
                     }
                 }
-
-//                /*
-//                 * Assign data to councils and regions only.
-//                 */
-//                if( preg_match('/region|council/i',$organisationunit->getLongname()) ) {
-//                    $organisationunitGroupCode = 'hospitals';
-//                    $organisationunitGroupByReference = $manager->merge($this->getReference( strtolower(str_replace(' ','',$organisationunitGroupCode)).'-organisationunitgroup' ));
-//                    $organisationunitGroupByReference->addOrganisationunit($organisationunit);
-//                }
             }
         }
 		$manager->flush();
@@ -322,7 +526,9 @@ class LoadRecordData extends AbstractFixture implements OrderedFixtureInterface
 	 */
 	public function getOrder()
 	{
+        //LoadIndicator preceeds
 		return 11;
+        //LoadResourceTable follows
 	}
 
 }

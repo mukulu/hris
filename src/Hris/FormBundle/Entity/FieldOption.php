@@ -60,6 +60,17 @@ class FieldOption
     private $uid;
 
     /**
+     * @var Field $field
+     *
+     * @Gedmo\Versioned
+     * @ORM\ManyToOne(targetEntity="Hris\FormBundle\Entity\Field", inversedBy="fieldOption")
+     * @ORM\JoinColumns({
+     *   @ORM\JoinColumn(name="field_id", referencedColumnName="id", onDelete="CASCADE")
+     * })
+     */
+    private $field;
+
+    /**
      * @var string $value
      *
      * @Gedmo\Versioned
@@ -121,17 +132,6 @@ class FieldOption
      * @ORM\OrderBy({"name" = "ASC"})
      */
     private $fieldOptionGroup;
-    
-    /**
-     * @var Field $field
-     *
-     * @Gedmo\Versioned
-     * @ORM\ManyToOne(targetEntity="Hris\FormBundle\Entity\Field", inversedBy="fieldOption")
-     * @ORM\JoinColumns({
-     *   @ORM\JoinColumn(name="field_id", referencedColumnName="id", onDelete="CASCADE")
-     * })
-     */
-    private $field;
     
     /**
      * @var RelationalFilter $relationalFilter

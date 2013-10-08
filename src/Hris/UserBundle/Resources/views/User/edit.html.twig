@@ -2,7 +2,19 @@
 {% block javascripts %}
     {{ parent() }}
     <script type="text/javascript" language="javascript" src="{{ asset('commons/js/ext-all.js') }}"></script>
+    <script type="text/javascript" src="{{ asset('commons/js/jquery-ui.js') }}"></script>
     <script type="text/javascript">
+        $( ".date" ).datepicker( {
+            changeMonth: true,
+            changeYear: true,
+            showOn: "both",
+            buttonImage: "{{ asset('commons/images/calendar.gif') }}",
+            buttonImageOnly: true,
+            dateFormat: "dd/mm/yy",
+            showAnim: "clip",
+            minDate: "-90Y",
+            yearRange:'c-60:c+60'
+        });
         var treeplaceholder="treeplaceholder";
         var inputboxname="hris_userbundle_usertype[organisationunit]";
         var urlExtension="";
@@ -57,6 +69,8 @@
 {% block stylesheets %}
     {{ parent() }}
     <link rel="stylesheet" type="text/css" media="all" href="{{ asset('commons/css/ext-standard.css') }}">
+    <link rel="stylesheet" href="{{ asset('commons/css/datepicker.css') }}" />
+    <link rel="stylesheet" href="{{ asset('commons/css/jquery-ui.css') }}" />
 {% endblock stylesheets %}
 
 {% block right_content -%}

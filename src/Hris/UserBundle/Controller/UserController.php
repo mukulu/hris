@@ -27,6 +27,7 @@ namespace Hris\UserBundle\Controller;
 
 use Doctrine\Common\Collections\ArrayCollection;
 use Hris\OrganisationunitBundle\Entity\Organisationunit;
+use JMS\SecurityExtraBundle\Annotation\Secure;
 use Hris\UserBundle\Form\UserEditType;
 use Hris\UserBundle\Form\UserNewType;
 use Symfony\Component\HttpFoundation\Request;
@@ -70,6 +71,7 @@ class UserController extends Controller
             'delete_forms' => $delete_forms,
         );
     }
+
     /**
      * Creates a new User entity.
      *
@@ -89,6 +91,7 @@ class UserController extends Controller
 
             return $this->redirect($this->generateUrl('user_list', array('id' => $entity->getId())));
         }else {
+            print_r($form->getErrors());
             return $this->redirect($this->generateUrl('user_new'));
         }
 
@@ -134,6 +137,62 @@ class UserController extends Controller
         return array(
             'entity'      => $entity,
             'delete_form' => $deleteForm->createView(),
+        );
+    }
+
+    /**
+     * Check if username exists(unique)
+     *
+     * @Secure(roles="IS_AUTHENTICATED_ANONYMOUSLY,ROLE_USER")
+     * @Route("/isusernameunique/{_format}", requirements={"_format"="yml|xml|json"}, defaults={"_format"="json"}, name="user_isusernameunique")
+     * @Method("GET")
+     * @Template()
+     */
+    public function isUsernameUniqueAction($_format)
+    {
+        $em = $this->getDoctrine()->getManager();
+        $username = $this->getRequest()->query->get('username');
+
+        $entity = $em->getRepository('HrisUserBundle:User')->findBy(array('username'=>$username));
+
+        if (empty($entity)) {
+            $isusernameunique = 'true';
+        }else {
+            $isusernameunique = 'false';
+        }
+
+        $serializer = $this->container->get('serializer');
+
+        return array(
+            'isusernameunique' => $serializer->serialize($isusernameunique,$_format)
+        );
+    }
+
+    /**
+     * Check if email exists(unique)
+     *
+     * @Secure(roles="IS_AUTHENTICATED_ANONYMOUSLY,ROLE_USER")
+     * @Route("/isemailunique/{_format}", requirements={"_format"="yml|xml|json"}, defaults={"_format"="json"}, name="user_isemailunique")
+     * @Method("GET")
+     * @Template()
+     */
+    public function isEmailUniqueAction($_format)
+    {
+        $em = $this->getDoctrine()->getManager();
+        $email = $this->getRequest()->query->get('email');
+
+        $entity = $em->getRepository('HrisUserBundle:User')->findBy(array('email'=>$email));
+
+        if (empty($entity)) {
+            $isemailunique = 'true';
+        }else {
+            $isemailunique = 'false';
+        }
+
+        $serializer = $this->container->get('serializer');
+
+        return array(
+            'isemailunique' => $serializer->serialize($isemailunique,$_format)
         );
     }
 
@@ -198,6 +257,7 @@ class UserController extends Controller
             'delete_form' => $deleteForm->createView(),
         );
     }
+
     /**
      * Deletes a User entity.
      *

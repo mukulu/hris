@@ -59,8 +59,30 @@ class UserType extends AbstractType
             ->add('firstName')
             ->add('middleName')
             ->add('surname')
+            ->add('form')
             ->add('enabled',null,array(
                 'required'=>false,
+            ))
+            ->add('locked',null,array(
+                'required'=>false,
+            ))
+            ->add('credentialsExpired',null,array(
+                'required'=>false,
+            ))
+            ->add('expired',null,array(
+                'required'=>false,
+            ))
+            ->add('expiresAt','date',array(
+                'required'=>true,
+                'widget' => 'single_text',
+                'format' => 'dd/MM/yyyy',
+                'attr' => array('class' => 'date')
+            ))
+            ->add('credentialsExpireAt','date',array(
+                'required'=>true,
+                'widget' => 'single_text',
+                'format' => 'dd/MM/yyyy',
+                'attr' => array('class' => 'date')
             ))
             ->add('roles')
         ;

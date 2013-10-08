@@ -1,28 +1,56 @@
 {% extends '::base.html.twig' %}
+{% block javascripts %}
+    {{ parent() }}
+    <script type="text/javascript" src="{{ asset('bundles/hrisrecords/js/indexedb.js') }}"></script>
+
+    <script type="text/javascript">
+
+        getDataEntryForm( '{{ project_code | lower | raw }}', '{{ formUid | raw }}', '{{ table_name | raw }}' );
+
+        //getting field Options and append them on select statements
+
+        $(window).load(function(){
+
+            //Populating field Options
+            populateForm( '{{ fields | raw | escape('js') }}', '{{ project_code | lower | raw }}', '{{ dataValues | raw }}', '{{ otherFields | raw | escape('js') }}', '{{ selectedUnit | raw | escape('js') }}' );
+
+        });
+
+
+
+
+    </script>
+
+{% endblock %}
 
 {% block right_content -%}
-    <h1>Record edit</h1>
 
-    <form action="{{ path('record_update', { 'id': entity.id }) }}" method="post" {{ form_enctype(edit_form) }}>
-        <input type="hidden" name="_method" value="PUT" />
-        {{ form_widget(edit_form) }}
+    <h1>{{ title | raw }}</h1>
+
+    <form action="{{ path('record_update') }}" method="post">
+        {% if entryLevel %}
+            Duty Post
+            <select name="orgunitParent" onchange="getunits(this)" required>
+                <option value="{{ organisation_unit['uid'] }}" selected>
+                    {{ organisation_unit['longname'] }}
+                </option>
+            </select>
+            <br />
+            Work Station
+            <select name="unit" id="units" >
+
+            </select>
+        {% else %}
+            <input name="orgunitParent" type="hidden" value="{{ organisation_unit['uid'] }}">
+        {% endif %}
+
+        <div id="result" />
+        </div>
         <p>
-            <button type="submit">Edit</button>
+            <input type="hidden" name="formId" value="{{ id }}">
+            <input type="hidden" name="instance" value="{{ instance }}">
+            <button name='Save' class="btn"> Save Records</button>
         </p>
     </form>
 
-        <ul class="record_actions">
-    <li>
-        <a href="{{ path('record') }}">
-            Back to the list
-        </a>
-    </li>
-    <li>
-        <form action="{{ path('record_delete', { 'id': entity.id }) }}" method="post">
-            <input type="hidden" name="_method" value="DELETE" />
-            {{ form_widget(delete_form) }}
-            <button type="submit">Delete</button>
-        </form>
-    </li>
-</ul>
 {% endblock %}

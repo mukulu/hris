@@ -31,6 +31,7 @@ use Hris\ReportsBundle\Form\ReportAggregationType;
 use Symfony\Component\HttpFoundation\Request;
 use Doctrine\Common\Collections\ArrayCollection;
 use Symfony\Bundle\FrameworkBundle\Controller\Controller;
+use Hris\FormBundle\Entity\ResourceTable;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Method;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Route;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Template;
@@ -85,6 +86,9 @@ class ReportAggregationController extends Controller
             $fields = $aggregationFormData['fields'];
             $fieldsTwo = $aggregationFormData['fieldsTwo'];
             $graphType = $aggregationFormData['graphType'];
+        }
+        if(empty($organisationUnit)) {
+            $organisationUnit = $this->getDoctrine()->getManager()->createQuery('SELECT organisationunit FROM HrisOrganisationunitBundle:Organisationunit organisationunit WHERE organisationunit.parent IS NULL')->getSingleResult();
         }
 
         $results = $this->aggregationEngine($organisationUnit, $forms, $fields, $organisationunitGroup, $withLowerLevels, $fieldsTwo);
@@ -231,10 +235,12 @@ class ReportAggregationController extends Controller
      * @param Field $fieldsTwo
      * @return mixed
      */
-    private function aggregationEngine(Organisationunit $organisationUnit,  ArrayCollection $forms, Field $fields, ArrayCollection $organisationunitGroup, $withLowerLevels, Field $fieldsTwo)
+    public function aggregationEngine(Organisationunit $organisationUnit,  ArrayCollection $forms, Field $fields, ArrayCollection $organisationunitGroup, $withLowerLevels, Field $fieldsTwo)
     {
 
+
         $entityManager = $this->getDoctrine()->getManager();
+
         $selectedOrgunitStructure = $entityManager->getRepository('HrisOrganisationunitBundle:OrganisationunitStructure')->findOneBy(array('organisationunit' => $organisationUnit->getId()));
 
         //get the list of options to exclude from the reports
@@ -249,13 +255,18 @@ class ReportAggregationController extends Controller
                         unset($fieldOptionsToExclude[$key]);
 
         //create the query to aggregate the records from the static resource table
+        //check if field one is calculating field so to create the sub query
+        $resourceTableName = ResourceTable::getStandardResourceTableName();
+        if($fields->getIsCalculated()){
+            // @todo implement calculated fields feature and remove hard-coding
+
+        }
         $query = "SELECT ResourceTable.".$fields->getName();
         if ($fieldsTwo->getId() != $fields->getId()) {
             $query .= " , ResourceTable.".$fieldsTwo->getName()." , count(ResourceTable.".$fieldsTwo->getName().") as total";
        }else{
             $query .= " , count(ResourceTable.".$fields->getName().") as total";
        }
-        $resourceTableName = "_resource_all_fields";
 
         $query .= " FROM ".$resourceTableName." ResourceTable inner join hris_organisationunit as Orgunit ON Orgunit.id = ResourceTable.organisationunit_id INNER JOIN hris_organisationunitstructure AS Structure ON Structure.organisationunit_id = ResourceTable.organisationunit_id";
 
@@ -616,7 +627,7 @@ class ReportAggregationController extends Controller
         //Pull the organisation unit Structure
         $selectedOrgunitStructure = $em->getRepository('HrisOrganisationunitBundle:OrganisationunitStructure')->findOneBy(array('organisationunit' => $organisationUnit->getId()));
 
-        $resourceTableName = "_resource_all_fields";
+        $resourceTableName = ResourceTable::getStandardResourceTableName();
         //create the query to select the records from the resource table
         $query ="SELECT ResourceTable.firstname, ResourceTable.middlename, ResourceTable.surname, ResourceTable.profession,ResourceTable.".$fields->getName();
 

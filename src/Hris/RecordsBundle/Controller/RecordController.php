@@ -164,6 +164,10 @@ class RecordController extends Controller
         $title .= " for ".$formNames;
         if(empty($visibleFields)) $visibleFields=$formFields;
 
+        //getting all User Forms for User Migration
+
+        $user = $this->container->get('security.context')->getToken()->getUser();
+        $userForms = $user->getForm();
 
         return array(
             'title'=>$title,
@@ -171,6 +175,7 @@ class RecordController extends Controller
             'records'=>$records,
             'optionMap'=>$fieldOptionMap,
             'fieldMap'=>$fieldMap,
+            'userForms'=>$userForms,
         );
     }
 
@@ -224,9 +229,62 @@ class RecordController extends Controller
             ->join('o.field', 'f')
             ->getQuery()
             ->getArrayResult();
-
+        //var_dump($field_Option_entities);
         $field_Option_Values = json_encode($field_Option_entities);
         $filed_Option_Table_Name = json_encode($em->getClassMetadata('HrisFormBundle:FieldOption')->getTableName());
+
+        /*
+        * Getting the Organisation Unit Metadata and Values
+        */
+
+        $user = $this->container->get('security.context')->getToken()->getUser();
+
+        if ($user->getOrganisationunit()->getOrganisationunitStructure()->getLevel()->getDataentrylevel()){
+        $orgUnit = $em->getRepository( 'HrisOrganisationunitBundle:Organisationunit' )
+            ->createQueryBuilder('o')
+            ->select('o', 'p')
+            ->join('o.parent', 'p')
+            ->where('o.uid = :uid')
+            ->orWhere('o.parent = :parent')
+            ->setParameters(array('uid' => $user->getOrganisationunit()->getUid(), 'parent' => $user->getOrganisationunit()))
+            ->getQuery()
+            ->getArrayResult();
+
+        }else{
+            $orgUnit = $em->getRepository( 'HrisOrganisationunitBundle:Organisationunit' )
+                ->createQueryBuilder('o')
+                ->select('o')
+                ->where('o.uid = :uid')
+                ->setParameters(array('uid' => $user->getOrganisationunit()->getUid()))
+                ->getQuery()
+                ->getArrayResult();
+        }
+        $orgunit_Values = json_encode($orgUnit);
+        $orgunit_table = json_encode($em->getClassMetadata('HrisOrganisationunitBundle:Organisationunit')->getTableName());
+
+        /*
+         * Field Options Associations
+         */
+
+        $field_Options = $em->getRepository( 'HrisFormBundle:FieldOption' )
+        ->createQueryBuilder('option')
+        ->select('option', 'field')
+        ->join('option.field', 'field')
+        ->getQuery()->getResult();
+
+        $id = 1;
+        $fieldOptionAssocitiontablename = "field_option_association";
+        foreach($field_Options as $key => $fieldOption){
+            $option_associations =  $fieldOption->getChildFieldOption();
+            if (!empty($option_associations) ){
+                foreach($option_associations as $keyoption => $option){
+                    //print "<br><br>the reference Key ". $fieldOption->getValue()." the referenced Field ".$option->getValue()." the reference Field ". $fieldOption->getField()->getName(). " the associate field ".$option->getField()->getName();
+                    $fieldOptions[] = array( 'id' => $id++,'fieldoption'=>$fieldOption->getUid(), 'fielduid' => $fieldOption->getField()->getUid(), 'fieldoptionref' => $option->getValue(), 'fieldoptionrefuid' => $option->getUid(), 'fieldref'=>$option->getField()->getUid() );
+                }
+            }
+        }
+
+        //var_dump($fieldOptions);
 
         return array(
             'entities' => $entities,
@@ -239,10 +297,71 @@ class RecordController extends Controller
             'field_values' => $filed_Values,
             'field_option_values' => $field_Option_Values,
             'field_option_table_name' => $filed_Option_Table_Name,
+            'option_associations_values' => json_encode($fieldOptions),
+            'option_associations_table' => $fieldOptionAssocitiontablename,
+            'organisation_Values' => $orgunit_Values,
+            'organisation_unit_table' => $orgunit_table,
             'channel'=>$channel,
+
         );
     }
 
+    /**
+     * List Forms Available for Update Record.
+     *
+     * @Route("/formlistupdate", name="record_form_list_update")
+     * @Method("GET")
+     * @Template("HrisRecordsBundle:Record:formlistupdate.html.twig")
+     */
+    public function formlistupdateAction()
+    {
+        $em = $this->getDoctrine()->getManager();
+
+        $entities = $em->getRepository( 'HrisFormBundle:Form' )->createQueryBuilder('p')->getQuery()->getArrayResult();
+
+        return array(
+            'entities' => $entities,
+        );
+    }
+
+    /**
+     * List Records Available for Updating.
+     *
+     * @Route("/{id}", name="record_update_list")
+     * @Method("GET")
+     * @Template("")
+     */
+    public function updatelistAction(Request $request, $id)
+    {
+
+        $em = $this->getDoctrine()->getManager();
+        $forms = $em->getRepository('HrisFormBundle:Form')->find($id);
+
+        $user = $this->container->get('security.context')->getToken()->getUser();
+        $searchString = $this->getRequest()->request->get('sSearch');
+        $sEcho = $this->getRequest()->request->get('sEcho');
+
+        if(!isset($searchString)) $searchString=NULL;
+
+        if ($user->getOrganisationunit()->getOrganisationunitStructure()->getLevel()->getDataentrylevel()) {
+            $oganisationunitObjects = $em->getRepository('HrisOrganisationunitBundle:Organisationunit')->findBy(array('parent' => $user->getOrganisationunit()->getId()));
+            foreach ($oganisationunitObjects as $key => $oganisationunit) {
+                $oganisationunitids[] = $oganisationunit->getId();
+            }
+            $oganisationunitids[] = $user->getOrganisationunit()->getId();
+        } else {
+            $oganisationunitids = $user->getOrganisationunit()->getId();
+        }
+
+        //preparing array of Fields
+        //mukulu continue from here
+
+
+
+        return array(
+
+        );
+    }
     /**
      * Creates a new Record entity.
      *
@@ -258,9 +377,18 @@ class RecordController extends Controller
         //$record = $this->createForm(new RecordType(), $entity);
         //$record->bind($request);
 
-        $formId = $this->get('request')->request->get('formId');
+        $formId = (int) $this->get('request')->request->get('formId');
 
-        $orgunit = $em->getRepository('HrisOrganisationunitBundle:Organisationunit')->find(1);
+        $user = $this->container->get('security.context')->getToken()->getUser();
+
+        $onrgunitParent = $this->get('request')->request->get('orgunitParent');
+        $orunitUid = $this->get('request')->request->get('unit');
+
+        if ( $orunitUid != null ){
+            $orgunit = $em->getRepository('HrisOrganisationunitBundle:Organisationunit')->findOneBy(array('uid' => $orunitUid));
+        }else{
+            $orgunit = $user->getOrganisationunit();
+        }
 
         $form = $em->getRepository('HrisFormBundle:Form')->find($formId);
         $uniqueFields = $form->getUniqueRecordFields();
@@ -286,11 +414,9 @@ class RecordController extends Controller
             $recordArray[$valueKey] = $recordValue;
         }
 
-        $user = $this->container->get('security.context')->getToken()->getUser();
-
         $entity->setValue($recordArray);
         $entity->setForm($form);
-        $entity->setInstance(md5(uniqid()));
+        $entity->setInstance(md5($instance));
         $entity->setOrganisationunit($orgunit);
         $entity->setUsername($user->getUsername());
         $entity->setComplete(True);
@@ -308,14 +434,7 @@ class RecordController extends Controller
         var_dump("this is done without any doubt");
 
         return $this->redirect($this->generateUrl('record_new', array('id' => $form->getId())));
-        //}
 
-
-
-        return array(
-            'entity' => $entity,
-            'form'   => $form->createView(),
-        );
     }
 
 
@@ -335,6 +454,17 @@ class RecordController extends Controller
 
         $fields = $formEntity->getSimpleField();
 
+        $user = $this->container->get('security.context')->getToken()->getUser();
+
+        $orgUnit = $em->getRepository( 'HrisOrganisationunitBundle:Organisationunit' )
+            ->createQueryBuilder('o')
+            ->select('o')
+            ->where('o.uid = :uid')
+            ->setParameters(array('uid' => $user->getOrganisationunit()->getUid()))
+            ->getQuery()
+            ->getArrayResult();
+
+        $isEntryLevel = $user->getOrganisationunit()->getOrganisationunitStructure()->getLevel()->getDataentrylevel();
         $selectFields = array();
         $key = NULL;
 
@@ -351,6 +481,8 @@ class RecordController extends Controller
             'id' => $formEntity->getId(),
             'table_name' => $tableName,
             'fields' => json_encode($selectFields),
+            'entryLevel' => $isEntryLevel,
+            'organisation_unit' => array_shift($orgUnit),
         );
     }
 
@@ -407,53 +539,135 @@ class RecordController extends Controller
 
         $entity = $em->getRepository('HrisRecordsBundle:Record')->find($id);
 
-        if (!$entity) {
-            throw $this->createNotFoundException('Unable to find Record entity.');
+        $formEntity = $entity->getForm();
+        $tableName = json_encode($em->getClassMetadata('HrisFormBundle:Form')->getTableName());
+
+        $fields = $formEntity->getSimpleField();
+
+        $user = $this->container->get('security.context')->getToken()->getUser();
+
+        //Getting the Object of User Organisation unit
+        $orgUnit = $em->getRepository( 'HrisOrganisationunitBundle:Organisationunit' )
+            ->createQueryBuilder('o')
+            ->select('o')
+            ->where('o.uid = :uid')
+            ->setParameters(array('uid' => $user->getOrganisationunit()->getUid()))
+            ->getQuery()
+            ->getArrayResult();
+
+        //Getting the Object of User Organisation unit
+        $selectedOrgunit = $em->getRepository( 'HrisOrganisationunitBundle:Organisationunit' )
+            ->createQueryBuilder('o')
+            ->select('o')
+            ->where('o.uid = :uid')
+            ->setParameters(array('uid' => $entity->getOrganisationunit()->getUid()))
+            ->getQuery()
+            ->getArrayResult();
+
+        $isEntryLevel = $user->getOrganisationunit()->getOrganisationunitStructure()->getLevel()->getDataentrylevel();
+
+        //getting fields with Select combo
+        $selectFields = array();
+        $key = NULL;
+        foreach ($fields as $key => $field){
+            if($field->getInputType()->getName() == 'Select'){
+                $selectFields[] = $field->getUid();
+            }
         }
 
-        $editForm = $this->createForm(new RecordType(), $entity);
-        $deleteForm = $this->createDeleteForm($id);
+        //getting all other fields
+        $otherFields = array();
+        $key = NULL;
+        reset($fields);
+        foreach ($fields as $key => $field){
+            if($field->getInputType()->getName() != 'Select'){
+                $otherFields[] = $field->getUid();
+            }
+        }
+
+        //var_dump($entity->getValue());die();
 
         return array(
-            'entity'      => $entity,
-            'edit_form'   => $editForm->createView(),
-            'delete_form' => $deleteForm->createView(),
+
+            'formUid' => $formEntity->getUid(),
+            'title' => $formEntity->getTitle(),
+            'id' => $formEntity->getId(),
+            'table_name' => $tableName,
+            'fields' => json_encode($selectFields),
+            'otherFields' => json_encode($otherFields),
+            'entryLevel' => $isEntryLevel,
+            'organisation_unit' => array_shift($orgUnit),
+            'dataValues'=> json_encode($entity->getValue()),
+            'selectedUnit'=> json_encode($selectedOrgunit),
+            'instance'=>$entity->getInstance(),
         );
     }
 
     /**
      * Edits an existing Record entity.
      *
-     * @Route("/{id}", requirements={"id"="\d+"}, name="record_update")
-     * @Method("PUT")
-     * @Template("HrisRecordsBundle:Record:new.html.twig")
+     * @Route("/update", name="record_update")
+     * @Method("POST")
+     * @Template("HrisRecordsBundle:Record:viewRecords.html.twig")
      */
-    public function updateAction(Request $request, $id)
+
+    public function updateAction(Request $request)
     {
+
         $em = $this->getDoctrine()->getManager();
 
-        $entity = $em->getRepository('HrisRecordsBundle:Record')->find($id);
+        $instance = $this->get('request')->request->get('instance');
 
-        if (!$entity) {
-            throw $this->createNotFoundException('Unable to find Record entity.');
+        $entity = $em->getRepository('HrisRecordsBundle:Record')->findOneBy(array('instance' => $instance ));
+
+        $formId = (int) $this->get('request')->request->get('formId');
+
+        $user = $this->container->get('security.context')->getToken()->getUser();
+
+        $onrgunitParent = $this->get('request')->request->get('orgunitParent');
+        $orunitUid = $this->get('request')->request->get('unit');
+
+        if ( $orunitUid != null ){
+            $orgunit = $em->getRepository('HrisOrganisationunitBundle:Organisationunit')->findOneBy(array('uid' => $orunitUid));
+        }else{
+            $orgunit = $user->getOrganisationunit();
         }
 
-        $deleteForm = $this->createDeleteForm($id);
-        $editForm = $this->createForm(new RecordType(), $entity);
-        $editForm->bind($request);
+        $form = $em->getRepository('HrisFormBundle:Form')->find($formId);
+        $uniqueFields = $form->getUniqueRecordFields();
+        $fields = $form->getSimpleField();
 
-        if ($editForm->isValid()) {
-            $em->persist($entity);
-            $em->flush();
+        foreach ($fields as $key => $field){
+            $recordValue = $this->get('request')->request->get($field->getName());
 
-            return $this->redirect($this->generateUrl('record_edit', array('id' => $id)));
+            /**
+             * Made dynamic, on which field column is used as key, i.e. uid, name or id.
+             */
+            $recordFieldKey = ucfirst(Record::getFieldKey());
+            $valueKey = call_user_func_array(array($field, "get${recordFieldKey}"),array());
+
+            $recordArray[$valueKey] = $recordValue;
         }
 
-        return array(
-            'entity'      => $entity,
-            'edit_form'   => $editForm->createView(),
-            'delete_form' => $deleteForm->createView(),
-        );
+        $entity->setValue($recordArray);
+        $entity->setForm($form);
+        $entity->setInstance($instance);
+        $entity->setOrganisationunit($orgunit);
+        $entity->setUsername($user->getUsername());
+        $entity->setComplete(True);
+        $entity->setCorrect(True);
+        $entity->setHashistory(False);
+        $entity->setHastraining(False);
+
+
+
+        //if ($entity->isValid()) {
+        $em = $this->getDoctrine()->getManager();
+        $em->persist($entity);
+        $em->flush();
+
+        return $this->redirect($this->generateUrl('record_viewrecords', array('formid' => $form->getId())));
+
     }
 
     /**
@@ -494,4 +708,36 @@ class RecordController extends Controller
         array_walk_recursive($arr, function($v, $k) use($key, &$val){if($k == $key) array_push($val, $v);});
         return count($val) > 1 ? $val : array_pop($val);
     }
+
+    /**
+     * Change the Forms for the Employee.
+     *
+     * @Route("/changeform", name="record_form_change")
+     * @Method("POST")
+     */
+
+    public function updateFormAction(Request $request)
+    {
+
+        $em = $this->getDoctrine()->getManager();
+
+        $uid = $this->get('request')->request->get('record_uid');
+
+        $formId = $this->get('request')->request->get('form_id');
+
+        $entity = $em->getRepository('HrisRecordsBundle:Record')->findOneBy(array('uid' => $uid ));
+
+        $form = $em->getRepository('HrisFormBundle:Form')->find($formId);
+
+        $entity->setForm($form);
+
+        $em = $this->getDoctrine()->getManager();
+        $em->persist($entity);
+        $em->flush();
+
+        return new Response('success');
+
+    }
 }
+
+

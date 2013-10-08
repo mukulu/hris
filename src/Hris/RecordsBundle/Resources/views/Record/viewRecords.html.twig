@@ -3,6 +3,7 @@
     {{ parent() }}
     <script type="text/javascript" src="{{ asset('commons/js/jquery.dataTables.js') }}"></script>
     <script type="text/javascript" src="{{ asset('commons/js/dt_settings.js') }}"></script>
+    <script type="text/javascript" src="{{ asset('bundles/hrisrecords/js/dataentry.js') }}"></script>
     <script>window["_GOOG_TRANS_EXT_VER"] = "1";</script>
 {% endblock javascripts %}
 
@@ -34,7 +35,7 @@
         {% set incr=0 %}
         {% for record in records %}
             {% set incr = incr+1 %}
-            <tr>
+            <tr id = {{ record.uid }}>
                 <td>{{ incr }}</td>
                 {% for visibleField in visibleFields %}
                     {% if visibleField.getInputType == 'Select' %}
@@ -51,12 +52,24 @@
                 <td>{{ record.lastupdated| date('d/m/Y') }}</td>
                 <td>{{ record.organisationunit.longname }}</td>
                 <td>
-                    <ul class="inline">
-                        <li>
-                            <a href="{{ path('record_show', { 'id': record.id }) }}"><i class="icon-info-sign icon-large" title="Show"></i></a>
-                        </li>
+                    <ul class="inline" style="width:170px;">
                         <li>
                             <a href="{{ path('record_edit', { 'id': record.id }) }}"><i class="icon-edit icon-large" title="Edit"></i></a>
+                        </li>
+                        <li>
+                            <a href="{{ path('record_show', { 'id': record.id }) }}"><i class="icon-list icon-large" title="History"></i></a>
+                        </li>
+                        <li>
+                            <a href="{{ path('training_list_byrecord', { 'recordid': record.id }) }}"><i class="icon-folder-open icon-large" title="In service Training"></i></a>
+                        </li>
+                        <li>
+                            <a href="{{ path('record_show', { 'id': record.id }) }}"><i class="icon-user icon-large" title="Profile"></i></a>
+                        </li>
+                        <li>
+                            <a href="{{ path('record_delete', { 'id': record.id }) }}"><i class="icon-remove-sign icon-large" title="Delete"></i></a>
+                        </li>
+                        <li>
+                            <button onclick="changeForm('{{ record.uid }}');">Form</button>
                         </li>
                     </ul>
                 </td>
@@ -65,4 +78,35 @@
         </tbody>
     </table>
 </div>
+
+    <div class="modal fade" id="showPopupModal">
+        <div class="modal-dialog">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <button type="button" class="close" data-dismiss="modal" aria-hidden="true">×</button>
+                    <h4 class="modal-title"><i class="icon-circle-remove icon-largest" title="Delete"></i>Deleting</h4>
+                </div>
+                <div class="modal-body">
+
+                    <select id="content_field" ondblclick="$('#showPopupModal').modal('hide')" name="content" size="10" style="width: 100%; height: 90%; font-family: 'Courier New',Courier,mono; font-size: 12px;" dir="ltr" wrap="soft">
+                        {% for form in userForms %}
+
+                            <option value="{{ form.id }}">{{ form.title }}</option>
+                        {% endfor %}
+                    </select>
+                </div>
+                <div class="modal-footer">
+                    <form action="" method="post">
+                        <input type="hidden" class="btn btn-danger" name="_method" value="DELETE"/>
+                        <input type="hidden" value="" id="selectedField"/>
+                        <button type="button" class="btn btn-success" onclick="$('#showPopupModal').modal('hide')">Insert Field</button>
+                        <button type="button" class="btn btn-primary" data-dismiss="modal">Close</button>
+                    </form>
+
+                </div>
+            </div>
+            <!-- /.modal-content -->
+        </div>
+        <!-- /.modal-dialog -->
+    </div>
     {% endblock %}

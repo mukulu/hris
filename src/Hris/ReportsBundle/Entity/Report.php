@@ -276,7 +276,7 @@ class Report
     /**
      * Get parameters
      *
-     * @return string 
+     * @return string
      */
     public function getParameters()
     {

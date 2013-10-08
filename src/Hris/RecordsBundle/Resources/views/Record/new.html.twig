@@ -2,7 +2,6 @@
 {% block javascripts %}
     {{ parent() }}
     <script type="text/javascript" src="{{ asset('bundles/hrisrecords/js/indexedb.js') }}"></script>
-    <script type="text/javascript" src="{{ asset('bundles/hrisrecords/js/dataentry.js') }}"></script>
 
     <script type="text/javascript">
 
@@ -23,7 +22,24 @@
     <h1>{{ title | raw }}</h1>
 
     <form action="{{ path('record_create') }}" method="post">
+        {% if entryLevel %}
+            Duty Post
+            <select name="orgunitParent" onchange="getunits(this)" required>
+                <option value="">
+                    --
+                </option>
+                <option value="{{ organisation_unit['uid'] }}">
+                    {{ organisation_unit['longname'] }}
+                </option>
+            </select>
+            <br />
+            Work Station
+            <select name="unit" id="units" >
 
+            </select>
+        {% else %}
+            <input name="orgunitParent" type="hidden" value="{{ organisation_unit['uid'] }}">
+        {% endif %}
 
         <div id="result" />
         </div>

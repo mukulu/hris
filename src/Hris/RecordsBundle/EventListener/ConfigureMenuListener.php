@@ -54,16 +54,17 @@ class ConfigureMenuListener
             )
         );
         $recordsModule->addChild('Update Records',
+
             array('route'=>'record_form_list_updaterecords',
                   'extras'=>array('tag'=>'div'),
-                  'name'=>'Reports Module',
+                  'name'=>'Update Records',
                   'attributes'=> array('class'=>'accordion-group'),
             )
         );
         $recordsModule->addChild('Data Validation',
-            array('uri'=>'#datavalidation',
+            array('route'=>'validation_run',
                 'extras'=>array('tag'=>'div'),
-                'name'=>'Update Records',
+                'name'=>'Data Validation',
                 'attributes'=> array('class'=>'accordion-group'),
             )
         );

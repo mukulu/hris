@@ -1,28 +1,16 @@
 {% extends '::base.html.twig' %}
 
-{% block body -%}
-    <h1>Training</h1>
+{% block right_content -%}
+    <h1><i class="icon-circle-info icon-largest" title="Show"></i> <small>{{ entity.coursename | capitalize }} Training Details</small></h1>
 
-    <table class="record_properties">
+    <table class="record_properties table table-striped table-bordered table-hover">
         <tbody>
             <tr>
-                <th>Id</th>
-                <td>{{ entity.id }}</td>
-            </tr>
-            <tr>
-                <th>Uid</th>
-                <td>{{ entity.uid }}</td>
-            </tr>
-            <tr>
-                <th>Instance</th>
-                <td>{{ entity.instance }}</td>
-            </tr>
-            <tr>
-                <th>Coursename</th>
+                <th>Course Name</th>
                 <td>{{ entity.coursename }}</td>
             </tr>
             <tr>
-                <th>Courselocation</th>
+                <th>Course Location</th>
                 <td>{{ entity.courselocation }}</td>
             </tr>
             <tr>
@@ -30,16 +18,12 @@
                 <td>{{ entity.sponsor }}</td>
             </tr>
             <tr>
-                <th>Startdate</th>
-                <td>{{ entity.startdate }}</td>
+                <th>Start Date</th>
+                <td>{{ entity.startdate|date('Y-m-d H:i:s') }}</td>
             </tr>
             <tr>
-                <th>Enddate</th>
-                <td>{{ entity.enddate }}</td>
-            </tr>
-            <tr>
-                <th>Username</th>
-                <td>{{ entity.username }}</td>
+                <th>End Date</th>
+                <td>{{ entity.enddate|date('Y-m-d H:i:s') }}</td>
             </tr>
             <tr>
                 <th>Datecreated</th>
@@ -52,23 +36,48 @@
         </tbody>
     </table>
 
-        <ul class="record_actions">
+        <ul class="record_actions inline">
     <li>
-        <a href="{{ path('training') }}">
+        <a href="{{ path('training_list_byrecord', { 'recordid': entity.record.id }) }}" class="btn">
             Back to the list
         </a>
     </li>
     <li>
-        <a href="{{ path('training_edit', { 'id': entity.id }) }}">
+        <a href="{{ path('training_edit', { 'id': entity.id }) }}" class="btn">
             Edit
         </a>
     </li>
     <li>
-        <form action="{{ path('training_delete', { 'id': entity.id }) }}" method="post">
-            <input type="hidden" name="_method" value="DELETE" />
-            {{ form_widget(delete_form) }}
-            <button type="submit">Delete</button>
-        </form>
+        <a data-toggle="modal" href="#deleteModalFor{{ entity.uid }}" class="btn btn-danger">Delete {{ entity.coursename | capitalize }}</a>
+
+        <!-- Modal -->
+        <div class="modal fade" id="deleteModalFor{{ entity.uid }}">
+            <div class="modal-dialog">
+                <div class="modal-content">
+                    <div class="modal-header">
+                        <button type="button" class="close" data-dismiss="modal" aria-hidden="true">×</button>
+                        <h4 class="modal-title"><i class="icon-circle-remove icon-largest" title="Delete"></i>Deleting {{ entity.coursename | capitalize }}</h4>
+                    </div>
+                    <div class="modal-body">
+                        Are you sure you want to delete <strong>{{ entity.coursename | capitalize }}</strong> that was created on <em>{{ entity.datecreated|date('d/m/Y') }}</em>
+                        {% if entity.lastUpdated %}
+                            and last updated on {{ entity.lastUpdated|date('H:i:s d/m/Y') }} ??
+                        {% else %}
+                            and never updated ??
+                        {% endif %}
+                    </div>
+                    <div class="modal-footer">
+                        <form action="{{ path('training_delete', { 'id': entity.id }) }}" method="post">
+                            <input type="hidden" name="_method" value="DELETE" />
+                            {{ form_widget(delete_form) }}
+                            <button type="button" class="btn btn-default" data-dismiss="modal">Close</button>
+                            <button type="submit" class="btn btn-danger">Delete</button>
+                        </form>
+
+                    </div>
+                </div><!-- /.modal-content -->
+            </div><!-- /.modal-dialog -->
+        </div><!-- /.modal -->
     </li>
 </ul>
 {% endblock %}

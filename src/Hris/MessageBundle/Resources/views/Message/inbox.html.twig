@@ -1,0 +1,25 @@
+{% extends 'HrisMessageBundle::layout.html.twig' %}
+
+{% block javascripts %}
+    {{ parent() }}
+    <script type="text/javascript" src="{{ asset('commons/js/jquery.dataTables.js') }}"></script>
+    <script type="text/javascript" src="{{ asset('commons/js/dt_settings.js') }}"></script>
+    <script>window["_GOOG_TRANS_EXT_VER"] = "1";</script>
+{% endblock javascripts %}
+
+{% block stylesheets %}
+    {{ parent() }}
+    <link rel="stylesheet" href="{{ asset('commons/css/dt_bootstrap.css') }}" />
+{% endblock stylesheets %}
+
+{% block fos_message_header %}
+    {% trans from 'FOSMessageBundle' %}Inbox{% endtrans %}
+{% endblock fos_message_header %}
+
+{% block fos_message_links %}
+    <a href="{{ url('message_thread_new' )}}" class="btn">{% trans from 'FOSMessageBundle' %}Send a new message{% endtrans %}</a>
+{% endblock fos_message_links %}
+
+{% block fos_message_content %}
+    {% include 'HrisMessageBundle:Message:threads_list.html.twig' with {'threads': threads} %}
+{% endblock %}

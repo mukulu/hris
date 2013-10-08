@@ -30,12 +30,23 @@ function createDatabase(databaseName, tableName, columnNames, dataValues) {
         var db = openRequest.result;
         //var tables = ["hris_form2", "hris_form3"];
 
+        var created = false;
+
         for (var key in tableName) {
             var dataStore = db.createObjectStore(tableName[key], {keyPath: "id"});
             console.log("data Store " + tableName[key] + " Created");
 
             dataStore.createIndex("uid", "uid", { unique: true });
             console.log("data Store Column UID  Added for the datastore " + tableName[key]);
+
+            if (created == false) {
+                var dataStore = db.createObjectStore("field_option_association", {keyPath: "id"});
+                console.log("data Store 'field_option_association' Created");
+
+                dataStore.createIndex("fieldoption", "fieldoption", { unique: false });
+                console.log("data Store Column UID  Added for the datastore 'field_option_Association' ");
+                created = true;
+            }
         }
 
     };
@@ -75,8 +86,10 @@ function addRecords(databaseName, tableName, dataValues) {
     /*
      Parsing the names of columns form strin to Json Format
      */
+
     tableName = JSON.parse(tableName);
     dataValues = JSON.parse(dataValues);
+
 
     var openRequest = localDatabase.indexedDB.open(databaseName);
 
@@ -97,6 +110,8 @@ function addRecords(databaseName, tableName, dataValues) {
                 } else if (val == "datecreated" || val == "lastupdated") {
                     results += '"' + val + '" : "' + encodeURIComponent(dataValues[key][val]['date']) + '", ';
                 } else if (val == "field") {
+                    results += '"' + val + '" : "' + encodeURIComponent(dataValues[key][val]['uid']) + '", ';
+                } else if (val == "parent") {
                     results += '"' + val + '" : "' + encodeURIComponent(dataValues[key][val]['uid']) + '", ';
                 } else {
                     results += '"' + val + '" : "' + encodeURIComponent(dataValues[key][val]) + '", ';
@@ -160,11 +175,11 @@ function getSingleRecord(databaseName, uid, tableName) {
 
 }
 
-function getDataEntryForm(databaseName, uid, tableName) {
+function getDataEntryForm(databaseName, formUid, tableName) {
 
     tableName = JSON.parse(tableName);
 
-    console.log(uid);
+    console.log(formUid);
 
     var result = document.getElementById("result");
     result.innerHTML = "";
@@ -173,38 +188,38 @@ function getDataEntryForm(databaseName, uid, tableName) {
 
     function getForm(callback) {
 
-    openRequest.onsuccess = function () {
-        db = openRequest.result;
-        console.log("this is done deal");
+        openRequest.onsuccess = function () {
+            db = openRequest.result;
+            console.log("this is done deal");
 
 
-        var transaction = db.transaction(tableName, "readonly");
-        var store = transaction.objectStore(tableName);
-        var index = store.index("uid");
+            var transaction = db.transaction(tableName, "readonly");
+            var store = transaction.objectStore(tableName);
+            var index = store.index("uid");
 
-        var request = index.get(uid);
-        request.onsuccess = function () {
-            var matching = request.result;
-            if (matching !== undefined) {
-                // A match was found.
+            var request = index.get(formUid);
+            request.onsuccess = function () {
+                var matching = request.result;
+                if (matching !== undefined) {
+                    // A match was found.
 
-                var jsonStr = JSON.stringify(decodeURIComponent(matching.hypertext));
+                    var jsonStr = JSON.stringify(decodeURIComponent(matching.hypertext));
 
-                var hypertext = decodeURIComponent(matching.hypertext);
+                    var hypertext = decodeURIComponent(matching.hypertext);
 
-                result.innerHTML = hypertext;
+                    result.innerHTML = hypertext;
 
-            } else {
-                // No match was found.
-                report(null);
-            }
+                } else {
+                    // No match was found.
+                    report(null);
+                }
+            };
+
         };
-
-    };
         callback();
     }
 
-    getForm(function() {
+    getForm(function () {
         //alert('Finished eating my sandwich.');
     });
 
@@ -221,7 +236,6 @@ function loadFieldOptions(fieldUIDS, databaseName) {
 
         var field_uid = value;
 
-
         //getting all the field Combos
 
         var openRequest = localDatabase.indexedDB.open(databaseName);
@@ -235,12 +249,26 @@ function loadFieldOptions(fieldUIDS, databaseName) {
 
             var fielOptiondRequest = fieldOptionStore.openCursor();
 
+            var emptyElement = false
+
             fielOptiondRequest.onsuccess = function () {
 
                 var cursorOption = fielOptiondRequest.result;
 
 
                 if (cursorOption) {
+
+                    //Setting the first empty Option
+
+                    if ( emptyElement == false ){
+
+                        $("#" + field_uid).append($('<option>', {
+                            value: '',
+                            text: '--'
+                        }));
+
+                        emptyElement = true;
+                    }
 
                     if (field_uid == cursorOption.value.field) {
                         console.log(decodeURIComponent(cursorOption.value.value) + " uid " + field_uid + " field_id " + cursorOption.value.uid);
@@ -255,6 +283,266 @@ function loadFieldOptions(fieldUIDS, databaseName) {
                 }
                 else {
                     console.log('No more Matching Fields Options');
+                }
+
+            }
+        }
+    });
+
+}
+
+function changeRelatedFieldOptions(field_uid) {
+
+    var optionUid = $("#" + field_uid).val();
+
+    //getting all the field Combos
+
+    var openRequest = localDatabase.indexedDB.open("hrhis");
+
+    openRequest.onsuccess = function () {
+
+        var db = openRequest.result;
+
+        var fieldOptionTransaction = db.transaction("field_option_association", "readonly");
+        var fieldOptionStore = fieldOptionTransaction.objectStore("field_option_association");
+
+        var index = fieldOptionStore.index("fieldoption");
+
+        var request = index.openCursor(IDBKeyRange.only(optionUid));
+
+        var removeElement = false
+
+        request.onsuccess = function () {
+
+            var cursorOption = request.result;
+
+            if (cursorOption) {
+
+                if ( removeElement == false ){
+                    $("#" + cursorOption.value.fieldref).find('option').remove();
+
+                    $("#" + cursorOption.value.fieldref).append($('<option>', {
+                        value: '',
+                        text: '--'
+                    }));
+
+                    removeElement = true;
+                }
+
+                console.log(decodeURIComponent(cursorOption.value.fieldoptionref) + " uid " + field_uid + " fieldoptionUID " + cursorOption.value.fieldoptionrefuid);
+
+                $("#" + cursorOption.value.fieldref).append($('<option>', {
+                    value: cursorOption.value.fieldoptionrefuid,
+                    text: decodeURIComponent(cursorOption.value.fieldoptionref)
+                }));
+                cursorOption.continue();
+            }
+            else {
+                console.log('No more Matching Fields Options');
+            }
+
+        }
+    }
+
+}
+
+function isUnique(field_uid) {
+
+    var optionUid = $("#" + field_uid).val();
+
+    //getting all the field Combos
+
+    var openRequest = localDatabase.indexedDB.open("hrhis");
+
+    openRequest.onsuccess = function () {
+
+        var db = openRequest.result;
+
+        var fieldOptionTransaction = db.transaction("field_option_association", "readonly");
+        var fieldOptionStore = fieldOptionTransaction.objectStore("field_option_association");
+
+        var index = fieldOptionStore.index("fieldoption");
+
+        var request = index.openCursor(IDBKeyRange.only(optionUid));
+
+        var removeElement = false
+
+        request.onsuccess = function () {
+
+            var cursorOption = request.result;
+
+            if (cursorOption) {
+
+                if ( removeElement == false ){
+                    $("#" + cursorOption.value.fieldref).find('option').remove();
+                    removeElement = true;
+                }
+
+                console.log(decodeURIComponent(cursorOption.value.fieldoptionref) + " uid " + field_uid + " fieldoptionUID " + cursorOption.value.fieldoptionrefuid);
+
+                $("#" + cursorOption.value.fieldref).append($('<option>', {
+                    value: cursorOption.value.fieldoptionrefuid,
+                    text: decodeURIComponent(cursorOption.value.fieldoptionref)
+                }));
+                cursorOption.continue();
+            }
+            else {
+                console.log('No more Matching Fields Options');
+            }
+
+        }
+    }
+
+}
+
+function getunits(parent){
+
+    var parentUid = $(parent).val();
+
+    //getting all the field Combos
+
+    var openRequest = localDatabase.indexedDB.open('hrhis');
+
+    openRequest.onsuccess = function () {
+
+        var db = openRequest.result;
+
+        var orgunitTransaction = db.transaction("hris_organisationunit", "readonly");
+        var orgunitStore = orgunitTransaction.objectStore("hris_organisationunit");
+
+        var orgunitRequest = orgunitStore.openCursor();
+
+        $("#units").find('option').remove();
+
+        $("#units").append($('<option>', {
+            value: '',
+            text: '--'
+        }));
+
+        orgunitRequest.onsuccess = function () {
+
+            var cursorOption = orgunitRequest.result;
+
+
+            if (cursorOption) {
+
+                if (parentUid == cursorOption.value.parent) {
+                    console.log(decodeURIComponent(cursorOption.value.longname));
+
+                    $("#units").append($('<option>', {
+                        value: cursorOption.value.uid,
+                        text: decodeURIComponent(cursorOption.value.longname)
+                    }));
+                }
+
+                cursorOption.continue();
+            }
+            else {
+                console.log('No more Matching Fields Options');
+            }
+
+        }
+    }
+}
+
+function populateForm(fieldUIDS, databaseName, dataValues, otherFields, orgunit) {
+
+    dataValues = JSON.parse(dataValues);
+    otherFields = JSON.parse(otherFields);
+    orgunit = JSON.parse(orgunit);
+
+    var fieldUid = JSON.parse(fieldUIDS);
+
+    //Setting Organizationunit
+    $.each(orgunit, function (key, value) {
+        $("#units").append($('<option>', {
+            value: value["uid"],
+            text: value["longname"],
+            selected: "selected"
+        }));
+
+    });
+
+    console.log('other fields' + otherFields);
+
+    $.each(fieldUid, function (key, value) {
+        console.log(key + ": " + value);
+
+        var field_uid = value;
+
+        //getting all the field Combos
+
+        var openRequest = localDatabase.indexedDB.open(databaseName);
+
+        openRequest.onsuccess = function () {
+
+            var db = openRequest.result;
+
+            var fieldOptionTransaction = db.transaction("hris_fieldoption", "readonly");
+            var fieldOptionStore = fieldOptionTransaction.objectStore("hris_fieldoption");
+
+            var fielOptiondRequest = fieldOptionStore.openCursor();
+
+            var emptyElement = false
+
+            fielOptiondRequest.onsuccess = function () {
+
+                var cursorOption = fielOptiondRequest.result;
+
+
+                if (cursorOption) {
+
+                    //Setting the first empty Option
+
+
+
+                    if (field_uid == cursorOption.value.field) {
+                        console.log(decodeURIComponent(cursorOption.value.value) + " uid " + field_uid + " field_id " + cursorOption.value.uid);
+
+                        $("#" + field_uid).append($('<option>', {
+                            value: cursorOption.value.uid,
+                            text: decodeURIComponent(cursorOption.value.value)
+                        }));
+
+                        if ( emptyElement == false ){
+
+                            for (var keys in dataValues){
+
+                                if (field_uid == keys && cursorOption.value.uid == dataValues[keys]){
+
+                                $("#" + field_uid).append($('<option>', {
+                                    value: cursorOption.value.uid,
+                                    text: decodeURIComponent(cursorOption.value.value),
+                                    selected: "selected"
+                                }))
+
+                                emptyElement = true;
+                                }
+                            }
+                        }
+                    }
+
+                    cursorOption.continue();
+                }
+                else {
+                    console.log('No more Matching Fields Options');
+
+                    $.each(otherFields, function (key, value) {
+                        for ( var keyValue in dataValues){
+                            if(value == keyValue){
+
+                                if (Object.prototype.toString.call(dataValues[keyValue]) == "[object Object]"){
+
+                                    var date = dataValues[keyValue]["date"].split(" ");
+                                    $('#' + value).val(date[0]);
+                                    //alert(dataValues[keyValue]["date"]);
+                                }else{
+                                    $('#' + value).val(dataValues[keyValue]);
+                                }
+
+                            }
+                        }
+                    });
                 }
 
             }
