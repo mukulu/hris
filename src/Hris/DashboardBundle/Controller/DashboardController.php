@@ -24,6 +24,9 @@
  */
 namespace Hris\DashboardBundle\Controller;
 
+use Hris\DashboardBundle\Entity\DashboardChart;
+use Symfony\Component\HttpFoundation\Request;
+use Hris\DashboardBundle\Form\DashboardType;
 use Hris\FormBundle\Entity\Field;
 use Hris\ReportsBundle\Controller\ReportAggregationController;
 use JMS\SecurityExtraBundle\Annotation\Secure;
@@ -48,6 +51,7 @@ class DashboardController extends Controller
      * @Secure(roles="ROLE_DASHBOARD_DASHBOARD_SHOW,ROLE_USER")
      *
      * @Route("/", name="hris_homepage")
+     * @Route("/", name="dashboard")
      * @Route("/dashboard/", name="hris_dashboard_homepage")
      * @Method("GET")
      * @Template()
@@ -246,14 +250,173 @@ class DashboardController extends Controller
     /**
      * Finds and displays a dashboards for the user.
      *
-     * @Route("/dashboard", name="dashboard_show")
+     * @Route("/dashboardList", name="dashboard_list")
+     * @Method("GET")
+     * @Template("")
+     */
+    public function listAction()
+    {
+        $em = $this->getDoctrine()->getManager();
+
+        $entities = $em->getRepository('HrisDashboardBundle:DashboardChart')->findAll();
+        $delete_forms = array();
+        foreach($entities as $entity) {
+            $delete_form= $this->createDeleteForm($entity->getId());
+            $delete_forms[$entity->getId()] = $delete_form->createView();
+        }
+
+        return array(
+            'entities' => $entities,
+            'delete_forms' => $delete_forms,
+        );
+    }
+    /**
+     * Adds a new dashboards for the user.
+     *
+     * @Route("/dashboardAdd", name="dashboard_new")
+     * @Method("GET")
+     * @Template("")
+     */
+    public function newAction()
+    {
+        $aggregationForm = $this->createForm(new DashboardType(),null,array('em'=>$this->getDoctrine()->getManager()));
+
+        return array(
+            'aggregationForm'=>$aggregationForm->createView(),
+        );
+    }
+
+    /**
+     * Generate aggregated reports
+     *
+     * @Route("/", name="dashboard_create")
+     * @Method("POST")
+     * @Template("")
+     */
+    public function createAction(Request $request)
+    {
+        $entity  = new DashboardChart();
+
+        $form = $this->createForm(new DashboardType(),$entity, array('em'=>$this->getDoctrine()->getManager()));
+        $form->submit($request);
+
+        if ($form->isValid()) {
+            $em = $this->getDoctrine()->getManager();
+            $requestcontent = $request->request->get('hris_dashboardbundle_dashboardtype');
+            $organisationunitId = $requestcontent['organisationunit'];
+            $organisationunit = $em->getRepository('HrisOrganisationunitBundle:Organisationunit')->find($organisationunitId);
+            $entity->addOrganisationunit($organisationunit);
+            $entity->setUser($this->container->get('security.context')->getToken()->getUser());
+            $em->persist($entity);
+            $em->flush();
+
+            return $this->redirect($this->generateUrl('dashboard_show', array('id' => $entity->getId())));
+        }
+
+        return array(
+            'entity' => $entity,
+            'form'   => $form->createView(),
+        );
+    }
+    /**
+     * Finds and displays a Dashboard entity.
+     *
+     * @Route("/{id}", requirements={"id"="\d+"}, name="dashboard_show")
      * @Method("GET")
      * @Template()
      */
-    public function showAction()
+    public function showAction($id)
     {
         $em = $this->getDoctrine()->getManager();
-        exit();
+
+        $entity = $em->getRepository('HrisDashboardBundle:DashboardChart')->find($id);
+
+        if (!$entity) {
+            throw $this->createNotFoundException('Unable to find Dashboard entity.');
+        }
+
+        $deleteForm = $this->createDeleteForm($id);
+
+        return array(
+            'entity'      => $entity,
+            'delete_form' => $deleteForm->createView(),
+        );
+    }
+    /**
+     * Finds and Show the Dashboard entity to edit.
+     *
+     * @Route("/{id}/edit",  name="dashboard_edit")
+     * @Method("GET")
+     * @Template()
+     */
+    public function editAction($id)
+    {
+        $em = $this->getDoctrine()->getManager();
+
+        $entity = $em->getRepository('HrisDashboardBundle:DashboardChart')->find($id);
+
+        if (!$entity) {
+            throw $this->createNotFoundException('Unable to find Dashboard entity.');
+        }
+        $deleteForm = $this->createDeleteForm($id);
+        $editForm = $this->createForm(new DashboardType(),$entity,array('em'=>$this->getDoctrine()->getManager()));
+
+        return array(
+            'entity'      => $entity,
+            'aggregationForm' => $editForm->createView(),
+            'delete_form' => $deleteForm->createView(),
+        );
+    }
+    /**
+     * Updates a Dashboard entity.
+     *
+     * @Route("/{id}",  name="dashboard_update")
+     * @Method("GET")
+     * @Template()
+     */
+    public function updateAction($id)
+    {
+
+    }
+    /**
+     * Finds and delete a Dashboard entity.
+     *
+     * @Route("/{id}",  name="dashboard_delete")
+     * @Method("DELETE")
+     */
+    public function deleteAction(Request $request, $id)
+    {
+        $form = $this->createDeleteForm($id);
+        $form->submit($request);
+
+        if ($form->isValid()) {
+            $em = $this->getDoctrine()->getManager();
+            $entity = $em->getRepository('HrisDashboardBundle:DashboardChart')->find($id);
+
+            if (!$entity) {
+                throw $this->createNotFoundException('Unable to find Dashboard entity.');
+            }
+
+            $em->remove($entity);
+            $em->flush();
+        }
+
+        return $this->redirect($this->generateUrl('dashboard_list'));
+    }
+
+
+    /**
+     * Creates a form to delete a Dashboard entity by id.
+     *
+     * @param mixed $id The entity id
+     *
+     * @return \Symfony\Component\Form\Form The form
+     */
+    private function createDeleteForm($id)
+    {
+        return $this->createFormBuilder(array('id' => $id))
+            ->add('id', 'hidden')
+            ->getForm();
     }
 
     /**search the multidimension array for a needle
