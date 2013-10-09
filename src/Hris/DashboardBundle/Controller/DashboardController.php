@@ -20,6 +20,7 @@
  *
  * @since 2012
  * @author John Francis Mukulu <john.f.mukulu@gmail.com>
+ * @author Wilfred Felix Senyoni <senyoni@gmail.com>
  *
  */
 namespace Hris\DashboardBundle\Controller;
@@ -378,7 +379,7 @@ class DashboardController extends Controller
      */
     public function updateAction($id)
     {
-
+        
     }
     /**
      * Finds and delete a Dashboard entity.
