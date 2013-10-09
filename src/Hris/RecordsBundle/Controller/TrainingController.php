@@ -97,7 +97,12 @@ class TrainingController extends Controller
                 $entity->setRecord($record);
             }
             $entity->setUsername($user->getUsername() );
+
+            //Update Record Table hasTraining column
+            $record->setHastraining(true);
+
             $em->persist($entity);
+            $em->persist($record);
             $em->flush();
 
             return $this->redirect($this->generateUrl('training_list_byrecord', array( 'recordid' => $recordid )));
@@ -240,12 +245,27 @@ class TrainingController extends Controller
             if (!$entity) {
                 throw $this->createNotFoundException('Unable to find Training entity.');
             }
+            $record = $entity->getRecord();
+
+            //check if this deleted entity is the last for this record
+            $query = "SELECT count (id) as total ";
+            $query .= " FROM hris_record_training T ";
+            $query .= " WHERE record_id = ". $record->getId();
+            $query .= " AND id <> ". $id;
+
+            $result = $em -> getConnection() -> executeQuery($query) -> fetchAll();
+
+            //Update records hasTraining column to false when no trainings will be left after delete
+            if ( $result[0]['total'] == 0 ){
+                $record->setHasTraining(false);
+                $em->persist($record);
+            }
 
             $em->remove($entity);
             $em->flush();
         }
 
-        return $this->redirect($this->generateUrl('training_list_byrecord', array( 'recordid' => $entity->getRecord()->getId()) ));
+        return $this->redirect($this->generateUrl('training_list_byrecord', array( 'recordid' => $record->getId()) ));
     }
 
     /**
