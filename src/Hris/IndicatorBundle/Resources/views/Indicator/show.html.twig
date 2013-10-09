@@ -65,7 +65,7 @@
                             <div class="modal-body">
                                 Are you sure you want to delete <strong>{{ entity.name | capitalize }}</strong> that was created on <em>{{ entity.datecreated|date('d/m/Y') }}</em>
                                 {% if entity.lastUpdated %}
-                                    and last logged in on {{ entity.lastUpdated|date('H:i:s d/m/Y') }} ??
+                                    and last updated on {{ entity.lastUpdated|date('H:i:s d/m/Y') }} ??
                                 {% else %}
                                     and never updated ??
                                 {% endif %}

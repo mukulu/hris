@@ -20,6 +20,7 @@
  *
  * @since 2012
  * @author John Francis Mukulu <john.f.mukulu@gmail.com>
+ * @author Ismail Y. Koleleni <ismailkoleleni@gmail.com>
  *
  */
 namespace Hris\IndicatorBundle\Controller;

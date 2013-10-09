@@ -53,39 +53,54 @@ class TrainingController extends Controller
      */
     public function indexAction( $recordid=NULL )
     {
-        //echo "Welome to Training Module";exit;
-        //echo $recordid;exit;
         $em = $this->getDoctrine()->getManager();
 
         if(!empty($recordid)){
             $entities = $em->getRepository('HrisRecordsBundle:Training')->findBy(array('record'=>$recordid));
             $record = $em->getRepository('HrisRecordsBundle:Record')->findOneBy(array('id'=>$recordid));
         }
+
+        foreach($entities as $entity) {
+            $delete_form= $this->createDeleteForm($entity->getId());
+            $delete_forms[$entity->getId()] = $delete_form->createView();
+        }
         //print_r($record->getValue());exit;
 
         return array(
             'entities' => $entities,
+            'delete_forms' => $delete_forms,
+            'recordid' => $recordid,
         );
     }
     /**
      * Creates a new Training entity.
      *
-     * @Route("/", name="training_create")
+     * @Route("/{recordid}/recordid", requirements={"recordid"="\d+"}, name="training_create")
      * @Method("POST")
      * @Template("HrisRecordsBundle:Training:new.html.twig")
      */
-    public function createAction(Request $request)
+    public function createAction(Request $request, $recordid = NULL)
     {
+        //echo $recordid;exit;
         $entity  = new Training();
         $form = $this->createForm(new TrainingType(), $entity);
         $form->bind($request);
+        $user = $this->container->get('security.context')->getToken()->getUser();
 
         if ($form->isValid()) {
             $em = $this->getDoctrine()->getManager();
+            if(!empty($recordid)) {
+                $record = $this->getDoctrine()->getManager()->getRepository('HrisRecordsBundle:Record')->findOneBy(array('id'=>$recordid));
+                $entity->setRecord($record);
+            }else {
+                $record = NULL;
+                $entity->setRecord($record);
+            }
+            $entity->setUsername($user->getUsername() );
             $em->persist($entity);
             $em->flush();
 
-            return $this->redirect($this->generateUrl('training_show', array('id' => $entity->getId())));
+            return $this->redirect($this->generateUrl('training_list_byrecord', array( 'recordid' => $recordid )));
         }
 
         return array(
@@ -97,18 +112,25 @@ class TrainingController extends Controller
     /**
      * Displays a form to create a new Training entity.
      *
-     * @Route("/new", name="training_new")
+     * @Route("/new/{recordid}/recordid", requirements={"recordid"="\d+"}, name="training_new")
      * @Method("GET")
      * @Template()
      */
-    public function newAction()
+    public function newAction( $recordid=NULL )
     {
         $entity = new Training();
         $form   = $this->createForm(new TrainingType(), $entity);
+        if(!empty($recordid)) {
+            $record = $this->getDoctrine()->getManager()->getRepository('HrisRecordsBundle:Record')->findOneBy(array('id'=>$recordid));
+        }else {
+            $record = NULL;
+        }
 
         return array(
             'entity' => $entity,
             'form'   => $form->createView(),
+            'recordid' => $recordid,
+            'record' => $record,
         );
     }
 
@@ -174,12 +196,14 @@ class TrainingController extends Controller
     public function updateAction(Request $request, $id)
     {
         $em = $this->getDoctrine()->getManager();
+        $user = $this->container->get('security.context')->getToken()->getUser();
 
         $entity = $em->getRepository('HrisRecordsBundle:Training')->find($id);
 
         if (!$entity) {
             throw $this->createNotFoundException('Unable to find Training entity.');
         }
+        $entity->setUsername($user->getUsername() );
 
         $deleteForm = $this->createDeleteForm($id);
         $editForm = $this->createForm(new TrainingType(), $entity);
@@ -189,7 +213,7 @@ class TrainingController extends Controller
             $em->persist($entity);
             $em->flush();
 
-            return $this->redirect($this->generateUrl('training_edit', array('id' => $id)));
+            return $this->redirect($this->generateUrl('training_list_byrecord', array( 'recordid' => $entity->getRecord()->getId() )));
         }
 
         return array(
@@ -221,7 +245,7 @@ class TrainingController extends Controller
             $em->flush();
         }
 
-        return $this->redirect($this->generateUrl('training'));
+        return $this->redirect($this->generateUrl('training_list_byrecord', array( 'recordid' => $entity->getRecord()->getId()) ));
     }
 
     /**
