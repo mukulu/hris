@@ -379,7 +379,7 @@ class DashboardController extends Controller
      */
     public function updateAction($id)
     {
-        
+
     }
     /**
      * Finds and delete a Dashboard entity.
