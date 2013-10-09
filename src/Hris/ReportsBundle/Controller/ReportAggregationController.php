@@ -87,6 +87,9 @@ class ReportAggregationController extends Controller
             $fieldsTwo = $aggregationFormData['fieldsTwo'];
             $graphType = $aggregationFormData['graphType'];
         }
+        if(empyt($organisationUnit)) {
+            $organisationUnit = $this->getDoctrine()->getManager()->createQuery('SELECT organisationunit FROM HrisOrganisationunitBundle:Organisationunit organisationunit WHERE organisationunit.parent IS NULL')->getSingleResult();
+        }
 
         $results = $this->aggregationEngine($organisationUnit, $forms, $fields, $organisationunitGroup, $withLowerLevels, $fieldsTwo);
 

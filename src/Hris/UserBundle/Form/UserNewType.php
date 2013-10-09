@@ -63,6 +63,21 @@ class UserNewType extends AbstractType
             ->add('enabled',null,array(
                 'required'=>false,
             ))
+            ->add('locked',null,array(
+                'required'=>false,
+            ))
+            ->add('expiresAt','date',array(
+                'required'=>false,
+                'widget' => 'single_text',
+                'format' => 'dd-MM-yyyy',
+                'attr' => array('class' => 'date')
+            ))
+            ->add('credentialsExpireAt','date',array(
+                'required'=>false,
+                'widget' => 'single_text',
+                'format' => 'dd-MM-yyyy',
+                'attr' => array('class' => 'date')
+            ))
             ->add('roles')
         ;
     }
