@@ -1,7 +1,7 @@
 {% extends '::base.html.twig' %}
 
 {% block right_content -%}
-    <h1><i class="icon-edit icon-largest" title="Edit"></i><small>Indicator edit</small></h1>
+    <h1><i class="icon-edit icon-largest" title="Edit"></i><small>Target edit</small></h1>
 
     <form class="form-horizontal" action="{{ path('indicator_update', { 'id': entity.id }) }}" method="post" {{ form_enctype(edit_form) }}>
         <input type="hidden" name="_method" value="PUT" />

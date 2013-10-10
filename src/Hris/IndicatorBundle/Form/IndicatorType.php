@@ -26,6 +26,7 @@
 namespace Hris\IndicatorBundle\Form;
 
 use Symfony\Component\Form\AbstractType;
+use Doctrine\ORM\EntityRepository;
 use Symfony\Component\Form\FormBuilderInterface;
 use Symfony\Component\OptionsResolver\OptionsResolverInterface;
 
@@ -54,7 +55,17 @@ class IndicatorType extends AbstractType
             ->add('name')
             ->add('description')
             ->add('organisationunitGroup')
-            ->add('fieldOptionGroup')
+            ->add('fields','entity',array(
+                'mapped' => false,
+                'class'=>'HrisFormBundle:Field',
+                'empty_value' => '--SELECT--',
+                'query_builder'=>function(EntityRepository $er) {
+                    return $er->createQueryBuilder('field')
+                        ->where('field.hastarget=True')
+                        ->orderBy('field.name','ASC');
+                }
+            ))
+            ->add('fieldOption')
             ->add('year', 'choice', array(
                 'empty_value' => '--SELECT--',
                 'choices'   => $this->generateYears(),

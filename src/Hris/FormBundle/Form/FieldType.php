@@ -49,6 +49,9 @@ class FieldType extends AbstractType
             ->add('hashistory',null,array(
                 'required'=>false,
             ))
+            ->add('hastarget',null,array(
+                'required'=>false,
+            ))
             ->add('skipInReport',null,array(
                 'required'=>false,
             ))

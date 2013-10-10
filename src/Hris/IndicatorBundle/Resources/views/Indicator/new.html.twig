@@ -1,5 +1,32 @@
 {% extends '::base.html.twig' %}
 
+{% block javascripts %}
+    <script type="text/javascript">
+
+        var inputboxname="hris_indicatorbundle_indicatortype[fields]";
+        var fieldUrl = '{{ path('field_options',{'_format':'json'}) }}';
+        var fieldOptionsTagId = "#hris_indicatorbundle_indicatortype_fieldOption";
+
+
+        function updateFieldOptions() {
+            postData={'fieldid': $('input[name="'+inputboxname+'"]').val() };
+            $.post(fieldUrl,postData , function( fieldOptions ){
+                $(fieldOptionsTagId).find('option').remove();
+                if (jQuery.isEmptyObject(fieldOptions)){
+                    $(fieldOptionsTagId).attr('disabled', 'true');
+                }else {
+                    $(fieldOptionsTagId).removeAttr('disabled');
+                    $.each(fieldOptions, function(fieldOptionIndex, fieldOption) {
+                        $(fieldOptionsTagId).append(new Option(fieldOption['name'], fieldOption['id']));
+                    });
+                }
+            });
+        }
+    </script>
+
+
+{% endblock javascripts %}
+
 {% block right_content -%}
     <h1><small>Indicator creation</small></h1>
 

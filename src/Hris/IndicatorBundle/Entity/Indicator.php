@@ -91,16 +91,16 @@ class Indicator
     private $year;
 
     /**
-     * @var FieldOptionGroup $fieldOptionGroup
+     * @var FieldOption $fieldOption
      *
      * @Gedmo\Versioned
-     * @ORM\ManyToOne(targetEntity="\Hris\FormBundle\Entity\FieldOptionGroup",inversedBy="indicator")
+     * @ORM\ManyToOne(targetEntity="\Hris\FormBundle\Entity\FieldOption",inversedBy="indicator")
      * @ORM\JoinColumns({
-     *   @ORM\JoinColumn(name="fieldoptiongroup_id", referencedColumnName="id", onDelete="CASCADE")
+     *   @ORM\JoinColumn(name="fieldoption_id", referencedColumnName="id", onDelete="CASCADE")
      * })
      *
      */
-    private $fieldOptionGroup;
+    private $fieldOption;
 
     /**
      * @var OrganisationunitGroup $organisationunitGroup
@@ -254,26 +254,26 @@ class Indicator
     }
 
     /**
-     * Set fieldOptionGroup
+     * Set fieldOption
      *
-     * @param FieldOptionGroup $fieldOptionGroup
+     * @param FieldOption $fieldOption
      * @return Indicator
      */
-    public function setFieldOptionGroup(FieldOptionGroup $fieldOptionGroup = null)
+    public function setFieldOptionGroup(FieldOption $fieldOption = null)
     {
-        $this->fieldOptionGroup = $fieldOptionGroup;
+        $this->fieldOption = $fieldOption;
 
         return $this;
     }
 
     /**
-     * Get fieldOptionGroup
+     * Get fieldOption
      *
-     * @return FieldOptionGroup
+     * @return FieldOption
      */
-    public function getFieldOptionGroup()
+    public function getFieldOption()
     {
-        return $this->fieldOptionGroup;
+        return $this->fieldOption;
     }
 
 
