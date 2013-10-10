@@ -582,7 +582,7 @@ class LoadFieldData extends AbstractFixture implements OrderedFixtureInterface
                 'description'=>"Employee's Contacts of Next of Kin(Optional)",
                 'history'=>true),
             33=>Array(
-                'dataType'=>'String',
+                'dataType'=>'Integer',
                 'inputType'=>'Date',
                 'name'=>'EmploymentDistribution',
                 'caption'=>'Employment Distribution',
@@ -593,10 +593,10 @@ class LoadFieldData extends AbstractFixture implements OrderedFixtureInterface
                 'calculatedExpression'=>"date('Y', strtotime(#{DateofFirstAppointment}))",
                 'fieldRelation'=>False,
                 'parentField'=>Null,
-                'description'=>"Employee's Contacts of Next of Kin(Optional)",
+                'description'=>"Annual employment distrubtion based on Employee's Employment date",
                 'history'=>true),
             34=>Array(
-                'dataType'=>'String',
+                'dataType'=>'Integer',
                 'inputType'=>'Date',
                 'name'=>'RetirementDistribution',
                 'caption'=>'Retirement Distribution',
@@ -607,7 +607,7 @@ class LoadFieldData extends AbstractFixture implements OrderedFixtureInterface
                 'calculatedExpression'=>"date('Y', strtotime('#{Birthdate}'))+60",
                 'fieldRelation'=>False,
                 'parentField'=>Null,
-                'description'=>"Employee's Contacts of Next of Kin(Optional)",
+                'description'=>"Annual retirement distribution based on Employee's birthdate",
                 'history'=>true),
             35=>Array(
                 'dataType'=>'String',
@@ -621,7 +621,7 @@ class LoadFieldData extends AbstractFixture implements OrderedFixtureInterface
                 'calculatedExpression'=>"((floor(floor((time() - strtotime('#{Birthdate}')) / 31556926)/5))*5) .'-'.(((floor(floor((time() - strtotime('#{Birthdate}')) / 31556926)/5))*5)+4)",
                 'fieldRelation'=>False,
                 'parentField'=>Null,
-                'description'=>"Employee's Contacts of Next of Kin(Optional)",
+                'description'=>"Distribution by age group based on Employee's birthdate",
                 'history'=>true),
         );
         return $this->fields;

@@ -850,7 +850,7 @@ class ResourceTable
                         $organisationunitStructure=$record->getOrganisationunit()->getOrganisationunitStructure();
 
                         $nLevelParent=$organisationunitStructure->getParentByNLevelsBack($record->getOrganisationunit(),($organisationunitStructure->getLevel()->getLevel()-$organisationunitLevel->getLevel()));
-                        $dataArray[$organisationunitLevelName] = $nLevelParent->getLongname();
+                        if(!empty($nLevelParent)) $dataArray[$organisationunitLevelName] = $nLevelParent->getLongname();
 
                         $thisrganisationunitLevel = $entityManager->getRepository('HrisOrganisationunitBundle:OrganisationunitLevel')->findOneBy(array('level'=>$organisationunitStructure->getLevel()->getLevel()));
                         $organisationunitLevelName = str_replace(' ','_',"level".$thisrganisationunitLevel->getLevel()."_".str_replace(',','_',str_replace('.','_',str_replace('/','_',$thisrganisationunitLevel->getName())))); ;

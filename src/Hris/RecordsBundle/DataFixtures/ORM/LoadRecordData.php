@@ -341,15 +341,15 @@ class LoadRecordData extends AbstractFixture implements OrderedFixtureInterface
                                 // If employment data set it to birth date range+18
                                 // If confirmation date, set it to employment date+1
                                 // If promotion date, set it to confirmation+3
-                                $beginDateStart=30;
-                                $beginDateStop=55;
-                                $endDateStart=20;
-                                $endDateStop=30;
+                                $beginDateStart=50;
+                                $beginDateStop=75;
+                                $endDateStart=40;
+                                $endDateStop=50;
                                 if($formFieldMember->getField()->getName()=="Birthdate") {
-                                    $beginDateStart=30;
-                                    $beginDateStop=55;
-                                    $endDateStart=20;
-                                    $endDateStop=30;
+                                    $beginDateStart=50;
+                                    $beginDateStop=75;
+                                    $endDateStart=40;
+                                    $endDateStop=50;
                                 }elseif($formFieldMember->getField()->getName()=="DateofFirstAppointment") {
                                     $beginDateStart-=18;
                                     $beginDateStop-=18;
