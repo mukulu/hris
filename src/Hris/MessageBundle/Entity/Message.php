@@ -122,7 +122,7 @@ class Message extends BaseMessage
      * Set uid
      *
      * @param string $uid
-     * @return Field
+     * @return Message
      */
     public function setUid($uid)
     {
@@ -174,7 +174,7 @@ class Message extends BaseMessage
      * Set datecreated
      *
      * @param \DateTime $datecreated
-     * @return Field
+     * @return Message
      */
     public function setDatecreated($datecreated)
     {
@@ -197,7 +197,7 @@ class Message extends BaseMessage
      * Set lastupdated
      *
      * @param \DateTime $lastupdated
-     * @return Field
+     * @return Message
      */
     public function setLastupdated($lastupdated)
     {

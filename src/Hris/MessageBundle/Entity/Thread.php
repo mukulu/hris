@@ -144,7 +144,7 @@ class Thread extends BaseThread
      * Set uid
      *
      * @param string $uid
-     * @return Field
+     * @return Thread
      */
     public function setUid($uid)
     {
@@ -167,7 +167,7 @@ class Thread extends BaseThread
      * Set datecreated
      *
      * @param \DateTime $datecreated
-     * @return Field
+     * @return Thread
      */
     public function setDatecreated($datecreated)
     {
@@ -190,7 +190,7 @@ class Thread extends BaseThread
      * Set lastupdated
      *
      * @param \DateTime $lastupdated
-     * @return Field
+     * @return Thread
      */
     public function setLastupdated($lastupdated)
     {
