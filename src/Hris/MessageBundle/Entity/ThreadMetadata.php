@@ -127,7 +127,7 @@ class ThreadMetadata extends BaseThreadMetadata
      * Set datecreated
      *
      * @param \DateTime $datecreated
-     * @return Field
+     * @return ThreadMetadata
      */
     public function setDatecreated($datecreated)
     {
@@ -150,7 +150,7 @@ class ThreadMetadata extends BaseThreadMetadata
      * Set lastupdated
      *
      * @param \DateTime $lastupdated
-     * @return Field
+     * @return ThreadMetadata
      */
     public function setLastupdated($lastupdated)
     {
@@ -167,5 +167,28 @@ class ThreadMetadata extends BaseThreadMetadata
     public function getLastupdated()
     {
         return $this->lastupdated;
+    }
+
+    /**
+     * Set uid
+     *
+     * @param string $uid
+     * @return ThreadMetadata
+     */
+    public function setUid($uid)
+    {
+        $this->uid = $uid;
+
+        return $this;
+    }
+
+    /**
+     * Get uid
+     *
+     * @return string
+     */
+    public function getUid()
+    {
+        return $this->uid;
     }
 }

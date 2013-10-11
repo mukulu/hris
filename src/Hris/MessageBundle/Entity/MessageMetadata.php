@@ -113,7 +113,7 @@ class MessageMetadata extends BaseMessageMetadata
      * Set datecreated
      *
      * @param \DateTime $datecreated
-     * @return Field
+     * @return MessageMetadata
      */
     public function setDatecreated($datecreated)
     {
@@ -136,7 +136,7 @@ class MessageMetadata extends BaseMessageMetadata
      * Set lastupdated
      *
      * @param \DateTime $lastupdated
-     * @return Field
+     * @return MessageMetadata
      */
     public function setLastupdated($lastupdated)
     {
@@ -153,5 +153,28 @@ class MessageMetadata extends BaseMessageMetadata
     public function getLastupdated()
     {
         return $this->lastupdated;
+    }
+
+    /**
+     * Set uid
+     *
+     * @param string $uid
+     * @return MessageMetadata
+     */
+    public function setUid($uid)
+    {
+        $this->uid = $uid;
+
+        return $this;
+    }
+
+    /**
+     * Get uid
+     *
+     * @return string
+     */
+    public function getUid()
+    {
+        return $this->uid;
     }
 }
