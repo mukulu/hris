@@ -62,7 +62,7 @@ class ConfigureMenuListener
             )
         );
         $recordsModule->addChild('Data Validation',
-            array('uri'=>'#datavalidation',
+            array('route'=>'validation_run',
                 'extras'=>array('tag'=>'div'),
                 'name'=>'Data Validation',
                 'attributes'=> array('class'=>'accordion-group'),
