@@ -16,7 +16,7 @@
         <h1><small>Training list</small></h1>
         <ul class="inline">
             <li>
-                <a class="btn" href="{{ path('training_new') }}">
+                <a class="btn" href="{{ path('training_new', { 'recordid': recordid }) }}">
                     Add Training
                 </a>
             </li>
@@ -28,6 +28,8 @@
                 <th>SN</th>
                 <th>Course Name</th>
                 <th>Course Location</th>
+                <th>Start Date</th>
+                <th>End Date</th>
                 <th>Sponsor</th>
                 <th>Actions</th>
             </tr>
@@ -40,6 +42,8 @@
                 <td>{{ incr }}</td>
                 <td>{{ entity.coursename }}</td>
                 <td>{{ entity.courselocation }}</td>
+                <td>{{ entity.startdate |date('d/m/Y') }}</td>
+                <td>{{ entity.enddate |date('d/m/Y') }}</td>
                 <td>{{ entity.sponsor }}</td>
                 <td>
                 <ul class="inline">
@@ -50,7 +54,35 @@
                         <a href="{{ path('training_edit', { 'id': entity.id }) }}"><i class="icon-edit icon-large" title="Edit"></i></a>
                     </li>
                     <li>
-                        <a href="{{ path('training_delete', { 'id': entity.id }) }}"><i class="icon-remove-sign icon-large" title="Delete"></i></a>
+                        <a data-toggle="modal" href="#deleteModalFor{{ entity.uid }}"><i class="icon-remove-sign icon-large" title="Delete"></i></a>
+                        <!-- Modal -->
+                        <div class="modal fade" id="deleteModalFor{{ entity.uid }}">
+                            <div class="modal-dialog">
+                                <div class="modal-content">
+                                    <div class="modal-header">
+                                        <button type="button" class="close" data-dismiss="modal" aria-hidden="true">×</button>
+                                        <h4 class="modal-title"><i class="icon-circle-remove icon-largest" title="Delete"></i>Deleting <strong>{{ entity.coursename | capitalize }}</strong></h4>
+                                    </div>
+                                    <div class="modal-body">
+                                        Are you sure you want to delete <strong>{{ entity.coursename | capitalize }}</strong> that was created on <em>{{ entity.datecreated|date('d/m/Y') }}</em>
+                                        {% if entity.lastUpdated %}
+                                            and last updated on {{ entity.lastUpdated|date('H:i:s d/m/Y') }} ??
+                                        {% else %}
+                                            and never updated ??
+                                        {% endif %}
+                                    </div>
+                                    <div class="modal-footer">
+                                        <form action="{{ path('training_delete', { 'id': entity.id }) }}" method="post">
+                                            <input type="hidden" name="_method" value="DELETE" />
+                                            {{ form_widget(delete_forms[entity.id] ) }}
+                                            <button type="button" class="btn btn-default" data-dismiss="modal">Close</button>
+                                            <button type="submit" class="btn btn-danger">Delete</button>
+                                        </form>
+                                    </div>
+                                </div><!-- /.modal-content -->
+                            </div><!-- /.modal-dialog -->
+                        </div><!-- /.modal -->
+
                     </li>
                 </ul>
                 </td>

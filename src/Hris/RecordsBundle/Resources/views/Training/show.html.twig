@@ -43,16 +43,41 @@
         </a>
     </li>
     <li>
-        <a href="{{ path('training_edit', { 'id': entity.id }) }} class="btn"">
+        <a href="{{ path('training_edit', { 'id': entity.id }) }}" class="btn">
             Edit
         </a>
     </li>
     <li>
-        <form action="{{ path('training_delete', { 'id': entity.id }) }}" method="post">
-            <input type="hidden" name="_method" value="DELETE" />
-            {{ form_widget(delete_form) }}
-            <button type="submit">Delete</button>
-        </form>
+        <a data-toggle="modal" href="#deleteModalFor{{ entity.uid }}" class="btn btn-danger">Delete {{ entity.coursename | capitalize }}</a>
+
+        <!-- Modal -->
+        <div class="modal fade" id="deleteModalFor{{ entity.uid }}">
+            <div class="modal-dialog">
+                <div class="modal-content">
+                    <div class="modal-header">
+                        <button type="button" class="close" data-dismiss="modal" aria-hidden="true">×</button>
+                        <h4 class="modal-title"><i class="icon-circle-remove icon-largest" title="Delete"></i>Deleting {{ entity.coursename | capitalize }}</h4>
+                    </div>
+                    <div class="modal-body">
+                        Are you sure you want to delete <strong>{{ entity.coursename | capitalize }}</strong> that was created on <em>{{ entity.datecreated|date('d/m/Y') }}</em>
+                        {% if entity.lastUpdated %}
+                            and last updated on {{ entity.lastUpdated|date('H:i:s d/m/Y') }} ??
+                        {% else %}
+                            and never updated ??
+                        {% endif %}
+                    </div>
+                    <div class="modal-footer">
+                        <form action="{{ path('training_delete', { 'id': entity.id }) }}" method="post">
+                            <input type="hidden" name="_method" value="DELETE" />
+                            {{ form_widget(delete_form) }}
+                            <button type="button" class="btn btn-default" data-dismiss="modal">Close</button>
+                            <button type="submit" class="btn btn-danger">Delete</button>
+                        </form>
+
+                    </div>
+                </div><!-- /.modal-content -->
+            </div><!-- /.modal-dialog -->
+        </div><!-- /.modal -->
     </li>
 </ul>
 {% endblock %}

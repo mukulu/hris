@@ -20,6 +20,7 @@
  *
  * @since 2012
  * @author John Francis Mukulu <john.f.mukulu@gmail.com>
+ * @author Ismail Y.Koleleni <ismailkoleleni@gmail.com>
  *
  */
 namespace Hris\RecordsBundle\Form;
@@ -33,16 +34,20 @@ class TrainingType extends AbstractType
     public function buildForm(FormBuilderInterface $builder, array $options)
     {
         $builder
-            ->add('uid')
             ->add('coursename')
             ->add('courselocation')
-            ->add('sponsor')
-            ->add('startdate')
-            ->add('enddate')
-            ->add('username')
-            ->add('datecreated')
-            ->add('lastupdated')
-            ->add('record')
+            ->add('sponsor', 'choice', array(
+                'empty_value' => '--SELECT--',
+                'choices' => array(
+                    'Development Partner' => 'Development Partner',
+                    'Employer' => 'Employer',
+                    'MOHSW' => 'Ministry of Health and Social Welfare',
+                    'Self Sponsored' => 'Self Sponsored',
+                    'Other' => 'Other',
+                ),
+            ))
+            ->add('startdate', 'date', array('input' => 'datetime', 'widget' => 'single_text',) )
+            ->add('enddate', 'date', array('input' => 'datetime', 'widget' => 'single_text',) )
         ;
     }
 

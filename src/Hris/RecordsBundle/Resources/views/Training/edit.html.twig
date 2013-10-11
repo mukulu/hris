@@ -12,7 +12,7 @@
                 <button type="submit" class="btn">Edit</button>
             </li>
             <li>
-                <a href="{{ path('training') }}" class="btn">
+                <a href="{{ path('training_list_byrecord', { 'recordid': entity.record.id }) }}" class="btn">
                     Back to the list
                 </a>
             </li>

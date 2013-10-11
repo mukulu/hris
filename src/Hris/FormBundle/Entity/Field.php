@@ -135,6 +135,14 @@ class Field
     private $hashistory;
 
     /**
+     * @var boolean $hastarget
+     *
+     * @Gedmo\Versioned
+     * @ORM\Column(name="hastarget", type="boolean", nullable=True)
+     */
+    private $hastarget;
+
+    /**
      * @var boolean $fieldrelation
      *
      * @ORM\Column(name="fieldrelation", type="boolean", nullable=true)
@@ -423,6 +431,29 @@ class Field
     public function getHashistory()
     {
         return $this->hashistory;
+    }
+
+    /**
+     * Set hastarget
+     *
+     * @param boolean $hastarget
+     * @return Field
+     */
+    public function setHastarget($hastarget)
+    {
+        $this->hastarget = $hastarget;
+
+        return $this;
+    }
+
+    /**
+     * Get hastarget
+     *
+     * @return boolean
+     */
+    public function getHastarget()
+    {
+        return $this->hastarget;
     }
 
     /**
