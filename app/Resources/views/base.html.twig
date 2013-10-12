@@ -41,11 +41,11 @@
                                     {% block notifications %}
                                         <li><a class="pull-right visible-desktop" href="{{ path('message_inbox') }}"><i class="icon-comment" title="Unread Messages"></i>0</a></li>
                                     {% endblock notifications %}
-                                    <li><a class="pull-right visible-desktop" href="#"><i class="icon-info-sign"></i>&nbsp;Help</a></li>
+                                    <li><a class="pull-right visible-desktop" href="{{ path('help_helpcentre') }}"><i class="icon-info-sign"></i>&nbsp;Help</a></li>
                                     <li class="dropdown">
                                         <a href="#" class="dropdown-toggle" data-toggle="dropdown"><i class="icon-user"></i>&nbsp;{{ app.user }} <b class="caret"></b></a>
                                         <ul class="dropdown-menu">
-                                            <li><a href="#"><i class="icon-info-sign"></i>&nbsp;Help</a></li>
+                                            <li class="visible-phone"><a href="{{ path('help_helpcentre') }}"><i class="icon-info-sign"></i>&nbsp;Help</a></li>
                                             <li><a href="{{ path('fos_user_profile_show') }}"><i class="icon-picture"></i>&nbsp;Profile</a></li>
                                             <li><a href="{{ path('dashboard_list') }}"><i class="icon-picture"></i>&nbsp;Dashboard</a></li>
                                             <li><a href="{{ path('settings_show', { 'username':  app.user }) }}"><i class="icon-cog"></i>&nbsp;Settings</a></li>

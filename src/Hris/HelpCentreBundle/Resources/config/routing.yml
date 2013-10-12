@@ -2,6 +2,10 @@ help_helpcentre_chapter:
     resource: "@HrisHelpCentreBundle/Controller/ChapterController.php"
     type: annotation
     
-designdataentryform:
+help_helpcentre_topic:
     resource: "@HrisHelpCentreBundle/Controller/TopicController.php"
+    type: annotation
+
+help_helpcentre_helpcentre:
+    resource: "@HrisHelpCentreBundle/Controller/HelpCentreController.php"
     type: annotation
