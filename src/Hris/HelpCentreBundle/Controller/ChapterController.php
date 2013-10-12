@@ -21,7 +21,7 @@ class ChapterController extends Controller
     /**
      * Lists all Chapter entities.
      *
-     * @Route("/", name="chapter")
+     * @Route("/", name="help_chapter")
      * @Method("GET")
      * @Template()
      */
@@ -45,7 +45,7 @@ class ChapterController extends Controller
     /**
      * Creates a new Chapter entity.
      *
-     * @Route("/", name="chapter_create")
+     * @Route("/", name="help_chapter_create")
      * @Method("POST")
      * @Template("HrisHelpCentreBundle:Chapter:new.html.twig")
      */
@@ -60,7 +60,7 @@ class ChapterController extends Controller
             $em->persist($entity);
             $em->flush();
 
-            return $this->redirect($this->generateUrl('chapter_show', array('id' => $entity->getId())));
+            return $this->redirect($this->generateUrl('help_chapter_show', array('id' => $entity->getId())));
         }
 
         return array(
@@ -79,11 +79,9 @@ class ChapterController extends Controller
     private function createCreateForm(Chapter $entity)
     {
         $form = $this->createForm(new ChapterType(), $entity, array(
-            'action' => $this->generateUrl('chapter_create'),
+            'action' => $this->generateUrl('help_chapter_create'),
             'method' => 'POST',
         ));
-
-        $form->add('submit', 'submit', array('label' => 'Create'));
 
         return $form;
     }
@@ -91,7 +89,7 @@ class ChapterController extends Controller
     /**
      * Displays a form to create a new Chapter entity.
      *
-     * @Route("/new", name="chapter_new")
+     * @Route("/new", name="help_chapter_new")
      * @Method("GET")
      * @Template()
      */
@@ -109,7 +107,7 @@ class ChapterController extends Controller
     /**
      * Finds and displays a Chapter entity.
      *
-     * @Route("/{id}", name="chapter_show")
+     * @Route("/{id}", name="help_chapter_show")
      * @Method("GET")
      * @Template()
      */
@@ -134,7 +132,7 @@ class ChapterController extends Controller
     /**
      * Displays a form to edit an existing Chapter entity.
      *
-     * @Route("/{id}/edit", name="chapter_edit")
+     * @Route("/{id}/edit", name="help_chapter_edit")
      * @Method("GET")
      * @Template()
      */
@@ -168,18 +166,16 @@ class ChapterController extends Controller
     private function createEditForm(Chapter $entity)
     {
         $form = $this->createForm(new ChapterType(), $entity, array(
-            'action' => $this->generateUrl('chapter_update', array('id' => $entity->getId())),
+            'action' => $this->generateUrl('help_chapter_update', array('id' => $entity->getId())),
             'method' => 'PUT',
         ));
-
-        $form->add('submit', 'submit', array('label' => 'Update'));
 
         return $form;
     }
     /**
      * Edits an existing Chapter entity.
      *
-     * @Route("/{id}", name="chapter_update")
+     * @Route("/{id}", name="help_chapter_update")
      * @Method("PUT")
      * @Template("HrisHelpCentreBundle:Chapter:edit.html.twig")
      */
@@ -200,7 +196,7 @@ class ChapterController extends Controller
         if ($editForm->isValid()) {
             $em->flush();
 
-            return $this->redirect($this->generateUrl('chapter_edit', array('id' => $id)));
+            return $this->redirect($this->generateUrl('help_chapter_edit', array('id' => $id)));
         }
 
         return array(
@@ -212,7 +208,7 @@ class ChapterController extends Controller
     /**
      * Deletes a Chapter entity.
      *
-     * @Route("/{id}", name="chapter_delete")
+     * @Route("/{id}", name="help_chapter_delete")
      * @Method("DELETE")
      */
     public function deleteAction(Request $request, $id)
@@ -232,7 +228,7 @@ class ChapterController extends Controller
             $em->flush();
         }
 
-        return $this->redirect($this->generateUrl('chapter'));
+        return $this->redirect($this->generateUrl('help_chapter'));
     }
 
     /**
@@ -245,9 +241,8 @@ class ChapterController extends Controller
     private function createDeleteForm($id)
     {
         return $this->createFormBuilder()
-            ->setAction($this->generateUrl('chapter_delete', array('id' => $id)))
+            ->setAction($this->generateUrl('help_chapter_delete', array('id' => $id)))
             ->setMethod('DELETE')
-            ->add('submit', 'submit', array('label' => 'Delete'))
             ->getForm()
         ;
     }

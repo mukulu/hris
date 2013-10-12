@@ -3,7 +3,7 @@
 {% block right_content -%}
     <h1><i class="icon-circle-info icon-largest" title="Show"></i> <small>{{ entity.name | capitalize }}'s Details</small></h1>
 
-    <table class="record_properties">
+    <table class="record_properties table table-striped table-bordered table-hover">
         <tbody>
             <tr>
                 <th>Id</th>
@@ -38,12 +38,12 @@
 
     <ul class="record_actions inline">
         <li>
-            <a href="{{ path('chapter') }}" class="btn">
+            <a href="{{ path('help_chapter') }}" class="btn">
                 Back to the list
             </a>
         </li>
         <li>
-            <a href="{{ path('chapter_edit', { 'id': entity.id }) }}" class="btn">
+            <a href="{{ path('help_chapter_edit', { 'id': entity.id }) }}" class="btn">
                 Edit
             </a>
         </li>
@@ -68,7 +68,7 @@
                             {% endif %}
                         </div>
                         <div class="modal-footer">
-                            <form action="{{ path('field_delete', { 'id': entity.id }) }}" method="post">
+                            <form action="{{ path('help_chapter_delete', { 'id': entity.id }) }}" method="post">
                                 <input type="hidden" class="btn btn-danger" name="_method" value="DELETE" />
                                 {{ form_widget(delete_form) }}
                                 <button type="button" class="btn btn-default" data-dismiss="modal">Close</button>

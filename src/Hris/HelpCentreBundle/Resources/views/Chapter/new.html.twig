@@ -3,7 +3,7 @@
 {% block right_content -%}
     <h1><small>Chapter creation</small></h1>
 
-    <form action="{{ path('chapter_create') }}" method="post" {{ form_enctype(form) }}>
+    <form action="{{ path('help_chapter_create') }}" method="post" {{ form_enctype(form) }}>
         {{ form_widget(form) }}
         <br/>
         <ul class="record_actions inline" style="float:left;">
@@ -11,7 +11,7 @@
                 <button type="submit" class="btn">Create</button>
             </li>
             <li>
-                <a href="{{ path('chapter') }}" class="btn">
+                <a href="{{ path('help_chapter') }}" class="btn">
                     Back to the list
                 </a>
             </li>

@@ -21,7 +21,7 @@ class TopicController extends Controller
     /**
      * Lists all Topic entities.
      *
-     * @Route("/", name="topic")
+     * @Route("/", name="help_topic")
      * @Method("GET")
      * @Template()
      */
@@ -45,7 +45,7 @@ class TopicController extends Controller
     /**
      * Creates a new Topic entity.
      *
-     * @Route("/", name="topic_create")
+     * @Route("/", name="help_topic_create")
      * @Method("POST")
      * @Template("HrisHelpCentreBundle:Topic:new.html.twig")
      */
@@ -60,7 +60,7 @@ class TopicController extends Controller
             $em->persist($entity);
             $em->flush();
 
-            return $this->redirect($this->generateUrl('topic_show', array('id' => $entity->getId())));
+            return $this->redirect($this->generateUrl('help_topic_show', array('id' => $entity->getId())));
         }
 
         return array(
@@ -79,11 +79,9 @@ class TopicController extends Controller
     private function createCreateForm(Topic $entity)
     {
         $form = $this->createForm(new TopicType(), $entity, array(
-            'action' => $this->generateUrl('topic_create'),
+            'action' => $this->generateUrl('help_topic_create'),
             'method' => 'POST',
         ));
-
-        $form->add('submit', 'submit', array('label' => 'Create'));
 
         return $form;
     }
@@ -91,7 +89,7 @@ class TopicController extends Controller
     /**
      * Displays a form to create a new Topic entity.
      *
-     * @Route("/new", name="topic_new")
+     * @Route("/new", name="help_topic_new")
      * @Method("GET")
      * @Template()
      */
@@ -109,7 +107,7 @@ class TopicController extends Controller
     /**
      * Finds and displays a Topic entity.
      *
-     * @Route("/{id}", name="topic_show")
+     * @Route("/{id}", name="help_topic_show")
      * @Method("GET")
      * @Template()
      */
@@ -134,7 +132,7 @@ class TopicController extends Controller
     /**
      * Displays a form to edit an existing Topic entity.
      *
-     * @Route("/{id}/edit", name="topic_edit")
+     * @Route("/{id}/edit", name="help_topic_edit")
      * @Method("GET")
      * @Template()
      */
@@ -168,18 +166,16 @@ class TopicController extends Controller
     private function createEditForm(Topic $entity)
     {
         $form = $this->createForm(new TopicType(), $entity, array(
-            'action' => $this->generateUrl('topic_update', array('id' => $entity->getId())),
+            'action' => $this->generateUrl('help_topic_update', array('id' => $entity->getId())),
             'method' => 'PUT',
         ));
-
-        $form->add('submit', 'submit', array('label' => 'Update'));
 
         return $form;
     }
     /**
      * Edits an existing Topic entity.
      *
-     * @Route("/{id}", name="topic_update")
+     * @Route("/{id}", name="help_topic_update")
      * @Method("PUT")
      * @Template("HrisHelpCentreBundle:Topic:edit.html.twig")
      */
@@ -200,7 +196,7 @@ class TopicController extends Controller
         if ($editForm->isValid()) {
             $em->flush();
 
-            return $this->redirect($this->generateUrl('topic_edit', array('id' => $id)));
+            return $this->redirect($this->generateUrl('help_topic_edit', array('id' => $id)));
         }
 
         return array(
@@ -212,7 +208,7 @@ class TopicController extends Controller
     /**
      * Deletes a Topic entity.
      *
-     * @Route("/{id}", name="topic_delete")
+     * @Route("/{id}", name="help_topic_delete")
      * @Method("DELETE")
      */
     public function deleteAction(Request $request, $id)
@@ -232,7 +228,7 @@ class TopicController extends Controller
             $em->flush();
         }
 
-        return $this->redirect($this->generateUrl('topic'));
+        return $this->redirect($this->generateUrl('help_topic'));
     }
 
     /**
@@ -245,9 +241,8 @@ class TopicController extends Controller
     private function createDeleteForm($id)
     {
         return $this->createFormBuilder()
-            ->setAction($this->generateUrl('topic_delete', array('id' => $id)))
+            ->setAction($this->generateUrl('help_topic_delete', array('id' => $id)))
             ->setMethod('DELETE')
-            ->add('submit', 'submit', array('label' => 'Delete'))
             ->getForm()
         ;
     }
