@@ -154,11 +154,14 @@ class ReportFriendlyReportController extends Controller
         // Query for Options to exclude from reports
         $fieldOptionsToSkip = $this->getDoctrine()->getManager()->getRepository('HrisFormBundle:FieldOption')->findBy (array('skipInReport' =>True));
         //filter the records with exclude report tag
+
+        if($friendlyReport->getIgnoreSkipInReport() == False) {
         foreach($fieldOptionsToSkip as $key => $fieldOptionToSkip){
-            if(empty($fieldOptionsToSkipQuery)) {
-                $fieldOptionsToSkipQuery = "$resourceTableAlias.".$fieldOptionToSkip->getField()->getName()." !='".$fieldOptionToSkip->getValue()."'";
-            }else {
-                $fieldOptionsToSkipQuery .= " AND $resourceTableAlias.".$fieldOptionToSkip->getField()->getName()." !='".$fieldOptionToSkip->getValue()."'";
+                if(empty($fieldOptionsToSkipQuery)) {
+                    $fieldOptionsToSkipQuery = "$resourceTableAlias.".$fieldOptionToSkip->getField()->getName()." !='".$fieldOptionToSkip->getValue()."'";
+                }else {
+                    $fieldOptionsToSkipQuery .= " AND $resourceTableAlias.".$fieldOptionToSkip->getField()->getName()." !='".$fieldOptionToSkip->getValue()."'";
+                }
             }
         }
 
