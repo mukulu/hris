@@ -1,0 +1,61 @@
+{% extends '::base.html.twig' %}
+
+{% block javascripts %}
+    {{ parent() }}
+    <script type="text/javascript" language="javascript" src="{{ asset('commons/js/ext-all.js') }}"></script>
+    <script type="text/javascript">
+        $( document ).ready(function() {
+            var fields='#hris_indicatorbundle_targettype_fields';
+            var fieldOptionTargetUrl = '{{ path('target_targetfieldption', {'_format':'json'}) }}';
+            var fieldOptionTargetNames='hris_indicatorbundle_targettype_fieldoptiontarget';
+            var fieldOptionSection='#fieldOptionsSection';
+
+            $(fields).on('change', function() {
+                // Empty FieldOptionSection contents
+                $( fieldOptionSection ).empty();
+                // Fetch fieldOptionTargets based on selected fields
+                postData={
+                    'fieldid': $('#hris_indicatorbundle_targettype_fields').val()
+                };
+                $.post(fieldOptionTargetUrl,postData , function( fieldOptionTargets ){
+                    if (jQuery.isEmptyObject(fieldOptionTargets)){
+                        //Alert on absence of options for the field
+                        $( fieldOptionSection ).removeClass( "highlight" );
+                        $(fieldOptionSection).prepend('<h1><small>Field Has No Options</small></h1>');
+                    }else {
+                        $( fieldOptionSection ).addClass( "highlight" );
+                        // Loop accross the field options constructing inputbox and it's value
+                        $.each(fieldOptionTargets, function(targetFieldOptionIndex, targetFieldOption) {
+                            $(fieldOptionSection).prepend('<input type="text" name="'+fieldOptionTargetNames+'[' + targetFieldOption['id']+']"'
+                                    + 'value="'+ targetFieldOption['value']+'"'
+                                    + 'id="' + fieldOptionTargetNames + targetFieldOption['id'] + '" />');
+                            // Create label and inputbox
+                            $(fieldOptionSection).prepend('<label for="'+fieldOptionTargetNames + targetFieldOption['id']+'">'+targetFieldOption['name']+'</label>');
+                        });
+                    }
+                });
+            });
+        });
+    </script>
+{% endblock javascripts %}
+
+{% block right_content -%}
+    <h1><small>Target creation</small></h1>
+
+    <form action="{{ path('target_create') }}" method="post" {{ form_enctype(form) }}>
+        {{ form_widget(form) }}
+        <br/>
+        <div id="fieldOptionsSection"></div>
+        <br/>
+        <ul class="record_actions inline" style="float:left;">
+            <li>
+                <button type="submit" class="btn">Create</button>
+            </li>
+            <li>
+                <a href="{{ path('target') }}" class="btn">
+                    Back to the list
+                </a>
+            </li>
+        </ul>
+    </form>
+{% endblock %}

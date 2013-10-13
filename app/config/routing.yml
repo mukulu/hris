@@ -1,3 +1,7 @@
+hris_help_centre:
+    resource: "@HrisHelpCentreBundle/Resources/config/routing.yml"
+    prefix:   /
+
 hris_message:
     resource: "@HrisMessageBundle/Resources/config/routing.yml"
     prefix:   /

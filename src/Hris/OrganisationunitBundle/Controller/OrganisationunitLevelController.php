@@ -56,6 +56,19 @@ class OrganisationunitLevelController extends Controller
 
         $entities = $em->getRepository('HrisOrganisationunitBundle:OrganisationunitLevel')->findAll();
 
+        $queryBuilder = $em->createQueryBuilder();
+        $organisationunitStructureCount =  $queryBuilder->select('count( organisationunitStructure.id )')->from('HrisOrganisationunitBundle:OrganisationunitStructure','organisationunitStructure')->getQuery()->getSingleScalarResult();
+        $queryBuilder = $em->createQueryBuilder();
+        $organisationunitCount =  $queryBuilder->select('count( organisationunit.id )')->from('HrisOrganisationunitBundle:Organisationunit','organisationunit')->getQuery()->getSingleScalarResult();
+
+        // Regenerate Orgunit Stucture of Orgunit and OrgunitStructure Differs
+        if($organisationunitCount!=$organisationunitStructureCount) {
+            $regenerationRequired=True;
+        }else {
+            $regenerationRequired=False;
+        }
+
+        $delete_forms = NULL;
         foreach($entities as $entity) {
             $delete_form= $this->createDeleteForm($entity->getId());
             $delete_forms[$entity->getId()] = $delete_form->createView();
@@ -64,6 +77,7 @@ class OrganisationunitLevelController extends Controller
         return array(
             'entities' => $entities,
             'delete_forms' => $delete_forms,
+            'regenerationRequired'=>$regenerationRequired,
         );
     }
 

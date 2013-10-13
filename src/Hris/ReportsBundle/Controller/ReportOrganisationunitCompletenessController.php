@@ -414,8 +414,7 @@ class ReportOrganisationunitCompletenessController extends Controller
                     echo '</tr>';
                 }
 
-                $option=NULL;
-                $completenessMatrix=NULL;
+
             }
         }else {
             // Organsiationunit without children
@@ -424,8 +423,12 @@ class ReportOrganisationunitCompletenessController extends Controller
             $aliasParameters=$maskParameters;
             $aliasParameters['organisationunitId']=$organisationunit->getId();
             $queryBuilder = $this->getDoctrine()->getManager()->createQueryBuilder();
-            $records = $queryBuilder->select('record')->from('HrisRecordsBundle:Record','record')->join('record.organisationunit','organisationunit')->join('record.form','form')
-                ->andWhere($queryBuilder->expr()->in('form.id',$formIds))->andWhere('organisationunit.id=:organisationunitId')
+            $records = $queryBuilder->select('record')
+                ->from('HrisRecordsBundle:Record','record')
+                ->join('record.organisationunit','organisationunit')
+                ->join('record.form','form')
+                ->andWhere($queryBuilder->expr()->in('form.id',$formIds))
+                ->andWhere('organisationunit.id=:organisationunitId')
                 ->andWhere($whereExpression) // Append in query, field options to exclude
                 ->setParameters($aliasParameters) // Set mask value for all parameters
                 ->getQuery()->getResult();
@@ -448,12 +451,19 @@ class ReportOrganisationunitCompletenessController extends Controller
                     ->where($queryBuilder->expr()->in('form.id',$formIds))
                     ->orderBy('formVisibleFields.sort','ASC')->getQuery()->getResult();
                 foreach($visibleFieldIds as $visibleKey=>$visibleFieldId) {
-                    $visibleFields[] = $this->getDoctrine()->getManager()->createQueryBuilder()->select('afield')->from('HrisFormBundle:Field','afield')->where($queryBuilder->expr()->in('afield.id',$visibleFieldId['id']))->getQuery()->getSingleResult();
+                    $visibleFields[] = $this->getDoctrine()->getManager()->createQueryBuilder()
+                        ->select('afield')->from('HrisFormBundle:Field','afield')
+                        ->where($queryBuilder->expr()
+                            ->in('afield.id',$visibleFieldId['id']))
+                        ->getQuery()->getSingleResult();
                     $this->getDoctrine()->getManager()->flush();
                 }
                 if(empty($visibleFieldIds)) {
                     $queryBuilder = $this->getDoctrine()->getManager()->createQueryBuilder();
-                    $visibleFields = $queryBuilder->select('field')->from('HrisFormBundle:Field','field')->where('field.isCalculated=False')->orderBy('field.uid','ASC')->getQuery()->getResult();
+                    $visibleFields = $queryBuilder->select('field')
+                        ->from('HrisFormBundle:Field','field')
+                        ->where('field.isCalculated=False')
+                        ->orderBy('field.uid','ASC')->getQuery()->getResult();
                 }
             }else {
                 /*

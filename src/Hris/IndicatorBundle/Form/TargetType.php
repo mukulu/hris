@@ -30,7 +30,7 @@ use Doctrine\ORM\EntityRepository;
 use Symfony\Component\Form\FormBuilderInterface;
 use Symfony\Component\OptionsResolver\OptionsResolverInterface;
 
-class IndicatorType extends AbstractType
+class TargetType extends AbstractType
 {
     /**
      * Generates years from ten years back to the current year
@@ -56,6 +56,7 @@ class IndicatorType extends AbstractType
             ->add('description')
             ->add('organisationunitGroup')
             ->add('fields','entity',array(
+                'class' => 'mukulu',
                 'mapped' => false,
                 'class'=>'HrisFormBundle:Field',
                 'empty_value' => '--SELECT--',
@@ -65,12 +66,7 @@ class IndicatorType extends AbstractType
                         ->orderBy('field.name','ASC');
                 }
             ))
-            ->add('fieldOption')
-            ->add('year', 'choice', array(
-                'empty_value' => '--SELECT--',
-                'choices'   => $this->generateYears(),
-            ))
-            ->add('value');
+            ;
     }
 
     /**
@@ -79,7 +75,7 @@ class IndicatorType extends AbstractType
     public function setDefaultOptions(OptionsResolverInterface $resolver)
     {
         $resolver->setDefaults(array(
-            'data_class' => 'Hris\IndicatorBundle\Entity\Indicator'
+            'data_class' => 'Hris\IndicatorBundle\Entity\Target'
         ));
     }
 
@@ -88,6 +84,6 @@ class IndicatorType extends AbstractType
      */
     public function getName()
     {
-        return 'hris_indicatorbundle_indicatortype';
+        return 'hris_indicatorbundle_targettype';
     }
 }

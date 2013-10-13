@@ -77,6 +77,17 @@
                 <th>Description</th>
                 <td>{{ entity.description }}</td>
             </tr>
+
+            {% for completenessForm in completenessForms %}
+            <tr>
+                <th>{{ completenessForm.name }} Expectation</th>
+                <td>{{ completenessExpectation[completenessForm.uid] }}</td>
+            </tr>
+            {% endfor %}
+
+
+
+
             <tr>
                 <th>Datecreated</th>
                 <td>{{ entity.datecreated|date('Y-m-d H:i:s') }}</td>

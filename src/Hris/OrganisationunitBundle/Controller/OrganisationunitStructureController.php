@@ -257,7 +257,7 @@ class OrganisationunitStructureController extends Controller
         /*
          * Check Clock for time spent
         */
-        $organisationunitStructureGenerationTime = $stopwatch->stop('resourceTableGeneration');
+        $organisationunitStructureGenerationTime = $stopwatch->stop('organisationnunitStructureRegeneration');
         $duration = $organisationunitStructureGenerationTime->getDuration()/60;
         $duration = round($duration, 2);
 
@@ -354,5 +354,67 @@ class OrganisationunitStructureController extends Controller
             }
         }
         return $parentNLevelsBack;
+    }
+
+    /**
+     * 	Persist Organisationunit in structure
+     * 	provided parent is set and entityManager
+     * 	is not yet flushed.
+     *
+     * 	@return NULL
+     */
+    public function persistInOrganisationunitStructure($entityManager,$organisationunit) {
+        $organisationunitStructure = $entityManager->getRepository('HrisOrganisationunitBundle:OrganisationunitStructure')->findOneBy(array('organisationunit'=>$organisationunit));
+        if(empty($organisationunitStructure)) {
+            $organisationunitStructure = new OrganisationunitStructure();
+            $parentStructure = $organisationunit->getParent()->getOrganisationunitStructure();
+        }else {
+            $parentStructure = $organisationunitStructure->getOrganisationunit()->getParent()->getOrganisationunitStructure();
+        }
+        $parentLevel = $parentStructure->getLevel()->getLevel();
+        $organisationunitStructure->setLevel($entityManager->getRepository('HrisOrganisationunitBundle:OrganisationunitLevel')->findOneBy(array('level'=>($parentLevel+1))));
+        $organisationunitStructure->setOrganisationunit($organisationunit);
+        // Clear level values;
+        $organisationunitStructure->setLevel1Organisationunit();
+        $organisationunitStructure->setLevel2Organisationunit();
+        $organisationunitStructure->setLevel3Organisationunit();
+        $organisationunitStructure->setLevel4Organisationunit();
+        $organisationunitStructure->setLevel5Organisationunit();
+        $organisationunitStructure->setLevel6Organisationunit();
+        // Assign them afresh
+        if($parentLevel >= 1) {
+            $organisationunitStructure->setLevel1Organisationunit($organisationunit->getParent());
+        }
+        if($parentLevel >= 2 ) {
+            $organisationunitStructure->setLevel1Organisationunit($parentStructure->getLevel1Organisationunit());
+            $organisationunitStructure->setLevel2Organisationunit($organisationunit->getParent());
+        }
+        if($parentLevel >= 3 ) {
+            $organisationunitStructure->setLevel1Organisationunit($parentStructure->getLevel1Organisationunit());
+            $organisationunitStructure->setLevel2Organisationunit($parentStructure->getLevel2Organisationunit());
+            $organisationunitStructure->setLevel3Organisationunit($organisationunit->getParent());
+        }
+        if($parentLevel >= 4 ) {
+            $organisationunitStructure->setLevel1Organisationunit($parentStructure->getLevel1Organisationunit());
+            $organisationunitStructure->setLevel2Organisationunit($parentStructure->getLevel2Organisationunit());
+            $organisationunitStructure->setLevel3Organisationunit($parentStructure->getLevel3Organisationunit());
+            $organisationunitStructure->setLevel4Organisationunit($organisationunit->getParent());
+        }
+        if($parentLevel >= 5 ) {
+            $organisationunitStructure->setLevel1Organisationunit($parentStructure->getLevel1Organisationunit());
+            $organisationunitStructure->setLevel2Organisationunit($parentStructure->getLevel2Organisationunit());
+            $organisationunitStructure->setLevel3Organisationunit($parentStructure->getLevel3Organisationunit());
+            $organisationunitStructure->setLevel4Organisationunit($parentStructure->getLevel4Organisationunit());
+            $organisationunitStructure->setLevel5Organisationunit($organisationunit->getParent());
+        }
+        if($parentLevel >= 6 ) {
+            $organisationunitStructure->setLevel1Organisationunit($parentStructure->getLevel1Organisationunit());
+            $organisationunitStructure->setLevel2Organisationunit($parentStructure->getLevel2Organisationunit());
+            $organisationunitStructure->setLevel3Organisationunit($parentStructure->getLevel3Organisationunit());
+            $organisationunitStructure->setLevel4Organisationunit($parentStructure->getLevel4Organisationunit());
+            $organisationunitStructure->setLevel5Organisationunit($parentStructure->getLevel5Organisationunit());
+            $organisationunitStructure->setLevel6Organisationunit($organisationunit->getParent());
+        }
+        $entityManager->persist($organisationunitStructure);
     }
 }
