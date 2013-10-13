@@ -32,6 +32,7 @@ use Hris\FormBundle\Entity\RelationalFilter;
 use Hris\FormBundle\Entity\ArithmeticFilter;
 use Hris\FormBundle\Entity\FriendlyReportCategory;
 use Hris\FormBundle\Entity\FieldOptionGroup;
+use Hris\IndicatorBundle\Entity\Target;
 use Symfony\Component\Validator\Constraints as Assert;
 
 /**
@@ -104,15 +105,20 @@ class FriendlyReport
     private $friendlyReportCategory;
 
     /**
-     * @var Target $target
+     * @var boolean $useTargets
      *
      * @Gedmo\Versioned
-     * @ORM\ManyToOne(targetEntity="Hris\IndicatorBundle\Entity\Target")
-     * @ORM\JoinColumns({
-     *   @ORM\JoinColumn(name="target_id", referencedColumnName="id", onDelete="CASCADE", nullable=true)
-     * })
+     * @ORM\Column(name="useTargets", type="boolean", nullable=true)
      */
-    private $target;
+    private $ignoreSkipInReport;
+
+    /**
+     * @var boolean $ignoreSkipInReport
+     *
+     * @Gedmo\Versioned
+     * @ORM\Column(name="ignoreSkipInReport", type="boolean", nullable=true)
+     */
+    private $useTargets;
     
     /**
      * @var ArithmeticFilter $arithmeticFilter
@@ -457,26 +463,49 @@ class FriendlyReport
     }
 
     /**
-     * Set target
+     * Set useTargets
      *
-     * @param FieldOptionGroup $target
+     * @param boolean $useTargets
      * @return FriendlyReport
      */
-    public function setTarget(FieldOptionGroup $target = null)
+    public function setUseTargets($useTargets)
     {
-        $this->target = $target;
+        $this->useTargets = $useTargets;
 
         return $this;
     }
 
     /**
-     * Get target
+     * Get useTargets
      *
-     * @return FieldOptionGroup
+     * @return boolean
      */
-    public function getTarget()
+    public function getUseTargets()
     {
-        return $this->target;
+        return $this->useTargets;
+    }
+    
+    /**
+     * Set ignoreSkipInReport
+     *
+     * @param boolean $ignoreSkipInReport
+     * @return FriendlyReport
+     */
+    public function setIgnoreSkipInReport($ignoreSkipInReport)
+    {
+        $this->ignoreSkipInReport = $ignoreSkipInReport;
+
+        return $this;
+    }
+
+    /**
+     * Get ignoreSkipInReport
+     *
+     * @return boolean
+     */
+    public function getIgnoreSkipInReport()
+    {
+        return $this->ignoreSkipInReport;
     }
 
     /**

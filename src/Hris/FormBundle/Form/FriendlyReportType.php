@@ -48,7 +48,10 @@ class FriendlyReportType extends AbstractType
                     'required'=>True,
                     'mapped'=>False,
             ))
-            ->add('target',null,array(
+            ->add('useTargets',null,array(
+                'required'=> False,
+            ))
+            ->add('ignoreSkipInReport',null,array(
                 'required'=> False,
             ))
         ;
