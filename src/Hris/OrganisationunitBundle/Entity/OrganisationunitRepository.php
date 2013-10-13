@@ -37,17 +37,17 @@ class OrganisationunitRepository extends EntityRepository
 {
     /**
      * Returns organisationunit count
-     * @param Organisationunit $organiastionunit
+     * @param Organisationunit $organisationunit
      * @return null|integer
      */
-    public function getImmediateChildrenCount( Organisationunit $organiastionunit)
+    public function getImmediateChildrenCount( Organisationunit $organisationunit)
     {
         $queryBuilder = $this->getEntityManager()-> $this->getEntityManager()->createQueryBuilder();
         $query = $queryBuilder->select('COUNT(organisationunit')
                             ->from('HrisOrganisationunitBundle:Organisationunit','organisationunit')
                             ->where('organisationunit.parent = :parent')
                             ->setParameters(array(
-                                        'parent'=>$organiastionunit
+                                        'parent'=>$organisationunit
                             )
             )->getQuery();
 
@@ -62,17 +62,17 @@ class OrganisationunitRepository extends EntityRepository
 
     /**
      * Returns organisationunit count
-     * @param Organisationunit $organiastionunit
+     * @param Organisationunit $organisationunit
      * @return \Doctrine\Common\Collections\Collection
      */
-    public function getImmediateChildren( Organisationunit $organiastionunit)
+    public function getImmediateChildren( Organisationunit $organisationunit)
     {
         $queryBuilder = $this->getEntityManager()->createQueryBuilder();
         $query = $queryBuilder->select('organisationunit')
             ->from('HrisOrganisationunitBundle:Organisationunit','organisationunit')
             ->where('organisationunit.parent = :parent')
             ->setParameters(array(
-                    'parent'=>$organiastionunit
+                    'parent'=>$organisationunit
                 )
             )->getQuery();
 
@@ -83,6 +83,33 @@ class OrganisationunitRepository extends EntityRepository
             $result = NULL;
         }
         return $result;
+    }
+
+    /**
+     * Returns organisationunit children collection
+     * @param Organisationunit $organisationunit
+     * @return \Doctrine\Common\Collections\Collection
+     */
+    public function getAllChildren( Organisationunit $organisationunit)
+    {
+        $queryBuilder = $this->getEntityManager()->createQueryBuilder();
+        $organisationunitChildren = $queryBuilder->select('organisationunit')
+            ->from('HrisOrganisationunitBundle:Organisationunit','organisationunit')
+            ->join('organisationunit.organisationunitStructure','organisationunitStructure')
+            ->join('organisationunitStructure.level','level')
+            ->andWhere('
+                        (
+                            level.level >= :organisationunitLevel
+                            AND organisationunitStructure.level'.$organisationunit->getOrganisationunitStructure()->getLevel()->getLevel().'Organisationunit=:levelOrganisationunit
+                        )'
+            )
+            ->setParameters(array(
+                'levelOrganisationunit'=>$organisationunit,
+                'organisationunitLevel'=>$organisationunit->getOrganisationunitStructure()->getLevel()->getLevel()
+            ))
+            ->getQuery()->getResult();
+
+        return $organisationunitChildren;
     }
 
     /**
