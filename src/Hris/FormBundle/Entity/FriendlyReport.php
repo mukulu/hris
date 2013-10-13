@@ -102,6 +102,17 @@ class FriendlyReport
      * @ORM\OrderBy({"sort" = "ASC"})
      */
     private $friendlyReportCategory;
+
+    /**
+     * @var Target $target
+     *
+     * @Gedmo\Versioned
+     * @ORM\ManyToOne(targetEntity="Hris\IndicatorBundle\Entity\Target")
+     * @ORM\JoinColumns({
+     *   @ORM\JoinColumn(name="target_id", referencedColumnName="id", onDelete="CASCADE", nullable=true)
+     * })
+     */
+    private $target;
     
     /**
      * @var ArithmeticFilter $arithmeticFilter
@@ -443,6 +454,29 @@ class FriendlyReport
     public function getSerie()
     {
         return $this->serie;
+    }
+
+    /**
+     * Set target
+     *
+     * @param FieldOptionGroup $target
+     * @return FriendlyReport
+     */
+    public function setTarget(FieldOptionGroup $target = null)
+    {
+        $this->target = $target;
+
+        return $this;
+    }
+
+    /**
+     * Get target
+     *
+     * @return FieldOptionGroup
+     */
+    public function getTarget()
+    {
+        return $this->target;
     }
 
     /**

@@ -107,8 +107,8 @@ class ReportFriendlyReportController extends Controller
             $friendlyReport = $friendlyReportFormData['genericReport'];
             $organisationunit = $friendlyReportFormData['organisationunit'];
             $forms = $friendlyReportFormData['forms'];
-            $organisationunitGroupset = $friendlyReportFormData['organisationunitGroupset'];
-            $organisationunitGroup = $friendlyReportFormData['organisationunitGroup'];
+            $organisationunitGroupset = (isset($friendlyReportFormData['organisationunitGroupset'])) ? $friendlyReportFormData['organisationunitGroupset'] : null;
+            $organisationunitGroup = (isset($friendlyReportFormData['organisationunitGroup'])) ? $friendlyReportFormData['organisationunitGroup'] : null;
             // Create FormIds
             $formIds = NULL;
             foreach($forms as $formKey=>$formObject) {
@@ -116,8 +116,10 @@ class ReportFriendlyReportController extends Controller
             }
             // Create OrganisationunitGroupIds
             $organisationunitGroupIds = NULL;
-            foreach($organisationunitGroup as $organisationunitGroupKey=>$organisationunitGroupObject) {
-                if(empty($organisationunitGroupIds)) $organisationunitGroupIds=$organisationunitGroupObject->getId();else $organisationunitGroupIds.=','.$organisationunitGroupObject->getId();
+            if(isset($organisationunitGroup) && !empty($organisationunitGroup)) {
+                foreach($organisationunitGroup as $organisationunitGroupKey=>$organisationunitGroupObject) {
+                    if(empty($organisationunitGroupIds)) $organisationunitGroupIds=$organisationunitGroupObject->getId();else $organisationunitGroupIds.=','.$organisationunitGroupObject->getId();
+                }
             }
         }
         $title = $friendlyReport->getName().' for '. $organisationunit->getLongname().' and lower levels';
@@ -172,15 +174,13 @@ class ReportFriendlyReportController extends Controller
         foreach($friendlyReport->getFriendlyReportCategory() as $friendlyReportCategoryKey=>$friendlyReportCategory) {
             if(!isset($pastFirstCategory)) $pastFirstCategory=True;// Initiate first category
             foreach($friendlyReportCategory->getFieldOptionGroup()->getFieldOption() as $fieldOptionKey=>$fieldOption ) {
-                $queryColumnNames[] = $fieldOption->getValue();
+                $queryColumnNames[] = str_replace(' ','',$fieldOption->getValue());
                 $categoryFieldNames[] = $fieldOption->getField()->getName();
                 $categoryFieldName = $fieldOption->getField()->getName();
                 $categoryFieldOptionValue=$fieldOption->getValue();
                 $categoryFieldOptionValues[]=$fieldOption->getValue();
-                $categoryResourceTableName=$categoryResourceTableName=$resourceTableAlias.$categoryFieldOptionValue;
-                $queryColumnWhereClause[$fieldOption->getValue()] = "$categoryResourceTableName.$categoryFieldName='$categoryFieldOptionValue'";
-                if(!isset($totalColumnWhereClause[$fieldOption->getField()->getName()])) $totalColumnWhereClause[$fieldOption->getField()->getName()]= $fieldOption->getValue();
-                else $totalColumnWhereClause[$fieldOption->getField()->getName()].=",".$fieldOption->getValue();
+                $categoryResourceTableName=$resourceTableAlias.str_replace(' ','',$categoryFieldOptionValue);
+                $queryColumnWhereClause[$fieldOption->getValue()] = "$categoryResourceTableName.$categoryFieldName='".str_replace(' ','',$categoryFieldOptionValue)."'";
             }
         }
 
@@ -189,10 +189,10 @@ class ReportFriendlyReportController extends Controller
             // randomize resourcetable alias
             $categoryFieldName=$categoryFieldNames[$queryColumnNameKey];
             $categoryFieldOptionValue=$categoryFieldOptionValues[$queryColumnNameKey];
-            $categoryResourceTableName=$resourceTableAlias.$categoryFieldOptionValue;
+            $categoryResourceTableName=$resourceTableAlias.str_replace(' ','',$categoryFieldOptionValue);
             $joinClause .= " INNER JOIN
                             (
-                                SELECT COUNT($categoryResourceTableName.$categoryFieldName) AS $categoryFieldOptionValue, $categoryResourceTableName.$seriesFieldName
+                                SELECT COUNT($categoryResourceTableName.".str_replace(' ','',$categoryFieldName).") AS ".str_replace(' ','',$categoryFieldOptionValue).", $categoryResourceTableName.$seriesFieldName
                                 FROM $resourceTableName $categoryResourceTableName
                                 ".str_replace($resourceTableAlias,$categoryResourceTableName,$organisationUnitJoinClause)."
                                 WHERE $categoryResourceTableName.$categoryFieldName='$categoryFieldOptionValue'
@@ -205,6 +205,7 @@ class ReportFriendlyReportController extends Controller
 
         $selectQuery="SELECT $columns $fromClause $joinClause WHERE $organisationunitLevelsWhereClause".( !empty($fieldOptionsToSkipQuery) ? " AND ( $fieldOptionsToSkipQuery )" : "" );
         $friendlyReportResults = $this->getDoctrine()->getManager()->getConnection()->fetchAll($selectQuery);
+
 
 
         foreach($friendlyReport->getFriendlyReportCategory() as $friendlyReportCategoryKey=>$friendlyReportCategory) {

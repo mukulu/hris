@@ -128,7 +128,7 @@ fos_user:
     user_class: Hris\UserBundle\Entity\User
     group:
         group_class: Hris\UserBundle\Entity\Group
-    use_listener: false
+    use_listener: true
     registration:
         confirmation:
             enabled: false

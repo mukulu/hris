@@ -48,6 +48,9 @@ class FriendlyReportType extends AbstractType
                     'required'=>True,
                     'mapped'=>False,
             ))
+            ->add('target',null,array(
+                'required'=> False,
+            ))
         ;
     }
 
