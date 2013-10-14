@@ -27,6 +27,12 @@
                         {% set optionsCount = optionsCount + 1  %}
                         <th >{{ fieldOption.getValue }}</th>
                     {% endfor %}
+                    {% if targets is not empty %}
+
+                        {% for target in targets %}
+                            <th>{{ target.getName }}</th>
+                        {% endfor %}
+                    {% endif %}
                     {% if totalOptionsPreviouslySet =='false' %}
                         {% set totalOptions = { key : optionsCount } %}
                         {% set totalOptionsPreviouslySet = 'true' %}
@@ -34,8 +40,8 @@
                         {% set totalOptions = totalOptions|merge({ incr : optionsCount }) %}
                     {% endif %}
                     {% set incr = incr +1 %}
-                    <th>{{ friendlyReportCategory.getFieldOptionGroup.getName }} Total</th>
                 {% endfor %}
+                <th>Total</th>
             </tr>
             </thead>
             <tbody>
@@ -43,17 +49,21 @@
                     {% for friendlyReportResult in friendlyReportResults %}
                         <tr>
                             {% set lastSlice = 0 %}
+                            {% set fieldOptionValueTotal=0 %}
                             {% for totalOption in totalOptions %}
-
                                 {% set fieldOptionValueTotal=0 %}
                                 {% for fieldOptionValue in  friendlyReportResult|slice(lastSlice, totalOption+1)  %}
-                                    <td>{{ fieldOptionValue }}</td>
                                     {% set fieldOptionValueTotal = fieldOptionValueTotal + fieldOptionValue %}
                                 {% endfor %}
                                 {% set lastSlice = totalOption+1 %}
-                                <td>{{ fieldOptionValueTotal }}</td>
-
                             {% endfor %}
+
+                            {% for fieldOptionValue in  friendlyReportResult %}
+                                <td>{{ fieldOptionValue }}</td>
+                            {% endfor %}
+
+
+                            <td>{{ fieldOptionValueTotal }}</td>
 
 
                         </tr>
