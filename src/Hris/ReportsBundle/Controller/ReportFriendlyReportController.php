@@ -120,7 +120,7 @@ class ReportFriendlyReportController extends Controller
             $targetColumns = NULL;
             if(isset($targets) && !empty($targets)) {
                 foreach($targets as $targetKey=>$target) {
-                    $targetColumns = empty($targetColumns) ? str_replace(' ','',$target->getName()) : ",".str_replace(' ','',$target->getName());
+                    $targetColumns = empty($targetColumns) ? str_replace(' ','',$target->getName()) : $targetColumns.",".str_replace(' ','',$target->getName());
                 }
             }
             // Create OrganisationunitGroupIds
@@ -252,9 +252,7 @@ class ReportFriendlyReportController extends Controller
 
         $columns = " DISTINCT $resourceTableAlias.$seriesFieldName as $seriesFieldName,".implode(',',$queryColumnNames).( !empty($targetColumns) ? ','.$targetColumns : '');
         if(!empty($targetJoinClause)) $joinClause .=$targetJoinClause;
-
         $selectQuery="SELECT $columns $fromClause $joinClause WHERE $organisationunitLevelsWhereClause".( !empty($fieldOptionsToSkipQuery) ? " AND ( $fieldOptionsToSkipQuery )" : "" );
-
         $friendlyReportResults = $this->getDoctrine()->getManager()->getConnection()->fetchAll($selectQuery);
 
 
