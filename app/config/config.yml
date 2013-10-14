@@ -237,3 +237,8 @@ fos_message:
     db_driver: orm
     thread_class: Hris\MessageBundle\Entity\Thread
     message_class: Hris\MessageBundle\Entity\Message
+    new_thread_form:
+          type:               hris_message.new_thread_multiple_form.type
+          handler:            hris_message.new_thread_multiple_form.handler
+          model:              Hris\MessageBundle\FormModel\NewThreadMultipleMessage
+          name:               message
