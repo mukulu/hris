@@ -127,6 +127,63 @@ class MessageController extends ContainerAware
     }
 
     /**
+     * Create a new multi message thread
+     *
+     * @Route("/new/multimessage", name="multi_message_thread_new")
+     * @Method("GET|POST")
+     * @Template()
+     * @return Response
+     */
+    public function newMultiMessageThreadAction()
+    {
+        $form = $this->container->get('fos_message.new_thread_form.factory')->create();
+        $formHandler = $this->container->get('fos_message.new_thread_form.handler');
+
+        if ($message = $formHandler->process($form)) {
+            return new RedirectResponse($this->container->get('router')->generate('message_thread_view', array(
+                'threadId' => $message->getThread()->getId()
+            )));
+        }
+
+        return $this->container->get('templating')->renderResponse('HrisMessageBundle:Message:newThread.html.twig', array(
+            'form' => $form->createView(),
+            'data' => $form->getData()
+        ));
+    }
+    /**
+     * Returns Users searched json.
+     *
+     *
+     *
+     * @Route("/{q}",  name="search_users")
+     * @Method("Get")
+     * @Template()
+     */
+    public function searchUsersAction($q)
+    {
+        $em = $this->getDoctrine()->getManager();
+
+        /*
+         * Getting the Users
+         */
+        $users = $em->getRepository( 'HrisUserBundle:User' )->findBy
+            (array('firstname'=> $q,
+                'surname'=> $q
+            ));
+        # Collect the results
+        foreach($users as $user){
+
+            $arr[] = $user;
+        }
+
+        # JSON-encode the response
+        $json_response = json_encode($arr);
+
+        # Return the response
+        echo $json_response;
+    }
+
+    /**
      * Deletes a thread
      *
      * @Route("/{threadId}/delete", requirements={"threadId"="\d+"}, name="message_thread_delete")

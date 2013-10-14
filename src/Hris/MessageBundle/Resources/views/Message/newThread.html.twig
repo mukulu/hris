@@ -1,12 +1,28 @@
 {% extends 'HrisMessageBundle::layout.html.twig' %}
+{% block javascripts %}
+    {{ parent() }}
+    <script type="text/javascript" src="{{ asset('commons/js/jquery.min.js')}}"></script>
+    <script type="text/javascript" src="{{ asset('commons/js/jquery.tokeninput.js')}}"></script>
+    <script type="text/javascript">
+        $(document).ready(function () {
+            $("#my-text-input").tokenInput("/url/to/your/script/");
+        });
+    </script>
+{% endblock javascripts %}
 
+{% block stylesheets %}
+    {{ parent() }}
+    <link rel="stylesheet" type="text/css" href="{{ asset('commons/css/token-input-facebook.css')}}" />
+{% endblock stylesheets %}
 {% block fos_message_header %}
     {% trans from 'FOSMessageBundle' %}Send a new message{% endtrans %}
 {% endblock fos_message_header %}
 
 {% block fos_message_content %}
     <form action="{{ url('message_thread_new') }}" method="post">
-        {{ form_widget(form) }}
+        {{ form_row( aggregationForm.forms ) }}
+        {{ form_row( aggregationForm.forms ) }}
+        {{ form_row( aggregationForm.forms ) }}
 
         <input type="submit" class="btn"/>
     </form>
