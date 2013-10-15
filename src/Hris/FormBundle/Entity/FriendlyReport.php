@@ -32,6 +32,7 @@ use Hris\FormBundle\Entity\RelationalFilter;
 use Hris\FormBundle\Entity\ArithmeticFilter;
 use Hris\FormBundle\Entity\FriendlyReportCategory;
 use Hris\FormBundle\Entity\FieldOptionGroup;
+use Hris\IndicatorBundle\Entity\Target;
 use Symfony\Component\Validator\Constraints as Assert;
 
 /**
@@ -102,6 +103,22 @@ class FriendlyReport
      * @ORM\OrderBy({"sort" = "ASC"})
      */
     private $friendlyReportCategory;
+
+    /**
+     * @var boolean $useTargets
+     *
+     * @Gedmo\Versioned
+     * @ORM\Column(name="useTargets", type="boolean", nullable=true)
+     */
+    private $ignoreSkipInReport;
+
+    /**
+     * @var boolean $ignoreSkipInReport
+     *
+     * @Gedmo\Versioned
+     * @ORM\Column(name="ignoreSkipInReport", type="boolean", nullable=true)
+     */
+    private $useTargets;
     
     /**
      * @var ArithmeticFilter $arithmeticFilter
@@ -443,6 +460,52 @@ class FriendlyReport
     public function getSerie()
     {
         return $this->serie;
+    }
+
+    /**
+     * Set useTargets
+     *
+     * @param boolean $useTargets
+     * @return FriendlyReport
+     */
+    public function setUseTargets($useTargets)
+    {
+        $this->useTargets = $useTargets;
+
+        return $this;
+    }
+
+    /**
+     * Get useTargets
+     *
+     * @return boolean
+     */
+    public function getUseTargets()
+    {
+        return $this->useTargets;
+    }
+    
+    /**
+     * Set ignoreSkipInReport
+     *
+     * @param boolean $ignoreSkipInReport
+     * @return FriendlyReport
+     */
+    public function setIgnoreSkipInReport($ignoreSkipInReport)
+    {
+        $this->ignoreSkipInReport = $ignoreSkipInReport;
+
+        return $this;
+    }
+
+    /**
+     * Get ignoreSkipInReport
+     *
+     * @return boolean
+     */
+    public function getIgnoreSkipInReport()
+    {
+        return $this->ignoreSkipInReport;
     }
 
     /**
