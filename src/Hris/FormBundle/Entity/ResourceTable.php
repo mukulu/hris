@@ -762,8 +762,11 @@ class ResourceTable
 
                                             $dataArray[$field->getName()] = eval("return $datavalue;");
                                             //$dataArray[$field->getName()] = trim($displayValue->format('Y-m-d H:i:s.u')); //working on date format fix
-                                            //$dataArray[$field->getName().'_month_text'] = trim($displayValue->format('F'));
-                                            //$dataArray[$field->getName().'_year'] = trim($displayValue->format('Y'));
+                                            if($field->getDataType()->getName() == 'Date') {
+                                                $dataArray[$field->getName().'_month_text'] = trim($displayValue->format('F'));
+                                                $dataArray[$field->getName().'_year'] = trim($displayValue->format('Y'));
+                                            }
+
                                         }else{
                                         $dataArray[$field->getName()] = NULL;
                                     }

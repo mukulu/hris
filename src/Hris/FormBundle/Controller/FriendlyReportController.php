@@ -222,7 +222,7 @@ class FriendlyReportController extends Controller
             $em->persist($entity);
             $em->flush();
 
-            return $this->redirect($this->generateUrl('friendlyreport_edit', array('id' => $id)));
+            return $this->redirect($this->generateUrl('friendlyreport_show', array('id' => $id)));
         }
 
         return array(
