@@ -31,7 +31,7 @@ use Symfony\Component\EventDispatcher\Event;
 
 class ConfigureMenuEvent extends Event
 {
-    const CONFIGURE = 'hris_indicator.menu_configure';
+    const CONFIGURE = 'hris_target.menu_configure';
 
     private $factory;
     private $menu;

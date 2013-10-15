@@ -6,6 +6,14 @@
     <form class="form-horizontal" action="{{ path('organisationunit_update', { 'id': entity.id }) }}" method="post" {{ form_enctype(edit_form) }}>
         <input type="hidden" name="_method" value="PUT" />
         {{ form_widget(edit_form) }}
+        <div id="hris_organisationunitbundle_organisationunittype_completeness">
+            {% for completenessForm in completenessForms %}
+                <label for="hris_organisationunitbundle_organisationunittype_completeness{{ completenessForm.uid }}">{{ completenessForm.name }} Expectation</label>
+                <input type="number" name="hris_organisationunitbundle_organisationunittype_completeness[{{ completenessForm.uid }}]"
+                       id="hris_organisationunitbundle_organisationunittype_completeness{{ completenessForm.uid }}"
+                       value="{{ completenessExpectation[completenessForm.uid] }}"/>
+            {% endfor %}
+        </div>
         <br/>
         <ul class="record_actions inline" style="float:left;">
             <li>

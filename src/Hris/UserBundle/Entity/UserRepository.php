@@ -34,4 +34,24 @@ use Doctrine\ORM\EntityRepository;
  */
 class UserRepository extends EntityRepository
 {
+    /**
+     * Returns users with matching firstname and lastname
+     * @param $name
+     * @return \Doctrine\Common\Collections\Collection
+     */
+    public function getSearchedUsers($name)
+    {
+        $queryBuilder = $this->getEntityManager()->createQueryBuilder();
+        $result = $queryBuilder->select('user')
+            ->from('HrisUserBundle:User','user')
+            ->where('lower(user.firstName) like :name')
+            ->orWhere('lower(user.surname) like :name')
+            ->orWhere('lower(user.middleName) like :name')
+            ->setParameters(array(
+                    'name'=>"%$name%"
+                )
+            )->getQuery()->getResult();
+
+        return $result;
+    }
 }

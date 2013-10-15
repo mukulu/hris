@@ -670,6 +670,58 @@ class ResourceTable
             }
             if (!empty($records)) {
 
+                /**
+                 * Make sure organisationunitstructure is uptodate for good measure
+                 */
+                // Check and Notify if organisationunit structure doesn't exist
+                $queryBuilder = $entityManager->createQueryBuilder();
+                $organisationunitStructureCount =  $queryBuilder->select('count( organisationunitStructure.id )')->from('HrisOrganisationunitBundle:OrganisationunitStructure','organisationunitStructure')->getQuery()->getSingleScalarResult();
+                $queryBuilder = $entityManager->createQueryBuilder();
+                $organisationunitCount =  $queryBuilder->select('count( organisationunit.id )')->from('HrisOrganisationunitBundle:Organisationunit','organisationunit')->getQuery()->getSingleScalarResult();
+
+                // Regenerate Orgunit Stucture of Orgunit and OrgunitStructure Differs
+                if($organisationunitCount!=$organisationunitStructureCount) {
+                    $this->returnMessage ='';
+                    // Regenerate Orgunit Structure
+                    $organisationunitStructure = new OrganisationunitStructureController();
+                    $this->returnMessage = $organisationunitStructure->regenerateOrganisationunitStructure($entityManager);
+                }else {
+                    $this->returnMessage='Organisationunit structure is complete!';
+                };
+
+
+                // Regenerate Levels if OrgunitLevel and DISTINCT OrgunitStructure.level differs
+                $organisationunitStructureLevels = $entityManager->createQuery('SELECT DISTINCT organisationunitLevel.level FROM HrisOrganisationunitBundle:OrganisationunitStructure organisationunitStructure INNER JOIN organisationunitStructure.level organisationunitLevel ORDER BY organisationunitLevel.level ')->getResult();
+                $organisationunitLevelInfos = $entityManager->createQuery('SELECT organisationunitLevel.level,organisationunitLevel.name,organisationunitLevel.description FROM HrisOrganisationunitBundle:OrganisationunitLevel organisationunitLevel ORDER BY organisationunitLevel.level ')->getResult();
+                $organisationunitStructureLevels = $this->array_value_recursive('level', $organisationunitStructureLevels);
+                $organisationunitLevelsLevel = $this->array_value_recursive('level', $organisationunitLevelInfos);
+                if($organisationunitLevelsLevel != $organisationunitStructureLevels && !empty($organisationunitStructureLevels)) {
+                    if(!empty($organisationunitLevelInfos)) {
+                        // Cache in-memory saved Level names and descriptions
+                        $organisationunitLevelsName = $this->array_value_recursive('name', $organisationunitLevelInfos);
+                        $organisationunitLevelsDescription = $this->array_value_recursive('description', $organisationunitLevelInfos);
+                        $organisationunitLevelsName = array_combine($organisationunitLevelsLevel,$organisationunitLevelsName);
+                        $organisationunitLevelsDescription = array_combine($organisationunitLevelsLevel,$organisationunitLevelsDescription);
+                        $qb = $entityManager->createQueryBuilder('organisationunitLevel')->delete('HrisOrganisationunitBundle:OrganisationunitLevel','organisationunitLevel')->getQuery() -> getResult();
+                    }
+                    foreach($organisationunitStructureLevels as $key => $organisationunitStructureLevel) {
+                        // Update Levels
+                        $organisationunitLevel = new OrganisationunitLevel();
+                        if(in_array($organisationunitStructureLevel,$organisationunitLevelsLevel)) {
+                            $organisationunitLevel->setName($organisationunitLevelsName[$organisationunitStructureLevel]);
+                            $organisationunitLevel->setDescription($organisationunitLevelsDescription[$organisationunitStructureLevel]);
+                            $organisationunitLevel->setLevel($organisationunitStructureLevel);
+                            $entityManager->persist($organisationunitLevel);
+                        }else {
+                            $organisationunitLevel->setName('Level'.$organisationunitStructureLevel);
+                            $organisationunitLevel->setDescription('Level'.$organisationunitStructureLevel);
+                            $organisationunitLevel->setLevel($organisationunitStructureLevel);
+                            $entityManager->persist($organisationunitLevel);
+                        }
+                    }
+                    $entityManager->flush();
+                }
+
                 $dataArray=NULL;
                 $id=0;
                 //Prepare field Option map, converting from stored FieldOption key in record value array to actual text value

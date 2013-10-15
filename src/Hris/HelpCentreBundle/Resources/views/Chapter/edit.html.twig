@@ -1,9 +1,9 @@
 {% extends '::base.html.twig' %}
 
 {% block right_content -%}
-    <h1><i class="icon-edit icon-largest" title="Edit"></i><small>Target edit</small></h1>
+    <h1><i class="icon-edit icon-largest" title="Edit"></i><small>Chapter edit</small></h1>
 
-    <form class="form-horizontal" action="{{ path('indicator_update', { 'id': entity.id }) }}" method="post" {{ form_enctype(edit_form) }}>
+    <form action="{{ path('help_chapter_update', { 'id': entity.id }) }}" method="post" {{ form_enctype(edit_form) }}>
         <input type="hidden" name="_method" value="PUT" />
         {{ form_widget(edit_form) }}
         <br/>
@@ -12,7 +12,7 @@
                 <button type="submit" class="btn">Edit</button>
             </li>
             <li>
-                <a href="{{ path('indicator') }}" class="btn">
+                <a href="{{ path('help_chapter') }}" class="btn">
                     Back to the list
                 </a>
             </li>
@@ -40,19 +40,19 @@
                             {% endif %}
                         </div>
                         <div class="modal-footer">
-                            <form action="{{ path('indicator_delete', { 'id': entity.id }) }}" method="post">
+                            <form action="{{ path('help_chapter_delete', { 'id': entity.id }) }}" method="post">
                                 <input type="hidden" name="_method" value="DELETE" />
                                 {{ form_widget(delete_form) }}
                                 <button type="button" class="btn btn-default" data-dismiss="modal">Close</button>
                                 <button type="submit" class="btn btn-danger">Delete</button>
                             </form>
-
                         </div>
                     </div><!-- /.modal-content -->
                 </div><!-- /.modal-dialog -->
             </div><!-- /.modal -->
 
         </li>
-    </ul>
 
+
+    </ul>
 {% endblock %}

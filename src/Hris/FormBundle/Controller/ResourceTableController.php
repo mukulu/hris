@@ -52,6 +52,7 @@ class ResourceTableController extends Controller
     {
         $em = $this->getDoctrine()->getManager();
 
+        $delete_forms = NULL;
         $entities = $em->getRepository('HrisFormBundle:ResourceTable')->findAll();
         foreach($entities as $entity) {
             $delete_form= $this->createDeleteForm($entity->getId());

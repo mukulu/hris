@@ -32,7 +32,6 @@ use Hris\FormBundle\Entity\FriendlyReportCategory;
 use Hris\FormBundle\Entity\FieldOptionGroupset;
 use Hris\FormBundle\Entity\FieldOption;
 use Hris\FormBundle\Entity\Field;
-use Hris\IndicatorBundle\Entity\Indicator;
 use Symfony\Component\Validator\Constraints as Assert;
 
 /**
@@ -136,14 +135,6 @@ class FieldOptionGroup
      * @ORM\Column(name="lastupdated", type="datetime", nullable=true)
      */
     private $lastupdated;
-
-    /**
-     * @var Indicator $indicator
-     *
-     * @ORM\OneToMany(targetEntity="Hris\IndicatorBundle\Entity\Indicator", mappedBy="indicator",cascade={"ALL"})
-     * @ORM\OrderBy({"name" = "ASC"})
-     */
-    private $indicator;
     
     /**
      * @todo Support filter to further constraint criteria for items fitting in the field group
@@ -214,7 +205,6 @@ class FieldOptionGroup
     public function __construct()
     {
         $this->fieldOption = new ArrayCollection();
-        $this->indicator = new ArrayCollection();
         $this->uid = uniqid();
     }
     
@@ -408,39 +398,6 @@ class FieldOptionGroup
     public function getFriendlyReportCategory()
     {
         return $this->friendlyReportCategory;
-    }
-
-    /**
-     * Add indicator
-     *
-     * @param Indicator $indicator
-     * @return FieldOptionGroup
-     */
-    public function addIndicator(Indicator $indicator)
-    {
-        $this->indicator[$indicator->getId()] = $indicator;
-
-        return $this;
-    }
-
-    /**
-     * Remove indicator
-     *
-     * @param Indicator $indicator
-     */
-    public function removeIndicator(Indicator $indicator)
-    {
-        $this->indicator->removeElement($indicator);
-    }
-
-    /**
-     * Get indicator
-     *
-     * @return \Doctrine\Common\Collections\Collection
-     */
-    public function getIndicator()
-    {
-        return $this->indicator;
     }
 
     /**

@@ -31,6 +31,13 @@ use Sensio\Bundle\FrameworkExtraBundle\Configuration\Method;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Route;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Template;
 use Hris\ImportExportBundle\Form\ExportType;
+use Symfony\Component\Filesystem\Filesystem;
+use Symfony\Component\Filesystem\Exception\IOException;
+use Symfony\Component\HttpFoundation\Response;
+use Symfony\Component\HttpFoundation\ResponseHeaderBag;
+use ZipArchive;
+
+ini_set('zlib.output_compression', 'Off');
 
 /**
  * Export controller.
@@ -60,9 +67,8 @@ class ExportController extends Controller
     /**
      * Creates a new Export entity.
      *
-     * @Route("/{_format}", requirements={"_format"="json|"}, defaults={"_format"="json"}, name="importexport_export_create")
+     * @Route("/{_format}", requirements={"_format"="json|"}, defaults={"_format"="zip"}, name="importexport_export_create")
      * @Method("POST")
-     * @Template("HrisImportExportBundle:Export:export.json.twig")
      */
     public function createAction(Request $request,$_format="json")
     {
@@ -210,10 +216,34 @@ class ExportController extends Controller
             'hris_record'=>$records
         );
 
-        $serializer = $this->container->get('serializer');
-        return array(
-            'records' => $serializer->serialize($dataexport,empty($_format) ? "json" : $_format)
-        );
+       $fs = new Filesystem();
+
+       // $fs->chmod('/temp/export', 0777, 0000, true);
+
+        $filename = "export_".date("Y_m_d_His").".zip";
+
+        //$fs->chmod('records.json', 0666);
+
+
+        $archive = new ZipArchive();
+        $archive->open($filename, ZipArchive::CREATE);
+        $archive->addFromString('organizationUnit.json', json_encode($organisationunits));
+        $archive->addFromString('fields.json', json_encode($fields));
+        $archive->addFromString('fieldOptions.json', json_encode($fieldOptions));
+        $archive->addFromString('records.json', json_encode($records));
+        $archive->close();
+
+        $fs->chmod($filename, 0666);
+
+        $response = new Response(file_get_contents($filename));
+
+        $d = $response->headers->makeDisposition(ResponseHeaderBag::DISPOSITION_ATTACHMENT, $filename);
+        $response->headers->set('Content-Disposition', $d);
+
+        unlink($filename);
+
+        return $response;
+
     }
 
     /**

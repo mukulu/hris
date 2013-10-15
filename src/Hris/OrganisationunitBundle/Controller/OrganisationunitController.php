@@ -26,6 +26,8 @@ namespace Hris\OrganisationunitBundle\Controller;
 
 use Doctrine\ORM\NoResultException;
 use Doctrine\Tests\Common\Annotations\Null;
+use Hris\OrganisationunitBundle\Entity\OrganisationunitCompleteness;
+use Hris\OrganisationunitBundle\Entity\OrganisationunitStructure;
 use Hris\OrganisationunitBundle\Form\HierarchyOperationType;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Bundle\FrameworkBundle\Controller\Controller;
@@ -102,6 +104,7 @@ class OrganisationunitController extends Controller
         $entity  = new Organisationunit();
         $form = $this->createForm(new OrganisationunitType(), $entity);
         $form->bind($request);
+        $completenessForms = $this->getDoctrine()->getManager()->getRepository('HrisFormBundle:Form')->findAll();
 
         if ($form->isValid()) {
             $em = $this->getDoctrine()->getManager();
@@ -112,7 +115,26 @@ class OrganisationunitController extends Controller
                 $parent = NULL;
                 $entity->setParent($parent);
             }
+            // Persist completeness figures too
+            $completenessFigures = $request->request->get('hris_organisationunitbundle_organisationunittype_completeness');
+            foreach($completenessForms as $completenessFormKey=>$completenessForm) {
+                if(isset($completenessFigures[$completenessForm->getUid()]) && !empty($completenessFigures[$completenessForm->getUid()])) {
+                    $organisationunitCompleteness = new OrganisationunitCompleteness();
+                    $organisationunitCompleteness->setOrganisationunit($entity);
+                    $organisationunitCompleteness->setForm($completenessForm);
+                    $organisationunitCompleteness->setExpectation($completenessFigures[$completenessForm->getUid()]);
+                    $entity->addOrganisationunitCompletenes($organisationunitCompleteness);
+                    unset($organisationunitCompleteness);
+                }
+            }
+
+
             $em->persist($entity);
+
+            // Add to organisationunit structure too
+            // Regenerate Orgunit Structure
+            $organisationunitStructure = new OrganisationunitStructureController();
+            $organisationunitStructure->persistInOrganisationunitStructure($em,$entity);
             $em->flush();
 
             return $this->redirect($this->generateUrl('organisationunit_show', array('id' => $entity->getId())));
@@ -144,11 +166,13 @@ class OrganisationunitController extends Controller
         }else {
             $parent = NULL;
         }
+        $completenessForms = $this->getDoctrine()->getManager()->getRepository('HrisFormBundle:Form')->findAll();
 
         return array(
             'entity' => $entity,
             'parent'=>$parent,
             'form'   => $form->createView(),
+            'completenessForms'=>$completenessForms,
         );
     }
 
@@ -170,12 +194,20 @@ class OrganisationunitController extends Controller
         if (!$entity) {
             throw $this->createNotFoundException('Unable to find Organisationunit entity.');
         }
+        $completenessForms = $this->getDoctrine()->getManager()->getRepository('HrisFormBundle:Form')->findAll();
+        $completenessExpectation=NULL;
+        foreach($completenessForms as $completenessFormKey=>$completenessForm) {
+            $organisationunitCompleteness = $em->getRepository('HrisOrganisationunitBundle:OrganisationunitCompleteness')->findOneBy(array('organisationunit'=>$entity,'form'=>$completenessForm));
+            $completenessExpectation[$completenessForm->getUid()] = !empty($organisationunitCompleteness) ? $organisationunitCompleteness->getExpectation() : NULL;
+        }
 
         $deleteForm = $this->createDeleteForm($id);
 
         return array(
             'entity'      => $entity,
             'delete_form' => $deleteForm->createView(),
+            'completenessForms'=>$completenessForms,
+            'completenessExpectation'=>$completenessExpectation,
         );
     }
 
@@ -200,11 +232,19 @@ class OrganisationunitController extends Controller
 
         $editForm = $this->createForm(new OrganisationunitType(), $entity);
         $deleteForm = $this->createDeleteForm($id);
+        $completenessForms = $this->getDoctrine()->getManager()->getRepository('HrisFormBundle:Form')->findAll();
+        $completenessExpectation=NULL;
+        foreach($completenessForms as $completenessFormKey=>$completenessForm) {
+            $organisationunitCompleteness = $em->getRepository('HrisOrganisationunitBundle:OrganisationunitCompleteness')->findOneBy(array('organisationunit'=>$entity,'form'=>$completenessForm));
+            $completenessExpectation[$completenessForm->getUid()] = !empty($organisationunitCompleteness) ? $organisationunitCompleteness->getExpectation() : NULL;
+        }
 
         return array(
             'entity'      => $entity,
             'edit_form'   => $editForm->createView(),
             'delete_form' => $deleteForm->createView(),
+            'completenessForms'=>$completenessForms,
+            'completenessExpectation'=>$completenessExpectation,
         );
     }
 
@@ -230,18 +270,33 @@ class OrganisationunitController extends Controller
         $deleteForm = $this->createDeleteForm($id);
         $editForm = $this->createForm(new OrganisationunitType(), $entity);
         $editForm->bind($request);
+        $completenessForms = $this->getDoctrine()->getManager()->getRepository('HrisFormBundle:Form')->findAll();
 
         if ($editForm->isValid()) {
+            // Persist completeness figures too
+            $completenessFigures = $request->request->get('hris_organisationunitbundle_organisationunittype_completeness');
+            foreach($completenessForms as $completenessFormKey=>$completenessForm) {
+                if(isset($completenessFigures[$completenessForm->getUid()]) && !empty($completenessFigures[$completenessForm->getUid()])) {
+                    $organisationunitCompleteness = new OrganisationunitCompleteness();
+                    $organisationunitCompleteness->setOrganisationunit($entity);
+                    $organisationunitCompleteness->setForm($completenessForm);
+                    $organisationunitCompleteness->setExpectation((int)$completenessFigures[$completenessForm->getUid()]);
+                    $entity->addOrganisationunitCompletenes($organisationunitCompleteness);
+                    unset($organisationunitCompleteness);
+                }
+            }
+
             $em->persist($entity);
             $em->flush();
 
-            return $this->redirect($this->generateUrl('organisationunit_edit', array('id' => $id)));
+            return $this->redirect($this->generateUrl('organisationunit_show', array('id' => $id)));
         }
 
         return array(
             'entity'      => $entity,
             'edit_form'   => $editForm->createView(),
             'delete_form' => $deleteForm->createView(),
+            'completenessForms'=>$completenessForms,
         );
     }
     /**
@@ -542,6 +597,10 @@ class OrganisationunitController extends Controller
             // Change parent
             $organisationunitToMove->setParent($parentOrganisationunit);
             $em->persist($organisationunitToMove);
+            // Add to organisationunit structure too
+            // Regenerate Orgunit Structure
+            $organisationunitStructure = new OrganisationunitStructureController();
+            $organisationunitStructure->persistInOrganisationunitStructure($em,$organisationunitToMove);
             $em->flush();
         }
 

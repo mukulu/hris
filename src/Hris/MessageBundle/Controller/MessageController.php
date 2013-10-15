@@ -28,10 +28,12 @@ use JMS\SecurityExtraBundle\Annotation\Secure;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Method;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Route;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Template;
+use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpKernel\Exception\NotFoundHttpException;
 use Symfony\Component\DependencyInjection\ContainerAware;
 use Symfony\Component\HttpFoundation\RedirectResponse;
 use FOS\MessageBundle\Provider\ProviderInterface;
+use Doctrine\ORM\QueryBuilder as QueryBuilder;
 
 /**
  * Message controller.
@@ -155,32 +157,41 @@ class MessageController extends ContainerAware
      *
      *
      *
-     * @Route("/{q}",  name="search_users")
-     * @Method("Get")
+     * @Route("/searchusers",  name="search_users")
+     * @Method("GET")
      * @Template()
      */
-    public function searchUsersAction($q)
+    public function searchUsersAction(Request $request)
     {
-        $em = $this->getDoctrine()->getManager();
+
+        $q = $request->query->get('q');
+        $entityManager = $this->container->get('doctrine.orm.entity_manager');
+        //$queryBuilder = $em->createQueryBuilder();
+        //var_dump($queryBuilder);die();
+        //$queryBuilder = $this->container->get('doctrine.orm.entity_manager')->createQueryBuilder();
 
         /*
          * Getting the Users
-         */
-        $users = $em->getRepository( 'HrisUserBundle:User' )->findBy
-            (array('firstname'=> $q,
-                'surname'=> $q
-            ));
-        # Collect the results
-        foreach($users as $user){
+        */
+        $users = $entityManager->getRepository('HrisUserBundle:User')->getSearchedUsers($q);
 
-            $arr[] = $user;
+        /*
+         * Getting the Users Groups
+        */
+        //$userGroups = $entityManager->getRepository('HrisUserBundle:Group')->getSearchedUserGroups($q);
+
+        foreach($users as $user){
+            $arr[] = Array('id'=>$user->getUsername(),'name'=>$user->getFirstName().' '.$user->getSurname(),"url"=>$this->container->get('templating.helper.assets')->getUrl("commons/images/user.png"));
         }
 
+
         # JSON-encode the response
+        if(empty($arr)) $arr= NULL;
         $json_response = json_encode($arr);
 
-        # Return the response
-        echo $json_response;
+        return $this->container->get('templating')->renderResponse('HrisMessageBundle:Message:searchUsers.html.twig', array(
+            'searchUsers' => $json_response
+        ));
     }
 
     /**
