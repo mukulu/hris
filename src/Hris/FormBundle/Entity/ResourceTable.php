@@ -584,7 +584,7 @@ class ResourceTable
             $resourceTable->setPrimaryKey(array('id'),'IDX_'.uniqid(''));
             $resourceTable->addIndex(array('id'),'IDX_'.uniqid(''));
 
-            // Create other column in the resource table
+            // Create other columns(fields, organisationunits,etc) in the resource table
             foreach($this->getResourceTableFieldMember() as $resourceTableKey=> $resourceTableFieldMember) {
                 $field = $resourceTableFieldMember->getField();
 
@@ -605,15 +605,6 @@ class ResourceTable
 
                 }
                 // @todo implement after creation of history date class
-                // Add History date field for fields with history
-                if($field->getHashistory()== True) {
-                    $resourceTable->addColumn($field->getName().'_last_updated', "datetime",array('notnull'=>false,'precision'=>0, 'scale'=>0));
-                    //$resourceTable->addColumn($field->getName().'_last_updated_day', "string",array('length'=>64, 'notnull'=>false));
-                    //$resourceTable->addColumn($field->getName().'_last_updated_month_number', "integer",array('notnull'=>false,'precision'=>0, 'scale'=>0));
-                    $resourceTable->addColumn($field->getName().'_last_updated_month_text', "string",array('length'=>64, 'notnull'=>false));
-                    $resourceTable->addColumn($field->getName().'_last_updated_year', "integer",array('notnull'=>false,'precision'=>0, 'scale'=>0));
-                    //$resourceTable->addColumn($field->getName().'_last_updated_month_and_year', "string",array('length'=>64, 'notnull'=>false));
-                }
                 $totalResourceTableFields++;
             }
 
@@ -629,17 +620,6 @@ class ResourceTable
             foreach($organisationunitGroupsets as $organisationunitGroupsetKey=>$organisationunitGroupset) {
                 $resourceTable->addColumn($organisationunitGroupset->getName(), "string",array('length'=>64, 'notnull'=>false));
             }
-            // Calculated fields
-            // @todo implement calculated fields feature and remove hard-coding
-            $resourceTable->addColumn("Age", "integer",array('notnull'=>false,'precision'=>0, 'scale'=>0));
-            //$resourceTable->addColumn("Age_group", "string",array('length'=>64, 'notnull'=>false));
-            $resourceTable->addColumn("Employment_duration", "string",array('length'=>64, 'notnull'=>false));
-            //$resourceTable->addColumn("Retirement_date", "date",array('notnull'=>false,'precision'=>0, 'scale'=>0));
-            //$resourceTable->addColumn('retirement_date_day', "string",array('length'=>64, 'notnull'=>false));
-            //$resourceTable->addColumn('retirement_date_month_number', "integer",array('notnull'=>false,'precision'=>0, 'scale'=>0));
-            $resourceTable->addColumn('Retirement_date_month_text', "string",array('length'=>64, 'notnull'=>false));
-            $resourceTable->addColumn('Retirement_date_year', "integer",array('notnull'=>false,'precision'=>0, 'scale'=>0));
-            //$resourceTable->addColumn('retirement_date_month_and_year', "string",array('length'=>64, 'notnull'=>false));
 
             // Form and Organisationunit name
             $resourceTable->addColumn("Organisationunit_name", "string",array('length'=>64, 'notnull'=>false));
@@ -802,27 +782,6 @@ class ResourceTable
                                     }
                                 }
 
-                                // @todo implement calculated fields feature and remove hard-coding
-                                // Set Calculated Retirement Date Field values
-                                if ($field->getName()=="Birthdate"){
-                                    $birthDate = new \DateTime($dataValue[$valueKey]['date'],new \DateTimeZone ($dataValue[$valueKey]['timezone']));
-                                    $birthDate = $birthDate->format('Y-m-d');
-                                    $age = round($this->dateDiff("-", date("Y-m-d"), $birthDate) / 365, 0);
-                                    $retirementDate = new \DateTime($dataValue[$valueKey]['date'],new \DateTimeZone ($dataValue[$valueKey]['timezone']));
-                                    $retirementDate->add(new \DateInterval('P60Y'));
-                                }
-                                // Set Calculated Employment Date Field values
-                                if ($field->getName()=="DateofFirstAppointment"){
-                                    $firstAppointment = new \DateTime($dataValue[$valueKey]['date'],new \DateTimeZone ($dataValue[$valueKey]['timezone']));
-                                    $firstAppointment = $firstAppointment->format('Y-m-d');
-                                    $datediff = $this->dateDiff("-", date("Y-m-d"), $firstAppointment);
-                                    if (round($datediff / 12, 0) < 12) {
-                                        $employmentDuration = round($datediff / 12, 0) . "m";
-                                    } else {
-                                        $employmentDuration = floor($datediff / 365) . "y " . floor(($datediff % 365) / 30) . "m";
-                                    }
-                                }
-
                             }else {
                                 if ($field->getDataType()->getName() == 'Integer') {
                                     if(!empty($dataValue[$valueKey])) {
@@ -850,51 +809,6 @@ class ResourceTable
                         }
 
                         // @todo implement after creation of history date class
-                        // Add history date data for fields  with history
-                        if($field->getHasHistory()==True && $field->getInputType()->getName() == 'Select' && !empty($dataValue[$valueKey])) {
-                            // Fetch history date with instance same as our current data
-                            $historyDates = $entityManager->getRepository('HrisRecordsBundle:HistoryDate')
-                                ->findOneBy(
-                                    array('instance'=>$record->getInstance(),
-                                        'history'=>trim($fieldOptionMap[$dataValue[$valueKey]]),
-                                        'field'=>$field
-                                    )
-                                );
-                            //$lastHistoryDate = $historyDates[count($historyDates)-1];
-                            if(!empty($historyDates)) {
-                                $dataArray[$field->getName().'_last_updated'] = trim($historyDates->getPreviousdate()->format('Y-m-d H:i:s.u'));
-                                //$dataArray[$field->getName().'_last_updated_day'] = trim($historyDates->getPreviousdate()->format('l'));
-                                //$dataArray[$field->getName().'_last_updated_month_number'] = trim($historyDates->getPreviousdate()->format('m'));
-                                $dataArray[$field->getName().'_last_updated_month_text'] = trim($historyDates->getPreviousdate()->format('F'));
-                                $dataArray[$field->getName().'_last_updated_year'] = trim($historyDates->getPreviousdate()->format('Y'));
-                                //$dataArray[$field->getName().'_last_updated_month_and_year'] = trim($historyDates->getPreviousdate()->format('F Y'));
-                            }
-                        }
-                    }
-
-                    // @todo implement calculated fields feature and remove hard-coding
-                    // Fill in  calculated fields after finishing all fields in a record
-                    // Calculated Fields
-                    if(!empty($age)) {
-                        $dataArray['Age'] = $age;
-                        //$dataArray['Age_group'] = ((floor($age/5))*5) .'-'.(((floor($age/5))*5)+4);
-                    }else {
-                        $dataArray['Age']=NULL;
-                    }
-                    if(!empty($retirementDate)) {
-                        //$dataArray['Retirement_date'] = trim($retirementDate->format('Y-m-d H:i:s.u'));
-                        //$dataArray['retirement_date_day'] = trim($retirementDate->format('l'));
-                        //$dataArray['retirement_date_month_number'] = trim($retirementDate->format('m'));
-                        $dataArray['Retirement_date_month_text'] = trim($retirementDate->format('F'));
-                        $dataArray['Retirement_date_year'] = trim($retirementDate->format('Y'));
-                        //$dataArray['retirement_date_month_and_year'] = trim($retirementDate->format('F Y'));
-                    }else {
-                        //$dataArray['Retirement_date'] =NULL;
-                    }
-                    if(!empty($employmentDuration)) {
-                        $dataArray['Employment_duration'] = $employmentDuration;
-                    }else {
-                        $dataArray['Employment_duration'] =NULL;
                     }
                     // Fill in Levels
                     foreach($organisationunitLevels as $organisationunitLevelKey=>$organisationunitLevel) {
@@ -913,11 +827,18 @@ class ResourceTable
                         $organisationunitGroupsetNames=NULL;
                         foreach($organisationunitGroupset->getOrganisationunitGroup() as $organisationunitGroupKey=>$organisationunitGroup) {
                             if( $organisationunitGroup->getOrganisationunit()->contains($record->getOrganisationunit()) ) {
-                                if(empty($organisationunitGroupNames)) $organisationunitGroupNames=$organisationunitGroup->getName();else $organisationunitGroupNames.=','.$organisationunitGroupNames=$organisationunitGroup->getName();
+                                if(empty($organisationunitGroupNames)) {
+                                    $organisationunitGroupNames=$organisationunitGroup->getName();
+                                }else {
+                                    if(!preg_match("/".$organisationunitGroup->getName()."/",$organisationunitGroupNames)) {
+                                        $organisationunitGroupNames.=','.$organisationunitGroupNames=$organisationunitGroup->getName();
+                                    }
+                                }
                             }
                         }
-                        if(empty($organisationunitGroupNames)) $organisationunitGroupNames= NULL;
+                        if(!isset($organisationunitGroupNames)) $organisationunitGroupNames= NULL;
                         $dataArray[$organisationunitGroupset->getName()] = $organisationunitGroupNames;
+                        $organisationunitGroupNames = NULL;
                     }
 
                     // Form and Orgunit

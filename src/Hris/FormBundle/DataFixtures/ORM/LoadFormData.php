@@ -66,7 +66,7 @@ class LoadFormData extends AbstractFixture implements OrderedFixtureInterface
                     0=>'Firstname',
                     1=>'Middlename',
                     2=>'Surname',
-                    3=>'Birthdate',
+                    3=>'DateOfBirth',
                     4=>'Sex',
                     5=>'MaritalStatus',
                     6=>'Nationality',
@@ -100,7 +100,7 @@ class LoadFormData extends AbstractFixture implements OrderedFixtureInterface
                     0=>'Firstname',
                     1=>'Middlename',
                     2=>'Surname',
-                    3=>'Birthdate',
+                    3=>'DateOfBirth',
                     4=>'Sex',
                     16=>'Profession',
                     17=>'PresentDesignation',
@@ -109,7 +109,7 @@ class LoadFormData extends AbstractFixture implements OrderedFixtureInterface
                     0=>'Firstname',
                     1=>'Middlename',
                     2=>'Surname',
-                    3=>'Birthdate'
+                    3=>'DateOfBirth'
                 ),
                 'hypertext'=>'
                 <table class="dataentry" border="1">
@@ -139,7 +139,7 @@ class LoadFormData extends AbstractFixture implements OrderedFixtureInterface
                             <tr>
                                 <td><span>4.</span></td>
                                 <td><span>Date of Birth</span></td>
-                                <td><input type="date" name="DateofBirth" id="DateofBirth" required="required"/></td>
+                                <td><input type="date" name="DateOfBirth" id="DateOfBirth" required="required"/></td>
                             </tr>
                             <tr>
                                 <td><span>5.</span></td>
@@ -291,7 +291,7 @@ class LoadFormData extends AbstractFixture implements OrderedFixtureInterface
                     0=>'Firstname',
                     1=>'Middlename',
                     2=>'Surname',
-                    3=>'Birthdate',
+                    3=>'DateOfBirth',
                     4=>'Sex',
                     5=>'MaritalStatus',
                     6=>'Nationality',
@@ -319,7 +319,7 @@ class LoadFormData extends AbstractFixture implements OrderedFixtureInterface
                     0=>'Firstname',
                     1=>'Middlename',
                     2=>'Surname',
-                    3=>'Birthdate',
+                    3=>'DateOfBirth',
                     4=>'Sex',
                     16=>'Profession',
                     17=>'PresentDesignation',
@@ -328,7 +328,7 @@ class LoadFormData extends AbstractFixture implements OrderedFixtureInterface
                     0=>'Firstname',
                     1=>'Middlename',
                     2=>'Surname',
-                    3=>'Birthdate'
+                    3=>'DateOfBirth'
                 ),
                 'hypertext'=>'
                 <table class="dataentry" border="1">
@@ -358,7 +358,7 @@ class LoadFormData extends AbstractFixture implements OrderedFixtureInterface
                             <tr>
                                 <td><span>4.</span></td>
                                 <td><span>Date of Birth</span></td>
-                                <td><input type="date" name="DateofBirth" id="DateofBirth" required="required"/></td>
+                                <td><input type="date" name="DateOfBirth" id="DateOfBirth" required="required"/></td>
                             </tr>
                             <tr>
                                 <td><span>5.</span></td>
@@ -480,7 +480,7 @@ class LoadFormData extends AbstractFixture implements OrderedFixtureInterface
                     0=>'Firstname',
                     1=>'Middlename',
                     2=>'Surname',
-                    3=>'Birthdate',
+                    3=>'DateOfBirth',
                     4=>'Sex',
                     5=>'MaritalStatus',
                     6=>'Nationality',
@@ -514,7 +514,7 @@ class LoadFormData extends AbstractFixture implements OrderedFixtureInterface
                     0=>'Firstname',
                     1=>'Middlename',
                     2=>'Surname',
-                    3=>'Birthdate',
+                    3=>'DateOfBirth',
                     4=>'Sex',
                     16=>'Profession',
                     17=>'PresentDesignation',
@@ -523,7 +523,7 @@ class LoadFormData extends AbstractFixture implements OrderedFixtureInterface
                     0=>'Firstname',
                     1=>'Middlename',
                     2=>'Surname',
-                    3=>'Birthdate'
+                    3=>'DateOfBirth'
                 ),
                 'hypertext'=>'
                 <table class="dataentry" border="1">
@@ -553,7 +553,7 @@ class LoadFormData extends AbstractFixture implements OrderedFixtureInterface
                             <tr>
                                 <td><span>4.</span></td>
                                 <td><span>Date of Birth</span></td>
-                                <td><input type="date" name="DateofBirth" id="DateofBirth" required="required"/></td>
+                                <td><input type="date" name="DateOfBirth" id="DateOfBirth" required="required"/></td>
                             </tr>
                             <tr>
                                 <td><span>5.</span></td>
@@ -705,7 +705,7 @@ class LoadFormData extends AbstractFixture implements OrderedFixtureInterface
                     0=>'Firstname',
                     1=>'Middlename',
                     2=>'Surname',
-                    3=>'Birthdate',
+                    3=>'DateOfBirth',
                     4=>'Sex',
                     5=>'MaritalStatus',
                     6=>'Nationality',
@@ -739,7 +739,7 @@ class LoadFormData extends AbstractFixture implements OrderedFixtureInterface
                     0=>'Firstname',
                     1=>'Middlename',
                     2=>'Surname',
-                    3=>'Birthdate',
+                    3=>'DateOfBirth',
                     4=>'Sex',
                     16=>'Profession',
                     17=>'HospitalPresentDesignation',
@@ -748,7 +748,7 @@ class LoadFormData extends AbstractFixture implements OrderedFixtureInterface
                     0=>'Firstname',
                     1=>'Middlename',
                     2=>'Surname',
-                    3=>'Birthdate'
+                    3=>'DateOfBirth'
                 ),
                 'hypertext'=>'
                 <table class="dataentry" border="1">
@@ -778,7 +778,7 @@ class LoadFormData extends AbstractFixture implements OrderedFixtureInterface
                             <tr>
                                 <td><span>4.</span></td>
                                 <td><span>Date of Birth</span></td>
-                                <td><input type="date" name="DateofBirth" id="DateofBirth" required="required"/></td>
+                                <td><input type="date" name="DateOfBirth" id="DateOfBirth" required="required"/></td>
                             </tr>
                             <tr>
                                 <td><span>5.</span></td>

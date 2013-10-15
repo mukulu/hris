@@ -345,7 +345,7 @@ class LoadRecordData extends AbstractFixture implements OrderedFixtureInterface
                                 $beginDateStop=75;
                                 $endDateStart=40;
                                 $endDateStop=50;
-                                if($formFieldMember->getField()->getName()=="Birthdate") {
+                                if($formFieldMember->getField()->getName()=="DateOfBirth") {
                                     $beginDateStart=50;
                                     $beginDateStop=75;
                                     $endDateStart=40;
@@ -368,7 +368,7 @@ class LoadRecordData extends AbstractFixture implements OrderedFixtureInterface
                                 }
                                 $value[$valueKey] = new \DateTime($this->getRandDate(array($beginDateStart,$beginDateStop),array($endDateStart,$endDateStop)));
                                 //@todo remove hard-coding of instance
-                                if($formFieldMember->getField()->getName()=="Birthdate") $birthDate =$value[$valueKey];
+                                if($formFieldMember->getField()->getName()=="DateOfBirth") $dateOfBirth =$value[$valueKey];
                             }else if($formFieldMember->getField()->getInputType()->getName()=="Text") {
                                 // Deal with numbers
                                 if($formFieldMember->getField()->getName()=="NumberofChildrenDependants" ) {
@@ -394,7 +394,7 @@ class LoadRecordData extends AbstractFixture implements OrderedFixtureInterface
                                 }
                             }
                         }
-                        $instance=md5($firstName.$middleName.$surname.$birthDate->format('Y-m-d'));
+                        $instance=md5($firstName.$middleName.$surname.$dateOfBirth->format('Y-m-d'));
                         $record->setInstance($instance);
                         $record->setValue($value);
                         //@todo check for uniqueness of instance and unique fields
