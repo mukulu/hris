@@ -63,6 +63,7 @@ class DashboardController extends Controller
     {
         //get the detail for the active user
         $user = $this->container->get('security.context')->getToken()->getUser();
+        $queryBuilder = $this->getDoctrine()->getManager()->createQueryBuilder();
         $reportAggregationController =  New ReportAggregationController();
         $entityManager = $this->getDoctrine()->getManager();
         $organisationunitGroups = new ArrayCollection();
@@ -229,12 +230,85 @@ class DashboardController extends Controller
         /*
         * Prepare the Age Distribution Chart
         */
+        $categories = NULL;
+        $data = NULL;
         foreach($dashboardAgeChart as $dashboardAgeCharts){
             $categories[] = $dashboardAgeCharts[strtolower($dashboardAgeField->getName())];
             $data[] =  $dashboardAgeCharts['total'];
         }
         $ageChart = $this->constructChartAction($dashboardAgeField,$data,$organisationunit,$categories,'column','Age Distribution','agedistribution');
 
+        /*
+        * Prepare the Other Dashboard Charts
+        */
+        $entities = $queryBuilder->select('dashboard')
+            ->from('HrisDashboardBundle:DashboardChart','dashboard')
+            ->where('dashboard.user = :uname')
+            ->orWhere('dashboard.systemWide = :systemwide')
+            ->setParameters(array(
+                    'uname'=>$user,
+                    'systemwide'=>true,
+                )
+            )->getQuery()->getResult();
+        foreach($entities as $entity){
+            $categories = NULL;
+            $data = NULL;
+            #TODO Deal with multi select of the organisation unit
+            foreach($entity->getOrganisationunit() as $organisationunitEntity){
+                $organisationunit = $organisationunitEntity;
+            }
+            $forms = new ArrayCollection();
+            foreach($entity->getForm() as $form){
+                $forms->add($form);
+            }
+            $fieldOne = $entityManager->getRepository('HrisFormBundle:Field')->findOneBy
+                (array('caption'=> $entity->getFieldOne()));
+            $fieldTwo = $entityManager->getRepository('HrisFormBundle:Field')->findOneBy
+                (array('caption'=> $entity->getFieldTwo()));
+
+            $entitiesData = $reportAggregationController::aggregationEngine($organisationunit, $forms, $fieldOne,$organisationunitGroups, $entity->getLowerLevels(), $fieldTwo);
+
+            //if only one field selected
+            if($fieldOne->getId() == $fieldTwo->getId()){
+
+                foreach($entitiesData as $result){
+                    $categories[] = $result[strtolower($fieldOne->getName())];
+                    $data[] =  $result['total'];
+
+                    if($entity->getGraphType() == 'pie'){
+                        $piedata[] = array('name' => $result[strtolower($fieldOne)],'y' => $result['total']);
+                    }
+                }
+                if($entity->getGraphType() == 'pie') $data = $piedata;
+
+                //var_dump($categories);exit();
+            }else{//Two fields selected
+                foreach($entitiesData as $result){
+                    $keys[$result[strtolower($fieldTwo->getName())]][] = $result['total'];
+                    $categoryKeys[$result[strtolower($fieldTwo->getName())]] = $result['total'];
+                }
+                $series = array();
+                foreach($keys as $key => $values){
+                    $series[] = array(
+                        'name'  => $key,
+                        'yAxis' => 1,
+                        'data'  => $values,
+                    );
+                }
+                $formatterLabel = $fieldTwo->getCaption();
+                $categories = array_keys($categoryKeys);
+            }
+
+            //check which type of chart to display
+            if($entity->getGraphType() == "bar"){
+                $graph = "column";
+            }elseif($entity->getGraphType() == "line"){
+                $graph = "spline";
+            }else{
+                $graph = "pie";
+            }
+            $entitiesChart[] = $this->constructChartAction($fieldOne,$data,$organisationunit,$categories,$graph,$entity->getName(),str_replace(' ','_',strtolower($entity->getName())));
+        }
         /*
          * Messaging
          */
@@ -247,7 +321,9 @@ class DashboardController extends Controller
             'combinationchart'=>$combinationdashboardchart,
             'retirementchart'=>$retirementChart,
             'agechart'=>$ageChart,
-            'unreadmessages'=>$unreadMessages
+            'unreadmessages'=>$unreadMessages,
+            'entitiesChart' =>$entitiesChart,
+            'entities' => $entities
         );
     }
     /**
@@ -259,14 +335,27 @@ class DashboardController extends Controller
      */
     public function listAction()
     {
-        $em = $this->getDoctrine()->getManager();
+        $queryBuilder = $this->getDoctrine()->getManager()->createQueryBuilder();
 
-        $entities = $em->getRepository('HrisDashboardBundle:DashboardChart')->findAll();
+        //get the detail for the active user
+        $user = $this->container->get('security.context')->getToken()->getUser();
+
+        $entities = $queryBuilder->select('dashboard')
+            ->from('HrisDashboardBundle:DashboardChart','dashboard')
+            ->where('dashboard.user = :uname')
+            ->orWhere('dashboard.systemWide = :systemwide')
+            ->setParameters(array(
+                    'uname'=>$user,
+                    'systemwide'=>true,
+                )
+            )->getQuery()->getResult();
+
         $delete_forms = array();
         foreach($entities as $entity) {
             $delete_form= $this->createDeleteForm($entity->getId());
             $delete_forms[$entity->getId()] = $delete_form->createView();
-        }
+        }//get the detail for the active user
+        $user = $this->container->get('security.context')->getToken()->getUser();
 
         return array(
             'entities' => $entities,
@@ -300,7 +389,7 @@ class DashboardController extends Controller
     {
         $entity  = new DashboardChart();
 
-        $form = $this->createForm(new DashboardType(),$entity, array('em'=>$this->getDoctrine()->getManager()));
+        $form = $this->createForm(new DashboardType($this->getDoctrine()->getManager()),$entity, array('em'=>$this->getDoctrine()->getManager()));
         $form->submit($request);
 
         if ($form->isValid()) {
@@ -373,13 +462,36 @@ class DashboardController extends Controller
     /**
      * Updates a Dashboard entity.
      *
-     * @Route("/{id}",  name="dashboard_update")
-     * @Method("GET")
+     * @Route("/{id}",requirements={"id"="\d+"},  name="dashboard_update")
+     * @Method("POST")
      * @Template()
      */
-    public function updateAction($id)
+    public function updateAction(Request $request, $id)
     {
+        $em = $this->getDoctrine()->getManager();
 
+        $entity = $em->getRepository('HrisDashboardBundle:DashboardChart')->find($id);
+
+        if (!$entity) {
+            throw $this->createNotFoundException('Unable to find DashboardChart entity.');
+        }
+
+        $deleteForm = $this->createDeleteForm($id);
+        $editForm = $this->createForm(new DashboardType(), $entity,array('em'=>$this->getDoctrine()->getManager()));
+        $editForm->bind($request);
+
+        if ($editForm->isValid()) {die();
+            $em->persist($entity);
+            $em->flush();
+
+            return $this->redirect($this->generateUrl('dashboard_edit', array('id' => $id)));
+        }
+
+        return array(
+            'entity'      => $entity,
+            'edit_form'   => $editForm->createView(),
+            'delete_form' => $deleteForm->createView(),
+        );
     }
     /**
      * Finds and delete a Dashboard entity.
