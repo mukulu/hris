@@ -11,7 +11,13 @@ use Symfony\Component\Validator\Constraints\NotBlank;
 
 class DashboardType extends AbstractType
 {
-        /**
+    #needs to put this as alternative for em variable
+
+     //public function __construct($em) {
+     //   $this->em = $em;
+     // }
+
+    /**
      * @param FormBuilderInterface $builder
      * @param array $options
      */
@@ -74,6 +80,9 @@ class DashboardType extends AbstractType
         );
         $resolver->setAllowedTypes(array(
             'em'=>'Doctrine\Common\Persistence\ObjectManager',
+        ));
+        $resolver->setDefaults(array(
+            'data_class' => 'Hris\DashboardBundle\Entity\DashboardChart',
         ));
     }
 

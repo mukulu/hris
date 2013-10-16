@@ -60,17 +60,6 @@
             var graphTypeId='#hris_dashboardbundle_dashboardtype_graphType';
 
 
-            // On entering value of second field remove pie chart option
-            $(fieldTwoId).on('change', function() {
-                if($(this).val() != ''){
-                    if($(this).val() != $(fieldOneId).val())
-                    //alert($(fieldTwoId).val());
-                        $(graphTypeId).find('option[value="pie"]').remove();
-                    //add the pie chart option in the select if removed
-                }else if ($(graphTypeId).find( 'option[value="' + "pie" + '"]').length === 0) {
-                    $(graphTypeId).append(new Option('Pie Chart', 'pie'));
-                }
-            });
         });
     </script>
 {% endblock javascripts %}
@@ -90,14 +79,10 @@
         {{ form_errors( aggregationForm.organisationunit ) }}
         {{ form_widget( aggregationForm.organisationunit ) }}
     </div>
-    <br/>
     {{ form_row( aggregationForm.lowerLevels ) }}
     {{ form_row( aggregationForm.systemWide ) }}
     {{ form_row( aggregationForm.form ) }}
 
-    {{ form_label(aggregationForm.fieldOne) }}
-    {{ form_widget(aggregationForm.fieldOne, {'attr': {'class': 'task_field'} }) }}
-    {{ form_widget(aggregationForm.fieldOne, {'attr': {'class': 'task_field'}}) }}
 
     {{ form_end(aggregationForm) }}
 

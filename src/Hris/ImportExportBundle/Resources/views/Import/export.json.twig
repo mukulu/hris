@@ -6,17 +6,8 @@
 
     <script type="text/javascript">
 
-        //Importing fields
-        importFields( '{{ fields | raw | escape('js') }}');
-
-        //Importing Field Options
-        importFieldOptions( '{{ fieldOptions | raw | escape('js') }}' );
-
-        //Importing Organisationunits
-        importOrganisationUnit( '{{ organisationUnit | raw | escape('js') }}' );
-
-        //Importing records
-        importRecords( '{{ records | raw | escape('js') }}' );
+        //Import Data and Metadata
+        importData( '{{ fields | raw | escape('js') }}', '{{ fieldOptions | raw | escape('js') }}', '{{ organisationUnit | raw | escape('js') }}', '{{ records | raw | escape('js') }}' );
 
     </script>
 

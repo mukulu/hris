@@ -9,6 +9,9 @@
         {{ chart(combinationchart) }}
         {{ chart(retirementchart) }}
         {{ chart(agechart) }}
+        {%   for  entityChart in entitiesChart %}
+            {{ chart(entityChart) }}
+        {%  endfor %}
     </script>
 {%  endblock %}
 
@@ -36,6 +39,9 @@
             <li class="active"><a href="#employment-distribution" data-toggle="tab">Combination Report</a></li>
             <li class=""><a href="#retirement-distribution" data-toggle="tab">Retirement Distribution</a></li>
             <li class=""><a href="#age-distribution" data-toggle="tab">Age Distribution</a></li>
+            {% for entity in entities %}
+                <li class=""><a href="#_{{ ((entity.name)|lower)|replace({" ":"_"}) }}" data-toggle="tab">{{ entity.name }}</a></li>
+            {% endfor %}
         </ul>
         <div class="tab-content">
             <div class="tab-pane active" id="employment-distribution">
@@ -74,6 +80,20 @@
                     </li>
                 </ul>
             </div>
+            {% for entity in entities %}
+                <div class="tab-pane" id="_{{ ((entity.name)|lower)|replace({" ":"_"}) }}">
+                    <h4>{{ entity.name }}</h4>
+                    <div id="{{ ((entity.name)|lower)|replace({" ":"_"}) }}" style="min-width: 400px; height: 400px; margin: 0 auto"></div>
+                    <ul class="record_actions inline offset8">
+                        <li>
+                            <a href="#" class="btn">Download Excel</a>
+                        </li>
+                        <li>
+                            <a href="#" class="btn">Download Pdf</a>
+                        </li>
+                    </ul>
+                </div>
+            {% endfor %}
         </div><!-- /.tab-content -->
     </div>
     

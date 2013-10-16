@@ -50,8 +50,8 @@
                     <td>{{ entity.fieldOne }}</td>
                     <td>{% if entity.fieldTwo == entity.fieldOne %} Use One Field Only{% else %} {{ entity.fieldTwo}} {% endif %}</td>
                     <td>{{ entity.graphtype }}</td>
-                    <td>{% if entity.systemWide %} YES {% else %} NO {% endif %}</td>
                     <td>{% if entity.lowerlevels %} YES {% else %} NO {% endif %}</td>
+                    <td>{% if entity.systemWide %} YES {% else %} NO {% endif %}</td>
                     <td>
                         {% for form in entity.form %}
                             {{form.name}},
