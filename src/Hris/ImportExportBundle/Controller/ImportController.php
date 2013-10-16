@@ -33,6 +33,7 @@ use Sensio\Bundle\FrameworkExtraBundle\Configuration\Route;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Template;
 use Hris\ImportExportBundle\Entity\Export;
 use Hris\ImportExportBundle\Form\ExportType;
+use ZipArchive;
 
 /**
  * Import controller.
@@ -63,11 +64,10 @@ class ImportController extends Controller
      *
      * @Route("/{_format}", requirements={"_format"="json|"}, defaults={"_format"="json"}, name="importexport_import_create")
      * @Method("POST")
-     * @Template("HrisImportExportBundle:Export:export.json.twig")
+     * @Template("HrisImportExportBundle:Import:export.json.twig")
      */
-    public function createAction(Request $request,$_format="json")
+    public function createAction(Request $request)
     {
-        $serializer = $this->container->get('serializer');
 
         $importForm = $this->createForm(new ImportType(),null);
         $importForm->bind($request);
@@ -77,8 +77,78 @@ class ImportController extends Controller
             $file = $importFormData['file'];
         }
 
-        $serializer = $this->container->get('serializer');
+        $filename = NULL;
+        $doctype = NULL;
+
+
+        $file->move('../app/cache','export.zip');
+
+        $filename = '../app/cache/export.zip';
+
+        $zip = new ZipArchive();
+
+
+        if (!empty($filename)) {
+
+            if (true === $zip->open($filename)) {
+
+                $zipFile = zip_open($filename);
+
+                while ($entry = zip_read($zipFile)) {
+                    zip_entry_open($zipFile, $entry);
+                    $xmlFileName = zip_entry_name($entry);
+                    $data = $fileStrem[$xmlFileName] = $entry;
+
+                }
+
+                /*
+                 * Creating the variable to hold Fields from import file
+                 */
+
+                if (array_key_exists('fields.json', $fileStrem)) {
+                    $entryValue = $fileStrem['fields.json'];
+                    $fields = zip_entry_read($entryValue, zip_entry_filesize($entryValue));
+
+                }
+
+                /*
+                 * Creating the variable to hold Field Options from import file
+                 */
+
+                if (array_key_exists('fieldOptions.json', $fileStrem)) {
+                    $entryValue = $fileStrem['fieldOptions.json'];
+                    $fieldOptions = zip_entry_read($entryValue, zip_entry_filesize($entryValue));
+                }
+
+                /*
+                 * Creating the variable to hold Organisation units from import file
+                 */
+
+                if (array_key_exists('organizationUnit.json', $fileStrem)) {
+                    $entryValue = $fileStrem['organizationUnit.json'];
+                    $organisationUnits = zip_entry_read($entryValue, zip_entry_filesize($entryValue));
+                }
+
+                /*
+                 * Creating the variable to hold Records from import file
+                 */
+
+                if (array_key_exists('records.json', $fileStrem)) {
+                    $entryValue = $fileStrem['records.json'];
+                    $records = zip_entry_read($entryValue, zip_entry_filesize($entryValue));
+                }
+
+            }
+        }else{
+            var_dump("Nothing works");
+            die();
+        }
+
         return array(
+            'records'           => $records,
+            'organisationUnit'  => $organisationUnits,
+            'fieldOptions'      => $fieldOptions,
+            'fields'            => $fields,
         );
     }
 
@@ -193,5 +263,129 @@ class ImportController extends Controller
             ->add('id', 'hidden')
             ->getForm()
         ;
+    }
+
+    /**
+     * Importing fields.
+     *
+     * @Route("/importFields", name="importexport_import_importFields")
+     * @Method("POST")
+     */
+
+    public function updateFieldsAction(Request $request)
+    {
+
+        $em = $this->getDoctrine()->getManager();
+
+        $fields = $this->get('request')->request->get('fields');
+
+        var_dump($fields);
+        die();
+
+        $entity = $em->getRepository('HrisRecordsBundle:Record')->findOneBy(array('uid' => $uid ));
+
+        $form = $em->getRepository('HrisFormBundle:Form')->find($formId);
+
+        $entity->setForm($form);
+
+        $em = $this->getDoctrine()->getManager();
+        $em->persist($entity);
+        $em->flush();
+
+        return new Response('success');
+
+    }
+
+    /**
+     * Importing fields Options.
+     *
+     * @Route("/importFieldOptions", name="importexport_import_importFieldOptions")
+     * @Method("POST")
+     */
+
+    public function updateFieldOptionsAction(Request $request)
+    {
+
+        $em = $this->getDoctrine()->getManager();
+
+        $fieldOptions = $this->get('request')->request->get('fieldOptions');
+
+        var_dump($fieldOptions);
+        die();
+
+        $entity = $em->getRepository('HrisRecordsBundle:Record')->findOneBy(array('uid' => $uid ));
+
+        $form = $em->getRepository('HrisFormBundle:Form')->find($formId);
+
+        $entity->setForm($form);
+
+        $em = $this->getDoctrine()->getManager();
+        $em->persist($entity);
+        $em->flush();
+
+        return new Response('success');
+
+    }
+
+    /**
+     * Importing Organisation Units.
+     *
+     * @Route("/importOrganisationUnits", name="importexport_import_importOrganisationUnits")
+     * @Method("POST")
+     */
+
+    public function updateOrganisationUnitsAction(Request $request)
+    {
+
+        $em = $this->getDoctrine()->getManager();
+
+        $organisationUnits = $this->get('request')->request->get('organisationUnits');
+
+        var_dump($organisationUnits);
+        die();
+
+        $entity = $em->getRepository('HrisRecordsBundle:Record')->findOneBy(array('uid' => $uid ));
+
+        $form = $em->getRepository('HrisFormBundle:Form')->find($formId);
+
+        $entity->setForm($form);
+
+        $em = $this->getDoctrine()->getManager();
+        $em->persist($entity);
+        $em->flush();
+
+        return new Response('success');
+
+    }
+
+    /**
+     * Importing Records.
+     *
+     * @Route("/importRecords", name="importexport_import_importRecords")
+     * @Method("POST")
+     */
+
+    public function updateRecordsAction(Request $request)
+    {
+
+        $em = $this->getDoctrine()->getManager();
+
+        $records = $this->get('request')->request->get('records');
+
+        var_dump($records);
+        die();
+
+        $entity = $em->getRepository('HrisRecordsBundle:Record')->findOneBy(array('uid' => $uid ));
+
+        $form = $em->getRepository('HrisFormBundle:Form')->find($formId);
+
+        $entity->setForm($form);
+
+        $em = $this->getDoctrine()->getManager();
+        $em->persist($entity);
+        $em->flush();
+
+        return new Response('success');
+
     }
 }

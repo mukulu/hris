@@ -52,7 +52,7 @@
                 <td>{{ record.lastupdated| date('d/m/Y') }}</td>
                 <td>{{ record.organisationunit.longname }}</td>
                 <td>
-                    <ul class="inline" style="width:170px;">
+                    <ul class="inline" style="width:210px;">
                         <li>
                             <a href="{{ path('record_edit', { 'id': record.id }) }}"><i class="icon-edit icon-large" title="Edit"></i></a>
                         </li>
@@ -66,10 +66,10 @@
                             <a href="{{ path('record_show', { 'id': record.id }) }}"><i class="icon-user icon-large" title="Profile"></i></a>
                         </li>
                         <li>
-                            <a href="{{ path('record_delete', { 'id': record.id }) }}"><i class="icon-remove-sign icon-large" title="Delete"></i></a>
+                            <a href="#" onclick="changeForm('{{ record.uid }}');" onsubmit="changeForm('{{ record.uid }}');"><i class="icon-transfer icon-large" title="Delete"></i></a>
                         </li>
                         <li>
-                            <button onclick="changeForm('{{ record.uid }}');">Form</button>
+                            <a href="{{ path('record_delete', { 'id': record.id }) }}"><i class="icon-remove-sign icon-large" title="Delete"></i></a>
                         </li>
                     </ul>
                 </td>

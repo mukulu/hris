@@ -36,7 +36,12 @@ class ResourceTableType extends AbstractType
         $builder
             ->add('name')
             ->add('description')
-            ->add('resourceTableFieldMember',null, array("multiple"=>"true"))
+            ->add('fields','entity',array(
+                'class'=>'HrisFormBundle:Field',
+                'multiple'=>True,
+                'required'=>True,
+                'mapped'=>False,
+            ))
         ;
     }
 

@@ -28,12 +28,11 @@
                 <tr>
                     <th>Name</th>
                     <th>Caption</th>
+                    <th>InputType</th>
+                    <th>DataType</th>
                     <th>Compulsory</th>
                     <th>Unique</th>
                     <th>Calculated</th>
-                    <th>Hashistory</th>
-                    <th>Hastarget</th>
-                    <th>Skip in report</th>
                     <th>Actions</th>
                 </tr>
             </thead>
@@ -42,6 +41,8 @@
                 <tr>
                     <td><a href="{{ path('field_show', { 'id': entity.id }) }}">{{ entity.name }}</a></td>
                     <td>{{ entity.caption }}</td>
+                    <td>{{ entity.inputType }}</td>
+                    <td>{{ entity.dataType }}</td>
                     <td>{% if entity.compulsory %}
                             TRUE
                         {% else %}
@@ -58,24 +59,6 @@
                             TRUE
                         {% else %}
                             FALSE
-                        {% endif %}
-                    </td>
-                    <td>{% if entity.hashistory %}
-                        TRUE
-                        {% else %}
-                        FALSE
-                        {% endif %}
-                    </td>
-                    <td>{% if entity.hastarget %}
-                            TRUE
-                        {% else %}
-                            FALSE
-                        {% endif %}
-                    </td>
-                    <td>{% if entity.skipInReport %}
-                        TRUE
-                        {% else %}
-                        FALSE
                         {% endif %}
                     </td>
                     <td>
