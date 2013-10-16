@@ -111,7 +111,7 @@ class ExportController extends Controller
         */
         $fieldOptions = $em->getRepository( 'HrisFormBundle:FieldOption' )
             ->createQueryBuilder('o')
-            ->select('o', 'f.uid as field_uid')
+            ->select('o', 'f.name as field_name')
             ->join('o.field', 'f')
             ->getQuery()
             ->getArrayResult();
