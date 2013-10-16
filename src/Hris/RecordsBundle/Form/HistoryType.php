@@ -27,20 +27,28 @@ namespace Hris\RecordsBundle\Form;
 use Symfony\Component\Form\AbstractType;
 use Symfony\Component\Form\FormBuilderInterface;
 use Symfony\Component\OptionsResolver\OptionsResolverInterface;
+use Doctrine\ORM\EntityRepository;
 
 class HistoryType extends AbstractType
 {
     public function buildForm(FormBuilderInterface $builder, array $options)
     {
         $builder
-            ->add('uid')
-            ->add('history')
-            ->add('startdate')
+            ->add('field','entity',array(
+                'class'=>'HrisFormBundle:Field',
+                'empty_value' => '--SELECT--',
+                'query_builder'=>function(EntityRepository $er) {
+                    return $er->createQueryBuilder('field')
+                        ->where('field.hashistory=True')
+                        ->orderBy('field.name','ASC');
+                }
+            ))
+            ->add('startdate', 'date', array('input' => 'datetime', 'widget' => 'single_text',))
             ->add('reason')
-            ->add('username')
-            ->add('datecreated')
-            ->add('lastupdated')
-            ->add('record')
+            ->add('updaterecord','checkbox',array(
+                'required'=>False,
+                'mapped' => False,
+            ))
         ;
     }
 

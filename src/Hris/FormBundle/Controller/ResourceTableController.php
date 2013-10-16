@@ -24,6 +24,8 @@
  */
 namespace Hris\FormBundle\Controller;
 
+use Doctrine\Common\Collections\ArrayCollection;
+use Hris\FormBundle\Entity\ResourceTableFieldMember;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Bundle\FrameworkBundle\Controller\Controller;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Method;
@@ -79,6 +81,18 @@ class ResourceTableController extends Controller
 
         if ($form->isValid()) {
             $em = $this->getDoctrine()->getManager();
+            $incr=1;
+            $requestcontent = $request->request->get('hris_formbundle_resourcetabletype');
+            $fieldIds = $requestcontent['fields'];
+            foreach($fieldIds as $fieldIdKey=>$fieldId) {
+                $field = $this->getDoctrine()->getRepository('HrisFormBundle:Field')->findOneBy(array('id'=>$fieldId));
+                $resourceTableFieldMember = new ResourceTableFieldMember();
+                $resourceTableFieldMember->setField($field);
+                $resourceTableFieldMember->setResourceTable($entity);
+                $resourceTableFieldMember->setSort($incr++);
+                $entity->addResourceTableFieldMember($resourceTableFieldMember);
+            }
+
             $em->persist($entity);
             $em->flush();
 
@@ -193,6 +207,14 @@ class ResourceTableController extends Controller
         }
 
         $editForm = $this->createForm(new ResourceTableType(), $entity);
+
+        $resourceTAbleFieldMembers = $em->getRepository('HrisFormBundle:ResourceTableFieldMember')->findBy(array('resourceTable'=>$entity));
+        $fields = new ArrayCollection();
+        foreach($resourceTAbleFieldMembers as $resourceTAbleFieldMemberKey=>$resourceTAbleFieldMember) {
+            $fields->add($resourceTAbleFieldMember->getField());
+        }
+        $editForm->get('fields')->setData($fields);
+
         $deleteForm = $this->createDeleteForm($id);
 
         return array(
@@ -224,10 +246,30 @@ class ResourceTableController extends Controller
         $editForm->bind($request);
 
         if ($editForm->isValid()) {
+            $incr=1;
+            $requestcontent = $request->request->get('hris_formbundle_resourcetabletype');
+            $fieldIds = $requestcontent['fields'];
+            // Clear ResourceTableFieldMembers
+            //Get rid of current fields
+            $em->createQueryBuilder('resourceTableFieldMember')
+                ->delete('HrisFormBundle:ResourceTableFieldMember','resourceTableFieldMember')
+                ->where('resourceTableFieldMember.resourceTable= :resourceTable')
+                ->setParameter('resourceTable',$entity)
+                ->getQuery()->getResult();
+            $em->flush();
+            foreach($fieldIds as $fieldIdKey=>$fieldId) {
+                $field = $this->getDoctrine()->getRepository('HrisFormBundle:Field')->findOneBy(array('id'=>$fieldId));
+                $resourceTableFieldMember = new ResourceTableFieldMember();
+                $resourceTableFieldMember->setField($field);
+                $resourceTableFieldMember->setResourceTable($entity);
+                $resourceTableFieldMember->setSort($incr++);
+                $entity->addResourceTableFieldMember($resourceTableFieldMember);
+            }
+
             $em->persist($entity);
             $em->flush();
 
-            return $this->redirect($this->generateUrl('resourcetable_edit', array('id' => $id)));
+            return $this->redirect($this->generateUrl('resourcetable_show', array('id' => $id)));
         }
 
         return array(

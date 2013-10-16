@@ -127,7 +127,7 @@ class ReportAggregationController extends Controller
             );
             $formatterLabel = $fields->getCaption();
 
-        }else{
+        }else{//Two fields selected
             foreach($results as $result){
                 $keys[$result[strtolower($fieldsTwo->getName())]][] = $result['total'];
                 $categoryKeys[$result[strtolower($fields->getName())]] = $result['total'];
