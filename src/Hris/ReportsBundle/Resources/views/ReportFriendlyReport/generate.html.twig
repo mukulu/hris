@@ -14,40 +14,58 @@
 {% block right_content -%}
     <div class="container">
         <h1><small>{{ title }}</small></h1>
-        {% set totalAlreadyPrinted='false' %}
-        {% set headingAlreadyPrinted='false' %}
-        {% set prevKey= 1 %}
         <table class="records_list dataTable table table-striped table-bordered table-hover" cellpadding="0" cellspacing="0" border="0">
             <thead>
+            <tr>
+                <th>{{ friendlyReport.getSerie.getName }}</th>
+                {% set totalOptions = {'5':5} %}
+                {% set totalOptionsPreviouslySet = 'false' %}
                 {% for key,friendlyReportCategory in friendlyReport.getFriendlyReportCategory %}
-                    <tr>
-                        {% if headingAlreadyPrinted=='false' %}
-                            <th rowspan="{{ friendlyReport.getFriendlyReportCategory|length }}">{{ friendlyReport.getSerie.getName }}</th>
-                            {% set headingAlreadyPrinted='true' %}
-                        {% endif %}
-                        {# If repetition is allowed repeat option groups for previous category #}
-                        {% for incr in range(0,repetition[friendlyReportCategory.getFieldOptionGroup.getName]-1) if incr>=0 %}
-                            {% for fieldOption in  friendlyReportCategory.getFieldOptionGroup.getFieldOption %}
-                                <th colspan="{{ colspan[friendlyReportCategory.getFieldOptionGroup.getName] }}">{{ fieldOption.getValue }}</th>
-                            {% endfor %}
+                    {% set optionsCount = 0 %}
+                    {% set incr = 1 %}
+                    {% for fieldOption in  friendlyReportCategory.getFieldOptionGroup.getFieldOption %}
+                        {% set optionsCount = optionsCount + 1  %}
+                        <th >{{ fieldOption.getValue }}</th>
+                    {% endfor %}
+                    {% if targets is not empty %}
+
+                        {% for target in targets %}
+                            <th>{{ target.getName }}</th>
                         {% endfor %}
-                        {% if totalAlreadyPrinted=='false' %}
-                            <th rowspan="{{ friendlyReport.getFriendlyReportCategory|length }}">Total</th>
-                            {% set totalAlreadyPrinted='true' %}
-                        {% endif %}
-                    </tr>
+                    {% endif %}
+                    {% if totalOptionsPreviouslySet =='false' %}
+                        {% set totalOptions = { key : optionsCount } %}
+                        {% set totalOptionsPreviouslySet = 'true' %}
+                    {% else %}
+                        {% set totalOptions = totalOptions|merge({ incr : optionsCount }) %}
+                    {% endif %}
+                    {% set incr = incr +1 %}
                 {% endfor %}
+                <th>Total</th>
+            </tr>
             </thead>
             <tbody>
                     {# If repetition is allowed repeat option groups for previous category #}
                     {% for friendlyReportResult in friendlyReportResults %}
                         <tr>
-                        {% set fieldOptionValueTotal=0 %}
-                        {% for fieldOptionValue in  friendlyReportResult %}
-                            <td>{{ fieldOptionValue }}</td>
-                            {% set fieldOptionValueTotal = fieldOptionValueTotal + fieldOptionValue %}
-                        {% endfor %}
+                            {% set lastSlice = 0 %}
+                            {% set fieldOptionValueTotal=0 %}
+                            {% for totalOption in totalOptions %}
+                                {% set fieldOptionValueTotal=0 %}
+                                {% for fieldOptionValue in  friendlyReportResult|slice(lastSlice, totalOption+1)  %}
+                                    {% set fieldOptionValueTotal = fieldOptionValueTotal + fieldOptionValue %}
+                                {% endfor %}
+                                {% set lastSlice = totalOption+1 %}
+                            {% endfor %}
+
+                            {% for fieldOptionValue in  friendlyReportResult %}
+                                <td>{{ fieldOptionValue }}</td>
+                            {% endfor %}
+
+
                             <td>{{ fieldOptionValueTotal }}</td>
+
+
                         </tr>
                     {% endfor %}
             </tbody>

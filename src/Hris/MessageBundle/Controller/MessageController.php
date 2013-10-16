@@ -28,10 +28,12 @@ use JMS\SecurityExtraBundle\Annotation\Secure;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Method;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Route;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Template;
+use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpKernel\Exception\NotFoundHttpException;
 use Symfony\Component\DependencyInjection\ContainerAware;
 use Symfony\Component\HttpFoundation\RedirectResponse;
 use FOS\MessageBundle\Provider\ProviderInterface;
+use Doctrine\ORM\QueryBuilder as QueryBuilder;
 
 /**
  * Message controller.
@@ -123,6 +125,72 @@ class MessageController extends ContainerAware
         return $this->container->get('templating')->renderResponse('HrisMessageBundle:Message:newThread.html.twig', array(
             'form' => $form->createView(),
             'data' => $form->getData()
+        ));
+    }
+
+    /**
+     * Create a new multi message thread
+     *
+     * @Route("/new/multimessage", name="multi_message_thread_new")
+     * @Method("GET|POST")
+     * @Template()
+     * @return Response
+     */
+    public function newMultiMessageThreadAction()
+    {
+        $form = $this->container->get('fos_message.new_thread_form.factory')->create();
+        $formHandler = $this->container->get('fos_message.new_thread_form.handler');
+
+        if ($message = $formHandler->process($form)) {
+            return new RedirectResponse($this->container->get('router')->generate('message_thread_view', array(
+                'threadId' => $message->getThread()->getId()
+            )));
+        }
+
+        return $this->container->get('templating')->renderResponse('HrisMessageBundle:Message:newThread.html.twig', array(
+            'form' => $form->createView(),
+            'data' => $form->getData()
+        ));
+    }
+    /**
+     * Returns Users searched json.
+     *
+     *
+     *
+     * @Route("/searchusers",  name="search_users")
+     * @Method("GET")
+     * @Template()
+     */
+    public function searchUsersAction(Request $request)
+    {
+
+        $q = $request->query->get('q');
+        $entityManager = $this->container->get('doctrine.orm.entity_manager');
+        //$queryBuilder = $em->createQueryBuilder();
+        //var_dump($queryBuilder);die();
+        //$queryBuilder = $this->container->get('doctrine.orm.entity_manager')->createQueryBuilder();
+
+        /*
+         * Getting the Users
+        */
+        $users = $entityManager->getRepository('HrisUserBundle:User')->getSearchedUsers($q);
+
+        /*
+         * Getting the Users Groups
+        */
+        //$userGroups = $entityManager->getRepository('HrisUserBundle:Group')->getSearchedUserGroups($q);
+
+        foreach($users as $user){
+            $arr[] = Array('id'=>$user->getUsername(),'name'=>$user->getFirstName().' '.$user->getSurname(),"url"=>$this->container->get('templating.helper.assets')->getUrl("commons/images/user.png"));
+        }
+
+
+        # JSON-encode the response
+        if(empty($arr)) $arr= NULL;
+        $json_response = json_encode($arr);
+
+        return $this->container->get('templating')->renderResponse('HrisMessageBundle:Message:searchUsers.html.twig', array(
+            'searchUsers' => $json_response
         ));
     }
 

@@ -27,7 +27,7 @@ namespace Hris\MessageBundle\FormHandler;
 use Symfony\Component\Form\Form;
 use Symfony\Component\HttpFoundation\Request;
 use FOS\MessageBundle\Composer\ComposerInterface;
-use FOS\MessageBundle\FormModel\AbstractMessage;
+use Hris\MessageBundle\FormModel\AbstractMessage;
 use FOS\MessageBundle\Security\ParticipantProviderInterface;
 use FOS\MessageBundle\Model\ParticipantInterface;
 use FOS\MessageBundle\Sender\SenderInterface;

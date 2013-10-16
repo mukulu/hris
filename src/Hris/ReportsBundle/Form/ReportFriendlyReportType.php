@@ -59,6 +59,14 @@ class ReportFriendlyReportType extends AbstractType
                     new NotBlank(),
                 )
             ))
+            ->add('targets','entity', array(
+                'class'=>'HrisIndicatorBundle:Target',
+                'required'=>false,
+                'multiple'=>true,
+                'constraints'=>array(
+                    new NotBlank(),
+                )
+            ))
             ->add('submit','submit')
         ;
     }

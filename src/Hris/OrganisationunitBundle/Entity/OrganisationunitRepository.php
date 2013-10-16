@@ -42,7 +42,7 @@ class OrganisationunitRepository extends EntityRepository
      */
     public function getImmediateChildrenCount( Organisationunit $organisationunit)
     {
-        $queryBuilder = $this->getEntityManager()-> $this->getEntityManager()->createQueryBuilder();
+        $queryBuilder = $this->getEntityManager()->createQueryBuilder();
         $query = $queryBuilder->select('COUNT(organisationunit')
                             ->from('HrisOrganisationunitBundle:Organisationunit','organisationunit')
                             ->where('organisationunit.parent = :parent')

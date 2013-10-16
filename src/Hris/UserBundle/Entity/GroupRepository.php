@@ -12,4 +12,22 @@ use Doctrine\ORM\EntityRepository;
  */
 class GroupRepository extends EntityRepository
 {
+    /**
+     * Returns usersGroups with matching name
+     * @param $name
+     * @return \Doctrine\Common\Collections\Collection
+     */
+    public function getSearchedUserGroups($name)
+    {
+        $queryBuilder = $this->getEntityManager()->createQueryBuilder();
+        $result = $queryBuilder->select('group')
+            ->from('HrisUserBundle:Group','group')
+            ->where('lower(group.name) like :name')
+            ->setParameters(array(
+                    'name'=>"%$name%"
+                )
+            )->getQuery()->getResult();
+
+        return $result;
+    }
 }
