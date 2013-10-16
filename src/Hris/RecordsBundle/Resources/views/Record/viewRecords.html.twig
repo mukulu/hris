@@ -57,7 +57,7 @@
                             <a href="{{ path('record_edit', { 'id': record.id }) }}"><i class="icon-edit icon-large" title="Edit"></i></a>
                         </li>
                         <li>
-                            <a href="{{ path('record_show', { 'id': record.id }) }}"><i class="icon-list icon-large" title="History"></i></a>
+                            <a href="{{ path('history_list_byrecord', { 'recordid': record.id }) }}"><i class="icon-list icon-large" title="History"></i></a>
                         </li>
                         <li>
                             <a href="{{ path('training_list_byrecord', { 'recordid': record.id }) }}"><i class="icon-folder-open icon-large" title="In service Training"></i></a>

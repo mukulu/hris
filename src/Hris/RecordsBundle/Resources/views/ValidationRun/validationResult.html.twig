@@ -16,87 +16,117 @@
 {% block right_content -%}
     <div class="container">
         <h1><small>{{ title }}</small></h1>
+                {% if hrhisValues is null %}
+        <h5>No data found</h5>
+          {% else %}
 
 
-        <table class="records_list dataTable table table-striped table-bordered table-hover" cellpadding="0" cellspacing="0" border="0">
-            <thead>
-            <tr><h3>Name Validation</h3></tr>
-{% if dupArray is not null %}
-
-            <tr>
-                <td><b>SN<b/></td>
-                <td><b>Name<b/></td>
-                <td><b>Date of Birth<b/></td>
-                <td><b>Form</b></td>
-                <td><b>OrgUnit</b></td>
-                <td><b>Repeated Name<b/></td>
-                <td><b>Date of Birth<b/></td>
-                <td><b>Form<b/></td>
-                <td><b>OrgUnit<b/></td>
-            </tr>
-
-    {% set index=0 %}
-    {% for value in dupArray  %}
-            <tr>
-                   <td> {{ index+1 }}</td>
-                   <td> {{ dupArray[index].name }}</td>
-                    <td> {{ dupArray[index].dBirth }}</td>
-                     <td>{{ dupArray[index].form }}</td>
-                <td>{{ dupArray[index].orgunit }}</td>
-                <td> {{ dupArray[index].name }}</td>
-                <td> {{ dupArray[index].dBirth }}</td>
-                <td>{{ dupArray[index].form }}</td>
-                <td>{{ dupArray[index].orgunit }}</td>
-                        {% set index=index+1 %}
-                       </tr>
-            {% endfor %}
-
-{% else %}
-           <h5>No duplicate records found</h5>
-            {% endif %}
-            </thead>
-            <tbody>
-            </tbody>
-        </table>
-    </div>
-
-    <div>
-
-        {% if specificTitle is not null %}
-
-        <table class="records_list dataTable table table-striped table-bordered table-hover" cellpadding="0" cellspacing="0" border="0">
-            <thead>
-            <tr><h3>{{ specificTitle }}</h3></tr>
-            {% if validationFault is not null %}
-
+   {% for getValidation in getValidations %}
+        <h3> {{ getValidation.name }}</h3>
+        {% if getValidation.id not in validationFault|keys %}
+            <h5>All data are valid</h5>
+        {% else %}
+            <table class="records_list dataTable table table-striped table-bordered table-hover" cellpadding="0" cellspacing="0" border="0">
+                <thead>
+                <th width="50" height="20">SN</th>
+                <th width="50" height="20">Name</th>
+                <th width="80" height="20">{{ displayTitle[getValidation.id].leftExpression }}</th>
+                <th width="80" height="20">{{ displayTitle[getValidation.id].rightExpression }}</th>
+                <th width="50" height="20">Facility Name</th>
+                {% set i=1 %}
+                {% for validationValue in validationFault[getValidation.id] %}
                 <tr>
-                    <td><b>SN<b/></td>
-                    <td><b>Name<b/></td>
-                    <td><b>First Date<b/></td>
-                    <td><b>Second Date</b></td>
-
+                    <td>{{i  }}</td>
+                    <td>{{validationValue.name  }}</td>
+                    <td>{{validationValue.leftSide  }}</td>
+                    <td>{{validationValue.rightSide  }}</td>
+                    <td>{{validationValue.orgunit  }}</td>
+                    {% set i=i+1 %}
+                    {% endfor %}
                 </tr>
 
-                {% set index=0 %}
-                {% for value in validationFault  %}
+                </thead>
+                <tbody>
+                </tbody>
+            </table>
+        {% endif %}
+   {% endfor %}
 
-                    <tr>
-                        <td> {{ index+1 }}</td>
-                        <td> {{ validationFault.name }}</td>
-                        <td> {{ validationFault.leftSide }}</td>
-                        <td> {{ validationFault.rightSide }}</td>
-                        {% set index=index+1 %}
-                        </tr>
-                       {% endfor %}
-            {%else  %}
-                <h5>No invalid records found</h5>
-            {% endif %}
+        {#display name validation results#}
+<h3>Name Validation</h3>
+  {% if duplicate is null %}
+        <h5>All Data are Valid</h5>
+        {% else %}
 
-            </thead>
-            <tbody>
-            </tbody>
-        </table>
-          {% endif %}
+      <div>
+          <table class="records_list dataTable table table-striped table-bordered table-hover" cellpadding="0" cellspacing="0" border="0">
+              <thead>
+              <th width="50" height="20">SN</th>
+              <th width="50" height="20">Instance</th>
+              <th width="50" height="20">Name</th>
+              <th width="50" height="20">Date of Birth</th>
+              <th width="50" height="20">Form</th>
+              <th width="50" height="20">Instance</th>
+              <th width="50" height="20">Repeated Name</th>
+              <th width="50" height="20">Date of Birth</th
+              <th width="50" height="20">Form</th>
+               <th width="50" height="20">Orgunit</th>
+              {% set counter=0%}
+              {% for person in duplicate %}
+              <tr>
+                  <td>{{counter+1  }}</td>
+                  <td>{{person.ref.instance  }}</td>
+                  <td>{{person.ref.name  }}</td>
+                  <td>{{person.ref.dBirth  }}</td>
+                  <td>{{person.ref.form  }}</td>
+                  <td>{{person.ref.instance  }}</td>
+                  <td>{{person.dup.name  }}</td>
+                  <td>{{person.dup.dBirth  }}</td>
+                  <td>{{person.dup.form  }}</td>
+                  <td>{{person.ref.orgunit }}</td>
+                  {% set counter=counter+1 %}
+                  {% endfor %}
+              </tr>
 
+              {% endif %}
+
+              </thead>
+              <tbody>
+              </tbody>
+          </table>
+      </div>
+
+
+        <h3>Compulsory Field Validation</h3>
+        {% if compulsoryInfo is null %}
+        <h5>There are no records with missing fields</h5>
+    {% else %}
+
+        <div>
+            <table class="records_list dataTable table table-striped table-bordered table-hover" cellpadding="0" cellspacing="0" border="0">
+                <thead>
+                <th width="50" height="20">SN</th>
+                 <th width="50" height="20">Name</th>
+                <th width="50" height="20">Missing Field</th>
+                 <th width="50" height="20">Orgunit</th>
+                {% set counter=0 %}
+                {% for emptyValue in emptyFields %}
+
+                <tr>
+                    <td>{{counter+1}}</td>
+                    <td>{{ compulsoryInfo.name  }}</td>
+                    <td>{compulsoryInfo.missingField}}</td>
+                    <td>{{compulsoryInfo.missingOrgUnit }}</td>
+                    {% set counter=counter+1 %}
+                </tr>
+                 {% endfor %}
+                {% endif %}
+
+                </thead>
+                <tbody>
+                </tbody>
+            </table>
         </div>
+        {% endif %}
 {% endblock %}
+

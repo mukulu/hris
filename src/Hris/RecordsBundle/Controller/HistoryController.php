@@ -20,6 +20,7 @@
  *
  * @since 2012
  * @author John Francis Mukulu <john.f.mukulu@gmail.com>
+ * @author Ismail Yusuf Koleleni <ismailkoleleni@gmail.com>
  *
  */
 namespace Hris\RecordsBundle\Controller;
@@ -45,17 +46,29 @@ class HistoryController extends Controller
      *
      * @Route("/", name="history")
      * @Route("/list", name="history_list")
+     * @Route("/list/{recordid}/", requirements={"recordid"="\d+"}, name="history_list_byrecord")
      * @Method("GET")
      * @Template()
      */
-    public function indexAction()
+    public function indexAction( $recordid=NULL )
     {
         $em = $this->getDoctrine()->getManager();
 
-        $entities = $em->getRepository('HrisRecordsBundle:History')->findAll();
+        if(!empty($recordid)){
+            $entities = $em->getRepository('HrisRecordsBundle:History')->findBy(array('record'=>$recordid));
+            $record = $em->getRepository('HrisRecordsBundle:Record')->findOneBy(array('id'=>$recordid));
+        }
+
+        //$entities = $em->getRepository('HrisRecordsBundle:History')->findAll();
+        foreach($entities as $entity) {
+            $delete_form= $this->createDeleteForm($entity->getId());
+            $delete_forms[$entity->getId()] = $delete_form->createView();
+        }
 
         return array(
             'entities' => $entities,
+            'delete_forms' => $delete_forms,
+            'recordid' => $recordid,
         );
     }
     /**
@@ -207,12 +220,27 @@ class HistoryController extends Controller
             if (!$entity) {
                 throw $this->createNotFoundException('Unable to find History entity.');
             }
+            $record = $entity->getRecord();
+
+            //check if this deleted entity is the last for this record
+            $query = "SELECT count (id) as total ";
+            $query .= " FROM hris_record_history H ";
+            $query .= " WHERE record_id = ". $record->getId();
+            $query .= " AND id <> ". $id;
+
+            $result = $em -> getConnection() -> executeQuery($query) -> fetchAll();
+
+            //Update records hasTraining column to false when no trainings will be left after delete
+            if ( $result[0]['total'] == 0 ){
+                $record->setHasHistory(false);
+                $em->persist($record);
+            }
 
             $em->remove($entity);
             $em->flush();
         }
 
-        return $this->redirect($this->generateUrl('history'));
+        return $this->redirect($this->generateUrl('history_list_byrecord', array( 'recordid' => $record->getId()) ));
     }
 
     /**
