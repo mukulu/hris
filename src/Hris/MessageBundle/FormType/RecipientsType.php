@@ -28,7 +28,7 @@ use Symfony\Component\Form\AbstractType;
 use Symfony\Component\Form\FormBuilderInterface;
 use Doctrine\Common\Persistence\ObjectManager;
 use Symfony\Component\OptionsResolver\OptionsResolverInterface;
-use FOS\MessageBundle\DataTransformer\RecipientsDataTransformer;
+use Hris\MessageBundle\DataTransformer\RecipientsDataTransformer;
 
 /**
  * Description of RecipientsType

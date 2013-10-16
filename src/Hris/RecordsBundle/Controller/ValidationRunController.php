@@ -48,7 +48,7 @@ class ValidationRunController extends Controller
             'validationRunForm'=>$validationRunForm->createView(),
         );
 
-}
+    }
 
 
     /**
@@ -292,16 +292,7 @@ class ValidationRunController extends Controller
 
                             $count = 0;
                             $emptyFields = '';
-                            if (empty($hrhisValues)){
-                                ?>
-                                <div class="blue_text">
-                                    <div class="info">
-                                        <h2  style="text-align:left;font-size:22px;color:#0059AE;"><b>There is No Data in This Category</b></h2>
-                                    </div>
-                                </div>
-                                <?
-                                exit;
-                            }
+
 
                             foreach ($hrhisValues as $key => $dataValue) {
                                 $count++;

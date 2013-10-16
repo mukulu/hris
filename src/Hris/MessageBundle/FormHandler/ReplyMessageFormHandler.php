@@ -24,8 +24,8 @@
  */
 namespace Hris\MessageBundle\FormHandler;
 
-use FOS\MessageBundle\FormModel\AbstractMessage;
-use FOS\MessageBundle\FormModel\ReplyMessage;
+use Hris\MessageBundle\FormModel\AbstractMessage;
+use Hris\MessageBundle\FormModel\ReplyMessage;
 
 class ReplyMessageFormHandler extends AbstractMessageFormHandler
 {

@@ -88,7 +88,7 @@ class Target
      * @Gedmo\Versioned
      * @ORM\ManyToOne(targetEntity="\Hris\OrganisationunitBundle\Entity\OrganisationunitGroup",inversedBy="target")
      * @ORM\JoinColumns({
-     *   @ORM\JoinColumn(name="organisationunit_id", referencedColumnName="id", onDelete="CASCADE")
+     *   @ORM\JoinColumn(name="organisationunitgroup_id", referencedColumnName="id", onDelete="CASCADE")
      * })
      *
      */

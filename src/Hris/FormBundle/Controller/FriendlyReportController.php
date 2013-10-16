@@ -203,7 +203,13 @@ class FriendlyReportController extends Controller
             $requestcontent = $request->request->get('hris_formbundle_friendlyreporttype');
             $fieldOptionGroupIds = $requestcontent['friendlyReportCategory'];
             // Clear Report categories
-            $entity->removeAllFriendlyReportCategory();
+            //Get rid of current expectations
+            $em->createQueryBuilder('friendlyReportCategory')
+                ->delete('HrisFormBundle:FriendlyReportCategory','friendlyReportCategory')
+                ->where('friendlyReportCategory.friendlyReport= :friendlyReport')
+                ->setParameter('friendlyReport',$entity)
+                ->getQuery()->getResult();
+            $em->flush();
             foreach($fieldOptionGroupIds as $fieldOptionGroupIdKey=>$fieldOptionGroupId) {
                 $fieldOptionGroup = $this->getDoctrine()->getRepository('HrisFormBundle:FieldOptionGroup')->findOneBy(array('id'=>$fieldOptionGroupId));
                 $friendlyReportCategory = new FriendlyReportCategory();

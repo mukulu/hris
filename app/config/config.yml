@@ -128,7 +128,7 @@ fos_user:
     user_class: Hris\UserBundle\Entity\User
     group:
         group_class: Hris\UserBundle\Entity\Group
-    use_listener: false
+    use_listener: true
     registration:
         confirmation:
             enabled: false
@@ -241,3 +241,8 @@ fos_message:
     db_driver: orm
     thread_class: Hris\MessageBundle\Entity\Thread
     message_class: Hris\MessageBundle\Entity\Message
+    new_thread_form:
+          type:               fos_message.new_thread_multiple_form.type
+          handler:            fos_message.new_thread_multiple_form.handler
+          model:              Hris\MessageBundle\FormModel\NewThreadMultipleMessage
+          name:               message
