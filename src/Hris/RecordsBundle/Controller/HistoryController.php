@@ -101,18 +101,26 @@ class HistoryController extends Controller
     /**
      * Displays a form to create a new History entity.
      *
-     * @Route("/new", name="history_new")
+     * @Route("/new/{recordid}/recordid", requirements={"recordid"="\d+"}, name="history_new")
      * @Method("GET")
      * @Template()
      */
-    public function newAction()
+    public function newAction( $recordid=NULL )
     {
         $entity = new History();
         $form   = $this->createForm(new HistoryType(), $entity);
 
+        if(!empty($recordid)) {
+            $record = $this->getDoctrine()->getManager()->getRepository('HrisRecordsBundle:Record')->findOneBy(array('id'=>$recordid));
+        }else {
+            $record = NULL;
+        }
+
         return array(
             'entity' => $entity,
             'form'   => $form->createView(),
+            'recordid' => $recordid,
+            'record' => $record,
         );
     }
 
@@ -242,6 +250,61 @@ class HistoryController extends Controller
 
         return $this->redirect($this->generateUrl('history_list_byrecord', array( 'recordid' => $record->getId()) ));
     }
+
+
+    /**
+     * Returns FieldOptions json.
+     *
+     *
+     * @Route("/historyFieldOption.{_format}", requirements={"_format"="yml|xml|json"}, defaults={"_format"="json"}, name="history_historyfieldption")
+     * @Method("POST")
+     * @Template()
+     */
+    public function historyFieldOptionAction($_format)
+    {
+        $em = $this->getDoctrine()->getManager();
+        $fieldid = $this->getRequest()->request->get('fieldid');
+        $targetid = $this->getRequest()->request->get('targetid');
+        $fieldOptionTargetNodes = NULL;
+
+        // Fetch existing targets and field options belonging to target
+        $fieldOptions = $em->getRepository('HrisFormBundle:FieldOption')->findBy(array('field'=>$fieldid));
+
+        if(!empty($targetid) && !empty($fieldid)) {
+            $queryBuilder = $this->getDoctrine()->getManager()->createQueryBuilder();
+            $targetFieldOptions = $queryBuilder->select('targetFieldOption')
+                ->from('HrisIndicatorBundle:TargetFieldOption','targetFieldOption')
+                ->join('targetFieldOption.fieldOption','fieldOption')
+                ->join('fieldOption.field','field')
+                ->where('targetFieldOption.target=:targetid')
+                ->andWhere('field.id=:fieldid')
+                ->setParameters(array('targetid'=>$targetid,'fieldid'=>$fieldid))
+                ->getQuery()->getResult();
+            if(!empty($targetFieldOptions)) {
+                foreach($targetFieldOptions as $targetFieldOptionKey=>$targetFieldOption) {
+                    $fieldOptionTargetNodes[$targetFieldOption->getFieldOption()->getId()] = Array(
+                        'name' => $targetFieldOption->getFieldOption()->getValue(),
+                        'uid' => $targetFieldOption->getFieldOption()->getUid()
+                    );
+                }
+            }
+        }
+        foreach($fieldOptions as $fieldOptionKey=>$fieldOption) {
+            if(!isset($fieldOptionTargetNodes[$fieldOption->getId()])) {
+                $fieldOptionTargetNodes[] = Array(
+                    'name' => $fieldOption->getValue(),
+                    'uid' => $fieldOption->getUid()
+                );
+            }
+        }
+
+        $serializer = $this->container->get('serializer');
+
+        return array(
+            'entities' => $serializer->serialize($fieldOptionTargetNodes,$_format)
+        );
+    }
+
 
     /**
      * Creates a form to delete a History entity by id.
