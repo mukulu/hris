@@ -81,7 +81,6 @@ class TrainingController extends Controller
      */
     public function createAction(Request $request, $recordid = NULL)
     {
-        //echo $recordid;exit;
         $entity  = new Training();
         $form = $this->createForm(new TrainingType(), $entity);
         $form->bind($request);
@@ -96,7 +95,7 @@ class TrainingController extends Controller
                 $record = NULL;
                 $entity->setRecord($record);
             }
-            $entity->setUsername($user->getUsername() );
+            $entity->setUsername($user->getUsername());
 
             //Update Record Table hasTraining column
             $record->setHastraining(true);

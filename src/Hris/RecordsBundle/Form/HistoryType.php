@@ -43,12 +43,9 @@ class HistoryType extends AbstractType
                         ->orderBy('field.name','ASC');
                 }
             ))
-            ->add('history', 'choice', array(
-                'empty_value' => '--SELECT--',
-            ))
             ->add('startdate', 'date', array('input' => 'datetime', 'widget' => 'single_text',))
             ->add('reason')
-            ->add('updatecurrent','checkbox',array(
+            ->add('updaterecord','checkbox',array(
                 'required'=>False,
                 'mapped' => False,
             ))

@@ -8,7 +8,8 @@
             var fields='#hris_recordsbundle_historytype_field';
             var fieldOptionUrl = '{{ path('history_historyfieldption', {'_format':'json'}) }}';
             var fieldOptionNames='hris_recordsbundle_historytype_history';
-            var fieldOptionSection='#hris_recordsbundle_historytype_history';
+            //var fieldOptionSection='#hris_recordsbundle_historytype_history';
+            var fieldOptionSection='#historyFieldSection';
 
             $(fields).on('change', function() {
                 // Empty FieldOptionSection contents
@@ -21,14 +22,18 @@
                     $(fieldOptionSection).find('option').remove();
                     if (jQuery.isEmptyObject(fieldOptions)){
                         //disable field with no options
-                        $(fieldOptionSection).attr('disabled', 'true');
+                        //$(fieldOptionSection).attr('disabled', 'true');
+                        $(fieldOptionSection).prepend('<h1><small>Field Has No Options</small></h1>');
                     }else {
 
-                        $(fieldOptionSection).removeAttr('disabled');
+                        //$(fieldOptionSection).removeAttr('disabled');
 
+                        $(fieldOptionSection).prepend('<select name="hris_recordsbundle_history[history]" id="hris_recordsbundle_history_history"> </select>');
+
+                        $(fieldOptionSection).prepend('<label for="hris_recordsbundle_history_history">History</label>');
                         // Loop accross the field options constructing history options
                          $.each(fieldOptions, function(historyFieldOptionIndex, historyFieldOption) {
-                             $(fieldOptionSection).append(new Option(historyFieldOption['name'], historyFieldOption['name']));
+                             $("#hris_recordsbundle_history_history").append(new Option(historyFieldOption['name'], historyFieldOption['name']));
                          });
                     }
                 });
@@ -40,11 +45,10 @@
 {% block right_content -%}
     <h1><small>History creation</small></h1>
 
-    <form action="{{ path('history_create', {'recordid': recordid} ) }}" method="post" {{ form_enctype(form) }}>
+    <form action="{{ path('history_create', {'recordid': recordid } ) }}" method="post" {{ form_enctype(form) }}>
         {{ form_widget(form) }}
-        <br/>
-        <div id="fieldOptionsSection"></div>
 
+        <div id="historyFieldSection"></div>
         <ul class="record_actions inline" style="..." >
             <li>
                 <button type="submit" class="btn">Create</button>

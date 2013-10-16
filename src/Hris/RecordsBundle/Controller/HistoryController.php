@@ -74,27 +74,52 @@ class HistoryController extends Controller
     /**
      * Creates a new History entity.
      *
-     * @Route("/", name="history_create")
+     * @Route("/{recordid}/recordid", requirements={"recordid"="\d+"}, name="history_create")
      * @Method("POST")
      * @Template("HrisRecordsBundle:History:new.html.twig")
      */
-    public function createAction(Request $request)
+    public function createAction(Request $request, $recordid = NULL)
     {
         $entity  = new History();
         $form = $this->createForm(new HistoryType(), $entity);
         $form->bind($request);
+        $user = $this->container->get('security.context')->getToken()->getUser();
 
         if ($form->isValid()) {
             $em = $this->getDoctrine()->getManager();
+            $historyValue = $request->request->get('hris_recordsbundle_history');
+            $historyFormData = $request->request->get('hris_recordsbundle_historytype');
+            $entity->setHistory($historyValue['history']);
+
+            if(!empty($recordid)) {
+                $record = $this->getDoctrine()->getManager()->getRepository('HrisRecordsBundle:Record')->findOneBy(array('id'=>$recordid));
+                $field = $this->getDoctrine()->getManager()->getRepository('HrisFormBundle:Field')->findOneBy(array('id'=>$historyFormData['field']));
+                //echo $field->getUid();exit;
+                //If History Set to update record
+                if($historyFormData['updaterecord']){
+                    $recordValue = $record->getValue();
+                    echo $recordValue[$field->getUidst()];die();
+                }
+            }else {
+                $record = NULL;
+                $entity->setRecord($record);
+            }
+            $entity->setUsername($user->getUsername());
+
+            //Update Record Table hasHistory column
+            $record->setHashistory(true);
+
             $em->persist($entity);
+            $em->persist($record);
             $em->flush();
 
-            return $this->redirect($this->generateUrl('history_show', array('id' => $entity->getId())));
+            return $this->redirect($this->generateUrl('history_list_byrecord', array( 'recordid' => $recordid )));
         }
 
         return array(
             'entity' => $entity,
             'form'   => $form->createView(),
+            'recordid' => $recordid,
         );
     }
 
