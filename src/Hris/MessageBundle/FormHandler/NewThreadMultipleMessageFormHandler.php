@@ -24,8 +24,8 @@
  */
 namespace Hris\MessageBundle\FormHandler;
 
-use FOS\MessageBundle\FormModel\AbstractMessage;
-use FOS\MessageBundle\FormModel\NewThreadMultipleMessage;
+use Hris\MessageBundle\FormModel\AbstractMessage;
+use Hris\MessageBundle\FormModel\NewThreadMultipleMessage;
 /**
  * Form handler for multiple recipients support
  *

@@ -48,7 +48,7 @@ class ValidationRunController extends Controller
             'validationRunForm'=>$validationRunForm->createView(),
         );
 
-}
+    }
 
 
     /**
@@ -223,6 +223,7 @@ class ValidationRunController extends Controller
                                $param ="#{". $tempField->getName()."}";
 
 
+
                                 if($field == $firstNameUid){
                                     $firstname = $value;
                                                                                                                                }
@@ -234,6 +235,11 @@ class ValidationRunController extends Controller
                                         $bdate = $value['date'];
                                     }
                                 }
+
+                            $count = 0;
+                            $emptyFields = '';
+
+
 
                                  /*
                                  * Getting the Compulsory fields which are empty

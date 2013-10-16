@@ -14,6 +14,7 @@ class NewThreadMultipleMessageFormType extends AbstractType
     public function buildForm(FormBuilderInterface $builder, array $options)
     {
         $builder
+
             ->add('recipients', 'recipients_selector')
             ->add('subject', 'text')
             ->add('body', 'textarea');

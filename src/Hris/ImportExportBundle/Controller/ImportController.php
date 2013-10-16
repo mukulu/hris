@@ -33,6 +33,7 @@ use Sensio\Bundle\FrameworkExtraBundle\Configuration\Route;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Template;
 use Hris\ImportExportBundle\Entity\Export;
 use Hris\ImportExportBundle\Form\ExportType;
+use ZipArchive;
 
 /**
  * Import controller.
@@ -67,7 +68,6 @@ class ImportController extends Controller
      */
     public function createAction(Request $request,$_format="json")
     {
-        $serializer = $this->container->get('serializer');
 
         $importForm = $this->createForm(new ImportType(),null);
         $importForm->bind($request);
@@ -77,8 +77,88 @@ class ImportController extends Controller
             $file = $importFormData['file'];
         }
 
-        $serializer = $this->container->get('serializer');
+        $filename = NULL;
+        $doctype = NULL;
+        $recordCount = 0;
+
+
+        $location = $file->move('../app/cache','export.zip');
+
+        //var_dump($location); die();
+
+        $filename = '../app/cache/export.zip';
+
+        $zip = new ZipArchive();
+
+
+        if (!empty($filename)) {
+
+            if (true === $zip->open($filename)) {
+
+                $zipFile = zip_open($filename);
+
+                while ($entry = zip_read($zipFile)) {
+                    zip_entry_open($zipFile, $entry);
+                    $xmlFileName = zip_entry_name($entry);
+                    $data = $fileStrem[$xmlFileName] = $entry;
+
+                }
+
+                /*
+                 * Creating the variable to hold Fields from import file
+                 */
+
+                if (array_key_exists('fields.json', $fileStrem)) {
+                    $entryValue = $fileStrem['fields.json'];
+                    $fields = zip_entry_read($entryValue, zip_entry_filesize($entryValue));
+
+                }
+
+                /*
+                 * Creating the variable to hold Field Options from import file
+                 */
+
+                if (array_key_exists('fieldOptions.json', $fileStrem)) {
+                    $entryValue = $fileStrem['fieldOptions.json'];
+                    $fieldOptions = zip_entry_read($entryValue, zip_entry_filesize($entryValue));
+                }
+
+                /*
+                 * Creating the variable to hold Organisation units from import file
+                 */
+
+                if (array_key_exists('organizationUnit.json', $fileStrem)) {
+                    $entryValue = $fileStrem['organizationUnit.json'];
+                    $organisationUnits = zip_entry_read($entryValue, zip_entry_filesize($entryValue));
+                }
+
+                /*
+                 * Creating the variable to hold Records from import file
+                 */
+
+                if (array_key_exists('records.json', $fileStrem)) {
+                    $entryValue = $fileStrem['records.json'];
+                    $records = zip_entry_read($entryValue, zip_entry_filesize($entryValue));
+                }
+
+                /*
+                //checking the format of the data imported
+                if ($data == 'JSON') {
+                    importJSON($fileStrem);
+                }
+                */
+
+            }
+        }else{
+            var_dump("Nothing works");
+            die();
+        }
+
         return array(
+            'records'           => $records,
+            'organisationUnit'  => $organisationUnits,
+            'fieldOptions'      => $fieldOptions,
+            'fields'            => $fields,
         );
     }
 

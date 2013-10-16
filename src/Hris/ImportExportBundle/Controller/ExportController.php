@@ -31,6 +31,13 @@ use Sensio\Bundle\FrameworkExtraBundle\Configuration\Method;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Route;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Template;
 use Hris\ImportExportBundle\Form\ExportType;
+use Symfony\Component\Filesystem\Filesystem;
+use Symfony\Component\Filesystem\Exception\IOException;
+use Symfony\Component\HttpFoundation\Response;
+use Symfony\Component\HttpFoundation\ResponseHeaderBag;
+use ZipArchive;
+
+ini_set('zlib.output_compression', 'Off');
 
 /**
  * Export controller.
@@ -60,13 +67,14 @@ class ExportController extends Controller
     /**
      * Creates a new Export entity.
      *
-     * @Route("/{_format}", requirements={"_format"="json|"}, defaults={"_format"="json"}, name="importexport_export_create")
+     * @Route("/{_format}", requirements={"_format"="json|"}, defaults={"_format"="zip"}, name="importexport_export_create")
      * @Method("POST")
-     * @Template("HrisImportExportBundle:Export:export.json.twig")
      */
     public function createAction(Request $request,$_format="json")
     {
-        $serializer = $this->container->get('serializer');
+
+        $em = $this->getDoctrine()->getManager();
+        $queryBuilder = $this->getDoctrine()->getManager()->createQueryBuilder();
 
         $exportForm = $this->createForm(new ExportType(),null,array('em'=>$this->getDoctrine()->getManager()));
         $exportForm->bind($request);
@@ -77,143 +85,111 @@ class ExportController extends Controller
             $forms = $exportFormData['forms'];
             $withLowerLevels = $exportFormData['withLowerLevels'];
         }
+
         /*
-         * Generate an export file with data records
+         * Generate Selected Form Ids.
          */
         $formIds = Array();
         foreach($forms as $formKey=>$form) {
             $formIds[] = $form->getId();
-            foreach ($form->getFormFieldMember() as $key => $fieldObject) {
-                if( !$fieldObject->getField()->getIsCalculated() ) {
-                    if(empty($formFieldMemberIds)) $formFieldMemberIds  = $fieldObject->getField()->getId();
-                    else $formFieldMemberIds .=','.$fieldObject->getField()->getId();
-                }
-            }
-        }
-        $em = $this->getDoctrine()->getManager();
-        $queryBuilder = $this->getDoctrine()->getManager()->createQueryBuilder();
-
-        $userManager = $this->container->get('fos_user.user_manager');
-        $user = $userManager->findUserByUsername($this->getUser());
-
-
-        //Prepare field Option map, converting from stored FieldOption key in record value array to actual text value
-        $fieldOptions = $this->getDoctrine()->getManager()->getRepository('HrisFormBundle:FieldOption')->findAll();
-        foreach ($fieldOptions as $fieldOptionKey => $fieldOption) {
-            $recordFieldOptionKey = ucfirst(Record::getFieldOptionKey());
-            $fieldOptionMap[call_user_func_array(array($fieldOption, "get${recordFieldOptionKey}"),array()) ] =   $fieldOption->getValue();
         }
 
-        //Prepare field map, converting from stored FieldOption key in record value array to actual text value
-        $fields = $this->getDoctrine()->getManager()->getRepository('HrisFormBundle:Field')->findAll();
-        foreach ($fields as $fieldKey => $field) {
-            $recordFieldKey = ucfirst(Record::getFieldKey());
-            $fieldMap[$field->getName()] =  call_user_func_array(array($field, "get${recordFieldKey}"),array());
+        /*
+       * Getting the Field Metadata and Values
+       */
+        $fields = $em->getRepository( 'HrisFormBundle:Field' )
+            ->createQueryBuilder('f')
+            ->select('f', 'd.uid as datatype_uid', 'i.uid as inputtype_uid')
+            ->join('f.dataType', 'd')
+            ->join('f.inputType', 'i')
+            ->getQuery()
+            ->getArrayResult();
+
+
+        /*
+        * Getting the Field Options Metadata and Values
+        */
+        $fieldOptions = $em->getRepository( 'HrisFormBundle:FieldOption' )
+            ->createQueryBuilder('o')
+            ->select('o', 'f.uid as field_uid')
+            ->join('o.field', 'f')
+            ->getQuery()
+            ->getArrayResult();
+
+        /*
+        * Getting the Organisation Unit Metadata
+        */
+
+        $user = $this->container->get('security.context')->getToken()->getUser();
+
+        if ($withLowerLevels){
+
+            $orgUnitObj = $em->getRepository('HrisOrganisationunitBundle:Organisationunit')->find($organisationunit);
+
+            $orgUnit = $em->getRepository('HrisOrganisationunitBundle:Organisationunit')->getAllChildren($orgUnitObj);
+
+        }else{
+            $orgUnit = $em->getRepository( 'HrisOrganisationunitBundle:Organisationunit' )
+                ->createQueryBuilder('o')
+                ->select('o', 'p.shortname')
+                ->join('o.parent', 'p')
+                ->where('o.id = :uid')
+                ->setParameters(array('uid' => $organisationunit ))
+                ->getQuery()
+                ->getArrayResult();
         }
 
-        $records = $queryBuilder->select('  record.id id,
-                                            organisationunit.id organisationunit_id,
-                                            form.id form_id,
-                                            record.uid,
-                                            record.instance,
-                                            record.value,
-                                            record.complete,
-                                            record.correct,
-                                            record.hashistory,
-                                            record.hastraining,
-                                            record.datecreated,
-                                            record.lastupdated,
-                                            record.username')
-            ->from('HrisRecordsBundle:Record','record')
-            ->join('record.organisationunit','organisationunit')
-            ->join('record.form','form')
-            ->join('organisationunit.organisationunitStructure','organisationunitStructure')
-            ->join('organisationunitStructure.level','organisationunitLevel')
-            ->andWhere('organisationunit.active=True');
+        /*
+        * getting Organisation Units Ids.
+        */
 
-        if($withLowerLevels) {
-            $records = $records->andWhere('organisationunitLevel.level >= (
-                                            SELECT selectedOrganisationunitLevel.level
-                                            FROM HrisOrganisationunitBundle:OrganisationunitStructure selectedOrganisationunitStructure
-                                            INNER JOIN selectedOrganisationunitStructure.level selectedOrganisationunitLevel
-                                            WHERE selectedOrganisationunitStructure.organisationunit=:selectedOrganisationunit )'
-                )
-                ->andWhere('organisationunitStructure.level'.$organisationunit->getOrganisationunitStructure()->getLevel()->getLevel().'Organisationunit=:levelId');
-        }else {
-            $records = $records->andWhere('organisationunit.id='.$organisationunit->getId());
+        foreach ($orgUnit as $key => $unit){
+            $unitId[] = $unit[0]['uid'];
         }
 
-        $records = $records->andWhere($queryBuilder->expr()->in('form.id',':formIds'))
-            ->setParameters(array(
-                'levelId'=>$organisationunit->getId(),
-                'selectedOrganisationunit'=>$organisationunit->getId(),
-                'formIds'=>$formIds,
-            ))
-            ->getQuery()->getResult();
+        /*
+        * Getting Records depending on the form and organisation unit
+        */
 
-        //Field Details
-        $fields = $this->getDoctrine()->getManager()
-            ->createQueryBuilder()
-            ->select(' field.id,
-                     field.uid,
-                     dataType.id datatype_id,
-                     inputType.id inputtype_id,
-                     field.name,
-                     field.compulsory,
-                     field.isUnique,
-                     field.datecreated,
-                     field.lastupdated')
-            ->from('HrisFormBundle:Field','field')
-            ->join('field.dataType','dataType')
-            ->join('field.inputType','inputType')
-            ->getQuery()->getResult();
-        //Field Option Details
-        $fieldOptions = $this->getDoctrine()->getManager()
-            ->createQueryBuilder()
-            ->select('fieldOption.id,
-                     fieldOption.value,
-                     field.id field_id,
-                     fieldOption.datecreated,
-                     fieldOption.lastupdated')
-            ->from('HrisFormBundle:FieldOption','fieldOption')
-            ->join('fieldOption.field','field')->getQuery()->getResult();
-        //Organisationunit details
-        $organisationunits = $this->getDoctrine()->getManager()->createQueryBuilder()->select('organisationunit.uid organisationunit_uid,
-                                            organisationunit.longname organisationunit_longname,
-                                            organisationunit.datecreated organisationunit_datecreated,
-                                            organisationunit.lastupdated organisationunit_lastupdated')
-            ->from('HrisOrganisationunitBundle:Organisationunit','organisationunit')
-            ->join('organisationunit.organisationunitStructure','organisationunitStructure')
-            ->join('organisationunitStructure.level','organisationunitLevel')
-            ->andWhere('organisationunit.active=True');
-        if($withLowerLevels) {
-            $organisationunits = $organisationunits->andWhere('organisationunitLevel.level >= (
-                                            SELECT selectedOrganisationunitLevel.level
-                                            FROM HrisOrganisationunitBundle:OrganisationunitStructure selectedOrganisationunitStructure
-                                            INNER JOIN selectedOrganisationunitStructure.level selectedOrganisationunitLevel
-                                            WHERE selectedOrganisationunitStructure.organisationunit=:selectedOrganisationunit )'
-            )
-                ->andWhere('organisationunitStructure.level'.$organisationunit->getOrganisationunitStructure()->getLevel()->getLevel().'Organisationunit=:levelId');
-        }else {
-            $organisationunits = $organisationunits->andWhere('organisationunit.id='.$organisationunit->getId());
-        }
-        $organisationunits = $organisationunits->setParameters(array(
-                                                        'levelId'=>$organisationunit->getId(),
-                                                        'selectedOrganisationunit'=>$organisationunit->getId()
-                                                    ))
-        ->getQuery()->getResult();
+        $records = $em->getRepository( 'HrisRecordsBundle:Record' )
+            ->createQueryBuilder('r')
+            ->select('r', 'f.id as form_id', 'o.uid as orgunit_uid')
+            ->join('r.form', 'f')
+            ->join('r.organisationunit', 'o')
+            ->Where($queryBuilder->expr()->in('f.id', $formIds))
+            ->andWhere($queryBuilder->expr()->in('o.uid', $unitId))
+            ->getQuery()
+            ->getArrayResult();
 
-        $dataexport = Array(
-            'hris_organisationunit'=>$organisationunits,
-            'hris_field'=>$fields,
-            'hris_fieldoption'=>$fieldOptions,
-            'hris_record'=>$records
-        );
 
-        $serializer = $this->container->get('serializer');
-        return array(
-            'records' => $serializer->serialize($dataexport,empty($_format) ? "json" : $_format)
-        );
+       $fs = new Filesystem();
+
+       // $fs->chmod('/temp/export', 0777, 0000, true);
+
+        $filename = "export_".date("Y_m_d_His").".zip";
+
+        //$fs->chmod('records.json', 0666);
+
+
+        $archive = new ZipArchive();
+        $archive->open($filename, ZipArchive::CREATE);
+        $archive->addFromString('organizationUnit.json', json_encode($orgUnit));
+        $archive->addFromString('fields.json', json_encode($fields));
+        $archive->addFromString('fieldOptions.json', json_encode($fieldOptions));
+        $archive->addFromString('records.json', json_encode($records));
+        $archive->close();
+
+        $fs->chmod($filename, 0666);
+
+        $response = new Response(file_get_contents($filename));
+
+        $d = $response->headers->makeDisposition(ResponseHeaderBag::DISPOSITION_ATTACHMENT, $filename);
+        $response->headers->set('Content-Disposition', $d);
+
+        unlink($filename);
+
+        return $response;
+
     }
 
     /**

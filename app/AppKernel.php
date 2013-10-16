@@ -44,6 +44,7 @@ class AppKernel extends Kernel
             new Hris\ImportExportBundle\HrisImportExportBundle(),
         	new Stfalcon\Bundle\TinymceBundle\StfalconTinymceBundle(),
             new Liuggio\ExcelBundle\LiuggioExcelBundle(),
+            new Hris\HelpCentreBundle\HrisHelpCentreBundle(),
         );
 
         if (in_array($this->getEnvironment(), array('dev', 'test'))) {

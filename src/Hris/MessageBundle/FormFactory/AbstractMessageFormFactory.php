@@ -26,7 +26,7 @@ namespace Hris\MessageBundle\FormFactory;
 
 use Symfony\Component\Form\AbstractType;
 use Symfony\Component\Form\FormFactoryInterface;
-use FOS\MessageBundle\FormModel\AbstractMessage;
+use Hris\MessageBundle\FormModel\AbstractMessage;
 
 /**
  * Instanciates message forms

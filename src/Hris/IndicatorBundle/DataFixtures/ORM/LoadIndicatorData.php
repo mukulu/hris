@@ -74,6 +74,7 @@ class LoadIndicatorData extends AbstractFixture implements OrderedFixtureInterfa
     }
 	public function load(ObjectManager $manager)
 	{
+        /**
         // Populate dummy forms
         $this->addDummyIndicators();
 
@@ -92,6 +93,7 @@ class LoadIndicatorData extends AbstractFixture implements OrderedFixtureInterfa
             $manager->persist($indicator);
         }
 		$manager->flush();
+         * */
 	}
 	
 	/**

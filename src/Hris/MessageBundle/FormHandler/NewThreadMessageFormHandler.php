@@ -24,8 +24,8 @@
  */
 namespace Hris\MessageBundle\FormHandler;
 
-use FOS\MessageBundle\FormModel\AbstractMessage;
-use FOS\MessageBundle\FormModel\NewThreadMessage;
+use Hris\MessageBundle\FormModel\AbstractMessage;
+use Hris\MessageBundle\FormModel\NewThreadMessage;
 
 class NewThreadMessageFormHandler extends AbstractMessageFormHandler
 {

@@ -1,0 +1,8 @@
+parameters:
+#    hris_help_centre.example.class: Hris\HelpCentreBundle\Example
+
+services:
+    hris_help_centre.configure_menu_listener:
+        class: Hris\HelpCentreBundle\EventListener\ConfigureMenuListener
+        tags:
+            - { name: kernel.event_listener, event: hris_help_centre.menu_configure, method: onMenuConfigure }

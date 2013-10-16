@@ -62,10 +62,10 @@ class ConfigureMenuListener
                 'attributes'=> array('class'=>'accordion-group'),
             )
         );
-        $reportsModule->addChild('Generic Report',
+        $reportsModule->addChild('Friendly Report',
             array('route'=>'report_friendlyreport',
                 'extras'=>array('tag'=>'div'),
-                'name'=>'Generic Report',
+                'name'=>'Friendly Report',
                 'attributes'=> array('class'=>'accordion-group'),
             )
         );
