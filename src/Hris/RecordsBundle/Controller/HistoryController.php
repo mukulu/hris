@@ -89,7 +89,7 @@ class HistoryController extends Controller
             $em = $this->getDoctrine()->getManager();
             $historyValue = $request->request->get('hris_recordsbundle_history');
             $historyFormData = $request->request->get('hris_recordsbundle_historytype');
-            $entity->setHistory($historyValue['history']);
+            $fieldOption = $this->getDoctrine()->getManager()->getRepository('HrisFormBundle:FieldOption')->findOneBy(array('uid'=>$historyValue['history']));
 
             if(!empty($recordid)) {
                 $record = $this->getDoctrine()->getManager()->getRepository('HrisRecordsBundle:Record')->findOneBy(array('id'=>$recordid));
@@ -98,9 +98,26 @@ class HistoryController extends Controller
                 //If History Set to update record
                 if($historyFormData['updaterecord']){
                     $recordValue = $record->getValue();
-                    echo $recordValue[$field->getUidst()];die();
+                    //Get Previous value before updating
+                    $previousValue = $recordValue[$field->getUid()];
+                    //Assign Record with the new update uid
+                    $recordValue[$field->getUid()] = $historyValue['history'];
+
+                    //Assign old value from records to history table
+                    $previousOption = $this->getDoctrine()->getManager()->getRepository('HrisFormBundle:FieldOption')->findOneBy(array('uid'=>$previousValue));
+                    $entity->setHistory($previousOption->getValue());
+                    $entity->setReason($historyFormData['reason']." Note: This is previous ".$field->getCaption()." held before changed to ".$fieldOption->getValue().".");
+
+                    //Update new record value
+                    $record->setValue($recordValue);
                 }
-            }else {
+                else{
+                    //Set entity value assigned from the history form
+                    $entity->setHistory($fieldOption->getValue());
+                }
+                $entity->setRecord($record);
+            }
+            else {
                 $record = NULL;
                 $entity->setRecord($record);
             }

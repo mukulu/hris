@@ -33,7 +33,7 @@
                         $(fieldOptionSection).prepend('<label for="hris_recordsbundle_history_history">History</label>');
                         // Loop accross the field options constructing history options
                          $.each(fieldOptions, function(historyFieldOptionIndex, historyFieldOption) {
-                             $("#hris_recordsbundle_history_history").append(new Option(historyFieldOption['name'], historyFieldOption['name']));
+                             $("#hris_recordsbundle_history_history").append(new Option(historyFieldOption['name'], historyFieldOption['uid']));
                          });
                     }
                 });
