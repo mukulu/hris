@@ -64,9 +64,9 @@ class ImportController extends Controller
      *
      * @Route("/{_format}", requirements={"_format"="json|"}, defaults={"_format"="json"}, name="importexport_import_create")
      * @Method("POST")
-     * @Template("HrisImportExportBundle:Export:export.json.twig")
+     * @Template("HrisImportExportBundle:Import:export.json.twig")
      */
-    public function createAction(Request $request,$_format="json")
+    public function createAction(Request $request)
     {
 
         $importForm = $this->createForm(new ImportType(),null);
@@ -79,12 +79,9 @@ class ImportController extends Controller
 
         $filename = NULL;
         $doctype = NULL;
-        $recordCount = 0;
 
 
-        $location = $file->move('../app/cache','export.zip');
-
-        //var_dump($location); die();
+        $file->move('../app/cache','export.zip');
 
         $filename = '../app/cache/export.zip';
 
@@ -140,13 +137,6 @@ class ImportController extends Controller
                     $entryValue = $fileStrem['records.json'];
                     $records = zip_entry_read($entryValue, zip_entry_filesize($entryValue));
                 }
-
-                /*
-                //checking the format of the data imported
-                if ($data == 'JSON') {
-                    importJSON($fileStrem);
-                }
-                */
 
             }
         }else{
@@ -273,5 +263,129 @@ class ImportController extends Controller
             ->add('id', 'hidden')
             ->getForm()
         ;
+    }
+
+    /**
+     * Importing fields.
+     *
+     * @Route("/importFields", name="importexport_import_importFields")
+     * @Method("POST")
+     */
+
+    public function updateFieldsAction(Request $request)
+    {
+
+        $em = $this->getDoctrine()->getManager();
+
+        $fields = $this->get('request')->request->get('fields');
+
+        var_dump($fields);
+        die();
+
+        $entity = $em->getRepository('HrisRecordsBundle:Record')->findOneBy(array('uid' => $uid ));
+
+        $form = $em->getRepository('HrisFormBundle:Form')->find($formId);
+
+        $entity->setForm($form);
+
+        $em = $this->getDoctrine()->getManager();
+        $em->persist($entity);
+        $em->flush();
+
+        return new Response('success');
+
+    }
+
+    /**
+     * Importing fields Options.
+     *
+     * @Route("/importFieldOptions", name="importexport_import_importFieldOptions")
+     * @Method("POST")
+     */
+
+    public function updateFieldOptionsAction(Request $request)
+    {
+
+        $em = $this->getDoctrine()->getManager();
+
+        $fieldOptions = $this->get('request')->request->get('fieldOptions');
+
+        var_dump($fieldOptions);
+        die();
+
+        $entity = $em->getRepository('HrisRecordsBundle:Record')->findOneBy(array('uid' => $uid ));
+
+        $form = $em->getRepository('HrisFormBundle:Form')->find($formId);
+
+        $entity->setForm($form);
+
+        $em = $this->getDoctrine()->getManager();
+        $em->persist($entity);
+        $em->flush();
+
+        return new Response('success');
+
+    }
+
+    /**
+     * Importing Organisation Units.
+     *
+     * @Route("/importOrganisationUnits", name="importexport_import_importOrganisationUnits")
+     * @Method("POST")
+     */
+
+    public function updateOrganisationUnitsAction(Request $request)
+    {
+
+        $em = $this->getDoctrine()->getManager();
+
+        $organisationUnits = $this->get('request')->request->get('organisationUnits');
+
+        var_dump($organisationUnits);
+        die();
+
+        $entity = $em->getRepository('HrisRecordsBundle:Record')->findOneBy(array('uid' => $uid ));
+
+        $form = $em->getRepository('HrisFormBundle:Form')->find($formId);
+
+        $entity->setForm($form);
+
+        $em = $this->getDoctrine()->getManager();
+        $em->persist($entity);
+        $em->flush();
+
+        return new Response('success');
+
+    }
+
+    /**
+     * Importing Records.
+     *
+     * @Route("/importRecords", name="importexport_import_importRecords")
+     * @Method("POST")
+     */
+
+    public function updateRecordsAction(Request $request)
+    {
+
+        $em = $this->getDoctrine()->getManager();
+
+        $records = $this->get('request')->request->get('records');
+
+        var_dump($records);
+        die();
+
+        $entity = $em->getRepository('HrisRecordsBundle:Record')->findOneBy(array('uid' => $uid ));
+
+        $form = $em->getRepository('HrisFormBundle:Form')->find($formId);
+
+        $entity->setForm($form);
+
+        $em = $this->getDoctrine()->getManager();
+        $em->persist($entity);
+        $em->flush();
+
+        return new Response('success');
+
     }
 }

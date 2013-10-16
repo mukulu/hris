@@ -1,1 +1,28 @@
-{{ records | raw }}
+{% extends '::base.html.twig' %}
+
+{% block javascripts %}
+    {{ parent() }}
+    <script type="text/javascript" src="{{ asset('bundles/hrisimportexport/js/importExport.js') }}"></script>
+
+    <script type="text/javascript">
+
+        //Importing fields
+        importFields( '{{ fields | raw | escape('js') }}');
+
+        //Importing Field Options
+        importFieldOptions( '{{ fieldOptions | raw | escape('js') }}' );
+
+        //Importing Organisationunits
+        importOrganisationUnit( '{{ organisationUnit | raw | escape('js') }}' );
+
+        //Importing records
+        importRecords( '{{ records | raw | escape('js') }}' );
+
+    </script>
+
+{% endblock %}
+
+
+{% block right_content -%}
+<select size="30" name="status" id="status" style="width: 40%"></select>
+{% endblock %}
