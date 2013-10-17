@@ -1,5 +1,5 @@
 //Importing fields
-function importFields( fields ){
+function importData( fields, fieldOptions, organisationUnits, records ){
 
     //Initialize field Import Message
     $("#status").append($('<option>', {
@@ -17,13 +17,15 @@ function importFields( fields ){
                 value: "",
                 text: "Field Import Completed"
             }));
+
+            importFieldOptions( fieldOptions,  organisationUnits, records )
         }
     });
 
 }
 
 //Importing Field Options
-function importFieldOptions( fieldOptions ){
+function importFieldOptions( fieldOptions,  organisationUnits, records ){
 
     //Initialize field Import Message
     $("#status").append($('<option>', {
@@ -41,13 +43,15 @@ function importFieldOptions( fieldOptions ){
                 value: "",
                 text: "Field Options Import Completed"
             }));
+
+            importOrganisationUnit( organisationUnits, records )
         }
     });
 
 }
 
 //Importing Organisationunits
-function importOrganisationUnit( organisationUnits ){
+function importOrganisationUnit( organisationUnits, records ){
 
     //Initialize field Import Message
     $("#status").append($('<option>', {
@@ -65,6 +69,8 @@ function importOrganisationUnit( organisationUnits ){
                 value: "",
                 text: "organisationUnits Import Completed"
             }));
+
+            importRecords( records )
         }
     });
 
