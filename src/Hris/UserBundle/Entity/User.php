@@ -175,12 +175,12 @@ class User extends BaseUser implements ParticipantInterface
      * )
      */
     protected $groups;
-    
-    /*
+
+    /**
      * @var Form $form
      *
      * @ORM\ManyToMany(targetEntity="Hris\FormBundle\Entity\Form", inversedBy="user")
-     * @ORM\JoinTable(name="hris_user_forms",
+     * @ORM\JoinTable(name="hris_user_formmembers",
      *   joinColumns={
      *     @ORM\JoinColumn(name="user_id", referencedColumnName="id", onDelete="CASCADE")
      *   },
@@ -389,7 +389,6 @@ class User extends BaseUser implements ParticipantInterface
     public function addForm(Form $form)
     {
         $this->form[$form->getId()] = $form;
-        $form->addUser($this);
 
         return $this;
     }
@@ -402,7 +401,6 @@ class User extends BaseUser implements ParticipantInterface
     public function removeForm(Form $form)
     {
         $this->form->removeElement($form);
-        $form->removeFormGroup($this);
     }
 
     /**
