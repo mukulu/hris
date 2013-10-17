@@ -239,8 +239,17 @@ class DashboardController extends Controller
         $ageChart = $this->constructChartAction($dashboardAgeField,$dashboardAgeField,$data,$organisationunit,$categories,'column','Age Distribution','agedistribution');
 
         /*
+         * Messaging
+         */
+        $provider = $this->get('fos_message.provider');
+
+        $unreadMessages = $provider->getNbUnreadMessages();
+        if(empty($unreadMessages)) $unreadMessages= 0;
+
+        /*
         * Prepare the User Defined Dashboard Charts
         */
+        $entitiesChart = array();
         $entities = $queryBuilder->select('dashboard')
             ->from('HrisDashboardBundle:DashboardChart','dashboard')
             ->where('dashboard.user = :uname')
@@ -263,22 +272,18 @@ class DashboardController extends Controller
             foreach($entity->getForm() as $form){
                 $forms->add($form);
             }
-            $fieldOne = $entityManager->getRepository('HrisFormBundle:Field')->findOneBy
-                (array('caption'=> $entity->getFieldOne()));
-            $fieldTwo = $entityManager->getRepository('HrisFormBundle:Field')->findOneBy
-                (array('caption'=> $entity->getFieldTwo()));
 
-            $entitiesData = $reportAggregationController::aggregationEngine($organisationunit, $forms, $fieldOne,$organisationunitGroups, $entity->getLowerLevels(), $fieldTwo);
+            $entitiesData = $reportAggregationController::aggregationEngine($organisationunit, $forms, $entity->getFieldOne(),$organisationunitGroups, $entity->getLowerLevels(), $entity->getFieldTwo());
 
             //if only one field selected
-            if($fieldOne->getId() == $fieldTwo->getId()){
+            if($entity->getFieldOne()->getId() == $entity->getFieldTwo()->getId()){
 
                 foreach($entitiesData as $result){
-                    $categories[] = $result[strtolower($fieldOne->getName())];
+                    $categories[] = $result[strtolower($entity->getFieldOne()->getName())];
                     $data[] =  $result['total'];
 
                     if($entity->getGraphType() == 'pie'){
-                        $piedata[] = array('name' => $result[strtolower($fieldOne->getName())],'y' => $result['total']);
+                        $piedata[] = array('name' => $result[strtolower($entity->getFieldOne()->getName())],'y' => $result['total']);
                     }
                 }
                 if($entity->getGraphType() == 'pie') $data = $piedata;
@@ -286,8 +291,8 @@ class DashboardController extends Controller
 
             }else{//Two fields selected
                 foreach($entitiesData as $result){
-                    $keys[$result[strtolower($fieldTwo->getName())]][] = $result['total'];
-                    $categoryKeys[$result[strtolower($fieldOne->getName())]] = $result['total'];
+                    $keys[$result[strtolower($entity->getFieldTwo()->getName())]][] = $result['total'];
+                    $categoryKeys[$result[strtolower($entity->getFieldOne()->getName())]] = $result['total'];
                 }
                 $series = array();
                 foreach($keys as $key => $values){
@@ -297,7 +302,7 @@ class DashboardController extends Controller
                         'data'  => $values,
                     );
                 }
-                $formatterLabel = $fieldTwo->getCaption();
+                $formatterLabel = $entity->getFieldTwo()->getCaption();
                 $categories = array_keys($categoryKeys);
                 $data = $series;
             }
@@ -311,15 +316,9 @@ class DashboardController extends Controller
             }else{
                 $graph = "pie";
             }
-            $entitiesChart[] = $this->constructChartAction($fieldOne,$fieldTwo,$data,$organisationunit,$categories,$graph,$entity->getName(),str_replace(' ','_',strtolower($entity->getName())));
-        }
-        /*
-         * Messaging
-         */
-        $provider = $this->get('fos_message.provider');
+            $entitiesChart[] = $this->constructChartAction($entity->getFieldOne(),$entity->getFieldTwo(),$data,$organisationunit,$categories,$graph,$entity->getName(),str_replace(' ','_',strtolower($entity->getName())));
 
-        $unreadMessages = $provider->getNbUnreadMessages();
-        if(empty($unreadMessages)) $unreadMessages= 0;
+        }
 
         return array(
             'combinationchart'=>$combinationdashboardchart,
@@ -375,7 +374,8 @@ class DashboardController extends Controller
      */
     public function newAction()
     {
-        $aggregationForm = $this->createForm(new DashboardType(),null,array('em'=>$this->getDoctrine()->getManager()));
+        $entity = new DashboardChart();
+        $aggregationForm = $this->createForm(new DashboardType(),$entity,array('em'=>$this->getDoctrine()->getManager()));
 
         return array(
             'aggregationForm'=>$aggregationForm->createView(),
@@ -484,7 +484,7 @@ class DashboardController extends Controller
         $editForm = $this->createForm(new DashboardType(), $entity,array('em'=>$this->getDoctrine()->getManager()));
         $editForm->bind($request);
 
-        if ($editForm->isValid()) {die();
+        if ($editForm->isValid()) {
             $em->persist($entity);
             $em->flush();
 
