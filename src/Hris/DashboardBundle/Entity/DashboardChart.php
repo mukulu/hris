@@ -28,6 +28,7 @@ use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\ORM\Mapping as ORM;
 use Gedmo\Mapping\Annotation as Gedmo;
 
+use Hris\FormBundle\Entity\Field;
 use Hris\FormBundle\Entity\Form;
 use Hris\UserBundle\Entity\User;
 use Hris\OrganisationunitBundle\Entity\Organisationunit;
@@ -37,7 +38,7 @@ use Symfony\Component\Validator\Constraints as Assert;
  * Hris\DashboardBundle\Entity\DashboardChart
  *
  * @Gedmo\Loggable
- * @ORM\Table(name="hris_dashboardchart", uniqueConstraints={@ORM\UniqueConstraint(name="userFieldOneTwoGraphTypeLowerLevel_idx",columns={"user_id", "fieldOne","fieldTwo","graphType","lowerLevels"})})
+ * @ORM\Table(name="hris_dashboardchart", uniqueConstraints={@ORM\UniqueConstraint(name="userFieldOneTwoGraphTypeLowerLevel_idx",columns={"user_id", "fieldone_id","fieldtwo_id","graphType","lowerLevels"})})
  * @ORM\Entity(repositoryClass="Hris\DashboardBundle\Entity\DashboardChartRepository")
  */
 class DashboardChart
@@ -76,18 +77,24 @@ class DashboardChart
     private $description;
 
     /**
-     * @var string $fieldOne
+     * @var Field $fieldOne
      *
      * @Gedmo\Versioned
-     * @ORM\Column(name="fieldOne", type="string", length=64)
+     * @ORM\ManyToOne(targetEntity="Hris\FormBundle\Entity\Field",inversedBy="dashboardChart")
+     * @ORM\JoinColumns({
+     *   @ORM\JoinColumn(name="fieldone_id", referencedColumnName="id", onDelete="CASCADE")
+     * })
      */
     private $fieldOne;
 
     /**
-     * @var string $fieldTwo
+     * @var Field $fieldTwo
      *
      * @Gedmo\Versioned
-     * @ORM\Column(name="fieldTwo", type="string", length=64)
+     * @ORM\ManyToOne(targetEntity="Hris\FormBundle\Entity\Field",inversedBy="dashboardChart")
+     * @ORM\JoinColumns({
+     *   @ORM\JoinColumn(name="fieldtwo_id", referencedColumnName="id", onDelete="CASCADE")
+     * })
      */
     private $fieldTwo;
 
@@ -234,20 +241,20 @@ class DashboardChart
     /**
      * Set fieldOne
      *
-     * @param string $fieldOne
+     * @param Field $fieldOne
      * @return DashboardChart
      */
-    public function setFieldOne($fieldOne)
+    public function setFieldOne(Field $fieldOne = null)
     {
         $this->fieldOne = $fieldOne;
-    
+
         return $this;
     }
 
     /**
      * Get fieldOne
      *
-     * @return string 
+     * @return Field
      */
     public function getFieldOne()
     {
@@ -257,20 +264,20 @@ class DashboardChart
     /**
      * Set fieldTwo
      *
-     * @param string $fieldTwo
+     * @param Field $fieldTwo
      * @return DashboardChart
      */
-    public function setFieldTwo($fieldTwo)
+    public function setFieldTwo(Field $fieldTwo = null)
     {
         $this->fieldTwo = $fieldTwo;
-    
+
         return $this;
     }
 
     /**
      * Get fieldTwo
      *
-     * @return string 
+     * @return Field
      */
     public function getFieldTwo()
     {

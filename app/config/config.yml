@@ -5,7 +5,6 @@ imports:
     - { resource: "@HrisUserBundle/Resources/config/profile.xml" }
     - { resource: "@HrisUserBundle/Resources/config/registration.xml" }
     - { resource: "@HrisUserBundle/Resources/config/group.xml" }
-    - { resource: "@HrisMessageBundle/Resources/config/form.xml" }
 
 framework:
     #esi:             ~
@@ -244,5 +243,5 @@ fos_message:
     new_thread_form:
           type:               fos_message.new_thread_multiple_form.type
           handler:            fos_message.new_thread_multiple_form.handler
-          model:              Hris\MessageBundle\FormModel\NewThreadMultipleMessage
+          model:              FOS\MessageBundle\FormModel\NewThreadMultipleMessage
           name:               message

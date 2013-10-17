@@ -166,9 +166,6 @@ class MessageController extends ContainerAware
 
         $q = $request->query->get('q');
         $entityManager = $this->container->get('doctrine.orm.entity_manager');
-        //$queryBuilder = $em->createQueryBuilder();
-        //var_dump($queryBuilder);die();
-        //$queryBuilder = $this->container->get('doctrine.orm.entity_manager')->createQueryBuilder();
 
         /*
          * Getting the Users
@@ -178,7 +175,8 @@ class MessageController extends ContainerAware
         /*
          * Getting the Users Groups
         */
-        //$userGroups = $entityManager->getRepository('HrisUserBundle:Group')->getSearchedUserGroups($q);
+        //$userGroups = $entityManager->getRepository('HrisUserBundle:Group')->getSearchedUserGrou
+
 
         foreach($users as $user){
             $arr[] = Array('id'=>$user->getUsername(),'name'=>$user->getFirstName().' '.$user->getSurname(),"url"=>$this->container->get('templating.helper.assets')->getUrl("commons/images/user.png"));

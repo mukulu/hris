@@ -35,6 +35,9 @@ use Sensio\Bundle\FrameworkExtraBundle\Configuration\Route;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Template;
 use Hris\ImportExportBundle\Entity\Export;
 use Hris\ImportExportBundle\Form\ExportType;
+use Symfony\Component\HttpFoundation\Response;
+use Hris\FormBundle\Entity\Field;
+use Hris\FormBundle\Entity\FieldOption;
 use ZipArchive;
 
 /**
@@ -312,7 +315,7 @@ class ImportController extends Controller
                 $fieldObject->setDataType($dataType);
                 $fieldObject->setInputType($inputType);
                 $fieldObject->setIsCalculated($field[0]['isCalculated']);
-                $fieldObject->setDatecreated($field[0]['datecreated']);
+               // $fieldObject->setDatecreated($field[0]['datecreated']);
                 $em->persist($fieldObject);
 
                 $refField[$field['uid']] = $field[0]['uid'];
@@ -355,16 +358,17 @@ class ImportController extends Controller
 
             } else {
 
-                $fieldOptionObject = new Field();
+                $fieldOptionObject = new FieldOption();
                 $fieldOptionObject->setUid($fieldOption[0]['uid']);
+                $fieldOptionObject->setField($field);
                 $fieldOptionObject->setValue($fieldOption[0]['value']);
                 $fieldOptionObject->setDescription($fieldOption[0]['description']);
                 $fieldOptionObject->setSort($fieldOption[0]['sort']);
                 $fieldOptionObject->setSkipInReport($fieldOption[0]['skipInReport']);
-                $fieldOptionObject->setDatecreated($fieldOption[0]['datecreated']);
+                //$fieldOptionObject->setDatecreated($fieldOption[0]['datecreated']);
                 $em->persist($fieldOptionObject);
 
-                $refFieldOptions[$fieldOption[0]['uid']] = $field[0]['uid'];
+                $refFieldOptions[$fieldOption[0]['uid']] = $fieldOption[0]['uid'];
 
             }
         }
@@ -413,7 +417,7 @@ class ImportController extends Controller
                 $orgunitObject->setParent($organisationUnit[0]['sort']);
                 $orgunitObject->setCode($organisationUnit[0]['code']);
                 $orgunitObject->setDescription($organisationUnit[0]['description']);
-                $orgunitObject->setDatecreated($organisationUnit[0]['datecreated']);
+                //$orgunitObject->setDatecreated($organisationUnit[0]['datecreated']);
 
                 $em->persist($orgunitObject);
 
@@ -440,19 +444,29 @@ class ImportController extends Controller
 
         $em = $this->getDoctrine()->getManager();
 
-        $records = $this->get('request')->request->get('records');
+        $records = json_decode($this->get('request')->request->get('records'), True);
 
-        var_dump($refOrganisationUnit . $refFieldOptions . $refField);
-        die();
+        foreach ($records as $key => $record) {
 
-        $entity = $em->getRepository('HrisRecordsBundle:Record')->findOneBy(array('uid' => $uid));
+            //getting the Object if Exist from the Database
 
-        $form = $em->getRepository('HrisFormBundle:Form')->find($formId);
+            $form = $em->getRepository('HrisFormBundle:Form')->find($record['form_id']);
+            $orgunit = $em->getRepository('HrisOrganisationunitBundle:Organisationunit')->findOneby(array('uid' => $record['orgunit_uid']));
 
-        $entity->setForm($form);
+            $recordObject = $em->getRepository('HrisRecordsBundle:Record')->findOneby(array('instance' => $record[0]['instance']));
 
-        $em = $this->getDoctrine()->getManager();
-        $em->persist($entity);
+            if (empty($recordObject)) {
+
+                $recordObject = new Record();
+                $recordObject->setForm($form);
+                $recordObject->setOrganisationunit($orgunit);
+                $recordObject->setInstance($record[0]['instance']);
+                $recordObject->setUid($record[0]['uid']);
+                //$recordObject->setDatecreated($record[0]['datecreated']);
+
+            }
+        }
+
         $em->flush();
 
         return new Response('success');

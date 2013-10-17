@@ -49,32 +49,13 @@ class DashboardType extends AbstractType
                 )
             ))
             ->add('fieldOne','entity',array(
-                'class'=>'HrisFormBundle:Field',
-                'empty_value' => '--SELECT--',
-                'query_builder'=>function(EntityRepository $er) {
-                    return $er->createQueryBuilder('field')
-                        ->innerJoin('field.inputType','inputType')
-                        ->where('inputType.name=:inputTypeName')
-                        ->orWhere('field.isCalculated=True')
-                        ->setParameter('inputTypeName',"Select")
-                        ->orderBy('field.isCalculated,field.name','ASC');
-                },
+                'required'=> True,
                 'constraints'=> array(
                     new NotBlank(),
                 )
             ))
-            ->add('fieldTwo','entity',array(
-                'class'=>'HrisFormBundle:Field',
-                'empty_value' => '--SELECT--',
+            ->add('fieldTwo',null,array(
                 'required'=>False,
-                'query_builder'=>function(EntityRepository $er) {
-                    return $er->createQueryBuilder('field')
-                        ->innerJoin('field.inputType','inputType')
-                        ->where('inputType.name=:inputTypeName')
-                        ->orWhere('field.isCalculated=True')
-                        ->setParameter('inputTypeName',"Select")
-                        ->orderBy('field.isCalculated,field.name','ASC');
-                },
                 'constraints'=> array(
                     new NotBlank(),
                 )
