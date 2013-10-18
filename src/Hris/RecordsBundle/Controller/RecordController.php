@@ -106,26 +106,38 @@ class RecordController extends Controller
             $fieldOptionMap[call_user_func_array(array($fieldOption, "get${recordFieldOptionKey}"),array()) ] =   $fieldOption->getValue();
         }
 
+        //If user's organisationunit is data entry level pull only records of his organisationunit
+        //else pull lower children too.
         $records = $queryBuilder->select('record')
             ->from('HrisRecordsBundle:Record','record')
             ->join('record.organisationunit','organisationunit')
-            ->join('record.form','form')
-            ->join('organisationunit.organisationunitStructure','organisationunitStructure')
-            ->join('organisationunitStructure.level','organisationunitLevel')
-            ->andWhere('organisationunit.active=True')
-            ->andWhere('organisationunitLevel.level >= (
+            ->join('record.form','form');
+        if($organisationunit->getOrganisationunitStructure()->getLevel()->getDataentrylevel()) {
+            $records = $records
+                ->join('organisationunit.organisationunitStructure','organisationunitStructure')
+                ->join('organisationunitStructure.level','organisationunitLevel')
+                ->andWhere('organisationunitLevel.level >= (
                                         SELECT selectedOrganisationunitLevel.level
                                         FROM HrisOrganisationunitBundle:OrganisationunitStructure selectedOrganisationunitStructure
                                         INNER JOIN selectedOrganisationunitStructure.level selectedOrganisationunitLevel
                                         WHERE selectedOrganisationunitStructure.organisationunit=:selectedOrganisationunit )'
-            )
-            ->andWhere('organisationunitStructure.level'.$organisationunit->getOrganisationunitStructure()->getLevel()->getLevel().'Organisationunit=:levelId')
-            ->andWhere($queryBuilder->expr()->in('form.id',':formIds'))
-            ->setParameters(array(
+                )
+            ->andWhere('organisationunitStructure.level'.$organisationunit->getOrganisationunitStructure()->getLevel()->getLevel().'Organisationunit=:levelId');
+            $parameters = array(
                 'levelId'=>$organisationunit->getId(),
                 'selectedOrganisationunit'=>$organisationunit->getId(),
                 'formIds'=>$formIds,
-            ))
+            );
+        }else {
+            $records = $records->andWhere('organisationunit.id=:selectedOrganisationunit');
+            $parameters = array(
+                'selectedOrganisationunit'=>$organisationunit->getId(),
+                'formIds'=>$formIds,
+            );
+        }
+
+        $records = $records->andWhere($queryBuilder->expr()->in('form.id',':formIds'))
+            ->setParameters($parameters)
             ->getQuery()->getResult();
 
         $formNames = NULL;
