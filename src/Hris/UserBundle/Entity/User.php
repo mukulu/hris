@@ -224,6 +224,12 @@ class User extends BaseUser implements ParticipantInterface
         {
             $this->datecreated = new \DateTime('now');
         }
+        if(empty($this->expiresAt)) {
+            $this->expiresAt = new \DateTime('now +1 year');
+        }
+        if(empty($this->credentialsExpireAt)) {
+            $this->credentialsExpireAt = new \DateTime('now +1 year');
+        }
     }
 
     /**
