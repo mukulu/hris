@@ -28,6 +28,7 @@ use Hris\FormBundle\Entity\Form;
 use Hris\FormBundle\Entity\ResourceTable;
 use Hris\OrganisationunitBundle\Entity\Organisationunit;
 use Hris\FormBundle\Entity\Field;
+use Hris\RecordsBundle\Entity\Record;
 use Hris\ReportsBundle\Form\ReportAggregationType;
 use Hris\ReportsBundle\Form\ReportEmployeeRecordsType;
 use Symfony\Component\HttpFoundation\Request;
@@ -104,7 +105,7 @@ class ReportEmployeeRecordsController extends Controller
             // Accrue visible fields
             foreach($form->getFormVisibleFields() as $visibleFieldKey=>$visibleField) {
 
-                if(!in_array($visibleField->getField(),$visibleFields) && !$visibleField->getField()->getIsCalculated()) $visibleFields[] =$visibleField->getField();
+                if(!in_array($visibleField->getField(),$visibleFields)) $visibleFields[] =$visibleField->getField();
             }
             // Accrue form fields
             foreach($form->getFormFieldMember() as $formFieldKey=>$formField) {
@@ -128,12 +129,10 @@ class ReportEmployeeRecordsController extends Controller
             }
         }else {
             foreach ($form->getFormFieldMember() as $key => $fieldObject) {
-                if( !$fieldObject->getField()->getIsCalculated() ) {
                     if(empty($visibleFieldUids)) $visibleFieldUids  = $fieldObject->getField()->getId();
                     else $visibleFieldUids .=','.$fieldObject->getField()->getId();
                     $individualSearchClause .= '{type:"text"},';
                     $visibleFieldsCounter++;
-                }
             }
         }
         $visibleFieldParameters['name'] = 'visibleFields';
@@ -206,7 +205,7 @@ class ReportEmployeeRecordsController extends Controller
         }
         //preparing array of Fields
         $queryBuilder = $this->getDoctrine()->getManager()->createQueryBuilder();
-        $fieldObjects = $queryBuilder->select('field')->from('HrisFormBundle:Field','field')->where($queryBuilder->expr()->in('field.id',$visibleFieldIds))->andWhere('field.isCalculated=False')->getQuery()->getResult();
+        $fieldObjects = $queryBuilder->select('field')->from('HrisFormBundle:Field','field')->where($queryBuilder->expr()->in('field.id',$visibleFieldIds))->getQuery()->getResult();
         foreach ($fieldObjects as $key => $fieldObject) {
             $field[strtolower($fieldObject->getName())] = $fieldObject->getId();
             $fieldKeys[strtolower($fieldObject->getName())]=$key; // Used later in tracing FieldObject for resolving fieldOptions
@@ -312,8 +311,6 @@ class ReportEmployeeRecordsController extends Controller
         }
 
         // Putting select column clause together the query
-        $birthDateNotPresent=True;
-        $firstAppointmentNotPresent=True;
         foreach($visibleFields as $key=>$visibleFieldObject) {
             // Building the Select column clause
             if(isset($selectColumnClause)) {
@@ -321,29 +318,11 @@ class ReportEmployeeRecordsController extends Controller
             }else {
                 $selectColumnClause="ResourceTable.".strtolower($visibleFieldObject->getName())." as ".strtolower($visibleFieldObject->getName());
             }
-            if($visibleFieldObject->getName()=="dateoffirstappointment") {
-                $firstAppointmentNotPresent=False;
-            }
-            if($visibleFieldObject->getName()=="birthdate") {
-                $birthDateNotPresent=False;
-            }
         }
         if(isset($selectColumnClause)) {
             $selectColumnClause.=",ResourceTable.instance as instance,ResourceTable.lastupdated as lastupdated,ResourceTable.organisationunit_name as organisationunit_name";
-            if($firstAppointmentNotPresent==True) {
-                $selectColumnClause .=",ResourceTable.dateoffirstappointment as dateoffirstappointment";
-            }
-            if($birthDateNotPresent == True) {
-                $selectColumnClause .=",ResourceTable.birthdate as birthdate";
-            }
         }else {
             $selectColumnClause="ResourceTable.instance as instance,ResourceTable.lastupdated as lastupdated,ResourceTable.organisationunit_name as organisationunit_name";
-            if($firstAppointmentNotPresent==True) {
-                $selectColumnClause .=",ResourceTable.dateoffirstappointment as dateoffirstappointment";
-            }
-            if($birthDateNotPresent == True) {
-                $selectColumnClause .=",ResourceTable.birthdate as birthdate";
-            }
         }
         // Constructing where clause
         $whereClause=NULL;
@@ -445,80 +424,39 @@ class ReportEmployeeRecordsController extends Controller
                     }else {
                         $counter++;
                     }
-                    for ( $i=0 ; $i<count($visibleFieldIds)-1 ; $i++ ) {
+                    for ( $i=0 ; $i<count($visibleFieldIds) ; $i++ ) {
                         $fieldObject = $fieldObjects[$i];
                         if ($fieldObject->getInputType()->getName() == 'Select') {
                             $displayValue = $recordArray[strtolower($fieldObject->getName())];
                         }else if ($fieldObject->getInputType()->getName() == 'Date') {
-                            if(isset($recordArray[strtolower($fieldObject->getName())])) {
-                                $displayValue = new \DateTime($recordArray[strtolower($fieldObject->getName())]);
+                            if($fieldObject->getIsCalculated()) {
+
+                                if(preg_match_all('/\#{([^\}]+)\}/',$fieldObject->getCalculatedExpression(),$match)) {
+                                    foreach($fieldObjects as $fieldKey=>$field) {
+                                        if($field->getName()==$match[1][0]) {
+                                            // Translates to $field->getName()
+                                            $valueKey = $field->getName();
+                                        }
+                                    }
+                                }
+                                $derivedDate = new \DateTime($recordArray[strtolower($field->getName())]);
                                 // Date Field Value
-                                $displayValue = $displayValue->format('d/m/Y');
+                                $formattedDerivedDate = $derivedDate->format('d/m/Y');
+                                $expression = @@str_replace($match[0][0],$formattedDerivedDate,$fieldObject->getCalculatedExpression());
+
+                                $displayValue = eval("return $expression;");
+                            }else {
+                                if(isset($recordArray[strtolower($fieldObject->getName())])) {
+                                    $displayValue = new \DateTime($recordArray[strtolower($fieldObject->getName())]);
+                                    // Date Field Value
+                                    $displayValue = $displayValue->format('d/m/Y');
+                                }
                             }
                         } else {
                             $displayValue = $recordArray[strtolower($fieldObject->getName())];
                         }
                         if(!empty($displayValue)) $row[]=$displayValue; else $row[] = "";
                     }
-                    // Employment duration calcuation @wild hack and hard coded
-                    if(isset($recordArray["dateoffirstappointment"])) {
-                        $firstAppointment = new \DateTime($recordArray["dateoffirstappointment"]);
-                        if (!empty($firstAppointment)){
-                            if(gettype($firstAppointment)=="object") {
-                                $correctFormat="Y-m-d";
-                                $firstAppointment = $firstAppointment->format($correctFormat);
-                            }else {
-                                // Workaround for dates that got saved as d/m/Y instead of Y-m-d
-                                $correctFormat = 'd/m/Y';
-                                $firstAppointmentDateObject = \DateTime::createFromFormat($correctFormat, $firstAppointment);
-                                if(empty($firstAppointmentDateObject)) {
-                                    $correctFormat = 'Y-m-d';
-                                    $firstAppointment = \DateTime::createFromFormat($correctFormat, $firstAppointment);
-                                }else {
-                                    $correctFormat="Y-m-d";
-                                    $firstAppointment = $firstAppointmentDateObject->format('Y-m-d');
-                                }
-                            }
-                            $datediff = $this->dateDiff("-", date($correctFormat), $firstAppointment);
-                            if (round($datediff / 12, 0) < 12) {
-                                $employmentDuration = round($datediff / 12, 0) . "(m)";
-                            } else {
-                                $employmentDuration = floor($datediff / 365) . "(y) " . floor(($datediff % 365) / 30) . "(m)";
-                            }
-                        }else {
-                            $employmentDuration = "";
-                        }
-                    }
-                    if(isset($recordArray["birthdate"])) {
-                        // Hard coding calculated fields
-                        // Calculating age and retirement
-                        $birthdate = new \DateTime($recordArray["birthdate"]);
-                        $correctFormat = 'Y-m-d';
-                        if (!empty($birthdate)){
-                            if(gettype($birthdate)=="object") {
-                                $birthdate = $birthdate->format('Y-m-d');
-                            }else {
-                                // Workaround for dates that got saved as d/m/Y instead of Y-m-d
-                                $correctFormat = 'd/m/Y';
-                                $birthdate = \DateTime::createFromFormat($correctFormat, $birthdate);
-                                $birthdate = $birthdate->format('Y-m-d');
-                            }
-
-                        }
-                        if (!empty($birthdate)) {
-
-                            $age = round($this->dateDiff("-", date($correctFormat), $birthdate) / 365, 0);
-                            $date = explode('-', $birthdate);
-                            $retirementDate = $date[2] . '/' . $date[1] . '/' . ($date[0] + 60);
-                            $birthdate = $date[2] . '/' . $date[1] . '/' . $date[0];
-                        } else {
-                            $age = "";
-                            $retirementDate = "";
-                        }
-                    }
-                    if(isset($age)) $row[] = $age;else $row[]='';
-                    if(isset($employmentDuration)) $row[] = $employmentDuration;else $row[]='';
-                    if(isset($retirementDate)) $row[] = $retirementDate;else $row[]='';
                     $lastUpdated = new \DateTime($recordArray["lastupdated"]);
                     $row[] = $lastUpdated->format('d/m/Y');
                     $row[] = $recordArray["organisationunit_name"];
@@ -617,11 +555,6 @@ class ReportEmployeeRecordsController extends Controller
         }
 
         // Calculated fields
-        $query .= "ResourceTable.age ,";
-        $query .= "ResourceTable.age_group ,";
-        $query .= "ResourceTable.employment_duration ,";
-        $query .= "ResourceTable.retirement_date ,";
-        $query .= "ResourceTable.retirement_date_year ,";
         $query .= "ResourceTable.form_name ,";
 
         $query .= " Orgunit.longname FROM ".$resourceTableName." ResourceTable inner join hris_organisationunit as Orgunit ON Orgunit.id = ResourceTable.organisationunit_id INNER JOIN hris_organisationunitstructure AS Structure ON Structure.organisationunit_id = ResourceTable.organisationunit_id";
@@ -794,11 +727,6 @@ class ReportEmployeeRecordsController extends Controller
             }
             // Calculated fields
             $excelService->excelObj->setActiveSheetIndex(0)
-                ->setCellValue($column++.$row,  $rows["age"])
-                ->setCellValue($column++.$row,  $rows["age_group"])
-                ->setCellValue($column++.$row,  $rows["employment_duration"])
-                ->setCellValue($column++.$row,  $rows["retirement_date"])
-                ->setCellValue($column++.$row,  $rows["retirement_date_year"])
                 ->setCellValue($column++.$row,  $rows["form_name"])
                 ->setCellValue($column.$row,  $rows["longname"]);
 
@@ -890,11 +818,6 @@ class ReportEmployeeRecordsController extends Controller
         }
 
         // Calculated fields
-        $query .= "ResourceTable.age ,";
-        $query .= "ResourceTable.age_group ,";
-        $query .= "ResourceTable.employment_duration ,";
-        $query .= "ResourceTable.retirement_date ,";
-        $query .= "ResourceTable.retirement_date_year ,";
         $query .= "ResourceTable.form_name ,";
 
         $query .= " Orgunit.longname FROM ".$resourceTableName." ResourceTable inner join hris_organisationunit as Orgunit ON Orgunit.id = ResourceTable.organisationunit_id INNER JOIN hris_organisationunitstructure AS Structure ON Structure.organisationunit_id = ResourceTable.organisationunit_id";
@@ -1081,11 +1004,6 @@ class ReportEmployeeRecordsController extends Controller
             }
             // Calculated fields
             $excelService->excelObj->setActiveSheetIndex(0)
-                ->setCellValue($column++.$row,  $rows["age"])
-                ->setCellValue($column++.$row,  $rows["age_group"])
-                ->setCellValue($column++.$row,  $rows["employment_duration"])
-                ->setCellValue($column++.$row,  $rows["retirement_date"])
-                ->setCellValue($column++.$row,  $rows["retirement_date_year"])
                 ->setCellValue($column++.$row,  $rows["form_name"])
                 ->setCellValue($column.$row,  $rows["longname"]);
 
