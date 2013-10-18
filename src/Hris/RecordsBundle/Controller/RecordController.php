@@ -106,13 +106,6 @@ class RecordController extends Controller
             $fieldOptionMap[call_user_func_array(array($fieldOption, "get${recordFieldOptionKey}"),array()) ] =   $fieldOption->getValue();
         }
 
-        //Prepare field map, converting from stored FieldOption key in record value array to actual text value
-        $fields = $this->getDoctrine()->getManager()->getRepository('HrisFormBundle:Field')->findAll();
-        foreach ($fields as $fieldKey => $field) {
-            $recordFieldKey = ucfirst(Record::getFieldKey());
-            $fieldMap[$field->getName()] =  call_user_func_array(array($field, "get${recordFieldKey}"),array());
-        }
-
         $records = $queryBuilder->select('record')
             ->from('HrisRecordsBundle:Record','record')
             ->join('record.organisationunit','organisationunit')
@@ -152,11 +145,11 @@ class RecordController extends Controller
             // Accrue visible fields
             foreach($form->getFormVisibleFields() as $visibleFieldKey=>$visibleField) {
 
-                if(!in_array($visibleField->getField(),$visibleFields) && !$visibleField->getField()->getIsCalculated()) $visibleFields[] =$visibleField->getField();
+                if(!in_array($visibleField->getField(),$visibleFields)) $visibleFields[] =$visibleField->getField();
             }
             // Accrue form fields
             foreach($form->getFormFieldMember() as $formFieldKey=>$formField) {
-                if(!in_array($formField->getField(),$formFields) && !$formField->getField()->getIsCalculated()) $formFields[] =$formField->getField();
+                if(!in_array($formField->getField(),$formFields)) $formFields[] =$formField->getField();
             }
         }
         $title = "Records Report for ".$organisationunit->getLongname();
@@ -172,9 +165,9 @@ class RecordController extends Controller
         return array(
             'title'=>$title,
             'visibleFields' => $visibleFields,
+            'formFields'=>$formFields,
             'records'=>$records,
             'optionMap'=>$fieldOptionMap,
-            'fieldMap'=>$fieldMap,
             'userForms'=>$userForms,
         );
     }

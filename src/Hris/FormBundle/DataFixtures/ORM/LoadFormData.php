@@ -98,12 +98,12 @@ class LoadFormData extends AbstractFixture implements OrderedFixtureInterface
                 ),
                 'visibleFields'=>Array(
                     0=>'Firstname',
-                    1=>'Middlename',
                     2=>'Surname',
                     3=>'DateOfBirth',
-                    4=>'Sex',
                     16=>'Profession',
-                    17=>'PresentDesignation',
+                    18=>'Age',
+                    19=>'EmploymentDuration',
+                    20=>'RetirementDate'
                 ),
                 'uniqueFields'=>Array(
                     0=>'Firstname',
@@ -317,12 +317,12 @@ class LoadFormData extends AbstractFixture implements OrderedFixtureInterface
                 ),
                 'visibleFields'=>Array(
                     0=>'Firstname',
-                    1=>'Middlename',
                     2=>'Surname',
                     3=>'DateOfBirth',
-                    4=>'Sex',
                     16=>'Profession',
-                    17=>'PresentDesignation',
+                    18=>'Age',
+                    19=>'EmploymentDuration',
+                    20=>'RetirementDate'
                 ),
                 'uniqueFields'=>Array(
                     0=>'Firstname',
@@ -512,12 +512,12 @@ class LoadFormData extends AbstractFixture implements OrderedFixtureInterface
                 ),
                 'visibleFields'=>Array(
                     0=>'Firstname',
-                    1=>'Middlename',
                     2=>'Surname',
                     3=>'DateOfBirth',
-                    4=>'Sex',
                     16=>'Profession',
-                    17=>'PresentDesignation',
+                    18=>'Age',
+                    19=>'EmploymentDuration',
+                    20=>'RetirementDate'
                 ),
                 'uniqueFields'=>Array(
                     0=>'Firstname',
@@ -737,12 +737,12 @@ class LoadFormData extends AbstractFixture implements OrderedFixtureInterface
                 ),
                 'visibleFields'=>Array(
                     0=>'Firstname',
-                    1=>'Middlename',
                     2=>'Surname',
                     3=>'DateOfBirth',
-                    4=>'Sex',
                     16=>'Profession',
-                    17=>'HospitalPresentDesignation',
+                    18=>'Age',
+                    19=>'EmploymentDuration',
+                    20=>'RetirementDate'
                 ),
                 'uniqueFields'=>Array(
                     0=>'Firstname',

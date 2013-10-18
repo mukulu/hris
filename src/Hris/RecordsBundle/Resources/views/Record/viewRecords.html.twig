@@ -23,9 +23,6 @@
                 {% for visibleField in visibleFields %}
                     <th>{{ visibleField.caption }}</th>
                 {% endfor %}
-                <th>Age</th>
-                <th>Employment Duration</th>
-                <th>Retirement Date</th>
                 <th>Last updated</th>
                 <th>Duty Post</th>
                 <th>Actions</th>
@@ -38,17 +35,18 @@
             <tr id = {{ record.uid }}>
                 <td>{{ incr }}</td>
                 {% for visibleField in visibleFields %}
-                    {% if visibleField.getInputType == 'Select' %}
-                        <td>{{ optionMap[ record.getValue( visibleField.uid ) ] }}</td>
-                    {% elseif visibleField.getInputType == 'Date' %}
-                        <td>{{ record.getValue( visibleField.uid ) | date('d/m/Y') }}</td>
+                    {% if visibleField.getIsCalculated %}
+                        <td>{{ record | calculateFieldExpression(visibleField.getCalculatedExpression,formFields) }}</td>
                     {% else %}
-                        <td>{{ record.getValue( visibleField.uid ) }}</td>
+                        {% if visibleField.getInputType == 'Select' %}
+                            <td>{{ optionMap[ record.getValue( visibleField.uid ) ] }}</td>
+                        {% elseif visibleField.getInputType == 'Date' %}
+                            <td>{{ record.getValue( visibleField.uid ) | date('d/m/Y') }}</td>
+                        {% else %}
+                            <td>{{ record.getValue( visibleField.uid ) }}</td>
+                        {% endif %}
                     {% endif %}
                 {% endfor %}
-                <td>{{ "now"|date('Y') - record.getValue( fieldMap['Birthdate'] ) |date('Y') }} yrs</td>
-                <td>{{ "now"|date('Y') - record.getValue( fieldMap['DateofFirstAppointment'] ) |date('Y') }} yrs</td>
-                <td> {{ record.getValue( fieldMap['Birthdate'] )|date_modify("+60 year") | date('d/m/Y') }}</td>
                 <td>{{ record.lastupdated| date('d/m/Y') }}</td>
                 <td>{{ record.organisationunit.longname }}</td>
                 <td>

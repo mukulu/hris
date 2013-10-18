@@ -757,7 +757,6 @@ class ResourceTable
 
                                         if(!empty($dataValue[$valueKey])) {
                                             $displayValue = new \DateTime($dataValue[$valueKey]['date'],new \DateTimeZone ($dataValue[$valueKey]['timezone']));
-                                            //var_dump($field->getCalculatedExpression());
                                             $datavalue = str_replace($match[0][0],$displayValue->format('Y-m-d'),$field->getCalculatedExpression());
 
                                             $dataArray[$field->getName()] = eval("return $datavalue;");
