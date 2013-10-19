@@ -6,6 +6,19 @@
     <form class="form-horizontal" action="{{ path('organisationunit_update', { 'id': entity.id }) }}" method="post" {{ form_enctype(edit_form) }}>
         <input type="hidden" name="_method" value="PUT" />
         {{ form_widget(edit_form) }}
+
+        <div id="hris_organisationunitbundle_orgnisationunittype_groupsets">
+            {% for organisationunitGroupset in organisationunitGroupsets %}
+                <label for="hris_organisationunitbundle_orgnisationunittype_groupsets_{{ organisationunitGroupset.uid }}">Organisationunit {{ organisationunitGroupset.name }}</label>
+                <select id="hris_organisationunitbundle_orgnisationunittype_groupsets_{{ organisationunitGroupset.uid }}" name="hris_organisationunitbundle_orgnisationunittype_groupsets[{{ organisationunitGroupset.uid }}]" required="required">
+                    <option value=""></option>
+                    {% for organisationunitGroup in organisationunitGroupset.getOrganisationunitGroup %}
+                        <option value="{{ organisationunitGroup.id }}" {% if entity.getOrganisationunitGroup.contains(organisationunitGroup) %} selected="selected"{% endif %}>{{ organisationunitGroup.name }}</option>
+                    {% endfor %}
+                </select>
+            {% endfor %}
+        </div>
+
         <div id="hris_organisationunitbundle_organisationunittype_completeness">
             {% for completenessForm in completenessForms %}
                 <label for="hris_organisationunitbundle_organisationunittype_completeness{{ completenessForm.uid }}">{{ completenessForm.name }} Expectation</label>
