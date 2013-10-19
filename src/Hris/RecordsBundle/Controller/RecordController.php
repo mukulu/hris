@@ -164,7 +164,7 @@ class RecordController extends Controller
                 if(!in_array($formField->getField(),$formFields)) $formFields[] =$formField->getField();
             }
         }
-        $title = "Records Report for ".$organisationunit->getLongname();
+        $title = "Employee Records for ".$organisationunit->getLongname();
 
         $title .= " for ".$formNames;
         if(empty($visibleFields)) $visibleFields=$formFields;
@@ -174,6 +174,12 @@ class RecordController extends Controller
         $user = $this->container->get('security.context')->getToken()->getUser();
         $userForms = $user->getForm();
 
+        $delete_forms = NULL;
+        foreach($records as $entity) {
+            $delete_form= $this->createDeleteForm($entity->getId());
+            $delete_forms[$entity->getId()] = $delete_form->createView();
+        }
+
         return array(
             'title'=>$title,
             'visibleFields' => $visibleFields,
@@ -181,6 +187,7 @@ class RecordController extends Controller
             'records'=>$records,
             'optionMap'=>$fieldOptionMap,
             'userForms'=>$userForms,
+            'delete_forms' => $delete_forms,
         );
     }
 
@@ -689,6 +696,7 @@ class RecordController extends Controller
         if ($form->isValid()) {
             $em = $this->getDoctrine()->getManager();
             $entity = $em->getRepository('HrisRecordsBundle:Record')->find($id);
+            $form = $entity->getForm();
 
             if (!$entity) {
                 throw $this->createNotFoundException('Unable to find Record entity.');
@@ -698,7 +706,7 @@ class RecordController extends Controller
             $em->flush();
         }
 
-        return $this->redirect($this->generateUrl('record'));
+        return $this->redirect($this->generateUrl('record_viewrecords', array('formid' => $form->getId())));
     }
 
     /**
