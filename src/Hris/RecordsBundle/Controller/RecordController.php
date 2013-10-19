@@ -337,44 +337,6 @@ class RecordController extends Controller
     }
 
     /**
-     * List Records Available for Updating.
-     *
-     * @Route("/{id}", name="record_update_list")
-     * @Method("GET")
-     * @Template("")
-     */
-    public function updatelistAction(Request $request, $id)
-    {
-
-        $em = $this->getDoctrine()->getManager();
-        $forms = $em->getRepository('HrisFormBundle:Form')->find($id);
-
-        $user = $this->container->get('security.context')->getToken()->getUser();
-        $searchString = $this->getRequest()->request->get('sSearch');
-        $sEcho = $this->getRequest()->request->get('sEcho');
-
-        if(!isset($searchString)) $searchString=NULL;
-
-        if ($user->getOrganisationunit()->getOrganisationunitStructure()->getLevel()->getDataentrylevel()) {
-            $oganisationunitObjects = $em->getRepository('HrisOrganisationunitBundle:Organisationunit')->findBy(array('parent' => $user->getOrganisationunit()->getId()));
-            foreach ($oganisationunitObjects as $key => $oganisationunit) {
-                $oganisationunitids[] = $oganisationunit->getId();
-            }
-            $oganisationunitids[] = $user->getOrganisationunit()->getId();
-        } else {
-            $oganisationunitids = $user->getOrganisationunit()->getId();
-        }
-
-        //preparing array of Fields
-        //mukulu continue from here
-
-
-
-        return array(
-
-        );
-    }
-    /**
      * Creates a new Record entity.
      *
      * @Route("/", name="record_create")
@@ -515,11 +477,19 @@ class RecordController extends Controller
             throw $this->createNotFoundException('Unable to find Record entity.');
         }
 
+        //Prepare field Option map, converting from stored FieldOption key in record value array to actual text value
+        $fieldOptions = $this->getDoctrine()->getManager()->getRepository('HrisFormBundle:FieldOption')->findAll();
+        foreach ($fieldOptions as $fieldOptionKey => $fieldOption) {
+            $recordFieldOptionKey = ucfirst(Record::getFieldOptionKey());
+            $fieldOptionMap[call_user_func_array(array($fieldOption, "get${recordFieldOptionKey}"),array()) ] =   $fieldOption->getValue();
+        }
+
         $deleteForm = $this->createDeleteForm($id);
 
         return array(
             'entity'      => $entity,
             'delete_form' => $deleteForm->createView(),
+            'optionMap'=>$fieldOptionMap,
         );
     }
 
