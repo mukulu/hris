@@ -30,6 +30,7 @@
             <tr>
                 <th>Name</th>
                 <th>Description</th>
+                <td>Users</td>
                 <th>Roles</th>
                 <th>Actions</th>
             </tr>
@@ -39,10 +40,8 @@
                 <tr>
                     <td><a href="{{ path('user_group_show', {'id': group.id} ) }}">{{ group.name }}</a></td>
                     <td>{{ group.description }}</td>
-                    <td>{% for role in group.roles %}
-                            {{ role }},
-                        {% endfor %}
-                    </td>
+                    <td>{{ group.users | length }}</td>
+                    <td>{{ group.roles | length }} </td>
                     <td>
                         <ul class="inline">
                             <li>

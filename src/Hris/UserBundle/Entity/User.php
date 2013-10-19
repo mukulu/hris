@@ -164,7 +164,7 @@ class User extends BaseUser implements ParticipantInterface
     /**
      * @var Group $groups
      *
-     * @ORM\ManyToMany(targetEntity="Hris\UserBundle\Entity\Group", inversedBy="user")
+     * @ORM\ManyToMany(targetEntity="Hris\UserBundle\Entity\Group", inversedBy="users")
      * @ORM\JoinTable(name="hris_user_group_members",
      *   joinColumns={
 	 *     @ORM\JoinColumn(name="user_id", referencedColumnName="id", onDelete="CASCADE")
@@ -417,6 +417,39 @@ class User extends BaseUser implements ParticipantInterface
     public function getForm()
     {
         return $this->form;
+    }
+
+    /**
+     * Add groups
+     *
+     * @param Group $groups
+     * @return User
+     */
+    public function addGroups(Group $groups)
+    {
+        $this->groups[$groups->getId()] = $groups;
+
+        return $this;
+    }
+
+    /**
+     * Remove groups
+     *
+     * @param Group $groups
+     */
+    public function removeGroups(Group $groups)
+    {
+        $this->groups->removeElement($groups);
+    }
+
+    /**
+     * Get groups
+     *
+     * @return \Doctrine\Common\Collections\Collection
+     */
+    public function getGroups()
+    {
+        return $this->groups;
     }
 
     /**

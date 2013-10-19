@@ -75,7 +75,7 @@ class GroupController extends ContainerAware
      * Displays a form to edit an existing Group.
      *
      * @Route("/{id}/edit", requirements={"id"="\d+"}, name="user_group_edit")
-     * @Method("GET|PUT")
+     * @Method("GET|PUT|POST")
      * @Template()
      */
     public function editAction($id)
@@ -85,12 +85,14 @@ class GroupController extends ContainerAware
         $formHandler = $this->container->get('fos_user.group.form.handler');
 
         $process = $formHandler->process($group);
+
         if ($process) {
             $this->setFlash('fos_user_success', 'group.flash.updated');
             $groupUrl =  $this->container->get('router')->generate('user_group_show', array('id' => $group->getId()));
 
             return new RedirectResponse($groupUrl);
         }
+
 
         return $this->container->get('templating')->renderResponse('HrisUserBundle:Group:edit.html.'.$this->getEngine(), array(
             'form'      => $form->createview(),
