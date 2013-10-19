@@ -56,19 +56,13 @@ class LoadIndicatorData extends AbstractFixture implements OrderedFixtureInterfa
         // Load Public Data
         $this->indicators = Array(
             0=>Array(
-                'name'=>'Secondary Education Health Workers',
-                'description'=>'All health works with atleast Secondary Education for Basic education level in Health Centre',
-                'organisationunitGroup'=>'healthcentres',
-                'fieldOptionGroup'=>'Atleast Secondary Education',
-                'year'=>'2013',
-                'value'=>5),
+                'name'=>'Proffesion Targets',
+                'description'=>'Targets for all professions',
+                'organisationunitGroup'=>'healthcentres'),
             1=>Array(
-                'name'=>'University Education Hospital Employees',
-                'description'=>'Hospital health workers with atleast university education',
+                'name'=>'Proffesion Targets',
+                'description'=>'Targets for all professions in hospitals',
                 'organisationunitGroup'=>'hospitals',
-                'fieldOptionGroup'=>'University Education',
-                'year'=>'2010',
-                'value'=>10),
         );
         return $this->indicators;
     }
