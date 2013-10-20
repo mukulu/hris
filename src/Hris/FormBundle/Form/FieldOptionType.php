@@ -54,7 +54,9 @@ class FieldOptionType extends AbstractType
             ))
             ->add('value')
             ->add('description')
-            ->add('childFieldOption')
+            ->add('childFieldOption',null,array(
+                'required'=>False,
+            ))
         ;
     }
 
