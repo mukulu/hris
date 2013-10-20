@@ -230,8 +230,8 @@ class Field
     /**
      * @var FieldOptionMerge $fieldOptionMerge
      *
-     * @ORM\OneToMany(targetEntity="Hris\FormBundle\Entity\FieldOptionMerge", mappedBy="removedOptionField",cascade={"ALL"})
-     * @ORM\OrderBy({"removedoptionvalue" = "ASC"})
+     * @ORM\OneToMany(targetEntity="Hris\FormBundle\Entity\FieldOptionMerge", mappedBy="field",cascade={"ALL"})
+     * @ORM\OrderBy({"removedFieldOptionValue" = "ASC"})
      */
     private $fieldOptionMerge;
     
