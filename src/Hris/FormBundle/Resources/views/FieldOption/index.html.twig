@@ -45,6 +45,7 @@
             <thead>
                 <tr>
                     <th>Value</th>
+                    <th>Sort</th>
                     <th>Field</th>
                     <th>Description</th>
                     <th>Actions</th>
@@ -54,6 +55,7 @@
             {% for entity in entities %}
                 <tr>
                     <td><a href="{{ path('fieldoption_show', { 'id': entity.id }) }}">{{ entity.value }}</a></td>
+                    <td>{{ entity.sort }}</td>
                     <td>{{ entity.field }}</td>
                     <td>{{ entity.description }}</td>
                     <td>

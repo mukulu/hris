@@ -131,6 +131,8 @@ class FieldOptionController extends Controller
             $em = $this->getDoctrine()->getManager();
             $field = $em->getRepository('HrisFormBundle:Field')->findOneBy(array('id'=>$fieldid));
             $form->get('field')->setData($field);
+            $maxSort = $em->getRepository('HrisFormBundle:FieldOption')->findMaxSort($fieldid);
+            $form->get('sort')->setData($maxSort+1);
             $form->get('description')->setData("Employee's ".$field->getCaption());
         }else {
             $field=NULL;
