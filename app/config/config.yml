@@ -128,9 +128,17 @@ fos_user:
     group:
         group_class: Hris\UserBundle\Entity\Group
     use_listener: true
+    from_email:
+        sender_name: "HRIS Mailer"
     registration:
         confirmation:
+            from_email:
+                sender_name: "HRIS Mailer"
             enabled: false
+    resetting:
+        email:
+            from_email:
+                sender_name: "HRIS Mailer"
 #KnpMenuBundle Configurations
 knp_menu:
    templating: false # if true, enables the helper for PHP templates
