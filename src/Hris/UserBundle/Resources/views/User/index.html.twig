@@ -28,10 +28,9 @@
         <table class="records_list dataTable table table-striped table-bordered table-hover" cellpadding="0" cellspacing="0" border="0">
             <thead>
                 <tr>
-                    <th>Username</th>
+                    <th style="width:90px;">Username</th>
                     <th>Firstname</th>
                     <th>Surname</th>
-                    <th>Roles</th>
                     <th>Forms</th>
                     <th>Organisationunit</th>
                     <th>Actions</th>
@@ -43,7 +42,6 @@
                     <td><a href="{{ path('user_show', { 'id': entity.id }) }}">{{ entity.username }}</a></td>
                     <td>{{ entity.firstname }}</td>
                     <td>{{ entity.surname }}</td>
-                    <td>{{ entity.roles | join(', ') }}</td>
                     <td>{{ entity.form | join(', ') | replace({'Employee Form':''}) }}</td>
                     <td>{{ entity.organisationunit }}</td>
                     <td>
