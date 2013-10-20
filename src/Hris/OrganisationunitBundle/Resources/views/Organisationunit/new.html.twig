@@ -35,9 +35,11 @@
                 <button type="submit" class="btn">Create</button>
             </li>
             <li>
-                <a href="{{ path('organisationunit') }}" class="btn">
-                    Back to the list
-                </a>
+                {% if parent is not empty %}
+                    <a href="{{ path('organisationunit_list_parent', { 'parent': parent.id }) }}" class="btn">Back to the list</a>
+                {% else %}
+                    <a href="{{ path('organisationunit_list') }}" class="btn">Back to the list</a>
+                {% endif %}
             </li>
         </ul>
     </form>

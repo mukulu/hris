@@ -736,7 +736,8 @@ class ResourceTable
                                 $fields = $entityManager->getRepository('HrisFormBundle:Field')->findOneBy (
                                     array('name' => $match[1][0])
                                 );
-                                $valueKey = call_user_func_array(array($fields, "get${recordFieldKey}"),array());
+                                // @todo mechanism to notified on flawed formula(resulting in no match in db)
+                                $valueKey = @@call_user_func_array(array($fields, "get${recordFieldKey}"),array());
                             }
                         }
 
@@ -884,7 +885,6 @@ class ResourceTable
             // Drop table if it exists
             if( $schemaManager->tablesExist($resourceTableName) ) {
                 $schemaManager->dropTable($resourceTableName);
-                $this->messagelog .="Operation: Dropping existent resource table\n";
             }
             $schemaManager->renameTable($resourceTableName.'_temporary', $resourceTableName);
             unset($schemaManager);
