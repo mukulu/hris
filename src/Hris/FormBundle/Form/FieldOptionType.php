@@ -56,7 +56,6 @@ class FieldOptionType extends AbstractType
                 'required'=>False,
             ))
             ->add('value')
-            ->add('description')
             ->add('skipInReport',null,array(
                 'required'=>False,
             ))
@@ -67,6 +66,9 @@ class FieldOptionType extends AbstractType
                 'required'=>False,
             ))
             ->add('fieldOptionMerge',null,array(
+                'required'=>False,
+            ))
+            ->add('childFieldOption',null,array(
                 'required'=>False,
             ))
         ;
