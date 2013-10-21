@@ -54,6 +54,9 @@ class FriendlyReportType extends AbstractType
             ->add('ignoreSkipInReport',null,array(
                 'required'=> False,
             ))
+            ->add('showDeficitSurplus',null,array(
+                'required'=>False,
+            ))
         ;
     }
 
