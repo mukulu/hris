@@ -683,6 +683,20 @@ class Organisationunit
     }
 
     /**
+     * Remove all organisationunitGroups
+     *
+     * @return Organisationunit
+     */
+    public function removeAllOrganisationunitGroups()
+    {
+        foreach($this->organisationunitGroup as $organisationunitGroupKey=>$organisationunitGroup) {
+            $this->organisationunitGroup->removeElement($organisationunitGroup);
+        }
+
+        return $this;
+    }
+
+    /**
      * Get organisationunitGroup
      *
      * @return \Doctrine\Common\Collections\Collection

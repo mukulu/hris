@@ -305,12 +305,17 @@ class OrganisationunitController extends Controller
             // Persist organisationunit groups
             $organisationunitGroupsetsContents = $request->request->get('hris_organisationunitbundle_orgnisationunittype_groupsets');
             $organisationunitGroupsets = $this->getDoctrine()->getManager()->getRepository('HrisOrganisationunitBundle:OrganisationunitGroupset')->findAll();
+            $entity->removeAllOrganisationunitGroups();
+            $em->persist($entity);
             foreach($organisationunitGroupsets as $organisationunitGroupsetKey=>$organisationunitGroupset) {
+                // Go through groups in the groupset and remove membership
+                foreach($organisationunitGroupset->getOrganisationunitGroup() as $organisationunitGroupKey=>$organisationunitGroup) {
+                    $organisationunitGroup->removeOrganisationunit($entity);
+                }
                 $organisationunitGroupId= $organisationunitGroupsetsContents[$organisationunitGroupset->getUid()];
                 $organisationunitGroup = $this->getDoctrine()->getRepository('HrisOrganisationunitBundle:OrganisationunitGroup')->findOneBy(array('id'=>$organisationunitGroupId));
                 $organisationunitGroup->addOrganisationunit($entity);
             }
-
             $em->persist($entity);
             $em->flush();
 
