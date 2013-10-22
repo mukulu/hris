@@ -50,6 +50,33 @@
                             <li>
                                 <a href="{{ path('user_group_edit', { 'id': group.id }) }}"><i class="icon-edit icon-large" title="Edit"></i></a>
                             </li>
+                            <li>
+                                <a data-toggle="modal" href="#deleteModalFor{{ group.name }}"><i class="icon-remove-sign icon-large" title="Delete"></i></a>
+                                <!-- Modal -->
+                                <div class="modal fade" id="deleteModalFor{{ group.name }}">
+                                    <div class="modal-dialog">
+                                        <div class="modal-content">
+                                            <div class="modal-header">
+                                                <button type="button" class="close" data-dismiss="modal" aria-hidden="true">×</button>
+                                                <h4 class="modal-title"><i class="icon-circle-remove icon-largest" title="Delete"></i>Deleting <strong>{{ group.name | capitalize }}</strong></h4>
+                                            </div>
+                                            <div class="modal-body">
+                                                Are you sure you want to delete <strong>{{ group.name | capitalize }}</strong> who's account was created on <em>{{ group.datecreated|date('d/m/Y') }}</em>
+                                                {% if group.lastupdated %}
+                                                    and last updated on {{ group.lastupdated|date('H:i:s d/m/Y') }} ??
+                                                {% else %}
+                                                    and never updated ??
+                                                {% endif %}
+                                            </div>
+                                            <div class="modal-footer">
+                                                <a href="{{ path('user_group_delete', { 'id': group.id }) }}"  class="btn btn-danger">Delete {{ group.name | capitalize }}</a>
+                                                <button type="button" class="btn btn-default" data-dismiss="modal">Close</button>
+                                            </div>
+                                        </div><!-- /.modal-content -->
+                                    </div><!-- /.modal-dialog -->
+                                </div><!-- /.modal -->
+
+                            </li>
                         </ul>
                     </td>
                 </tr>

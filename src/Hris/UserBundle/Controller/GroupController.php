@@ -138,7 +138,7 @@ class GroupController extends ContainerAware
         $this->container->get('fos_user.group_manager')->deleteGroup($group);
         $this->setFlash('fos_user_success', 'group.flash.deleted');
 
-        return new RedirectResponse($this->container->get('router')->generate('fos_user_group_list'));
+        return new RedirectResponse($this->container->get('router')->generate('user_group_list'));
     }
 
     /**

@@ -5,6 +5,7 @@
     <h1><small>User Group creation</small></h1>
 
     <form action="{{ path('user_group_new') }}" method="POST" {{ form_enctype(form) }}>
+        {{ form_errors( form ) }}
         {{ form_widget(form) }}
         <br/>
         <ul class="record_actions inline" style="float:left;">

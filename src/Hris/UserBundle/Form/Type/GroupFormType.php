@@ -53,9 +53,6 @@ class GroupFormType extends AbstractType
             ->add('description',null,array(
                 'required'=>false,
             ))
-            ->add('users',null,array(
-                'required'=>False,
-            ))
         ;
     }
 
