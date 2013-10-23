@@ -56,9 +56,13 @@ class UserNewType extends AbstractType
             )
             ->add('phonenumber')
             ->add('jobTitle')
-            ->add('firstName')
+            ->add('firstName',null,array(
+                'required'=>True,
+            ))
             ->add('middleName')
-            ->add('surname')
+            ->add('surname',null,array(
+                'required'=>True,
+            ))
             ->add('form')
             ->add('enabled',null,array(
                 'required'=>false,
