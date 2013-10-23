@@ -41,6 +41,9 @@
                     {% endif %}
                     {% set incr = incr +1 %}
                 {% endfor %}
+                {% if friendlyReport.showDeficitSurplus %}
+                    <th>Deficit/Surplus(-/+)</th>
+                {% endif %}
                 <th>Total</th>
             </tr>
             </thead>
@@ -62,6 +65,9 @@
                                 <td>{{ fieldOptionValue }}</td>
                             {% endfor %}
 
+                            {% if friendlyReport.showDeficitSurplus %}
+                                <th>{{ (fieldOptionValueTotal*2 - (friendlyReportResult|sum)) }}</th>
+                            {% endif %}
 
                             <td>{{ fieldOptionValueTotal }}</td>
 

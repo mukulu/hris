@@ -131,6 +131,8 @@ class FieldOptionController extends Controller
             $em = $this->getDoctrine()->getManager();
             $field = $em->getRepository('HrisFormBundle:Field')->findOneBy(array('id'=>$fieldid));
             $form->get('field')->setData($field);
+            $maxSort = $em->getRepository('HrisFormBundle:FieldOption')->findMaxSort($fieldid);
+            $form->get('sort')->setData($maxSort+1);
             $form->get('description')->setData("Employee's ".$field->getCaption());
         }else {
             $field=NULL;
@@ -220,7 +222,7 @@ class FieldOptionController extends Controller
             $em->persist($entity);
             $em->flush();
 
-            return $this->redirect($this->generateUrl('fieldoption_edit', array('id' => $id)));
+            return $this->redirect($this->generateUrl('fieldoption_show', array('id' => $id)));
         }
 
         return array(

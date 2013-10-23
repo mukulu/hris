@@ -85,6 +85,9 @@ class UserType extends AbstractType
                 'attr' => array('class' => 'date')
             ))
             ->add('roles')
+            ->add('groups',null,array(
+                'required'=>False,
+            ))
         ;
     }
 

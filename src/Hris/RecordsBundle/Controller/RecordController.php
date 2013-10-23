@@ -106,33 +106,38 @@ class RecordController extends Controller
             $fieldOptionMap[call_user_func_array(array($fieldOption, "get${recordFieldOptionKey}"),array()) ] =   $fieldOption->getValue();
         }
 
-        //Prepare field map, converting from stored FieldOption key in record value array to actual text value
-        $fields = $this->getDoctrine()->getManager()->getRepository('HrisFormBundle:Field')->findAll();
-        foreach ($fields as $fieldKey => $field) {
-            $recordFieldKey = ucfirst(Record::getFieldKey());
-            $fieldMap[$field->getName()] =  call_user_func_array(array($field, "get${recordFieldKey}"),array());
-        }
-
+        //If user's organisationunit is data entry level pull only records of his organisationunit
+        //else pull lower children too.
         $records = $queryBuilder->select('record')
             ->from('HrisRecordsBundle:Record','record')
             ->join('record.organisationunit','organisationunit')
-            ->join('record.form','form')
-            ->join('organisationunit.organisationunitStructure','organisationunitStructure')
-            ->join('organisationunitStructure.level','organisationunitLevel')
-            ->andWhere('organisationunit.active=True')
-            ->andWhere('organisationunitLevel.level >= (
+            ->join('record.form','form');
+        if($organisationunit->getOrganisationunitStructure()->getLevel()->getDataentrylevel()) {
+            $records = $records
+                ->join('organisationunit.organisationunitStructure','organisationunitStructure')
+                ->join('organisationunitStructure.level','organisationunitLevel')
+                ->andWhere('organisationunitLevel.level >= (
                                         SELECT selectedOrganisationunitLevel.level
                                         FROM HrisOrganisationunitBundle:OrganisationunitStructure selectedOrganisationunitStructure
                                         INNER JOIN selectedOrganisationunitStructure.level selectedOrganisationunitLevel
                                         WHERE selectedOrganisationunitStructure.organisationunit=:selectedOrganisationunit )'
-            )
-            ->andWhere('organisationunitStructure.level'.$organisationunit->getOrganisationunitStructure()->getLevel()->getLevel().'Organisationunit=:levelId')
-            ->andWhere($queryBuilder->expr()->in('form.id',':formIds'))
-            ->setParameters(array(
+                )
+            ->andWhere('organisationunitStructure.level'.$organisationunit->getOrganisationunitStructure()->getLevel()->getLevel().'Organisationunit=:levelId');
+            $parameters = array(
                 'levelId'=>$organisationunit->getId(),
                 'selectedOrganisationunit'=>$organisationunit->getId(),
                 'formIds'=>$formIds,
-            ))
+            );
+        }else {
+            $records = $records->andWhere('organisationunit.id=:selectedOrganisationunit');
+            $parameters = array(
+                'selectedOrganisationunit'=>$organisationunit->getId(),
+                'formIds'=>$formIds,
+            );
+        }
+
+        $records = $records->andWhere($queryBuilder->expr()->in('form.id',':formIds'))
+            ->setParameters($parameters)
             ->getQuery()->getResult();
 
         $formNames = NULL;
@@ -152,14 +157,14 @@ class RecordController extends Controller
             // Accrue visible fields
             foreach($form->getFormVisibleFields() as $visibleFieldKey=>$visibleField) {
 
-                if(!in_array($visibleField->getField(),$visibleFields) && !$visibleField->getField()->getIsCalculated()) $visibleFields[] =$visibleField->getField();
+                if(!in_array($visibleField->getField(),$visibleFields)) $visibleFields[] =$visibleField->getField();
             }
             // Accrue form fields
             foreach($form->getFormFieldMember() as $formFieldKey=>$formField) {
-                if(!in_array($formField->getField(),$formFields) && !$formField->getField()->getIsCalculated()) $formFields[] =$formField->getField();
+                if(!in_array($formField->getField(),$formFields)) $formFields[] =$formField->getField();
             }
         }
-        $title = "Records Report for ".$organisationunit->getLongname();
+        $title = "Employee Records for ".$organisationunit->getLongname();
 
         $title .= " for ".$formNames;
         if(empty($visibleFields)) $visibleFields=$formFields;
@@ -169,13 +174,20 @@ class RecordController extends Controller
         $user = $this->container->get('security.context')->getToken()->getUser();
         $userForms = $user->getForm();
 
+        $delete_forms = NULL;
+        foreach($records as $entity) {
+            $delete_form= $this->createDeleteForm($entity->getId());
+            $delete_forms[$entity->getId()] = $delete_form->createView();
+        }
+
         return array(
             'title'=>$title,
             'visibleFields' => $visibleFields,
+            'formFields'=>$formFields,
             'records'=>$records,
             'optionMap'=>$fieldOptionMap,
-            'fieldMap'=>$fieldMap,
             'userForms'=>$userForms,
+            'delete_forms' => $delete_forms,
         );
     }
 
@@ -325,44 +337,6 @@ class RecordController extends Controller
     }
 
     /**
-     * List Records Available for Updating.
-     *
-     * @Route("/{id}", name="record_update_list")
-     * @Method("GET")
-     * @Template("")
-     */
-    public function updatelistAction(Request $request, $id)
-    {
-
-        $em = $this->getDoctrine()->getManager();
-        $forms = $em->getRepository('HrisFormBundle:Form')->find($id);
-
-        $user = $this->container->get('security.context')->getToken()->getUser();
-        $searchString = $this->getRequest()->request->get('sSearch');
-        $sEcho = $this->getRequest()->request->get('sEcho');
-
-        if(!isset($searchString)) $searchString=NULL;
-
-        if ($user->getOrganisationunit()->getOrganisationunitStructure()->getLevel()->getDataentrylevel()) {
-            $oganisationunitObjects = $em->getRepository('HrisOrganisationunitBundle:Organisationunit')->findBy(array('parent' => $user->getOrganisationunit()->getId()));
-            foreach ($oganisationunitObjects as $key => $oganisationunit) {
-                $oganisationunitids[] = $oganisationunit->getId();
-            }
-            $oganisationunitids[] = $user->getOrganisationunit()->getId();
-        } else {
-            $oganisationunitids = $user->getOrganisationunit()->getId();
-        }
-
-        //preparing array of Fields
-        //mukulu continue from here
-
-
-
-        return array(
-
-        );
-    }
-    /**
      * Creates a new Record entity.
      *
      * @Route("/", name="record_create")
@@ -503,11 +477,19 @@ class RecordController extends Controller
             throw $this->createNotFoundException('Unable to find Record entity.');
         }
 
+        //Prepare field Option map, converting from stored FieldOption key in record value array to actual text value
+        $fieldOptions = $this->getDoctrine()->getManager()->getRepository('HrisFormBundle:FieldOption')->findAll();
+        foreach ($fieldOptions as $fieldOptionKey => $fieldOption) {
+            $recordFieldOptionKey = ucfirst(Record::getFieldOptionKey());
+            $fieldOptionMap[call_user_func_array(array($fieldOption, "get${recordFieldOptionKey}"),array()) ] =   $fieldOption->getValue();
+        }
+
         $deleteForm = $this->createDeleteForm($id);
 
         return array(
             'entity'      => $entity,
             'delete_form' => $deleteForm->createView(),
+            'optionMap'=>$fieldOptionMap,
         );
     }
 
@@ -688,6 +670,7 @@ class RecordController extends Controller
         if ($form->isValid()) {
             $em = $this->getDoctrine()->getManager();
             $entity = $em->getRepository('HrisRecordsBundle:Record')->find($id);
+            $form = $entity->getForm();
 
             if (!$entity) {
                 throw $this->createNotFoundException('Unable to find Record entity.');
@@ -697,7 +680,7 @@ class RecordController extends Controller
             $em->flush();
         }
 
-        return $this->redirect($this->generateUrl('record'));
+        return $this->redirect($this->generateUrl('record_viewrecords', array('formid' => $form->getId())));
     }
 
     /**

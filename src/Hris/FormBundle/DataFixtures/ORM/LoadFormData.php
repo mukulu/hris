@@ -98,12 +98,12 @@ class LoadFormData extends AbstractFixture implements OrderedFixtureInterface
                 ),
                 'visibleFields'=>Array(
                     0=>'Firstname',
-                    1=>'Middlename',
                     2=>'Surname',
                     3=>'DateOfBirth',
-                    4=>'Sex',
                     16=>'Profession',
-                    17=>'PresentDesignation',
+                    18=>'Age',
+                    19=>'EmploymentDuration',
+                    20=>'RetirementDate'
                 ),
                 'uniqueFields'=>Array(
                     0=>'Firstname',
@@ -139,7 +139,7 @@ class LoadFormData extends AbstractFixture implements OrderedFixtureInterface
                             <tr>
                                 <td><span>4.</span></td>
                                 <td><span>Date of Birth</span></td>
-                                <td><input type="date" name="DateOfBirth" id="DateOfBirth" required="required"/></td>
+                                <td><input type="date" name="DateOfBirth" id="DateOfBirth" class="date" required="required"/></td>
                             </tr>
                             <tr>
                                 <td><span>5.</span></td>
@@ -234,17 +234,17 @@ class LoadFormData extends AbstractFixture implements OrderedFixtureInterface
                             <tr>
                                 <td><span>23.</span></td>
                                 <td><span>Date of First Appointment</span></td>
-                                <td class="whitebg"><input type="date" name="DateofFirstAppointment" id="DateofFirstAppointment" required="required"/></td>
+                                <td class="whitebg"><input type="date" name="DateofFirstAppointment" id="DateofFirstAppointment" class="date" required="required"/></td>
                             </tr>
                             <tr>
                                 <td><span>24.</span></td>
                                 <td><span>Date of Confirmation</span></td>
-                                <td><input type="date" name="DateofConfirmation" id="DateofConfirmation" /></td>
+                                <td><input type="date" name="DateofConfirmation" class="date" id="DateofConfirmation" /></td>
                             </tr>
                             <tr>
                                 <td><span>25.</span></td>
                                 <td><span>Date of Last Promotion</span></td>
-                                <td class="whitebg"><input type="date" name="DateofLastPromotion" id="DateofLastPromotion" /></td>
+                                <td class="whitebg"><input type="date" name="DateofLastPromotion" class="date" id="DateofLastPromotion" /></td>
                             </tr>
                             <tr>
                                 <td><span>26.</span></td>
@@ -317,12 +317,12 @@ class LoadFormData extends AbstractFixture implements OrderedFixtureInterface
                 ),
                 'visibleFields'=>Array(
                     0=>'Firstname',
-                    1=>'Middlename',
                     2=>'Surname',
                     3=>'DateOfBirth',
-                    4=>'Sex',
                     16=>'Profession',
-                    17=>'PresentDesignation',
+                    18=>'Age',
+                    19=>'EmploymentDuration',
+                    20=>'RetirementDate'
                 ),
                 'uniqueFields'=>Array(
                     0=>'Firstname',
@@ -358,7 +358,7 @@ class LoadFormData extends AbstractFixture implements OrderedFixtureInterface
                             <tr>
                                 <td><span>4.</span></td>
                                 <td><span>Date of Birth</span></td>
-                                <td><input type="date" name="DateOfBirth" id="DateOfBirth" required="required"/></td>
+                                <td><input type="date" name="DateOfBirth" id="DateOfBirth" class="date" required="required"/></td>
                             </tr>
                             <tr>
                                 <td><span>5.</span></td>
@@ -428,12 +428,12 @@ class LoadFormData extends AbstractFixture implements OrderedFixtureInterface
                             <tr>
                                 <td><span>18.</span></td>
                                 <td><span>Date of First Appointment</span></td>
-                                <td class="whitebg"><input type="date" name="DateofFirstAppointment" id="DateofFirstAppointment" required="required"/></td>
+                                <td class="whitebg"><input type="date" name="DateofFirstAppointment" class="date" id="DateofFirstAppointment" required="required"/></td>
                             </tr>
                             <tr>
                                 <td><span>19.</span></td>
                                 <td><span>Date of Last Promotion</span></td>
-                                <td class="whitebg"><input type="date" name="DateofLastPromotion" id="DateofLastPromotion" /></td>
+                                <td class="whitebg"><input type="date" name="DateofLastPromotion" class="date" id="DateofLastPromotion" /></td>
                             </tr>
                             <tr>
                                 <td><span>20.</span></td>
@@ -512,12 +512,12 @@ class LoadFormData extends AbstractFixture implements OrderedFixtureInterface
                 ),
                 'visibleFields'=>Array(
                     0=>'Firstname',
-                    1=>'Middlename',
                     2=>'Surname',
                     3=>'DateOfBirth',
-                    4=>'Sex',
                     16=>'Profession',
-                    17=>'PresentDesignation',
+                    18=>'Age',
+                    19=>'EmploymentDuration',
+                    20=>'RetirementDate'
                 ),
                 'uniqueFields'=>Array(
                     0=>'Firstname',
@@ -648,17 +648,17 @@ class LoadFormData extends AbstractFixture implements OrderedFixtureInterface
                             <tr>
                                 <td><span>23.</span></td>
                                 <td><span>Date of First Appointment</span></td>
-                                <td class="whitebg"><input type="date" name="DateofFirstAppointment" id="DateofFirstAppointment" required="required"/></td>
+                                <td class="whitebg"><input type="date" name="DateofFirstAppointment" class="date" id="DateofFirstAppointment" required="required"/></td>
                             </tr>
                             <tr>
                                 <td><span>24.</span></td>
                                 <td><span>Date of Confirmation</span></td>
-                                <td><input type="date" name="DateofConfirmation" id="DateofConfirmation" /></td>
+                                <td><input type="date" name="DateofConfirmation" class="date" id="DateofConfirmation" /></td>
                             </tr>
                             <tr>
                                 <td><span>25.</span></td>
                                 <td><span>Date of Last Promotion</span></td>
-                                <td class="whitebg"><input type="date" name="DateofLastPromotion" id="DateofLastPromotion" /></td>
+                                <td class="whitebg"><input type="date" name="DateofLastPromotion" class="date" id="DateofLastPromotion" /></td>
                             </tr>
                             <tr>
                                 <td><span>26.</span></td>
@@ -737,12 +737,12 @@ class LoadFormData extends AbstractFixture implements OrderedFixtureInterface
                 ),
                 'visibleFields'=>Array(
                     0=>'Firstname',
-                    1=>'Middlename',
                     2=>'Surname',
                     3=>'DateOfBirth',
-                    4=>'Sex',
                     16=>'Profession',
-                    17=>'HospitalPresentDesignation',
+                    18=>'Age',
+                    19=>'EmploymentDuration',
+                    20=>'RetirementDate'
                 ),
                 'uniqueFields'=>Array(
                     0=>'Firstname',
@@ -778,7 +778,7 @@ class LoadFormData extends AbstractFixture implements OrderedFixtureInterface
                             <tr>
                                 <td><span>4.</span></td>
                                 <td><span>Date of Birth</span></td>
-                                <td><input type="date" name="DateOfBirth" id="DateOfBirth" required="required"/></td>
+                                <td><input type="date" name="DateOfBirth" id="DateOfBirth" class="date" required="required"/></td>
                             </tr>
                             <tr>
                                 <td><span>5.</span></td>
@@ -873,17 +873,17 @@ class LoadFormData extends AbstractFixture implements OrderedFixtureInterface
                             <tr>
                                 <td><span>23.</span></td>
                                 <td><span>Date of First Appointment</span></td>
-                                <td class="whitebg"><input type="date" name="DateofFirstAppointment" id="DateofFirstAppointment" required="required"/></td>
+                                <td class="whitebg"><input type="date" name="DateofFirstAppointment" class="date" id="DateofFirstAppointment" required="required"/></td>
                             </tr>
                             <tr>
                                 <td><span>24.</span></td>
                                 <td><span>Date of Confirmation</span></td>
-                                <td><input type="date" name="DateofConfirmation" id="DateofConfirmation" /></td>
+                                <td><input type="date" name="DateofConfirmation" class="date" id="DateofConfirmation" /></td>
                             </tr>
                             <tr>
                                 <td><span>25.</span></td>
                                 <td><span>Date of Last Promotion</span></td>
-                                <td class="whitebg"><input type="date" name="DateofLastPromotion" id="DateofLastPromotion" /></td>
+                                <td class="whitebg"><input type="date" name="DateofLastPromotion" class="date" id="DateofLastPromotion" /></td>
                             </tr>
                             <tr>
                                 <td><span>26.</span></td>

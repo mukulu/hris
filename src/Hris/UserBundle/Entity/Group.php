@@ -77,10 +77,10 @@ class Group extends BaseGroup
     /**
      * @var User $user
      *
-     * @ORM\ManyToMany(targetEntity="Hris\UserBundle\Entity\User", mappedBy="group")
-     * @ORM\OrderBy({"name" = "ASC"})
+     * @ORM\ManyToMany(targetEntity="Hris\UserBundle\Entity\User", mappedBy="groups")
+     * @ORM\OrderBy({"username" = "ASC"})
      */
-    private $user;
+    private $users;
 
     /**
      * @var string $uid
@@ -235,12 +235,14 @@ class Group extends BaseGroup
     /**
      * Add user
      *
-     * @param User $user
+     * @param User $users
      * @return Group
      */
     public function addUser(User $user)
     {
-        $this->user[$user->getId()] = $user;
+        $this->users[$user->getId()] = $user;
+
+        $user->addGroup($this);
 
         return $this;
     }
@@ -252,7 +254,7 @@ class Group extends BaseGroup
      */
     public function removeUser(User $user)
     {
-        $this->user->removeElement($user);
+        $this->users->removeElement($user);
     }
 
     /**
@@ -260,8 +262,8 @@ class Group extends BaseGroup
      *
      * @return \Doctrine\Common\Collections\Collection
      */
-    public function getUser()
+    public function getUsers()
     {
-        return $this->user;
+        return $this->users;
     }
 }

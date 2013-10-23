@@ -116,7 +116,7 @@ class ValidationController extends Controller
         $query = $em->createQuery('SELECT n from Hris\FormBundle\Entity\Field n WHERE (n.name = :name1 OR n.name = :name2 OR n.name=:name3 OR n.name=:name4 OR n.name=:name5 OR n.name=:name6 OR n.name=:name7)');
         $query->setParameters(array(
             'name1' => 'MonthlyBasicSalary',
-            'name2' => 'Birthdate',
+            'name2' => 'DateOfBirth',
             'name3' => 'DateofLastPromotion',
             'name4' => 'DateofConfirmation',
             'name5' => 'DateofFirstAppointment',

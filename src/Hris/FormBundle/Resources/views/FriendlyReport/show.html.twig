@@ -34,6 +34,18 @@
                 <td>{{ entity.friendlyReportCategory|join(', ') }}</td>
             </tr>
             <tr>
+                <th>Use Targets</th>
+                <td>{{ entity.useTargets ? 'True' : 'False' }}</td>
+            </tr>
+            <tr>
+                <th>Ignore Skip In Report</th>
+                <td>{{ entity.ignoreSkipInReport ? 'True' : 'False' }}</td>
+            </tr>
+            <tr>
+                <th>Show Deficit/Surplus</th>
+                <td>{{ entity.showDeficitSurplus ? 'True' : 'False' }}</td>
+            </tr>
+            <tr>
                 <th>Lastupdated</th>
                 <td>{{ entity.lastupdated|date('Y-m-d H:i:s') }}</td>
             </tr>

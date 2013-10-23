@@ -104,7 +104,7 @@
                                 {% elseif expectedCompleteness[childOrganisationunit.id][form.id]<=0 %}
                                     <td>-</td>
                                 {% else %}
-                                    <td>{{ ( completenessMatrix[childOrganisationunit.id][form.id] / expectedCompleteness[childOrganisationunit.id][form.id] )*100  }}</td>
+                                    <td>{{ ( ( completenessMatrix[childOrganisationunit.id][form.id] / expectedCompleteness[childOrganisationunit.id][form.id] )*100 ) | number_format(2)  }}</td>
                                 {% endif %}
 
                             {% else %}

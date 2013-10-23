@@ -105,20 +105,28 @@ class FriendlyReport
     private $friendlyReportCategory;
 
     /**
-     * @var boolean $useTargets
-     *
-     * @Gedmo\Versioned
-     * @ORM\Column(name="useTargets", type="boolean", nullable=true)
-     */
-    private $ignoreSkipInReport;
-
-    /**
      * @var boolean $ignoreSkipInReport
      *
      * @Gedmo\Versioned
      * @ORM\Column(name="ignoreSkipInReport", type="boolean", nullable=true)
      */
+    private $ignoreSkipInReport;
+
+    /**
+     * @var boolean $useTargets
+     *
+     * @Gedmo\Versioned
+     * @ORM\Column(name="useTargets", type="boolean", nullable=true)
+     */
     private $useTargets;
+
+    /**
+     * @var boolean $showDeficitSurplus
+     *
+     * @Gedmo\Versioned
+     * @ORM\Column(name="showDeficitSurplus", type="boolean", nullable=true)
+     */
+    private $showDeficitSurplus;
     
     /**
      * @var ArithmeticFilter $arithmeticFilter
@@ -258,6 +266,7 @@ class FriendlyReport
         $this->relationalFilter = new ArrayCollection();
         $this->sort = 0;
         $this->uid = uniqid();
+        $this->showDeficitSurplus = False;
     }
     
     /**
@@ -483,6 +492,29 @@ class FriendlyReport
     public function getUseTargets()
     {
         return $this->useTargets;
+    }
+
+    /**
+     * Set showDeficitSurplus
+     *
+     * @param boolean $showDeficitSurplus
+     * @return FriendlyReport
+     */
+    public function setShowDeficitSurplus($showDeficitSurplus)
+    {
+        $this->showDeficitSurplus = $showDeficitSurplus;
+
+        return $this;
+    }
+
+    /**
+     * Get showDeficitSurplus
+     *
+     * @return boolean
+     */
+    public function getShowDeficitSurplus()
+    {
+        return $this->showDeficitSurplus;
     }
     
     /**

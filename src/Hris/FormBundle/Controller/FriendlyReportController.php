@@ -56,8 +56,15 @@ class FriendlyReportController extends Controller
 
         $entities = $em->getRepository('HrisFormBundle:FriendlyReport')->findAll();
 
+        $delete_forms = NULL;
+        foreach($entities as $entity) {
+            $delete_form= $this->createDeleteForm($entity->getId());
+            $delete_forms[$entity->getId()] = $delete_form->createView();
+        }
+
         return array(
             'entities' => $entities,
+            'delete_forms' => $delete_forms,
         );
     }
 

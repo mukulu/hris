@@ -266,7 +266,7 @@ class FormController extends Controller
             $em->persist($entity);
             $em->flush();
 
-            return $this->redirect($this->generateUrl('form_edit', array('id' => $id)));
+            return $this->redirect($this->generateUrl('form_show', array('id' => $id)));
         }
 
         return array(

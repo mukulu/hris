@@ -5,7 +5,6 @@ imports:
     - { resource: "@HrisUserBundle/Resources/config/profile.xml" }
     - { resource: "@HrisUserBundle/Resources/config/registration.xml" }
     - { resource: "@HrisUserBundle/Resources/config/group.xml" }
-    - { resource: "@HrisMessageBundle/Resources/config/form.xml" }
 
 framework:
     #esi:             ~
@@ -129,9 +128,19 @@ fos_user:
     group:
         group_class: Hris\UserBundle\Entity\Group
     use_listener: true
+    from_email:
+        sender_name: "HRIS Mailer"
     registration:
         confirmation:
+            from_email:
+                address: hrismailer@gmail.com
+                sender_name: "HRIS Mailer<noreply>"
             enabled: false
+    resetting:
+        email:
+            from_email:
+                address: hrismailer@gmail.com
+                sender_name: "HRIS Mailer<noreply>"
 #KnpMenuBundle Configurations
 knp_menu:
    templating: false # if true, enables the helper for PHP templates
@@ -244,5 +253,5 @@ fos_message:
     new_thread_form:
           type:               fos_message.new_thread_multiple_form.type
           handler:            fos_message.new_thread_multiple_form.handler
-          model:              Hris\MessageBundle\FormModel\NewThreadMultipleMessage
+          model:              FOS\MessageBundle\FormModel\NewThreadMultipleMessage
           name:               message

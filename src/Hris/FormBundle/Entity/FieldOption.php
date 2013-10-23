@@ -65,7 +65,7 @@ class FieldOption
      * @Gedmo\Versioned
      * @ORM\ManyToOne(targetEntity="Hris\FormBundle\Entity\Field", inversedBy="fieldOption")
      * @ORM\JoinColumns({
-     *   @ORM\JoinColumn(name="field_id", referencedColumnName="id", onDelete="CASCADE")
+     *   @ORM\JoinColumn(name="field_id", referencedColumnName="id", onDelete="CASCADE", nullable=false)
      * })
      */
     private $field;

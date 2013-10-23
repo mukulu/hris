@@ -56,25 +56,28 @@ class DashboardType extends AbstractType
                         ->innerJoin('field.inputType','inputType')
                         ->where('inputType.name=:inputTypeName')
                         ->orWhere('field.isCalculated=True')
+                        ->orWhere('field.skipInReport=True')
                         ->setParameter('inputTypeName',"Select")
                         ->orderBy('field.isCalculated,field.name','ASC');
                 },
+                'required'=> True,
                 'constraints'=> array(
                     new NotBlank(),
                 )
             ))
-            ->add('fieldTwo','entity',array(
+            ->add('fieldTwo',null,array(
                 'class'=>'HrisFormBundle:Field',
                 'empty_value' => '--SELECT--',
-                'required'=>False,
                 'query_builder'=>function(EntityRepository $er) {
                     return $er->createQueryBuilder('field')
                         ->innerJoin('field.inputType','inputType')
                         ->where('inputType.name=:inputTypeName')
                         ->orWhere('field.isCalculated=True')
+                        ->orWhere('field.skipInReport=True')
                         ->setParameter('inputTypeName',"Select")
                         ->orderBy('field.isCalculated,field.name','ASC');
                 },
+                'required'=>False,
                 'constraints'=> array(
                     new NotBlank(),
                 )
@@ -97,11 +100,11 @@ class DashboardType extends AbstractType
         $resolver->setRequired(
             array('em')
         );
+        $resolver->setDefaults(array(
+            'data_class' => 'Hris\DashboardBundle\Entity\DashboardChart'
+        ));
         $resolver->setAllowedTypes(array(
             'em'=>'Doctrine\Common\Persistence\ObjectManager',
-        ));
-        $resolver->setDefaults(array(
-            'data_class' => 'Hris\DashboardBundle\Entity\DashboardChart',
         ));
     }
 

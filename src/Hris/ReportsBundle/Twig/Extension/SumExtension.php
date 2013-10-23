@@ -22,29 +22,37 @@
  * @author John Francis Mukulu <john.f.mukulu@gmail.com>
  *
  */
-namespace Hris\MessageBundle\FormHandler;
+namespace Hris\ReportsBundle\Twig\Extension;
 
-use Hris\MessageBundle\FormModel\AbstractMessage;
-use Hris\MessageBundle\FormModel\ReplyMessage;
+use Hris\ReportsBundle\Entity\Record;
 
-class ReplyMessageFormHandler extends AbstractMessageFormHandler
+class SumExtension extends \Twig_Extension
 {
-    /**
-     * Composes a message from the form data
-     *
-     * @param AbstractMessage $message
-     * @return MessageInterface the composed message ready to be sent
-     * @throws InvalidArgumentException if the message is not a ReplyMessage
-     */
-    public function composeMessage(AbstractMessage $message)
+    public function getFilters()
     {
-        if (!$message instanceof ReplyMessage) {
-            throw new \InvalidArgumentException(sprintf('Message must be a ReplyMessage instance, "%s" given', get_class($message)));
-        }
+        return array(
+            new \Twig_SimpleFilter(
+                'sum', array($this, 'sumFilter')
+            ),
+        );
+    }
 
-        return $this->composer->reply($message->getThread())
-            ->setSender($this->getAuthenticatedParticipant())
-            ->setBody($message->getBody())
-            ->getMessage();
+    /**
+     * Converts into twig template tag {{ integerArray | sum }}
+     *
+     * @param $record
+     * @param $fieldExpression
+     * @return mixed
+     */
+    public function sumFilter($integerArray)
+    {
+        $sum = array_sum($integerArray);
+
+        return $sum;
+    }
+
+    public function getName()
+    {
+        return 'sum_expression';
     }
 }

@@ -10,6 +10,18 @@
     {% endif %}
         {{ form_widget(form) }}
 
+        <div id="hris_organisationunitbundle_orgnisationunittype_groupsets">
+            {% for organisationunitGroupset in organisationunitGroupsets %}
+                <label for="hris_organisationunitbundle_orgnisationunittype_groupsets_{{ organisationunitGroupset.uid }}">Organisationunit {{ organisationunitGroupset.name }}</label>
+                <select id="hris_organisationunitbundle_orgnisationunittype_groupsets_{{ organisationunitGroupset.uid }}" name="hris_organisationunitbundle_orgnisationunittype_groupsets[{{ organisationunitGroupset.uid }}]" required="required">
+                    <option value=""></option>
+                    {% for organisationunitGroup in organisationunitGroupset.getOrganisationunitGroup %}
+                        <option value="{{ organisationunitGroup.id }}">{{ organisationunitGroup.name }}</option>
+                    {% endfor %}
+                </select>
+            {% endfor %}
+        </div>
+
         <div id="hris_organisationunitbundle_organisationunittype_completeness">
             {% for completenessForm in completenessForms %}
                 <label for="hris_organisationunitbundle_organisationunittype_completeness{{ completenessForm.uid }}">{{ completenessForm.name }} Expectation</label>
@@ -23,9 +35,11 @@
                 <button type="submit" class="btn">Create</button>
             </li>
             <li>
-                <a href="{{ path('organisationunit') }}" class="btn">
-                    Back to the list
-                </a>
+                {% if parent is not empty %}
+                    <a href="{{ path('organisationunit_list_parent', { 'parent': parent.id }) }}" class="btn">Back to the list</a>
+                {% else %}
+                    <a href="{{ path('organisationunit_list') }}" class="btn">Back to the list</a>
+                {% endif %}
             </li>
         </ul>
     </form>

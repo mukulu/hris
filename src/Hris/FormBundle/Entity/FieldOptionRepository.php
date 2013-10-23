@@ -34,4 +34,22 @@ use Doctrine\ORM\EntityRepository;
  */
 class FieldOptionRepository extends EntityRepository
 {
+    /**
+     * Returns maximum sort for the field children collection
+     *
+     * @param integer $fieldId
+     * @return integer
+     */
+    public function findMaxSort($fieldId)
+    {
+        $queryBuilder = $this->getEntityManager()->createQueryBuilder();
+        $maxSort = $queryBuilder->select('MAX(fieldOption.sort)')
+            ->from('HrisFormBundle:FieldOption','fieldOption')
+            ->join('fieldOption.field','field')
+            ->andWhere('field.id=:fieldid')
+            ->setParameters(array('fieldid'=>$fieldId))
+            ->getQuery()->getSingleScalarResult();
+
+        return $maxSort;
+    }
 }

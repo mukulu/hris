@@ -21,6 +21,14 @@
             <th>Description</th>
             <td>{{ group.description }}</td>
         </tr>
+        <tr>
+            <th>Users</th>
+            <td>{{ group.users |  join(', ') }}</td>
+        </tr>
+        <tr>
+            <th>Roles</th>
+            <td>{{ group.roles | join(', ') }}</td>
+        </tr>
         </tbody>
     </table>
 

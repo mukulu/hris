@@ -52,7 +52,7 @@ class GroupFormHandler
 
         $this->form->setData($group);
 
-        if ('POST' === $this->request->getMethod()) {
+        if ('PUT' === $this->request->getMethod()) {
             $this->form->bind($this->request);
 
             if ($this->form->isValid()) {

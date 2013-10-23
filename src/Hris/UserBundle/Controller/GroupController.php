@@ -68,14 +68,14 @@ class GroupController extends ContainerAware
     {
         $group = $this->findGroupBy('id', $id);
 
-        return $this->container->get('templating')->renderResponse('FOSUserBundle:Group:show.html.'.$this->getEngine(), array('group' => $group));
+        return $this->container->get('templating')->renderResponse('HrisUserBundle:Group:show.html.'.$this->getEngine(), array('group' => $group));
     }
 
     /**
      * Displays a form to edit an existing Group.
      *
      * @Route("/{id}/edit", requirements={"id"="\d+"}, name="user_group_edit")
-     * @Method("GET|PUT")
+     * @Method("GET|PUT|POST")
      * @Template()
      */
     public function editAction($id)
@@ -85,6 +85,7 @@ class GroupController extends ContainerAware
         $formHandler = $this->container->get('fos_user.group.form.handler');
 
         $process = $formHandler->process($group);
+
         if ($process) {
             $this->setFlash('fos_user_success', 'group.flash.updated');
             $groupUrl =  $this->container->get('router')->generate('user_group_show', array('id' => $group->getId()));
@@ -92,7 +93,8 @@ class GroupController extends ContainerAware
             return new RedirectResponse($groupUrl);
         }
 
-        return $this->container->get('templating')->renderResponse('FOSUserBundle:Group:edit.html.'.$this->getEngine(), array(
+
+        return $this->container->get('templating')->renderResponse('HrisUserBundle:Group:edit.html.'.$this->getEngine(), array(
             'form'      => $form->createview(),
             'group'     =>$group,
         ));
@@ -113,13 +115,13 @@ class GroupController extends ContainerAware
         $process = $formHandler->process();
         if ($process) {
             $this->setFlash('fos_user_success', 'group.flash.created');
-            $parameters = array('groupname' => $form->getData('group')->getName());
+            $parameters = array('id' => $form->getData('group')->getId());
             $url = $this->container->get('router')->generate('user_group_show', $parameters);
 
             return new RedirectResponse($url);
         }
 
-        return $this->container->get('templating')->renderResponse('FOSUserBundle:Group:new.html.'.$this->getEngine(), array(
+        return $this->container->get('templating')->renderResponse('HrisUserBundle:Group:new.html.'.$this->getEngine(), array(
             'form' => $form->createview(),
         ));
     }

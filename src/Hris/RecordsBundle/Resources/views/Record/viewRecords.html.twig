@@ -23,9 +23,6 @@
                 {% for visibleField in visibleFields %}
                     <th>{{ visibleField.caption }}</th>
                 {% endfor %}
-                <th>Age</th>
-                <th>Employment Duration</th>
-                <th>Retirement Date</th>
                 <th>Last updated</th>
                 <th>Duty Post</th>
                 <th>Actions</th>
@@ -38,17 +35,18 @@
             <tr id = {{ record.uid }}>
                 <td>{{ incr }}</td>
                 {% for visibleField in visibleFields %}
-                    {% if visibleField.getInputType == 'Select' %}
-                        <td>{{ optionMap[ record.getValue( visibleField.uid ) ] }}</td>
-                    {% elseif visibleField.getInputType == 'Date' %}
-                        <td>{{ record.getValue( visibleField.uid ) | date('d/m/Y') }}</td>
+                    {% if visibleField.getIsCalculated %}
+                        <td>{{ record | calculateFieldExpression(visibleField.getCalculatedExpression,formFields) }}</td>
                     {% else %}
-                        <td>{{ record.getValue( visibleField.uid ) }}</td>
+                        {% if visibleField.getInputType == 'Select' %}
+                            <td>{{ optionMap[ record.getValue( visibleField.uid ) ] }}</td>
+                        {% elseif visibleField.getInputType == 'Date' %}
+                            <td>{{ record.getValue( visibleField.uid ) | date('d/m/Y') }}</td>
+                        {% else %}
+                            <td>{{ record.getValue( visibleField.uid ) }}</td>
+                        {% endif %}
                     {% endif %}
                 {% endfor %}
-                <td>{{ "now"|date('Y') - record.getValue( fieldMap['Birthdate'] ) |date('Y') }} yrs</td>
-                <td>{{ "now"|date('Y') - record.getValue( fieldMap['DateofFirstAppointment'] ) |date('Y') }} yrs</td>
-                <td> {{ record.getValue( fieldMap['Birthdate'] )|date_modify("+60 year") | date('d/m/Y') }}</td>
                 <td>{{ record.lastupdated| date('d/m/Y') }}</td>
                 <td>{{ record.organisationunit.longname }}</td>
                 <td>
@@ -69,7 +67,34 @@
                             <a href="#" onclick="changeForm('{{ record.uid }}');" onsubmit="changeForm('{{ record.uid }}');"><i class="icon-transfer icon-large" title="Delete"></i></a>
                         </li>
                         <li>
-                            <a href="{{ path('record_delete', { 'id': record.id }) }}"><i class="icon-remove-sign icon-large" title="Delete"></i></a>
+                            <a data-toggle="modal" href="#deleteModalFor{{ record.uid }}"><i class="icon-remove-sign icon-large" title="Delete"></i></a>
+                            <!-- Modal -->
+                            <div class="modal fade" id="deleteModalFor{{ record.uid }}">
+                                <div class="modal-dialog">
+                                    <div class="modal-content">
+                                        <div class="modal-header">
+                                            <button type="button" class="close" data-dismiss="modal" aria-hidden="true">×</button>
+                                            <h4 class="modal-title"><i class="icon-circle-remove icon-largest" title="Delete"></i>Deleting <strong> Individual Record</strong></h4>
+                                        </div>
+                                        <div class="modal-body">
+                                            Are you sure you want to delete <strong>record</strong> that was created on <em>{{ record.datecreated|date('d/m/Y') }}</em>
+                                            {% if record.lastUpdated %}
+                                                and last updated on {{ record.lastUpdated|date('H:i:s d/m/Y') }} ??
+                                            {% else %}
+                                                and never updated ??
+                                            {% endif %}
+                                        </div>
+                                        <div class="modal-footer">
+                                            <form action="{{ path('record_delete', { 'id': record.id }) }}" method="post">
+                                                <input type="hidden" name="_method" value="DELETE" />
+                                                {{ form_widget(delete_forms[record.id] ) }}
+                                                <button type="button" class="btn btn-default" data-dismiss="modal">Close</button>
+                                                <button type="submit" class="btn btn-danger">Delete</button>
+                                            </form>
+                                        </div>
+                                    </div><!-- /.modal-content -->
+                                </div><!-- /.modal-dialog -->
+                            </div><!-- /.modal -->
                         </li>
                     </ul>
                 </td>

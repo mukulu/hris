@@ -113,9 +113,15 @@
                 </a>
             </li>
             <li>
-                <a class="btn" href="{{ path('organisationunit_new') }}">
-                    Create a another
-                </a>
+                {% if entity.parent is not empty %}
+                    <a class="btn" href="{{ path('organisationunit_new_parent', { 'parent': entity.parent.id }) }}">
+                        Create a new entry
+                    </a>
+                {% else %}
+                    <a class="btn" href="{{ path('organisationunit_new') }}">
+                        Create another
+                    </a>
+                {% endif %}
             </li>
             <li>
                 <a data-toggle="modal" href="#deleteModalFor{{ entity.uid }}" class="btn btn-danger">Delete {{ entity.longname | capitalize }}</a>

@@ -12,7 +12,7 @@
             buttonImageOnly: true,
             dateFormat: "dd/mm/yy",
             showAnim: "clip",
-            minDate: "-90Y",
+            minDate: "+0D",
             yearRange:'c-60:c+60'
         });
         var treeplaceholder="treeplaceholder";
@@ -78,8 +78,16 @@
     <form action="{{ path('user_create') }}" {{ form_enctype(form) }} method="POST" class="fos_user_registration_register">
         <div id="treeplaceholder"></div>
         {{ form_widget(form) }}
-        <div>
-            <input type="submit" value="{{ 'registration.submit'|trans({}, 'FOSUserBundle') }}" />
-        </div>
+        <br/>
+        <ul class="record_actions inline" style="float:left;">
+            <li>
+                <button type="submit" class="btn">{{ 'registration.submit'|trans({}, 'FOSUserBundle') }}</button>
+            </li>
+            <li>
+                <a href="{{ path('user') }}" class="btn">
+                    Back to the list
+                </a>
+            </li>
+        </ul>
     </form>
 {% endblock right_content %}

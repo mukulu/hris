@@ -164,7 +164,7 @@ class User extends BaseUser implements ParticipantInterface
     /**
      * @var Group $groups
      *
-     * @ORM\ManyToMany(targetEntity="Hris\UserBundle\Entity\Group", inversedBy="user")
+     * @ORM\ManyToMany(targetEntity="Hris\UserBundle\Entity\Group", inversedBy="users")
      * @ORM\JoinTable(name="hris_user_group_members",
      *   joinColumns={
 	 *     @ORM\JoinColumn(name="user_id", referencedColumnName="id", onDelete="CASCADE")
@@ -175,12 +175,12 @@ class User extends BaseUser implements ParticipantInterface
      * )
      */
     protected $groups;
-    
-    /*
+
+    /**
      * @var Form $form
      *
      * @ORM\ManyToMany(targetEntity="Hris\FormBundle\Entity\Form", inversedBy="user")
-     * @ORM\JoinTable(name="hris_user_forms",
+     * @ORM\JoinTable(name="hris_user_formmembers",
      *   joinColumns={
      *     @ORM\JoinColumn(name="user_id", referencedColumnName="id", onDelete="CASCADE")
      *   },
@@ -223,6 +223,12 @@ class User extends BaseUser implements ParticipantInterface
         if(empty($this->datecreated))
         {
             $this->datecreated = new \DateTime('now');
+        }
+        if(empty($this->expiresAt)) {
+            $this->expiresAt = new \DateTime('now +1 year');
+        }
+        if(empty($this->credentialsExpireAt)) {
+            $this->credentialsExpireAt = new \DateTime('now +1 year');
         }
     }
 
@@ -389,7 +395,6 @@ class User extends BaseUser implements ParticipantInterface
     public function addForm(Form $form)
     {
         $this->form[$form->getId()] = $form;
-        $form->addUser($this);
 
         return $this;
     }
@@ -402,7 +407,6 @@ class User extends BaseUser implements ParticipantInterface
     public function removeForm(Form $form)
     {
         $this->form->removeElement($form);
-        $form->removeFormGroup($this);
     }
 
     /**
@@ -413,6 +417,39 @@ class User extends BaseUser implements ParticipantInterface
     public function getForm()
     {
         return $this->form;
+    }
+
+    /**
+     * Add groups
+     *
+     * @param Group $groups
+     * @return User
+     */
+    public function addGroups(Group $groups)
+    {
+        $this->groups[$groups->getId()] = $groups;
+
+        return $this;
+    }
+
+    /**
+     * Remove groups
+     *
+     * @param Group $groups
+     */
+    public function removeGroups(Group $groups)
+    {
+        $this->groups->removeElement($groups);
+    }
+
+    /**
+     * Get groups
+     *
+     * @return \Doctrine\Common\Collections\Collection
+     */
+    public function getGroups()
+    {
+        return $this->groups;
     }
 
     /**

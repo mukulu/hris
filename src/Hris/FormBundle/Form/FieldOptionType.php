@@ -52,9 +52,25 @@ class FieldOptionType extends AbstractType
                     new NotBlank(),
                 )
             ))
+            ->add('sort',null,array(
+                'required'=>False,
+            ))
             ->add('value')
-            ->add('description')
-            ->add('childFieldOption')
+            ->add('skipInReport',null,array(
+                'required'=>False,
+            ))
+            ->add('childFieldOption',null,array(
+                'required'=>False,
+            ))
+            ->add('fieldOptionGroup',null,array(
+                'required'=>False,
+            ))
+            ->add('fieldOptionMerge',null,array(
+                'required'=>False,
+            ))
+            ->add('childFieldOption',null,array(
+                'required'=>False,
+            ))
         ;
     }
 

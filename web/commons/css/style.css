@@ -88,7 +88,7 @@ body {
 #push,
 #footer {
     height: 60px;
-    margin-top:15px;
+    margin-top:45px;
 }
 #footer {
     background-color: #f5f5f5;
@@ -102,8 +102,18 @@ body {
         padding-right: 20px;
     }
 }
-
-
+/** Search input box **/
+input[type="text"].search-query.span2 {
+    -webkit-transition: all 0.4s linear;
+    -moz-transition: all 0.4s linear;
+    transition: all 0.4s linear;
+}
+.search-query:focus {
+    width:100%;
+}
+input.span2, textarea.span2, .uneditable-input.span2 {
+    width: 100px;
+}
 
 /* Custom page CSS
 -------------------------------------------------- */

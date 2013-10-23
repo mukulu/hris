@@ -128,6 +128,15 @@ class OrganisationunitController extends Controller
                 }
             }
 
+            // Persist organisationunit groups
+            $organisationunitGroupsetsContents = $request->request->get('hris_organisationunitbundle_orgnisationunittype_groupsets');
+            $organisationunitGroupsets = $this->getDoctrine()->getManager()->getRepository('HrisOrganisationunitBundle:OrganisationunitGroupset')->findAll();
+            foreach($organisationunitGroupsets as $organisationunitGroupsetKey=>$organisationunitGroupset) {
+                $organisationunitGroupId= $organisationunitGroupsetsContents[$organisationunitGroupset->getUid()];
+                $organisationunitGroup = $this->getDoctrine()->getRepository('HrisOrganisationunitBundle:OrganisationunitGroup')->findOneBy(array('id'=>$organisationunitGroupId));
+                $organisationunitGroup->addOrganisationunit($entity);
+            }
+
 
             $em->persist($entity);
 
@@ -168,11 +177,15 @@ class OrganisationunitController extends Controller
         }
         $completenessForms = $this->getDoctrine()->getManager()->getRepository('HrisFormBundle:Form')->findAll();
 
+        //Support addition of group and groupset
+        $organisationunitGroupsets = $this->getDoctrine()->getManager()->getRepository('HrisOrganisationunitBundle:OrganisationunitGroupset')->findAll();
+
         return array(
             'entity' => $entity,
             'parent'=>$parent,
             'form'   => $form->createView(),
             'completenessForms'=>$completenessForms,
+            'organisationunitGroupsets'=>$organisationunitGroupsets,
         );
     }
 
@@ -238,6 +251,8 @@ class OrganisationunitController extends Controller
             $organisationunitCompleteness = $em->getRepository('HrisOrganisationunitBundle:OrganisationunitCompleteness')->findOneBy(array('organisationunit'=>$entity,'form'=>$completenessForm));
             $completenessExpectation[$completenessForm->getUid()] = !empty($organisationunitCompleteness) ? $organisationunitCompleteness->getExpectation() : NULL;
         }
+        //Support addition of group and groupset
+        $organisationunitGroupsets = $this->getDoctrine()->getManager()->getRepository('HrisOrganisationunitBundle:OrganisationunitGroupset')->findAll();
 
         return array(
             'entity'      => $entity,
@@ -245,6 +260,7 @@ class OrganisationunitController extends Controller
             'delete_form' => $deleteForm->createView(),
             'completenessForms'=>$completenessForms,
             'completenessExpectation'=>$completenessExpectation,
+            'organisationunitGroupsets'=>$organisationunitGroupsets,
         );
     }
 
@@ -286,6 +302,20 @@ class OrganisationunitController extends Controller
                 }
             }
 
+            // Persist organisationunit groups
+            $organisationunitGroupsetsContents = $request->request->get('hris_organisationunitbundle_orgnisationunittype_groupsets');
+            $organisationunitGroupsets = $this->getDoctrine()->getManager()->getRepository('HrisOrganisationunitBundle:OrganisationunitGroupset')->findAll();
+            $entity->removeAllOrganisationunitGroups();
+            $em->persist($entity);
+            foreach($organisationunitGroupsets as $organisationunitGroupsetKey=>$organisationunitGroupset) {
+                // Go through groups in the groupset and remove membership
+                foreach($organisationunitGroupset->getOrganisationunitGroup() as $organisationunitGroupKey=>$organisationunitGroup) {
+                    $organisationunitGroup->removeOrganisationunit($entity);
+                }
+                $organisationunitGroupId= $organisationunitGroupsetsContents[$organisationunitGroupset->getUid()];
+                $organisationunitGroup = $this->getDoctrine()->getRepository('HrisOrganisationunitBundle:OrganisationunitGroup')->findOneBy(array('id'=>$organisationunitGroupId));
+                $organisationunitGroup->addOrganisationunit($entity);
+            }
             $em->persist($entity);
             $em->flush();
 

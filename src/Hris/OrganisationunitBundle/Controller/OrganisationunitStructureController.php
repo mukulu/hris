@@ -367,11 +367,18 @@ class OrganisationunitStructureController extends Controller
         $organisationunitStructure = $entityManager->getRepository('HrisOrganisationunitBundle:OrganisationunitStructure')->findOneBy(array('organisationunit'=>$organisationunit));
         if(empty($organisationunitStructure)) {
             $organisationunitStructure = new OrganisationunitStructure();
-            $parentStructure = $organisationunit->getParent()->getOrganisationunitStructure();
+            if($organisationunit->getParent() != NULL) {
+                $parentStructure = $organisationunit->getParent()->getOrganisationunitStructure();
+                $parentLevel = $parentStructure->getLevel()->getLevel();
+            }else {
+                $parentStructure=NULL;
+                $parentLevel=0;
+            }
         }else {
             $parentStructure = $organisationunitStructure->getOrganisationunit()->getParent()->getOrganisationunitStructure();
+            $parentLevel = $parentStructure->getLevel()->getLevel();
         }
-        $parentLevel = $parentStructure->getLevel()->getLevel();
+
         $organisationunitStructure->setLevel($entityManager->getRepository('HrisOrganisationunitBundle:OrganisationunitLevel')->findOneBy(array('level'=>($parentLevel+1))));
         $organisationunitStructure->setOrganisationunit($organisationunit);
         // Clear level values;
