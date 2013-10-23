@@ -63,7 +63,7 @@ class LoadIndicatorData extends AbstractFixture implements OrderedFixtureInterfa
                 'name'=>'Proffesion Targets',
                 'description'=>'Targets for all professions in hospitals',
                 'organisationunitGroup'=>'hospitals',
-        );
+        ));
         return $this->indicators;
     }
 	public function load(ObjectManager $manager)

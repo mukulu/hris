@@ -330,6 +330,76 @@ class ReportHistoryTrainingController extends Controller
     }
 
     /**
+     * Records Engine
+     *
+     * @param Organisationunit $organisationUnit
+     * @param Form $forms
+     * @param Field $fields
+     * @param $reportType
+     * @param $withLowerLevels
+     * @return mixed
+     */
+    private function recordsEngine(Organisationunit $organisationUnit,  Form $forms, Field $fields, $reportType, $withLowerLevels)
+    {
+
+        $entityManager = $this->getDoctrine()->getManager();
+        $resourceTableName = "_resource_all_fields";
+
+        if ($reportType == "training") {
+            //Query all lower levels units from the passed orgunit
+            if($withLowerLevels){
+                $allChildrenIds = "SELECT hris_organisationunitlevel.level ";
+                $allChildrenIds .= "FROM hris_organisationunitlevel , hris_organisationunitstructure ";
+                $allChildrenIds .= "WHERE hris_organisationunitlevel.id = hris_organisationunitstructure.level_id AND hris_organisationunitstructure.organisationunit_id = ". $organisationUnit->getId();
+                $subQuery = "V.organisationunit_id = ". $organisationUnit->getId() . " OR ";
+                $subQuery .= " ( L.level >= ( ". $allChildrenIds .") AND S.level".$organisationUnit->getOrganisationunitStructure()->getLevel()->getLevel()."_id =".$organisationUnit->getId()." )";
+            }else{
+                $subQuery = "V.organisationunit_id = ". $organisationUnit->getId();
+            }
+
+            //Query all training data and count by start date year
+            $query = "SELECT R.firstname, R.middlename, R.surname, R.presentdesignation, T.coursename, T.courselocation, T.sponsor, T.startdate, T.enddate, R.level5_level_5 ";
+            $query .= "FROM hris_record_training T ";
+            $query .= "INNER JOIN hris_record as V on V.id = T.record_id ";
+            $query .= "INNER JOIN ".$resourceTableName." as R on R.instance = V.instance ";
+            $query .= "INNER JOIN hris_organisationunitstructure as S on S.organisationunit_id = V.organisationunit_id ";
+            $query .= "INNER JOIN hris_organisationunitlevel as L on L.id = S.level_id ";
+            $query .= "WHERE V.form_id = ". $forms->getId();
+            $query .= " AND (". $subQuery .") ";
+            $query .= "ORDER BY R.firstname ASC";
+
+        }else{
+
+                //Query all lower levels units from the passed orgunit
+                if($withLowerLevels){
+                    $allChildrenIds = "SELECT hris_organisationunitlevel.level ";
+                    $allChildrenIds .= "FROM hris_organisationunitlevel , hris_organisationunitstructure ";
+                    $allChildrenIds .= "WHERE hris_organisationunitlevel.id = hris_organisationunitstructure.level_id AND hris_organisationunitstructure.organisationunit_id = ". $organisationUnit->getId();
+                    $subQuery = "V.organisationunit_id = ". $organisationUnit->getId() . " OR ";
+                    $subQuery .= " ( L.level >= ( ". $allChildrenIds .") AND S.level".$organisationUnit->getOrganisationunitStructure()->getLevel()->getLevel()."_id =".$organisationUnit->getId()." )";
+                }else{
+                    $subQuery = "V.organisationunit_id = ". $organisationUnit->getId();
+                }
+
+                //Query all history data and count by field option
+                $query = "SELECT R.firstname, R.middlename, R.surname, R.presentdesignation, H.history, H.reason, H.startdate, R.level5_level_5 ";
+                $query .= "FROM hris_record_history H ";
+                $query .= "INNER JOIN hris_record as V on V.id = H.record_id ";
+                $query .= "INNER JOIN ".$resourceTableName." as R on R.instance = V.instance ";
+                $query .= "INNER JOIN hris_organisationunitstructure as S on S.organisationunit_id = V.organisationunit_id ";
+                $query .= "INNER JOIN hris_organisationunitlevel as L on L.id = S.level_id ";
+                $query .= "WHERE V.form_id = ". $forms->getId()." AND H.field_id = ". $fields->getId();
+                $query .= " AND (". $subQuery .") ";
+                $query .= " ORDER BY R.firstname ASC";
+        }
+        //echo $query;exit;
+
+        //get the records
+        $report = $entityManager -> getConnection() -> executeQuery($query) -> fetchAll();
+        return $report;
+    }
+
+    /**
      * Download History reports
      *
      * @Route("/download", name="report_historytraining_download")
@@ -454,7 +524,7 @@ class ReportHistoryTrainingController extends Controller
         $column == 'A';
         $row += 2;
 
-        //work with cross tabulation report
+        //Start populating excel with data
         if ($reportType == "history") {
 
             /*print_r($results);exit;
@@ -567,98 +637,38 @@ class ReportHistoryTrainingController extends Controller
         $em = $this->getDoctrine()->getManager();
 
         $organisationUnitid =$request->query->get('organisationUnit');
-        $formsId = explode(",",$request->query->get('formsId'));
-        $organisationunitGroupsId = explode(",",$request->query->get('organisationunitGroupsId'));
+        $formsId = $request->query->get('formsId');
+        $reportType = $request->query->get('reportType');
         $withLowerLevels =$request->query->get('withLowerLevels');
         $fieldsId =$request->query->get('fields');
-        $fieldsTwoId =$request->query->get('fieldsTwo');
-        $forms = new ArrayCollection();
-        $organisationunitGroups = new ArrayCollection();
 
         //Get the objects from the the variables
 
         $organisationUnit = $em->getRepository('HrisOrganisationunitBundle:Organisationunit')->find($organisationUnitid);
-        $fields = $em->getRepository('HrisFormBundle:Field')->find($fieldsId);
-        $fieldsTwo = $em->getRepository('HrisFormBundle:Field')->find($fieldsTwoId);
-        foreach($formsId as $formId){
-            $forms->add($em->getRepository('HrisFormBundle:Form')->find($formId)) ;
+        $forms = $em->getRepository('HrisFormBundle:Form')->find($formsId);
+
+        if(is_null($fieldsId)){
+            $fields = new Field();
+        }
+        else{
+            $fields = $em->getRepository('HrisFormBundle:Field')->find($fieldsId);
         }
 
-        foreach($organisationunitGroupsId as $organisationunitGroupId){
-            $organisationunitGroups->add($em->getRepository('HrisOrganisationunitBundle:OrganisationunitGroup')->find($organisationunitGroupId));
-        }
-
-        //get the list of options to exclude from the reports
-        $fieldOptionsToExclude = $em->getRepository('HrisFormBundle:FieldOption')->findBy (
-            array('skipInReport' => TRUE)
-        );
-
-        //remove the value which have field option set to exclude in reports
-        //but check to see if the first field is in the list of fields to remove.
-        foreach($fieldOptionsToExclude as $key => $fieldOptionToExclude)
-            if($fieldOptionToExclude->getField()->getId() == $fields->getId())
-                unset($fieldOptionsToExclude[$key]);
-
-
-        //Pull the organisation unit Structure
-        $selectedOrgunitStructure = $em->getRepository('HrisOrganisationunitBundle:OrganisationunitStructure')->findOneBy(array('organisationunit' => $organisationUnit->getId()));
-
-        $resourceTableName = "_resource_all_fields";
-        //create the query to select the records from the resource table
-        $query ="SELECT ResourceTable.firstname, ResourceTable.middlename, ResourceTable.surname, ResourceTable.profession,ResourceTable.".$fields->getName();
-
-        if ($fieldsTwo->getId() != $fields->getId()) {
-            $query .= " ,ResourceTable.".$fieldsTwo->getName();
-        }
-        $query .= " ,Orgunit.longname FROM ".$resourceTableName." ResourceTable inner join hris_organisationunit as Orgunit ON Orgunit.id = ResourceTable.organisationunit_id INNER JOIN hris_organisationunitstructure AS Structure ON Structure.organisationunit_id = ResourceTable.organisationunit_id";
-
-        $query .= " WHERE ResourceTable.".$fields->getName()." is not NULL ";
-        if ($fieldsTwo->getId() != $fields->getId()) {
-            $query .= " AND ResourceTable.".$fieldsTwo->getName()." is not NULL";
-        }
-
-        //filter the records by the selected form and facility
-        $query .= " AND ResourceTable.form_id IN (";
-        foreach($forms as $form){
-            $query .= $form->getId()." ,";
-        }
-
-        //remove the last comma in the query
-        $query = rtrim($query,",").")";
-
-        if($withLowerLevels){
-            $query .= " AND Structure.level".$selectedOrgunitStructure->getLevel()->getLevel()."_id=".$organisationUnit->getId();
-            $query .= " AND  Structure.level_id >= ";
-            $query .= "(SELECT hris_organisationunitstructure.level_id FROM hris_organisationunitstructure WHERE hris_organisationunitstructure.organisationunit_id=".$organisationUnit->getId()." )";
-        }else{
-            $query .= " AND ResourceTable.organisationunit_id=".$organisationUnit->getId();
-        }
-
-        //filter the records if the organisation group was choosen
-        /*if(!empty($organisationunitGroup)){
-            foreach($organisationunitGroup as $organisationunitGroups){
-                $groups .= "'".$organisationunitGroups->getName()."',";
-            }
-            //remove the last comma in the query
-            $groups = rtrim($groups,",");
-
-            $query .= " AND (ResourceTable.type IN (".$groups.") OR ownership IN (".$groups.") )";//OR administrative IN (".$groups.")
-        }*/
-
-        //remove the record which have field option set to exclude in reports
-        foreach($fieldOptionsToExclude as $key => $fieldOptionToExclude)
-            $query .= " AND ResourceTable.".$fieldOptionToExclude->getField()->getName()." != '".$fieldOptionToExclude->getValue()."'";
-
-        //sort the records by cadre
-        $query .= " ORDER BY ResourceTable.profession, ".$fields->getName();
-
-        $results = $em -> getConnection() -> executeQuery($query) -> fetchAll();
+        $results = $this->recordsEngine($organisationUnit ,$forms, $fields, $reportType, $withLowerLevels );
 
         //create the title
-        $title = 'List of Records by '.$fields->getCaption();
-        if($fieldsId != $fieldsTwoId) $title .= " and ".$fieldsTwo->getCaption();
-        $title .= ' for ' . $organisationUnit->getLongname();
-        if($withLowerLevels == 1) $title .= " with lower levels";
+        if ($reportType == "training"){
+            $subtitle = "In Service Training";
+        }
+        elseif( $reportType = "history"){
+            $subtitle = $fields->getCaption()." History";
+        }
+
+        $title = $subtitle. " Report ".$organisationUnit->getLongname();
+
+        if($withLowerLevels){
+            $title .= " with lower levels";
+        }
 
 
         // ask the service for a Excel5
@@ -676,7 +686,7 @@ class ReportHistoryTrainingController extends Controller
         $row  = 1;
         $date = "Date: ".date("jS F Y");
         $excelService->excelObj->getActiveSheet()->getDefaultRowDimension()->setRowHeight(15);
-        $excelService->excelObj->getActiveSheet()->getDefaultColumnDimension()->setWidth(15);
+        $excelService->excelObj->getActiveSheet()->getDefaultColumnDimension()->setWidth(20);
         $excelService->excelObj->setActiveSheetIndex(0)
             ->setCellValue($column.$row++, $title)
             ->setCellValue($column.$row, $date);
@@ -740,46 +750,105 @@ class ReportHistoryTrainingController extends Controller
         $column == 'A';
         $row += 2;
 
-        //apply the styles
-        if($fields->getId() != $fieldsTwo->getId()) $cellMerge = 'F'; else $cellMerge = 'E';
-        $excelService->excelObj->getActiveSheet()->getStyle('A1:'.$cellMerge.'2')->applyFromArray($heading_format);
-        $excelService->excelObj->getActiveSheet()->mergeCells('A1:'.$cellMerge.'1');
-        $excelService->excelObj->getActiveSheet()->mergeCells('A2:'.$cellMerge.'2');
+        //Start populating excel with data
+        if ($reportType == "history") {
 
-        //write the table heading of the values
-        $excelService->excelObj->getActiveSheet()->getStyle('A4:'.$cellMerge.'4')->applyFromArray($header_format);
-        $excelService->excelObj->setActiveSheetIndex(0)
-            ->setCellValue($column++.$row, 'SN')
-            ->setCellValue($column++.$row, 'Name')
-            ->setCellValue($column++.$row, 'Profession');
-        if ($fields->getName() != "profession")
-            $excelService->excelObj->setActiveSheetIndex(0)->setCellValue($column++.$row, $fields->getCaption());
-        if($fields->getId() != $fieldsTwo->getId())
-            if ($fieldsTwo->getName() != "profession")
-                $excelService->excelObj->setActiveSheetIndex(0)->setCellValue($column++.$row, $fieldsTwo->getCaption());
-        $excelService->excelObj->setActiveSheetIndex(0)->setCellValue($column.$row, 'Facility Name');
-        //write the values
-        $i =1; //count the row
-        foreach($results as $result){
-            $column = 'A';//return to the 1st column
-            $row++; //increment one row
+            /*print_r($results);exit;
+            foreach($results as $result){
+                $keys[$result[strtolower($fields->getName())]][$result[strtolower($fieldsTwo->getName())]] = $result['total'];
+                //$categoryKeys[$result[strtolower($fields->getName())]] = $result['total'];
 
-            //format of the row
-            if (($row % 2) == 1)
-                $excelService->excelObj->getActiveSheet()->getStyle($column.$row.':'.$cellMerge.$row)->applyFromArray($text_format1);
-            else
-                $excelService->excelObj->getActiveSheet()->getStyle($column.$row.':'.$cellMerge.$row)->applyFromArray($text_format2);
+            }*/
+
+            //apply the styles
+            $excelService->excelObj->getActiveSheet()->getStyle('A1:G2')->applyFromArray($heading_format);
+            $excelService->excelObj->getActiveSheet()->mergeCells('A1:G1');
+            $excelService->excelObj->getActiveSheet()->mergeCells('A2:G2');
+
+            //write the table heading of the values
+            $excelService->excelObj->getActiveSheet()->getStyle('A4:G4')->applyFromArray($header_format);
             $excelService->excelObj->setActiveSheetIndex(0)
-                ->setCellValue($column++.$row, $i++)
-                ->setCellValue($column++.$row, $result['firstname'].' '.$result['middlename'].' '.$result['surname'])
-                ->setCellValue($column++.$row, $result['profession']);
-            if ($fields->getName() != "profession")
-                $excelService->excelObj->setActiveSheetIndex(0)->setCellValue($column++.$row, $result[strtolower($fields->getName())]);
-            if($fields->getId() != $fieldsTwo->getId())
-                if ($fieldsTwo->getName() != "profession")
-                    $excelService->excelObj->setActiveSheetIndex(0)->setCellValue($column++.$row, $result[strtolower($fieldsTwo->getName())]);
-            $excelService->excelObj->setActiveSheetIndex(0)->setCellValue($column.$row, $result['longname']);
+                ->setCellValue($column++.$row, 'SN')
+                ->setCellValue($column++.$row, 'Name')
+                ->setCellValue($column++.$row, 'Designation')
+                ->setCellValue($column++.$row, 'History')
+                ->setCellValue($column++.$row, 'Reason')
+                ->setCellValue($column++.$row, 'Date')
+                ->setCellValue($column.$row, 'Duty Post');
 
+            /*$fieldOptions = $em->getRepository('HrisFormBundle:FieldOption')->findBy(array('field'=>$fieldsTwo));
+
+            foreach ($fieldOptions as $fieldOption) {
+                $excelService->excelObj->setActiveSheetIndex(0)->setCellValue($column++.$row, $fieldOption->getValue());
+            }*/
+
+            //write the values
+            $i =1; //count the row
+            foreach($results as $result){
+                $column = 'A';//return to the 1st column
+                $row++; //increment one row
+
+                //format of the row
+                if (($row % 2) == 1)
+                    $excelService->excelObj->getActiveSheet()->getStyle($column.$row.':G'.$row)->applyFromArray($text_format1);
+                else
+                    $excelService->excelObj->getActiveSheet()->getStyle($column.$row.':G'.$row)->applyFromArray($text_format2);
+                $excelService->excelObj->setActiveSheetIndex(0)
+                    ->setCellValue($column++.$row, $i++)
+                    ->setCellValue($column++.$row, $result['firstname']." ".$result['middlename']." ".$result['surname'])
+                    ->setCellValue($column++.$row, $result['presentdesignation'])
+                    ->setCellValue($column++.$row, $result['history'])
+                    ->setCellValue($column++.$row, $result['reason'])
+                    ->setCellValue($column++.$row, $result['startdate'])
+                    ->setCellValue($column.$row, $result['level5_level_5']);
+
+                /*foreach ($items as $item) {
+                    $excelService->excelObj->setActiveSheetIndex(0)->setCellValue($column++.$row, $item);
+                }*/
+            }
+
+        }elseif ($reportType == "training" ){
+            //apply the styles
+            $excelService->excelObj->getActiveSheet()->getStyle('A1:I2')->applyFromArray($heading_format);
+            $excelService->excelObj->getActiveSheet()->mergeCells('A1:I1');
+            $excelService->excelObj->getActiveSheet()->mergeCells('A2:I2');
+
+            //write the table heading of the values
+            $excelService->excelObj->getActiveSheet()->getStyle('A4:I4')->applyFromArray($header_format);
+            $excelService->excelObj->setActiveSheetIndex(0)
+                ->setCellValue($column++.$row, 'SN')
+                ->setCellValue($column++.$row, 'Name')
+                ->setCellValue($column++.$row, 'Designation')
+                ->setCellValue($column++.$row, 'Course Name')
+                ->setCellValue($column++.$row, 'Course Location')
+                ->setCellValue($column++.$row, 'Sponsor')
+                ->setCellValue($column++.$row, 'Start Date')
+                ->setCellValue($column++.$row, 'End Date')
+                ->setCellValue($column.$row, 'Duty Post');
+
+            //write the values
+            $i =1; //count the row
+            foreach($results as $result){
+                $column = 'A';//return to the 1st column
+                $row++; //increment one row
+
+                //format of the row
+                if (($row % 2) == 1)
+                    $excelService->excelObj->getActiveSheet()->getStyle($column.$row.':I'.$row)->applyFromArray($text_format1);
+                else
+                    $excelService->excelObj->getActiveSheet()->getStyle($column.$row.':I'.$row)->applyFromArray($text_format2);
+                $excelService->excelObj->setActiveSheetIndex(0)
+                    ->setCellValue($column++.$row, $i++)
+                    ->setCellValue($column++.$row, $result['firstname']." ".$result['middlename']." ".$result['surname'])
+                    ->setCellValue($column++.$row, $result['presentdesignation'])
+                    ->setCellValue($column++.$row, $result['coursename'])
+                    ->setCellValue($column++.$row, $result['courselocation'])
+                    ->setCellValue($column++.$row, $result['sponsor'])
+                    ->setCellValue($column++.$row, $result['startdate'])
+                    ->setCellValue($column++.$row, $result['enddate'])
+                    ->setCellValue($column.$row, $result['level5_level_5']);
+
+            }
         }
 
         $excelService->excelObj->getActiveSheet()->setTitle('List of Records');

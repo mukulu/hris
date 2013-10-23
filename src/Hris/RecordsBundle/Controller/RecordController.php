@@ -377,6 +377,10 @@ class RecordController extends Controller
         foreach ($fields as $key => $field){
             $recordValue = $this->get('request')->request->get($field->getName());
 
+            if($field->getDataType()->getName() == "Date"){
+                $recordValue = new \DateTime($recordValue);
+            }
+
             /**
              * Made dynamic, on which field column is used as key, i.e. uid, name or id.
              */
@@ -621,6 +625,10 @@ class RecordController extends Controller
 
         foreach ($fields as $key => $field){
             $recordValue = $this->get('request')->request->get($field->getName());
+
+            if($field->getDataType()->getName() == "Date"){
+                $recordValue = new \DateTime($recordValue);
+            }
 
             /**
              * Made dynamic, on which field column is used as key, i.e. uid, name or id.
