@@ -62,13 +62,7 @@ class FieldOptionType extends AbstractType
             ->add('childFieldOption',null,array(
                 'required'=>False,
             ))
-            ->add('fieldOptionGroup',null,array(
-                'required'=>False,
-            ))
             ->add('fieldOptionMerge',null,array(
-                'required'=>False,
-            ))
-            ->add('childFieldOption',null,array(
                 'required'=>False,
             ))
         ;
