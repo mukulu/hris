@@ -5,6 +5,7 @@
     {{ parent() }}
     <script src="{{ asset('bundles/obhighcharts/js/highcharts/highcharts.js') }}"></script>
     <script src="{{ asset('bundles/obhighcharts/js/highcharts/modules/exporting.js') }}"></script>
+    <script type="text/javascript" src="{{ asset('commons/js/jquery-ui.js') }}"></script>
     <script type="text/javascript">
         {{ chart(combinationchart) }}
         {{ chart(retirementchart) }}
@@ -12,8 +13,28 @@
         {%   for  entityChart in entitiesChart %}
             {{ chart(entityChart) }}
         {%  endfor %}
+        $( '.tab-content').resizable();
     </script>
 {%  endblock %}
+
+{% block stylesheets %}
+    {{ parent() }}
+    <link rel="stylesheet" href="{{ asset('commons/css/jquery-ui.css') }}" />
+    <style type="text/css">
+        .tab-content {
+            width: 100%;
+            height: 100%;
+            border-right-width:1px;
+            border-right-style:solid;
+            border-right-color:#DEDEDE;
+            border-bottom-width:1px;
+            border-bottom-style:solid;
+            border-bottom-color:#DEDEDE;
+            overflow: hidden;
+        }
+    </style>
+{% endblock stylesheets %}
+
 
 {% block notifications %}
     <li><a class="pull-right visible-desktop" href="{{ path('message_inbox') }}"><i class="icon-comment"></i>{{ unreadmessages }}</a></li>
@@ -47,26 +68,10 @@
             <div class="tab-pane active" id="employment-distribution">
                 <h4>The Employment Distribution Chart</h4>
                 <div id="chart_placeholder" style="min-width: 400px; height: 400px; margin: 0 auto"></div>
-                <ul class="record_actions inline offset8">
-                    <li>
-                        <a href="#" class="btn">Download Excel</a>
-                    </li>
-                    <li>
-                        <a href="#" class="btn">Download Pdf</a>
-                    </li>
-                </ul>
             </div>
             <div class="tab-pane" id="retirement-distribution">
                     <h4>Retirement Distribution Chart</h4>
                     <div id="retirementdistribution" style="min-width: 400px; height: 400px; margin: 0 auto"></div>
-                    <ul class="record_actions inline offset8">
-                        <li>
-                            <a href="#" class="btn">Download Excel</a>
-                        </li>
-                        <li>
-                            <a href="#" class="btn">Download Pdf</a>
-                        </li>
-                    </ul>
             </div>
             <div class="tab-pane" id="age-distribution">
                 <h4>Age Distribution</h4>
@@ -84,14 +89,6 @@
                 <div class="tab-pane" id="_{{ ((entity.name)|lower)|replace({" ":"_"}) }}">
                     <h4>{{ entity.name }}</h4>
                     <div id="{{ ((entity.name)|lower)|replace({" ":"_"}) }}" style="min-width: 400px; height: 400px; margin: 0 auto"></div>
-                    <ul class="record_actions inline offset8">
-                        <li>
-                            <a href="#" class="btn">Download Excel</a>
-                        </li>
-                        <li>
-                            <a href="#" class="btn">Download Pdf</a>
-                        </li>
-                    </ul>
                 </div>
             {% endfor %}
         </div><!-- /.tab-content -->
