@@ -67,15 +67,15 @@
         <div class="tab-content">
             <div class="tab-pane active" id="employment-distribution">
                 <h4>The Employment Distribution Chart</h4>
-                <div id="chart_placeholder" style="min-width: 400px; height: 400px; margin: 0 auto"></div>
+                <div id="chart_placeholder" style="min-width: 100%; height: 100%; margin: 0 auto"></div>
             </div>
             <div class="tab-pane" id="retirement-distribution">
                     <h4>Retirement Distribution Chart</h4>
-                    <div id="retirementdistribution" style="min-width: 400px; height: 400px; margin: 0 auto"></div>
+                    <div id="retirementdistribution" style="min-width: 100%; height: 100%; margin: 0 auto"></div>
             </div>
             <div class="tab-pane" id="age-distribution">
                 <h4>Age Distribution</h4>
-                <div id="agedistribution" style="min-width: 400px; height: 400px; margin: 0 auto"></div>
+                <div id="agedistribution" style="min-width: 100%; height: 100%; margin: 0 auto"></div>
                 <ul class="record_actions inline offset8">
                     <li>
                         <a href="#" class="btn">Download Excel</a>
@@ -88,7 +88,7 @@
             {% for entity in entities %}
                 <div class="tab-pane" id="_{{ ((entity.name)|lower)|replace({" ":"_"}) }}">
                     <h4>{{ entity.name }}</h4>
-                    <div id="{{ ((entity.name)|lower)|replace({" ":"_"}) }}" style="min-width: 400px; height: 400px; margin: 0 auto"></div>
+                    <div id="{{ ((entity.name)|lower)|replace({" ":"_"}) }}" style="min-width: 100%; height: 100%; margin: 0 auto"></div>
                 </div>
             {% endfor %}
         </div><!-- /.tab-content -->
