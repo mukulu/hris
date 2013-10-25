@@ -49,22 +49,26 @@ class SettingsController extends Controller
     public function showAction($username)
     {
         $em = $this->getDoctrine()->getManager();
-        $entity = $em->createQueryBuilder()->select('settings')
-            ->from('HrisDashboardBundle:Settings', 'settings')
-            ->innerJoin('settings.user','user')
-            ->where('user.username=:username')
-            ->setParameter('username',$username)
-            ->getQuery()->getSingleResult();
+        // Create new settings if nothing found!
+        try {
+            $entity = $em->createQueryBuilder()->select('settings')
+                ->from('HrisDashboardBundle:Settings', 'settings')
+                ->innerJoin('settings.user','user')
+                ->where('user.username=:username')
+                ->setParameter('username',$username)
+                ->getQuery()->getSingleResult();
+        } catch (\Doctrine\Orm\NoResultException $e) {
+
+        }
+
+
 
         if (!$entity) {
             return $this->redirect($this->generateUrl('settings_new', array('username' => $username)));
         }
 
-        $deleteForm = $this->createDeleteForm($entity->getId());
-
         return array(
             'entity'      => $entity,
-            'delete_form' => $deleteForm->createView(),
         );
     }
 
@@ -82,7 +86,11 @@ class SettingsController extends Controller
         $user = $userManager->findUserByUsername($this->getUser());
 
         // Create new settings if nothing found!
-        $entity = $em->getRepository('HrisDashboardBundle:Settings')->findOneBy(array('user'=>$user));
+        try {
+            $entity = $em->getRepository('HrisDashboardBundle:Settings')->findOneBy(array('user'=>$user));
+        } catch (\Doctrine\Orm\NoResultException $e) {
+            $entity = new Settings();
+        }
         if(empty($entity)) $entity = new Settings();
         $form   = $this->createCreateForm($entity);
 

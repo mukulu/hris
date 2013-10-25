@@ -76,14 +76,6 @@
             <div class="tab-pane" id="age-distribution">
                 <h4>Age Distribution</h4>
                 <div id="agedistribution" style="min-width: 100%; height: 100%; margin: 0 auto"></div>
-                <ul class="record_actions inline offset8">
-                    <li>
-                        <a href="#" class="btn">Download Excel</a>
-                    </li>
-                    <li>
-                        <a href="#" class="btn">Download Pdf</a>
-                    </li>
-                </ul>
             </div>
             {% for entity in entities %}
                 <div class="tab-pane" id="_{{ ((entity.name)|lower)|replace({" ":"_"}) }}">
