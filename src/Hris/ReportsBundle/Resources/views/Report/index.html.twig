@@ -91,7 +91,7 @@
                                         {% endif %}
                                     </div>
                                     <div class="modal-footer">
-                                        <form action="{{ path('resourcetable_delete', { 'id': entity.id }) }}" method="post">
+                                        <form action="{{ path('report_delete', { 'id': entity.id }) }}" method="post">
                                             <input type="hidden" name="_method" value="DELETE" />
                                             {{ form_widget(delete_forms[entity.id] ) }}
                                             <button type="button" class="btn btn-default" data-dismiss="modal">Close</button>
