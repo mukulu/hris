@@ -4,8 +4,10 @@
     {% trans from 'FOSMessageBundle' %}Sent{% endtrans %}
 {% endblock fos_message_header %}
 
+{% block fos_message_links %}
+    <a href="{{ url('message_thread_new' )}}" class="btn">{% trans from 'FOSMessageBundle' %}Send a new message{% endtrans %}</a>
+{% endblock fos_message_links %}
+
 {% block fos_message_content %}
-
-{% include 'HrisMessageBundle:Message:threads_list.html.twig' with {'threads': threads} %}
-
+    {% include 'HrisMessageBundle:Message:threads_list.html.twig' with {'threads': threads} %}
 {% endblock %}
