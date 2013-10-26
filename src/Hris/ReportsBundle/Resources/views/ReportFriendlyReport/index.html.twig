@@ -3,6 +3,7 @@
 {% block javascripts %}
     {{ parent() }}
     <script type="text/javascript" language="javascript" src="{{ asset('commons/js/ext-all.js') }}"></script>
+    <script type="text/javascript" language="javascript" src="{{ asset('commons/js/jquery.validate.js') }}"></script>
     <script type="text/javascript">
         var treeplaceholder="treeplaceholder";
         var inputboxname="hris_reportsbundle_reportfriendlytype[organisationunit]";
@@ -51,6 +52,10 @@
                 }
             });
         });
+        $( document ).ready(function() {
+            // validate signup form on keyup and submit
+            $("#friendlyReportForm").validate({ ignore:[] });
+        });
     </script>
 {% endblock javascripts %}
 
@@ -62,11 +67,12 @@
 {% block right_content -%}
     <h1><small>Friendly Report</small></h1>
 
-    {{ form_start(friendlyReportForm, { 'method' : 'PUT' } ) }}
+    {{ form_start(friendlyReportForm, { 'method' : 'PUT','attr': {'class':'aggregationForm','id':'friendlyReportForm'} } ) }}
 
     {{ form_row( friendlyReportForm.genericReport ) }}
 
     <div>
+        {{ form_label( friendlyReportForm.organisationunit ) }}
         <div id="treeplaceholder"></div>
         {{ form_errors( friendlyReportForm.organisationunit ) }}
         {{ form_widget( friendlyReportForm.organisationunit ) }}

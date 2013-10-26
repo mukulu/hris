@@ -2,6 +2,7 @@
 
 {% block javascripts %}
     {{ parent() }}
+    <script type="text/javascript" language="javascript" src="{{ asset('commons/js/jquery.validate.js') }}"></script>
     <script type="text/javascript" language="javascript" src="{{ asset('commons/js/ext-all.js') }}"></script>
     <script type="text/javascript">
         var treeplaceholder="treeplaceholder";
@@ -47,6 +48,10 @@
 
             });
         });
+        $( document ).ready(function() {
+            // validate signup form on keyup and submit
+            $("#organisationunitByGroupForm").validate({ ignore:[] });
+        });
     </script>
 {% endblock javascripts %}
 
@@ -58,9 +63,10 @@
 {% block right_content -%}
     <h1><small>Report Organisationunit By Groupset</small></h1>
 
-    {{ form_start(organisationunitByGroupForm, { 'method' : 'PUT' } ) }}
+    {{ form_start(organisationunitByGroupForm, { 'method' : 'PUT','attr': {'class':'organisationunitByGroupForm','id':'organisationunitByGroupForm'} } ) }}
 
     <div>
+        {{ form_label( organisationunitByGroupForm.organisationunit ) }}
         <div id="treeplaceholder"></div>
         {{ form_errors( organisationunitByGroupForm.organisationunit ) }}
         {{ form_widget( organisationunitByGroupForm.organisationunit ) }}
