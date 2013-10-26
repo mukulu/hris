@@ -48,7 +48,7 @@ class UserType extends AbstractType
                 'invalid_message' => 'fos_user.password.mismatch',
             ))
             ->add($builder->create('organisationunit','hidden',array(
-                    'required'=>true,
+                    'required'=>True,
                     'constraints'=> array(
                         new NotBlank(),
                     )

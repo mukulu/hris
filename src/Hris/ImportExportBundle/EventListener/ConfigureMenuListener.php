@@ -60,13 +60,13 @@ class ConfigureMenuListener
                 'attributes'=> array('class'=>'accordion-group'),
             )
         );
-        $importexportModule->addChild('Export Metadata',
-            array('route'=>'importexport_exportmetadata',
-                'extras'=>array('tag'=>'div'),
-                'name'=>'Export Metadata',
-                'attributes'=> array('class'=>'accordion-group'),
-            )
-        );
+//        $importexportModule->addChild('Export Metadata',
+//            array('route'=>'importexport_exportmetadata',
+//                'extras'=>array('tag'=>'div'),
+//                'name'=>'Export Metadata',
+//                'attributes'=> array('class'=>'accordion-group'),
+//            )
+//        );
         $importexportModule->addChild('Import History',
             array('route'=>'importexport_history_list',
                 'extras'=>array('tag'=>'div'),

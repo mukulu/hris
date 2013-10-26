@@ -2,6 +2,7 @@
 
 {% block javascripts %}
     {{ parent() }}
+    <script type="text/javascript" language="javascript" src="{{ asset('commons/js/jquery.validate.js') }}"></script>
     <script type="text/javascript" language="javascript" src="{{ asset('commons/js/ext-all.js') }}"></script>
     <script type="text/javascript">
         var treeplaceholder="treeplaceholder";
@@ -64,7 +65,11 @@
 
             });
         });
-            </script>
+        $( document ).ready(function() {
+            // validate signup form on keyup and submit
+            $("#validationRunForm").validate({ ignore:[] });
+        });
+    </script>
 {% endblock javascripts %}
 
 {% block stylesheets %}
@@ -74,10 +79,9 @@
 
 {% block right_content -%}
     <h1><small>Run Validation</small></h1>
-
-        {{ form_start(validationRunForm, {'action': path('validation_result'), 'method': 'POST'}) }}
-
+        {{ form_start(validationRunForm, {'action': path('validation_result'), 'method': 'POST','attr': {'class':'validationRunForm','id':'validationRunForm'} }) }}
     <div>
+        {{ form_label( validationRunForm.organisationunit ) }}
         <div id="treeplaceholder"></div>
         {{ form_errors( validationRunForm.organisationunit ) }}
         {{ form_widget( validationRunForm.organisationunit ) }}
