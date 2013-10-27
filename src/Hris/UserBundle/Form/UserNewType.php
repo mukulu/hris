@@ -55,7 +55,6 @@ class UserNewType extends AbstractType
                     new UniqueEntity(array(
                         'fields'=>array('username'),
                         'groups'=>array('registration'),
-                        'message'=>'Username already exists'
                     )),
                 )
             ))
