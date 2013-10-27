@@ -69,6 +69,7 @@ class HistoryController extends Controller
             'entities' => $entities,
             'delete_forms' => $delete_forms,
             'recordid' => $recordid,
+            'record' => $record,
         );
     }
     /**

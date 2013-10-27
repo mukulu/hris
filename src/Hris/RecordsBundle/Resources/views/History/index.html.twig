@@ -21,29 +21,32 @@
                 Add History
             </a>
         </li>
+        <li>
+            <a class="btn" href="{{ path('record_viewrecords', { 'formid': record.form.id }) }}">
+                Back to Records
+            </a>
+        </li>
     </ul>
 
     <table class="records_list dataTable table table-striped table-bordered table-hover">
         <thead>
             <tr>
                 <th>Id</th>
-                <th>Uid</th>
                 <th>History</th>
-                <th>Startdate</th>
+                <th>Date</th>
                 <th>Reason</th>
-                <th>Username</th>
                 <th>Actions</th>
             </tr>
         </thead>
         <tbody>
+        {% set incr=0 %}
         {% for entity in entities %}
+            {% set incr = incr+1 %}
             <tr>
-                <td><a href="{{ path('history_show', { 'id': entity.id }) }}">{{ entity.id }}</a></td>
-                <td>{{ entity.uid }}</td>
+                <td><a href="{{ path('history_show', { 'id': entity.id }) }}">{{ incr }}</a></td>
                 <td>{{ entity.history }}</td>
                 <td>{% if entity.startdate %}{{ entity.startdate|date('d/m/Y') }}{% endif %}</td>
                 <td>{{ entity.reason }}</td>
-                <td>{{ entity.username }}</td>
                 <td>
                     <ul class="inline">
                         <li>
