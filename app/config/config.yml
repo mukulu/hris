@@ -21,7 +21,8 @@ framework:
         #assets_version: SomeVersionScheme
     default_locale:  "%locale%"
     trusted_proxies: ~
-    session:         ~
+    session:
+        cookie_lifetime: 1200
     fragments:       ~
 
 # Twig Configuration

@@ -145,7 +145,7 @@ class FieldOption
      * @var FieldOptionMerge $fieldOptionMerge
      *
      * @ORM\OneToMany(targetEntity="Hris\FormBundle\Entity\FieldOptionMerge", mappedBy="mergedFieldOption")
-     * @ORM\OrderBy({"removedoptionvalue" = "ASC"})
+     * @ORM\OrderBy({"removedFieldOptionValue" = "ASC"})
      */
     private $fieldOptionMerge;
 
@@ -367,6 +367,7 @@ class FieldOption
     public function addFieldOptionGroup(FieldOptionGroup $fieldOptionGroup)
     {
         $this->fieldOptionGroup[$fieldOptionGroup->getId()] = $fieldOptionGroup;
+        $fieldOptionGroup->addFieldOption($this);
     
         return $this;
     }

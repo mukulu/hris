@@ -39,88 +39,6 @@ use Hris\DashboardBundle\Form\SettingsType;
  */
 class SettingsController extends Controller
 {
-
-    /**
-     * Lists all Settings entities.
-     *
-     * @Route("/", name="settings")
-     * @Method("GET")
-     * @Template()
-     */
-    public function indexAction()
-    {
-        $em = $this->getDoctrine()->getManager();
-
-        $entities = $em->getRepository('HrisDashboardBundle:Settings')->findAll();
-
-        return array(
-            'entities' => $entities,
-        );
-    }
-    /**
-     * Creates a new Settings entity.
-     *
-     * @Route("/", name="settings_create")
-     * @Method("POST")
-     * @Template("HrisDashboardBundle:Settings:new.html.twig")
-     */
-    public function createAction(Request $request)
-    {
-        $entity = new Settings();
-        $form = $this->createCreateForm($entity);
-        $form->handleRequest($request);
-
-        if ($form->isValid()) {
-            $em = $this->getDoctrine()->getManager();
-            $em->persist($entity);
-            $em->flush();
-
-            return $this->redirect($this->generateUrl('settings_show', array('id' => $entity->getId())));
-        }
-
-        return array(
-            'entity' => $entity,
-            'form'   => $form->createView(),
-        );
-    }
-
-    /**
-    * Creates a form to create a Settings entity.
-    *
-    * @param Settings $entity The entity
-    *
-    * @return \Symfony\Component\Form\Form The form
-    */
-    private function createCreateForm(Settings $entity)
-    {
-        $form = $this->createForm(new SettingsType(), $entity, array(
-            'action' => $this->generateUrl('settings_create'),
-            'method' => 'POST',
-        ));
-
-        $form->add('submit', 'submit', array('label' => 'Create'));
-
-        return $form;
-    }
-
-    /**
-     * Displays a form to create a new Settings entity.
-     *
-     * @Route("/{username}/new", requirements={"username"="\w+"}, name="settings_new")
-     * @Method("GET")
-     * @Template()
-     */
-    public function newAction()
-    {
-        $entity = new Settings();
-        $form   = $this->createCreateForm($entity);
-
-        return array(
-            'entity' => $entity,
-            'form'   => $form->createView(),
-        );
-    }
-
     /**
      * Finds and displays a Settings entity.
      *
@@ -131,103 +49,92 @@ class SettingsController extends Controller
     public function showAction($username)
     {
         $em = $this->getDoctrine()->getManager();
-        $entity = $em->createQueryBuilder()->select('settings')
-            ->from('HrisDashboardBundle:Settings', 'settings')
-            ->innerJoin('settings.user','user')
-            ->where('user.username=:username')
-            ->setParameter('username',$username)
-            ->getQuery()->getResult();
+        // Create new settings if nothing found!
+        try {
+            $entity = $em->createQueryBuilder()->select('settings')
+                ->from('HrisDashboardBundle:Settings', 'settings')
+                ->innerJoin('settings.user','user')
+                ->where('user.username=:username')
+                ->setParameter('username',$username)
+                ->getQuery()->getSingleResult();
+        } catch (\Doctrine\Orm\NoResultException $e) {
+
+        }
+
+
 
         if (!$entity) {
             return $this->redirect($this->generateUrl('settings_new', array('username' => $username)));
         }
 
-        $deleteForm = $this->createDeleteForm($entity->getId());
-
         return array(
             'entity'      => $entity,
-            'delete_form' => $deleteForm->createView(),
         );
     }
 
     /**
-     * Displays a form to edit an existing Settings entity.
+     * Displays a form to create a new Settings entity.
      *
-     * @Route("/{id}/edit", name="settings_edit")
+     * @Route("/{username}/new", requirements={"username"="\w+"}, name="settings_new")
      * @Method("GET")
      * @Template()
      */
-    public function editAction($id)
+    public function newAction($username)
     {
         $em = $this->getDoctrine()->getManager();
+        $userManager = $this->container->get('fos_user.user_manager');
+        $user = $userManager->findUserByUsername($this->getUser());
 
-        $entity = $em->getRepository('HrisDashboardBundle:Settings')->find($id);
-
-        if (!$entity) {
-            throw $this->createNotFoundException('Unable to find Settings entity.');
+        // Create new settings if nothing found!
+        try {
+            $entity = $em->getRepository('HrisDashboardBundle:Settings')->findOneBy(array('user'=>$user));
+        } catch (\Doctrine\Orm\NoResultException $e) {
+            $entity = new Settings();
         }
-
-        $editForm = $this->createEditForm($entity);
-        $deleteForm = $this->createDeleteForm($id);
+        if(empty($entity)) $entity = new Settings();
+        $form   = $this->createCreateForm($entity);
 
         return array(
-            'entity'      => $entity,
-            'edit_form'   => $editForm->createView(),
-            'delete_form' => $deleteForm->createView(),
+            'entity' => $entity,
+            'form'   => $form->createView(),
+            'user'=>$user,
         );
     }
 
     /**
-    * Creates a form to edit a Settings entity.
-    *
-    * @param Settings $entity The entity
-    *
-    * @return \Symfony\Component\Form\Form The form
-    */
-    private function createEditForm(Settings $entity)
-    {
-        $form = $this->createForm(new SettingsType(), $entity, array(
-            'action' => $this->generateUrl('settings_update', array('id' => $entity->getId())),
-            'method' => 'PUT',
-        ));
-
-        $form->add('submit', 'submit', array('label' => 'Update'));
-
-        return $form;
-    }
-    /**
-     * Edits an existing Settings entity.
+     * Creates a new Settings entity.
      *
-     * @Route("/{id}", name="settings_update")
-     * @Method("PUT")
-     * @Template("HrisDashboardBundle:Settings:edit.html.twig")
+     * @Route("/{username}/create", name="settings_create")
+     * @Method("POST")
+     * @Template("HrisDashboardBundle:Settings:new.html.twig")
      */
-    public function updateAction(Request $request, $id)
+    public function createAction(Request $request,$username)
     {
         $em = $this->getDoctrine()->getManager();
+        $userManager = $this->container->get('fos_user.user_manager');
+        $user = $userManager->findUserByUsername($this->getUser());
+        // Create new settings
+        $entity = $em->getRepository('HrisDashboardBundle:Settings')->findOneBy(array('user'=>$user));
+        if(empty($entity)) $entity = new Settings();
+        $entity->setUser($user);
+        $form = $this->createCreateForm($entity);
+        $form->handleRequest($request);
 
-        $entity = $em->getRepository('HrisDashboardBundle:Settings')->find($id);
-
-        if (!$entity) {
-            throw $this->createNotFoundException('Unable to find Settings entity.');
-        }
-
-        $deleteForm = $this->createDeleteForm($id);
-        $editForm = $this->createEditForm($entity);
-        $editForm->handleRequest($request);
-
-        if ($editForm->isValid()) {
+        if ($form->isValid()) {
+            $em->persist($entity);
             $em->flush();
 
-            return $this->redirect($this->generateUrl('settings_edit', array('id' => $id)));
+
+            return $this->redirect($this->generateUrl('settings_show', array('username' => $user->getUsername())));
         }
 
         return array(
-            'entity'      => $entity,
-            'edit_form'   => $editForm->createView(),
-            'delete_form' => $deleteForm->createView(),
+            'entity' => $entity,
+            'form'   => $form->createView(),
+            'user'=>$user,
         );
     }
+
     /**
      * Deletes a Settings entity.
      *
@@ -266,8 +173,28 @@ class SettingsController extends Controller
         return $this->createFormBuilder()
             ->setAction($this->generateUrl('settings_delete', array('id' => $id)))
             ->setMethod('DELETE')
-            ->add('submit', 'submit', array('label' => 'Delete'))
             ->getForm()
         ;
     }
+
+    /**
+     * Creates a form to create a Settings entity.
+     *
+     * @param Settings $entity The entity
+     *
+     * @return \Symfony\Component\Form\Form The form
+     */
+    private function createCreateForm(Settings $entity)
+    {
+        $userManager = $this->container->get('fos_user.user_manager');
+        $user = $userManager->findUserByUsername($this->getUser());
+
+        $form = $this->createForm(new SettingsType(), $entity, array(
+            'action' => $this->generateUrl('settings_create', array('username' => $user->getUsername())),
+            'method' => 'POST',
+        ));
+
+        return $form;
+    }
+
 }

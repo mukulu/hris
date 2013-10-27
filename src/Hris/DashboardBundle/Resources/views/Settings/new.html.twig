@@ -2,15 +2,16 @@
 
 {% block right_content -%}
     <h1><small>Settings creation</small></h1>
-    <div class="well form-signin">
-        {{ form(form) }}
 
-        <ul class="record_actions inline">
+<div class="well form-signin">
+    <form action="{{ path('settings_create', { 'username': user.username }) }}" method="post" {{ form_enctype(form) }}>
+        {{ form_widget(form) }}
+        <br/>
+        <ul class="record_actions inline" style="float:left;">
             <li>
-                <a href="{{ path('settings') }}" class="btn">
-                    Back to the list
-                </a>
+                <button type="submit" class="btn">Update</button>
             </li>
         </ul>
-    </div>
+    </form>
+</div>
 {% endblock %}
