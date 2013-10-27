@@ -229,9 +229,9 @@ class ReportEmployeeRecordsController extends Controller
         // Clause for filtering target organisationunits
         if ($withLowerLevels=="true") {
             $organisationunit = $this->getDoctrine()->getManager()->getRepository('HrisOrganisationunitBundle:Organisationunit')->find($organisationunitId);
-            $organisationunitLevelsWhereClause = " Structure.level".$organisationunit->getOrganisationunitStructure()->getLevel()->getLevel()."_id=$organisationunitId AND Structure.level_id >= ( SELECT hris_organisationunitlevel.level FROM hris_organisationunitstructure INNER JOIN hris_organisationunitlevel ON hris_organisationunitstructure.level_id=hris_organisationunitlevel.id  WHERE hris_organisationunitstructure.organisationunit_id=$organisationunitId ) ";
+            $organisationunitLevelsWhereClause = " Structure.level".$organisationunit->getOrganisationunitStructure()->getLevel()->getLevel()."_id=$organisationunitId AND Structure.level_id >= ( SELECT hris_organisationunitlevel.level FROM hris_organisationunitstructure INNER JOIN hris_organisationunitlevel ON hris_organisationunitstructure.level_id=hris_organisationunitlevel.id  WHERE hris_organisationunitstructure.organisationunit_id=$organisationunitId )  AND Organisationunit.active=True";
         }else {
-            $organisationunitLevelsWhereClause = " ResourceTable.organisationunit_id=$organisationunitId ";
+            $organisationunitLevelsWhereClause = " ResourceTable.organisationunit_id=$organisationunitId AND Organisationunit.active=True";
         }
         // Clause for filtering target forms
         $formsWhereClause=" ResourceTable.form_id IN ($formIds) ";
