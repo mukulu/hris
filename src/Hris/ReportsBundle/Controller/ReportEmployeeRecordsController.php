@@ -244,7 +244,7 @@ class ReportEmployeeRecordsController extends Controller
         /*
          * Individual column filtering
          */
-        for ( $i=1 ; $i<count($visibleFieldIds) ; $i++ )
+        for ( $i=0 ; $i<count($visibleFieldIds) ; $i++ )
         {
             if ( isset($_POST['bSearchable_'.$i]) && $_POST['bSearchable_'.$i] == "true" && $_POST['sSearch_'.$i] != '' )
             {
@@ -311,12 +311,13 @@ class ReportEmployeeRecordsController extends Controller
         }
 
         // Putting select column clause together the query
-        foreach($visibleFields as $key=>$visibleFieldObject) {
+        for ( $i=0 ; $i<count($visibleFieldIds) ; $i++ )
+        {
             // Building the Select column clause
             if(isset($selectColumnClause)) {
-                $selectColumnClause.=",ResourceTable.".strtolower($visibleFieldObject->getName())." as ".strtolower($visibleFieldObject->getName());
+                $selectColumnClause.=",ResourceTable.".strtolower($fieldObjects[$visibleFieldKeysById[$visibleFieldIds[$i]]]->getName())." as ".strtolower($fieldObjects[$visibleFieldKeysById[$visibleFieldIds[$i]]]->getName());
             }else {
-                $selectColumnClause="ResourceTable.".strtolower($visibleFieldObject->getName())." as ".strtolower($visibleFieldObject->getName());
+                $selectColumnClause="ResourceTable.".strtolower($fieldObjects[$visibleFieldKeysById[$visibleFieldIds[$i]]]->getName())." as ".strtolower($fieldObjects[$visibleFieldKeysById[$visibleFieldIds[$i]]]->getName());
             }
         }
         if(isset($selectColumnClause)) {
@@ -425,7 +426,8 @@ class ReportEmployeeRecordsController extends Controller
                         $counter++;
                     }
                     for ( $i=0 ; $i<count($visibleFieldIds) ; $i++ ) {
-                        $fieldObject = $fieldObjects[$i];
+                        $fieldObject = $fieldObjects[$visibleFieldKeysById[$visibleFieldIds[$i]]];
+                        //$fieldObject = $fieldObjects[$i];
                         if ($fieldObject->getInputType()->getName() == 'Select') {
                             $displayValue = $recordArray[strtolower($fieldObject->getName())];
                         }else if ($fieldObject->getInputType()->getName() == 'Date') {
@@ -456,6 +458,7 @@ class ReportEmployeeRecordsController extends Controller
                             $displayValue = $recordArray[strtolower($fieldObject->getName())];
                         }
                         if(!empty($displayValue)) $row[]=$displayValue; else $row[] = "";
+
                     }
                     $lastUpdated = new \DateTime($recordArray["lastupdated"]);
                     $row[] = $lastUpdated->format('d/m/Y');
