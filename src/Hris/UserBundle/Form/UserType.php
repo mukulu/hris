@@ -23,6 +23,7 @@
  *
  */
 namespace Hris\UserBundle\Form;
+use Doctrine\ORM\Mapping\UniqueConstraint;
 use Symfony\Component\Form\AbstractType;
 use Symfony\Component\Form\FormBuilderInterface;
 use Symfony\Component\OptionsResolver\OptionsResolverInterface;
@@ -37,16 +38,32 @@ class UserType extends AbstractType
         $transformer = new OrganisationunitToIdTransformer($em);
 
         $builder
-            ->add('username', null, array('label' => 'form.username', 'translation_domain' => 'FOSUserBundle'))
-            ->add('email', 'email', array('label' => 'form.email', 'translation_domain' => 'FOSUserBundle'))
+            ->add('username', 'hidden', array(
+                'required'=>True,
+                'label' => 'form.username',
+                'translation_domain' => 'FOSUserBundle',
+                'constraints'=>array(
+                    new NotBlank(),
+                )
+                )
+            )
+            ->add('email', 'email', array(
+                'required'=>True,
+                'label' => 'form.email',
+                'translation_domain' => 'FOSUserBundle',
+                'constraints'=> array(
+                    new NotBlank(),
+                )
+                )
+            )
             ->add('plainPassword', 'repeated', array(
                 'type' => 'password',
                 'required'=> false,
                 'options' => array('translation_domain' => 'FOSUserBundle'),
                 'first_options' => array('label' => 'form.password'),
                 'second_options' => array('label' => 'form.password_confirmation'),
-                'invalid_message' => 'fos_user.password.mismatch',
-            ))
+                'invalid_message' => 'fos_user.password.mismatch',)
+            )
             ->add($builder->create('organisationunit','hidden',array(
                     'required'=>True,
                     'constraints'=> array(

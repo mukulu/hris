@@ -23,6 +23,9 @@
  *
  */
 namespace Hris\UserBundle\Form;
+use Doctrine\ORM\Mapping\UniqueConstraint;
+use Symfony\Bridge\Doctrine\Validator\Constraints\UniqueEntity;
+use Symfony\Bridge\Doctrine\Validator\Constraints\UniqueEntityValidator;
 use Symfony\Component\Form\AbstractType;
 use Symfony\Component\Form\FormBuilderInterface;
 use Symfony\Component\OptionsResolver\OptionsResolverInterface;
@@ -37,8 +40,25 @@ class UserNewType extends AbstractType
         $transformer = new OrganisationunitToIdTransformer($em);
 
         $builder
-            ->add('username', null, array('label' => 'form.username', 'translation_domain' => 'FOSUserBundle'))
-            ->add('email', 'email', array('label' => 'form.email', 'translation_domain' => 'FOSUserBundle'))
+            ->add('username', null, array(
+                'label' => 'form.username',
+                'translation_domain' => 'FOSUserBundle',
+                'constraints'=>array(
+                    new NotBlank(),
+                    new UniqueConstraint('columns',array('username','email')),
+                )
+            ))
+            ->add('email', 'email', array(
+                'label' => 'form.email',
+                'translation_domain' => 'FOSUserBundle',
+                'constraints'=> Array (
+                    new UniqueEntity(array(
+                        'fields'=>array('username'),
+                        'groups'=>array('registration'),
+                        'message'=>'Username already exists'
+                    )),
+                )
+            ))
             ->add('plainPassword', 'repeated', array(
                 'type' => 'password',
                 'required'=> true,
