@@ -1,6 +1,7 @@
 {% extends '::base.html.twig' %}
 {% block javascripts %}
     {{ parent() }}
+    <script type="text/javascript" language="javascript" src="{{ asset('commons/js/jquery.validate.js') }}"></script>
     <script type="text/javascript" language="javascript" src="{{ asset('commons/js/ext-all.js') }}"></script>
     <script type="text/javascript" src="{{ asset('commons/js/jquery-ui.js') }}"></script>
     <script type="text/javascript">
@@ -65,7 +66,7 @@
         });
         $( document ).ready(function() {
             // validate signup form on keyup and submit
-            $("#fos_user_registration_register").validate({ ignore:[] });
+            $("#fos_user_registration_register").validate({ ignore:".date" });
         });
     </script>
 {% endblock javascripts %}
@@ -83,6 +84,8 @@
     <form class="form-horizontal" action="{{ path('user_update', { 'id': entity.id }) }}" method="post" class="fos_user_registration_register" id="fos_user_registration_register" {{ form_enctype(edit_form) }}>
         <input type="hidden" name="_method" value="PUT" />
         {{ form_label( edit_form.organisationunit ) }}
+        {{ form_errors( edit_form.organisationunit ) }}
+        {{ form_widget( edit_form.organisationunit ) }}
         <div id="treeplaceholder"></div>
         {{ form_widget(edit_form) }}
         <br/>
