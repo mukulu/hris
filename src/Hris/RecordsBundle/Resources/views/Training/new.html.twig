@@ -1,7 +1,42 @@
 {% extends '::base.html.twig' %}
 
+{% block javascripts %}
+    {{ parent() }}
+    <script type="text/javascript">
+        $( document ).ready(function() {
+
+            var startdate='#hris_recordsbundle_trainingtype_startdate';
+            var enddate='#hris_recordsbundle_trainingtype_enddate';
+
+            // Disable end date
+            $(enddate).attr('disabled', 'true');
+
+            // Enable End date when startdate is set
+            $(startdate).on('change', function() {
+                // enable forms
+                if( $(startdate).val() != '') {
+                    $(enddate).removeAttr('disabled');
+                }else{
+                    $(enddate).attr('disabled', 'true');
+                }
+            });
+
+            //Check startdate should always be less than end date
+            $(enddate).on('change', function(){
+                var startdateValue = $(startdate).val();
+                var enddateValue = $(enddate).val();
+                if( Date.parse(startdateValue) > Date.parse(enddateValue) ){
+                    alert("End date can not be before startdate. Please enter correct value");
+                    $(enddate).val("");
+                }
+            });
+        });
+    </script>
+
+{% endblock javascripts %}
+
 {% block right_content -%}
-    <h1><small>Add Training</small></h1>
+    <h1><small>Add Training for {{ employeeName }}</small></h1>
 
     <form action="{{ path('training_create',{'recordid': recordid}) }}" method="post" {{ form_enctype(form) }}>
         {{ form_widget(form) }}

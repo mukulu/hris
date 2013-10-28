@@ -43,7 +43,7 @@
 {% endblock javascripts %}
 
 {% block right_content -%}
-    <h1><small>History creation</small></h1>
+    <h1><small>New History for {{ employeeName }}</small></h1>
 
     <form action="{{ path('history_create', {'recordid': recordid } ) }}" method="post" {{ form_enctype(form) }}>
 
