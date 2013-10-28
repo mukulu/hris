@@ -35,7 +35,7 @@
 
 {% block right_content -%}
     <div class="container">
-        <h1><small>Training list</small></h1>
+        <h1><small>Training list for {{ employeeName }}</small></h1>
         <ul class="inline">
             <li>
                 <a class="btn" href="{{ path('training_new', { 'recordid': recordid }) }}">

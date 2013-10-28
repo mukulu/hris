@@ -1,7 +1,7 @@
 {% extends '::base.html.twig' %}
 
 {% block right_content -%}
-    <h1><small>Add Training</small></h1>
+    <h1><small>Add Training for {{ employeeName }}</small></h1>
 
     <form action="{{ path('training_create',{'recordid': recordid}) }}" method="post" {{ form_enctype(form) }}>
         {{ form_widget(form) }}

@@ -70,6 +70,7 @@ class HistoryController extends Controller
             'delete_forms' => $delete_forms,
             'recordid' => $recordid,
             'record' => $record,
+            'employeeName' => $this->getEmployeeName($recordid),
         );
     }
     /**
@@ -138,6 +139,7 @@ class HistoryController extends Controller
             'entity' => $entity,
             'form'   => $form->createView(),
             'recordid' => $recordid,
+            'employeeName' => $this->getEmployeeName($recordid),
         );
     }
 
@@ -164,8 +166,33 @@ class HistoryController extends Controller
             'form'   => $form->createView(),
             'recordid' => $recordid,
             'record' => $record,
+            'employeeName' => $this->getEmployeeName($recordid),
         );
     }
+
+    /**
+     * Returns Employee's Full Name
+     *
+     * @Method("GET")
+     * @Template()
+     */
+    private function getEmployeeName($recordid)
+    {
+        $entityManager = $this->getDoctrine()->getManager();
+
+        if(!empty($recordid)) {
+            $record = $this->getDoctrine()->getManager()->getRepository('HrisRecordsBundle:Record')->findOneBy(array('id'=>$recordid));
+        }else {
+            $record = NULL;
+        }
+        $resourceTableName = "_resource_all_fields";
+        $query = "SELECT firstname, middlename, surname FROM ".$resourceTableName;
+        $query .= " WHERE instance = '".$record->getInstance()."' ";
+
+        $result = $entityManager -> getConnection() -> executeQuery($query) -> fetchAll();
+        return $result[0]['firstname']." ".$result[0]['middlename']." ".$result[0]['surname'];
+    }
+
 
     /**
      * Finds and displays a History entity.
@@ -216,6 +243,7 @@ class HistoryController extends Controller
             'entity'      => $entity,
             'edit_form'   => $editForm->createView(),
             'delete_form' => $deleteForm->createView(),
+            'employeeName' => $this->getEmployeeName($entity->getRecord()->getId()),
         );
     }
 
