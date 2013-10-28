@@ -1,5 +1,58 @@
 {% extends '::base.html.twig' %}
 
+{% block javascripts %}
+    {{ parent() }}
+    <script type="text/javascript" language="javascript" src="{{ asset('commons/js/jquery.validate.js') }}"></script>
+    <script type="text/javascript" language="javascript" src="{{ asset('commons/js/ext-all.js') }}"></script>
+    <script type="text/javascript" src="{{ asset('commons/js/jquery-ui.js') }}"></script>
+    <script type="text/javascript">
+        $( ".date" ).datepicker( {
+            changeMonth: true,
+            changeYear: true,
+            showOn: "both",
+            buttonImage: "{{ asset('commons/images/calendar.gif') }}",
+            buttonImageOnly: true,
+            dateFormat: "dd/mm/yy",
+            showAnim: "clip",
+            //minDate: "+0D",
+            yearRange:'c-60:c+60'
+        });
+
+        $( document ).ready(function() {
+
+            var startdate='#hris_recordsbundle_trainingtype_startdate';
+            var enddate='#hris_recordsbundle_trainingtype_enddate';
+
+            // Enable End date when startdate is set
+            $(startdate).on('change', function() {
+                // enable forms
+                if( $(startdate).val() != '') {
+                    $(enddate).removeAttr('disabled');
+                }else{
+                    $(enddate).attr('disabled', 'true');
+                }
+            });
+
+            //Check startdate should always be less than end date
+            $(enddate).on('change', function(){
+                var startdateValue = $(startdate).val();
+                var enddateValue = $(enddate).val();
+                if( Date.parse(startdateValue) > Date.parse(enddateValue) ){
+                    alert("End date can not be before startdate. Please enter correct value");
+                    $(enddate).val("");
+                }
+            });
+        });
+    </script>
+{% endblock javascripts %}
+
+{% block stylesheets %}
+    {{ parent() }}
+    <link rel="stylesheet" type="text/css" media="all" href="{{ asset('commons/css/ext-standard.css') }}">
+    <link rel="stylesheet" href="{{ asset('commons/css/datepicker.css') }}" />
+    <link rel="stylesheet" href="{{ asset('commons/css/jquery-ui.css') }}" />
+{% endblock stylesheets %}
+
 {% block right_content -%}
     <h1><i class="icon-edit icon-largest" title="Edit"></i><small>Edit History for {{ employeeName }}</small></h1>
 
