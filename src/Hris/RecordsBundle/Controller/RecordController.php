@@ -415,8 +415,6 @@ class RecordController extends Controller
         $em->persist($entity);
         $em->flush();
 
-        var_dump("this is done without any doubt");
-
         return $this->redirect($this->generateUrl('record_new', array('id' => $form->getId())));
 
     }
@@ -457,6 +455,15 @@ class RecordController extends Controller
                 $selectFields[] = $field->getUid();
             }
         }
+        // Workaround to send message when user is redirected from one data entry page to another.
+        $message = NULL;
+        $referer = $this->get('request')->headers->get('referer');
+        $host = $this->get('request')->headers->get('host');
+        if( empty($referer) ) {
+            $message = NULL;
+        }elseif(($referer== "http://".$host.$this->generateUrl('record_new', array('id' => $id))) || ($referer== "https://".$host.$this->generateUrl('record_new', array('id' => $id))) ) {
+            $message = "Data Was Saved successfully.";
+        }
 
         return array(
 
@@ -467,6 +474,7 @@ class RecordController extends Controller
             'fields' => json_encode($selectFields),
             'entryLevel' => $isEntryLevel,
             'organisation_unit' => array_shift($orgUnit),
+            'message'=>$message,
         );
     }
 
