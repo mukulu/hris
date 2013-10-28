@@ -70,6 +70,12 @@ tbody > tr > td > ul.inline {
 }
 /* Sticky footer styles
  -------------------------------------------------- */
+label.error {
+    float: none;
+    color: #ff0000;
+    padding-left: .5em;
+    vertical-align: top;
+}
 
 html,
 body {

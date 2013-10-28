@@ -33,6 +33,7 @@ use Hris\UserBundle\Entity\Group;
 use FOS\MessageBundle\Model\ParticipantInterface;
 use Hris\FormBundle\Entity\Form;
 use Hris\OrganisationunitBundle\Entity\Organisationunit;
+use Symfony\Bridge\Doctrine\Validator\Constraints\UniqueEntity;
 
 /**
  * Hris\UserBundle\Entity\User
@@ -41,6 +42,8 @@ use Hris\OrganisationunitBundle\Entity\Organisationunit;
  * @ORM\Entity(repositoryClass="Hris\UserBundle\Entity\UserRepository")
  * @Gedmo\Loggable
  * @Gedmo\SoftDeleteable(fieldName="deletedAt")
+ * @UniqueEntity(fields={"email"}, groups={"registration"}, message="Email exists")
+ * @UniqueEntity(fields={"username"}, groups={"registration"}, message="Username exists")
  */
 class User extends BaseUser implements ParticipantInterface
 {
@@ -64,6 +67,7 @@ class User extends BaseUser implements ParticipantInterface
     /**
      * @var string $username
      * @Gedmo\Versioned
+     * @Assert\NotBlank(groups={"registration"})
      */
     protected $username;
 
@@ -76,6 +80,8 @@ class User extends BaseUser implements ParticipantInterface
     /**
      * @var string
      * @Gedmo\Versioned
+     * @Assert\NotBlank(groups={"registration"})
+     * @Assert\Email(groups={"registration"})
      */
     protected $email;
 

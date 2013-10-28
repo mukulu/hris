@@ -1,6 +1,7 @@
 {% extends "::base.html.twig" %}
 {% block javascripts %}
     {{ parent() }}
+    <script type="text/javascript" language="javascript" src="{{ asset('commons/js/jquery.validate.js') }}"></script>
     <script type="text/javascript" language="javascript" src="{{ asset('commons/js/ext-all.js') }}"></script>
     <script type="text/javascript" src="{{ asset('commons/js/jquery-ui.js') }}"></script>
     <script type="text/javascript">
@@ -63,6 +64,10 @@
 
             });
         });
+        $( document ).ready(function() {
+            // validate signup form on keyup and submit
+            $("#fos_user_registration_register").validate({ ignore:".date" });
+        });
     </script>
 {% endblock javascripts %}
 
@@ -75,7 +80,10 @@
 
 {% block right_content %}
     <h1><small>User creation</small></h1>
-    <form action="{{ path('user_create') }}" {{ form_enctype(form) }} method="POST" class="fos_user_registration_register">
+    <form action="{{ path('user_create') }}" {{ form_enctype(form) }} method="POST" class="fos_user_registration_register" id="fos_user_registration_register">
+        {{ form_label( form.organisationunit ) }}
+        {{ form_errors( form.organisationunit ) }}
+        {{ form_widget( form.organisationunit ) }}
         <div id="treeplaceholder"></div>
         {{ form_widget(form) }}
         <br/>

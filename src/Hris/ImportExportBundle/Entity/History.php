@@ -368,6 +368,15 @@ class History
     }
 
     /**
+     * Constructor
+     */
+    public function __construct()
+    {
+        $this->uid = uniqid();
+        $this->datecreated = new \DateTime('now');
+    }
+
+    /**
      * Get Entity verbose name
      *
      * @return string

@@ -62,14 +62,14 @@ class Message extends BaseMessage
     /**
      * @Gedmo\Versioned
      * @ORM\ManyToOne(targetEntity="Hris\MessageBundle\Entity\Thread", inversedBy="messages")
-     * @ORM\JoinColumn(name="thread_id", referencedColumnName="id")
+     * @ORM\JoinColumn(name="thread_id", referencedColumnName="id", onDelete="CASCADE")
      */
     protected $thread;
 
     /**
      * @Gedmo\Versioned
      * @ORM\ManyToOne(targetEntity="Hris\UserBundle\Entity\User")
-     * @ORM\JoinColumn(name="user_id", referencedColumnName="id")
+     * @ORM\JoinColumn(name="user_id", referencedColumnName="id", onDelete="CASCADE")
      */
     protected $sender;
 

@@ -40,6 +40,7 @@ class ReportAggregationType extends AbstractType
         $transformer = new OrganisationunitToIdTransformer($em);
         $builder
             ->add($builder->create('organisationunit','hidden',array(
+                    'required'=>True,
                     'constraints'=> array(
                         new NotBlank(),
                     )

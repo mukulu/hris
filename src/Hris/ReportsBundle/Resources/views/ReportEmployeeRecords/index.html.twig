@@ -2,6 +2,7 @@
 
 {% block javascripts %}
     {{ parent() }}
+    <script type="text/javascript" language="javascript" src="{{ asset('commons/js/jquery.validate.js') }}"></script>
     <script type="text/javascript" language="javascript" src="{{ asset('commons/js/ext-all.js') }}"></script>
     <script type="text/javascript">
         var treeplaceholder="treeplaceholder";
@@ -52,6 +53,10 @@
 
             });
         });
+        $(document).ready(function() {
+            // validate signup form on keyup and submit
+            $("#employeeRecordsForm").validate({ ignore:[] });
+        });
     </script>
 {% endblock javascripts %}
 
@@ -63,9 +68,10 @@
 {% block right_content -%}
     <h1><small>Report Employee Records</small></h1>
 
-    {{ form_start(employeeRecordsForm, { 'method' : 'PUT' } ) }}
+    {{ form_start(employeeRecordsForm, { 'method' : 'PUT','attr': {'class':'employeeRecordsForm','id':'employeeRecordsForm'} } ) }}
 
     <div>
+        {{ form_label( employeeRecordsForm.organisationunit ) }}
         <div id="treeplaceholder"></div>
         {{ form_errors( employeeRecordsForm.organisationunit ) }}
         {{ form_widget( employeeRecordsForm.organisationunit ) }}

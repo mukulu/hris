@@ -2,6 +2,7 @@
 
 {% block javascripts %}
     {{ parent() }}
+    <script type="text/javascript" language="javascript" src="{{ asset('commons/js/jquery.validate.js') }}"></script>
     <script type="text/javascript" language="javascript" src="{{ asset('commons/js/ext-all.js') }}"></script>
     <script type="text/javascript">
         var treeplaceholder="treeplaceholder";
@@ -64,6 +65,10 @@
 
             });
         });
+        $( document ).ready(function() {
+            // validate signup form on keyup and submit
+            $("#organisationunitCompletenessForm").validate({ ignore:[] });
+        });
     </script>
 {% endblock javascripts %}
 
@@ -85,9 +90,10 @@
         {% endfor %}
         </div>
     {% endif %}
-    {{ form_start(organisationunitCompletenessForm, { 'method' : 'PUT' } ) }}
+    {{ form_start(organisationunitCompletenessForm, { 'method' : 'PUT','attr': {'class':'organisationunitCompletenessForm','id':'organisationunitCompletenessForm'} } ) }}
 
     <div>
+        {{ form_label( organisationunitCompletenessForm.organisationunit ) }}
         <div id="treeplaceholder"></div>
         {{ form_errors( organisationunitCompletenessForm.organisationunit ) }}
         {{ form_widget( organisationunitCompletenessForm.organisationunit ) }}

@@ -2,6 +2,7 @@
 
 {% block javascripts %}
     {{ parent() }}
+    <script type="text/javascript" language="javascript" src="{{ asset('commons/js/jquery.validate.js') }}"></script>
     <script type="text/javascript" language="javascript" src="{{ asset('commons/js/ext-all.js') }}"></script>
     <script type="text/javascript">
         var treeplaceholder="treeplaceholder";
@@ -66,6 +67,10 @@
 
             });
         });
+        $( document ).ready(function() {
+            // validate signup form on keyup and submit
+            $("#organisationunitByLevelsForm").validate({ ignore:[] });
+        });
     </script>
 {% endblock javascripts %}
 
@@ -77,9 +82,10 @@
 {% block right_content -%}
     <h1><small>Report Organisationunit By Levels</small></h1>
 
-    {{ form_start(organisationunitByLevelsForm, { 'method' : 'PUT' } ) }}
+    {{ form_start(organisationunitByLevelsForm, { 'method' : 'PUT','attr': {'class':'organisationunitByLevelsForm','id':'organisationunitByLevelsForm'} } ) }}
 
     <div>
+        {{ form_label( organisationunitByLevelsForm.organisationunit ) }}
         <div id="treeplaceholder"></div>
         {{ form_errors( organisationunitByLevelsForm.organisationunit ) }}
         {{ form_widget( organisationunitByLevelsForm.organisationunit ) }}

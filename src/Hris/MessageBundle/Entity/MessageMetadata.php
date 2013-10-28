@@ -60,12 +60,14 @@ class MessageMetadata extends BaseMessageMetadata
     /**
      * @Gedmo\Versioned
      * @ORM\ManyToOne(targetEntity="Hris\MessageBundle\Entity\Message", inversedBy="metadata")
+     * @ORM\JoinColumn(name="message_id", referencedColumnName="id", onDelete="CASCADE")
      */
     protected $message;
 
     /**
      * @Gedmo\Versioned
      * @ORM\ManyToOne(targetEntity="Hris\UserBundle\Entity\User")
+     * @ORM\JoinColumn(name="participant_id", referencedColumnName="id", onDelete="CASCADE")
      */
     protected $participant;
 

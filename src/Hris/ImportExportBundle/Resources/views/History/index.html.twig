@@ -47,9 +47,7 @@
     <table class="records_list dataTable table table-striped table-bordered table-hover" cellpadding="0" cellspacing="0" border="0">
         <thead>
             <tr>
-                <th>Id</th>
-                <th>Session_type</th>
-                <th>Uid</th>
+                <th>Session Type</th>
                 <th>Object</th>
                 <th>Status</th>
                 <th>Count</th>
@@ -62,9 +60,7 @@
         <tbody>
         {% for entity in entities %}
             <tr>
-                <td><a href="{{ path('history_show', { 'id': entity.id }) }}">{{ entity.id }}</a></td>
-                <td>{{ entity.sessiontype }}</td>
-                <td>{{ entity.uid }}</td>
+                <td><a href="{{ path('history_show', { 'id': entity.id }) }}">{{ entity.sessiontype }}</a></td>
                 <td>{{ entity.object }}</td>
                 <td>{{ entity.status }}</td>
                 <td>{{ entity.count }}</td>

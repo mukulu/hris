@@ -41,6 +41,7 @@ class ValidationRunType extends AbstractType
 
         $builder
             ->add($builder->create('organisationunit','hidden',array(
+                'required'=>True,
                 'constraints'=> array(
                     new NotBlank(),
                 )

@@ -47,6 +47,7 @@ class ReportFriendlyReportType extends AbstractType
                 )
             ))
             ->add($builder->create('organisationunit','hidden',array(
+                    'required'=>True,
                     'constraints'=> array(
                         new NotBlank(),
                     )

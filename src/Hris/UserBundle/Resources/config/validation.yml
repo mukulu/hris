@@ -1,0 +1,7 @@
+# src/Hris/UserBundle/Resources/config/validation.yml
+Hris\UserBundle\Entity\User:
+    constraints:
+        - Symfony\Bridge\Doctrine\Validator\Constraints\UniqueEntity: email
+    properties:
+        email:
+            - Email: ~

@@ -206,7 +206,13 @@ class RecordController extends Controller
         /*
          * Getting the Form Metadata and Values
          */
-        $entities = $em->getRepository( 'HrisFormBundle:Form' )->createQueryBuilder('p')->getQuery()->getArrayResult();
+        $em = $this->getDoctrine()->getManager();
+        $queryBuilder = $this->getDoctrine()->getManager()->createQueryBuilder();
+        $entities = $queryBuilder->select('form')
+            ->from('HrisFormBundle:Form','form')
+            ->join('form.user','user')
+            ->andWhere("user.username='".$this->getUser()."'")
+            ->getQuery()->getArrayResult();
 
         $form_Column_Names = json_encode($em->getClassMetadata('HrisFormBundle:Form')->getFieldNames());
         $form_Table_Name = json_encode($em->getClassMetadata('HrisFormBundle:Form')->getTableName());
