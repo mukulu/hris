@@ -77,8 +77,12 @@ class OrganisationunitRepository extends EntityRepository
             )->getQuery();
 
         try {
-            $immediateChildren = $query->getSingleResult();
-            $result = $immediateChildren[1];
+            $immediateChildren = $query->getResult();
+            if(!empty($immediateChildren)) {
+                $result = $immediateChildren[1];
+            }else {
+                $result=NULL;
+            }
         } catch( NoResultException $e) {
             $result = NULL;
         }

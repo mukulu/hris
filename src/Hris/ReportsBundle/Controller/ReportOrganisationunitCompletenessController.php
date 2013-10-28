@@ -49,7 +49,6 @@ class ReportOrganisationunitCompletenessController extends Controller
      */
     public function indexAction()
     {
-
         $organisationunitCompletenessForm = $this->createForm(new ReportOrganisationunitCompletenessType(),null,array('em'=>$this->getDoctrine()->getManager()));
 
         return array(
@@ -71,15 +70,15 @@ class ReportOrganisationunitCompletenessController extends Controller
 
         if ($organisationunitCompletenessForm->isValid()) {
             $organisationunitCompletenessFormData = $organisationunitCompletenessForm->getData();
-            $organisationunit = $organisationunitCompletenessFormData['organisationunit'];
-            $organisationunitLevel = $organisationunitCompletenessFormData['organisationunitLevel'];
-            $forms = $organisationunitCompletenessFormData['forms'];
+            $this->organisationunit = $organisationunitCompletenessFormData['organisationunit'];
+            $this->organisationunitLevel = $organisationunitCompletenessFormData['organisationunitLevel'];
+            $this->forms = $organisationunitCompletenessFormData['forms'];
         }else {
             $organisationunitCompletenessFormData = $organisationunitCompletenessForm->getData();
-            $organisationunit = $organisationunitCompletenessFormData['organisationunit'];
-            $organisationunitLevel = $organisationunitCompletenessFormData['organisationunitLevel'];
-            $forms = $organisationunitCompletenessFormData['forms'];
-            if(empty($organisationunit) && empty($forms)) {
+            $this->organisationunit = $organisationunitCompletenessFormData['organisationunit'];
+            $this->organisationunitLevel = $organisationunitCompletenessFormData['organisationunitLevel'];
+            $this->forms = $organisationunitCompletenessFormData['forms'];
+            if(empty($organisationunit) && empty($this->forms)) {
                 $this->get('session')->getFlashBag()->add(
                     'notice',
                     'Your changes were saved!'
@@ -87,31 +86,89 @@ class ReportOrganisationunitCompletenessController extends Controller
                 return $this->redirect($this->generateUrl('report_organisationunit_completeness'));
             }
         }
+        $this->processCompletenessFigures();
 
+        return array(
+            'title' => $this->title,
+            'organisationunitChildren'=>$this->organisationunitChildren,
+            'rootNodeOrganisationunit'=>$this->rootNodeOrganisationunit,
+            'visibleFields'=>$this->visibleFields,
+            'forms'=>$this->forms,
+            'sameLevel'=>$this->sameLevel,
+            'completenessMatrix'=>$this->completenessMatrix,
+            'expectedCompleteness'=>$this->expectedCompleteness,
+            'totalCompletenessMatrix'=>$this->totalCompletenessMatrix,
+            'totalExpectedCompleteness'=>$this->totalExpectedCompleteness,
+            'recordsToDisplay'=>$this->recordsToDisplay,
+            'recordInstances'=>$this->recordInstances,
+            'parent'=>$this->parent,
+        );
+    }
+
+    /**
+     * Generate a Report Redirect for Organisationunit Completeness
+     *
+     * @Route("/generate/redirect", name="report_organisationunit_completeness_generate_redirect")
+     * @Method("GET")
+     * @Template("HrisReportsBundle:ReportOrganisationunitCompleteness:generate.html.twig")
+     */
+    public function generateRedirectAction(Request $request)
+    {
+
+        $queryBuilder = $this->getDoctrine()->getManager()->createQueryBuilder();
+        $organisationunitId = $this->getRequest()->query->get('organisationunit');
+        $formIds = $this->getRequest()->query->get('forms');
+
+        $em = $this->getDoctrine()->getManager();
+        $this->organisationunit = $em->getRepository('HrisOrganisationunitBundle:Organisationunit')->findOneBy(array('id'=>$organisationunitId));
+        $this->organisationunitLevel = $this->getDoctrine()->getManager()->getRepository('HrisOrganisationunitBundle:OrganisationunitLevel')->findOneBy(array('level' => ($this->organisationunit->getOrganisationunitStructure()->getLevel()->getLevel()+1) ));
+        $this->forms = $queryBuilder->select('form')->from('HrisFormBundle:Form','form')->where($queryBuilder->expr()->in('form.id',$formIds))->getQuery()->getResult();
+
+        $this->processCompletenessFigures();
+
+        return array(
+            'title' => $this->title,
+            'organisationunitChildren'=>$this->organisationunitChildren,
+            'rootNodeOrganisationunit'=>$this->rootNodeOrganisationunit,
+            'visibleFields'=>$this->visibleFields,
+            'forms'=>$this->forms,
+            'sameLevel'=>$this->sameLevel,
+            'completenessMatrix'=>$this->completenessMatrix,
+            'expectedCompleteness'=>$this->expectedCompleteness,
+            'totalCompletenessMatrix'=>$this->totalCompletenessMatrix,
+            'totalExpectedCompleteness'=>$this->totalExpectedCompleteness,
+            'recordsToDisplay'=>$this->recordsToDisplay,
+            'recordInstances'=>$this->recordInstances,
+            'parent'=>$this->parent,
+        );
+    }
+    
+    public function processCompletenessFigures()
+    {
         // Create FormIds
         $formIds = NULL;
-        foreach($forms as $formKey=>$formObject) {
+        foreach($this->forms as $formKey=>$formObject) {
             if(empty($formIds)) $formIds=$formObject->getId();else $formIds.=','.$formObject->getId();
         }
         $queryBuilder = $this->getDoctrine()->getManager()->createQueryBuilder();
         // Determine lowest level in organisationunit structure
         $lowestOrganisationunitLevel = $this->array_value_recursive('maxLevel',$this->getDoctrine()->getManager()->createQuery('SELECT MAX(organisationunitLevel.level) as maxLevel FROM HrisOrganisationunitBundle:OrganisationunitLevel organisationunitLevel')->getResult());
         // Determine organisation unit(childrens) to display
-        if(!empty($organisationunitLevel) && $organisationunitLevel->getLevel() > $organisationunit->getOrganisationunitStructure()->getLevel()->getLevel() ) {
+        if(!empty($this->organisationunitLevel) && $this->organisationunitLevel->getLevel() > $this->organisationunit->getOrganisationunitStructure()->getLevel()->getLevel() ) {
             // Display children for the given level is passed, provided level is below the parent organisationunit
-            if(!isset($sameLevel)) {
-                $title = "Completeness Report for All " . $organisationunitLevel->getName() . " Under ". $organisationunit->getLongname(); // Create title
+            if(!isset($this->sameLevel)) {
+                $this->title = "Completeness Report for All " . $this->organisationunitLevel->getName() . " Under ". $this->organisationunit->getLongname(); // Create title
             }else{
-                $title = "Completeness Report for Employees directly under ". $organisationunit->getLongname(); // Create title
+                $this->title = "Completeness Report for Employees directly under ". $this->organisationunit->getLongname(); // Create title
             }
-            $organisationunitChildren = $queryBuilder->select('organisationunit')
+            $this->organisationunitChildren = $queryBuilder->select('organisationunit')
                 ->from('HrisOrganisationunitBundle:Organisationunit', 'organisationunit')
                 ->innerJoin('organisationunit.organisationunitStructure', 'organisationunitStructure')
                 ->where('organisationunitStructure.level=:organisationunitLevel')
-                ->andWhere('organisationunitStructure.level'.$organisationunit->getOrganisationunitStructure()->getLevel()->getLevel().'Organisationunit=:levelOrganisationunit')
+                ->andWhere('organisationunitStructure.level'.$this->organisationunit->getOrganisationunitStructure()->getLevel()->getLevel().'Organisationunit=:levelOrganisationunit')
                 ->setParameters(array(
-                    'organisationunitLevel'=>$organisationunitLevel,
-                    'levelOrganisationunit'=>$organisationunit,
+                    'organisationunitLevel'=>$this->organisationunitLevel,
+                    'levelOrganisationunit'=>$this->organisationunit,
                 ))
                 ->getQuery()->getResult();
         }else {
@@ -119,36 +176,36 @@ class ReportOrganisationunitCompletenessController extends Controller
             $lowerOrganisationunitCount = $this->getDoctrine()->getManager()->createQuery("SELECT COUNT(lowerOrganisationunit.id)
                                                             FROM HrisOrganisationunitBundle:Organisationunit lowerOrganisationunit
                                                             INNER JOIN lowerOrganisationunit.parent parentOrganisationunit
-                                                            WHERE parentOrganisationunit.id=".$organisationunit->getId())->getSingleScalarResult();
-            if($organisationunit->getOrganisationunitStructure()->getLevel()->getLevel() !== $lowestOrganisationunitLevel  && !empty($lowerOrganisationunitCount)) {
+                                                            WHERE parentOrganisationunit.id=".$this->organisationunit->getId())->getSingleScalarResult();
+            if($this->organisationunit->getOrganisationunitStructure()->getLevel()->getLevel() !== $lowestOrganisationunitLevel  && !empty($lowerOrganisationunitCount)) {
                 // Deal with organisationunit with children
-                $organisationunitLevel = $this->getDoctrine()->getManager()->getRepository('HrisOrganisationunitBundle:OrganisationunitLevel')->findOneBy(array('level' => ($organisationunit->getOrganisationunitStructure()->getLevel()+1) ));
-                $levelName=$organisationunitLevel->getName() ." Under ";
+                $this->organisationunitLevel = $this->getDoctrine()->getManager()->getRepository('HrisOrganisationunitBundle:OrganisationunitLevel')->findOneBy(array('level' => ($this->organisationunit->getOrganisationunitStructure()->getLevel()->getLevel()+1) ));
+                $levelName=$this->organisationunitLevel->getName() ." Under ";
             }else {
                 $levelName=NULL;
             }
-            $organisationunitChildren = $this->getDoctrine()->getRepository('HrisOrganisationunitBundle:Organisationunit')->getImmediateChildren($organisationunit);
-            if(!isset($sameLevel)) {
-                $title = "Completeness Report for ". $levelName . $organisationunit->getLongname(); // Create title
+            $this->organisationunitChildren = $this->getDoctrine()->getRepository('HrisOrganisationunitBundle:Organisationunit')->getImmediateChildren($this->organisationunit);
+            if(!isset($this->sameLevel)) {
+                $this->title = "Completeness Report for ". $levelName . $this->organisationunit->getLongname(); // Create title
             }else{
-                $title = "Completeness Report for Employees directly under ". $organisationunit->getLongname(); // Create title
+                $this->title = "Completeness Report for Employees directly under ". $this->organisationunit->getLongname(); // Create title
             }
 
         }
-        $rootNodeOrganisationunit = $organisationunit; // Establish the root node
-        $parent = NULL;
+        $this->rootNodeOrganisationunit = $this->organisationunit; // Establish the root node
+        $this->parent = NULL;
         //$userObject = $this->getDoctrine()->getManager()->getRepository('User')->findOneBy(array('username' => $user->getUsername()));
 
         //check to make sure you can not go beyond your assigned level
         //@todo implement checking user organisationunit
-//        if ($organisationunit->getOrganisationunitStructure()->getLevel()->getLevel() >= $userObject->getOrganisationunit()->getOrganisationunitStructure()->getLevel()) {
-//            $parent = $organisationunit->getParent();
+//        if ($this->organisationunit->getOrganisationunitStructure()->getLevel()->getLevel() >= $userObject->getOrganisationunit()->getOrganisationunitStructure()->getLevel()) {
+//            $this->parent = $this->organisationunit->getParent();
 //        }else {
-//            $parent = $userObject->getOrganisationunit();
+//            $this->parent = $userObject->getOrganisationunit();
 //        }
-        $parent = $organisationunit->getParent();
-        
-        
+        $this->parent = $this->organisationunit->getParent();
+
+
         // Query for Options to exclude from reports
         $fieldOptionsToSkip = $this->getDoctrine()->getManager()->getRepository('HrisFormBundle:FieldOption')->findBy (array('skipInReport' =>True));
         $maskIncr=1;
@@ -181,22 +238,22 @@ class ReportOrganisationunitCompletenessController extends Controller
             $valueKey = call_user_func_array(array($fieldOptionToSkip->getField(), "get${recordFieldKey}"),array());
             $maskParameters[$maskIncr]='%"'.$valueKey.'":%';
         }
-        if (isset($organisationunitChildren)) {
+        if (isset($this->organisationunitChildren)) {
 
             // user choose district and above show total records in the lower facilities
-            $completenessMatrix=NULL;
-            $expectedCompleteness=NULL;
-            $totalExpectedCompleteness=NULL;
-            $totalCompletenessMatrix=NULL;
-            foreach ($organisationunitChildren as $key => $childOrganisationunit) {
+            $this->completenessMatrix=NULL;
+            $this->expectedCompleteness=NULL;
+            $this->totalExpectedCompleteness=NULL;
+            $this->totalCompletenessMatrix=NULL;
+            foreach ($this->organisationunitChildren as $key => $childOrganisationunit) {
                 /*
                  * Construct completeness matrix
-                 * @Note: $completenessMatrix[organisationunitId][formId] //Holds particular value
-                 * @Note: $totalCompletenessMatrix[formId] // Holds total for all records of the organisationunits
+                 * @Note: $this->completenessMatrix[organisationunitId][formId] //Holds particular value
+                 * @Note: $this->totalCompletenessMatrix[formId] // Holds total for all records of the organisationunits
                  * @Note: $childrenNames[organisationunitId] hold names of OrganisationUnits in completeness matrix
-                 * @Note: $expectedCompleteness[organisationunitId][formId]
+                 * @Note: $this->expectedCompleteness[organisationunitId][formId]
                  */
-                foreach($forms as $key=>$form ) {
+                foreach($this->forms as $key=>$form ) {
                     $queryBuilder = $this->getDoctrine()->getManager()->createQueryBuilder();
                     if($childOrganisationunit->getOrganisationunitStructure()->getLevel()->getLevel() !== $lowestOrganisationunitLevel ) {
                         // Calculation for levels above the lowest ( Sum for only records below the selectedLevel)
@@ -243,17 +300,17 @@ class ReportOrganisationunitCompletenessController extends Controller
                                 'organisationunitid'=>$childOrganisationunit->getId(),
                             ))
                             ->getQuery()->getResult();
-                        $completenessMatrix[$childOrganisationunit->getId()][$form->getId()] = $this->array_value_recursive('employeeCount',$valuecount);
-                        $expectedCompleteness[$childOrganisationunit->getId()][$form->getId()] = $this->array_value_recursive('expectation',$expectations);
-                        if(isset($totalCompletenessMatrix[$form->getId()])) {
-                            $totalCompletenessMatrix[$form->getId()] += $completenessMatrix[$childOrganisationunit->getId()][$form->getId()];
+                        $this->completenessMatrix[$childOrganisationunit->getId()][$form->getId()] = $this->array_value_recursive('employeeCount',$valuecount);
+                        $this->expectedCompleteness[$childOrganisationunit->getId()][$form->getId()] = $this->array_value_recursive('expectation',$expectations);
+                        if(isset($this->totalCompletenessMatrix[$form->getId()])) {
+                            $this->totalCompletenessMatrix[$form->getId()] += $this->completenessMatrix[$childOrganisationunit->getId()][$form->getId()];
                         }else {
-                            $totalCompletenessMatrix[$form->getId()] = $completenessMatrix[$childOrganisationunit->getId()][$form->getId()];
+                            $this->totalCompletenessMatrix[$form->getId()] = $this->completenessMatrix[$childOrganisationunit->getId()][$form->getId()];
                         }
-                        if(isset($totalExpectedCompleteness[$form->getId()])) {
-                            $totalExpectedCompleteness[$form->getId()] += $expectedCompleteness[$childOrganisationunit->getId()][$form->getId()];
+                        if(isset($this->totalExpectedCompleteness[$form->getId()])) {
+                            $this->totalExpectedCompleteness[$form->getId()] += $this->expectedCompleteness[$childOrganisationunit->getId()][$form->getId()];
                         }else {
-                            $totalExpectedCompleteness[$form->getId()] = $expectedCompleteness[$childOrganisationunit->getId()][$form->getId()];
+                            $this->totalExpectedCompleteness[$form->getId()] = $this->expectedCompleteness[$childOrganisationunit->getId()][$form->getId()];
                         }
                         $childrenNames[$childOrganisationunit->getId()]= $childOrganisationunit->getLongname();
                     }else {
@@ -282,27 +339,27 @@ class ReportOrganisationunitCompletenessController extends Controller
                                 'organisationunitId'=>$childOrganisationunit->getId()
                             ))
                             ->getQuery()->getResult();
-                        $completenessMatrix[$childOrganisationunit->getId()][$form->getId()] = $this->array_value_recursive('employeeCount',$valuecount);
-                        $expectedCompleteness[$childOrganisationunit->getId()][$form->getId()] = $this->array_value_recursive('expectation',$expectations);
-                        if(isset($totalCompletenessMatrix[$form->getId()])) {
-                            $totalCompletenessMatrix[$form->getId()] += $completenessMatrix[$childOrganisationunit->getId()][$form->getId()];
+                        $this->completenessMatrix[$childOrganisationunit->getId()][$form->getId()] = $this->array_value_recursive('employeeCount',$valuecount);
+                        $this->expectedCompleteness[$childOrganisationunit->getId()][$form->getId()] = $this->array_value_recursive('expectation',$expectations);
+                        if(isset($this->totalCompletenessMatrix[$form->getId()])) {
+                            $this->totalCompletenessMatrix[$form->getId()] += $this->completenessMatrix[$childOrganisationunit->getId()][$form->getId()];
                         }else {
-                            $totalCompletenessMatrix[$form->getId()] = $completenessMatrix[$childOrganisationunit->getId()][$form->getId()];
+                            $this->totalCompletenessMatrix[$form->getId()] = $this->completenessMatrix[$childOrganisationunit->getId()][$form->getId()];
                         }
-                        if(isset($totalExpectedCompleteness[$form->getId()])) {
-                            $totalExpectedCompleteness[$form->getId()] += $expectedCompleteness[$childOrganisationunit->getId()][$form->getId()];
+                        if(isset($this->totalExpectedCompleteness[$form->getId()])) {
+                            $this->totalExpectedCompleteness[$form->getId()] += $this->expectedCompleteness[$childOrganisationunit->getId()][$form->getId()];
                         }else {
-                            $totalExpectedCompleteness[$form->getId()] = $expectedCompleteness[$childOrganisationunit->getId()][$form->getId()];
+                            $this->totalExpectedCompleteness[$form->getId()] = $this->expectedCompleteness[$childOrganisationunit->getId()][$form->getId()];
                         }
                         $childrenNames[$childOrganisationunit->getId()]= $childOrganisationunit->getLongname();
                     }
                 }
             }
             // Completeness for the root node organisationunit
-            foreach($forms as $key=>$form ) {
+            foreach($this->forms as $key=>$form ) {
                 $queryBuilder = $this->getDoctrine()->getManager()->createQueryBuilder();
                 $aliasParameters=$maskParameters;
-                $aliasParameters['organisationunitId']=$rootNodeOrganisationunit->getId();
+                $aliasParameters['organisationunitId']=$this->rootNodeOrganisationunit->getId();
                 $valuecount = $queryBuilder->select('COUNT(record.instance) as employeeCount ')
                     ->from('HrisRecordsBundle:Record','record')
                     ->join('record.organisationunit','organisationunit')
@@ -320,32 +377,32 @@ class ReportOrganisationunitCompletenessController extends Controller
                     ->join('organisationunit.organisationunitStructure','organisationunitStructure')
                     ->andWhere($queryBuilder->expr()->in('form.id',$form->getId()))
                     ->andWhere('organisationunit.id=:organisationunitId')
-                    ->setParameters(array('organisationunitId'=>$rootNodeOrganisationunit->getId()))
+                    ->setParameters(array('organisationunitId'=>$this->rootNodeOrganisationunit->getId()))
                     ->getQuery()->getResult();
-                $completenessMatrix[$rootNodeOrganisationunit->getId()][$form->getId()] = $this->array_value_recursive('employeeCount',$valuecount);
-                $expectedCompleteness[$rootNodeOrganisationunit->getId()][$form->getId()] = $this->array_value_recursive('expectation',$expectations);
+                $this->completenessMatrix[$this->rootNodeOrganisationunit->getId()][$form->getId()] = $this->array_value_recursive('employeeCount',$valuecount);
+                $this->expectedCompleteness[$this->rootNodeOrganisationunit->getId()][$form->getId()] = $this->array_value_recursive('expectation',$expectations);
                 // Summation of total completeness for selected forms
-                if(isset($totalCompletenessMatrix[$form->getId()])) {
-                    $totalCompletenessMatrix[$form->getId()] += $completenessMatrix[$rootNodeOrganisationunit->getId()][$form->getId()];
+                if(isset($this->totalCompletenessMatrix[$form->getId()])) {
+                    $this->totalCompletenessMatrix[$form->getId()] += $this->completenessMatrix[$this->rootNodeOrganisationunit->getId()][$form->getId()];
                 }else {
-                    $totalCompletenessMatrix[$form->getId()] = $completenessMatrix[$rootNodeOrganisationunit->getId()][$form->getId()];
+                    $this->totalCompletenessMatrix[$form->getId()] = $this->completenessMatrix[$this->rootNodeOrganisationunit->getId()][$form->getId()];
                 }
                 // Summation of total expected completeness for sselected forms
-                if(isset($totalExpectedCompleteness[$form->getId()])) {
-                    $totalExpectedCompleteness[$form->getId()] += $expectedCompleteness[$rootNodeOrganisationunit->getId()][$form->getId()];
+                if(isset($this->totalExpectedCompleteness[$form->getId()])) {
+                    $this->totalExpectedCompleteness[$form->getId()] += $this->expectedCompleteness[$this->rootNodeOrganisationunit->getId()][$form->getId()];
                 }else {
-                    $totalExpectedCompleteness[$form->getId()] = $expectedCompleteness[$rootNodeOrganisationunit->getId()][$form->getId()];
+                    $this->totalExpectedCompleteness[$form->getId()] = $this->expectedCompleteness[$this->rootNodeOrganisationunit->getId()][$form->getId()];
                 }
 
-                $childrenNames[$rootNodeOrganisationunit->getId()]= $rootNodeOrganisationunit->getLongname();
+                $childrenNames[$this->rootNodeOrganisationunit->getId()]= $this->rootNodeOrganisationunit->getLongname();
             }
             // Account for displaying of individual records
-            if(empty($organisationunitChildren) || isset($sameLevel)) {
+            if(empty($this->organisationunitChildren) || isset($this->sameLevel)) {
                 // When organisationunit has no children display  records(Only root node found)
 
                 $queryBuilder = $this->getDoctrine()->getManager()->createQueryBuilder();
                 // Gather Visible Fields from all passed Forms
-                if(!empty($forms)) {
+                if(!empty($this->forms)) {
                     $visibleFieldIds = $queryBuilder->select('DISTINCT(field),formVisibleFields.sort')
                         ->from('HrisFormBundle:FormVisibleFields','formVisibleFields')
                         ->innerJoin('formVisibleFields.field', 'field')
@@ -353,14 +410,14 @@ class ReportOrganisationunitCompletenessController extends Controller
                         ->where($queryBuilder->expr()->in('form.id',$formIds))
                         ->orderBy('formVisibleFields.sort','ASC')->getQuery()->getResult();
                     foreach($visibleFieldIds as $visibleKey=>$visibleFieldId) {
-                        $visibleFields[] = $this->getDoctrine()->getManager()->createQueryBuilder()->select('afield')->from('HrisFormBundle:Field','afield')->where($queryBuilder->expr()->in('afield.id',$visibleFieldId['id']))->getQuery()->getSingleResult();
+                        $this->visibleFields[] = $this->getDoctrine()->getManager()->createQueryBuilder()->select('afield')->from('HrisFormBundle:Field','afield')->where($queryBuilder->expr()->in('afield.id',$visibleFieldId['id']))->getQuery()->getSingleResult();
                         $this->getDoctrine()->getManager()->flush();
                     }
                 }else {
                     /*
                      * Make all fields visible
                     */
-                    $visibleFields = $queryBuilder->select('field')->from('HrisFormBundle:Field','field')->orderBy('field.name','ASC')->getQuery()->getResult();
+                    $this->visibleFields = $queryBuilder->select('field')->from('HrisFormBundle:Field','field')->orderBy('field.name','ASC')->getQuery()->getResult();
                 }
                 //Preparing array of Combination Categories
                 $fieldOption = $this->getDoctrine()->getManager()->getRepository('HrisFormBundle:FieldOption')->findAll();
@@ -368,7 +425,7 @@ class ReportOrganisationunitCompletenessController extends Controller
                 $counter=0;
                 // For Organisation Units without childrens
                 $aliasParameters=$maskParameters;
-                $aliasParameters['organisationunitId']=$organisationunit->getId();
+                $aliasParameters['organisationunitId']=$this->organisationunit->getId();
                 $queryBuilder = $this->getDoctrine()->getManager()->createQueryBuilder();
                 $records = $queryBuilder->select('record')->from('HrisRecordsBundle:Record','record')->join('record.organisationunit','organisationunit')->join('record.form','form')
                     ->andWhere($queryBuilder->expr()->in('form.id',$formIds))->andWhere('organisationunit.id=:organisationunitId')
@@ -385,7 +442,7 @@ class ReportOrganisationunitCompletenessController extends Controller
                 foreach($records as $key=>$dataValueInstance) {
                     echo '<tr height="20">';
                     echo '	<td id="'.$dataValueInstance->getInstance().'">'.++$counter.'</td>';
-                    foreach($visibleFields as $key=>$visibleField) {
+                    foreach($this->visibleFields as $key=>$visibleField) {
                         /**
                          * Made dynamic, on which field column is used as key, i.e. uid, name or id.
                          */
@@ -421,7 +478,7 @@ class ReportOrganisationunitCompletenessController extends Controller
             $counter=0;
             // For Organisation Units without childrens
             $aliasParameters=$maskParameters;
-            $aliasParameters['organisationunitId']=$organisationunit->getId();
+            $aliasParameters['organisationunitId']=$this->organisationunit->getId();
             $queryBuilder = $this->getDoctrine()->getManager()->createQueryBuilder();
             $records = $queryBuilder->select('record')
                 ->from('HrisRecordsBundle:Record','record')
@@ -442,7 +499,7 @@ class ReportOrganisationunitCompletenessController extends Controller
                 $option[$fieldOptionKey] = $optionObject->getValue();
             }
             // Gather Visible Fields from all passed Forms
-            if(!empty($forms)) {
+            if(!empty($this->forms)) {
                 $queryBuilder = $this->getDoctrine()->getManager()->createQueryBuilder();
                 $visibleFieldIds = $queryBuilder->select('DISTINCT(field),formVisibleFields.sort')
                     ->from('HrisFormBundle:FormVisibleFields','formVisibleFields')
@@ -451,7 +508,7 @@ class ReportOrganisationunitCompletenessController extends Controller
                     ->where($queryBuilder->expr()->in('form.id',$formIds))
                     ->orderBy('formVisibleFields.sort','ASC')->getQuery()->getResult();
                 foreach($visibleFieldIds as $visibleKey=>$visibleFieldId) {
-                    $visibleFields[] = $this->getDoctrine()->getManager()->createQueryBuilder()
+                    $this->visibleFields[] = $this->getDoctrine()->getManager()->createQueryBuilder()
                         ->select('afield')->from('HrisFormBundle:Field','afield')
                         ->where($queryBuilder->expr()
                             ->in('afield.id',$visibleFieldId['id']))
@@ -460,7 +517,7 @@ class ReportOrganisationunitCompletenessController extends Controller
                 }
                 if(empty($visibleFieldIds)) {
                     $queryBuilder = $this->getDoctrine()->getManager()->createQueryBuilder();
-                    $visibleFields = $queryBuilder->select('field')
+                    $this->visibleFields = $queryBuilder->select('field')
                         ->from('HrisFormBundle:Field','field')
                         ->where('field.isCalculated=False')
                         ->orderBy('field.uid','ASC')->getQuery()->getResult();
@@ -469,15 +526,15 @@ class ReportOrganisationunitCompletenessController extends Controller
                 /*
                  * Make all fields visible
                 */
-                $visibleFields = $queryBuilder->select('field')->from('HrisFormBundle:Field','field')->orderBy('field.name','ASC')->getQuery()->getResult();
+                $this->visibleFields = $queryBuilder->select('field')->from('HrisFormBundle:Field','field')->orderBy('field.name','ASC')->getQuery()->getResult();
             }
             // Initiate recordsToDisplay array
-            $recordsToDisplay=NULL;
-            $recordInstances = NULL;
+            $this->recordsToDisplay=NULL;
+            $this->recordInstances = NULL;
             foreach($records as $key=>$dataValueInstance) {
                 $dataValue = $dataValueInstance->getValue();
-                $recordInstances[] = $dataValueInstance->getInstance();
-                foreach($visibleFields as $key=>$visibleField) {
+                $this->recordInstances[] = $dataValueInstance->getInstance();
+                foreach($this->visibleFields as $key=>$visibleField) {
                     // Translates to $field->getUid()
                     // or $visibleField->getUid() depending on value of $recordKeyName
                     $recordFieldKey = ucfirst(Record::getFieldKey());
@@ -495,38 +552,56 @@ class ReportOrganisationunitCompletenessController extends Controller
                     }else {
                         $displayValue = $dataValue[$valueKey];
                     }
-                    $recordsToDisplay[$dataValueInstance->getInstance()][$visibleField->getUid()] = $displayValue;
+                    $this->recordsToDisplay[$dataValueInstance->getInstance()][$visibleField->getUid()] = $displayValue;
                 }
-                $recordsToDisplay[$dataValueInstance->getInstance()]['form'] = $dataValueInstance->getForm()->getName();
+                $this->recordsToDisplay[$dataValueInstance->getInstance()]['form'] = $dataValueInstance->getForm()->getName();
             }
         }
-        if(!isset($visibleFields)) $visibleFields = NULL;
-        if(!isset($sameLevel)) $sameLevel = NULL;
+        if(!isset($this->visibleFields)) $this->visibleFields = NULL;
+        if(!isset($this->sameLevel)) $this->sameLevel = NULL;
         if(!isset($dataValue)) $dataValue = NULL;
         if(!isset($records)) $records = NULL;
-        if(!isset($recordsToDisplay)) $recordsToDisplay = NULL;
-        if(!isset($recordInstances)) $recordInstances = NULL;
-        if(!isset($totalCompletenessMatrix)) $totalCompletenessMatrix = NULL;
-        if(!isset($totalExpectedCompleteness)) $totalExpectedCompleteness = NULL;
-        if(!isset($expectedCompleteness)) $expectedCompleteness = NULL;
-
-        
-        return array(
-            'title' => $title,
-            'organisationunitChildren'=>$organisationunitChildren,
-            'rootNodeOrganisationunit'=>$rootNodeOrganisationunit,
-            'visibleFields'=>$visibleFields,
-            'forms'=>$forms,
-            'sameLevel'=>$sameLevel,
-            'completenessMatrix'=>$completenessMatrix,
-            'expectedCompleteness'=>$expectedCompleteness,
-            'totalCompletenessMatrix'=>$totalCompletenessMatrix,
-            'totalExpectedCompleteness'=>$totalExpectedCompleteness,
-            'recordsToDisplay'=>$recordsToDisplay,
-            'recordInstances'=>$recordInstances,
-            'parent'=>$parent,
-        );
+        if(!isset($this->recordsToDisplay)) $this->recordsToDisplay = NULL;
+        if(!isset($this->recordInstances)) $this->recordInstances = NULL;
+        if(!isset($this->totalCompletenessMatrix)) $this->totalCompletenessMatrix = NULL;
+        if(!isset($this->totalExpectedCompleteness)) $this->totalExpectedCompleteness = NULL;
+        if(!isset($this->expectedCompleteness)) $this->expectedCompleteness = NULL;
     }
+
+    /**
+     * @var array
+     */
+    private $visibleFields;
+
+    private $title;
+
+    private $organisationunitChildren;
+
+    private $rootNodeOrganisationunit;
+
+    private $forms;
+
+    private $sameLevel;
+
+    private $completenessMatrix;
+
+    private $expectedCompleteness;
+
+    private $totalCompletenessMatrix;
+
+    private $totalExpectedCompleteness;
+
+    private $recordsToDisplay;
+
+    private $recordInstances;
+
+    private $parent;
+
+    private $organisationunit;
+
+    private $organisationunitLevel;
+
+
 
     /**
      * Get all values from specific key in a multidimensional array
