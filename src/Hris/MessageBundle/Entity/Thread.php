@@ -62,11 +62,12 @@ class Thread extends BaseThread
     /**
      * @Gedmo\Versioned
      * @ORM\ManyToOne(targetEntity="Hris\UserBundle\Entity\User")
+     * @ORM\JoinColumn(name="createdby_id", referencedColumnName="id", onDelete="CASCADE")
      */
     protected $createdBy;
 
     /**
-     * @ORM\OneToMany(targetEntity="Hris\MessageBundle\Entity\Message", mappedBy="thread")
+     * @ORM\OneToMany(targetEntity="Hris\MessageBundle\Entity\Message", mappedBy="thread", cascade={"all"})
      */
     protected $messages;
 

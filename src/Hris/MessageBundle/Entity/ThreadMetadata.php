@@ -60,12 +60,14 @@ class ThreadMetadata extends BaseThreadMetadata
     /**
      * @Gedmo\Versioned
      * @ORM\ManyToOne(targetEntity="Hris\MessageBundle\Entity\Thread", inversedBy="metadata")
+     * @ORM\JoinColumn(name="thread_id", referencedColumnName="id", onDelete="CASCADE")
      */
     protected $thread;
 
     /**
      * @Gedmo\Versioned
      * @ORM\ManyToOne(targetEntity="Hris\UserBundle\Entity\User")
+     * @ORM\JoinColumn(name="participant_id", referencedColumnName="id", onDelete="CASCADE")
      */
     protected $participant;
 
