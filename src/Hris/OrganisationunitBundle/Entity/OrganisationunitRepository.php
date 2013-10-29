@@ -61,17 +61,18 @@ class OrganisationunitRepository extends EntityRepository
     }
 
     /**
-     * Returns organisationunit count
+     * Returns immediate organisationunits
      * @param Organisationunit $organisationunit
      * @return \Doctrine\Common\Collections\Collection
      */
-    public function getImmediateChildren( Organisationunit $organisationunit)
+    public function getImmediateChildren( Organisationunit $organisationunit, $active=NULL)
     {
         $queryBuilder = $this->getEntityManager()->createQueryBuilder();
         $query = $queryBuilder->select('organisationunit')
             ->from('HrisOrganisationunitBundle:Organisationunit','organisationunit')
-            ->where('organisationunit.parent = :parent')
-            ->setParameters(array(
+            ->where('organisationunit.parent = :parent');
+        if($active==True) $query = $query->andWhere('organisationunit.active=True');
+        $query = $query->setParameters(array(
                     'parent'=>$organisationunit
                 )
             )->getQuery();

@@ -166,6 +166,7 @@ class ReportOrganisationunitCompletenessController extends Controller
                 ->innerJoin('organisationunit.organisationunitStructure', 'organisationunitStructure')
                 ->where('organisationunitStructure.level=:organisationunitLevel')
                 ->andWhere('organisationunitStructure.level'.$this->organisationunit->getOrganisationunitStructure()->getLevel()->getLevel().'Organisationunit=:levelOrganisationunit')
+                ->andWhere('organisationunit.active=True')
                 ->setParameters(array(
                     'organisationunitLevel'=>$this->organisationunitLevel,
                     'levelOrganisationunit'=>$this->organisationunit,
@@ -176,7 +177,7 @@ class ReportOrganisationunitCompletenessController extends Controller
             $lowerOrganisationunitCount = $this->getDoctrine()->getManager()->createQuery("SELECT COUNT(lowerOrganisationunit.id)
                                                             FROM HrisOrganisationunitBundle:Organisationunit lowerOrganisationunit
                                                             INNER JOIN lowerOrganisationunit.parent parentOrganisationunit
-                                                            WHERE parentOrganisationunit.id=".$this->organisationunit->getId())->getSingleScalarResult();
+                                                            WHERE lowerOrganisationunit.active=True AND parentOrganisationunit.id=".$this->organisationunit->getId())->getSingleScalarResult();
             if($this->organisationunit->getOrganisationunitStructure()->getLevel()->getLevel() !== $lowestOrganisationunitLevel  && !empty($lowerOrganisationunitCount)) {
                 // Deal with organisationunit with children
                 $this->organisationunitLevel = $this->getDoctrine()->getManager()->getRepository('HrisOrganisationunitBundle:OrganisationunitLevel')->findOneBy(array('level' => ($this->organisationunit->getOrganisationunitStructure()->getLevel()->getLevel()+1) ));
@@ -275,6 +276,7 @@ class ReportOrganisationunitCompletenessController extends Controller
 					            			)'
                             )
                             ->andWhere($queryBuilder->expr()->in('form.id',$form->getId()))
+                            ->andWhere('organisationunit.active=True')
                             ->andWhere($whereExpression); // Append in query, field options to exclude
                         $aliasParameters['organisationunitLevel']=$childOrganisationunit->getOrganisationunitStructure()->getLevel()->getLevel();
                         $aliasParameters['organisationunitId']=$childOrganisationunit->getId();
@@ -294,6 +296,7 @@ class ReportOrganisationunitCompletenessController extends Controller
 					            	    )'
                             )
                             ->andWhere($queryBuilder->expr()->in('form.id',$form->getId()))
+                            ->andWhere('organisationunit.active=True')
                             ->setParameters(array(
                                 'levelId'=>$childOrganisationunit->getId(),
                                 'organisationunitLevel'=>$childOrganisationunit->getOrganisationunitStructure()->getLevel()->getLevel(),
@@ -323,6 +326,7 @@ class ReportOrganisationunitCompletenessController extends Controller
                             ->join('record.form','form')
                             ->andWhere($queryBuilder->expr()->in('form.id',$form->getId()))
                             ->andWhere('organisationunit.id=:organisationunitId')
+                            ->andWhere('organisationunit.active=True')
                             ->andWhere($whereExpression) // Append in query, field options to exclude
                             ->setParameters($aliasParameters) // Set mask value for all parameters
                             ->getQuery()->getResult();
@@ -335,6 +339,7 @@ class ReportOrganisationunitCompletenessController extends Controller
                             ->join('organisationunit.organisationunitStructure','organisationunitStructure')
                             ->andWhere($queryBuilder->expr()->in('form.id',$form->getId()))
                             ->andWhere('organisationunit.id=:organisationunitId')
+                            ->andWhere('organisationunit.active=True')
                             ->setParameters(array(
                                 'organisationunitId'=>$childOrganisationunit->getId()
                             ))
@@ -366,6 +371,7 @@ class ReportOrganisationunitCompletenessController extends Controller
                     ->join('record.form','form')
                     ->andWhere($queryBuilder->expr()->in('form.id',$form->getId()))
                     ->andWhere('organisationunit.id=:organisationunitId')
+                    ->andWhere('organisationunit.active=True')
                     ->andWhere($whereExpression) // Append in query, field options to exclude
                     ->setParameters($aliasParameters) // Set mask value for all parameters
                     ->getQuery()->getResult();
@@ -377,6 +383,7 @@ class ReportOrganisationunitCompletenessController extends Controller
                     ->join('organisationunit.organisationunitStructure','organisationunitStructure')
                     ->andWhere($queryBuilder->expr()->in('form.id',$form->getId()))
                     ->andWhere('organisationunit.id=:organisationunitId')
+                    ->andWhere('organisationunit.active=True')
                     ->setParameters(array('organisationunitId'=>$this->rootNodeOrganisationunit->getId()))
                     ->getQuery()->getResult();
                 $this->completenessMatrix[$this->rootNodeOrganisationunit->getId()][$form->getId()] = $this->array_value_recursive('employeeCount',$valuecount);
@@ -428,7 +435,9 @@ class ReportOrganisationunitCompletenessController extends Controller
                 $aliasParameters['organisationunitId']=$this->organisationunit->getId();
                 $queryBuilder = $this->getDoctrine()->getManager()->createQueryBuilder();
                 $records = $queryBuilder->select('record')->from('HrisRecordsBundle:Record','record')->join('record.organisationunit','organisationunit')->join('record.form','form')
-                    ->andWhere($queryBuilder->expr()->in('form.id',$formIds))->andWhere('organisationunit.id=:organisationunitId')
+                    ->andWhere($queryBuilder->expr()->in('form.id',$formIds))
+                    ->andWhere('organisationunit.id=:organisationunitId')
+                    ->andWhere('organisationunit.active=True')
                     ->andWhere($whereExpression) // Append in query, field options to exclude
                     ->setParameters($aliasParameters) // Set mask value for all parameters
                     ->getQuery()->getResult();
@@ -486,6 +495,7 @@ class ReportOrganisationunitCompletenessController extends Controller
                 ->join('record.form','form')
                 ->andWhere($queryBuilder->expr()->in('form.id',$formIds))
                 ->andWhere('organisationunit.id=:organisationunitId')
+                ->andWhere('organisationunit.active=True')
                 ->andWhere($whereExpression) // Append in query, field options to exclude
                 ->setParameters($aliasParameters) // Set mask value for all parameters
                 ->getQuery()->getResult();
@@ -568,39 +578,6 @@ class ReportOrganisationunitCompletenessController extends Controller
         if(!isset($this->expectedCompleteness)) $this->expectedCompleteness = NULL;
     }
 
-    /**
-     * @var array
-     */
-    private $visibleFields;
-
-    private $title;
-
-    private $organisationunitChildren;
-
-    private $rootNodeOrganisationunit;
-
-    private $forms;
-
-    private $sameLevel;
-
-    private $completenessMatrix;
-
-    private $expectedCompleteness;
-
-    private $totalCompletenessMatrix;
-
-    private $totalExpectedCompleteness;
-
-    private $recordsToDisplay;
-
-    private $recordInstances;
-
-    private $parent;
-
-    private $organisationunit;
-
-    private $organisationunitLevel;
-
 
 
     /**
@@ -615,5 +592,80 @@ class ReportOrganisationunitCompletenessController extends Controller
         array_walk_recursive($arr, function($v, $k) use($key, &$val){if($k == $key) array_push($val, $v);});
         return count($val) > 1 ? $val : array_pop($val);
     }
+
+    /**
+     * @var array
+     */
+    private $visibleFields;
+
+    /**
+     * @var string
+     */
+    private $title;
+
+    /**
+     * @var \Doctrine\Common\Collections\Collection
+     */
+    private $organisationunitChildren;
+
+    /**
+     * @var Organisationunit
+     */
+    private $rootNodeOrganisationunit;
+
+    /**
+     * @var \Doctrine\Common\Collections\Collection
+     */
+    private $forms;
+
+    /**
+     * @var boolean
+     */
+    private $sameLevel;
+
+    /**
+     * @var array
+     */
+    private $completenessMatrix;
+
+    /**
+     * @var array
+     */
+    private $expectedCompleteness;
+
+    /**
+     * @var array
+     */
+    private $totalCompletenessMatrix;
+
+    /**
+     * @var array
+     */
+    private $totalExpectedCompleteness;
+
+    /**
+     * @var array
+     */
+    private $recordsToDisplay;
+
+    /**
+     * @var array
+     */
+    private $recordInstances;
+
+    /**
+     * @var Organisationunit
+     */
+    private $parent;
+
+    /**
+     * @var Organisationunit
+     */
+    private $organisationunit;
+
+    /**
+     * @var OrganisationunitLevel
+     */
+    private $organisationunitLevel;
 
 }
