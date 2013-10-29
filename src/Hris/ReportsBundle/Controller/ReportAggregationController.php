@@ -301,7 +301,7 @@ class ReportAggregationController extends Controller
             //remove the last comma in the query
             $groups = rtrim($groups,",");
 
-            $query .= " AND (ResourceTable.type IN (".$groups.") OR ownership IN (".$groups.") )";//OR administrative IN (".$groups.")
+            if($groups != NULL) $query .= " AND (ResourceTable.type IN (".$groups.") OR ownership IN (".$groups.") )";//OR administrative IN (".$groups.")
         }
 
         //remove the record which have field option set to exclude in reports
@@ -394,7 +394,7 @@ class ReportAggregationController extends Controller
         }
 
         foreach($organisationunitGroupsId as $organisationunitGroupId){
-            $organisationunitGroups->add($em->getRepository('HrisOrganisationunitBundle:OrganisationunitGroup')->find($organisationunitGroupId));
+            if($organisationunitGroupId != NULL)$organisationunitGroups->add($em->getRepository('HrisOrganisationunitBundle:OrganisationunitGroup')->find($organisationunitGroupId));
         }
 
         $results = $this->aggregationEngine($organisationUnit, $forms, $fields, $organisationunitGroups, $withLowerLevels, $fieldsTwo);
@@ -610,7 +610,7 @@ class ReportAggregationController extends Controller
         }
 
         foreach($organisationunitGroupsId as $organisationunitGroupId){
-            $organisationunitGroups->add($em->getRepository('HrisOrganisationunitBundle:OrganisationunitGroup')->find($organisationunitGroupId));
+            if($organisationunitGroupId != NULL) $organisationunitGroups->add($em->getRepository('HrisOrganisationunitBundle:OrganisationunitGroup')->find($organisationunitGroupId));
         }
 
         //get the list of options to exclude from the reports
@@ -660,14 +660,16 @@ class ReportAggregationController extends Controller
         }
 
         //filter the records if the organisation group was choosen
-        if($organisationunitGroups != NULL){
-            $groups = NULL;
-            foreach($organisationunitGroups as $organisationunitGroup){
+        $groups = NULL;
+        foreach($organisationunitGroups as $organisationunitGroup){
+            
+            if($organisationunitGroup != NULL)
                 $groups .= "'".$organisationunitGroup->getName()."',";
-            }
+        }
+
+        if($groups != NULL){
             //remove the last comma in the query
             $groups = rtrim($groups,",");
-
             $query .= " AND (ResourceTable.type IN (".$groups.") OR ownership IN (".$groups.") )";//OR administrative IN (".$groups.")
         }
 
