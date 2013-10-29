@@ -59,7 +59,7 @@ class ProfileController extends ContainerAware
     /**
      * Edit the user
      *
-     * @Secure(roles="ROLE_USERPROFILE_EDIT,ROLE_USER")
+     * @Secure(roles="ROLE_USERPROFILE_UPDATE,ROLE_USER")
      */
     public function editAction()
     {

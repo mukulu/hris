@@ -35,7 +35,7 @@ class ValidationRunController extends Controller
     /**
      * Lists all Validation entities.
      *
-     * @Secure(roles="ROLE_RECORDVALIDATION_LIST,ROLE_USER")
+     * @Secure(roles="ROLE_RECORDVALIDATION_VALIDATE,ROLE_USER")
      * @Route("/run", name="validation_run")
      * @Method("GET")
      * @Template()

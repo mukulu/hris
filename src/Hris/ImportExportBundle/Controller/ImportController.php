@@ -282,6 +282,7 @@ class ImportController extends Controller
     /**
      * Importing fields.
      *
+     * @Secure(roles="ROLE_IMPORT_IMPORTFIELDS,ROLE_USER")
      * @Route("/importFields", name="importexport_import_importFields")
      * @Method("POST")
      */
@@ -339,6 +340,7 @@ class ImportController extends Controller
     /**
      * Importing fields Options.
      *
+     * @Secure(roles="ROLE_IMPORT_IMPORTFIELDOPTIONS,ROLE_USER")
      * @Route("/importFieldOptions", name="importexport_import_importFieldOptions")
      * @Method("POST")
      */
@@ -389,6 +391,7 @@ class ImportController extends Controller
     /**
      * Importing Organisation Units.
      *
+     * @Secure(roles="ROLE_IMPORT_ORGANISATIONUNITS,ROLE_USER")
      * @Route("/importOrganisationUnits", name="importexport_import_importOrganisationUnits")
      * @Method("POST")
      */
@@ -441,6 +444,7 @@ class ImportController extends Controller
     /**
      * Importing Records.
      *
+     * @Secure(roles="ROLE_IMPORT_IMPORTRECORDS,ROLE_USER")
      * @Route("/importRecords", name="importexport_import_importRecords")
      * @Method("POST")
      */

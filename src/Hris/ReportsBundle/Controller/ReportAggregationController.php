@@ -52,7 +52,7 @@ class ReportAggregationController extends Controller
     /**
      * Show Report Aggregation
      *
-     * @Secure(roles="ROLE_REPORTAGGREGATION_LIST,ROLE_USER")
+     * @Secure(roles="ROLE_REPORTAGGREGATION_GENERATE,ROLE_USER")
      * @Route("/", name="report_aggregation")
      * @Method("GET")
      * @Template()
