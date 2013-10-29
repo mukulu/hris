@@ -31,6 +31,7 @@ use Sensio\Bundle\FrameworkExtraBundle\Configuration\Route;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Template;
 use Hris\FormBundle\Entity\Field;
 use Hris\FormBundle\Form\FieldType;
+use JMS\SecurityExtraBundle\Annotation\Secure;
 
 /**
  * Field controller.
@@ -43,6 +44,7 @@ class FieldController extends Controller
     /**
      * Lists all Field entities.
      *
+     * @Secure(roles="ROLE_FIELD_LIST,ROLE_USER")
      * @Route("/", name="field")
      * @Route("/list", name="field_list")
      * @Method("GET")
@@ -70,6 +72,7 @@ class FieldController extends Controller
     /**
      * Creates a new Field entity.
      *
+     * @Secure(roles="ROLE_FIELD_CREATE,ROLE_USER")
      * @Route("/", name="field_create")
      * @Method("POST")
      * @Template("HrisFormBundle:Field:new.html.twig")
@@ -97,6 +100,7 @@ class FieldController extends Controller
     /**
      * Displays a form to create a new Field entity.
      *
+     * @Secure(roles="ROLE_FIELD_CREATE,ROLE_USER")
      * @Route("/new", name="field_new")
      * @Method("GET")
      * @Template()
@@ -115,6 +119,7 @@ class FieldController extends Controller
     /**
      * Finds and displays a Field entity.
      *
+     * @Secure(roles="ROLE_FIELD_SHOW,ROLE_USER")
      * @Route("/{id}", requirements={"id"="\d+"}, name="field_show")
      * @Method("GET")
      * @Template()
@@ -140,6 +145,7 @@ class FieldController extends Controller
     /**
      * Displays a form to edit an existing Field entity.
      *
+     * @Secure(roles="ROLE_FIELD_UPDATE,ROLE_USER")
      * @Route("/{id}/edit", requirements={"id"="\d+"}, name="field_edit")
      * @Method("GET")
      * @Template()
@@ -167,6 +173,7 @@ class FieldController extends Controller
     /**
      * Edits an existing Field entity.
      *
+     * @Secure(roles="ROLE_FIELD_UPDATE,ROLE_USER")
      * @Route("/{id}", requirements={"id"="\d+"}, name="field_update")
      * @Method("PUT")
      * @Template("HrisFormBundle:Field:edit.html.twig")
@@ -201,6 +208,7 @@ class FieldController extends Controller
     /**
      * Deletes a Field entity.
      *
+     * @Secure(roles="ROLE_FIELD_DELETE,ROLE_USER")
      * @Route("/{id}", requirements={"id"="\d+"}, name="field_delete")
      * @Method("DELETE")
      */

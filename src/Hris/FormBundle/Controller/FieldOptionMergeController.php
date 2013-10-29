@@ -10,6 +10,7 @@ use Sensio\Bundle\FrameworkExtraBundle\Configuration\Route;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Template;
 use Hris\FormBundle\Entity\FieldOptionMerge;
 use Hris\FormBundle\Form\FieldOptionMergeType;
+use JMS\SecurityExtraBundle\Annotation\Secure;
 
 /**
  * FieldOptionMerge controller.
@@ -22,6 +23,7 @@ class FieldOptionMergeController extends Controller
     /**
      * Lists all FieldOptionMerge entities.
      *
+     * @Secure(roles="ROLE_FIELDOPTIONMERGE_LIST,ROLE_USER")
      * @Route("/", name="fieldoptionmerge")
      * @Method("GET")
      * @Template()
@@ -46,6 +48,7 @@ class FieldOptionMergeController extends Controller
     /**
      * Creates a new FieldOptionMerge entity.
      *
+     * @Secure(roles="ROLE_FIELDOPTIONMERGE_CREATE,ROLE_USER")
      * @Route("/", name="fieldoptionmerge_create")
      * @Method("POST")
      * @Template("HrisFormBundle:FieldOptionMerge:new.html.twig")
@@ -90,6 +93,7 @@ class FieldOptionMergeController extends Controller
     /**
      * Displays a form to create a new FieldOptionMerge entity.
      *
+     * @Secure(roles="ROLE_FIELDOPTIONMERGE_CREATE,ROLE_USER")
      * @Route("/new", name="fieldoptionmerge_new")
      * @Route("/new/{fieldid}/field", requirements={"fieldid"="\d+"}, name="fieldoptionmerge_new_byfield")
      * @Route("/new/{fieldid}/field/{fieldoptionid}/fieldoption", requirements={"fieldid"="\d+","fieldoptionid"="\d+"}, name="fieldoptionmerge_new_byfield_and_fieldoption")
@@ -136,6 +140,7 @@ class FieldOptionMergeController extends Controller
     /**
      * Finds and displays a FieldOptionMerge entity.
      *
+     * @Secure(roles="ROLE_FIELDOPTIONMERGE_SHOW,ROLE_USER")
      * @Route("/{id}", name="fieldoptionmerge_show")
      * @Method("GET")
      * @Template()
@@ -161,6 +166,7 @@ class FieldOptionMergeController extends Controller
     /**
      * Displays a form to edit an existing FieldOptionMerge entity.
      *
+     * @Secure(roles="ROLE_FIELDOPTIONMERGE_UPDATE,ROLE_USER")
      * @Route("/{id}/edit", name="fieldoptionmerge_edit")
      * @Method("GET")
      * @Template()
@@ -204,6 +210,7 @@ class FieldOptionMergeController extends Controller
     /**
      * Edits an existing FieldOptionMerge entity.
      *
+     * @Secure(roles="ROLE_FIELDOPTIONMERGE_UPDATE,ROLE_USER")
      * @Route("/{id}", name="fieldoptionmerge_update")
      * @Method("PUT")
      * @Template("HrisFormBundle:FieldOptionMerge:edit.html.twig")
@@ -237,6 +244,7 @@ class FieldOptionMergeController extends Controller
     /**
      * Deletes a FieldOptionMerge entity.
      *
+     * @Secure(roles="ROLE_FIELDOPTIONMERGE_DELETE,ROLE_USER")
      * @Route("/{id}", name="fieldoptionmerge_delete")
      * @Method("DELETE")
      */

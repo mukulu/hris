@@ -31,6 +31,7 @@ use Sensio\Bundle\FrameworkExtraBundle\Configuration\Route;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Template;
 use Hris\DashboardBundle\Entity\Settings;
 use Hris\DashboardBundle\Form\SettingsType;
+use JMS\SecurityExtraBundle\Annotation\Secure;
 
 /**
  * Settings controller.
@@ -42,6 +43,7 @@ class SettingsController extends Controller
     /**
      * Finds and displays a Settings entity.
      *
+     * @Secure(roles="ROLE_SETTINGS_SHOW,ROLE_USER")
      * @Route("/{username}", requirements={"username"="\w+"}, name="settings_show")
      * @Method("GET")
      * @Template()
@@ -75,6 +77,7 @@ class SettingsController extends Controller
     /**
      * Displays a form to create a new Settings entity.
      *
+     * @Secure(roles="ROLE_SETTINGS_CREATE,ROLE_USER")
      * @Route("/{username}/new", requirements={"username"="\w+"}, name="settings_new")
      * @Method("GET")
      * @Template()
@@ -104,6 +107,7 @@ class SettingsController extends Controller
     /**
      * Creates a new Settings entity.
      *
+     * @Secure(roles="ROLE_SETTINGS_CREATE,ROLE_USER")
      * @Route("/{username}/create", name="settings_create")
      * @Method("POST")
      * @Template("HrisDashboardBundle:Settings:new.html.twig")
@@ -138,6 +142,7 @@ class SettingsController extends Controller
     /**
      * Deletes a Settings entity.
      *
+     * @Secure(roles="ROLE_SETTINGS_DELETE,ROLE_USER")
      * @Route("/{id}", name="settings_delete")
      * @Method("DELETE")
      */

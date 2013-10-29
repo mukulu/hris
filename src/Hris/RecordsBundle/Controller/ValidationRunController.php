@@ -24,7 +24,6 @@ use Hris\FormBundle\Entity\Field;
 use Hris\OrganisationunitBundle\Entity\Organisationunit;
 use Doctrine\ORM\EntityManager;
 use Hris\DataQualityBundle\Entity\Validation;
-use Hris\RecordsBundle\Controller\mathematicalCalculator;
 
 /**
  * Validation controller.
@@ -35,7 +34,8 @@ class ValidationRunController extends Controller
 {
     /**
      * Lists all Validation entities.
-
+     *
+     * @Secure(roles="ROLE_RECORDVALIDATION_LIST,ROLE_USER")
      * @Route("/run", name="validation_run")
      * @Method("GET")
      * @Template()
@@ -54,6 +54,7 @@ class ValidationRunController extends Controller
     /**
      * Displays the validation results.
      *
+     * @Secure(roles="ROLE_RECORDVALIDATION_VALIDATE,ROLE_USER")
      * @Route("/result/",name="validation_result")
      * @Method("POST")
      * @Template("HrisRecordsBundle:ValidationRun:validationResult.html.twig")
@@ -153,8 +154,8 @@ class ValidationRunController extends Controller
 
 
                         /*
-        * Extracting the first, last name and date of birth Ids
-        */
+                        * Extracting the first, last name and date of birth Ids
+                        */
                         if($fieldObj->getName() == 'Firstname'){
                             $firstNameUid = $fieldObj->getUid();
                         }
@@ -447,8 +448,6 @@ return array(
 'validationNames'=>$validationNames,
  'displayTitle'=>$validationTitle,
     'getValidations'=>$getValidation,
-
-
 
 );
 

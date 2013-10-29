@@ -31,6 +31,7 @@ use Sensio\Bundle\FrameworkExtraBundle\Configuration\Route;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Template;
 use Hris\FormBundle\Entity\FieldOption;
 use Hris\FormBundle\Form\FieldOptionType;
+use JMS\SecurityExtraBundle\Annotation\Secure;
 
 /**
  * FieldOption controller.
@@ -43,6 +44,7 @@ class FieldOptionController extends Controller
     /**
      * Lists all FieldOption entities.
      *
+     * @Secure(roles="ROLE_FIELDOPTION_LIST,ROLE_USER")
      * @Route("/", name="fieldoption")
      * @Route("/list", name="fieldoption_list")
      * @Route("/{fieldid}/field", requirements={"fieldid"="\d+"}, name="fieldoption_byfield")
@@ -78,6 +80,7 @@ class FieldOptionController extends Controller
     /**
      * Creates a new FieldOption entity.
      *
+     * @Secure(roles="ROLE_FIELDOPTION_CREATE,ROLE_USER")
      * @Route("/", name="fieldoption_create")
      * @Route("/{fieldid}/field", requirements={"fieldid"="\d+"}, name="fieldoption_create_byfield")
      * @Method("POST")
@@ -116,6 +119,7 @@ class FieldOptionController extends Controller
     /**
      * Displays a form to create a new FieldOption entity.
      *
+     * @Secure(roles="ROLE_FIELDOPTION_CREATE,ROLE_USER")
      * @Route("/new", name="fieldoption_new")
      * @Route("/new/{fieldid}/field", requirements={"fieldid"="\d+"}, name="fieldoption_new_byfield")
      * @Method("GET")
@@ -148,6 +152,7 @@ class FieldOptionController extends Controller
     /**
      * Finds and displays a FieldOption entity.
      *
+     * @Secure(roles="ROLE_FIELDOPTION_SHOW,ROLE_USER")
      * @Route("/{id}", requirements={"id"="\d+"}, name="fieldoption_show")
      * @Method("GET")
      * @Template()
@@ -173,6 +178,7 @@ class FieldOptionController extends Controller
     /**
      * Displays a form to edit an existing FieldOption entity.
      *
+     * @Secure(roles="ROLE_FIELDOPTION_UPDATE,ROLE_USER")
      * @Route("/{id}/edit", requirements={"id"="\d+"}, name="fieldoption_edit")
      * @Method("GET")
      * @Template()
@@ -200,6 +206,7 @@ class FieldOptionController extends Controller
     /**
      * Edits an existing FieldOption entity.
      *
+     * @Secure(roles="ROLE_FIELDOPTION_UPDATE,ROLE_USER")
      * @Route("/{id}", requirements={"id"="\d+"}, name="fieldoption_update")
      * @Method("PUT")
      * @Template("HrisFormBundle:FieldOption:edit.html.twig")
@@ -234,6 +241,7 @@ class FieldOptionController extends Controller
     /**
      * Deletes a FieldOption entity.
      *
+     * @Secure(roles="ROLE_FIELDOPTION_DELETE,ROLE_USER")
      * @Route("/{id}", requirements={"id"="\d+"}, name="fieldoption_delete")
      * @Route("/{id}/field/{fieldid}", requirements={"fieldid"="\d+"}, name="fieldoption_delete_byfield")
      * @Method("DELETE")

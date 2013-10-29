@@ -38,6 +38,7 @@ use Hris\ImportExportBundle\Form\ExportType;
 use Symfony\Component\HttpFoundation\Response;
 use Hris\FormBundle\Entity\Field;
 use Hris\FormBundle\Entity\FieldOption;
+use JMS\SecurityExtraBundle\Annotation\Secure;
 use ZipArchive;
 
 /**
@@ -51,6 +52,7 @@ class ImportController extends Controller
     /**
      * Lists all Import entities.
      *
+     * @Secure(roles="ROLE_IMPORT_LIST,ROLE_USER")
      * @Route("/", name="importexport_import")
      * @Route("/list", name="importexport_import_list")
      * @Method("GET")
@@ -68,6 +70,7 @@ class ImportController extends Controller
     /**
      * Creates a new Import entity.
      *
+     * @Secure(roles="ROLE_IMPORT_CREATE,ROLE_USER")
      * @Route("/{_format}", requirements={"_format"="json|"}, defaults={"_format"="json"}, name="importexport_import_create")
      * @Method("POST")
      * @Template("HrisImportExportBundle:Import:export.json.twig")
@@ -161,6 +164,7 @@ class ImportController extends Controller
     /**
      * Displays a form to create a new Import entity.
      *
+     * @Secure(roles="ROLE_IMPORT_CREATE,ROLE_USER")
      * @Route("/new", name="importexport_import_new")
      * @Method("GET")
      * @Template()
@@ -177,6 +181,7 @@ class ImportController extends Controller
     /**
      * Finds and displays a Import entity.
      *
+     * @Secure(roles="ROLE_IMPORT_SHOW,ROLE_USER")
      * @Route("/{id}", requirements={"id"="\d+"}, name="importexport_import_show")
      * @Method("GET")
      * @Template()
@@ -216,6 +221,7 @@ class ImportController extends Controller
     /**
      * Displays a form to edit an existing Import entity.
      *
+     * @Secure(roles="ROLE_IMPORT_UPDATE,ROLE_USER")
      * @Route("/{id}/edit", name="importexport_import_edit")
      * @Method("GET")
      * @Template()
@@ -234,6 +240,7 @@ class ImportController extends Controller
     /**
      * Edits an existing Import entity.
      *
+     * @Secure(roles="ROLE_IMPORT_UPDATE,ROLE_USER")
      * @Route("/{id}", name="importexport_import_update")
      * @Method("PUT")
      * @Template("HrisImportExportBundle:Export:edit.html.twig")
@@ -260,6 +267,7 @@ class ImportController extends Controller
     /**
      * Deletes a Import entity.
      *
+     * @Secure(roles="ROLE_IMPORT_DELETE,ROLE_USER")
      * @Route("/{id}", name="importexport_import_delete")
      * @Method("DELETE")
      */
