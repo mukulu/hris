@@ -293,7 +293,8 @@ class ReportAggregationController extends Controller
         }
 
         //filter the records if the organisation group was choosen
-        /*if(!empty($organisationunitGroup)){
+        if($organisationunitGroup != NULL){
+            $groups = NULL;
             foreach($organisationunitGroup as $organisationunitGroups){
                 $groups .= "'".$organisationunitGroups->getName()."',";
             }
@@ -301,7 +302,7 @@ class ReportAggregationController extends Controller
             $groups = rtrim($groups,",");
 
             $query .= " AND (ResourceTable.type IN (".$groups.") OR ownership IN (".$groups.") )";//OR administrative IN (".$groups.")
-        }*/
+        }
 
         //remove the record which have field option set to exclude in reports
         foreach($fieldOptionsToExclude as $key => $fieldOptionToExclude)
@@ -659,15 +660,16 @@ class ReportAggregationController extends Controller
         }
 
         //filter the records if the organisation group was choosen
-        /*if(!empty($organisationunitGroup)){
-            foreach($organisationunitGroup as $organisationunitGroups){
-                $groups .= "'".$organisationunitGroups->getName()."',";
+        if($organisationunitGroups != NULL){
+            $groups = NULL;
+            foreach($organisationunitGroups as $organisationunitGroup){
+                $groups .= "'".$organisationunitGroup->getName()."',";
             }
             //remove the last comma in the query
             $groups = rtrim($groups,",");
 
             $query .= " AND (ResourceTable.type IN (".$groups.") OR ownership IN (".$groups.") )";//OR administrative IN (".$groups.")
-        }*/
+        }
 
         //remove the record which have field option set to exclude in reports
         foreach($fieldOptionsToExclude as $key => $fieldOptionToExclude)
