@@ -32,6 +32,7 @@ use Symfony\Component\HttpFoundation\RedirectResponse;
 use Symfony\Component\HttpKernel\Exception\NotFoundHttpException;
 use Symfony\Component\Security\Core\Exception\AccountStatusException;
 use FOS\UserBundle\Model\UserInterface;
+use JMS\SecurityExtraBundle\Annotation\Secure;
 
 /**
  * Controller managing the resetting of the password
@@ -45,6 +46,8 @@ class ResettingController extends ContainerAware
 
     /**
      * Request reset user password: show form
+     *
+     * @Secure(roles="ROLE_USER_RESETPASSWORD,ROLE_USER")
      */
     public function requestAction()
     {
@@ -53,6 +56,8 @@ class ResettingController extends ContainerAware
 
     /**
      * Request reset user password: submit form and send email
+     *
+     * @Secure(roles="ROLE_USER_RESETPASSWORDSENDEMAIL,ROLE_USER")
      */
     public function sendEmailAction()
     {
@@ -85,6 +90,8 @@ class ResettingController extends ContainerAware
 
     /**
      * Tell the user to check his email provider
+     *
+     * @Secure(roles="ROLE_USER_RESETPASSWORDCHECKEMAIL,ROLE_USER")
      */
     public function checkEmailAction()
     {

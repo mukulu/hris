@@ -34,6 +34,7 @@ use Symfony\Bundle\FrameworkBundle\Controller\Controller;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Method;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Route;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Template;
+use JMS\SecurityExtraBundle\Annotation\Secure;
 
 /**
  * Group RESTful controller managing group CRUD
@@ -45,6 +46,7 @@ class GroupController extends ContainerAware
     /**
      * Show all groups
      *
+     * @Secure(roles="ROLE_USERGROUP_LIST,ROLE_USER")
      * @Route("/", name="user_group")
      * @Route("/list", name="user_group_list")
      * @Method("GET")
@@ -60,6 +62,7 @@ class GroupController extends ContainerAware
     /**
      * Finds and displays a Group.
      *
+     * @Secure(roles="ROLE_USERGROUP_SHOW,ROLE_USER")
      * @Route("/{id}", requirements={"id"="\d+"}, name="user_group_show")
      * @Method("GET")
      * @Template()
@@ -74,6 +77,7 @@ class GroupController extends ContainerAware
     /**
      * Displays a form to edit an existing Group.
      *
+     * @Secure(roles="ROLE_USERGROUP_UPDATE,ROLE_USER")
      * @Route("/{id}/edit", requirements={"id"="\d+"}, name="user_group_edit")
      * @Method("GET|PUT|POST")
      * @Template()
@@ -103,6 +107,7 @@ class GroupController extends ContainerAware
     /**
      * Displays a form to create a new Group.
      *
+     * @Secure(roles="ROLE_USERGROUP_CREATE,ROLE_USER")
      * @Route("/new", name="user_group_new")
      * @Method("GET|POST")
      * @Template()
@@ -129,6 +134,7 @@ class GroupController extends ContainerAware
     /**
      * Deletes a Group.
      *
+     * @Secure(roles="ROLE_USERGROUP_DELETE,ROLE_USER")
      * @Route("/{id}/delete", requirements={"id"="\d+"}, name="user_group_delete")
      * @Method("GET")
      */

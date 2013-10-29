@@ -50,6 +50,7 @@ class UserController extends Controller
     /**
      * Lists all User entities.
      *
+     * @Secure(roles="ROLE_USER_LIST,ROLE_USER")
      * @Route("/", name="user")
      * @Route("/list", name="user_list")
      * @Method("GET")
@@ -75,6 +76,7 @@ class UserController extends Controller
     /**
      * Creates a new User entity.
      *
+     * @Secure(roles="ROLE_USER_CREATE,ROLE_USER")
      * @Route("/create", name="user_create")
      * @Method("POST")
      * @Template("HrisUserBundle:User:new.html.twig")
@@ -100,6 +102,7 @@ class UserController extends Controller
     /**
      * Displays a form to create a new User entity.
      *
+     * @Secure(roles="ROLE_USER_CREATE,ROLE_USER")
      * @Route("/new", name="user_new")
      * @Method("GET")
      * @Template()
@@ -118,6 +121,7 @@ class UserController extends Controller
     /**
      * Finds and displays a User entity.
      *
+     * @Secure(roles="ROLE_USER_SHOW,ROLE_USER")
      * @Route("/{id}", requirements={"id"="\d+"}, name="user_show")
      * @Method("GET")
      * @Template()
@@ -143,7 +147,7 @@ class UserController extends Controller
     /**
      * Check if username exists(unique)
      *
-     * @Secure(roles="IS_AUTHENTICATED_ANONYMOUSLY,ROLE_USER")
+     * @Secure(roles="ROLE_USER_ISUSERNAMEUNIQUE,IS_AUTHENTICATED_ANONYMOUSLY,ROLE_USER")
      * @Route("/isusernameunique/{_format}", requirements={"_format"="yml|xml|json"}, defaults={"_format"="json"}, name="user_isusernameunique")
      * @Method("GET")
      * @Template()
@@ -171,7 +175,7 @@ class UserController extends Controller
     /**
      * Check if email exists(unique)
      *
-     * @Secure(roles="IS_AUTHENTICATED_ANONYMOUSLY,ROLE_USER")
+     * @Secure(roles="ROLE_USER_ISEMAILUNIQUE,IS_AUTHENTICATED_ANONYMOUSLY,ROLE_USER")
      * @Route("/isemailunique/{_format}", requirements={"_format"="yml|xml|json"}, defaults={"_format"="json"}, name="user_isemailunique")
      * @Method("GET")
      * @Template()
@@ -199,6 +203,7 @@ class UserController extends Controller
     /**
      * Displays a form to edit an existing User entity.
      *
+     * @Secure(roles="ROLE_USER_UPDATE,ROLE_USER")
      * @Route("/{id}/edit", requirements={"id"="\d+"}, name="user_edit")
      * @Method("GET")
      * @Template()
@@ -226,6 +231,7 @@ class UserController extends Controller
     /**
      * Edits an existing User entity.
      *
+     * @Secure(roles="ROLE_USER_UPDATE,ROLE_USER")
      * @Route("/{id}", requirements={"id"="\d+"}, name="user_update")
      * @Method("PUT")
      * @Template("HrisUserBundle:User:edit.html.twig")
@@ -261,6 +267,7 @@ class UserController extends Controller
     /**
      * Deletes a User entity.
      *
+     * @Secure(roles="ROLE_USER_DELETE,ROLE_USER")
      * @Route("/{id}", requirements={"id"="\d+"}, name="user_delete")
      * @Method("DELETE")
      */

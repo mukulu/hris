@@ -28,9 +28,16 @@ namespace Hris\UserBundle\Controller;
 
 use Symfony\Component\DependencyInjection\ContainerAware;
 use Symfony\Component\Security\Core\SecurityContext;
+use JMS\SecurityExtraBundle\Annotation\Secure;
 
 class SecurityController extends ContainerAware
 {
+    /**
+     * Proccess user registration
+     *
+     * @Secure(roles="ROLE_USER_LOGIN,ROLE_USER")
+     * @return \Symfony\Component\HttpFoundation\Response
+     */
     public function loginAction()
     {
         $form = $this->container->get('fos_user.registration.form');

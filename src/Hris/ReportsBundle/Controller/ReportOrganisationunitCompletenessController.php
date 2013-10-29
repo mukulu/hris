@@ -31,6 +31,7 @@ use Symfony\Bundle\FrameworkBundle\Controller\Controller;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Method;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Route;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Template;
+use JMS\SecurityExtraBundle\Annotation\Secure;
 
 /**
  * Report Organisationunit Completeness controller.
@@ -43,6 +44,7 @@ class ReportOrganisationunitCompletenessController extends Controller
     /**
      * Show Report Form for generation of Organisation unit completeness
      *
+     * @Secure(roles="ROLE_REPORTORGANISATIONUNITCOMPLETENESS_GENERATE,ROLE_USER")
      * @Route("/", name="report_organisationunit_completeness")
      * @Method("GET")
      * @Template()
@@ -59,6 +61,7 @@ class ReportOrganisationunitCompletenessController extends Controller
     /**
      * Generate Report for Organisationunit Completeness
      *
+     * @Secure(roles="ROLE_REPORTORGANISATIONUNITCOMPLETENESS_GENERATE,ROLE_USER")
      * @Route("/", name="report_organisationunit_completeness_generate")
      * @Method("PUT")
      * @Template()
@@ -108,6 +111,7 @@ class ReportOrganisationunitCompletenessController extends Controller
     /**
      * Generate a Report Redirect for Organisationunit Completeness
      *
+     * @Secure(roles="ROLE_REPORTORGANISATIONUNITCOMPLETENESS_GENERATE,ROLE_USER")
      * @Route("/generate/redirect", name="report_organisationunit_completeness_generate_redirect")
      * @Method("GET")
      * @Template("HrisReportsBundle:ReportOrganisationunitCompleteness:generate.html.twig")

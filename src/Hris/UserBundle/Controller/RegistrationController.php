@@ -33,6 +33,7 @@ use Symfony\Component\HttpKernel\Exception\NotFoundHttpException;
 use Symfony\Component\Security\Core\Exception\AccessDeniedException;
 use Symfony\Component\Security\Core\Exception\AccountStatusException;
 use FOS\UserBundle\Model\UserInterface;
+use JMS\SecurityExtraBundle\Annotation\Secure;
 
 /**
  * Controller managing the registration
@@ -43,6 +44,12 @@ use FOS\UserBundle\Model\UserInterface;
  */
 class RegistrationController extends ContainerAware
 {
+    /**
+     * Registers user
+     *
+     * @Secure(roles="ROLE_USERREGISTRATION_REGISTER,ROLE_USER")
+     * @return RedirectResponse
+     */
     public function registerAction()
     {
         $form = $this->container->get('fos_user.registration.form');
@@ -80,6 +87,8 @@ class RegistrationController extends ContainerAware
 
     /**
      * Tell the user to check his email provider
+     *
+     * @Secure(roles="ROLE_USERREGISTRATION_CHECKEMAIL,ROLE_USER")
      */
     public function checkEmailAction()
     {
@@ -98,6 +107,8 @@ class RegistrationController extends ContainerAware
 
     /**
      * Receive the confirmation token from user email provider, login the user
+     *
+     * @Secure(roles="ROLE_USERREGISTRATION_CONFIRM,ROLE_USER")
      */
     public function confirmAction($token)
     {
@@ -120,6 +131,8 @@ class RegistrationController extends ContainerAware
 
     /**
      * Tell the user his account is now confirmed
+     *
+     * @Secure(roles="ROLE_USERREGISTRATION_CONFIRMED,ROLE_USER")
      */
     public function confirmedAction()
     {
