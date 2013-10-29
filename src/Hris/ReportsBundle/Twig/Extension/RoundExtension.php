@@ -26,13 +26,13 @@ namespace Hris\ReportsBundle\Twig\Extension;
 
 use Hris\ReportsBundle\Entity\Record;
 
-class SumExtension extends \Twig_Extension
+class RoundExtension extends \Twig_Extension
 {
     public function getFilters()
     {
         return array(
             new \Twig_SimpleFilter(
-                'sum', array($this, 'sumFilter')
+                'round', array($this, 'roundFilter')
             ),
         );
     }
@@ -40,18 +40,19 @@ class SumExtension extends \Twig_Extension
     /**
      * Converts into twig template tag {{ integerArray | sum }}
      *
-     * @param array integerArray
+     * @param float|integer
+     * @param integer
      * @return float|integer
      */
-    public function sumFilter($integerArray)
+    public function roundFilter($figure,$decimals=2)
     {
-        $sum = array_sum($integerArray);
+        $sum = round($figure,$decimals);
 
         return $sum;
     }
 
     public function getName()
     {
-        return 'sum_expression';
+        return 'round_expression';
     }
 }

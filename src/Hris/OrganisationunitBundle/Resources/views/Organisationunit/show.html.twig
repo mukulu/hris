@@ -35,7 +35,13 @@
             </tr>
             <tr>
                 <th>Active</th>
-                <td>{{ entity.active }}</td>
+                <td>
+                    {% if entity.active %}
+                        True
+                    {% else %}
+                        False
+                    {% endif %}
+                </td>
             </tr>
             <tr>
                 <th>Openingdate</th>
