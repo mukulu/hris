@@ -569,12 +569,12 @@ class ReportAggregationController extends Controller
 
         $response = $excelService->getResponse();
         $response->headers->set('Content-Type', 'application/vnd.ms-excel; charset=utf-8');
-        $response->headers->set('Content-Disposition', 'attachment; filename='.$title.'.xls');
+        $response->headers->set('Content-Disposition','attachment;filename='.$title.'.xls');
 
         // If you are using a https connection, you have to set those two headers and use sendHeaders() for compatibility with IE <9
         $response->headers->set('Pragma', 'public');
         $response->headers->set('Cache-Control', 'maxage=1');
-        $response->sendHeaders();
+        //$response->sendHeaders();
         return $response;
 
     }
@@ -821,7 +821,7 @@ class ReportAggregationController extends Controller
         // If you are using a https connection, you have to set those two headers and use sendHeaders() for compatibility with IE <9
         $response->headers->set('Pragma', 'public');
         $response->headers->set('Cache-Control', 'maxage=1');
-        $response->sendHeaders();
+        //$response->sendHeaders();
         return $response;
     }
 

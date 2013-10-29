@@ -2,35 +2,66 @@
 
 {% block javascripts %}
     {{ parent() }}
+    <script type="text/javascript" language="javascript" src="{{ asset('commons/js/ext-all.js') }}"></script>
+    <script type="text/javascript" language="javascript" src="{{ asset('commons/js/jquery.validate.js') }}"></script>
+    <script type="text/javascript" src="{{ asset('commons/js/jquery-ui.js') }}"></script>
     <script type="text/javascript">
+        $( ".date" ).datepicker( {
+            changeMonth: true,
+            changeYear: true,
+            showOn: "both",
+            buttonImage: "{{ asset('commons/images/calendar.gif') }}",
+            buttonImageOnly: true,
+            dateFormat: "dd/mm/yy",
+            showAnim: "clip",
+            //minDate: "+0D",
+            yearRange:'c-60:c+60'
+        });
+
         $( document ).ready(function() {
+            var fields='#hris_recordsbundle_historytype_field';
+            var fieldOptionUrl = '{{ path('history_historyfieldption', {'_format':'json'}) }}';
+            var fieldOptionNames='hris_recordsbundle_historytype_history';
+            //var fieldOptionSection='#hris_recordsbundle_historytype_history';
+            var fieldOptionSection='#historyFieldSection';
 
-            var startdate='#hris_recordsbundle_trainingtype_startdate';
-            var enddate='#hris_recordsbundle_trainingtype_enddate';
+            $(fields).on('change', function() {
+                // Empty FieldOptionSection contents
+                $( fieldOptionSection ).empty();
+                // Fetch fieldOptionTargets based on selected fields
+                postData={
+                    'fieldid': $('#hris_recordsbundle_historytype_field').val()
+                };
+                $.post(fieldOptionUrl,postData , function( fieldOptions ){
+                    $(fieldOptionSection).find('option').remove();
+                    if (jQuery.isEmptyObject(fieldOptions)){
+                        //disable field with no options
+                        //$(fieldOptionSection).attr('disabled', 'true');
+                        $(fieldOptionSection).prepend('<h1><small>Field Has No Options</small></h1>');
+                    }else {
 
-            // Enable End date when startdate is set
-            $(startdate).on('change', function() {
-                // enable forms
-                if( $(startdate).val() != '') {
-                    $(enddate).removeAttr('disabled');
-                }else{
-                    $(enddate).attr('disabled', 'true');
-                }
-            });
+                        //$(fieldOptionSection).removeAttr('disabled');
 
-            //Check startdate should always be less than end date
-            $(enddate).on('change', function(){
-                var startdateValue = $(startdate).val();
-                var enddateValue = $(enddate).val();
-                if( Date.parse(startdateValue) > Date.parse(enddateValue) ){
-                    alert("End date can not be before startdate. Please enter correct value");
-                    $(enddate).val("");
-                }
+                        $(fieldOptionSection).prepend('<select name="hris_recordsbundle_history[history]" id="hris_recordsbundle_history_history"> </select>');
+
+                        $(fieldOptionSection).prepend('<label for="hris_recordsbundle_history_history">History</label>');
+                        // Loop accross the field options constructing history options
+                        $.each(fieldOptions, function(historyFieldOptionIndex, historyFieldOption) {
+                            $("#hris_recordsbundle_history_history").append(new Option(historyFieldOption['name'], historyFieldOption['uid']));
+                        });
+                    }
+                });
             });
         });
     </script>
-
 {% endblock javascripts %}
+
+{% block stylesheets %}
+    {{ parent() }}
+    <link rel="stylesheet" type="text/css" media="all" href="{{ asset('commons/css/ext-standard.css') }}">
+    <link rel="stylesheet" href="{{ asset('commons/css/datepicker.css') }}" />
+    <link rel="stylesheet" href="{{ asset('commons/css/jquery-ui.css') }}" />
+{% endblock stylesheets %}
 
 {% block right_content -%}
     <h1><i class="icon-edit icon-largest" title="Edit"></i><small>Training Edit for {{ employeeName }}</small></h1>

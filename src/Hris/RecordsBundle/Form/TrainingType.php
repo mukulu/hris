@@ -46,8 +46,20 @@ class TrainingType extends AbstractType
                     'Other' => 'Other',
                 ),
             ))
-            ->add('startdate', 'date', array('input' => 'datetime', 'widget' => 'single_text',) )
-            ->add('enddate', 'date', array('input' => 'datetime', 'widget' => 'single_text',) )
+            ->add('startdate','date',array(
+                'required'=>true,
+                'widget' => 'single_text',
+                'format' => 'dd/MM/yyyy',
+                'attr' => array('class' => 'date')
+            ))
+            ->add('enddate','date',array(
+                'required'=>true,
+                'widget' => 'single_text',
+                'format' => 'dd/MM/yyyy',
+                'attr' => array('class' => 'date')
+            ))
+            //->add('startdate', 'date', array('input' => 'datetime', 'widget' => 'single_text',) )
+            //->add('enddate', 'date', array('input' => 'datetime', 'widget' => 'single_text',) )
         ;
     }
 

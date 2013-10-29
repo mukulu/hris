@@ -658,7 +658,7 @@ class ReportEmployeeRecordsController extends Controller
         $row += 2;
 
         //calculate the width of the styles
-        for ($i = 1; $i < (count($results)+2+sizeof($orgunitLevels)+sizeof($groupsets)+6); $i++) {
+        for ($i = 1; $i < (count($results)+2+sizeof($orgunitLevels)+sizeof($groupsets)+1); $i++) {
             $columnmerge++;
         }
 
@@ -687,11 +687,6 @@ class ReportEmployeeRecordsController extends Controller
         }
         // Calculated fields
         $excelService->excelObj->setActiveSheetIndex(0)
-            ->setCellValue($column++.$row, 'Age')
-            ->setCellValue($column++.$row, 'Age Group')
-            ->setCellValue($column++.$row, 'Employment Duration')
-            ->setCellValue($column++.$row, 'Retirement Date')
-            ->setCellValue($column++.$row, 'Retirement Date Year')
             ->setCellValue($column++.$row, 'Form Name')
             ->setCellValue($column.$row, 'Duty Post');
 
@@ -741,7 +736,7 @@ class ReportEmployeeRecordsController extends Controller
         $excelService->excelObj->setActiveSheetIndex(0);
 
         //create the response
-
+        $title = str_replace(',',' ',$title);
         $response = $excelService->getResponse();
         $response->headers->set('Content-Type', 'application/vnd.ms-excel; charset=utf-8');
         $response->headers->set('Content-Disposition', 'attachment; filename='.$title.'.xls');
@@ -749,7 +744,7 @@ class ReportEmployeeRecordsController extends Controller
         // If you are using a https connection, you have to set those two headers and use sendHeaders() for compatibility with IE <9
         $response->headers->set('Pragma', 'public');
         $response->headers->set('Cache-Control', 'maxage=1');
-        $response->sendHeaders();
+        //$response->sendHeaders();
         return $response;
 
     }
@@ -922,7 +917,7 @@ class ReportEmployeeRecordsController extends Controller
         $row += 2;
 
         //calculate the width of the styles
-        for ($i = 1; $i < (count($results)+2+sizeof($orgunitLevels)+sizeof($groupsets)+6); $i++) {
+        for ($i = 1; $i < (count($results)+2+sizeof($orgunitLevels)+sizeof($groupsets)+1); $i++) {
             $columnmerge++;
         }
 
@@ -967,15 +962,12 @@ class ReportEmployeeRecordsController extends Controller
                 }
                 // Calculated fields
                 $excelService->excelObj->setActiveSheetIndex(0)
-                    ->setCellValue($column++.$row, 'Age')
-                    ->setCellValue($column++.$row, 'Age Group')
-                    ->setCellValue($column++.$row, 'Employment Duration')
-                    ->setCellValue($column++.$row, 'Retirement Date')
-                    ->setCellValue($column++.$row, 'Retirement Date Year')
                     ->setCellValue($column++.$row, 'Form Name')
                     ->setCellValue($column.$row, 'Duty Post');
 
-                $i =0;//reset the serial number
+                $i =1;//reset the serial number
+                $row++;
+                $column = 'A';//return to the 1st column
             }
 
             //format of the row
@@ -1020,7 +1012,7 @@ class ReportEmployeeRecordsController extends Controller
         $excelService->excelObj->setActiveSheetIndex(0);
 
         //create the response
-
+        $title = str_replace(',',' ',$title);
         $response = $excelService->getResponse();
         $response->headers->set('Content-Type', 'application/vnd.ms-excel; charset=utf-8');
         $response->headers->set('Content-Disposition', 'attachment; filename='.$title.'.xls');
@@ -1028,7 +1020,7 @@ class ReportEmployeeRecordsController extends Controller
         // If you are using a https connection, you have to set those two headers and use sendHeaders() for compatibility with IE <9
         $response->headers->set('Pragma', 'public');
         $response->headers->set('Cache-Control', 'maxage=1');
-        $response->sendHeaders();
+        //$response->sendHeaders();
         return $response;
 
     }
