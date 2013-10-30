@@ -96,7 +96,7 @@ class HistoryController extends Controller
             if(!empty($recordid)) {
                 $record = $this->getDoctrine()->getManager()->getRepository('HrisRecordsBundle:Record')->findOneBy(array('id'=>$recordid));
                 $field = $this->getDoctrine()->getManager()->getRepository('HrisFormBundle:Field')->findOneBy(array('id'=>$historyFormData['field']));
-                //echo $field->getUid();exit;
+
                 //If History Set to update record
                 if($historyFormData['updaterecord']){
                     $recordValue = $record->getValue();
@@ -190,7 +190,12 @@ class HistoryController extends Controller
         $query .= " WHERE instance = '".$record->getInstance()."' ";
 
         $result = $entityManager -> getConnection() -> executeQuery($query) -> fetchAll();
-        return $result[0]['firstname']." ".$result[0]['middlename']." ".$result[0]['surname'];
+        if(!empty($result)){
+            return $result[0]['firstname']." ".$result[0]['middlename']." ".$result[0]['surname'];
+        }else{
+            return "Employee";
+        }
+
     }
 
 
@@ -263,22 +268,61 @@ class HistoryController extends Controller
         if (!$entity) {
             throw $this->createNotFoundException('Unable to find History entity.');
         }
+        //Get Field before bind since field is disabled
+        $field = $entity->getField();
 
         $deleteForm = $this->createDeleteForm($id);
         $editForm = $this->createForm(new HistoryType(), $entity);
         $editForm->bind($request);
+        $user = $this->container->get('security.context')->getToken()->getUser();
+        $recordid = $entity->getRecord()->getId();
+        $record = $entity->getRecord();
+
 
         if ($editForm->isValid()) {
+            $em = $this->getDoctrine()->getManager();
+            $historyValue = $request->request->get('hris_recordsbundle_history');
+            $historyFormData = $request->request->get('hris_recordsbundle_historytype');
+            $fieldOption = $this->getDoctrine()->getManager()->getRepository('HrisFormBundle:FieldOption')->findOneBy(array('uid'=>$historyValue['history']));
+
+                //If History Set to update record
+                if($historyFormData['updaterecord']){
+                    $recordValue = $record->getValue();
+                    //Get Previous value before updating
+                    $previousValue = $recordValue[$field->getUid()];
+                    //Assign Record with the new update uid
+                    $recordValue[$field->getUid()] = $historyValue['history'];
+
+                    //Assign old value from records to history table
+                    $previousOption = $this->getDoctrine()->getManager()->getRepository('HrisFormBundle:FieldOption')->findOneBy(array('uid'=>$previousValue));
+                    $entity->setHistory($previousOption->getValue());
+                    $entity->setReason($historyFormData['reason']." Note: This is previous ".$field->getCaption()." held before changed to ".$fieldOption->getValue().".");
+
+                    //Update new record value
+                    $record->setValue($recordValue);
+                }
+                else{
+                    //Set entity value assigned from the history form
+                    $entity->setHistory($fieldOption->getValue());
+                }
+                $entity->setRecord($record);
+
+            $entity->setField($field);
+            $entity->setUsername($user->getUsername());
             $em->persist($entity);
+            $em->persist($record);
             $em->flush();
 
-            return $this->redirect($this->generateUrl('history_edit', array('id' => $id)));
+            return $this->redirect($this->generateUrl('history_list_byrecord', array( 'recordid' => $recordid )));
         }
 
         return array(
             'entity'      => $entity,
             'edit_form'   => $editForm->createView(),
             'delete_form' => $deleteForm->createView(),
+            'recordid' => $recordid,
+            'record' => $record,
+            'employeeName' => $this->getEmployeeName($recordid),
         );
     }
     /**
