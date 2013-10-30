@@ -7,6 +7,7 @@ use Symfony\Bundle\FrameworkBundle\Controller\Controller;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Method;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Route;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Template;
+use JMS\SecurityExtraBundle\Annotation\Secure;
 
 /**
  * HelpCentre controller.
@@ -19,6 +20,7 @@ class HelpCentreController extends Controller
     /**
      * Lists all Topics and it's chapters.
      *
+     * @Secure(roles="ROLE_HELPCENTRE_TOPICS,ROLE_USER")
      * @Route("/", name="help_helpcentre")
      * @Method("GET")
      * @Template()
@@ -38,6 +40,7 @@ class HelpCentreController extends Controller
     /**
      * Finds and displays a Chapter contents.
      *
+     * @Secure(roles="ROLE_HELPCENTRE_CHAPTER,ROLE_USER")
      * @Route("/{id}", name="help_chapter_show")
      * @Method("GET")
      * @Template()

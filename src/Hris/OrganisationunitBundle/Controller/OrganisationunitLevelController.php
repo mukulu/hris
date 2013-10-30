@@ -45,6 +45,7 @@ class OrganisationunitLevelController extends Controller
     /**
      * Lists all OrganisationunitLevel entities.
      *
+     * @Secure(roles="ROLE_ORGANISATIONUNITLEVEL_LIST,ROLE_USER")
      * @Route("/", name="organisationunitlevel")
      * @Route("/list", name="organisationunitlevel_list")
      * @Method("GET")
@@ -84,6 +85,7 @@ class OrganisationunitLevelController extends Controller
     /**
      * Regenerate all OrganisationunitLevel entities.
      *
+     * @Secure(roles="ROLE_ORGANISATIONUNITLEVEL_REGENERATE,ROLE_USER")
      * @Route("/regeneration", name="organisationunitlevel_regeneration")
      * @Method("GET")
      * @Template()
@@ -146,6 +148,7 @@ class OrganisationunitLevelController extends Controller
     /**
      * Creates a new OrganisationunitLevel entity.
      *
+     * @Secure(roles="ROLE_ORGANISATIONUNITLEVEL_CREATE,ROLE_USER")
      * @Route("/", name="organisationunitlevel_create")
      * @Method("POST")
      * @Template("HrisOrganisationunitBundle:OrganisationunitLevel:new.html.twig")
@@ -173,6 +176,7 @@ class OrganisationunitLevelController extends Controller
     /**
      * Displays a form to create a new OrganisationunitLevel entity.
      *
+     * @Secure(roles="ROLE_ORGANISATIONUNITLEVEL_CREATE,ROLE_USER")
      * @Route("/new", name="organisationunitlevel_new")
      * @Method("GET")
      * @Template()
@@ -191,6 +195,7 @@ class OrganisationunitLevelController extends Controller
     /**
      * Finds and displays a OrganisationunitLevel entity.
      *
+     * @Secure(roles="ROLE_ORGANISATIONUNITLEVEL_SHOW,ROLE_USER")
      * @Route("/{id}", requirements={"id"="\d+"}, name="organisationunitlevel_show")
      * @Method("GET")
      * @Template()
@@ -216,6 +221,7 @@ class OrganisationunitLevelController extends Controller
     /**
      * Displays a form to edit an existing OrganisationunitLevel entity.
      *
+     * @Secure(roles="ROLE_ORGANISATIONUNITLEVEL_UPDATE,ROLE_USER")
      * @Route("/{id}/edit", requirements={"id"="\d+"}, name="organisationunitlevel_edit")
      * @Method("GET")
      * @Template()
@@ -243,6 +249,7 @@ class OrganisationunitLevelController extends Controller
     /**
      * Edits an existing OrganisationunitLevel entity.
      *
+     * @Secure(roles="ROLE_ORGANISATIONUNITLEVEL_UPDATE,ROLE_USER")
      * @Route("/{id}", requirements={"id"="\d+"}, name="organisationunitlevel_update")
      * @Method("PUT")
      * @Template("HrisOrganisationunitBundle:OrganisationunitLevel:edit.html.twig")
@@ -277,6 +284,7 @@ class OrganisationunitLevelController extends Controller
     /**
      * Deletes a OrganisationunitLevel entity.
      *
+     * @Secure(roles="ROLE_ORGANISATIONUNITLEVEL_DELETE,ROLE_USER")
      * @Route("/{id}", requirements={"id"="\d+"}, name="organisationunitlevel_delete")
      * @Method("DELETE")
      */
@@ -316,10 +324,9 @@ class OrganisationunitLevelController extends Controller
     }
 
     /**
-     * Returns OrganisationunitLevel json.
+     * Returns OrganisationunitLevel tree json.
      *
-     * @Secure(roles="ROLE_ORGANISATIONUNIT_ORGANISATIONUNIT_LEVEL,ROLE_USER")
-     *
+     * @Secure(roles="ROLE_ORGANISATIONUNITLEVEL_TREE,ROLE_USER")
      * @Route("/levels.{_format}", requirements={"_format"="yml|xml|json|"}, defaults={"format"="json","parent"=0}, name="organisationunit_levels")
      * @Route("/levels/{parent}/parent",requirements={"parent"="\d+"},defaults={"parent"=0}, name="organisationunit_levels_parent")
      * @Method("GET|POST")

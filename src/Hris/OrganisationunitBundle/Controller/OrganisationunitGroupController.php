@@ -32,6 +32,7 @@ use Sensio\Bundle\FrameworkExtraBundle\Configuration\Route;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Template;
 use Hris\OrganisationunitBundle\Entity\OrganisationunitGroup;
 use Hris\OrganisationunitBundle\Form\OrganisationunitGroupType;
+use JMS\SecurityExtraBundle\Annotation\Secure;
 
 /**
  * OrganisationunitGroup controller.
@@ -44,6 +45,7 @@ class OrganisationunitGroupController extends Controller
     /**
      * Lists all OrganisationunitGroup entities.
      *
+     * @Secure(roles="ROLE_ORGANISATIONUNITGROUP_LIST,ROLE_USER")
      * @Route("/", name="organisationunitgroup")
      * @Route("/list", name="organisationunitgroup_list")
      * @Method("GET")
@@ -69,6 +71,7 @@ class OrganisationunitGroupController extends Controller
     /**
      * Creates a new OrganisationunitGroup entity.
      *
+     * @Secure(roles="ROLE_ORGANISATIONUNITGROUP_CREATE,ROLE_USER")
      * @Route("/", name="organisationunitgroup_create")
      * @Method("POST")
      * @Template("HrisOrganisationunitBundle:OrganisationunitGroup:new.html.twig")
@@ -109,6 +112,7 @@ class OrganisationunitGroupController extends Controller
     /**
      * Displays a form to create a new OrganisationunitGroup entity.
      *
+     * @Secure(roles="ROLE_ORGANISATIONUNITGROUP_CREATE,ROLE_USER")
      * @Route("/new", name="organisationunitgroup_new")
      * @Method("GET")
      * @Template()
@@ -127,6 +131,7 @@ class OrganisationunitGroupController extends Controller
     /**
      * Finds and displays a OrganisationunitGroup entity.
      *
+     * @Secure(roles="ROLE_ORGANISATIONUNITGROUP_SHOW,ROLE_USER")
      * @Route("/{id}", requirements={"id"="\d+"}, requirements={"id"="\d+"}, name="organisationunitgroup_show")
      * @Method("GET")
      * @Template()
@@ -152,6 +157,7 @@ class OrganisationunitGroupController extends Controller
     /**
      * Displays a form to edit an existing OrganisationunitGroup entity.
      *
+     * @Secure(roles="ROLE_ORGANISATIONUNITGROUP_UPDATE,ROLE_USER")
      * @Route("/{id}/edit", requirements={"id"="\d+"}, name="organisationunitgroup_edit")
      * @Method("GET")
      * @Template()
@@ -179,6 +185,7 @@ class OrganisationunitGroupController extends Controller
     /**
      * Edits an existing OrganisationunitGroup entity.
      *
+     * @Secure(roles="ROLE_ORGANISATIONUNITGROUP_UPDATE,ROLE_USER")
      * @Route("/{id}", requirements={"id"="\d+"}, name="organisationunitgroup_update")
      * @Method("PUT")
      * @Template("HrisOrganisationunitBundle:OrganisationunitGroup:edit.html.twig")
@@ -214,6 +221,7 @@ class OrganisationunitGroupController extends Controller
     /**
      * Updates OrganisationunitGroup member.
      *
+     * @Secure(roles="ROLE_ORGANISATIONUNITGROUP_UPDATE,ROLE_USER")
      * @Route("/{id}/member", requirements={"id"="\d+"}, name="organisationunitgroup_update_member")
      * @Method("POST")
      * @Template()
@@ -246,6 +254,7 @@ class OrganisationunitGroupController extends Controller
     /**
      * Deletes a OrganisationunitGroup entity.
      *
+     * @Secure(roles="ROLE_ORGANISATIONUNITGROUP_DELETE,ROLE_USER")
      * @Route("/{id}", requirements={"id"="\d+"}, name="organisationunitgroup_delete")
      * @Method("DELETE")
      */

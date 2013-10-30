@@ -39,6 +39,7 @@ use Hris\ReportsBundle\Entity\Report;
 use Hris\ReportsBundle\Form\ReportType;
 use Ob\HighchartsBundle\Highcharts\Highchart;
 use Zend\Json\Expr;
+use JMS\SecurityExtraBundle\Annotation\Secure;
 
 /**
  * Report Aggregation controller.
@@ -51,6 +52,7 @@ class ReportAggregationController extends Controller
     /**
      * Show Report Aggregation
      *
+     * @Secure(roles="ROLE_REPORTAGGREGATION_GENERATE,ROLE_USER")
      * @Route("/", name="report_aggregation")
      * @Method("GET")
      * @Template()
@@ -68,6 +70,7 @@ class ReportAggregationController extends Controller
     /**
      * Generate aggregated reports
      *
+     * @Secure(roles="ROLE_REPORTAGGREGATION_GENERATE,ROLE_USER")
      * @Route("/", name="report_aggregation_generate")
      * @Method("PUT")
      * @Template()
@@ -367,6 +370,7 @@ class ReportAggregationController extends Controller
     /**
      * Download aggregated reports
      *
+     * @Secure(roles="ROLE_REPORTAGGREGATION_DOWNLOAD,ROLE_USER")
      * @Route("/download", name="report_aggregation_download")
      * @Method("GET")
      * @Template()
@@ -583,6 +587,7 @@ class ReportAggregationController extends Controller
     /**
      * Download aggregated reports by Cadre
      *
+     * @Secure(roles="ROLE_REPORTAGGREGATION_DOWNLOADRECORDS,ROLE_USER")
      * @Route("/records", name="report_aggregation_download_records")
      * @Method("GET")
      * @Template()
