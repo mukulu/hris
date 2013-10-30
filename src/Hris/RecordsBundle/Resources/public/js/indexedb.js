@@ -53,7 +53,7 @@ function createDatabase(databaseName, tableName, columnNames, dataValues) {
 
     openRequest.onsuccess = function () {
         db = openRequest.result;
-        console.log("this is done deal");
+        console.log("database has been generated");
     };
 
 }
@@ -95,7 +95,6 @@ function addRecords(databaseName, tableName, dataValues) {
 
     openRequest.onsuccess = function () {
         db = openRequest.result;
-        console.log("this is done deal");
 
         var transaction = db.transaction(tableName, "readwrite");
         var store = transaction.objectStore(tableName);
@@ -120,7 +119,6 @@ function addRecords(databaseName, tableName, dataValues) {
 
             results = results.slice(0, -2);
             results += '}';
-            console.log(results);
             store.put(JSON.parse(results));
             console.log("Results has been update");
             var results = '{';
@@ -128,7 +126,7 @@ function addRecords(databaseName, tableName, dataValues) {
 
         transaction.oncomplete = function () {
             // All requests have succeeded and the transaction has committed.
-            console.log("All transaction done");
+            console.log("All Records in " + tableName + " has been saved offline");
         };
 
     };
@@ -139,8 +137,6 @@ function getSingleRecord(databaseName, uid, tableName) {
 
     tableName = JSON.parse(tableName);
 
-    console.log(uid);
-
     var result = document.getElementById("result");
     result.innerHTML = "";
 
@@ -148,8 +144,6 @@ function getSingleRecord(databaseName, uid, tableName) {
 
     openRequest.onsuccess = function () {
         db = openRequest.result;
-        console.log("this is done deal");
-
 
         var transaction = db.transaction(tableName, "readonly");
         var store = transaction.objectStore(tableName);
@@ -163,7 +157,6 @@ function getSingleRecord(databaseName, uid, tableName) {
 
                 var jsonStr = JSON.stringify(decodeURIComponent(matching.hypertext));
                 result.innerHTML = decodeURIComponent(matching.hypertext);
-                console.log(decodeURIComponent(matching.hypertext));
 
             } else {
                 // No match was found.
@@ -179,8 +172,6 @@ function getDataEntryForm(databaseName, formUid, tableName) {
 
     tableName = JSON.parse(tableName);
 
-    console.log(formUid);
-
     var result = document.getElementById("result");
     result.innerHTML = "";
 
@@ -190,8 +181,6 @@ function getDataEntryForm(databaseName, formUid, tableName) {
 
         openRequest.onsuccess = function () {
             db = openRequest.result;
-            console.log("this is done deal");
-
 
             var transaction = db.transaction(tableName, "readonly");
             var store = transaction.objectStore(tableName);
@@ -229,10 +218,7 @@ function loadFieldOptions(fieldUIDS, databaseName) {
 
     var fieldUid = JSON.parse(fieldUIDS);
 
-    console.log(fieldUid);
-
     $.each(fieldUid, function (key, value) {
-        console.log(key + ": " + value);
 
         var field_uid = value;
 
@@ -271,7 +257,6 @@ function loadFieldOptions(fieldUIDS, databaseName) {
                     }
 
                     if (field_uid == cursorOption.value.field) {
-                        console.log(decodeURIComponent(cursorOption.value.value) + " uid " + field_uid + " field_id " + cursorOption.value.uid);
 
                         $("#" + field_uid).append($('<option>', {
                             value: cursorOption.value.uid,
@@ -329,8 +314,6 @@ function changeRelatedFieldOptions(field_uid) {
                     removeElement = true;
                 }
 
-                console.log(decodeURIComponent(cursorOption.value.fieldoptionref) + " uid " + field_uid + " fieldoptionUID " + cursorOption.value.fieldoptionrefuid);
-
                 $("#" + cursorOption.value.fieldref).append($('<option>', {
                     value: cursorOption.value.fieldoptionrefuid,
                     text: decodeURIComponent(cursorOption.value.fieldoptionref)
@@ -377,8 +360,6 @@ function isUnique(field_uid) {
                     $("#" + cursorOption.value.fieldref).find('option').remove();
                     removeElement = true;
                 }
-
-                console.log(decodeURIComponent(cursorOption.value.fieldoptionref) + " uid " + field_uid + " fieldoptionUID " + cursorOption.value.fieldoptionrefuid);
 
                 $("#" + cursorOption.value.fieldref).append($('<option>', {
                     value: cursorOption.value.fieldoptionrefuid,
@@ -427,7 +408,6 @@ function getunits(parent){
             if (cursorOption) {
 
                 if (parentUid == cursorOption.value.parent) {
-                    console.log(decodeURIComponent(cursorOption.value.longname));
 
                     $("#units").append($('<option>', {
                         value: cursorOption.value.uid,
@@ -463,10 +443,7 @@ function populateForm(fieldUIDS, databaseName, dataValues, otherFields, orgunit)
 
     });
 
-    console.log('other fields' + otherFields);
-
     $.each(fieldUid, function (key, value) {
-        console.log(key + ": " + value);
 
         var field_uid = value;
 
@@ -497,7 +474,6 @@ function populateForm(fieldUIDS, databaseName, dataValues, otherFields, orgunit)
 
 
                     if (field_uid == cursorOption.value.field) {
-                        console.log(decodeURIComponent(cursorOption.value.value) + " uid " + field_uid + " field_id " + cursorOption.value.uid);
 
                         $("#" + field_uid).append($('<option>', {
                             value: cursorOption.value.uid,
