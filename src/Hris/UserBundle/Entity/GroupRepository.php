@@ -20,9 +20,9 @@ class GroupRepository extends EntityRepository
     public function getSearchedUserGroups($name)
     {
         $queryBuilder = $this->getEntityManager()->createQueryBuilder();
-        $result = $queryBuilder->select('group')
-            ->from('HrisUserBundle:Group','group')
-            ->where('lower(group.name) like :name')
+        $result = $queryBuilder->select('userGroup')
+            ->from('HrisUserBundle:Group','userGroup')
+            ->where('lower(userGroup.name) like :name')
             ->setParameters(array(
                     'name'=>"%$name%"
                 )
