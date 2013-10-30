@@ -17,6 +17,7 @@ localDatabase.indexedDB.onerror = function (e) {
 
 var replaceOptionString = "";
 
+
 function createDatabase(databaseName, tableName, columnNames, dataValues) {
     /*
      Parsing the names of columns form strin to Json Format
@@ -45,6 +46,13 @@ function createDatabase(databaseName, tableName, columnNames, dataValues) {
 
                 dataStore.createIndex("fieldoption", "fieldoption", { unique: false });
                 console.log("data Store Column UID  Added for the datastore 'field_option_Association' ");
+                created = true;
+
+                var dataStore = db.createObjectStore("offline_datavalues", {keyPath: "id"});
+                console.log("data Store 'offline_datavalues' Created");
+
+                dataStore.createIndex("status", "status", { unique: false });
+                console.log("data Store Column status  Added for the datastore 'offline_datavalues' ");
                 created = true;
             }
         }
@@ -525,4 +533,91 @@ function populateForm(fieldUIDS, databaseName, dataValues, otherFields, orgunit)
         }
     });
 
+}
+
+function offLineDataStorage(databaseName){
+    $(function () {
+        $('form').on('submit', function (e) {
+
+            e.preventDefault();
+
+            tableName = "offline_datavalues";
+            dataValues = $('form').serialize();
+
+
+            var openRequest = localDatabase.indexedDB.open(databaseName);
+
+            openRequest.onsuccess = function () {
+                db = openRequest.result;
+
+                var transaction = db.transaction(tableName, "readwrite");
+                var store = transaction.objectStore(tableName);
+
+                var uuid = Math.floor((Math.random()*10000)+1);
+
+                store.put({id: uuid, data: dataValues});
+
+                transaction.oncomplete = function () {
+                    // All requests have succeeded and the transaction has committed.
+                    console.log("All Records in " + tableName + " has been saved offline");
+                    $('form').trigger("reset");
+                };
+
+            };
+
+        });
+
+    });
+}
+
+
+function sendDataToServer(databaseName){
+
+    var timer = $.timer(function() {
+
+        var openRequest = localDatabase.indexedDB.open(databaseName);
+
+        openRequest.onsuccess = function () {
+
+            var db = openRequest.result;
+
+            var transaction = db.transaction("offline_datavalues", "readonly");
+            var store = transaction.objectStore("offline_datavalues");
+
+            var dataRequest = store.openCursor();
+
+
+            dataRequest.onsuccess = function () {
+
+                var cursorOption = dataRequest.result;
+
+
+                if (cursorOption) {
+
+                    var dataValues = JSON.stringify(cursorOption.value.data);
+
+                    $.ajax({
+                        type: 'POST',
+                        url: '../',
+                        data: decodeURIComponent(cursorOption.value.data),
+                        success: function () {
+                            alert('form was submitted');
+                            $('form').trigger("reset");
+                        },
+                        error: function(){
+                            alert('form was not submitted');
+                        }
+                    });
+
+                    cursorOption.continue();
+                }
+                else {
+                    console.log('No more Matching Fields Options');
+                }
+
+            }
+        }
+    });
+
+    timer.set({ time : 5000, autostart : true });
 }
