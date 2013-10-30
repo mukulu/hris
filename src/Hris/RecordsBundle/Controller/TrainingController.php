@@ -167,7 +167,11 @@ class TrainingController extends Controller
         $query .= " WHERE instance = '".$record->getInstance()."' ";
 
         $result = $entityManager -> getConnection() -> executeQuery($query) -> fetchAll();
-        return $result[0]['firstname']." ".$result[0]['middlename']." ".$result[0]['surname'];
+        if(!empty($result)){
+            return $result[0]['firstname']." ".$result[0]['middlename']." ".$result[0]['surname'];
+        }else{
+            return "Employee";
+        }
     }
 
     /**

@@ -14,7 +14,7 @@
             buttonImageOnly: true,
             dateFormat: "dd/mm/yy",
             showAnim: "clip",
-            //minDate: "+0D",
+            maxDate: "+0D",
             yearRange:'c-60:c+60'
         });
 
@@ -22,6 +22,36 @@
 
             var startdate='#hris_recordsbundle_trainingtype_startdate';
             var enddate='#hris_recordsbundle_trainingtype_enddate';
+            var fields='#hris_recordsbundle_historytype_field';
+            var fieldOptionUrl = '{{ path('history_historyfieldption', {'_format':'json'}) }}';
+            var fieldOptionNames='hris_recordsbundle_historytype_history';
+            var fieldOptionSection='#historyFieldSection';
+
+            $(fields).attr('disabled', 'true');
+            $( fieldOptionSection ).empty();
+            // Fetch fieldOptionTargets based on selected fields
+            postData={
+                'fieldid': $('#hris_recordsbundle_historytype_field').val()
+            };
+            $.post(fieldOptionUrl,postData , function( fieldOptions ){
+                $(fieldOptionSection).find('option').remove();
+                if (jQuery.isEmptyObject(fieldOptions)){
+                    //disable field with no options
+                    //$(fieldOptionSection).attr('disabled', 'true');
+                    $(fieldOptionSection).prepend('<h1><small>Field Has No Options</small></h1>');
+                }else {
+
+                    //$(fieldOptionSection).removeAttr('disabled');
+
+                    $(fieldOptionSection).prepend('<select name="hris_recordsbundle_history[history]" id="hris_recordsbundle_history_history"> </select>');
+
+                    $(fieldOptionSection).prepend('<label for="hris_recordsbundle_history_history">History</label>');
+                    // Loop accross the field options constructing history options
+                    $.each(fieldOptions, function(historyFieldOptionIndex, historyFieldOption) {
+                        $("#hris_recordsbundle_history_history").append(new Option(historyFieldOption['name'], historyFieldOption['uid']));
+                    });
+                }
+            });
 
             // Enable End date when startdate is set
             $(startdate).on('change', function() {
@@ -58,7 +88,9 @@
 
     <form action="{{ path('history_update', { 'id': entity.id }) }}" method="post" {{ form_enctype(edit_form) }}>
         <input type="hidden" name="_method" value="PUT" />
-        {{ form_widget(edit_form) }}
+        {{ form_row( edit_form.field ) }}
+
+        <div id="historyFieldSection">History<br/><br/></div>
 
         {{ form_row( edit_form.startdate ) }}
         {{ form_row( edit_form.reason ) }}

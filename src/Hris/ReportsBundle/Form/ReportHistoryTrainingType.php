@@ -85,7 +85,7 @@ class ReportHistoryTrainingType extends AbstractType
                     new NotBlank(),
                 )
             ))
-            ->add('submit','submit')
+            ->add('Generate Report','submit')
         ;
     }
 

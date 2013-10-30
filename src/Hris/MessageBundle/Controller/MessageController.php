@@ -178,13 +178,19 @@ class MessageController extends ContainerAware
 
         /*
          * Getting the Users Groups
+
+        $userGroups = $entityManager->getRepository('HrisUserBundle:Group')->getSearchedUserGroups($q);
         */
-        //$userGroups = $entityManager->getRepository('HrisUserBundle:Group')->getSearchedUserGrou
 
-
+        //Add the User to the json response
         foreach($users as $user){
             $arr[] = Array('id'=>$user->getUsername(),'name'=>$user->getFirstName().' '.$user->getSurname(),"url"=>$this->container->get('templating.helper.assets')->getUrl("commons/images/user.png"));
         }
+        /*
+        * Add the User groups to the json response
+       foreach($userGroups as $userGroup){
+           $arr[] = Array('id'=>$userGroup->getId(),'name'=>$userGroup->getName(),"url"=>$this->container->get('templating.helper.assets')->getUrl("commons/images/user.png"));
+       }*/
 
 
         # JSON-encode the response
