@@ -31,6 +31,7 @@ use Sensio\Bundle\FrameworkExtraBundle\Configuration\Method;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Route;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Template;
 use Hris\ImportExportBundle\Form\ExportMetadataType;
+use JMS\SecurityExtraBundle\Annotation\Secure;
 
 /**
  * ExportMetadata controller.
@@ -43,6 +44,7 @@ class ExportMetadataController extends Controller
     /**
      * Lists all ExportMetadata entities.
      *
+     * @Secure(roles="ROLE_EXPORTMETADATA_LIST,ROLE_USER")
      * @Route("/", name="importexport_exportmetadata")
      * @Route("/list", name="importexport_exportmetadata_list")
      * @Method("GET")
@@ -60,6 +62,7 @@ class ExportMetadataController extends Controller
     /**
      * Creates a new ExportMetadata entity.
      *
+     * @Secure(roles="ROLE_EXPORTMETADATA_CREATE,ROLE_USER")
      * @Route("/{_format}", requirements={"_format"="json|"}, defaults={"_format"="json"}, name="importexport_exportmetadata_create")
      * @Method("POST")
      * @Template("HrisImportExportBundle:ExportMetadata:export.json.twig")
@@ -219,6 +222,7 @@ class ExportMetadataController extends Controller
     /**
      * Displays a form to create a new ExportMetadata entity.
      *
+     * @Secure(roles="ROLE_EXPORTMETADATA_CREATE,ROLE_USER")
      * @Route("/new", name="importexport_exportmetadata_new")
      * @Method("GET")
      * @Template()
@@ -235,6 +239,7 @@ class ExportMetadataController extends Controller
     /**
      * Finds and displays a ExportMetadata entity.
      *
+     * @Secure(roles="ROLE_EXPORTMETADATA_SHOW,ROLE_USER")
      * @Route("/{id}", requirements={"id"="\d+"}, name="importexport_exportmetadata_show")
      * @Method("GET")
      * @Template()
@@ -260,6 +265,7 @@ class ExportMetadataController extends Controller
     /**
      * Displays a form to edit an existing ExportMetadata entity.
      *
+     * @Secure(roles="ROLE_EXPORTMETADATA_UPDATE,ROLE_USER")
      * @Route("/{id}/edit", name="importexport_exportmetadata_edit")
      * @Method("GET")
      * @Template()
@@ -278,6 +284,7 @@ class ExportMetadataController extends Controller
     /**
      * Edits an existing ExportMetadata entity.
      *
+     * @Secure(roles="ROLE_EXPORTMETADATA_UPDATE,ROLE_USER")
      * @Route("/{id}", name="importexport_exportmetadata_update")
      * @Method("PUT")
      * @Template("HrisImportExportBundle:ExportMetadata:edit.html.twig")
@@ -303,6 +310,7 @@ class ExportMetadataController extends Controller
     /**
      * Deletes a ExportMetadata entity.
      *
+     * @Secure(roles="ROLE_EXPORTMETADATA_DELETE,ROLE_USER")
      * @Route("/{id}", name="importexport_exportmetadata_delete")
      * @Method("DELETE")
      */

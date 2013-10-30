@@ -34,6 +34,7 @@ use Sensio\Bundle\FrameworkExtraBundle\Configuration\Route;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Template;
 use Hris\FormBundle\Entity\Form;
 use Hris\FormBundle\Form\FormType;
+use JMS\SecurityExtraBundle\Annotation\Secure;
 
 /**
  * Form controller.
@@ -46,6 +47,7 @@ class FormController extends Controller
     /**
      * Lists all Form entities.
      *
+     * @Secure(roles="ROLE_FORM_LIST,ROLE_USER")
      * @Route("/", name="form")
      * @Route("/list", name="form_list")
      * @Method("GET")
@@ -71,6 +73,7 @@ class FormController extends Controller
     /**
      * Creates a new Form entity.
      *
+     * @Secure(roles="ROLE_FORM_CREATE,ROLE_USER")
      * @Route("/", name="form_create")
      * @Method("POST")
      * @Template("HrisFormBundle:Form:new.html.twig")
@@ -122,6 +125,7 @@ class FormController extends Controller
     /**
      * Displays a form to create a new Form entity.
      *
+     * @Secure(roles="ROLE_FORM_CREATE,ROLE_USER")
      * @Route("/new", name="form_new")
      * @Method("GET")
      * @Template()
@@ -140,6 +144,7 @@ class FormController extends Controller
     /**
      * Finds and displays a Form entity.
      *
+     * @Secure(roles="ROLE_FORM_SHOW,ROLE_USER")
      * @Route("/{id}", requirements={"id"="\d+"}, name="form_show")
      * @Method("GET")
      * @Template()
@@ -165,6 +170,7 @@ class FormController extends Controller
     /**
      * Displays a form to edit an existing Form entity.
      *
+     * @Secure(roles="ROLE_FORM_UPDATE,ROLE_USER")
      * @Route("/{id}/edit", requirements={"id"="\d+"}, name="form_edit")
      * @Method("GET")
      * @Template()
@@ -206,6 +212,7 @@ class FormController extends Controller
     /**
      * Edits an existing Form entity.
      *
+     * @Secure(roles="ROLE_FORM_UPDATE,ROLE_USER")
      * @Route("/{id}", requirements={"id"="\d+"}, name="form_update")
      * @Method("PUT")
      * @Template("HrisFormBundle:Form:edit.html.twig")
@@ -278,6 +285,7 @@ class FormController extends Controller
     /**
      * Deletes a Form entity.
      *
+     * @Secure(roles="ROLE_FORM_DELETE,ROLE_USER")
      * @Route("/{id}", requirements={"id"="\d+"}, name="form_delete")
      * @Method("DELETE")
      */

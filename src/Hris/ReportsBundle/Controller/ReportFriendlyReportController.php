@@ -43,6 +43,7 @@ use Hris\ReportsBundle\Entity\Report;
 use Hris\ReportsBundle\Form\ReportType;
 use Ob\HighchartsBundle\Highcharts\Highchart;
 use Zend\Json\Expr;
+use JMS\SecurityExtraBundle\Annotation\Secure;
 
 /**
  * Report Friendly Report controller for generation of friendlier
@@ -75,6 +76,7 @@ class ReportFriendlyReportController extends Controller
     /**
      * Show Report Aggregation
      *
+     * @Secure(roles="ROLE_REPORTFRIENDLYREPORT_GENERATE,ROLE_USER")
      * @Route("/", name="report_friendlyreport")
      * @Method("GET")
      * @Template()
@@ -92,6 +94,7 @@ class ReportFriendlyReportController extends Controller
     /**
      * Generate friendly reports
      *
+     * @Secure(roles="ROLE_REPORTFRIENDLYREPORT_GENERATE,ROLE_USER")
      * @Route("/", name="report_friendlyreport_generate")
      * @Method("PUT")
      * @Template()

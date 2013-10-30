@@ -54,6 +54,7 @@ class ReportEmployeeRecordsController extends Controller
     /**
      * Show Report Employee Records Form
      *
+     * @Secure(roles="ROLE_REPORTRECORDS_LIST,ROLE_USER")
      * @Route("/", name="report_employeerecords")
      * @Method("GET")
      * @Template()
@@ -71,6 +72,7 @@ class ReportEmployeeRecordsController extends Controller
     /**
      * Generate employee records reports
      *
+     * @Secure(roles="ROLE_REPORTRECORDS_LIST,ROLE_USER")
      * @Route("/", name="report_employeerecords_generate")
      * @Method("PUT")
      * @Template()
@@ -173,8 +175,7 @@ class ReportEmployeeRecordsController extends Controller
     /**
      * Returns Employee records json.
      *
-     * @Secure(roles="ROLE_RECORDS_EMPLOYEE_RECORDS,ROLE_USER")
-     *
+     * @Secure(roles="ROLE_REPORTRECORDS_LIST,ROLE_USER")
      * @Route("/{_format}", requirements={"_format"="json|"}, defaults={"_format"="json"}, name="report_employeerecords_ajax")
      * @Method("POST")
      * @Template()
@@ -494,6 +495,7 @@ class ReportEmployeeRecordsController extends Controller
     /**
      * Download records reports
      *
+     * @Secure(roles="ROLE_REPORTRECORDS_DOWNLOAD,ROLE_USER")
      * @Route("/download", name="report_employeerecords_download")
      * @Method("GET")
      * @Template()
@@ -751,6 +753,7 @@ class ReportEmployeeRecordsController extends Controller
     /**
      * Download records reports
      *
+     * @Secure(roles="ROLE_REPORTRECORDS_DOWNLOADBYCADRE,ROLE_USER")
      * @Route("/download_bycarde", name="report_employeerecords_download_bycarde")
      * @Method("GET")
      * @Template()

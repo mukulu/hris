@@ -33,6 +33,7 @@ use Sensio\Bundle\FrameworkExtraBundle\Configuration\Route;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Template;
 use Hris\FormBundle\Entity\ResourceTable;
 use Hris\FormBundle\Form\ResourceTableType;
+use JMS\SecurityExtraBundle\Annotation\Secure;
 
 /**
  * ResourceTable controller.
@@ -45,6 +46,7 @@ class ResourceTableController extends Controller
     /**
      * Lists all ResourceTable entities.
      *
+     * @Secure(roles="ROLE_RESOURCETABLE_LIST,ROLE_USER")
      * @Route("/", name="resourcetable")
      * @Route("/list", name="resourcetable_list")
      * @Method("GET")
@@ -69,6 +71,7 @@ class ResourceTableController extends Controller
     /**
      * Creates a new ResourceTable entity.
      *
+     * @Secure(roles="ROLE_RESOURCETABLE_CREATE,ROLE_USER")
      * @Route("/", name="resourcetable_create")
      * @Method("POST")
      * @Template("HrisFormBundle:ResourceTable:new.html.twig")
@@ -108,6 +111,7 @@ class ResourceTableController extends Controller
     /**
      * Displays a form to create a new ResourceTable entity.
      *
+     * @Secure(roles="ROLE_RESOURCETABLE_CREATE,ROLE_USER")
      * @Route("/new", name="resourcetable_new")
      * @Method("GET")
      * @Template()
@@ -126,6 +130,7 @@ class ResourceTableController extends Controller
     /**
      * Finds and displays a ResourceTable entity.
      *
+     * @Secure(roles="ROLE_RESOURCETABLE_SHOW,ROLE_USER")
      * @Route("/{id}", requirements={"id"="\d+"}, name="resourcetable_show")
      * @Method("GET")
      * @Template()
@@ -151,6 +156,7 @@ class ResourceTableController extends Controller
     /**
      * Finds and generates a ResourceTable entity.
      *
+     * @Secure(roles="ROLE_RESOURCETABLE_GENERATE,ROLE_USER")
      * @Route("/{id}/generate/{context}", requirements={"id"="\d+","context"="graceful|forced"}, defaults={"context"="graceful"}, name="resourcetable_generate")
      * @Method("GET")
      * @Template()
@@ -192,6 +198,7 @@ class ResourceTableController extends Controller
     /**
      * Displays a form to edit an existing ResourceTable entity.
      *
+     * @Secure(roles="ROLE_RESOURCETABLE_UPDATE,ROLE_USER")
      * @Route("/{id}/edit", requirements={"id"="\d+"}, name="resourcetable_edit")
      * @Method("GET")
      * @Template()
@@ -227,6 +234,7 @@ class ResourceTableController extends Controller
     /**
      * Edits an existing ResourceTable entity.
      *
+     * @Secure(roles="ROLE_RESOURCETABLE_UPDATE,ROLE_USER")
      * @Route("/{id}", requirements={"id"="\d+"}, name="resourcetable_update")
      * @Method("PUT")
      * @Template("HrisFormBundle:ResourceTable:edit.html.twig")
@@ -281,6 +289,7 @@ class ResourceTableController extends Controller
     /**
      * Deletes a ResourceTable entity.
      *
+     * @Secure(roles="ROLE_RESOURCETABLE_DELETE,ROLE_USER")
      * @Route("/{id}", requirements={"id"="\d+"}, name="resourcetable_delete")
      * @Method("DELETE")
      */
