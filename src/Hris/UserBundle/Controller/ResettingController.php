@@ -47,7 +47,7 @@ class ResettingController extends ContainerAware
     /**
      * Request reset user password: show form
      *
-     * @Secure(roles="ROLE_USER_RESETPASSWORD,ROLE_USER")
+     * @Secure(roles="ROLE_USER_RESETPASSWORD,IS_AUTHENTICATED_ANONYMOUSLY,ROLE_USER")
      */
     public function requestAction()
     {

@@ -24,6 +24,7 @@ use Hris\FormBundle\Entity\Field;
 use Hris\OrganisationunitBundle\Entity\Organisationunit;
 use Doctrine\ORM\EntityManager;
 use Hris\DataQualityBundle\Entity\Validation;
+use JMS\SecurityExtraBundle\Annotation\Secure;
 
 /**
  * Validation controller.

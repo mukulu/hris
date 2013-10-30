@@ -47,7 +47,7 @@ class RegistrationController extends ContainerAware
     /**
      * Registers user
      *
-     * @Secure(roles="ROLE_USERREGISTRATION_REGISTER,ROLE_USER")
+     * @Secure(roles="ROLE_USERREGISTRATION_REGISTER,IS_AUTHENTICATED_ANONYMOUSLY,ROLE_USER")
      * @return RedirectResponse
      */
     public function registerAction()
@@ -88,7 +88,7 @@ class RegistrationController extends ContainerAware
     /**
      * Tell the user to check his email provider
      *
-     * @Secure(roles="ROLE_USERREGISTRATION_CHECKEMAIL,ROLE_USER")
+     * @Secure(roles="ROLE_USERREGISTRATION_CHECKEMAIL,IS_AUTHENTICATED_ANONYMOUSLY,ROLE_USER")
      */
     public function checkEmailAction()
     {
