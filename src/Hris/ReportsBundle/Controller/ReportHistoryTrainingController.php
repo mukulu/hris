@@ -875,4 +875,42 @@ class ReportHistoryTrainingController extends Controller
         return $response;
     }
 
+    /**
+     * Returns Fields json.
+     *
+     *
+     * @Secure(roles="ROLE_REPORTHISTORY_GENERATE,ROLE_USER")
+     * @Route("/reportFormFields.{_format}", requirements={"_format"="yml|xml|json"}, defaults={"_format"="json"}, name="report_formfields")
+     * @Method("POST")
+     * @Template()
+     */
+    public function reportFieldsAction($_format)
+    {
+        $em = $this->getDoctrine()->getManager();
+        $formid = $this->getRequest()->request->get('formid');
+        //$formid = 13;
+
+        // Fetch existing feidls belonging to selected form
+        $form = $em->getRepository('HrisFormBundle:Form')->findOneBy(array('id'=>$formid));
+        $formFields = new ArrayCollection();
+        foreach($form->getFormFieldMember() as $formFieldMemberKey=>$formFieldMember) {
+            $formFields->add($formFieldMember->getField());
+        }
+
+        foreach($formFields as $formFieldsKey=>$formField) {
+            if($formField->getHashistory() && $formField->getInputType()->getName() == "Select"){
+                $fieldNodes[] = Array(
+                    'name' => $formField->getCaption(),
+                    'id' => $formField->getId()
+                );
+            }
+        }
+
+        $serializer = $this->container->get('serializer');
+
+        return array(
+            'entities' => $serializer->serialize($fieldNodes,$_format)
+        );
+    }
+
 }
