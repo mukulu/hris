@@ -106,6 +106,27 @@ class ReportOrganisationunitCompletenessController extends Controller
     }
 
     /**
+     * Download Report for Organisationunit Completeness
+     *
+     * @Route("/download", name="report_organisationunit_completeness_download")
+     * @Method("GET")
+     * @Template()
+     */
+    public function downloadAction(Request $request)
+    {
+        $em = $this->getDoctrine()->getManager();
+
+        $organisationUnitid =$request->query->get('organisationUnit');
+        $formsId = explode(",",$request->query->get('formsId'));
+        $organisationunitGroupsId = explode(",",$request->query->get('organisationunitGroupsId'));
+        $withLowerLevels =$request->query->get('withLowerLevels');
+        $fieldsId =$request->query->get('fields');
+        $fieldsTwoId =$request->query->get('fieldsTwo');
+        $forms = new ArrayCollection();
+        $organisationunitGroups = new ArrayCollection();
+    }
+
+    /**
      * Generate a Report Redirect for Organisationunit Completeness
      *
      * @Route("/generate/redirect", name="report_organisationunit_completeness_generate_redirect")

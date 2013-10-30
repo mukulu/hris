@@ -767,6 +767,10 @@ class ReportEmployeeRecordsController extends Controller
         $formNames = '';
         $formid = '';
         $organisationUnit = $em->getRepository('HrisOrganisationunitBundle:Organisationunit')->find($organisationUnitid);
+        $proffesionFieldId = $em->getRepository('HrisFormBundle:Field')->findOneBy(
+                array(
+                    'name'=>"Profession"
+                ))->getId();;
         foreach($request->query->get('formsId') as $formIds){
             $form = $em->getRepository('HrisFormBundle:Form')->find($formIds);
             $formNames .= $form->getName().',';
@@ -818,7 +822,9 @@ class ReportEmployeeRecordsController extends Controller
         // Calculated fields
         $query .= "ResourceTable.form_name ,";
 
+        //From Clause
         $query .= " Orgunit.longname FROM ".$resourceTableName." ResourceTable inner join hris_organisationunit as Orgunit ON Orgunit.id = ResourceTable.organisationunit_id INNER JOIN hris_organisationunitstructure AS Structure ON Structure.organisationunit_id = ResourceTable.organisationunit_id";
+        $query .= " INNER JOIN ( SELECT * FROM hris_fieldoption where field_id=".$proffesionFieldId.") AS fieldoption ON fieldoption.value = ResourceTable.profession ";
         $query .= " WHERE ResourceTable.form_id in (".$formid.")";
         if($withLowerLevels){
             $query .= " AND Structure.level".$selectedOrgunitStructure->getLevel()->getLevel()."_id=".$organisationUnit->getId();
@@ -833,7 +839,8 @@ class ReportEmployeeRecordsController extends Controller
             $query .= " AND ".$fieldOptionToExclude->getField()->getName()." !='".$fieldOptionToExclude->getValue()."'";
         }
 
-        $query .= " ORDER BY ResourceTable.profession, ResourceTable.dateoffirstappointment";
+        $query .= " ORDER BY fieldoption.sort, ResourceTable.dateoffirstappointment";
+
         $report = $em -> getConnection() -> executeQuery($query) -> fetchAll();
 
         // ask the service for a Excel5

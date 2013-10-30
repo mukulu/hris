@@ -103,7 +103,7 @@ class ReportAggregationType extends AbstractType
                     new NotBlank(),
                 )
             ))
-            ->add('submit','submit')
+            ->add('Generate Report','submit')
         ;
     }
 
