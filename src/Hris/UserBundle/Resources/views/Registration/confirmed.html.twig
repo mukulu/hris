@@ -4,7 +4,6 @@
     <h1><small>{{ 'registration.confirmed'|trans({'%username%': user.username}, 'FOSUserBundle') }}</small></h1>
     {% if app.session is not empty %}
         {% set targetUrl = app.session.get('_security.' ~ app.security.token.providerKey ~ '.target_path') %}
-        {% if targetUrl is not empty %}<p><a href="{{ targetUrl }}" class="btn">{{ 'registration.back'|trans({}, 'FOSUserBundle') }}</a></p>{% endif %}
         <p><a href="{{ path('hris_homepage') }}" class="btn">{{ 'registration.to_dashboard'|trans({}, 'FOSUserBundle') }}</a></p>
     {% endif %}
 {% endblock right_content %}

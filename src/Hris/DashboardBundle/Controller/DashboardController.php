@@ -48,8 +48,10 @@ class DashboardController extends Controller
 {
     /**
      * Displays dashboard page
+     * Note users without dashboard but with profile permissions
+     * will be allowed in and redirected to profile.
      *
-     * @Secure(roles="ROLE_DASHBOARD_HOME,ROLE_USER")
+     * @Secure(roles="ROLE_DASHBOARD_HOME,ROLE_USERPROFILE_SHOW,ROLE_USER")
      *
      * @Route("/", name="hris_homepage")
      * @Route("/", name="dashboard")
@@ -61,14 +63,18 @@ class DashboardController extends Controller
      */
     public function indexAction()
     {
+        $securityContext = $this->container->get('security.context');
+        if(! $securityContext->isGranted('ROLE_DASHBOARD_HOME'))
+        {
+            return $this->redirect($this->generateUrl('fos_user_profile_show'));
+        }
         //get the detail for the active user
         $user = $this->container->get('security.context')->getToken()->getUser();
         $queryBuilder = $this->getDoctrine()->getManager()->createQueryBuilder();
         $reportAggregationController =  New ReportAggregationController();
         $entityManager = $this->getDoctrine()->getManager();
         $organisationunitGroups = new ArrayCollection();
-        $fieldTwo = $entityManager->getRepository('HrisFormBundle:Field')->findOneByName
-            (array('name'=> "ContactsofNextofKin"));
+        $fieldTwo = $entityManager->getRepository('HrisFormBundle:Field')->findOneByName(array('name'=> "ContactsofNextofKin"));
 
 
 

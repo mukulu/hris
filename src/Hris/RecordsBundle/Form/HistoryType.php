@@ -49,7 +49,9 @@ class HistoryType extends AbstractType
                 'format' => 'dd/MM/yyyy',
                 'attr' => array('class' => 'date')
             ))
-            ->add('reason')
+            ->add('reason', 'text', array(
+                'required'=>True,
+            ))
             ->add('updaterecord','checkbox',array(
                 'required'=>False,
                 'mapped' => False,
