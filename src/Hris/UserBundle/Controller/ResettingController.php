@@ -57,7 +57,7 @@ class ResettingController extends ContainerAware
     /**
      * Request reset user password: submit form and send email
      *
-     * @Secure(roles="ROLE_USER_RESETPASSWORDSENDEMAIL,ROLE_USER")
+     * @Secure(roles="ROLE_USER_RESETPASSWORDSENDEMAIL,IS_AUTHENTICATED_ANONYMOUSLY,ROLE_USER")
      */
     public function sendEmailAction()
     {
@@ -91,7 +91,7 @@ class ResettingController extends ContainerAware
     /**
      * Tell the user to check his email provider
      *
-     * @Secure(roles="ROLE_USER_RESETPASSWORDCHECKEMAIL,ROLE_USER")
+     * @Secure(roles="ROLE_USER_RESETPASSWORDCHECKEMAIL,IS_AUTHENTICATED_ANONYMOUSLY,ROLE_USER")
      */
     public function checkEmailAction()
     {
