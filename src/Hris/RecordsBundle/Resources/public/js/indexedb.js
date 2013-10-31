@@ -601,11 +601,11 @@ function sendDataToServer(databaseName){
                         url: '../',
                         data: decodeURIComponent(cursorOption.value.data),
                         success: function () {
-                            alert('form was submitted');
                             $('form').trigger("reset");
+                            console.log('data has been submitted to the server');
                         },
                         error: function(){
-                            alert('form was not submitted');
+                            console.log('form was not submitted, no internet connection');
                         }
                     });
 
