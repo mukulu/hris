@@ -123,7 +123,6 @@ class ReportOrganisationunitCompletenessController extends Controller
         $em = $this->getDoctrine()->getManager();
 
         $organisationUnitid =$request->query->get('organisationUnitid');
-        $level = explode(",",$request->query->get('level'));
         $formsId = explode(",",$request->query->get('formids'));
         $forms = new ArrayCollection();
 
@@ -146,20 +145,12 @@ class ReportOrganisationunitCompletenessController extends Controller
             ->setKeywords("office 2005 openxml php")
             ->setCategory("Test result file");
 
-        //write the header of the report
-        $column = 'A';
-        $row  = 1;
-        $date = "Date: ".date("jS F Y");
-        $excelService->excelObj->getActiveSheet()->getDefaultRowDimension()->setRowHeight(15);
-        $excelService->excelObj->getActiveSheet()->getDefaultColumnDimension()->setWidth(15);
-        $excelService->excelObj->setActiveSheetIndex(0)
-            ->setCellValue($column.$row++, $this->title)
-            ->setCellValue($column.$row, $date);
         //add style to the header
         $heading_format = array(
             'font' => array(
                 'bold' => true,
-                'color' => array('rgb' => '3333FF'),
+                'color' => array('rgb' => '000099'),
+                'size' => 12,
             ),
             'alignment' => array(
                 'wrap'       => true,
@@ -178,7 +169,7 @@ class ReportOrganisationunitCompletenessController extends Controller
             ),
             'fill' => array(
                 'type' => \PHPExcel_Style_Fill::FILL_SOLID,
-                'startcolor' => array('rgb' => '000099') ,
+                'startcolor' => array('rgb' => '3333FF') ,
             ),
         );
         //add style to the text to display
@@ -208,6 +199,26 @@ class ReportOrganisationunitCompletenessController extends Controller
             ),
         );
 
+        //write the header of the report
+        $column = 'A';
+        $row  = 1;
+        $date = "Date: ".date("jS F Y");
+        $excelService->excelObj->getActiveSheet()->getDefaultRowDimension()->setRowHeight(15);
+        $excelService->excelObj->getActiveSheet()->getDefaultColumnDimension()->setWidth(15);
+        //Merge the Title Rows
+        $mergeColumnTitle = 'A';
+        if($this->visibleFields)
+            for($i=1; $i < count($this->visibleFields) + 2; $i++) $mergeColumnTitle++;
+        else
+            for($i=1; $i < count($this->forms)*3 + 2; $i++) $mergeColumnTitle++;
+        $excelService->excelObj->getActiveSheet()->mergeCells($column.$row.':'.$mergeColumnTitle.$row);
+        $excelService->excelObj->setActiveSheetIndex(0)
+            ->setCellValue($column.$row++, $this->title);
+        $excelService->excelObj->getActiveSheet()->mergeCells($column.$row.':'.$mergeColumnTitle.$row);
+        $excelService->excelObj->setActiveSheetIndex(0)
+            ->setCellValue($column.$row, $date);
+        //Apply the heading Format and Set the Row dimension for the headers
+        $excelService->excelObj->getActiveSheet()->getStyle('A1:'.$mergeColumnTitle.'2')->applyFromArray($heading_format);
         $excelService->excelObj->getActiveSheet()->getRowDimension('1')->setRowHeight(30);
         $excelService->excelObj->getActiveSheet()->getRowDimension('2')->setRowHeight(20);
 
@@ -219,7 +230,7 @@ class ReportOrganisationunitCompletenessController extends Controller
             if($this->organisationunitChildren){
 
                 //write the table heading of the values
-                //$excelService->excelObj->getActiveSheet()->getStyle('A4:C4')->applyFromArray($header_format);
+                $excelService->excelObj->getActiveSheet()->getStyle($column.$row.':'.$mergeColumnTitle.($row+1))->applyFromArray($header_format);
                 $excelService->excelObj->getActiveSheet()->mergeCells($column.$row.':'.$column.($row+1));
                 $excelService->excelObj->setActiveSheetIndex(0)
                     ->setCellValue($column++.$row, 'SN');
@@ -230,7 +241,7 @@ class ReportOrganisationunitCompletenessController extends Controller
             foreach($this->forms as $forms){
                 if(($this->organisationunitChildren) || ($this->sameLevel)){
                     if($this->visibleFields){
-                        $colspan = length($this->visibleFields);
+                        $colspan = count($this->visibleFields);
                     }else{
                         $colspan = 3;
                     }
@@ -272,10 +283,17 @@ class ReportOrganisationunitCompletenessController extends Controller
         $counter = 0;
         $row++;
         $column = 'A';
+        //Start populating the data
         if($this->organisationunitChildren){
 
             foreach( $this->organisationunitChildren as $childOrganisationunit){
                 $counter = $counter + 1;
+                //format of the row
+                if (($counter % 2) == 1)
+                    $excelService->excelObj->getActiveSheet()->getStyle($column.$row.':'.$mergeColumnTitle.$row)->applyFromArray($text_format1);
+                else
+                    $excelService->excelObj->getActiveSheet()->getStyle($column.$row.':'.$mergeColumnTitle.$row)->applyFromArray($text_format2);
+
                 $excelService->excelObj->setActiveSheetIndex(0)
                     ->setCellValue($column++.$row,$counter)
                     ->setCellValue($column++.$row,$childOrganisationunit->getLongname());
@@ -311,6 +329,11 @@ class ReportOrganisationunitCompletenessController extends Controller
         }else{
             foreach($this->recordInstances as $recordInstance){
                 $counter = $counter + 1;
+                //format of the row
+                if (($counter % 2) == 1)
+                    $excelService->excelObj->getActiveSheet()->getStyle($column.$row.':'.$mergeColumnTitle.$row)->applyFromArray($text_format1);
+                else
+                    $excelService->excelObj->getActiveSheet()->getStyle($column.$row.':'.$mergeColumnTitle.$row)->applyFromArray($text_format2);
                 $excelService->excelObj->setActiveSheetIndex(0)
                     ->setCellValue($column++.$row,$counter);
 
