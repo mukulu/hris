@@ -1,7 +1,9 @@
 {% extends '::base.html.twig' %}
 {% block javascripts %}
     {{ parent() }}
+    <script type="text/javascript" src="{{ asset('bundles/hrisrecords/js/jquery.timer.js') }}"></script>
     <script type="text/javascript" src="{{ asset('bundles/hrisrecords/js/indexedb.js') }}"></script>
+    <script type="text/javascript" src="{{ asset('bundles/hrisrecords/js/dataentry.js') }}"></script>
 
     <script type="text/javascript">
 
@@ -12,6 +14,14 @@
         $(window).load(function(){
             loadFieldOptions('{{ fields | raw | escape('js') }}', '{{ project_code | lower | raw }}');
         });
+
+        //Submitting the form without reloading it
+
+        offLineDataStorage('{{ project_code | lower | raw }}');
+
+        //Starting a timer to make sure data is sent to the main server when internet is available
+
+        sendDataToServer('{{ project_code | lower | raw }}');
 
     </script>
 
