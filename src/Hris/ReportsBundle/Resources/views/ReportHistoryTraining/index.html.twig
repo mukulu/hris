@@ -60,6 +60,7 @@
             var forms='#hris_reportsbundle_reporthistorytrainingtype_forms';
             var fields='#hris_reportsbundle_reporthistorytrainingtype_fields';
             var graphTypeId='#hris_reportsbundle_reporthistorytrainingtype_graphType';
+            var fieldsUrl = '{{ path('report_formfields',{'_format':'json'}) }}';
 
             // Disable fields and forms
             $(forms).attr('disabled', 'true');
@@ -73,11 +74,6 @@
                 }else{
                     $(forms).attr('disabled', 'true');
                 }
-            });
-
-            // Fields is enabled only when history report type is selected
-            $(reportType).on('change', function() {
-                // enable forms
                 if( $(reportType).val() == 'history' && $(forms).val() != '') {
                     $(fields).removeAttr('disabled');
                 }else{
@@ -87,24 +83,21 @@
 
             //Change options of fields based on selected form
             $(forms).on('change', function() {
-                $(fields).find('option[value=""]').remove();
-                // enable field two when the field field value  is not empty
-                if( $(forms).val() != '' ) {
-                    $(fields).removeAttr('disabled');
-                    // On change of first field, trim selected option
-                    // from first field on second.
-                    $(fields+' option').each(function(){
-                        if( $(fields).val() == $(this).val() ) {
-                            //alert($(fieldTwoId).text());
-                            $(this).text('Use one Field')
-                            //$(fieldTwoId).append(new Option($(this).text(), $(this).val()));
-                        }else{
-                            //alert($(fieldOneId).find('option[value="'+$(this).val()+'"]').text());
-                            $(this).text($(fieldOneId).find('option[value="'+$(this).val()+'"]').text());
+                if( $(reportType).val() == 'history'){
+                    postData={
+                        'formid': $(forms).val()
+                    };
+                    $.post(fieldsUrl,postData , function( fieldResults ){
+                        $(fields).find('option').remove();
+                        if (jQuery.isEmptyObject(fieldResults)){
+                            $(fields).attr('disabled', 'true');
+                        }else {
+                            $(fields).removeAttr('disabled');
+                            $.each(fieldResults, function(fieldResultsIndex, fieldResult) {
+                                $(fields).append(new Option(fieldResult['name'], fieldResult['id']));
+                            });
                         }
                     });
-                }else{
-                    $(fields).attr('disabled', 'true');
                 }
             });
         });

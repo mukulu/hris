@@ -28,9 +28,16 @@ namespace Hris\UserBundle\Controller;
 
 use Symfony\Component\DependencyInjection\ContainerAware;
 use Symfony\Component\Security\Core\SecurityContext;
+use JMS\SecurityExtraBundle\Annotation\Secure;
 
 class SecurityController extends ContainerAware
 {
+    /**
+     * Proccess user registration
+     *
+     * @Secure(roles="ROLE_USER_LOGIN,IS_AUTHENTICATED_ANONYMOUSLY,ROLE_USER")
+     * @return \Symfony\Component\HttpFoundation\Response
+     */
     public function loginAction()
     {
         $form = $this->container->get('fos_user.registration.form');
@@ -70,6 +77,7 @@ class SecurityController extends ContainerAware
      * Renders the login template with the given parameters. Overwrite this function in
      * an extended controller to provide additional data for the login template.
      *
+     *  @Secure(roles="ROLE_USER_LOGIN,IS_AUTHENTICATED_ANONYMOUSLY,ROLE_USER")
      * @param array $data
      *
      * @return \Symfony\Component\HttpFoundation\Response

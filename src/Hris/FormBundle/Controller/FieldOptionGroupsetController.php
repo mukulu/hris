@@ -31,6 +31,7 @@ use Sensio\Bundle\FrameworkExtraBundle\Configuration\Route;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Template;
 use Hris\FormBundle\Entity\FieldOptionGroupset;
 use Hris\FormBundle\Form\FieldOptionGroupsetType;
+use JMS\SecurityExtraBundle\Annotation\Secure;
 
 /**
  * FieldOptionGroupset controller.
@@ -43,6 +44,7 @@ class FieldOptionGroupsetController extends Controller
     /**
      * Lists all FieldOptionGroupset entities.
      *
+     * @Secure(roles="ROLE_FIELDOPTIONGROUPSET_LIST,ROLE_USER")
      * @Route("/", name="fieldoptiongroupset")
      * @Route("/list", name="fieldoptiongroupset_list")
      * @Method("GET")
@@ -68,6 +70,7 @@ class FieldOptionGroupsetController extends Controller
     /**
      * Creates a new FieldOptionGroupset entity.
      *
+     * @Secure(roles="ROLE_FIELDOPTIONGROUPSET_CREATE,ROLE_USER")
      * @Route("/", name="fieldoptiongroupset_create")
      * @Method("POST")
      * @Template("HrisFormBundle:FieldOptionGroupset:new.html.twig")
@@ -95,6 +98,7 @@ class FieldOptionGroupsetController extends Controller
     /**
      * Displays a form to create a new FieldOptionGroupset entity.
      *
+     * @Secure(roles="ROLE_FIELDOPTIONGROUPSET_CREATE,ROLE_USER")
      * @Route("/new", name="fieldoptiongroupset_new")
      * @Method("GET")
      * @Template()
@@ -113,6 +117,7 @@ class FieldOptionGroupsetController extends Controller
     /**
      * Finds and displays a FieldOptionGroupset entity.
      *
+     * @Secure(roles="ROLE_FIELDOPTIONGROUPSET_SHOW,ROLE_USER")
      * @Route("/{id}", requirements={"id"="\d+"}, requirements={"id"="\d+"}, name="fieldoptiongroupset_show")
      * @Method("GET")
      * @Template()
@@ -138,6 +143,7 @@ class FieldOptionGroupsetController extends Controller
     /**
      * Displays a form to edit an existing FieldOptionGroupset entity.
      *
+     * @Secure(roles="ROLE_FIELDOPTIONGROUPSET_UPDATE,ROLE_USER")
      * @Route("/{id}/edit", requirements={"id"="\d+"}, name="fieldoptiongroupset_edit")
      * @Method("GET")
      * @Template()
@@ -165,6 +171,7 @@ class FieldOptionGroupsetController extends Controller
     /**
      * Edits an existing FieldOptionGroupset entity.
      *
+     * @Secure(roles="ROLE_FIELDOPTIONGROUPSET_UPDATE,ROLE_USER")
      * @Route("/{id}", requirements={"id"="\d+"}, name="fieldoptiongroupset_update")
      * @Method("PUT")
      * @Template("HrisFormBundle:FieldOptionGroupset:edit.html.twig")
@@ -199,6 +206,7 @@ class FieldOptionGroupsetController extends Controller
     /**
      * Deletes a FieldOptionGroupset entity.
      *
+     * @Secure(roles="ROLE_FIELDOPTIONGROUPSET_DELETE,ROLE_USER")
      * @Route("/{id}", requirements={"id"="\d+"}, name="fieldoptiongroupset_delete")
      * @Method("DELETE")
      */

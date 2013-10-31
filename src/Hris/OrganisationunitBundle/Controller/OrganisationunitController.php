@@ -49,8 +49,7 @@ class OrganisationunitController extends Controller
     /**
      * Lists all Organisationunit entities.
      *
-     * @Secure(roles="ROLE_ORGANISATIONUNIT_ORGANISATIONUNIT_LIST,ROLE_USER")
-     *
+     * @Secure(roles="ROLE_ORGANISATIONUNIT_LIST,ROLE_USER")
      * @Route("/", name="organisationunit")
      * @Route("/{parent}/parent",requirements={"parent"="\d+"}, name="organisationunit_parent")
      * @Route("/list", name="organisationunit_list")
@@ -92,8 +91,7 @@ class OrganisationunitController extends Controller
     /**
      * Creates a new Organisationunit entity.
      *
-     * @Secure(roles="ROLE_ORGANISATIONUNIT_ORGANISATIONUNIT_CREATE,ROLE_USER")
-     *
+     * @Secure(roles="ROLE_ORGANISATIONUNIT_CREATE,ROLE_USER")
      * @Route("/", name="organisationunit_create")
      * @Route("/{parent}/parent",requirements={"parent"="\d+"}, name="organisationunit_create_parent")
      * @Method("POST")
@@ -159,8 +157,7 @@ class OrganisationunitController extends Controller
     /**
      * Displays a form to create a new Organisationunit entity.
      *
-     * @Secure(roles="ROLE_ORGANISATIONUNIT_ORGANISATIONUNIT_CREATE,ROLE_USER")
-     *
+     * @Secure(roles="ROLE_ORGANISATIONUNIT_CREATE,ROLE_USER")
      * @Route("/new", name="organisationunit_new")
      * @Route("/new/{parent}/parent",requirements={"parent"="\d+"}, name="organisationunit_new_parent")
      * @Method("GET")
@@ -192,8 +189,7 @@ class OrganisationunitController extends Controller
     /**
      * Finds and displays a Organisationunit entity.
      *
-     * @Secure(roles="ROLE_ORGANISATIONUNIT_ORGANISATIONUNIT_SHOW,ROLE_USER")
-     *
+     * @Secure(roles="ROLE_ORGANISATIONUNIT_SHOW,ROLE_USER")
      * @Route("/{id}", requirements={"id"="\d+"}, name="organisationunit_show")
      * @Method("GET")
      * @Template()
@@ -227,8 +223,7 @@ class OrganisationunitController extends Controller
     /**
      * Displays a form to edit an existing Organisationunit entity.
      *
-     * @Secure(roles="ROLE_ORGANISATIONUNIT_ORGANISATIONUNIT_EDIT,ROLE_USER")
-     *
+     * @Secure(roles="ROLE_ORGANISATIONUNIT_UPDATE,ROLE_USER")
      * @Route("/{id}/edit", requirements={"id"="\d+"}, name="organisationunit_edit")
      * @Method("GET")
      * @Template()
@@ -267,8 +262,7 @@ class OrganisationunitController extends Controller
     /**
      * Edits an existing Organisationunit entity.
      *
-     * @Secure(roles="ROLE_ORGANISATIONUNIT_ORGANISATIONUNIT_EDIT,ROLE_USER")
-     *
+     * @Secure(roles="ROLE_ORGANISATIONUNIT_UPDATE,ROLE_USER")
      * @Route("/{id}", requirements={"id"="\d+"}, name="organisationunit_update")
      * @Method("PUT")
      * @Template("HrisOrganisationunitBundle:Organisationunit:edit.html.twig")
@@ -332,8 +326,7 @@ class OrganisationunitController extends Controller
     /**
      * Deletes a Organisationunit entity.
      *
-     * @Secure(roles="ROLE_ORGANISATIONUNIT_ORGANISATIONUNIT_DELETE,ROLE_USER")
-     *
+     * @Secure(roles="ROLE_ORGANISATIONUNIT_DELETE,ROLE_USER")
      * @Route("/{id}", requirements={"id"="\d+"}, name="organisationunit_delete")
      * @Method("DELETE")
      */
@@ -381,8 +374,7 @@ class OrganisationunitController extends Controller
     /**
      * Returns Organisationunit tree json.
      *
-     * @Secure(roles="ROLE_ORGANISATIONUNIT_ORGANISATIONUNIT_TREE,ROLE_USER")
-     *
+     * @Secure(roles="ROLE_ORGANISATIONUNIT_LISTTREE,ROLE_USER")
      * @Route("/tree.{_format}", requirements={"_format"="yml|xml|json"}, defaults={"_format"="json"}, name="organisationunit_tree")
      * @Method("GET")
      * @Template()
@@ -391,9 +383,15 @@ class OrganisationunitController extends Controller
     {
         $em = $this->getDoctrine()->getManager();
         $id = $this->getRequest()->query->get('id');
+        $user = $this->container->get('security.context')->getToken()->getUser();
 
         if($id == NULL || $id==0) {
-            // Root organisationunits called
+            // Root organisationunits called make user's orgunit, a root node and it's children count
+            $organisationunit = $this->container->get('security.context')->getToken()->getUser()->getOrganisationunit();
+
+            if(empty($organisationunit))
+                $organisationunit =  $this->getDoctrine()->getManager()->createQuery('SELECT organisationunit FROM HrisOrganisationunitBundle:Organisationunit organisationunit WHERE organisationunit.parent IS NULL')->getSingleResult();
+
             $organisationunitQuery = $em->createQuery("SELECT organisationunit.id,organisationunit.longname,
                                                         (
                                                             SELECT COUNT(lowerOrganisationunit.id)
@@ -401,8 +399,8 @@ class OrganisationunitController extends Controller
                                                             WHERE lowerOrganisationunit.parent=organisationunit
                                                         ) AS lowerChildrenCount
                                                         FROM HrisOrganisationunitBundle:Organisationunit organisationunit
-                                                        WHERE organisationunit.parent IS NULL
-                                                        GROUP BY organisationunit.id,organisationunit.longname");
+                                                        WHERE organisationunit.id=:organisationunitid
+                                                        GROUP BY organisationunit.id,organisationunit.longname")->setParameter('organisationunitid',$organisationunit);;
             try {
                 $entities = $organisationunitQuery->getArrayResult();
             } catch(NoResultException $e) {
@@ -430,14 +428,14 @@ class OrganisationunitController extends Controller
         $organisationunitTreeNodes = NULL;
         foreach($entities as $key=>$entity) {
             if($entity['lowerChildrenCount'] > 0 ) {
-                // Entity has no children
+                // Entity has children
                 $organisationunitTreeNodes[] = Array(
                     'id' => $entity['id'],
                     'longname' => $entity['longname'],
                     'cls' => 'folder'
                 );
             }else {
-                // Entity has children
+                // Entity has no children
                 $organisationunitTreeNodes[] = Array(
                     'id' => $entity['id'],
                     'longname' => $entity['longname'],
@@ -456,8 +454,7 @@ class OrganisationunitController extends Controller
     /**
      * Returns OrganisationunitGroup members tree json.
      *
-     * @Secure(roles="ROLE_ORGANISATIONUNIT_ORGANISATIONUNIT_TREE,ROLE_USER")
-     *
+     * @Secure(roles="ROLE_ORGANISATIONUNITGROUP_LISTTREE,ROLE_USER")
      * @Route("/group/{organisationunitgroupid}/tree.{_format}", requirements={"_format"="yml|xml|json","organisationunitgroupid"="\d+"}, defaults={"format"="json","organisationunitgroupid"=0}, name="organisationunit_tree_group_members")
      * @Method("GET")
      * @Template()
@@ -590,6 +587,7 @@ class OrganisationunitController extends Controller
     /**
      * Displays form for performing Hierarchy Operation
      *
+     * @Secure(roles="ROLE_ORGANISATIONUNIT_LISTHIERARCHY,ROLE_USER")
      * @Route("/hierarchyoperation", name="organisationunit_hierarchy_operation")
      * @Method("GET")
      * @Template()
@@ -607,6 +605,7 @@ class OrganisationunitController extends Controller
     /**
      * Perform Hierarchy Operation and display results
      *
+     * @Secure(roles="ROLE_ORGANISATIONUNIT_UPDATEHIERARCHY,ROLE_USER")
      * @Route("/hierarchyoperation", name="organisationunit_hierarchy_operation_update")
      * @Method("PUT")
      * @Template("HrisOrganisationunitBundle:Organisationunit:hierarchyOperation.html.twig")

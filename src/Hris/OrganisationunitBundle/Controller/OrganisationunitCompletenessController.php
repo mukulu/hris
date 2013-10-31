@@ -31,6 +31,7 @@ use Sensio\Bundle\FrameworkExtraBundle\Configuration\Route;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Template;
 use Hris\OrganisationunitBundle\Entity\OrganisationunitCompleteness;
 use Hris\OrganisationunitBundle\Form\OrganisationunitCompletenessType;
+use JMS\SecurityExtraBundle\Annotation\Secure;
 
 /**
  * OrganisationunitCompleteness controller.
@@ -43,6 +44,7 @@ class OrganisationunitCompletenessController extends Controller
     /**
      * Lists all OrganisationunitCompleteness entities.
      *
+     * @Secure(roles="ROLE_ORGANISATIONUNITCOMPLETENESS_LIST,ROLE_USER")
      * @Route("/", name="organisationunitcompleteness")
      * @Route("/list", name="organisationunitcompleteness_list")
      * @Method("GET")
@@ -61,6 +63,7 @@ class OrganisationunitCompletenessController extends Controller
     /**
      * Creates a new OrganisationunitCompleteness entity.
      *
+     * @Secure(roles="ROLE_ORGANISATIONUNITCOMPLETENESS_CREATE,ROLE_USER")
      * @Route("/", name="organisationunitcompleteness_create")
      * @Method("POST")
      * @Template("HrisOrganisationunitBundle:OrganisationunitCompleteness:new.html.twig")
@@ -88,6 +91,7 @@ class OrganisationunitCompletenessController extends Controller
     /**
      * Displays a form to create a new OrganisationunitCompleteness entity.
      *
+     * @Secure(roles="ROLE_ORGANISATIONUNITCOMPLETENESS_CREATE,ROLE_USER")
      * @Route("/new", name="organisationunitcompleteness_new")
      * @Method("GET")
      * @Template()
@@ -106,6 +110,7 @@ class OrganisationunitCompletenessController extends Controller
     /**
      * Finds and displays a OrganisationunitCompleteness entity.
      *
+     * @Secure(roles="ROLE_ORGANISATIONUNITCOMPLETENESS_SHOW,ROLE_USER")
      * @Route("/{id}", requirements={"id"="\d+"}, requirements={"id"="\d+"}, name="organisationunitcompleteness_show")
      * @Method("GET")
      * @Template()
@@ -131,6 +136,7 @@ class OrganisationunitCompletenessController extends Controller
     /**
      * Displays a form to edit an existing OrganisationunitCompleteness entity.
      *
+     * @Secure(roles="ROLE_ORGANISATIONUNITCOMPLETENESS_UPDATE,ROLE_USER")
      * @Route("/{id}/edit", requirements={"id"="\d+"}, name="organisationunitcompleteness_edit")
      * @Method("GET")
      * @Template()
@@ -158,6 +164,7 @@ class OrganisationunitCompletenessController extends Controller
     /**
      * Edits an existing OrganisationunitCompleteness entity.
      *
+     * @Secure(roles="ROLE_ORGANISATIONUNITCOMPLETENESS_UPDATE,ROLE_USER")
      * @Route("/{id}", requirements={"id"="\d+"}, name="organisationunitcompleteness_update")
      * @Method("PUT")
      * @Template("HrisOrganisationunitBundle:OrganisationunitCompleteness:edit.html.twig")
@@ -192,6 +199,7 @@ class OrganisationunitCompletenessController extends Controller
     /**
      * Deletes a OrganisationunitCompleteness entity.
      *
+     * @Secure(roles="ROLE_ORGANISATIONUNITCOMPLETENESS_DELETE,ROLE_USER")
      * @Route("/{id}", requirements={"id"="\d+"}, name="organisationunitcompleteness_delete")
      * @Method("DELETE")
      */

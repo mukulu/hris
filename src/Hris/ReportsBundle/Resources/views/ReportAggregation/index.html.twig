@@ -7,7 +7,7 @@
     <script type="text/javascript">
         var treeplaceholder="treeplaceholder";
         var inputboxname="hris_reportsbundle_reportaggregationtype[organisationunit]";
-        var urlExtension="";
+        var urlExtension="?selectedNode=16";
         var selectedNode="";
         Ext.define('OrganisationUnitTreeModel2', {
             extend: 'Ext.data.Model',
@@ -86,7 +86,7 @@
                     $(fieldTwoId+' option').each(function(){
                         if( $(fieldOneId).val() == $(this).val() ) {
                             //alert($(fieldTwoId).text());
-                            $(this).text('Use one Field')
+                            $(this).text('Use one Field').attr('selected', true)
                             //$(fieldTwoId).append(new Option($(this).text(), $(this).val()));
                         }else{
                             //alert($(fieldOneId).find('option[value="'+$(this).val()+'"]').text());
@@ -138,6 +138,5 @@
     {{ form_widget(aggregationForm.fields, {'attr': {'class': 'task_field'}}) }}
 
     {{ form_end(aggregationForm) }}
-
 
 {% endblock %}

@@ -35,6 +35,7 @@ use Symfony\Component\Filesystem\Filesystem;
 use Symfony\Component\Filesystem\Exception\IOException;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\HttpFoundation\ResponseHeaderBag;
+use JMS\SecurityExtraBundle\Annotation\Secure;
 use ZipArchive;
 
 ini_set('zlib.output_compression', 'Off');
@@ -50,6 +51,7 @@ class ExportController extends Controller
     /**
      * Lists all Export entities.
      *
+     * @Secure(roles="ROLE_EXPORT_LIST,ROLE_USER")
      * @Route("/", name="importexport_export")
      * @Route("/list", name="importexport_export_list")
      * @Method("GET")
@@ -67,6 +69,7 @@ class ExportController extends Controller
     /**
      * Creates a new Export entity.
      *
+     * @Secure(roles="ROLE_EXPORT_CREATE,ROLE_USER")
      * @Route("/{_format}", requirements={"_format"="json|"}, defaults={"_format"="zip"}, name="importexport_export_create")
      * @Method("POST")
      */
@@ -195,6 +198,7 @@ class ExportController extends Controller
     /**
      * Displays a form to create a new Export entity.
      *
+     * @Secure(roles="ROLE_EXPORT_CREATE,ROLE_USER")
      * @Route("/new", name="importexport_export_new")
      * @Method("GET")
      * @Template()
@@ -211,6 +215,7 @@ class ExportController extends Controller
     /**
      * Finds and displays a Export entity.
      *
+     * @Secure(roles="ROLE_EXPORT_SHOW,ROLE_USER")
      * @Route("/{id}", requirements={"id"="\d+"}, name="importexport_export_show")
      * @Method("GET")
      * @Template()
@@ -236,6 +241,7 @@ class ExportController extends Controller
     /**
      * Displays a form to edit an existing Export entity.
      *
+     * @Secure(roles="ROLE_EXPORT_UPDATE,ROLE_USER")
      * @Route("/{id}/edit", name="importexport_export_edit")
      * @Method("GET")
      * @Template()
@@ -254,6 +260,7 @@ class ExportController extends Controller
     /**
      * Edits an existing Export entity.
      *
+     * @Secure(roles="ROLE_EXPORT_UPDATE,ROLE_USER")
      * @Route("/{id}", name="importexport_export_update")
      * @Method("PUT")
      * @Template("HrisImportExportBundle:Export:edit.html.twig")
@@ -279,6 +286,7 @@ class ExportController extends Controller
     /**
      * Deletes a Export entity.
      *
+     * @Secure(roles="ROLE_EXPORT_DELETE,ROLE_USER")
      * @Route("/{id}", name="importexport_export_delete")
      * @Method("DELETE")
      */

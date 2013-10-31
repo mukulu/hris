@@ -39,6 +39,7 @@ use Hris\ReportsBundle\Entity\Report;
 use Hris\ReportsBundle\Form\ReportType;
 use Ob\HighchartsBundle\Highcharts\Highchart;
 use Zend\Json\Expr;
+use JMS\SecurityExtraBundle\Annotation\Secure;
 
 /**
  * Report HistoryTraining controller.
@@ -51,6 +52,7 @@ class ReportHistoryTrainingController extends Controller
     /**
      * Show Report HistoryTraining
      *
+     * @Secure(roles="ROLE_REPORTHISTORY_GENERATE,ROLE_USER")
      * @Route("/", name="report_historytraining")
      * @Method("GET")
      * @Template()
@@ -68,6 +70,7 @@ class ReportHistoryTrainingController extends Controller
     /**
      * Generate aggregated reports
      *
+     * @Secure(roles="ROLE_REPORTHISTORY_GENERATE,ROLE_USER")
      * @Route("/", name="report_historytraining_generate")
      * @Method("PUT")
      * @Template()
@@ -402,6 +405,7 @@ class ReportHistoryTrainingController extends Controller
     /**
      * Download History reports
      *
+     * @Secure(roles="ROLE_REPORTHISTORY_DOWNLOAD,ROLE_USER")
      * @Route("/download", name="report_historytraining_download")
      * @Method("GET")
      * @Template()
@@ -628,6 +632,7 @@ class ReportHistoryTrainingController extends Controller
     /**
      * Download history reports by Cadre
      *
+     * @Secure(roles="ROLE_REPORTHISTORY_DOWNLOADBYCADRE,ROLE_USER")
      * @Route("/records", name="report_historytraining_download_records")
      * @Method("GET")
      * @Template()
@@ -868,6 +873,44 @@ class ReportHistoryTrainingController extends Controller
         $response->headers->set('Cache-Control', 'maxage=1');
         //$response->sendHeaders();
         return $response;
+    }
+
+    /**
+     * Returns Fields json.
+     *
+     *
+     * @Secure(roles="ROLE_REPORTHISTORY_GENERATE,ROLE_USER")
+     * @Route("/reportFormFields.{_format}", requirements={"_format"="yml|xml|json"}, defaults={"_format"="json"}, name="report_formfields")
+     * @Method("POST")
+     * @Template()
+     */
+    public function reportFieldsAction($_format)
+    {
+        $em = $this->getDoctrine()->getManager();
+        $formid = $this->getRequest()->request->get('formid');
+        //$formid = 13;
+
+        // Fetch existing feidls belonging to selected form
+        $form = $em->getRepository('HrisFormBundle:Form')->findOneBy(array('id'=>$formid));
+        $formFields = new ArrayCollection();
+        foreach($form->getFormFieldMember() as $formFieldMemberKey=>$formFieldMember) {
+            $formFields->add($formFieldMember->getField());
+        }
+
+        foreach($formFields as $formFieldsKey=>$formField) {
+            if($formField->getHashistory() && $formField->getInputType()->getName() == "Select"){
+                $fieldNodes[] = Array(
+                    'name' => $formField->getCaption(),
+                    'id' => $formField->getId()
+                );
+            }
+        }
+
+        $serializer = $this->container->get('serializer');
+
+        return array(
+            'entities' => $serializer->serialize($fieldNodes,$_format)
+        );
     }
 
 }

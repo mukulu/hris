@@ -22,8 +22,12 @@
             var fields='#hris_recordsbundle_historytype_field';
             var fieldOptionUrl = '{{ path('history_historyfieldption', {'_format':'json'}) }}';
             var fieldOptionNames='hris_recordsbundle_historytype_history';
-            //var fieldOptionSection='#hris_recordsbundle_historytype_history';
             var fieldOptionSection='#historyFieldSection';
+
+
+            $.each([{id:{{ removeFields | join('},{id:') | raw }} }], function( removeFieldIndex, removeField ){
+                $("#hris_recordsbundle_historytype_field option[value="+ removeField['id'] +"]").remove();
+            });
 
             $(fields).on('change', function() {
                 // Empty FieldOptionSection contents
@@ -35,12 +39,8 @@
                 $.post(fieldOptionUrl,postData , function( fieldOptions ){
                     $(fieldOptionSection).find('option').remove();
                     if (jQuery.isEmptyObject(fieldOptions)){
-                        //disable field with no options
-                        //$(fieldOptionSection).attr('disabled', 'true');
                         $(fieldOptionSection).prepend('<h1><small>Field Has No Options</small></h1>');
                     }else {
-
-                        //$(fieldOptionSection).removeAttr('disabled');
 
                         $(fieldOptionSection).prepend('<select name="hris_recordsbundle_history[history]" id="hris_recordsbundle_history_history"> </select>');
 

@@ -32,6 +32,7 @@ use Sensio\Bundle\FrameworkExtraBundle\Configuration\Route;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Template;
 use Hris\RecordsBundle\Entity\History;
 use Hris\RecordsBundle\Form\HistoryType;
+use JMS\SecurityExtraBundle\Annotation\Secure;
 
 /**
  * History controller.
@@ -44,6 +45,7 @@ class HistoryController extends Controller
     /**
      * Lists all History entities.
      *
+     * @Secure(roles="ROLE_RECORDHISTORY_LIST,ROLE_USER")
      * @Route("/", name="history")
      * @Route("/list", name="history_list")
      * @Route("/list/{recordid}/", requirements={"recordid"="\d+"}, name="history_list_byrecord")
@@ -76,6 +78,7 @@ class HistoryController extends Controller
     /**
      * Creates a new History entity.
      *
+     * @Secure(roles="ROLE_RECORDHISTORY_CREATE,ROLE_USER")
      * @Route("/{recordid}/recordid", requirements={"recordid"="\d+"}, name="history_create")
      * @Method("POST")
      * @Template("HrisRecordsBundle:History:new.html.twig")
@@ -96,7 +99,7 @@ class HistoryController extends Controller
             if(!empty($recordid)) {
                 $record = $this->getDoctrine()->getManager()->getRepository('HrisRecordsBundle:Record')->findOneBy(array('id'=>$recordid));
                 $field = $this->getDoctrine()->getManager()->getRepository('HrisFormBundle:Field')->findOneBy(array('id'=>$historyFormData['field']));
-                //echo $field->getUid();exit;
+
                 //If History Set to update record
                 if($historyFormData['updaterecord']){
                     $recordValue = $record->getValue();
@@ -146,6 +149,7 @@ class HistoryController extends Controller
     /**
      * Displays a form to create a new History entity.
      *
+     * @Secure(roles="ROLE_RECORDHISTORY_CREATE,ROLE_USER")
      * @Route("/new/{recordid}/recordid", requirements={"recordid"="\d+"}, name="history_new")
      * @Method("GET")
      * @Template()
@@ -161,18 +165,36 @@ class HistoryController extends Controller
             $record = NULL;
         }
 
+        //Get all fields not associated with approptiate form
+        $entityManager = $this->getDoctrine()->getManager();
+        $subQuery = "SELECT field_id ";
+        $subQuery .= "FROM hris_form_fieldmembers ";
+        $subQuery .= "WHERE form_id = ".$record->getForm()->getId();
+        $query = "SELECT Field.id ";
+        $query .= "FROM hris_field Field ";
+        $query .= "FULL OUTER JOIN hris_form_fieldmembers as member on member.field_id = Field.id ";
+        $query .= "FULL OUTER JOIN hris_form as Form on Form.id = member.form_id ";
+        $query .= "WHERE ( Field.hashistory = true ";
+        $query .= "AND Field.id NOT IN ( ".$subQuery." )) ";
+        $query .= "OR Field.iscalculated = true";
+        $results = $entityManager -> getConnection() -> executeQuery($query) -> fetchAll();
+        $removeFields = $this->array_value_recursive('id' , $results);
+
+
         return array(
             'entity' => $entity,
             'form'   => $form->createView(),
             'recordid' => $recordid,
             'record' => $record,
             'employeeName' => $this->getEmployeeName($recordid),
+            'removeFields' => $removeFields,
         );
     }
 
     /**
      * Returns Employee's Full Name
      *
+     * @Secure(roles="ROLE_RECORDHISTORY_SHOWEMPLOYEENAME,ROLE_USER")
      * @Method("GET")
      * @Template()
      */
@@ -190,13 +212,19 @@ class HistoryController extends Controller
         $query .= " WHERE instance = '".$record->getInstance()."' ";
 
         $result = $entityManager -> getConnection() -> executeQuery($query) -> fetchAll();
-        return $result[0]['firstname']." ".$result[0]['middlename']." ".$result[0]['surname'];
+        if(!empty($result)){
+            return $result[0]['firstname']." ".$result[0]['middlename']." ".$result[0]['surname'];
+        }else{
+            return "Employee";
+        }
+
     }
 
 
     /**
      * Finds and displays a History entity.
      *
+     * @Secure(roles="ROLE_RECORDHISTORY_SHOW,ROLE_USER")
      * @Route("/{id}", requirements={"id"="\d+"}, requirements={"id"="\d+"}, name="history_show")
      * @Method("GET")
      * @Template()
@@ -222,6 +250,7 @@ class HistoryController extends Controller
     /**
      * Displays a form to edit an existing History entity.
      *
+     * @Secure(roles="ROLE_RECORDHISTORY_UPDATE,ROLE_USER")
      * @Route("/{id}/edit", requirements={"id"="\d+"}, name="history_edit")
      * @Method("GET")
      * @Template()
@@ -250,6 +279,7 @@ class HistoryController extends Controller
     /**
      * Edits an existing History entity.
      *
+     * @Secure(roles="ROLE_RECORDHISTORY_UPDATE,ROLE_USER")
      * @Route("/{id}", requirements={"id"="\d+"}, name="history_update")
      * @Method("PUT")
      * @Template("HrisRecordsBundle:History:edit.html.twig")
@@ -263,27 +293,67 @@ class HistoryController extends Controller
         if (!$entity) {
             throw $this->createNotFoundException('Unable to find History entity.');
         }
+        //Get Field before bind since field is disabled
+        $field = $entity->getField();
 
         $deleteForm = $this->createDeleteForm($id);
         $editForm = $this->createForm(new HistoryType(), $entity);
         $editForm->bind($request);
+        $user = $this->container->get('security.context')->getToken()->getUser();
+        $recordid = $entity->getRecord()->getId();
+        $record = $entity->getRecord();
+
 
         if ($editForm->isValid()) {
+            $em = $this->getDoctrine()->getManager();
+            $historyValue = $request->request->get('hris_recordsbundle_history');
+            $historyFormData = $request->request->get('hris_recordsbundle_historytype');
+            $fieldOption = $this->getDoctrine()->getManager()->getRepository('HrisFormBundle:FieldOption')->findOneBy(array('uid'=>$historyValue['history']));
+
+                //If History Set to update record
+                if($historyFormData['updaterecord']){
+                    $recordValue = $record->getValue();
+                    //Get Previous value before updating
+                    $previousValue = $recordValue[$field->getUid()];
+                    //Assign Record with the new update uid
+                    $recordValue[$field->getUid()] = $historyValue['history'];
+
+                    //Assign old value from records to history table
+                    $previousOption = $this->getDoctrine()->getManager()->getRepository('HrisFormBundle:FieldOption')->findOneBy(array('uid'=>$previousValue));
+                    $entity->setHistory($previousOption->getValue());
+                    $entity->setReason($historyFormData['reason']." Note: This is previous ".$field->getCaption()." held before changed to ".$fieldOption->getValue().".");
+
+                    //Update new record value
+                    $record->setValue($recordValue);
+                }
+                else{
+                    //Set entity value assigned from the history form
+                    $entity->setHistory($fieldOption->getValue());
+                }
+                $entity->setRecord($record);
+
+            $entity->setField($field);
+            $entity->setUsername($user->getUsername());
             $em->persist($entity);
+            $em->persist($record);
             $em->flush();
 
-            return $this->redirect($this->generateUrl('history_edit', array('id' => $id)));
+            return $this->redirect($this->generateUrl('history_list_byrecord', array( 'recordid' => $recordid )));
         }
 
         return array(
             'entity'      => $entity,
             'edit_form'   => $editForm->createView(),
             'delete_form' => $deleteForm->createView(),
+            'recordid' => $recordid,
+            'record' => $record,
+            'employeeName' => $this->getEmployeeName($recordid),
         );
     }
     /**
      * Deletes a History entity.
      *
+     * @Secure(roles="ROLE_RECORDHISTORY_DELETE,ROLE_USER")
      * @Route("/{id}", requirements={"id"="\d+"}, name="history_delete")
      * @Method("DELETE")
      */
@@ -327,6 +397,7 @@ class HistoryController extends Controller
      * Returns FieldOptions json.
      *
      *
+     * @Secure(roles="ROLE_RECORDHISTORY_SHOWFIELDOPTION,ROLE_USER")
      * @Route("/historyFieldOption.{_format}", requirements={"_format"="yml|xml|json"}, defaults={"_format"="json"}, name="history_historyfieldption")
      * @Method("POST")
      * @Template()
@@ -390,5 +461,18 @@ class HistoryController extends Controller
             ->add('id', 'hidden')
             ->getForm()
         ;
+    }
+
+    /**
+     * Get all values from specific key in a multidimensional array
+     *
+     * @param $key string
+     * @param $arr array
+     * @return null|string|array
+     */
+    public function array_value_recursive($key, array $arr){
+        $val = array();
+        array_walk_recursive($arr, function($v, $k) use($key, &$val){if($k == $key) array_push($val, $v);});
+        return count($val) > 1 ? $val : array_pop($val);
     }
 }

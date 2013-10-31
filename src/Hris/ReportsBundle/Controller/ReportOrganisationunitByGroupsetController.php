@@ -31,6 +31,7 @@ use Symfony\Bundle\FrameworkBundle\Controller\Controller;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Method;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Route;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Template;
+use JMS\SecurityExtraBundle\Annotation\Secure;
 
 /**
  * Report Organisationunit By Groupset controller.
@@ -43,6 +44,7 @@ class ReportOrganisationunitByGroupsetController extends Controller
     /**
      * Show Report Form for generation of Organisation unit by groupset
      *
+     * @Secure(roles="ROLE_REPORTORGANISATIONUNITGROUPSET_GENERATE,ROLE_USER")
      * @Route("/", name="report_organisationunit_groupset")
      * @Method("GET")
      * @Template()
@@ -60,6 +62,7 @@ class ReportOrganisationunitByGroupsetController extends Controller
     /**
      * Generate Report for Organisationunit by Groupset
      *
+     * @Secure(roles="ROLE_REPORTORGANISATIONUNITGROUPSET_GENERATE,ROLE_USER")
      * @Route("/", name="report_organisationunit_groupset_generate")
      * @Method("PUT")
      * @Template()

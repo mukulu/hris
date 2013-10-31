@@ -167,5 +167,10 @@
             {% endif %}
         </tbody>
     </table>
+    <div style="text-align: right">
+        <a class="btn" href="{{ path('report_organisationunit_completeness_download', { 'organisationUnitid': rootNodeOrganisationunit.id, 'formids':formIds } ) }}">
+            Download to Excel
+        </a>
+    </div>
 </div>
 {% endblock %}

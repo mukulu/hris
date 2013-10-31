@@ -31,6 +31,7 @@ use Symfony\Component\DependencyInjection\ContainerAware;
 use Symfony\Component\HttpFoundation\RedirectResponse;
 use Symfony\Component\Security\Core\Exception\AccessDeniedException;
 use FOS\UserBundle\Model\UserInterface;
+use JMS\SecurityExtraBundle\Annotation\Secure;
 
 /**
  * Controller managing the password change
@@ -43,6 +44,8 @@ class ChangePasswordController extends ContainerAware
 {
     /**
      * Change user password
+     *
+     * @Secure(roles="ROLE_USER_CHANGEPASSWORD,ROLE_USER")
      */
     public function changePasswordAction()
     {

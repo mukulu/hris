@@ -27,10 +27,12 @@ namespace Hris\ReportsBundle\Controller;
 use Hris\RecordsBundle\Entity\Record;
 use Hris\ReportsBundle\Form\ReportOrganisationunitCompletenessType;
 use Symfony\Component\HttpFoundation\Request;
+use Doctrine\Common\Collections\ArrayCollection;
 use Symfony\Bundle\FrameworkBundle\Controller\Controller;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Method;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Route;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Template;
+use JMS\SecurityExtraBundle\Annotation\Secure;
 
 /**
  * Report Organisationunit Completeness controller.
@@ -43,6 +45,7 @@ class ReportOrganisationunitCompletenessController extends Controller
     /**
      * Show Report Form for generation of Organisation unit completeness
      *
+     * @Secure(roles="ROLE_REPORTORGANISATIONUNITCOMPLETENESS_GENERATE,ROLE_USER")
      * @Route("/", name="report_organisationunit_completeness")
      * @Method("GET")
      * @Template()
@@ -59,6 +62,7 @@ class ReportOrganisationunitCompletenessController extends Controller
     /**
      * Generate Report for Organisationunit Completeness
      *
+     * @Secure(roles="ROLE_REPORTORGANISATIONUNITCOMPLETENESS_GENERATE,ROLE_USER")
      * @Route("/", name="report_organisationunit_completeness_generate")
      * @Method("PUT")
      * @Template()
@@ -73,6 +77,7 @@ class ReportOrganisationunitCompletenessController extends Controller
             $this->organisationunit = $organisationunitCompletenessFormData['organisationunit'];
             $this->organisationunitLevel = $organisationunitCompletenessFormData['organisationunitLevel'];
             $this->forms = $organisationunitCompletenessFormData['forms'];
+
         }else {
             $organisationunitCompletenessFormData = $organisationunitCompletenessForm->getData();
             $this->organisationunit = $organisationunitCompletenessFormData['organisationunit'];
@@ -94,6 +99,7 @@ class ReportOrganisationunitCompletenessController extends Controller
             'rootNodeOrganisationunit'=>$this->rootNodeOrganisationunit,
             'visibleFields'=>$this->visibleFields,
             'forms'=>$this->forms,
+            'level'=>$this->organisationunitLevel,
             'sameLevel'=>$this->sameLevel,
             'completenessMatrix'=>$this->completenessMatrix,
             'expectedCompleteness'=>$this->expectedCompleteness,
@@ -106,8 +112,246 @@ class ReportOrganisationunitCompletenessController extends Controller
     }
 
     /**
+     * Download Report for Organisationunit Completeness
+     *
+     * @Route("/download", name="report_organisationunit_completeness_download")
+     * @Method("GET")
+     * @Template()
+     */
+    public function downloadAction(Request $request)
+    {
+        $em = $this->getDoctrine()->getManager();
+
+        $organisationUnitid =$request->query->get('organisationUnitid');
+        $level = explode(",",$request->query->get('level'));
+        $formsId = explode(",",$request->query->get('formids'));
+        $forms = new ArrayCollection();
+
+        //Get the objects from the the variables
+        $this->organisationunit = $em->getRepository('HrisOrganisationunitBundle:Organisationunit')->find($organisationUnitid);
+        $this->organisationunitLevel = $em->getRepository('HrisOrganisationunitBundle:OrganisationunitLevel')->findOneBy(array('level'=>$this->organisationunit->getOrganisationunitStructure()->getLevel()->getLevel()+1));
+        foreach($formsId as $formId){
+            $forms->add($em->getRepository('HrisFormBundle:Form')->find($formId)) ;
+        }
+        $this->forms = $forms;
+        $this->processCompletenessFigures();
+
+        // ask the service for a Excel5
+        $excelService = $this->get('xls.service_xls5');
+        $excelService->excelObj->getProperties()->setCreator("HRHIS3")
+            ->setLastModifiedBy("HRHIS3")
+            ->setTitle($this->title)
+            ->setSubject("Office 2005 XLSX Test Document")
+            ->setDescription("Test document for Office 2005 XLSX, generated using PHP classes.")
+            ->setKeywords("office 2005 openxml php")
+            ->setCategory("Test result file");
+
+        //write the header of the report
+        $column = 'A';
+        $row  = 1;
+        $date = "Date: ".date("jS F Y");
+        $excelService->excelObj->getActiveSheet()->getDefaultRowDimension()->setRowHeight(15);
+        $excelService->excelObj->getActiveSheet()->getDefaultColumnDimension()->setWidth(15);
+        $excelService->excelObj->setActiveSheetIndex(0)
+            ->setCellValue($column.$row++, $this->title)
+            ->setCellValue($column.$row, $date);
+        //add style to the header
+        $heading_format = array(
+            'font' => array(
+                'bold' => true,
+                'color' => array('rgb' => '3333FF'),
+            ),
+            'alignment' => array(
+                'wrap'       => true,
+                'horizontal' => \PHPExcel_Style_Alignment::HORIZONTAL_CENTER,
+            ),
+        );
+        //add style to the Value header
+        $header_format = array(
+            'font' => array(
+                'bold' => true,
+                'color' => array('rgb' => 'FFFFFF'),
+            ),
+            'alignment' => array(
+                'wrap'       => true,
+                'horizontal' => \PHPExcel_Style_Alignment::HORIZONTAL_CENTER,
+            ),
+            'fill' => array(
+                'type' => \PHPExcel_Style_Fill::FILL_SOLID,
+                'startcolor' => array('rgb' => '000099') ,
+            ),
+        );
+        //add style to the text to display
+        $text_format1 = array(
+            'font' => array(
+                'bold' => false,
+                'color' => array('rgb' => '000000'),
+            ),
+            'alignment' => array(
+                'wrap'       => true,
+                'horizontal' => \PHPExcel_Style_Alignment::HORIZONTAL_CENTER,
+            ),
+        );
+        //add style to the Value header
+        $text_format2 = array(
+            'font' => array(
+                'bold' => false,
+                'color' => array('rgb' => '000000'),
+            ),
+            'alignment' => array(
+                'wrap'       => true,
+                'horizontal' => \PHPExcel_Style_Alignment::HORIZONTAL_CENTER,
+            ),
+            'fill' => array(
+                'type' => \PHPExcel_Style_Fill::FILL_SOLID,
+                'startcolor' => array('rgb' => 'E0E0E0') ,
+            ),
+        );
+
+        $excelService->excelObj->getActiveSheet()->getRowDimension('1')->setRowHeight(30);
+        $excelService->excelObj->getActiveSheet()->getRowDimension('2')->setRowHeight(20);
+
+        //reset the colomn and row number
+        $column == 'A';
+        $row += 2;
+
+        if ($this->organisationunitChildren){
+            if($this->organisationunitChildren){
+
+                //write the table heading of the values
+                //$excelService->excelObj->getActiveSheet()->getStyle('A4:C4')->applyFromArray($header_format);
+                $excelService->excelObj->getActiveSheet()->mergeCells($column.$row.':'.$column.($row+1));
+                $excelService->excelObj->setActiveSheetIndex(0)
+                    ->setCellValue($column++.$row, 'SN');
+                $excelService->excelObj->getActiveSheet()->mergeCells($column.$row.':'.$column.($row+1));
+                $excelService->excelObj->setActiveSheetIndex(0)
+                    ->setCellValue($column++.$row, 'Organisationunit');
+            }
+            foreach($this->forms as $forms){
+                if(($this->organisationunitChildren) || ($this->sameLevel)){
+                    if($this->visibleFields){
+                        $colspan = length($this->visibleFields);
+                    }else{
+                        $colspan = 3;
+                    }
+                }else{
+                    $colspan = 3;
+                }
+
+                if($this->organisationunitChildren){
+                    $mergeColumn = $column;
+                    for($i = 1; $i < $colspan; $i++)  $mergeColumn++;
+                    $excelService->excelObj->getActiveSheet()->mergeCells($column.$row.':'.$mergeColumn.$row);
+                    $excelService->excelObj->setActiveSheetIndex(0)
+                        ->setCellValue($column++.$row,$forms->getName());
+                    for($i = 1; $i < $colspan; $i++)  $column++;
+                }
+            }
+        }elseif($this->visibleFields){
+            //Headers for records compeleteness
+            $excelService->excelObj->setActiveSheetIndex(0)
+                    ->setCellValue($column++.$row,'SN');
+            foreach($this->visibleFields as $visibleField){
+                $excelService->excelObj->setActiveSheetIndex(0)
+                    ->setCellValue($column++.$row,$visibleField->getCaption());
+            }
+                $excelService->excelObj->setActiveSheetIndex(0)
+                    ->setCellValue($column++.$row,'Form name');
+        }
+        if(($this->organisationunitChildren) || ($this->sameLevel)){
+            $row++;
+            $column = 'C';
+            foreach($this->forms as $form){
+                $excelService->excelObj->setActiveSheetIndex(0)
+                    ->setCellValue($column++.$row,'Entered Records')
+                    ->setCellValue($column++.$row,'Expected Records')
+                    ->setCellValue($column++.$row,'Percentage');
+            }
+        }
+
+        $counter = 0;
+        $row++;
+        $column = 'A';
+        if($this->organisationunitChildren){
+
+            foreach( $this->organisationunitChildren as $childOrganisationunit){
+                $counter = $counter + 1;
+                $excelService->excelObj->setActiveSheetIndex(0)
+                    ->setCellValue($column++.$row,$counter)
+                    ->setCellValue($column++.$row,$childOrganisationunit->getLongname());
+
+                foreach($this->forms as $form){
+                    # Entered records #
+                    $excelService->excelObj->setActiveSheetIndex(0)
+                        ->setCellValue($column++.$row,$this->completenessMatrix[$childOrganisationunit->getId()][$form->getId()]);
+                    # Expected records and Percentage #
+                    if($this->expectedCompleteness[$childOrganisationunit->getId()][$form->getId()]){
+                        $excelService->excelObj->setActiveSheetIndex(0)
+                            ->setCellValue($column++.$row,$this->expectedCompleteness[$childOrganisationunit->getId()][$form->getId()]);
+                        if($this->completenessMatrix[$childOrganisationunit->getId()][$form->getId()] > $this->expectedCompleteness[$childOrganisationunit->getId()][$form->getId()])
+                            $excelService->excelObj->setActiveSheetIndex(0)
+                                ->setCellValue($column++.$row,'Above Expected');
+                        elseif($this->expectedCompleteness[$childOrganisationunit->getId()][$form->getId()]<=0)
+                            $excelService->excelObj->setActiveSheetIndex(0)
+                                ->setCellValue($column++.$row,'');
+                        else
+                            $excelService->excelObj->setActiveSheetIndex(0)
+                                ->setCellValue($column++.$row,round(($this->completenessMatrix[$childOrganisationunit->getId()][$form->getId()] / $this->expectedCompleteness[$childOrganisationunit->getId()][$form->getId()] )*100),2 );
+
+                    }else{
+                        # Expected records & percentage#
+                        $excelService->excelObj->setActiveSheetIndex(0)
+                            ->setCellValue($column++.$row,'')
+                            ->setCellValue($column++.$row,'');
+                    }
+                }
+                $row++;
+                $column = 'A';
+            }
+        }else{
+            foreach($this->recordInstances as $recordInstance){
+                $counter = $counter + 1;
+                $excelService->excelObj->setActiveSheetIndex(0)
+                    ->setCellValue($column++.$row,$counter);
+
+                foreach($this->visibleFields as $visibleField){
+                    $excelService->excelObj->setActiveSheetIndex(0)
+                        ->setCellValue($column++.$row,$this->recordsToDisplay[$recordInstance][$visibleField->getUid()]);
+                }
+                $excelService->excelObj->setActiveSheetIndex(0)
+                    ->setCellValue($column++.$row,$this->recordsToDisplay[$recordInstance]['form']);
+                $row++;
+                $column = 'A';
+
+            }
+        }
+
+
+
+
+        $excelService->excelObj->getActiveSheet()->setTitle('Completeness Report');
+
+
+        // Set active sheet index to the first sheet, so Excel opens this as the first sheet
+        $excelService->excelObj->setActiveSheetIndex(0);
+
+        //create the response
+
+        $response = $excelService->getResponse();
+        $response->headers->set('Content-Type', 'application/vnd.ms-excel; charset=utf-8');
+        $response->headers->set('Content-Disposition','attachment;filename='.$this->title.'.xls');
+
+        // If you are using a https connection, you have to set those two headers and use sendHeaders() for compatibility with IE <9
+        $response->headers->set('Pragma', 'public');
+        $response->headers->set('Cache-Control', 'maxage=1');
+        //$response->sendHeaders();
+        return $response;
+    }
+
+    /**
      * Generate a Report Redirect for Organisationunit Completeness
      *
+     * @Secure(roles="ROLE_REPORTORGANISATIONUNITCOMPLETENESS_GENERATE,ROLE_USER")
      * @Route("/generate/redirect", name="report_organisationunit_completeness_generate_redirect")
      * @Method("GET")
      * @Template("HrisReportsBundle:ReportOrganisationunitCompleteness:generate.html.twig")
