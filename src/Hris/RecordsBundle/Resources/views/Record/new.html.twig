@@ -4,6 +4,10 @@
     <script type="text/javascript" src="{{ asset('bundles/hrisrecords/js/jquery.timer.js') }}"></script>
     <script type="text/javascript" src="{{ asset('bundles/hrisrecords/js/indexedb.js') }}"></script>
     <script type="text/javascript" src="{{ asset('bundles/hrisrecords/js/dataentry.js') }}"></script>
+    <script type="text/javascript" src="{{ asset('commons/js/jquery-ui.js') }}"></script>
+    <script type="text/javascript">
+
+    </script>
 
     <script type="text/javascript">
 
@@ -26,6 +30,12 @@
     </script>
 
 {% endblock %}
+
+{% block stylesheets %}
+    {{ parent() }}
+    <link rel="stylesheet" href="{{ asset('commons/css/datepicker.css') }}" />
+    <link rel="stylesheet" href="{{ asset('commons/css/jquery-ui.css') }}" />
+{% endblock stylesheets %}
 
 {% block message_alert %}
     {% if message %}

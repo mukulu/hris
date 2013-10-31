@@ -206,8 +206,23 @@ function getDataEntryForm(databaseName, formUid, tableName) {
 
                     result.innerHTML = hypertext;
 
+                    //formatting dates
+
+                    $( ".date" ).datepicker( {
+                        changeMonth: true,
+                        changeYear: true,
+                        showOn: "both",
+                        buttonImageOnly: true,
+                        dateFormat: "dd/mm/yy",
+                        buttonImage: "../../../commons/images/calendar.gif",
+                        showAnim: "clip",
+                        minDate: "+0D",
+                        yearRange:'c-60:c+60'
+                    });
+
                 } else {
                     // No match was found.
+
                     report(null);
                 }
             };
