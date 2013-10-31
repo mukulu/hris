@@ -364,6 +364,7 @@ class RecordController extends Controller
 
         $formId = (int) $this->get('request')->request->get('formId');
 
+
         $user = $this->container->get('security.context')->getToken()->getUser();
 
         $onrgunitParent = $this->get('request')->request->get('orgunitParent');

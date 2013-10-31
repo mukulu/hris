@@ -165,12 +165,29 @@ class HistoryController extends Controller
             $record = NULL;
         }
 
+        //Get all fields not associated with approptiate form
+        $entityManager = $this->getDoctrine()->getManager();
+        $subQuery = "SELECT field_id ";
+        $subQuery .= "FROM hris_form_fieldmembers ";
+        $subQuery .= "WHERE form_id = ".$record->getForm()->getId();
+        $query = "SELECT Field.id ";
+        $query .= "FROM hris_field Field ";
+        $query .= "FULL OUTER JOIN hris_form_fieldmembers as member on member.field_id = Field.id ";
+        $query .= "FULL OUTER JOIN hris_form as Form on Form.id = member.form_id ";
+        $query .= "WHERE ( Field.hashistory = true ";
+        $query .= "AND Field.id NOT IN ( ".$subQuery." )) ";
+        $query .= "OR Field.iscalculated = true";
+        $results = $entityManager -> getConnection() -> executeQuery($query) -> fetchAll();
+        $removeFields = $this->array_value_recursive('id' , $results);
+
+
         return array(
             'entity' => $entity,
             'form'   => $form->createView(),
             'recordid' => $recordid,
             'record' => $record,
             'employeeName' => $this->getEmployeeName($recordid),
+            'removeFields' => $removeFields,
         );
     }
 
@@ -444,5 +461,18 @@ class HistoryController extends Controller
             ->add('id', 'hidden')
             ->getForm()
         ;
+    }
+
+    /**
+     * Get all values from specific key in a multidimensional array
+     *
+     * @param $key string
+     * @param $arr array
+     * @return null|string|array
+     */
+    public function array_value_recursive($key, array $arr){
+        $val = array();
+        array_walk_recursive($arr, function($v, $k) use($key, &$val){if($k == $key) array_push($val, $v);});
+        return count($val) > 1 ? $val : array_pop($val);
     }
 }

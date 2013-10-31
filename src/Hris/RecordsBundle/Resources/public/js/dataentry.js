@@ -35,3 +35,28 @@ function changeForm(record_uid) {
 
     })
 }
+/*
+function offLineDataStorage(){
+    $(function () {
+        $('form').on('submit', function (e) {
+
+            console.log($('form').serialize());
+
+            $.ajax({
+                type: 'POST',
+                url: '../',
+                data: $('form').serialize(),
+                success: function () {
+                    alert('form was submitted');
+                    $('form').trigger("reset");
+                },
+                error: function(){
+                    alert('form was not submitted');
+                }
+            });
+            e.preventDefault();
+        });
+
+    });
+}
+    */

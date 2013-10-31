@@ -383,9 +383,15 @@ class OrganisationunitController extends Controller
     {
         $em = $this->getDoctrine()->getManager();
         $id = $this->getRequest()->query->get('id');
+        $user = $this->container->get('security.context')->getToken()->getUser();
 
         if($id == NULL || $id==0) {
-            // Root organisationunits called
+            // Root organisationunits called make user's orgunit, a root node and it's children count
+            $organisationunit = $this->container->get('security.context')->getToken()->getUser()->getOrganisationunit();
+
+            if(empty($organisationunit))
+                $organisationunit =  $this->getDoctrine()->getManager()->createQuery('SELECT organisationunit FROM HrisOrganisationunitBundle:Organisationunit organisationunit WHERE organisationunit.parent IS NULL')->getSingleResult();
+
             $organisationunitQuery = $em->createQuery("SELECT organisationunit.id,organisationunit.longname,
                                                         (
                                                             SELECT COUNT(lowerOrganisationunit.id)
@@ -393,8 +399,8 @@ class OrganisationunitController extends Controller
                                                             WHERE lowerOrganisationunit.parent=organisationunit
                                                         ) AS lowerChildrenCount
                                                         FROM HrisOrganisationunitBundle:Organisationunit organisationunit
-                                                        WHERE organisationunit.parent IS NULL
-                                                        GROUP BY organisationunit.id,organisationunit.longname");
+                                                        WHERE organisationunit.id=:organisationunitid
+                                                        GROUP BY organisationunit.id,organisationunit.longname")->setParameter('organisationunitid',$organisationunit);;
             try {
                 $entities = $organisationunitQuery->getArrayResult();
             } catch(NoResultException $e) {
@@ -422,14 +428,14 @@ class OrganisationunitController extends Controller
         $organisationunitTreeNodes = NULL;
         foreach($entities as $key=>$entity) {
             if($entity['lowerChildrenCount'] > 0 ) {
-                // Entity has no children
+                // Entity has children
                 $organisationunitTreeNodes[] = Array(
                     'id' => $entity['id'],
                     'longname' => $entity['longname'],
                     'cls' => 'folder'
                 );
             }else {
-                // Entity has children
+                // Entity has no children
                 $organisationunitTreeNodes[] = Array(
                     'id' => $entity['id'],
                     'longname' => $entity['longname'],
