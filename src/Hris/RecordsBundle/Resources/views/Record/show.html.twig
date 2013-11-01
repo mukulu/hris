@@ -22,6 +22,60 @@
         </tbody>
     </table>
 
+    {% if entity.hashistory %}
+        <h1><small>Employee's History</small></h1>
+        <table class="record_properties table table-striped table-bordered table-hover">
+            <thead>
+                <th>History type</th>
+                <th>History</th>
+                <th>Reason</th>
+                <th>Start date</th>
+            </thead>
+            <tbody>
+            {% for history in entity.getHistory() %}
+                <tr>
+                    <td>{{ history.field.caption }}</td>
+                    <td>
+                        {% if history.field.getInputType == 'Select' %}
+                            {{ history.history }}
+                        {% elseif history.field.getInputType == 'Date' %}
+                            {{ history.history | date('d/m/Y') }}
+                        {% else %}
+                            {{ history.history }}
+                        {% endif %}
+                    </td>
+                    <td>{{ history.reason }}</td>
+                    <td>{{ history.startdate | date('d/m/Y') }}</td>
+                </tr>
+            {% endfor %}
+            </tbody>
+        </table>
+    {% endif %}
+
+    {% if entity.hastraining %}
+        <h1><small>Employee's Inservice Training</small></h1>
+        <table class="record_properties table table-striped table-bordered table-hover">
+            <thead>
+            <th>Course name</th>
+            <th>Course Location</th>
+            <th>Sponsor</th>
+            <th>Start date</th>
+            <td>End date</td>
+            </thead>
+            <tbody>
+            {% for training in entity.getTraining() %}
+                <tr>
+                    <td>{{ training.coursename }}</td>
+                    <td>{{ training.courselocation }}</td>
+                    <td>{{ training.sponsor }}</td>
+                    <td>{{ training.startdate | date('d/m/Y') }}</td>
+                    <td>{{ training.enddate | date('d/m/Y') }}</td>
+                </tr>
+            {% endfor %}
+            </tbody>
+        </table>
+    {% endif %}
+
     <ul class="record_actions inline">
         <li>
             <a href="{{ path('record_viewrecords', { 'formid': entity.getForm.getId }) }}" class="btn">
