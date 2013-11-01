@@ -136,7 +136,7 @@ fos_user:
             from_email:
                 address: hrismailer@gmail.com
                 sender_name: "HRIS Mailer<noreply>"
-            enabled: false
+            enabled: true
     resetting:
         email:
             from_email:
