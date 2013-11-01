@@ -55,7 +55,9 @@ class ReportRecordsType extends AbstractType
                     new NotBlank(),
                 )
             ))
-            ->add('Generate Report','submit')
+            ->add('Generate Report','submit',array(
+                'attr' => array('class' => 'btn'),
+            ))
         ;
     }
 

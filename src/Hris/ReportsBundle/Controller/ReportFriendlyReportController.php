@@ -84,7 +84,7 @@ class ReportFriendlyReportController extends Controller
     public function indexAction()
     {
 
-        $friendlyReportForm = $this->createForm(new ReportFriendlyReportType(),null,array('em'=>$this->getDoctrine()->getManager()));
+        $friendlyReportForm = $this->createForm(new ReportFriendlyReportType($this->getUser()),null,array('em'=>$this->getDoctrine()->getManager()));
 
         return array(
             'friendlyReportForm'=>$friendlyReportForm->createView(),
@@ -102,7 +102,7 @@ class ReportFriendlyReportController extends Controller
     public function generateAction(Request $request)
     {
         $entityManager = $this->getDoctrine()->getManager();
-        $friendlyReportForm = $this->createForm(new ReportFriendlyReportType(),null,array('em'=>$this->getDoctrine()->getManager()));
+        $friendlyReportForm = $this->createForm(new ReportFriendlyReportType($this->getUser()),null,array('em'=>$this->getDoctrine()->getManager()));
         $friendlyReportForm->bind($request);
 
         if ($friendlyReportForm->isValid()) {

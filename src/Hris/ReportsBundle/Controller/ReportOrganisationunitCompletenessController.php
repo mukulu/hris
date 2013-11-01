@@ -52,7 +52,7 @@ class ReportOrganisationunitCompletenessController extends Controller
      */
     public function indexAction()
     {
-        $organisationunitCompletenessForm = $this->createForm(new ReportOrganisationunitCompletenessType(),null,array('em'=>$this->getDoctrine()->getManager()));
+        $organisationunitCompletenessForm = $this->createForm(new ReportOrganisationunitCompletenessType($this->getUser()),null,array('em'=>$this->getDoctrine()->getManager()));
 
         return array(
             'organisationunitCompletenessForm'=>$organisationunitCompletenessForm->createView(),
@@ -69,7 +69,7 @@ class ReportOrganisationunitCompletenessController extends Controller
      */
     public function generateAction(Request $request)
     {
-        $organisationunitCompletenessForm = $this->createForm(new ReportOrganisationunitCompletenessType(),null,array('em'=>$this->getDoctrine()->getManager()));
+        $organisationunitCompletenessForm = $this->createForm(new ReportOrganisationunitCompletenessType($this->getUser()),null,array('em'=>$this->getDoctrine()->getManager()));
         $organisationunitCompletenessForm->bind($request);
 
         if ($organisationunitCompletenessForm->isValid()) {

@@ -64,7 +64,9 @@ class DashboardController extends Controller
     public function indexAction()
     {
         $securityContext = $this->container->get('security.context');
-        if(! $securityContext->isGranted('ROLE_DASHBOARD_HOME'))
+        if(! $securityContext->isGranted('ROLE_DASHBOARD_HOME') ||
+            ! $securityContext->isGranted('ROLE_SUPER_USER')
+        )
         {
             return $this->redirect($this->generateUrl('fos_user_profile_show'));
         }

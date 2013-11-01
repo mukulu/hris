@@ -60,7 +60,7 @@ class ReportAggregationController extends Controller
     public function indexAction()
     {
 
-        $aggregationForm = $this->createForm(new ReportAggregationType(),null,array('em'=>$this->getDoctrine()->getManager()));
+        $aggregationForm = $this->createForm(new ReportAggregationType($this->getUser()),null,array('em'=>$this->getDoctrine()->getManager()));
 
         return array(
             'aggregationForm'=>$aggregationForm->createView(),
@@ -77,7 +77,7 @@ class ReportAggregationController extends Controller
      */
     public function generateAction(Request $request)
     {
-        $aggregationForm = $this->createForm(new ReportAggregationType(),null,array('em'=>$this->getDoctrine()->getManager()));
+        $aggregationForm = $this->createForm(new ReportAggregationType($this->getUser()),null,array('em'=>$this->getDoctrine()->getManager()));
         $aggregationForm->bind($request);
 
         if ($aggregationForm->isValid()) {

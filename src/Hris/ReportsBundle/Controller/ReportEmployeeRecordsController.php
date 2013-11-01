@@ -62,7 +62,7 @@ class ReportEmployeeRecordsController extends Controller
     public function indexAction()
     {
 
-        $employeeRecordsForm = $this->createForm(new ReportEmployeeRecordsType(),null,array('em'=>$this->getDoctrine()->getManager()));
+        $employeeRecordsForm = $this->createForm(new ReportEmployeeRecordsType($this->getUser()),null,array('em'=>$this->getDoctrine()->getManager()));
 
         return array(
             'employeeRecordsForm'=>$employeeRecordsForm->createView(),
@@ -81,7 +81,7 @@ class ReportEmployeeRecordsController extends Controller
     {
         $serializer = $this->container->get('serializer');
 
-        $employeeRecordsForm = $this->createForm(new ReportEmployeeRecordsType(),null,array('em'=>$this->getDoctrine()->getManager()));
+        $employeeRecordsForm = $this->createForm(new ReportEmployeeRecordsType($this->getUser()),null,array('em'=>$this->getDoctrine()->getManager()));
         $employeeRecordsForm->bind($request);
 
         if ($employeeRecordsForm->isValid()) {

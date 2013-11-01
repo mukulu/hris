@@ -60,7 +60,7 @@ class ReportHistoryTrainingController extends Controller
     public function indexAction()
     {
 
-        $historytrainingForm = $this->createForm(new ReportHistoryTrainingType(),null,array('em'=>$this->getDoctrine()->getManager()));
+        $historytrainingForm = $this->createForm(new ReportHistoryTrainingType($this->getUser()),null,array('em'=>$this->getDoctrine()->getManager()));
 
         return array(
             'historytrainingForm'=>$historytrainingForm->createView(),
@@ -77,7 +77,7 @@ class ReportHistoryTrainingController extends Controller
      */
     public function generateAction(Request $request)
     {
-        $historytrainingForm = $this->createForm(new ReportHistoryTrainingType(),null,array('em'=>$this->getDoctrine()->getManager()));
+        $historytrainingForm = $this->createForm(new ReportHistoryTrainingType($this->getUser()),null,array('em'=>$this->getDoctrine()->getManager()));
         $historytrainingForm->bind($request);
 
         if ($historytrainingForm->isValid()) {
