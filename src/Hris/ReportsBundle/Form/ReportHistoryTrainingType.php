@@ -56,12 +56,14 @@ class ReportHistoryTrainingType extends AbstractType
                     'history'=>'History Report',
                     'training'=>'In Service Training Report'
                 ),
+                'required'=>True,
                 'constraints'=>array(
                     new NotBlank(),
                 )
             ))
             ->add('forms','entity', array(
                 'class'=>'HrisFormBundle:Form',
+                'required'=>True,
                 'constraints'=>array(
                     new NotBlank(),
                 )
