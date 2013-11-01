@@ -47,26 +47,13 @@
 
 <div class="container">
     <h1><small>{{ title }}</small></h1>
-
-    {% if sameLevel or parent %}
+    {% if rootNodeOrganisationunit.parent and rootNodeOrganisationunit.parent.organisationunitStructure.level.level >= app.user.organisationunit.organisationunitStructure.level.level %}
         <ul class="inline">
-            {% if sameLevel %}
-                <li>
-                    <a class="btn" href="{{ path('report_organisationunit_completeness_generate_redirect', { 'organisationunit': rootNodeOrganisationunit.parent.id, 'forms': formIds }) }}">
-                        {% if rootNodeOrganisationunit.parent %}
-                            Back To {{ rootNodeOrganisationunit.parent.getLongname() }}
-                        {% endif %}
-                    </a>
-                </li>
-            {% elseif parent %}
-                <li>
-                    <a class="btn" href="{{ path('report_organisationunit_completeness_generate_redirect', { 'organisationunit': rootNodeOrganisationunit.parent.id, 'forms': formIds }) }}">
-                        {% if rootNodeOrganisationunit.parent %}
-                        Back To {{ rootNodeOrganisationunit.parent.getLongname() }}
-                        {% endif %}
-                    </a>
-                </li>
-            {% endif %}
+            <li>
+                <a class="btn" href="{{ path('report_organisationunit_completeness_generate_redirect', { 'organisationunit': rootNodeOrganisationunit.parent.id, 'forms': formIds }) }}">
+                    Back To {{ rootNodeOrganisationunit.parent.getLongname() }}
+                </a>
+            </li>
         </ul>
     {% endif %}
 
