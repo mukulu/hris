@@ -74,14 +74,116 @@ class ReportOrganisationunitByGroupsetController extends Controller
 
         if ($organisationunitByGroupsetForm->isValid()) {
             $organisationunitByGroupsetFormData = $organisationunitByGroupsetForm->getData();
-            $organisationunit = $organisationunitByGroupsetFormData['organisationunit'];
-            $organisationunitGroupset = $organisationunitByGroupsetFormData['organisationunitGroupset'];
+            $this->organisationunit = $organisationunitByGroupsetFormData['organisationunit'];
+            $this->organisationunitGroupset = $organisationunitByGroupsetFormData['organisationunitGroupset'];
         }
 
-        $title = $organisationunit->getLongname().": Organisation Unit Report by ".$organisationunitGroupset->getName();
+        $this->proccessGroupset();
+
+        return array(
+            'organisationunit' => $this->organisationunit,
+            'organisationunitGroupset'   => $this->organisationunitGroupset,
+            'organisationunitGroupCounts' => $this->organisationunitGroupCounts,
+            'title' => $this->title,
+        );
+    }
+
+    /**
+     * Generate a Report Redirect for Organisationunit by Groupset
+     *
+     * @Secure(roles="ROLE_SUPER_USER,ROLE_REPORTORGANISATIONUNITGROUPSET_GENERATE,ROLE_USER")
+     * @Route("/redirect", name="report_organisationunit_groupset_generate_redirect")
+     * @Method("GET")
+     * @Template("HrisReportsBundle:ReportOrganisationunitByGroupset:generate.html.twig")
+     */
+    public function generateRedirectAction(Request $request)
+    {
 
         $queryBuilder = $this->getDoctrine()->getManager()->createQueryBuilder();
-        $organisationunitGroupCounts = $queryBuilder->select( 'organisationunitGroup.name,organisationunitGroup.id, COUNT(organisationunit.id) as organisationunitCount ')
+        $organisationunitId = $this->getRequest()->query->get('organisationunit');
+        $organisationunitGroupsetId = $this->getRequest()->query->get('organisationunitGroupset');
+
+        $em = $this->getDoctrine()->getManager();
+        $this->organisationunit = $em->getRepository('HrisOrganisationunitBundle:Organisationunit')->find($organisationunitId);
+        $this->organisationunitGroupset = $em->getRepository('HrisOrganisationunitBundle:OrganisationunitGroupset')->find($organisationunitGroupsetId);
+
+
+        $organisationunitByGroupsetForm = $this->createForm(new ReportOrganisationunitByGroupsetType(),null,array('em'=>$this->getDoctrine()->getManager()));
+        $organisationunitByGroupsetForm->bind($request);
+
+        $this->proccessGroupset();
+
+        return array(
+            'organisationunit' => $this->organisationunit,
+            'organisationunitGroupset'   => $this->organisationunitGroupset,
+            'organisationunitGroupCounts' => $this->organisationunitGroupCounts,
+            'title' => $this->title,
+        );
+    }
+
+    /**
+     * Generate Report for Organisationunit by Group
+     *
+     * @Secure(roles="ROLE_SUPER_USER,ROLE_REPORTORGANISATIONUNITGROUPSET_GENERATE,ROLE_USER")
+     * @Route("/organisationunitgroup", name="report_organisationunit_group_generate")
+     * @Method("GET")
+     * @Template()
+     */
+    public function generateOrganisationunitGroupAction(Request $request)
+    {
+        $queryBuilder = $this->getDoctrine()->getManager()->createQueryBuilder();
+        $organisationunitId = $this->getRequest()->query->get('organisationunit');
+        $organisationunitGroupId = $this->getRequest()->query->get('organisationunitGroup');
+
+        $em = $this->getDoctrine()->getManager();
+        $this->organisationunit = $em->getRepository('HrisOrganisationunitBundle:Organisationunit')->findOneBy(array('id'=>$organisationunitId));
+        $this->organisationunitGroup = $em->getRepository('HrisOrganisationunitBundle:OrganisationunitGroup')->findOneBy(array('id'=>$organisationunitGroupId));
+
+        $this->proccessGroup();
+
+        return array(
+            'organisationunit' => $this->organisationunit,
+            'organisationunitGroup'   => $this->organisationunitGroup,
+            'organisationunits' => $this->organisationunits,
+            'title' => $this->title,
+        );
+    }
+
+    /**
+     * Process Organisationunit Group report
+     */
+    public function proccessGroup()
+    {
+        $this->title = $this->organisationunitGroup->getName(). " under ". $this->organisationunit->getLongname();
+
+        $queryBuilder = $this->getDoctrine()->getManager()->createQueryBuilder();
+        $this->organisationunits = $queryBuilder->select( 'organisationunit')
+            ->from('HrisOrganisationunitBundle:Organisationunit','organisationunit')
+            ->join('organisationunit.organisationunitGroup','organisationunitGroup')
+            ->join('organisationunit.organisationunitStructure','organisationunitStructure')
+            ->join('organisationunitStructure.level','organisationunitLevel')
+            ->where('organisationunitGroup.id = :organisationunitGroupId')
+            ->andWhere('organisationunit.active=True')
+            ->andWhere('organisationunitLevel.level >= (
+                                        SELECT selectedOrganisationunitLevel.level
+                                        FROM HrisOrganisationunitBundle:OrganisationunitStructure selectedOrganisationunitStructure
+                                        INNER JOIN selectedOrganisationunitStructure.level selectedOrganisationunitLevel
+                                        WHERE selectedOrganisationunitStructure.organisationunit=:selectedOrganisationunit )'
+            )
+            ->andWhere('organisationunitStructure.level'.$this->organisationunit->getOrganisationunitStructure()->getLevel()->getLevel().'Organisationunit=:levelId')
+            ->setParameters(array('organisationunitGroupId'=> $this->organisationunitGroup->getId(),'levelId'=>$this->organisationunit->getId(),'selectedOrganisationunit'=>$this->organisationunit->getId()))
+            ->getQuery()->getResult();
+    }
+
+    /**
+     * Process Organisationunit Groupset report
+     */
+    public function proccessGroupset()
+    {
+        $this->title = $this->organisationunit->getLongname().": Organisation Unit Report by ".$this->organisationunitGroupset->getName();
+
+        $queryBuilder = $this->getDoctrine()->getManager()->createQueryBuilder();
+        $this->organisationunitGroupCounts = $queryBuilder->select( 'organisationunitGroup.name,organisationunitGroup.id, COUNT(organisationunit.id) as organisationunitCount ')
             ->from('HrisOrganisationunitBundle:OrganisationunitGroupset','organisationunitGroupset')
             ->join('organisationunitGroupset.organisationunitGroup','organisationunitGroup')
             ->join('organisationunitGroup.organisationunit','organisationunit')
@@ -96,16 +198,39 @@ class ReportOrganisationunitByGroupsetController extends Controller
                                         WHERE selectedOrganisationunitStructure.organisationunit=:selectedOrganisationunit )'
             )
             ->groupBy('organisationunitGroup.name,organisationunitGroup.id')
-            ->andWhere('organisationunitStructure.level'.$organisationunit->getOrganisationunitStructure()->getLevel()->getLevel().'Organisationunit=:levelId')
-            ->setParameters(array('organisationunitGroupsetId'=> $organisationunitGroupset->getId(),'levelId'=>$organisationunit->getId(),'selectedOrganisationunit'=>$organisationunit->getId()))
+            ->andWhere('organisationunitStructure.level'.$this->organisationunit->getOrganisationunitStructure()->getLevel()->getLevel().'Organisationunit=:levelId')
+            ->setParameters(array('organisationunitGroupsetId'=> $this->organisationunitGroupset->getId(),'levelId'=>$this->organisationunit->getId(),'selectedOrganisationunit'=>$this->organisationunit->getId()))
             ->getQuery()->getResult();
-
-        return array(
-            'organisationunit' => $organisationunit,
-            'organisationunitGroupset'   => $organisationunitGroupset,
-            'organisationunitGroupCounts' => $organisationunitGroupCounts,
-            'title' => $title,
-        );
     }
+
+    /**
+     * @var Organisationunit
+     */
+    private $organisationunit;
+
+    /**
+     * @var OrganisationunitGroup
+     */
+    private $organisationunitGroup;
+
+    /**
+     * @var Collection
+     */
+    private $organisationunitGroupset;
+
+    /**
+     * @var Array
+     */
+    private $organisationunitGroupCounts;
+
+    /**
+     * @var Collection
+     */
+    private $organisationunits;
+
+    /**
+     * @var string
+     */
+    private $title;
 
 }
