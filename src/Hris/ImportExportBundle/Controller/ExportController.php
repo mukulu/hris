@@ -51,7 +51,7 @@ class ExportController extends Controller
     /**
      * Lists all Export entities.
      *
-     * @Secure(roles="ROLE_EXPORT_LIST,ROLE_USER")
+     * @Secure(roles="ROLE_EXPORT_LIST")
      * @Route("/", name="importexport_export")
      * @Route("/list", name="importexport_export_list")
      * @Method("GET")
@@ -69,7 +69,7 @@ class ExportController extends Controller
     /**
      * Creates a new Export entity.
      *
-     * @Secure(roles="ROLE_EXPORT_CREATE,ROLE_USER")
+     * @Secure(roles="ROLE_EXPORT_CREATE")
      * @Route("/{_format}", requirements={"_format"="json|"}, defaults={"_format"="zip"}, name="importexport_export_create")
      * @Method("POST")
      */
@@ -198,7 +198,7 @@ class ExportController extends Controller
     /**
      * Displays a form to create a new Export entity.
      *
-     * @Secure(roles="ROLE_EXPORT_CREATE,ROLE_USER")
+     * @Secure(roles="ROLE_EXPORT_CREATE")
      * @Route("/new", name="importexport_export_new")
      * @Method("GET")
      * @Template()
@@ -215,7 +215,7 @@ class ExportController extends Controller
     /**
      * Finds and displays a Export entity.
      *
-     * @Secure(roles="ROLE_EXPORT_SHOW,ROLE_USER")
+     * @Secure(roles="ROLE_EXPORT_SHOW")
      * @Route("/{id}", requirements={"id"="\d+"}, name="importexport_export_show")
      * @Method("GET")
      * @Template()
@@ -241,7 +241,7 @@ class ExportController extends Controller
     /**
      * Displays a form to edit an existing Export entity.
      *
-     * @Secure(roles="ROLE_EXPORT_UPDATE,ROLE_USER")
+     * @Secure(roles="ROLE_EXPORT_UPDATE")
      * @Route("/{id}/edit", name="importexport_export_edit")
      * @Method("GET")
      * @Template()
@@ -260,7 +260,7 @@ class ExportController extends Controller
     /**
      * Edits an existing Export entity.
      *
-     * @Secure(roles="ROLE_EXPORT_UPDATE,ROLE_USER")
+     * @Secure(roles="ROLE_EXPORT_UPDATE")
      * @Route("/{id}", name="importexport_export_update")
      * @Method("PUT")
      * @Template("HrisImportExportBundle:Export:edit.html.twig")
@@ -286,7 +286,7 @@ class ExportController extends Controller
     /**
      * Deletes a Export entity.
      *
-     * @Secure(roles="ROLE_EXPORT_DELETE,ROLE_USER")
+     * @Secure(roles="ROLE_EXPORT_DELETE")
      * @Route("/{id}", name="importexport_export_delete")
      * @Method("DELETE")
      */

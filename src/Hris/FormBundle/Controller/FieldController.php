@@ -44,7 +44,7 @@ class FieldController extends Controller
     /**
      * Lists all Field entities.
      *
-     * @Secure(roles="ROLE_FIELD_LIST,ROLE_USER")
+     * @Secure(roles="ROLE_FIELD_LIST")
      * @Route("/", name="field")
      * @Route("/list", name="field_list")
      * @Method("GET")
@@ -72,7 +72,7 @@ class FieldController extends Controller
     /**
      * Creates a new Field entity.
      *
-     * @Secure(roles="ROLE_FIELD_CREATE,ROLE_USER")
+     * @Secure(roles="ROLE_FIELD_CREATE")
      * @Route("/", name="field_create")
      * @Method("POST")
      * @Template("HrisFormBundle:Field:new.html.twig")
@@ -100,7 +100,7 @@ class FieldController extends Controller
     /**
      * Displays a form to create a new Field entity.
      *
-     * @Secure(roles="ROLE_FIELD_CREATE,ROLE_USER")
+     * @Secure(roles="ROLE_FIELD_CREATE")
      * @Route("/new", name="field_new")
      * @Method("GET")
      * @Template()
@@ -119,7 +119,7 @@ class FieldController extends Controller
     /**
      * Finds and displays a Field entity.
      *
-     * @Secure(roles="ROLE_FIELD_SHOW,ROLE_USER")
+     * @Secure(roles="ROLE_FIELD_SHOW")
      * @Route("/{id}", requirements={"id"="\d+"}, name="field_show")
      * @Method("GET")
      * @Template()
@@ -145,7 +145,7 @@ class FieldController extends Controller
     /**
      * Displays a form to edit an existing Field entity.
      *
-     * @Secure(roles="ROLE_FIELD_UPDATE,ROLE_USER")
+     * @Secure(roles="ROLE_FIELD_UPDATE")
      * @Route("/{id}/edit", requirements={"id"="\d+"}, name="field_edit")
      * @Method("GET")
      * @Template()
@@ -173,7 +173,7 @@ class FieldController extends Controller
     /**
      * Edits an existing Field entity.
      *
-     * @Secure(roles="ROLE_FIELD_UPDATE,ROLE_USER")
+     * @Secure(roles="ROLE_FIELD_UPDATE")
      * @Route("/{id}", requirements={"id"="\d+"}, name="field_update")
      * @Method("PUT")
      * @Template("HrisFormBundle:Field:edit.html.twig")
@@ -208,7 +208,7 @@ class FieldController extends Controller
     /**
      * Deletes a Field entity.
      *
-     * @Secure(roles="ROLE_FIELD_DELETE,ROLE_USER")
+     * @Secure(roles="ROLE_FIELD_DELETE")
      * @Route("/{id}", requirements={"id"="\d+"}, name="field_delete")
      * @Method("DELETE")
      */

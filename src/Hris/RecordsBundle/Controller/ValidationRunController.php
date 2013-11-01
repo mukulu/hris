@@ -36,7 +36,7 @@ class ValidationRunController extends Controller
     /**
      * Lists all Validation entities.
      *
-     * @Secure(roles="ROLE_RECORDVALIDATION_VALIDATE,ROLE_USER")
+     * @Secure(roles="ROLE_RECORDVALIDATION_VALIDATE")
      * @Route("/run", name="validation_run")
      * @Method("GET")
      * @Template()
@@ -55,7 +55,7 @@ class ValidationRunController extends Controller
     /**
      * Displays the validation results.
      *
-     * @Secure(roles="ROLE_RECORDVALIDATION_VALIDATE,ROLE_USER")
+     * @Secure(roles="ROLE_RECORDVALIDATION_VALIDATE")
      * @Route("/result/",name="validation_result")
      * @Method("POST")
      * @Template("HrisRecordsBundle:ValidationRun:validationResult.html.twig")

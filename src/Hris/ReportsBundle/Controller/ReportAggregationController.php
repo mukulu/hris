@@ -52,7 +52,7 @@ class ReportAggregationController extends Controller
     /**
      * Show Report Aggregation
      *
-     * @Secure(roles="ROLE_REPORTAGGREGATION_GENERATE,ROLE_USER")
+     * @Secure(roles="ROLE_REPORTAGGREGATION_GENERATE")
      * @Route("/", name="report_aggregation")
      * @Method("GET")
      * @Template()
@@ -70,7 +70,7 @@ class ReportAggregationController extends Controller
     /**
      * Generate aggregated reports
      *
-     * @Secure(roles="ROLE_REPORTAGGREGATION_GENERATE,ROLE_USER")
+     * @Secure(roles="ROLE_REPORTAGGREGATION_GENERATE")
      * @Route("/", name="report_aggregation_generate")
      * @Method("PUT")
      * @Template()
@@ -370,7 +370,7 @@ class ReportAggregationController extends Controller
     /**
      * Download aggregated reports
      *
-     * @Secure(roles="ROLE_REPORTAGGREGATION_DOWNLOAD,ROLE_USER")
+     * @Secure(roles="ROLE_REPORTAGGREGATION_DOWNLOAD")
      * @Route("/download", name="report_aggregation_download")
      * @Method("GET")
      * @Template()
@@ -587,7 +587,7 @@ class ReportAggregationController extends Controller
     /**
      * Download aggregated reports by Cadre
      *
-     * @Secure(roles="ROLE_REPORTAGGREGATION_DOWNLOADRECORDS,ROLE_USER")
+     * @Secure(roles="ROLE_REPORTAGGREGATION_DOWNLOADRECORDS")
      * @Route("/records", name="report_aggregation_download_records")
      * @Method("GET")
      * @Template()

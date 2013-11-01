@@ -45,7 +45,7 @@ class TrainingController extends Controller
     /**
      * Lists all Training entities.
      *
-     * @Secure(roles="ROLE_RECORDTRAINING_LIST,ROLE_USER")
+     * @Secure(roles="ROLE_RECORDTRAINING_LIST")
      * @Route("/", name="training")
      * @Route("/list", name="training_list")
      * @Route("/{recordid}/training", requirements={"recordid"="\d+"}, name="training_byrecord")
@@ -79,7 +79,7 @@ class TrainingController extends Controller
     /**
      * Creates a new Training entity.
      *
-     * @Secure(roles="ROLE_RECORDTRAINING_CREATE,ROLE_USER")
+     * @Secure(roles="ROLE_RECORDTRAINING_CREATE")
      * @Route("/{recordid}/recordid", requirements={"recordid"="\d+"}, name="training_create")
      * @Method("POST")
      * @Template("HrisRecordsBundle:Training:new.html.twig")
@@ -122,7 +122,7 @@ class TrainingController extends Controller
     /**
      * Displays a form to create a new Training entity.
      *
-     * @Secure(roles="ROLE_RECORDTRAINING_CREATE,ROLE_USER")
+     * @Secure(roles="ROLE_RECORDTRAINING_CREATE")
      * @Route("/new/{recordid}/recordid", requirements={"recordid"="\d+"}, name="training_new")
      * @Method("GET")
      * @Template()
@@ -149,7 +149,7 @@ class TrainingController extends Controller
     /**
      * Returns Employee's Full Name
      *
-     * @Secure(roles="ROLE_RECORDTRAINING_SHOWEMPLOYEENAME,ROLE_USER")
+     * @Secure(roles="ROLE_RECORDTRAINING_SHOWEMPLOYEENAME")
      * @Method("GET")
      * @Template()
      */
@@ -177,7 +177,7 @@ class TrainingController extends Controller
     /**
      * Finds and displays a Training entity.
      *
-     * @Secure(roles="ROLE_RECORDTRAINING_SHOW,ROLE_USER")
+     * @Secure(roles="ROLE_RECORDTRAINING_SHOW")
      * @Route("/{id}", requirements={"id"="\d+"}, requirements={"id"="\d+"}, name="training_show")
      * @Method("GET")
      * @Template()
@@ -203,7 +203,7 @@ class TrainingController extends Controller
     /**
      * Displays a form to edit an existing Training entity.
      *
-     * @Secure(roles="ROLE_RECORDTRAINING_UPDATE,ROLE_USER")
+     * @Secure(roles="ROLE_RECORDTRAINING_UPDATE")
      * @Route("/{id}/edit", requirements={"id"="\d+"}, name="training_edit")
      * @Method("GET")
      * @Template()
@@ -232,7 +232,7 @@ class TrainingController extends Controller
     /**
      * Edits an existing Training entity.
      *
-     * @Secure(roles="ROLE_RECORDTRAINING_UPDATE,ROLE_USER")
+     * @Secure(roles="ROLE_RECORDTRAINING_UPDATE")
      * @Route("/{id}", requirements={"id"="\d+"}, name="training_update")
      * @Method("PUT")
      * @Template("HrisRecordsBundle:Training:edit.html.twig")
@@ -269,7 +269,7 @@ class TrainingController extends Controller
     /**
      * Deletes a Training entity.
      *
-     * @Secure(roles="ROLE_RECORDTRAINING_DELETE,ROLE_USER")
+     * @Secure(roles="ROLE_RECORDTRAINING_DELETE")
      * @Route("/{id}", requirements={"id"="\d+"}, name="training_delete")
      * @Method("DELETE")
      */

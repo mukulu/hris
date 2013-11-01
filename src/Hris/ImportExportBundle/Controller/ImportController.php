@@ -52,7 +52,7 @@ class ImportController extends Controller
     /**
      * Lists all Import entities.
      *
-     * @Secure(roles="ROLE_IMPORT_LIST,ROLE_USER")
+     * @Secure(roles="ROLE_IMPORT_LIST")
      * @Route("/", name="importexport_import")
      * @Route("/list", name="importexport_import_list")
      * @Method("GET")
@@ -70,7 +70,7 @@ class ImportController extends Controller
     /**
      * Creates a new Import entity.
      *
-     * @Secure(roles="ROLE_IMPORT_CREATE,ROLE_USER")
+     * @Secure(roles="ROLE_IMPORT_CREATE")
      * @Route("/{_format}", requirements={"_format"="json|"}, defaults={"_format"="json"}, name="importexport_import_create")
      * @Method("POST")
      * @Template("HrisImportExportBundle:Import:export.json.twig")
@@ -164,7 +164,7 @@ class ImportController extends Controller
     /**
      * Displays a form to create a new Import entity.
      *
-     * @Secure(roles="ROLE_IMPORT_CREATE,ROLE_USER")
+     * @Secure(roles="ROLE_IMPORT_CREATE")
      * @Route("/new", name="importexport_import_new")
      * @Method("GET")
      * @Template()
@@ -181,7 +181,7 @@ class ImportController extends Controller
     /**
      * Finds and displays a Import entity.
      *
-     * @Secure(roles="ROLE_IMPORT_SHOW,ROLE_USER")
+     * @Secure(roles="ROLE_IMPORT_SHOW")
      * @Route("/{id}", requirements={"id"="\d+"}, name="importexport_import_show")
      * @Method("GET")
      * @Template()
@@ -221,7 +221,7 @@ class ImportController extends Controller
     /**
      * Displays a form to edit an existing Import entity.
      *
-     * @Secure(roles="ROLE_IMPORT_UPDATE,ROLE_USER")
+     * @Secure(roles="ROLE_IMPORT_UPDATE")
      * @Route("/{id}/edit", name="importexport_import_edit")
      * @Method("GET")
      * @Template()
@@ -240,7 +240,7 @@ class ImportController extends Controller
     /**
      * Edits an existing Import entity.
      *
-     * @Secure(roles="ROLE_IMPORT_UPDATE,ROLE_USER")
+     * @Secure(roles="ROLE_IMPORT_UPDATE")
      * @Route("/{id}", name="importexport_import_update")
      * @Method("PUT")
      * @Template("HrisImportExportBundle:Export:edit.html.twig")
@@ -267,7 +267,7 @@ class ImportController extends Controller
     /**
      * Deletes a Import entity.
      *
-     * @Secure(roles="ROLE_IMPORT_DELETE,ROLE_USER")
+     * @Secure(roles="ROLE_IMPORT_DELETE")
      * @Route("/{id}", name="importexport_import_delete")
      * @Method("DELETE")
      */
@@ -282,7 +282,7 @@ class ImportController extends Controller
     /**
      * Importing fields.
      *
-     * @Secure(roles="ROLE_IMPORT_IMPORTFIELDS,ROLE_USER")
+     * @Secure(roles="ROLE_IMPORT_IMPORTFIELDS")
      * @Route("/importFields", name="importexport_import_importFields")
      * @Method("POST")
      */
@@ -340,7 +340,7 @@ class ImportController extends Controller
     /**
      * Importing fields Options.
      *
-     * @Secure(roles="ROLE_IMPORT_IMPORTFIELDOPTIONS,ROLE_USER")
+     * @Secure(roles="ROLE_IMPORT_IMPORTFIELDOPTIONS")
      * @Route("/importFieldOptions", name="importexport_import_importFieldOptions")
      * @Method("POST")
      */
@@ -391,7 +391,7 @@ class ImportController extends Controller
     /**
      * Importing Organisation Units.
      *
-     * @Secure(roles="ROLE_IMPORT_ORGANISATIONUNITS,ROLE_USER")
+     * @Secure(roles="ROLE_IMPORT_ORGANISATIONUNITS")
      * @Route("/importOrganisationUnits", name="importexport_import_importOrganisationUnits")
      * @Method("POST")
      */
@@ -444,7 +444,7 @@ class ImportController extends Controller
     /**
      * Importing Records.
      *
-     * @Secure(roles="ROLE_IMPORT_IMPORTRECORDS,ROLE_USER")
+     * @Secure(roles="ROLE_IMPORT_IMPORTRECORDS")
      * @Route("/importRecords", name="importexport_import_importRecords")
      * @Method("POST")
      */

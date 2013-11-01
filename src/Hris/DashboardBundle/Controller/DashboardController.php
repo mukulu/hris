@@ -51,7 +51,7 @@ class DashboardController extends Controller
      * Note users without dashboard but with profile permissions
      * will be allowed in and redirected to profile.
      *
-     * @Secure(roles="ROLE_DASHBOARD_HOME,ROLE_USERPROFILE_SHOW,ROLE_USER")
+     * @Secure(roles="ROLE_DASHBOARD_HOME,ROLE_USERPROFILE_SHOW")
      *
      * @Route("/", name="hris_homepage")
      * @Route("/", name="dashboard")
@@ -338,7 +338,7 @@ class DashboardController extends Controller
     /**
      * Finds and displays a dashboards for the user.
      *
-     * @Secure(roles="ROLE_DASHBOARD_LIST,ROLE_USER")
+     * @Secure(roles="ROLE_DASHBOARD_LIST")
      * @Route("/dashboardList", name="dashboard_list")
      * @Method("GET")
      * @Template("")
@@ -375,7 +375,7 @@ class DashboardController extends Controller
     /**
      * Adds a new dashboards for the user.
      *
-     * @Secure(roles="ROLE_DASHBOARD_CREATE,ROLE_USER")
+     * @Secure(roles="ROLE_DASHBOARD_CREATE")
      * @Route("/dashboardAdd", name="dashboard_new")
      * @Method("GET")
      * @Template("")
@@ -393,7 +393,7 @@ class DashboardController extends Controller
     /**
      * Generate aggregated reports
      *
-     * @Secure(roles="ROLE_DASHBOARD_CREATE,ROLE_USER")
+     * @Secure(roles="ROLE_DASHBOARD_CREATE")
      * @Route("/", name="dashboard_create")
      * @Method("POST")
      * @Template("")
@@ -426,7 +426,7 @@ class DashboardController extends Controller
     /**
      * Finds and displays a Dashboard entity.
      *
-     * @Secure(roles="ROLE_DASHBOARD_SHOW,ROLE_USER")
+     * @Secure(roles="ROLE_DASHBOARD_SHOW")
      * @Route("/{id}", requirements={"id"="\d+"}, name="dashboard_show")
      * @Method("GET")
      * @Template()
@@ -451,7 +451,7 @@ class DashboardController extends Controller
     /**
      * Finds and Show the Dashboard entity to edit.
      *
-     * @Secure(roles="ROLE_DASHBOARD_UPDATE,ROLE_USER")
+     * @Secure(roles="ROLE_DASHBOARD_UPDATE")
      * @Route("/{id}/edit",  name="dashboard_edit")
      * @Method("GET")
      * @Template()
@@ -477,7 +477,7 @@ class DashboardController extends Controller
     /**
      * Updates a Dashboard entity.
      *
-     * @Secure(roles="ROLE_DASHBOARD_UPDATE,ROLE_USER")
+     * @Secure(roles="ROLE_DASHBOARD_UPDATE")
      * @Route("/{id}",requirements={"id"="\d+"},  name="dashboard_update")
      * @Method("POST")
      * @Template()
@@ -512,7 +512,7 @@ class DashboardController extends Controller
     /**
      * Finds and delete a Dashboard entity.
      *
-     * @Secure(roles="ROLE_DASHBOARD_DELETE,ROLE_USER")
+     * @Secure(roles="ROLE_DASHBOARD_DELETE")
      * @Route("/{id}",  name="dashboard_delete")
      * @Method("DELETE")
      */

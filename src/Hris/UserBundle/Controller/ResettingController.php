@@ -110,6 +110,7 @@ class ResettingController extends ContainerAware
     }
 
     /**
+     * @Secure(roles="ROLE_USER_RESETPASSWORD,IS_AUTHENTICATED_ANONYMOUSLY,ROLE_USER")
      * Reset user password
      */
     public function resetAction($token)
