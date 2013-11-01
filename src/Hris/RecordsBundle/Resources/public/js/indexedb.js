@@ -570,7 +570,7 @@ function offLineDataStorage(databaseName){
 
                 var uuid = Math.floor((Math.random()*10000)+1);
 
-                store.put({id: uuid, data: dataValues});
+                store.put({id: uuid, status: 'false', data: dataValues});
 
                 transaction.oncomplete = function () {
                     // All requests have succeeded and the transaction has committed.
@@ -597,9 +597,14 @@ function sendDataToServer(databaseName){
             var db = openRequest.result;
 
             var transaction = db.transaction("offline_datavalues", "readonly");
+
             var store = transaction.objectStore("offline_datavalues");
 
-            var dataRequest = store.openCursor();
+            var index = store.index("status");
+
+            var dataRequest = index.openCursor(IDBKeyRange.only("false"));
+
+            var state = false;
 
 
             dataRequest.onsuccess = function () {
@@ -618,6 +623,12 @@ function sendDataToServer(databaseName){
                         success: function () {
                             $('form').trigger("reset");
                             console.log('data has been submitted to the server');
+
+                            var transactionUpdate = db.transaction("offline_datavalues", "readwrite");
+
+                            var storeUpdate = transactionUpdate.objectStore("offline_datavalues");
+
+                            storeUpdate.put({id: cursorOption.value.id, status: 'true', data: cursorOption.value.data});
                         },
                         error: function(){
                             console.log('form was not submitted, no internet connection');
@@ -631,6 +642,7 @@ function sendDataToServer(databaseName){
                 }
 
             }
+
         }
     });
 
