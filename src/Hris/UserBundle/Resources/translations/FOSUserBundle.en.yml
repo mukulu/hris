@@ -57,6 +57,7 @@ registration:
             Hello %username%!
             Welcome to HRIS, Your account has been successfully created, you will be receiving any email notifications through this email.
 
+            This is one time link use only! After clicking it make sure you complete registration and login.
             To finish activating your HRIS account - please visit %confirmationUrl%
 
             Regards,
@@ -81,6 +82,7 @@ resetting:
             Hello %username%!
             You have requested to reset your password of your HRIS User account.
 
+            This is one time link use only! After clicking it make sure you complete resetting password and login.
             To reset your password - please visit %confirmationUrl%
 
             Regards,
