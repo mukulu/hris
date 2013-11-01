@@ -17,6 +17,7 @@ localDatabase.indexedDB.onerror = function (e) {
 
 var replaceOptionString = "";
 
+
 function createDatabase(databaseName, tableName, columnNames, dataValues) {
     /*
      Parsing the names of columns form strin to Json Format
@@ -46,6 +47,13 @@ function createDatabase(databaseName, tableName, columnNames, dataValues) {
                 dataStore.createIndex("fieldoption", "fieldoption", { unique: false });
                 console.log("data Store Column UID  Added for the datastore 'field_option_Association' ");
                 created = true;
+
+                var dataStore = db.createObjectStore("offline_datavalues", {keyPath: "id"});
+                console.log("data Store 'offline_datavalues' Created");
+
+                dataStore.createIndex("status", "status", { unique: false });
+                console.log("data Store Column status  Added for the datastore 'offline_datavalues' ");
+                created = true;
             }
         }
 
@@ -53,7 +61,7 @@ function createDatabase(databaseName, tableName, columnNames, dataValues) {
 
     openRequest.onsuccess = function () {
         db = openRequest.result;
-        console.log("this is done deal");
+        console.log("database has been generated");
     };
 
 }
@@ -95,7 +103,6 @@ function addRecords(databaseName, tableName, dataValues) {
 
     openRequest.onsuccess = function () {
         db = openRequest.result;
-        console.log("this is done deal");
 
         var transaction = db.transaction(tableName, "readwrite");
         var store = transaction.objectStore(tableName);
@@ -120,7 +127,6 @@ function addRecords(databaseName, tableName, dataValues) {
 
             results = results.slice(0, -2);
             results += '}';
-            console.log(results);
             store.put(JSON.parse(results));
             console.log("Results has been update");
             var results = '{';
@@ -128,7 +134,7 @@ function addRecords(databaseName, tableName, dataValues) {
 
         transaction.oncomplete = function () {
             // All requests have succeeded and the transaction has committed.
-            console.log("All transaction done");
+            console.log("All Records in " + tableName + " has been saved offline");
         };
 
     };
@@ -139,8 +145,6 @@ function getSingleRecord(databaseName, uid, tableName) {
 
     tableName = JSON.parse(tableName);
 
-    console.log(uid);
-
     var result = document.getElementById("result");
     result.innerHTML = "";
 
@@ -148,8 +152,6 @@ function getSingleRecord(databaseName, uid, tableName) {
 
     openRequest.onsuccess = function () {
         db = openRequest.result;
-        console.log("this is done deal");
-
 
         var transaction = db.transaction(tableName, "readonly");
         var store = transaction.objectStore(tableName);
@@ -163,7 +165,6 @@ function getSingleRecord(databaseName, uid, tableName) {
 
                 var jsonStr = JSON.stringify(decodeURIComponent(matching.hypertext));
                 result.innerHTML = decodeURIComponent(matching.hypertext);
-                console.log(decodeURIComponent(matching.hypertext));
 
             } else {
                 // No match was found.
@@ -179,8 +180,6 @@ function getDataEntryForm(databaseName, formUid, tableName) {
 
     tableName = JSON.parse(tableName);
 
-    console.log(formUid);
-
     var result = document.getElementById("result");
     result.innerHTML = "";
 
@@ -190,8 +189,6 @@ function getDataEntryForm(databaseName, formUid, tableName) {
 
         openRequest.onsuccess = function () {
             db = openRequest.result;
-            console.log("this is done deal");
-
 
             var transaction = db.transaction(tableName, "readonly");
             var store = transaction.objectStore(tableName);
@@ -209,8 +206,23 @@ function getDataEntryForm(databaseName, formUid, tableName) {
 
                     result.innerHTML = hypertext;
 
+                    //formatting dates
+
+                    $( ".date" ).datepicker( {
+                        changeMonth: true,
+                        changeYear: true,
+                        showOn: "both",
+                        buttonImageOnly: true,
+                        dateFormat: "dd/mm/yy",
+                        buttonImage: "../../../commons/images/calendar.gif",
+                        showAnim: "clip",
+                        minDate: "+0D",
+                        yearRange:'c-60:c+60'
+                    });
+
                 } else {
                     // No match was found.
+
                     report(null);
                 }
             };
@@ -229,10 +241,7 @@ function loadFieldOptions(fieldUIDS, databaseName) {
 
     var fieldUid = JSON.parse(fieldUIDS);
 
-    console.log(fieldUid);
-
     $.each(fieldUid, function (key, value) {
-        console.log(key + ": " + value);
 
         var field_uid = value;
 
@@ -271,7 +280,6 @@ function loadFieldOptions(fieldUIDS, databaseName) {
                     }
 
                     if (field_uid == cursorOption.value.field) {
-                        console.log(decodeURIComponent(cursorOption.value.value) + " uid " + field_uid + " field_id " + cursorOption.value.uid);
 
                         $("#" + field_uid).append($('<option>', {
                             value: cursorOption.value.uid,
@@ -329,8 +337,6 @@ function changeRelatedFieldOptions(field_uid) {
                     removeElement = true;
                 }
 
-                console.log(decodeURIComponent(cursorOption.value.fieldoptionref) + " uid " + field_uid + " fieldoptionUID " + cursorOption.value.fieldoptionrefuid);
-
                 $("#" + cursorOption.value.fieldref).append($('<option>', {
                     value: cursorOption.value.fieldoptionrefuid,
                     text: decodeURIComponent(cursorOption.value.fieldoptionref)
@@ -377,8 +383,6 @@ function isUnique(field_uid) {
                     $("#" + cursorOption.value.fieldref).find('option').remove();
                     removeElement = true;
                 }
-
-                console.log(decodeURIComponent(cursorOption.value.fieldoptionref) + " uid " + field_uid + " fieldoptionUID " + cursorOption.value.fieldoptionrefuid);
 
                 $("#" + cursorOption.value.fieldref).append($('<option>', {
                     value: cursorOption.value.fieldoptionrefuid,
@@ -427,7 +431,6 @@ function getunits(parent){
             if (cursorOption) {
 
                 if (parentUid == cursorOption.value.parent) {
-                    console.log(decodeURIComponent(cursorOption.value.longname));
 
                     $("#units").append($('<option>', {
                         value: cursorOption.value.uid,
@@ -463,10 +466,7 @@ function populateForm(fieldUIDS, databaseName, dataValues, otherFields, orgunit)
 
     });
 
-    console.log('other fields' + otherFields);
-
     $.each(fieldUid, function (key, value) {
-        console.log(key + ": " + value);
 
         var field_uid = value;
 
@@ -497,7 +497,6 @@ function populateForm(fieldUIDS, databaseName, dataValues, otherFields, orgunit)
 
 
                     if (field_uid == cursorOption.value.field) {
-                        console.log(decodeURIComponent(cursorOption.value.value) + " uid " + field_uid + " field_id " + cursorOption.value.uid);
 
                         $("#" + field_uid).append($('<option>', {
                             value: cursorOption.value.uid,
@@ -549,4 +548,91 @@ function populateForm(fieldUIDS, databaseName, dataValues, otherFields, orgunit)
         }
     });
 
+}
+
+function offLineDataStorage(databaseName){
+    $(function () {
+        $('form').on('submit', function (e) {
+
+            e.preventDefault();
+
+            tableName = "offline_datavalues";
+            dataValues = $('form').serialize();
+
+
+            var openRequest = localDatabase.indexedDB.open(databaseName);
+
+            openRequest.onsuccess = function () {
+                db = openRequest.result;
+
+                var transaction = db.transaction(tableName, "readwrite");
+                var store = transaction.objectStore(tableName);
+
+                var uuid = Math.floor((Math.random()*10000)+1);
+
+                store.put({id: uuid, data: dataValues});
+
+                transaction.oncomplete = function () {
+                    // All requests have succeeded and the transaction has committed.
+                    console.log("All Records in " + tableName + " has been saved offline");
+                    $('form').trigger("reset");
+                };
+
+            };
+
+        });
+
+    });
+}
+
+
+function sendDataToServer(databaseName){
+
+    var timer = $.timer(function() {
+
+        var openRequest = localDatabase.indexedDB.open(databaseName);
+
+        openRequest.onsuccess = function () {
+
+            var db = openRequest.result;
+
+            var transaction = db.transaction("offline_datavalues", "readonly");
+            var store = transaction.objectStore("offline_datavalues");
+
+            var dataRequest = store.openCursor();
+
+
+            dataRequest.onsuccess = function () {
+
+                var cursorOption = dataRequest.result;
+
+
+                if (cursorOption) {
+
+                    var dataValues = JSON.stringify(cursorOption.value.data);
+
+                    $.ajax({
+                        type: 'POST',
+                        url: '../',
+                        data: decodeURIComponent(cursorOption.value.data),
+                        success: function () {
+                            $('form').trigger("reset");
+                            console.log('data has been submitted to the server');
+                        },
+                        error: function(){
+                            console.log('form was not submitted, no internet connection');
+                        }
+                    });
+
+                    cursorOption.continue();
+                }
+                else {
+                    console.log('No more Matching Fields Options');
+                }
+
+            }
+        }
+    });
+
+    timer.set({ time : 5000, autostart : true });
 }

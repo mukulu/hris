@@ -108,7 +108,7 @@ class RegistrationController extends ContainerAware
     /**
      * Receive the confirmation token from user email provider, login the user
      *
-     * @Secure(roles="ROLE_USERREGISTRATION_CONFIRM,ROLE_USER")
+     * @Secure(roles="ROLE_USERREGISTRATION_CONFIRM,IS_AUTHENTICATED_ANONYMOUSLY,ROLE_USER")
      */
     public function confirmAction($token)
     {
@@ -132,7 +132,7 @@ class RegistrationController extends ContainerAware
     /**
      * Tell the user his account is now confirmed
      *
-     * @Secure(roles="ROLE_USERREGISTRATION_CONFIRMED,ROLE_USER")
+     * @Secure(roles="ROLE_USERREGISTRATION_CONFIRMED,IS_AUTHENTICATED_ANONYMOUSLY,ROLE_USER")
      */
     public function confirmedAction()
     {
