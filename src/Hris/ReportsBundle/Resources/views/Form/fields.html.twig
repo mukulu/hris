@@ -1,0 +1,15 @@
+{# src/Hris/RecordsBundle/Resources/views/Form/fields.html.twig #}
+{% block multiselect_widget %}
+    {% spaceless %}
+        {% if expanded %}
+            <select {{ block('widget_container_attributes') }}>
+                {% for child in form %}
+                    <option {{ form_widget(child) }}>{{ form_label(child) }}</option>
+                {% endfor %}
+            </select>
+        {% else %}
+            {# just let the choice widget render the select tag #}
+            {{ block('choice_widget') }}
+        {% endif %}
+    {% endspaceless %}
+{% endblock %}

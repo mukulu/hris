@@ -2,6 +2,7 @@
 
 {% block javascripts %}
     {{ parent() }}
+    <script type="text/javascript" language="javascript" src="{{ asset('commons/js/jquery.multi-select.js') }}"></script>
     <script type="text/javascript" language="javascript" src="{{ asset('commons/js/ext-all.js') }}"></script>
     <script type="text/javascript" language="javascript" src="{{ asset('commons/js/jquery.validate.js') }}"></script>
     <script type="text/javascript">
@@ -55,6 +56,14 @@
         $( document ).ready(function() {
             // validate signup form on keyup and submit
             $("#friendlyReportForm").validate({ ignore:[] });
+            $('#hris_reportsbundle_reportfriendlytype_forms').multiSelect({
+                selectableHeader: "<div class=''>Avaiable Forms</div>",
+                selectionHeader: "<div class=''>Selected Forms</div>"
+            });
+            $('#hris_reportsbundle_reportfriendlytype_targets').multiSelect({
+                selectableHeader: "<div class=''>Avaiable Forms</div>",
+                selectionHeader: "<div class=''>Selected Forms</div>"
+            });
         });
     </script>
 {% endblock javascripts %}
@@ -62,6 +71,7 @@
 {% block stylesheets %}
     {{ parent() }}
     <link rel="stylesheet" type="text/css" media="all" href="{{ asset('commons/css/ext-standard.css') }}">
+    <link rel="stylesheet" type="text/css" media="all" href="{{ asset('commons/css/multi-select.css') }}">
 {% endblock stylesheets %}
 
 {% block right_content -%}
@@ -77,9 +87,7 @@
         {{ form_errors( friendlyReportForm.organisationunit ) }}
         {{ form_widget( friendlyReportForm.organisationunit ) }}
     </div>
-    <br/>
     {{ form_row( friendlyReportForm.forms ) }}
-
     {{ form_end(friendlyReportForm) }}
 
 
