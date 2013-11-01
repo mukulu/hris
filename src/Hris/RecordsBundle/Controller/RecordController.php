@@ -57,7 +57,7 @@ class RecordController extends Controller
     /**
      * Lists all Record entities.
      *
-     * @Secure(roles="ROLE_RECORD_LIST")
+     * @Secure(roles="ROLE_SUPER_USER,ROLE_RECORD_LIST")
      * @Route("/", name="record")
      * @Route("/list", name="record_list")
      * @Method("GET")
@@ -77,7 +77,7 @@ class RecordController extends Controller
     /**
      * Lists all Records by forms.
      *
-     * @Secure(roles="ROLE_RECORD_LIST")
+     * @Secure(roles="ROLE_SUPER_USER,ROLE_RECORD_LIST")
      * @Route("/viewrecords/{formid}/form", requirements={"formid"="\d+"}, defaults={"formid"=0}, name="record_viewrecords")
      * @Method("GET")
      * @Template()
@@ -196,7 +196,7 @@ class RecordController extends Controller
     /**
      * List Forms Available for Record entry.
      *
-     * @Secure(roles="ROLE_RECORD_LISTFORMS")
+     * @Secure(roles="ROLE_SUPER_USER,ROLE_RECORD_LISTFORMS")
      * @Route("/formlist/dataentry", defaults={"channel"="dataentry"}, name="record_form_list")
      * @Route("/formlist/updaterecords", defaults={"channel"="updaterecords"}, name="record_form_list_updaterecords")
      * @Method("GET")
@@ -330,7 +330,7 @@ class RecordController extends Controller
     /**
      * List Forms Available for Update Record.
      *
-     * @Secure(roles="ROLE_RECORD_LISTFORMS")
+     * @Secure(roles="ROLE_SUPER_USER,ROLE_RECORD_LISTFORMS")
      * @Route("/formlistupdate", name="record_form_list_update")
      * @Method("GET")
      * @Template("HrisRecordsBundle:Record:formlistupdate.html.twig")
@@ -349,7 +349,7 @@ class RecordController extends Controller
     /**
      * Creates a new Record entity.
      *
-     * @Secure(roles="ROLE_RECORD_CREATE")
+     * @Secure(roles="ROLE_SUPER_USER,ROLE_RECORD_CREATE")
      * @Route("/", name="record_create")
      * @Method("POST")
      * @Template("HrisRecordsBundle:Record:new.html.twig")
@@ -429,7 +429,7 @@ class RecordController extends Controller
     /**
      * Displays a form to create a new Record entity.
      *
-     * @Secure(roles="ROLE_RECORD_CREATE")
+     * @Secure(roles="ROLE_SUPER_USER,ROLE_RECORD_CREATE")
      * @Route("/new/{id}", requirements={"id"="\d+"}, name="record_new")
      * @Method("GET")
      * @Template()
@@ -488,7 +488,7 @@ class RecordController extends Controller
     /**
      * Finds and displays a Record entity.
      *
-     * @Secure(roles="ROLE_RECORD_SHOW")
+     * @Secure(roles="ROLE_SUPER_USER,ROLE_RECORD_SHOW")
      * @Route("/{id}", requirements={"id"="\d+"}, name="record_show")
      * @Method("GET")
      * @Template()
@@ -537,7 +537,7 @@ class RecordController extends Controller
     /**
      * Displays a form to edit an existing Record entity.
      *
-     * @Secure(roles="ROLE_RECORD_UPDATE")
+     * @Secure(roles="ROLE_SUPER_USER,ROLE_RECORD_UPDATE")
      * @Route("/{id}/edit", requirements={"id"="\d+"}, name="record_edit")
      * @Method("GET")
      * @Template()
@@ -615,7 +615,7 @@ class RecordController extends Controller
     /**
      * Edits an existing Record entity.
      *
-     * @Secure(roles="ROLE_RECORD_UPDATE")
+     * @Secure(roles="ROLE_SUPER_USER,ROLE_RECORD_UPDATE")
      * @Route("/update", name="record_update")
      * @Method("POST")
      * @Template("HrisRecordsBundle:Record:viewRecords.html.twig")
@@ -687,7 +687,7 @@ class RecordController extends Controller
     /**
      * Deletes a Record entity.
      *
-     * @Secure(roles="ROLE_RECORD_DELETE")
+     * @Secure(roles="ROLE_SUPER_USER,ROLE_RECORD_DELETE")
      * @Route("/{id}", requirements={"id"="\d+"}, name="record_delete")
      * @Method("DELETE")
      */
@@ -728,7 +728,7 @@ class RecordController extends Controller
     /**
      * Change the Forms for the Employee.
      *
-     * @Secure(roles="ROLE_RECORD_CHANGEFORM")
+     * @Secure(roles="ROLE_SUPER_USER,ROLE_RECORD_CHANGEFORM")
      * @Route("/changeform", name="record_form_change")
      * @Method("POST")
      */

@@ -22,7 +22,7 @@ class TopicController extends Controller
     /**
      * Lists all Topic entities.
      *
-     * @Secure(roles="ROLE_HELPTOPIC_LIST")
+     * @Secure(roles="ROLE_SUPER_USER,ROLE_HELPTOPIC_LIST")
      * @Route("/", name="help_topic")
      * @Method("GET")
      * @Template()
@@ -47,7 +47,7 @@ class TopicController extends Controller
     /**
      * Creates a new Topic entity.
      *
-     * @Secure(roles="ROLE_HELPTOPIC_CREATE")
+     * @Secure(roles="ROLE_SUPER_USER,ROLE_HELPTOPIC_CREATE")
      * @Route("/", name="help_topic_create")
      * @Method("POST")
      * @Template("HrisHelpCentreBundle:Topic:new.html.twig")
@@ -92,7 +92,7 @@ class TopicController extends Controller
     /**
      * Displays a form to create a new Topic entity.
      *
-     * @Secure(roles="ROLE_HELPTOPIC_CREATE")
+     * @Secure(roles="ROLE_SUPER_USER,ROLE_HELPTOPIC_CREATE")
      * @Route("/new", name="help_topic_new")
      * @Method("GET")
      * @Template()
@@ -111,7 +111,7 @@ class TopicController extends Controller
     /**
      * Finds and displays a Topic entity.
      *
-     * @Secure(roles="ROLE_HELPTOPIC_SHOW")
+     * @Secure(roles="ROLE_SUPER_USER,ROLE_HELPTOPIC_SHOW")
      * @Route("/{id}", name="help_topic_show")
      * @Method("GET")
      * @Template()
@@ -137,7 +137,7 @@ class TopicController extends Controller
     /**
      * Displays a form to edit an existing Topic entity.
      *
-     * @Secure(roles="ROLE_HELPTOPIC_UPDATE")
+     * @Secure(roles="ROLE_SUPER_USER,ROLE_HELPTOPIC_UPDATE")
      * @Route("/{id}/edit", name="help_topic_edit")
      * @Method("GET")
      * @Template()
@@ -181,7 +181,7 @@ class TopicController extends Controller
     /**
      * Edits an existing Topic entity.
      *
-     * @Secure(roles="ROLE_HELPTOPIC_UPDATE")
+     * @Secure(roles="ROLE_SUPER_USER,ROLE_HELPTOPIC_UPDATE")
      * @Route("/{id}", name="help_topic_update")
      * @Method("PUT")
      * @Template("HrisHelpCentreBundle:Topic:edit.html.twig")
@@ -215,7 +215,7 @@ class TopicController extends Controller
     /**
      * Deletes a Topic entity.
      *
-     * @Secure(roles="ROLE_HELPTOPIC_DELETE")
+     * @Secure(roles="ROLE_SUPER_USER,ROLE_HELPTOPIC_DELETE")
      * @Route("/{id}", name="help_topic_delete")
      * @Method("DELETE")
      */

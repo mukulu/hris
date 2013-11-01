@@ -22,7 +22,7 @@ class ChapterController extends Controller
     /**
      * Lists all Chapter entities.
      *
-     * @Secure(roles="ROLE_HELPCHAPTER_LIST")
+     * @Secure(roles="ROLE_SUPER_USER,ROLE_HELPCHAPTER_LIST")
      * @Route("/", name="help_chapter")
      * @Method("GET")
      * @Template()
@@ -47,7 +47,7 @@ class ChapterController extends Controller
     /**
      * Creates a new Chapter entity.
      *
-     * @Secure(roles="ROLE_HELPCHAPTER_CREATE")
+     * @Secure(roles="ROLE_SUPER_USER,ROLE_HELPCHAPTER_CREATE")
      * @Route("/", name="help_chapter_create")
      * @Method("POST")
      * @Template("HrisHelpCentreBundle:Chapter:new.html.twig")
@@ -92,7 +92,7 @@ class ChapterController extends Controller
     /**
      * Displays a form to create a new Chapter entity.
      *
-     * @Secure(roles="ROLE_HELPCHAPTER_CREATE")
+     * @Secure(roles="ROLE_SUPER_USER,ROLE_HELPCHAPTER_CREATE")
      * @Route("/new", name="help_chapter_new")
      * @Method("GET")
      * @Template()
@@ -111,7 +111,7 @@ class ChapterController extends Controller
     /**
      * Finds and displays a Chapter entity.
      *
-     * @Secure(roles="ROLE_HELPCHAPTER_SHOW")
+     * @Secure(roles="ROLE_SUPER_USER,ROLE_HELPCHAPTER_SHOW")
      * @Route("/{id}", name="help_chapter_show")
      * @Method("GET")
      * @Template()
@@ -137,7 +137,7 @@ class ChapterController extends Controller
     /**
      * Displays a form to edit an existing Chapter entity.
      *
-     * @Secure(roles="ROLE_HELPCHAPTER_UPDATE")
+     * @Secure(roles="ROLE_SUPER_USER,ROLE_HELPCHAPTER_UPDATE")
      * @Route("/{id}/edit", name="help_chapter_edit")
      * @Method("GET")
      * @Template()
@@ -181,7 +181,7 @@ class ChapterController extends Controller
     /**
      * Edits an existing Chapter entity.
      *
-     * @Secure(roles="ROLE_HELPCHAPTER_UPDATE")
+     * @Secure(roles="ROLE_SUPER_USER,ROLE_HELPCHAPTER_UPDATE")
      * @Route("/{id}", name="help_chapter_update")
      * @Method("PUT")
      * @Template("HrisHelpCentreBundle:Chapter:edit.html.twig")
@@ -215,7 +215,7 @@ class ChapterController extends Controller
     /**
      * Deletes a Chapter entity.
      *
-     * @Secure(roles="ROLE_HELPCHAPTER_DELETE")
+     * @Secure(roles="ROLE_SUPER_USER,ROLE_HELPCHAPTER_DELETE")
      * @Route("/{id}", name="help_chapter_delete")
      * @Method("DELETE")
      */

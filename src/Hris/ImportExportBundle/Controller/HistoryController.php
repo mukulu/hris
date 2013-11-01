@@ -44,7 +44,7 @@ class HistoryController extends Controller
     /**
      * Lists all History entities.
      *
-     * @Secure(roles="ROLE_IMPORTHISTORY_LIST")
+     * @Secure(roles="ROLE_SUPER_USER,ROLE_IMPORTHISTORY_LIST")
      * @Route("/", name="importexport_history")
      * @Route("/list", name="importexport_history_list")
      * @Method("GET")
@@ -63,7 +63,7 @@ class HistoryController extends Controller
     /**
      * Creates a new History entity.
      *
-     * @Secure(roles="ROLE_IMPORTHISTORY_CREATE")
+     * @Secure(roles="ROLE_SUPER_USER,ROLE_IMPORTHISTORY_CREATE")
      * @Route("/", name="importexport_history_create")
      * @Method("POST")
      * @Template("HrisImportExportBundle:History:new.html.twig")
@@ -91,7 +91,7 @@ class HistoryController extends Controller
     /**
      * Displays a form to create a new History entity.
      *
-     * @Secure(roles="ROLE_IMPORTHISTORY_CREATE")
+     * @Secure(roles="ROLE_SUPER_USER,ROLE_IMPORTHISTORY_CREATE")
      * @Route("/new", name="importexport_history_new")
      * @Method("GET")
      * @Template()
@@ -110,7 +110,7 @@ class HistoryController extends Controller
     /**
      * Finds and displays a History entity.
      *
-     * @Secure(roles="ROLE_IMPORTHISTORY_SHOW")
+     * @Secure(roles="ROLE_SUPER_USER,ROLE_IMPORTHISTORY_SHOW")
      * @Route("/{id}", requirements={"id"="\d+"}, name="importexport_history_show")
      * @Method("GET")
      * @Template()
@@ -136,7 +136,7 @@ class HistoryController extends Controller
     /**
      * Displays a form to edit an existing History entity.
      *
-     * @Secure(roles="ROLE_IMPORTHISTORY_UPDATE")
+     * @Secure(roles="ROLE_SUPER_USER,ROLE_IMPORTHISTORY_UPDATE")
      * @Route("/{id}/edit", name="importexport_history_edit")
      * @Method("GET")
      * @Template()
@@ -164,7 +164,7 @@ class HistoryController extends Controller
     /**
      * Edits an existing History entity.
      *
-     * @Secure(roles="ROLE_IMPORTHISTORY_UPDATE")
+     * @Secure(roles="ROLE_SUPER_USER,ROLE_IMPORTHISTORY_UPDATE")
      * @Route("/{id}", name="importexport_history_update")
      * @Method("PUT")
      * @Template("HrisImportExportBundle:History:edit.html.twig")
@@ -199,7 +199,7 @@ class HistoryController extends Controller
     /**
      * Deletes a History entity.
      *
-     * @Secure(roles="ROLE_IMPORTHISTORY_DELETE")
+     * @Secure(roles="ROLE_SUPER_USER,ROLE_IMPORTHISTORY_DELETE")
      * @Route("/{id}", name="importexport_history_delete")
      * @Method("DELETE")
      */

@@ -47,7 +47,7 @@ class ResettingController extends ContainerAware
     /**
      * Request reset user password: show form
      *
-     * @Secure(roles="ROLE_USER_RESETPASSWORD,IS_AUTHENTICATED_ANONYMOUSLY,ROLE_USER")
+     * @Secure(roles="ROLE_SUPER_USER,ROLE_USER_RESETPASSWORD,IS_AUTHENTICATED_ANONYMOUSLY,ROLE_USER")
      */
     public function requestAction()
     {
@@ -57,7 +57,7 @@ class ResettingController extends ContainerAware
     /**
      * Request reset user password: submit form and send email
      *
-     * @Secure(roles="ROLE_USER_RESETPASSWORDSENDEMAIL,IS_AUTHENTICATED_ANONYMOUSLY,ROLE_USER")
+     * @Secure(roles="ROLE_SUPER_USER,ROLE_USER_RESETPASSWORDSENDEMAIL,IS_AUTHENTICATED_ANONYMOUSLY,ROLE_USER")
      */
     public function sendEmailAction()
     {
@@ -91,7 +91,7 @@ class ResettingController extends ContainerAware
     /**
      * Tell the user to check his email provider
      *
-     * @Secure(roles="ROLE_USER_RESETPASSWORDCHECKEMAIL,IS_AUTHENTICATED_ANONYMOUSLY,ROLE_USER")
+     * @Secure(roles="ROLE_SUPER_USER,ROLE_USER_RESETPASSWORDCHECKEMAIL,IS_AUTHENTICATED_ANONYMOUSLY,ROLE_USER")
      */
     public function checkEmailAction()
     {
@@ -110,7 +110,7 @@ class ResettingController extends ContainerAware
     }
 
     /**
-     * @Secure(roles="ROLE_USER_RESETPASSWORD,IS_AUTHENTICATED_ANONYMOUSLY,ROLE_USER")
+     * @Secure(roles="ROLE_SUPER_USER,ROLE_USER_RESETPASSWORD,IS_AUTHENTICATED_ANONYMOUSLY,ROLE_USER")
      * Reset user password
      */
     public function resetAction($token)

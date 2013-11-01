@@ -40,7 +40,7 @@ class DefaultController extends Controller
     /**
      * Displays hello message
      *
-     * @Secure(roles="ROLE_MESSAGE_HELLO")
+     * @Secure(roles="ROLE_SUPER_USER,ROLE_MESSAGE_HELLO")
      * @Route("/hello/{name}", defaults={"name"="hello"}, name="hris_message_hello")
      * @Method("GET")
      * @Template()

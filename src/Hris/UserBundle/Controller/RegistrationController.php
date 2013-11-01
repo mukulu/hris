@@ -47,7 +47,7 @@ class RegistrationController extends ContainerAware
     /**
      * Registers user
      *
-     * @Secure(roles="ROLE_USERREGISTRATION_REGISTER,IS_AUTHENTICATED_ANONYMOUSLY,ROLE_USER")
+     * @Secure(roles="ROLE_SUPER_USER,ROLE_USERREGISTRATION_REGISTER,IS_AUTHENTICATED_ANONYMOUSLY,ROLE_USER")
      * @return RedirectResponse
      */
     public function registerAction()
@@ -88,7 +88,7 @@ class RegistrationController extends ContainerAware
     /**
      * Tell the user to check his email provider
      *
-     * @Secure(roles="ROLE_USERREGISTRATION_CHECKEMAIL,IS_AUTHENTICATED_ANONYMOUSLY,ROLE_USER")
+     * @Secure(roles="ROLE_SUPER_USER,ROLE_USERREGISTRATION_CHECKEMAIL,IS_AUTHENTICATED_ANONYMOUSLY,ROLE_USER")
      */
     public function checkEmailAction()
     {
@@ -108,7 +108,7 @@ class RegistrationController extends ContainerAware
     /**
      * Receive the confirmation token from user email provider, login the user
      *
-     * @Secure(roles="ROLE_USERREGISTRATION_CONFIRM,IS_AUTHENTICATED_ANONYMOUSLY,ROLE_USER")
+     * @Secure(roles="ROLE_SUPER_USER,ROLE_USERREGISTRATION_CONFIRM,IS_AUTHENTICATED_ANONYMOUSLY,ROLE_USER")
      */
     public function confirmAction($token)
     {
@@ -132,7 +132,7 @@ class RegistrationController extends ContainerAware
     /**
      * Tell the user his account is now confirmed
      *
-     * @Secure(roles="ROLE_USERREGISTRATION_CONFIRMED,IS_AUTHENTICATED_ANONYMOUSLY,ROLE_USER")
+     * @Secure(roles="ROLE_SUPER_USER,ROLE_USERREGISTRATION_CONFIRMED,IS_AUTHENTICATED_ANONYMOUSLY,ROLE_USER")
      */
     public function confirmedAction()
     {
@@ -149,7 +149,7 @@ class RegistrationController extends ContainerAware
     /**
      * Authenticate a user with Symfony Security
      *
-     * @Secure(roles="ROLE_USERREGISTRATION_CONFIRM,IS_AUTHENTICATED_ANONYMOUSLY,ROLE_USER")
+     * @Secure(roles="ROLE_SUPER_USER,ROLE_USERREGISTRATION_CONFIRM,IS_AUTHENTICATED_ANONYMOUSLY,ROLE_USER")
      * @param \FOS\UserBundle\Model\UserInterface        $user
      * @param \Symfony\Component\HttpFoundation\Response $response
      */
@@ -167,7 +167,7 @@ class RegistrationController extends ContainerAware
     }
 
     /**
-     * @Secure(roles="ROLE_USERREGISTRATION_CONFIRM,IS_AUTHENTICATED_ANONYMOUSLY,ROLE_USER")
+     * @Secure(roles="ROLE_SUPER_USER,ROLE_USERREGISTRATION_CONFIRM,IS_AUTHENTICATED_ANONYMOUSLY,ROLE_USER")
      * @param string $action
      * @param string $value
      */

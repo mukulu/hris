@@ -44,7 +44,7 @@ class ReportOrganisationunitByGroupsetController extends Controller
     /**
      * Show Report Form for generation of Organisation unit by groupset
      *
-     * @Secure(roles="ROLE_REPORTORGANISATIONUNITGROUPSET_GENERATE,ROLE_USER")
+     * @Secure(roles="ROLE_SUPER_USER,ROLE_REPORTORGANISATIONUNITGROUPSET_GENERATE,ROLE_USER")
      * @Route("/", name="report_organisationunit_groupset")
      * @Method("GET")
      * @Template()
@@ -62,7 +62,7 @@ class ReportOrganisationunitByGroupsetController extends Controller
     /**
      * Generate Report for Organisationunit by Groupset
      *
-     * @Secure(roles="ROLE_REPORTORGANISATIONUNITGROUPSET_GENERATE,ROLE_USER")
+     * @Secure(roles="ROLE_SUPER_USER,ROLE_REPORTORGANISATIONUNITGROUPSET_GENERATE,ROLE_USER")
      * @Route("/", name="report_organisationunit_groupset_generate")
      * @Method("PUT")
      * @Template()

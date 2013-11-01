@@ -35,7 +35,7 @@ class SecurityController extends ContainerAware
     /**
      * Proccess user registration
      *
-     * @Secure(roles="ROLE_USER_LOGIN,IS_AUTHENTICATED_ANONYMOUSLY,ROLE_USER")
+     * @Secure(roles="ROLE_SUPER_USER,ROLE_USER_LOGIN,IS_AUTHENTICATED_ANONYMOUSLY,ROLE_USER")
      * @return \Symfony\Component\HttpFoundation\Response
      */
     public function loginAction()
@@ -77,7 +77,7 @@ class SecurityController extends ContainerAware
      * Renders the login template with the given parameters. Overwrite this function in
      * an extended controller to provide additional data for the login template.
      *
-     * @Secure(roles="ROLE_USER_LOGIN,IS_AUTHENTICATED_ANONYMOUSLY,ROLE_USER")
+     * @Secure(roles="ROLE_SUPER_USER,ROLE_USER_LOGIN,IS_AUTHENTICATED_ANONYMOUSLY,ROLE_USER")
      * @param array $data
      *
      * @return \Symfony\Component\HttpFoundation\Response
@@ -90,7 +90,7 @@ class SecurityController extends ContainerAware
     }
 
     /**
-     * @Secure(roles="ROLE_USER_LOGIN,IS_AUTHENTICATED_ANONYMOUSLY,ROLE_USER")
+     * @Secure(roles="ROLE_SUPER_USER,ROLE_USER_LOGIN,IS_AUTHENTICATED_ANONYMOUSLY,ROLE_USER")
      * @throws \RuntimeException
      */
     public function checkAction()
@@ -99,7 +99,7 @@ class SecurityController extends ContainerAware
     }
 
     /**
-     * @Secure(roles="ROLE_USER_LOGIN,IS_AUTHENTICATED_ANONYMOUSLY,ROLE_USER")
+     * @Secure(roles="ROLE_SUPER_USER,ROLE_USER_LOGIN,IS_AUTHENTICATED_ANONYMOUSLY,ROLE_USER")
      * @throws \RuntimeException
      */
     public function logoutAction()

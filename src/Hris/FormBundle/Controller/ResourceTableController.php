@@ -46,7 +46,7 @@ class ResourceTableController extends Controller
     /**
      * Lists all ResourceTable entities.
      *
-     * @Secure(roles="ROLE_RESOURCETABLE_LIST")
+     * @Secure(roles="ROLE_SUPER_USER,ROLE_RESOURCETABLE_LIST")
      * @Route("/", name="resourcetable")
      * @Route("/list", name="resourcetable_list")
      * @Method("GET")
@@ -71,7 +71,7 @@ class ResourceTableController extends Controller
     /**
      * Creates a new ResourceTable entity.
      *
-     * @Secure(roles="ROLE_RESOURCETABLE_CREATE")
+     * @Secure(roles="ROLE_SUPER_USER,ROLE_RESOURCETABLE_CREATE")
      * @Route("/", name="resourcetable_create")
      * @Method("POST")
      * @Template("HrisFormBundle:ResourceTable:new.html.twig")
@@ -111,7 +111,7 @@ class ResourceTableController extends Controller
     /**
      * Displays a form to create a new ResourceTable entity.
      *
-     * @Secure(roles="ROLE_RESOURCETABLE_CREATE")
+     * @Secure(roles="ROLE_SUPER_USER,ROLE_RESOURCETABLE_CREATE")
      * @Route("/new", name="resourcetable_new")
      * @Method("GET")
      * @Template()
@@ -130,7 +130,7 @@ class ResourceTableController extends Controller
     /**
      * Finds and displays a ResourceTable entity.
      *
-     * @Secure(roles="ROLE_RESOURCETABLE_SHOW")
+     * @Secure(roles="ROLE_SUPER_USER,ROLE_RESOURCETABLE_SHOW")
      * @Route("/{id}", requirements={"id"="\d+"}, name="resourcetable_show")
      * @Method("GET")
      * @Template()
@@ -156,7 +156,7 @@ class ResourceTableController extends Controller
     /**
      * Finds and generates a ResourceTable entity.
      *
-     * @Secure(roles="ROLE_RESOURCETABLE_GENERATE")
+     * @Secure(roles="ROLE_SUPER_USER,ROLE_RESOURCETABLE_GENERATE")
      * @Route("/{id}/generate/{context}", requirements={"id"="\d+","context"="graceful|forced"}, defaults={"context"="graceful"}, name="resourcetable_generate")
      * @Method("GET")
      * @Template()
@@ -198,7 +198,7 @@ class ResourceTableController extends Controller
     /**
      * Displays a form to edit an existing ResourceTable entity.
      *
-     * @Secure(roles="ROLE_RESOURCETABLE_UPDATE")
+     * @Secure(roles="ROLE_SUPER_USER,ROLE_RESOURCETABLE_UPDATE")
      * @Route("/{id}/edit", requirements={"id"="\d+"}, name="resourcetable_edit")
      * @Method("GET")
      * @Template()
@@ -234,7 +234,7 @@ class ResourceTableController extends Controller
     /**
      * Edits an existing ResourceTable entity.
      *
-     * @Secure(roles="ROLE_RESOURCETABLE_UPDATE")
+     * @Secure(roles="ROLE_SUPER_USER,ROLE_RESOURCETABLE_UPDATE")
      * @Route("/{id}", requirements={"id"="\d+"}, name="resourcetable_update")
      * @Method("PUT")
      * @Template("HrisFormBundle:ResourceTable:edit.html.twig")
@@ -289,7 +289,7 @@ class ResourceTableController extends Controller
     /**
      * Deletes a ResourceTable entity.
      *
-     * @Secure(roles="ROLE_RESOURCETABLE_DELETE")
+     * @Secure(roles="ROLE_SUPER_USER,ROLE_RESOURCETABLE_DELETE")
      * @Route("/{id}", requirements={"id"="\d+"}, name="resourcetable_delete")
      * @Method("DELETE")
      */

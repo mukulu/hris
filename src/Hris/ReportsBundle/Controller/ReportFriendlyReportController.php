@@ -76,7 +76,7 @@ class ReportFriendlyReportController extends Controller
     /**
      * Show Report Aggregation
      *
-     * @Secure(roles="ROLE_REPORTFRIENDLYREPORT_GENERATE,ROLE_USER")
+     * @Secure(roles="ROLE_SUPER_USER,ROLE_REPORTFRIENDLYREPORT_GENERATE,ROLE_USER")
      * @Route("/", name="report_friendlyreport")
      * @Method("GET")
      * @Template()
@@ -94,7 +94,7 @@ class ReportFriendlyReportController extends Controller
     /**
      * Generate friendly reports
      *
-     * @Secure(roles="ROLE_REPORTFRIENDLYREPORT_GENERATE,ROLE_USER")
+     * @Secure(roles="ROLE_SUPER_USER,ROLE_REPORTFRIENDLYREPORT_GENERATE,ROLE_USER")
      * @Route("/", name="report_friendlyreport_generate")
      * @Method("PUT")
      * @Template()

@@ -46,7 +46,7 @@ class FriendlyReportController extends Controller
     /**
      * Lists all FriendlyReport entities.
      *
-     * @Secure(roles="ROLE_FRIENDLYREPORT_LIST")
+     * @Secure(roles="ROLE_SUPER_USER,ROLE_FRIENDLYREPORT_LIST")
      * @Route("/", name="friendlyreport")
      * @Route("/list", name="friendlyreport_list")
      * @Method("GET")
@@ -73,7 +73,7 @@ class FriendlyReportController extends Controller
     /**
      * Displays a form to create a new FriendlyReport entity.
      *
-     * @Secure(roles="ROLE_FRIENDLYREPORT_CREATE")
+     * @Secure(roles="ROLE_SUPER_USER,ROLE_FRIENDLYREPORT_CREATE")
      * @Route("/new", name="friendlyreport_new")
      * @Method("GET")
      * @Template()
@@ -92,7 +92,7 @@ class FriendlyReportController extends Controller
     /**
      * Creates a new FriendlyReport entity.
      *
-     * @Secure(roles="ROLE_FRIENDLYREPORT_CREATE")
+     * @Secure(roles="ROLE_SUPER_USER,ROLE_FRIENDLYREPORT_CREATE")
      * @Route("/", name="friendlyreport_create")
      * @Method("POST")
      * @Template("HrisFormBundle:FriendlyReport:new.html.twig")
@@ -132,7 +132,7 @@ class FriendlyReportController extends Controller
     /**
      * Finds and displays a FriendlyReport entity.
      *
-     * @Secure(roles="ROLE_FRIENDLYREPORT_SHOW")
+     * @Secure(roles="ROLE_SUPER_USER,ROLE_FRIENDLYREPORT_SHOW")
      * @Route("/{id}", requirements={"id"="\d+"}, requirements={"id"="\d+"}, name="friendlyreport_show")
      * @Method("GET")
      * @Template()
@@ -158,7 +158,7 @@ class FriendlyReportController extends Controller
     /**
      * Displays a form to edit an existing FriendlyReport entity.
      *
-     * @Secure(roles="ROLE_FRIENDLYREPORT_UPDATE")
+     * @Secure(roles="ROLE_SUPER_USER,ROLE_FRIENDLYREPORT_UPDATE")
      * @Route("/{id}/edit", requirements={"id"="\d+"}, name="friendlyreport_edit")
      * @Method("GET")
      * @Template()
@@ -193,7 +193,7 @@ class FriendlyReportController extends Controller
     /**
      * Edits an existing FriendlyReport entity.
      *
-     * @Secure(roles="ROLE_FRIENDLYREPORT_UPDATE")
+     * @Secure(roles="ROLE_SUPER_USER,ROLE_FRIENDLYREPORT_UPDATE")
      * @Route("/{id}", requirements={"id"="\d+"}, name="friendlyreport_update")
      * @Method("PUT")
      * @Template("HrisFormBundle:FriendlyReport:edit.html.twig")
@@ -248,7 +248,7 @@ class FriendlyReportController extends Controller
     /**
      * Deletes a FriendlyReport entity.
      *
-     * @Secure(roles="ROLE_FRIENDLYREPORT_DELETE")
+     * @Secure(roles="ROLE_SUPER_USER,ROLE_FRIENDLYREPORT_DELETE")
      * @Route("/{id}", requirements={"id"="\d+"}, name="friendlyreport_delete")
      * @Method("DELETE")
      */
