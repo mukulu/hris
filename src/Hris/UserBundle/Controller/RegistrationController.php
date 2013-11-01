@@ -149,6 +149,7 @@ class RegistrationController extends ContainerAware
     /**
      * Authenticate a user with Symfony Security
      *
+     * @Secure(roles="ROLE_USERREGISTRATION_CONFIRM,IS_AUTHENTICATED_ANONYMOUSLY,ROLE_USER")
      * @param \FOS\UserBundle\Model\UserInterface        $user
      * @param \Symfony\Component\HttpFoundation\Response $response
      */
@@ -166,6 +167,7 @@ class RegistrationController extends ContainerAware
     }
 
     /**
+     * @Secure(roles="ROLE_USERREGISTRATION_CONFIRM,IS_AUTHENTICATED_ANONYMOUSLY,ROLE_USER")
      * @param string $action
      * @param string $value
      */

@@ -45,7 +45,7 @@ class HistoryController extends Controller
     /**
      * Lists all History entities.
      *
-     * @Secure(roles="ROLE_RECORDHISTORY_LIST,ROLE_USER")
+     * @Secure(roles="ROLE_RECORDHISTORY_LIST")
      * @Route("/", name="history")
      * @Route("/list", name="history_list")
      * @Route("/list/{recordid}/", requirements={"recordid"="\d+"}, name="history_list_byrecord")
@@ -78,7 +78,7 @@ class HistoryController extends Controller
     /**
      * Creates a new History entity.
      *
-     * @Secure(roles="ROLE_RECORDHISTORY_CREATE,ROLE_USER")
+     * @Secure(roles="ROLE_RECORDHISTORY_CREATE")
      * @Route("/{recordid}/recordid", requirements={"recordid"="\d+"}, name="history_create")
      * @Method("POST")
      * @Template("HrisRecordsBundle:History:new.html.twig")
@@ -149,7 +149,7 @@ class HistoryController extends Controller
     /**
      * Displays a form to create a new History entity.
      *
-     * @Secure(roles="ROLE_RECORDHISTORY_CREATE,ROLE_USER")
+     * @Secure(roles="ROLE_RECORDHISTORY_CREATE")
      * @Route("/new/{recordid}/recordid", requirements={"recordid"="\d+"}, name="history_new")
      * @Method("GET")
      * @Template()
@@ -194,7 +194,7 @@ class HistoryController extends Controller
     /**
      * Returns Employee's Full Name
      *
-     * @Secure(roles="ROLE_RECORDHISTORY_SHOWEMPLOYEENAME,ROLE_USER")
+     * @Secure(roles="ROLE_RECORDHISTORY_SHOWEMPLOYEENAME")
      * @Method("GET")
      * @Template()
      */
@@ -224,7 +224,7 @@ class HistoryController extends Controller
     /**
      * Finds and displays a History entity.
      *
-     * @Secure(roles="ROLE_RECORDHISTORY_SHOW,ROLE_USER")
+     * @Secure(roles="ROLE_RECORDHISTORY_SHOW")
      * @Route("/{id}", requirements={"id"="\d+"}, requirements={"id"="\d+"}, name="history_show")
      * @Method("GET")
      * @Template()
@@ -250,7 +250,7 @@ class HistoryController extends Controller
     /**
      * Displays a form to edit an existing History entity.
      *
-     * @Secure(roles="ROLE_RECORDHISTORY_UPDATE,ROLE_USER")
+     * @Secure(roles="ROLE_RECORDHISTORY_UPDATE")
      * @Route("/{id}/edit", requirements={"id"="\d+"}, name="history_edit")
      * @Method("GET")
      * @Template()
@@ -279,7 +279,7 @@ class HistoryController extends Controller
     /**
      * Edits an existing History entity.
      *
-     * @Secure(roles="ROLE_RECORDHISTORY_UPDATE,ROLE_USER")
+     * @Secure(roles="ROLE_RECORDHISTORY_UPDATE")
      * @Route("/{id}", requirements={"id"="\d+"}, name="history_update")
      * @Method("PUT")
      * @Template("HrisRecordsBundle:History:edit.html.twig")
@@ -353,7 +353,7 @@ class HistoryController extends Controller
     /**
      * Deletes a History entity.
      *
-     * @Secure(roles="ROLE_RECORDHISTORY_DELETE,ROLE_USER")
+     * @Secure(roles="ROLE_RECORDHISTORY_DELETE")
      * @Route("/{id}", requirements={"id"="\d+"}, name="history_delete")
      * @Method("DELETE")
      */
@@ -397,7 +397,7 @@ class HistoryController extends Controller
      * Returns FieldOptions json.
      *
      *
-     * @Secure(roles="ROLE_RECORDHISTORY_SHOWFIELDOPTION,ROLE_USER")
+     * @Secure(roles="ROLE_RECORDHISTORY_SHOWFIELDOPTION")
      * @Route("/historyFieldOption.{_format}", requirements={"_format"="yml|xml|json"}, defaults={"_format"="json"}, name="history_historyfieldption")
      * @Method("POST")
      * @Template()

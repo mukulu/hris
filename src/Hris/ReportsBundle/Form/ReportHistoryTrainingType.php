@@ -52,16 +52,18 @@ class ReportHistoryTrainingType extends AbstractType
             ))
             ->add('reportType','choice',array(
                 'choices'=>array(
-                    'empty_value' => '--SELECT--',
+                    '' => '--SELECT--',
                     'history'=>'History Report',
                     'training'=>'In Service Training Report'
                 ),
+                'required'=>True,
                 'constraints'=>array(
                     new NotBlank(),
                 )
             ))
             ->add('forms','entity', array(
                 'class'=>'HrisFormBundle:Form',
+                'required'=>True,
                 'constraints'=>array(
                     new NotBlank(),
                 )
@@ -85,7 +87,7 @@ class ReportHistoryTrainingType extends AbstractType
                     new NotBlank(),
                 )
             ))
-            ->add('Generate Report','submit')
+            ->add('submit','submit')
         ;
     }
 
