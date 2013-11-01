@@ -1,7 +1,33 @@
 {% extends '::base.html.twig' %}
 
+{% block javascripts %}
+    {{ parent() }}
+    <script type="text/javascript" language="javascript" src="{{ asset('commons/js/jquery.multi-select.js') }}"></script>
+    <script type="text/javascript">
+        $( document ).ready(function() {
+            $('#hris_formbundle_formtype_uniqueRecordFields').multiSelect({
+                selectableHeader: "<div class=''>Avaiable Fields</div>",
+                selectionHeader: "<div class=''>Selected Fields</div>"
+            });
+            $('#hris_formbundle_formtype_formFieldMembers').multiSelect({
+                selectableHeader: "<div class=''>Avaiable Fields</div>",
+                selectionHeader: "<div class=''>Selected Fields</div>"
+            });
+            $('#hris_formbundle_formtype_formVisibleFields').multiSelect({
+                selectableHeader: "<div class=''>Avaiable Fields</div>",
+                selectionHeader: "<div class=''>Selected Fields</div>"
+            });
+        });
+    </script>
+{% endblock javascripts %}
+
+{% block stylesheets %}
+    {{ parent() }}
+    <link rel="stylesheet" type="text/css" media="all" href="{{ asset('commons/css/multi-select.css') }}">
+{% endblock stylesheets %}
+
 {% block right_content -%}
-    <h1>Form creation</h1>
+    <h1><small>Form creation</small></h1>
 
     <form action="{{ path('form_create') }}" method="post" {{ form_enctype(form) }}>
         {{ form_widget(form) }}

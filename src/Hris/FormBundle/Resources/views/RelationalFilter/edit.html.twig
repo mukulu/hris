@@ -1,5 +1,23 @@
 {% extends '::base.html.twig' %}
 
+{% block javascripts %}
+    {{ parent() }}
+    <script type="text/javascript" language="javascript" src="{{ asset('commons/js/jquery.multi-select.js') }}"></script>
+    <script type="text/javascript">
+        $( document ).ready(function() {
+            $('#hris_formbundle_relationalfiltertype_fieldOption').multiSelect({
+                selectableHeader: "<div class=''>Avaiable Options</div>",
+                selectionHeader: "<div class=''>Selected Options</div>"
+            });
+        });
+    </script>
+{% endblock javascripts %}
+
+{% block stylesheets %}
+    {{ parent() }}
+    <link rel="stylesheet" type="text/css" media="all" href="{{ asset('commons/css/multi-select.css') }}">
+{% endblock stylesheets %}
+
 {% block right_content -%}
     <h1><i class="icon-edit icon-largest" title="Edit"></i><small>RelationalFilter edit</small></h1>
 

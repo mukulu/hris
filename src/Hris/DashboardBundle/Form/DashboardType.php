@@ -92,7 +92,9 @@ class DashboardType extends AbstractType
                     new NotBlank(),
                 )
             ))
-            ->add('submit','submit');
+            ->add('Submit','submit',array(
+                'attr' => array('class' => 'btn'),
+            ));
     }
 
     public function setDefaultOptions(OptionsResolverInterface $resolver)

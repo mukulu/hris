@@ -51,7 +51,7 @@ class DashboardController extends Controller
      * Note users without dashboard but with profile permissions
      * will be allowed in and redirected to profile.
      *
-     * @Secure(roles="ROLE_SUPER_USER,ROLE_DASHBOARD_HOME,ROLE_USERPROFILE_SHOW")
+     * @Secure(roles="ROLE_SUPER_USER,ROLE_DASHBOARD_HOME,ROLE_USERPROFILE_SHOW,ROLE_USER")
      *
      * @Route("/", name="hris_homepage")
      * @Route("/", name="dashboard")
@@ -64,8 +64,7 @@ class DashboardController extends Controller
     public function indexAction()
     {
         $securityContext = $this->container->get('security.context');
-        if(! $securityContext->isGranted('ROLE_DASHBOARD_HOME') ||
-            ! $securityContext->isGranted('ROLE_SUPER_USER')
+        if(! $securityContext->isGranted('ROLE_DASHBOARD_HOME') && ! $securityContext->isGranted('ROLE_SUPER_USER')
         )
         {
             return $this->redirect($this->generateUrl('fos_user_profile_show'));
