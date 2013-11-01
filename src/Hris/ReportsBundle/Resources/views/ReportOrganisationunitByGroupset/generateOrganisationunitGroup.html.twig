@@ -50,19 +50,38 @@
         <thead>
         <tr>
             <th>No.</th>
-            <th>Organisationunit Name</th>
+            {% for lowerLevel in lowerLevels %}
+                <th>{{ lowerLevel.name }}</th>
+            {% endfor %}
         </tr>
         </thead>
         <tbody>
             {% set counter = 1 %}
-            {% for organisationunit in organisationunits %}
+            {% for organisationunitStructure in organisationunitStructures %}
                 <tr>
                     <td>{{ counter }}</td>
-                    <td>{{ organisationunit.longname }}</a></td>
+                    {% for lowerLevel in lowerLevels %}
+                        {% if organisationunitStructure.level.level - lowerLevel.level == 0 %}
+                            <td>{{ organisationunitStructure.organisationunit.longname }}</td>
+                        {% elseif organisationunitStructure.level.level - lowerLevel.level == 1 %}
+                            <td>{{ organisationunitStructure.organisationunit.parent.longname }}</td>
+                        {% elseif organisationunitStructure.level.level - lowerLevel.level == 2 %}
+                            <td>{{ organisationunitStructure.organisationunit.parent.parent.longname }}</td>
+                        {% elseif organisationunitStructure.level.level - lowerLevel.level == 3 %}
+                            <td>{{ organisationunitStructure.organisationunit.parent.parent.parent.longname }}</td>
+                        {% elseif organisationunitStructure.level.level - lowerLevel.level == 4 %}
+                            <td>{{ organisationunitStructure.organisationunit.parent.parent.parent.parent.longname }}</td>
+                        {% elseif organisationunitStructure.level.level - lowerLevel.level == 5 %}
+                            <td>{{ organisationunitStructure.organisationunit.parent.parent.parent.parent.parent.longname }}</td>
+                        {% elseif organisationunitStructure.level.level - lowerLevel.level == 6 %}
+                            <td>{{ organisationunitStructure.organisationunit.parent.parent.parent.parent.parent.parent.longname }}</td>
+                        {% else %}
+                            <td></td>
+                        {% endif %}
+                    {% endfor %}
                 </tr>
                 {% set counter = counter + 1 %}
             {% endfor %}
-
         </tbody>
     </table>
 </div>

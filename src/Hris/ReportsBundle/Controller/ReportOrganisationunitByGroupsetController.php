@@ -144,7 +144,8 @@ class ReportOrganisationunitByGroupsetController extends Controller
         return array(
             'organisationunit' => $this->organisationunit,
             'organisationunitGroup'   => $this->organisationunitGroup,
-            'organisationunits' => $this->organisationunits,
+            'organisationunitStructures' => $this->organisationunitStructures,
+            'lowerLevels' => $this->lowerLevels,
             'title' => $this->title,
         );
     }
@@ -157,10 +158,11 @@ class ReportOrganisationunitByGroupsetController extends Controller
         $this->title = $this->organisationunitGroup->getName(). " under ". $this->organisationunit->getLongname();
 
         $queryBuilder = $this->getDoctrine()->getManager()->createQueryBuilder();
-        $this->organisationunits = $queryBuilder->select( 'organisationunit')
-            ->from('HrisOrganisationunitBundle:Organisationunit','organisationunit')
+
+        $this->organisationunitStructures = $queryBuilder->select( 'organisationunitStructure')
+            ->from('HrisOrganisationunitBundle:OrganisationunitStructure','organisationunitStructure')
+            ->join('organisationunitStructure.organisationunit','organisationunit')
             ->join('organisationunit.organisationunitGroup','organisationunitGroup')
-            ->join('organisationunit.organisationunitStructure','organisationunitStructure')
             ->join('organisationunitStructure.level','organisationunitLevel')
             ->where('organisationunitGroup.id = :organisationunitGroupId')
             ->andWhere('organisationunit.active=True')
@@ -173,6 +175,12 @@ class ReportOrganisationunitByGroupsetController extends Controller
             ->andWhere('organisationunitStructure.level'.$this->organisationunit->getOrganisationunitStructure()->getLevel()->getLevel().'Organisationunit=:levelId')
             ->setParameters(array('organisationunitGroupId'=> $this->organisationunitGroup->getId(),'levelId'=>$this->organisationunit->getId(),'selectedOrganisationunit'=>$this->organisationunit->getId()))
             ->getQuery()->getResult();
+
+        // Fetching higher level headings[level<= levelPrefereed] excluding highest level
+        $this->lowerLevels = $this->getDoctrine()->getManager()->createQueryBuilder()->select('organisationunitLevel')
+            ->from('HrisOrganisationunitBundle:OrganisationunitLevel', 'organisationunitLevel')
+            ->andWhere($queryBuilder->expr()->gt('organisationunitLevel.level', $this->organisationunit->getOrganisationunitStructure()->getLevel()->getLevel()))
+            ->orderBy('organisationunitLevel.level', 'ASC')->getQuery()->getResult();
     }
 
     /**
@@ -226,7 +234,12 @@ class ReportOrganisationunitByGroupsetController extends Controller
     /**
      * @var Collection
      */
-    private $organisationunits;
+    private $organisationunitStructures;
+
+    /**
+     * @var Collection
+     */
+    private $lowerLevels;
 
     /**
      * @var string
