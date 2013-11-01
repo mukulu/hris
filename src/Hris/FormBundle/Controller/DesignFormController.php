@@ -22,7 +22,7 @@ class DesignFormController extends Controller
 	/**
      * Design custom form for data entry.
      *
-     * @Secure(roles="ROLE_FORM_DESIGN,ROLE_USER")
+     * @Secure(roles="ROLE_FORM_DESIGN")
      * @Route("/{id}/design", requirements={"id"="\d+"}, name="form_design")
      * @Method("GET")
      * @Template()
@@ -50,7 +50,7 @@ class DesignFormController extends Controller
     /**
      * Edits an existing Form entity.
      *
-     * @Secure(roles="ROLE_FORM_DESIGN,ROLE_USER")
+     * @Secure(roles="ROLE_FORM_DESIGN")
      * @Route("/{id}", requirements={"id"="\d+"}, requirements={"id"="\d+"}, name="design_update")
      * @Method("PUT")
      * @Template("HrisFormBundle:Form:index.html.twig")
@@ -84,7 +84,7 @@ class DesignFormController extends Controller
     /**
      * Design Popup entry for form related Fields.
      *
-     * @Secure(roles="ROLE_FORM_DESIGNFIELDS,ROLE_USER")
+     * @Secure(roles="ROLE_FORM_DESIGNFIELDS")
      * @Route("/{id}/list", requirements={"id"="\d+"}, name="form_fields_list")
      * @Method("GET")
      * @Template()

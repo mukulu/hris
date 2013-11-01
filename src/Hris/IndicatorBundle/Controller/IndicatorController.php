@@ -44,7 +44,7 @@ class IndicatorController extends Controller
     /**
      * Lists all Indicator entities.
      *
-     * @Secure(roles="ROLE_INDICATOR_LIST,ROLE_USER")
+     * @Secure(roles="ROLE_INDICATOR_LIST")
      * @Route("/", name="indicator")
      * @Route("/list", name="indicator_list")
      * @Method("GET")
@@ -69,7 +69,7 @@ class IndicatorController extends Controller
     /**
      * Creates a new Indicator entity.
      *
-     * @Secure(roles="ROLE_INDICATOR_CREATE,ROLE_USER")
+     * @Secure(roles="ROLE_INDICATOR_CREATE")
      * @Route("/", name="indicator_create")
      * @Method("POST")
      * @Template("HrisIndicatorBundle:Indicator:new.html.twig")
@@ -97,7 +97,7 @@ class IndicatorController extends Controller
     /**
      * Displays a form to create a new Indicator entity.
      *
-     * @Secure(roles="ROLE_INDICATOR_CREATE,ROLE_USER")
+     * @Secure(roles="ROLE_INDICATOR_CREATE")
      * @Route("/new", name="indicator_new")
      * @Method("GET")
      * @Template()
@@ -116,7 +116,7 @@ class IndicatorController extends Controller
     /**
      * Finds and displays a Indicator entity.
      *
-     * @Secure(roles="ROLE_INDICATOR_SHOW,ROLE_USER")
+     * @Secure(roles="ROLE_INDICATOR_SHOW")
      * @Route("/{id}", requirements={"id"="\d+"}, name="indicator_show")
      * @Method("GET")
      * @Template()
@@ -142,7 +142,7 @@ class IndicatorController extends Controller
     /**
      * Displays a form to edit an existing Indicator entity.
      *
-     * @Secure(roles="ROLE_INDICATOR_UPDATE,ROLE_USER")
+     * @Secure(roles="ROLE_INDICATOR_UPDATE")
      * @Route("/{id}/edit", name="indicator_edit")
      * @Method("GET")
      * @Template()
@@ -170,7 +170,7 @@ class IndicatorController extends Controller
     /**
      * Edits an existing Indicator entity.
      *
-     * @Secure(roles="ROLE_INDICATOR_UPDATE,ROLE_USER")
+     * @Secure(roles="ROLE_INDICATOR_UPDATE")
      * @Route("/{id}", name="indicator_update")
      * @Method("PUT")
      * @Template("HrisIndicatorBundle:Indicator:edit.html.twig")
@@ -205,7 +205,7 @@ class IndicatorController extends Controller
     /**
      * Deletes a Indicator entity.
      *
-     * @Secure(roles="ROLE_INDICATOR_DELETE,ROLE_USER")
+     * @Secure(roles="ROLE_INDICATOR_DELETE")
      * @Route("/{id}", name="indicator_delete")
      * @Method("DELETE")
      */

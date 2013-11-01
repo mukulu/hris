@@ -44,7 +44,7 @@ class ValidationController extends Controller
     /**
      * Lists all Validation entities.
      *
-     * @Secure(roles="ROLE_VALIDATION_LIST,ROLE_USER")
+     * @Secure(roles="ROLE_VALIDATION_LIST")
      * @Route("/", name="validation")
      * @Route("/list", name="validation_list")
      * @Method("GET")
@@ -69,7 +69,7 @@ class ValidationController extends Controller
     /**
      * Creates a new Validation entity.
      *
-     * @Secure(roles="ROLE_VALIDATION_CREATE,ROLE_USER")
+     * @Secure(roles="ROLE_VALIDATION_CREATE")
      * @Route("/", name="validation_create")
      * @Method("POST")
      * @Template()
@@ -105,7 +105,7 @@ class ValidationController extends Controller
     /**
      * Displays a form to create a new Validation entity.
      *
-     * @Secure(roles="ROLE_VALIDATION_CREATE,ROLE_USER")
+     * @Secure(roles="ROLE_VALIDATION_CREATE")
      * @Route("/new", name="validation_new")
      * @Method("GET")
      * @Template()
@@ -149,7 +149,7 @@ class ValidationController extends Controller
     /**
      * Finds and displays a Validation entity.
      *
-     * @Secure(roles="ROLE_VALIDATION_SHOW,ROLE_USER")
+     * @Secure(roles="ROLE_VALIDATION_SHOW")
      * @Route("/{id}", requirements={"id"="\d+"}, name="validation_show")
      * @Method("GET")
      * @Template()
@@ -175,7 +175,7 @@ class ValidationController extends Controller
     /**
      * Displays a form to edit an existing Validation entity.
      *
-     * @Secure(roles="ROLE_VALIDATION_UPDATE,ROLE_USER")
+     * @Secure(roles="ROLE_VALIDATION_UPDATE")
      * @Route("/{id}/edit", requirements={"id"="\d+"}, name="validation_edit")
      * @Method("GET")
      * @Template()
@@ -225,7 +225,7 @@ class ValidationController extends Controller
     /**
      * Edits an existing Validation entity.
      *
-     * @Secure(roles="ROLE_VALIDATION_UPDATE,ROLE_USER")
+     * @Secure(roles="ROLE_VALIDATION_UPDATE")
      * @Route("/{id}", requirements={"id"="\d+"}, name="validation_update")
      * @Method("POST")
      * @Template()
@@ -260,7 +260,7 @@ class ValidationController extends Controller
     /**
      * Deletes a Validation entity.
      *
-     * @Secure(roles="ROLE_VALIDATION_DELETE,ROLE_USER")
+     * @Secure(roles="ROLE_VALIDATION_DELETE")
      * @Route("/{id}", requirements={"id"="\d+"}, name="validation_delete")
      * @Method("DELETE")
      */

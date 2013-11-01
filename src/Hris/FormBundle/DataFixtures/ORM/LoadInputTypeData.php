@@ -78,7 +78,7 @@ class LoadInputTypeData extends AbstractFixture implements OrderedFixtureInterfa
             5=>Array(
                 'name'=>'Date',
                 'description'=>'Date HTML Input Tag',
-                'htmltag'=>'<input type="date" name="fieldName" id="fieldId" class="date" required="required" />'),
+                'htmltag'=>'<input type="text" name="fieldName" id="fieldId" class="date" required="required" />'),
             6=>Array(
                 'name'=>'Select',
                 'description'=>'Select Options HTML Tag',

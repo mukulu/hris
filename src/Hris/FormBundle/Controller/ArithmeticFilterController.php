@@ -44,7 +44,7 @@ class ArithmeticFilterController extends Controller
     /**
      * Lists all ArithmeticFilter entities.
      *
-     * @Secure(roles="ROLE_ARITHMETICFILTER_LIST,ROLE_USER")
+     * @Secure(roles="ROLE_ARITHMETICFILTER_LIST")
      * @Route("/", name="arithmeticfilter")
      * @Route("/list", name="arithmeticfilter_list")
      * @Method("GET")
@@ -63,7 +63,7 @@ class ArithmeticFilterController extends Controller
     /**
      * Creates a new ArithmeticFilter entity.
      *
-     * @Secure(roles="ROLE_ARITHMETICFILTER_CREATE,ROLE_USER")
+     * @Secure(roles="ROLE_ARITHMETICFILTER_CREATE")
      * @Route("/", name="arithmeticfilter_create")
      * @Method("POST")
      * @Template("HrisFormBundle:ArithmeticFilter:new.html.twig")
@@ -91,7 +91,7 @@ class ArithmeticFilterController extends Controller
     /**
      * Displays a form to create a new ArithmeticFilter entity.
      *
-     * @Secure(roles="ROLE_ARITHMETICFILTER_CREATE,ROLE_USER")
+     * @Secure(roles="ROLE_ARITHMETICFILTER_CREATE")
      * @Route("/new", name="arithmeticfilter_new")
      * @Method("GET")
      * @Template()
@@ -110,7 +110,7 @@ class ArithmeticFilterController extends Controller
     /**
      * Finds and displays a ArithmeticFilter entity.
      *
-     * @Secure(roles="ROLE_ARITHMETICFILTER_SHOW,ROLE_USER")
+     * @Secure(roles="ROLE_ARITHMETICFILTER_SHOW")
      * @Route("/{id}", requirements={"id"="\d+"}, name="arithmeticfilter_show")
      * @Method("GET")
      * @Template()
@@ -136,7 +136,7 @@ class ArithmeticFilterController extends Controller
     /**
      * Displays a form to edit an existing ArithmeticFilter entity.
      *
-     * @Secure(roles="ROLE_ARITHMETICFILTER_UPDATE,ROLE_USER")
+     * @Secure(roles="ROLE_ARITHMETICFILTER_UPDATE")
      * @Route("/{id}/edit", requirements={"id"="\d+"}, name="arithmeticfilter_edit")
      * @Method("GET")
      * @Template()
@@ -164,7 +164,7 @@ class ArithmeticFilterController extends Controller
     /**
      * Edits an existing ArithmeticFilter entity.
      *
-     * @Secure(roles="ROLE_ARITHMETICFILTER_UPDATE,ROLE_USER")
+     * @Secure(roles="ROLE_ARITHMETICFILTER_UPDATE")
      * @Route("/{id}", requirements={"id"="\d+"}, name="arithmeticfilter_update")
      * @Method("PUT")
      * @Template("HrisFormBundle:ArithmeticFilter:edit.html.twig")
@@ -199,7 +199,7 @@ class ArithmeticFilterController extends Controller
     /**
      * Deletes a ArithmeticFilter entity.
      *
-     * @Secure(roles="ROLE_ARITHMETICFILTER_DELETE,ROLE_USER")
+     * @Secure(roles="ROLE_ARITHMETICFILTER_DELETE")
      * @Route("/{id}", requirements={"id"="\d+"}, name="arithmeticfilter_delete")
      * @Method("DELETE")
      */

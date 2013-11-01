@@ -43,7 +43,7 @@ class SettingsController extends Controller
     /**
      * Finds and displays a Settings entity.
      *
-     * @Secure(roles="ROLE_SETTINGS_SHOW,ROLE_USER")
+     * @Secure(roles="ROLE_SETTINGS_SHOW")
      * @Route("/{username}", requirements={"username"="\w+"}, name="settings_show")
      * @Method("GET")
      * @Template()
@@ -77,7 +77,7 @@ class SettingsController extends Controller
     /**
      * Displays a form to create a new Settings entity.
      *
-     * @Secure(roles="ROLE_SETTINGS_CREATE,ROLE_USER")
+     * @Secure(roles="ROLE_SETTINGS_CREATE")
      * @Route("/{username}/new", requirements={"username"="\w+"}, name="settings_new")
      * @Method("GET")
      * @Template()
@@ -107,7 +107,7 @@ class SettingsController extends Controller
     /**
      * Creates a new Settings entity.
      *
-     * @Secure(roles="ROLE_SETTINGS_CREATE,ROLE_USER")
+     * @Secure(roles="ROLE_SETTINGS_CREATE")
      * @Route("/{username}/create", name="settings_create")
      * @Method("POST")
      * @Template("HrisDashboardBundle:Settings:new.html.twig")
@@ -142,7 +142,7 @@ class SettingsController extends Controller
     /**
      * Deletes a Settings entity.
      *
-     * @Secure(roles="ROLE_SETTINGS_DELETE,ROLE_USER")
+     * @Secure(roles="ROLE_SETTINGS_DELETE")
      * @Route("/{id}", name="settings_delete")
      * @Method("DELETE")
      */
