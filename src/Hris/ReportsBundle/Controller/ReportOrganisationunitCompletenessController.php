@@ -811,7 +811,7 @@ class ReportOrganisationunitCompletenessController extends Controller
                     }
                     else if ($visibleField->getInputType()->getName() == 'Date') {
                         if(!empty($dataValue[$valueKey])) {
-                            $dataValue[$valueKey] = new \DateTime($dataValue[$valueKey]['date'],new \DateTimeZone ($dataValue[$valueKey]['timezone']));
+                            if( gettype($dataValue[$valueKey]) == "array" ) $dataValue[$valueKey] = new \DateTime($dataValue[$valueKey]['date'],new \DateTimeZone ($dataValue[$valueKey]['timezone']));
                             $displayValue = $dataValue[$valueKey];
                             $displayValue = $displayValue->format('d/m/Y');
                         }
