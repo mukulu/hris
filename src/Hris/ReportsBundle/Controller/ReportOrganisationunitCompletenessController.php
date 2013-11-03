@@ -464,13 +464,7 @@ class ReportOrganisationunitCompletenessController extends Controller
         $this->parent = NULL;
         //$userObject = $this->getDoctrine()->getManager()->getRepository('User')->findOneBy(array('username' => $user->getUsername()));
 
-        //check to make sure you can not go beyond your assigned level
-        //@todo implement checking user organisationunit
-//        if ($this->organisationunit->getOrganisationunitStructure()->getLevel()->getLevel() >= $userObject->getOrganisationunit()->getOrganisationunitStructure()->getLevel()) {
-//            $this->parent = $this->organisationunit->getParent();
-//        }else {
-//            $this->parent = $userObject->getOrganisationunit();
-//        }
+        //check to make sure you can not go beyond your assigned level is now done at presentation layer.
         $this->parent = $this->organisationunit->getParent();
 
 
@@ -716,8 +710,6 @@ class ReportOrganisationunitCompletenessController extends Controller
                     $option[$fieldOptionKey] = $optionObject->getValue();
                 }
                 foreach($records as $key=>$dataValueInstance) {
-                    echo '<tr height="20">';
-                    echo '	<td id="'.$dataValueInstance->getInstance().'">'.++$counter.'</td>';
                     foreach($this->visibleFields as $key=>$visibleField) {
                         /**
                          * Made dynamic, on which field column is used as key, i.e. uid, name or id.
@@ -741,10 +733,7 @@ class ReportOrganisationunitCompletenessController extends Controller
                         }else {
                             $displayValue = $dataValue[$valueKey];
                         }
-                        echo '<td>'.$displayValue .'</td>';
                     }
-                    echo '<td>'.$dataValueInstance->getForm()->getName().'</td>';
-                    echo '</tr>';
                 }
 
 
