@@ -7,14 +7,21 @@
     <script src="{{ asset('bundles/obhighcharts/js/highcharts/modules/exporting.js') }}"></script>
     <script type="text/javascript" src="{{ asset('commons/js/jquery-ui.js') }}"></script>
     <script type="text/javascript">
-        {{ chart(hardcodeddashboard) }}
+        function draw() {
+            {{ chart(hardcodeddashboard) }}
+        };
+        draw();
+
         {{ chart(retirementchart) }}
         {{ chart(agechart) }}
         {%   for  entityChart in entitiesChart %}
             {{ chart(entityChart) }}
         {%  endfor %}
         {{ chart(combinationchart) }}
-        $( '.tab-content').resizable();
+        $( '.tab-content').resizable({});
+        $( ".tab-content" ).mouseout(function() {
+            $(window).trigger('resize');
+        });
     </script>
 {%  endblock %}
 
@@ -53,9 +60,6 @@
 {% endblock message_alert %}
 
 {% block right_content %}
-
-
-
     <div class="tabbable">
         <ul class="nav nav-tabs">
             <li class="active"><a href="#hardcodeddashboard" data-toggle="tab">Employment Trend</a> </li>
