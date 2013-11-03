@@ -216,7 +216,6 @@ function getDataEntryForm(databaseName, formUid, tableName) {
                         dateFormat: "dd/mm/yy",
                         buttonImage: "../../../commons/images/calendar.gif",
                         showAnim: "clip",
-                        minDate: "+0D",
                         yearRange:'c-60:c+60'
                     });
 
@@ -616,6 +615,9 @@ function sendDataToServer(databaseName){
 
                     var dataValues = JSON.stringify(cursorOption.value.data);
 
+                    var uuid = cursorOption.value.id;
+                    var value = cursorOption.value.data;
+
                     $.ajax({
                         type: 'POST',
                         url: '../',
@@ -628,7 +630,7 @@ function sendDataToServer(databaseName){
 
                             var storeUpdate = transactionUpdate.objectStore("offline_datavalues");
 
-                            storeUpdate.put({id: cursorOption.value.id, status: 'true', data: cursorOption.value.data});
+                            storeUpdate.put({id: uuid, status: 'true', data: value});
                         },
                         error: function(){
                             console.log('form was not submitted, no internet connection');
