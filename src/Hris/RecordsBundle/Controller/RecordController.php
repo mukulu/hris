@@ -45,6 +45,7 @@ use Symfony\Component\Serializer\Serializer;
 use Symfony\Component\Serializer\Normalizer\GetSetMethodNormalizer;
 use Symfony\Component\Serializer\Encoder\JsonEncoder;
 use JMS\SecurityExtraBundle\Annotation\Secure;
+use DateTime;
 
 /**
  * Record controller.
@@ -390,6 +391,7 @@ class RecordController extends Controller
             $recordValue = $this->get('request')->request->get($field->getName());
 
             if($field->getDataType()->getName() == "Date"){
+                $recordValue = DateTime::createFromFormat('d/m/Y', $recordValue)->format('Y-m-d');
                 $recordValue = new \DateTime($recordValue);
             }
 
