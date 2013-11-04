@@ -1,3 +1,8 @@
+hris_integration:
+    resource: "@HrisIntegrationBundle/Controller/"
+    type:     annotation
+    prefix:   /
+
 hris_help_centre:
     resource: "@HrisHelpCentreBundle/Resources/config/routing.yml"
     prefix:   /
