@@ -32,6 +32,7 @@ use Hris\FormBundle\Entity\FieldGroup;
 use Hris\FormBundle\Entity\FieldOption;
 use Hris\FormBundle\Entity\FieldOptionGroup;
 use Hris\FormBundle\Entity\FieldOptionGroupset;
+use Symfony\Component\Stopwatch\Stopwatch;
 
 class LoadFieldData extends AbstractFixture implements OrderedFixtureInterface
 {
@@ -624,7 +625,7 @@ class LoadFieldData extends AbstractFixture implements OrderedFixtureInterface
                 'hastarget'=>false,
                 'isCalculated'=>true,
                 'skipInReport'=>false,
-                'calculatedExpression'=>"date('Y', strtotime('#{DateofFirstAppointment'}))",
+                'calculatedExpression'=>"date('Y', strtotime('#{DateofFirstAppointment}'))",
                 'fieldRelation'=>False,
                 'parentField'=>Null,
                 'description'=>"Annual employment distrubtion based on Employee's Employment date",
@@ -699,7 +700,7 @@ class LoadFieldData extends AbstractFixture implements OrderedFixtureInterface
                 'hastarget'=>false,
                 'isCalculated'=>true,
                 'skipInReport'=>false,
-                'calculatedExpression'=>"date('Y-m-d', strtotime('#{DateOfBirth}'))",
+                'calculatedExpression'=>"date('Y-m-d', strtotime('#{DateOfBirth} +60 year'))",
                 'fieldRelation'=>False,
                 'parentField'=>Null,
                 'description'=>"Retirement date based on Employee's Date of Birth",
@@ -2417,6 +2418,9 @@ class LoadFieldData extends AbstractFixture implements OrderedFixtureInterface
 
     public function load(ObjectManager $manager)
 	{
+        $stopwatch = new Stopwatch();
+        $stopwatch->start('dummyFieldGeneration');
+
         $this->addDummyFields();
         $this->addDummyFieldOptions();
         $this->addDummyFieldOptionGroups();
@@ -2575,8 +2579,25 @@ class LoadFieldData extends AbstractFixture implements OrderedFixtureInterface
             unset($fieldGroup);
         }
 		$manager->flush();
+
+        /*
+         * Check Clock for time spent
+         */
+        $dummyFieldGenerationGenerationTime = $stopwatch->stop('dummyFieldGeneration');
+        $duration = $dummyFieldGenerationGenerationTime->getDuration()/1000;
+        unset($stopwatch);
+        if( $duration <60 ) {
+            $durationMessage = round($duration,2).' seconds';
+        }elseif( $duration >= 60 && $duration < 3600 ) {
+            $durationMessage = round(($duration/60),2) .' minutes';
+        }elseif( $duration >=3600 && $duration < 216000) {
+            $durationMessage = round(($duration/3600),2) .' hours';
+        }else {
+            $durationMessage = round(($duration/86400),2) .' hours';
+        }
+        echo "Dummy Fields generation complete in ". $durationMessage .".\n\n";
 	}
-	
+
 	/**
      * The order in which this fixture will be loaded
 	 * @return integer
