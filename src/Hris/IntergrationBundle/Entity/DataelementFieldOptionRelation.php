@@ -94,4 +94,142 @@ class DataelementFieldOptionRelation
     private $rowFieldOptionGroup;
 
 
+
+    /**
+     * Set dataelementUid
+     *
+     * @param string $dataelementUid
+     * @return DataelementFieldOptionRelation
+     */
+    public function setDataelementUid($dataelementUid)
+    {
+        $this->dataelementUid = $dataelementUid;
+    
+        return $this;
+    }
+
+    /**
+     * Get dataelementUid
+     *
+     * @return string 
+     */
+    public function getDataelementUid()
+    {
+        return $this->dataelementUid;
+    }
+
+    /**
+     * Set dataelementname
+     *
+     * @param string $dataelementname
+     * @return DataelementFieldOptionRelation
+     */
+    public function setDataelementname($dataelementname)
+    {
+        $this->dataelementname = $dataelementname;
+    
+        return $this;
+    }
+
+    /**
+     * Get dataelementname
+     *
+     * @return string 
+     */
+    public function getDataelementname()
+    {
+        return $this->dataelementname;
+    }
+
+    /**
+     * Set dhisDataConnection
+     *
+     * @param \Hris\IntergrationBundle\Entity\DHISDataConnection $dhisDataConnection
+     * @return DataelementFieldOptionRelation
+     */
+    public function setDhisDataConnection(\Hris\IntergrationBundle\Entity\DHISDataConnection $dhisDataConnection)
+    {
+        $this->dhisDataConnection = $dhisDataConnection;
+    
+        return $this;
+    }
+
+    /**
+     * Get dhisDataConnection
+     *
+     * @return \Hris\IntergrationBundle\Entity\DHISDataConnection 
+     */
+    public function getDhisDataConnection()
+    {
+        return $this->dhisDataConnection;
+    }
+
+    /**
+     * Set fieldOption
+     *
+     * @param \Hris\FormBundle\Entity\FieldOption $fieldOption
+     * @return DataelementFieldOptionRelation
+     */
+    public function setFieldOption(\Hris\FormBundle\Entity\FieldOption $fieldOption = null)
+    {
+        $this->fieldOption = $fieldOption;
+    
+        return $this;
+    }
+
+    /**
+     * Get fieldOption
+     *
+     * @return \Hris\FormBundle\Entity\FieldOption 
+     */
+    public function getFieldOption()
+    {
+        return $this->fieldOption;
+    }
+
+    /**
+     * Set columnFieldOptionGroup
+     *
+     * @param \Hris\FormBundle\Entity\FieldOptionGroup $columnFieldOptionGroup
+     * @return DataelementFieldOptionRelation
+     */
+    public function setColumnFieldOptionGroup(\Hris\FormBundle\Entity\FieldOptionGroup $columnFieldOptionGroup = null)
+    {
+        $this->columnFieldOptionGroup = $columnFieldOptionGroup;
+    
+        return $this;
+    }
+
+    /**
+     * Get columnFieldOptionGroup
+     *
+     * @return \Hris\FormBundle\Entity\FieldOptionGroup 
+     */
+    public function getColumnFieldOptionGroup()
+    {
+        return $this->columnFieldOptionGroup;
+    }
+
+    /**
+     * Set rowFieldOptionGroup
+     *
+     * @param \Hris\FormBundle\Entity\FieldOptionGroup $rowFieldOptionGroup
+     * @return DataelementFieldOptionRelation
+     */
+    public function setRowFieldOptionGroup(\Hris\FormBundle\Entity\FieldOptionGroup $rowFieldOptionGroup = null)
+    {
+        $this->rowFieldOptionGroup = $rowFieldOptionGroup;
+    
+        return $this;
+    }
+
+    /**
+     * Get rowFieldOptionGroup
+     *
+     * @return \Hris\FormBundle\Entity\FieldOptionGroup 
+     */
+    public function getRowFieldOptionGroup()
+    {
+        return $this->rowFieldOptionGroup;
+    }
 }

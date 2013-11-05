@@ -145,4 +145,231 @@ class DHISDataConnection
     {
         return $this->id;
     }
+
+    /**
+     * Set name
+     *
+     * @param string $name
+     * @return DHISDataConnection
+     */
+    public function setName($name)
+    {
+        $this->name = $name;
+    
+        return $this;
+    }
+
+    /**
+     * Get name
+     *
+     * @return string 
+     */
+    public function getName()
+    {
+        return $this->name;
+    }
+
+    /**
+     * Set datasetName
+     *
+     * @param string $datasetName
+     * @return DHISDataConnection
+     */
+    public function setDatasetName($datasetName)
+    {
+        $this->datasetName = $datasetName;
+    
+        return $this;
+    }
+
+    /**
+     * Get datasetName
+     *
+     * @return string 
+     */
+    public function getDatasetName()
+    {
+        return $this->datasetName;
+    }
+
+    /**
+     * Set datasetUid
+     *
+     * @param string $datasetUid
+     * @return DHISDataConnection
+     */
+    public function setDatasetUid($datasetUid)
+    {
+        $this->datasetUid = $datasetUid;
+    
+        return $this;
+    }
+
+    /**
+     * Get datasetUid
+     *
+     * @return string 
+     */
+    public function getDatasetUid()
+    {
+        return $this->datasetUid;
+    }
+
+    /**
+     * Set hostUrl
+     *
+     * @param string $hostUrl
+     * @return DHISDataConnection
+     */
+    public function setHostUrl($hostUrl)
+    {
+        $this->hostUrl = $hostUrl;
+    
+        return $this;
+    }
+
+    /**
+     * Get hostUrl
+     *
+     * @return string 
+     */
+    public function getHostUrl()
+    {
+        return $this->hostUrl;
+    }
+
+    /**
+     * Set username
+     *
+     * @param string $username
+     * @return DHISDataConnection
+     */
+    public function setUsername($username)
+    {
+        $this->username = $username;
+    
+        return $this;
+    }
+
+    /**
+     * Get username
+     *
+     * @return string 
+     */
+    public function getUsername()
+    {
+        return $this->username;
+    }
+
+    /**
+     * Set password
+     *
+     * @param string $password
+     * @return DHISDataConnection
+     */
+    public function setPassword($password)
+    {
+        $this->password = $password;
+    
+        return $this;
+    }
+
+    /**
+     * Get password
+     *
+     * @return string 
+     */
+    public function getPassword()
+    {
+        return $this->password;
+    }
+
+    /**
+     * Add fieldOptionGroupset
+     *
+     * @param \Hris\FormBundle\Entity\FieldOptionGroupset $fieldOptionGroupset
+     * @return DHISDataConnection
+     */
+    public function addFieldOptionGroupset(\Hris\FormBundle\Entity\FieldOptionGroupset $fieldOptionGroupset)
+    {
+        $this->fieldOptionGroupset[] = $fieldOptionGroupset;
+    
+        return $this;
+    }
+
+    /**
+     * Remove fieldOptionGroupset
+     *
+     * @param \Hris\FormBundle\Entity\FieldOptionGroupset $fieldOptionGroupset
+     */
+    public function removeFieldOptionGroupset(\Hris\FormBundle\Entity\FieldOptionGroupset $fieldOptionGroupset)
+    {
+        $this->fieldOptionGroupset->removeElement($fieldOptionGroupset);
+    }
+
+    /**
+     * Get fieldOptionGroupset
+     *
+     * @return \Doctrine\Common\Collections\Collection 
+     */
+    public function getFieldOptionGroupset()
+    {
+        return $this->fieldOptionGroupset;
+    }
+
+    /**
+     * Set parentOrganisationunit
+     *
+     * @param \Hris\OrganisationunitBundle\Entity\Organisationunit $parentOrganisationunit
+     * @return DHISDataConnection
+     */
+    public function setParentOrganisationunit(\Hris\OrganisationunitBundle\Entity\Organisationunit $parentOrganisationunit = null)
+    {
+        $this->parentOrganisationunit = $parentOrganisationunit;
+    
+        return $this;
+    }
+
+    /**
+     * Get parentOrganisationunit
+     *
+     * @return \Hris\OrganisationunitBundle\Entity\Organisationunit 
+     */
+    public function getParentOrganisationunit()
+    {
+        return $this->parentOrganisationunit;
+    }
+
+    /**
+     * Add dataelementFieldOptionRelation
+     *
+     * @param \Hris\IntergrationBundle\Entity\DataelementFieldOptionRelation $dataelementFieldOptionRelation
+     * @return DHISDataConnection
+     */
+    public function addDataelementFieldOptionRelation(\Hris\IntergrationBundle\Entity\DataelementFieldOptionRelation $dataelementFieldOptionRelation)
+    {
+        $this->dataelementFieldOptionRelation[] = $dataelementFieldOptionRelation;
+    
+        return $this;
+    }
+
+    /**
+     * Remove dataelementFieldOptionRelation
+     *
+     * @param \Hris\IntergrationBundle\Entity\DataelementFieldOptionRelation $dataelementFieldOptionRelation
+     */
+    public function removeDataelementFieldOptionRelation(\Hris\IntergrationBundle\Entity\DataelementFieldOptionRelation $dataelementFieldOptionRelation)
+    {
+        $this->dataelementFieldOptionRelation->removeElement($dataelementFieldOptionRelation);
+    }
+
+    /**
+     * Get dataelementFieldOptionRelation
+     *
+     * @return \Doctrine\Common\Collections\Collection 
+     */
+    public function getDataelementFieldOptionRelation()
+    {
+        return $this->dataelementFieldOptionRelation;
+    }
 }
