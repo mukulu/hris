@@ -1,5 +1,5 @@
-hris_integration:
-    resource: "@HrisIntegrationBundle/Controller/"
+hris_intergration:
+    resource: "@HrisIntergrationBundle/Controller/"
     type:     annotation
     prefix:   /
 
