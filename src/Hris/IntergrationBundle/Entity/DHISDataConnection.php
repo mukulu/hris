@@ -26,6 +26,7 @@ namespace Hris\IntergrationBundle\Entity;
 
 use Doctrine\ORM\Mapping as ORM;
 use Gedmo\Mapping\Annotation as Gedmo;
+use Hris\IntergrationBundle\Entity\DataelementFieldOptionRelation;
 use Symfony\Component\Validator\Constraints as Assert;
 
 /**
@@ -119,6 +120,14 @@ class DHISDataConnection
      * })
      */
     private $parentOrganisationunit;
+
+    /**
+     * @var DataelementFieldOptionRelation $dataelementFieldOptionRelation
+     *
+     * @ORM\OneToMany(targetEntity="Hris\IntergrationBundle\Entity\DataelementFieldOptionRelation", mappedBy="dhisDataConnection",cascade={"ALL"})
+     * @ORM\OrderBy({"dataelementname" = "ASC"})
+     */
+    private $dataelementFieldOptionRelation;
 
 
     public function __construct()

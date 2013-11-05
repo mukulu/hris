@@ -121,6 +121,22 @@ class FieldOptionGroup
     private $friendlyReportCategory;
 
     /**
+     * @var DataelementFieldOptionRelation $dataelementFieldOptionRelationColumn
+     *
+     * @ORM\OneToMany(targetEntity="Hris\IntergrationBundle\Entity\DataelementFieldOptionRelation", mappedBy="columnFieldOptionGroup",cascade={"ALL"})
+     * @ORM\OrderBy({"dataelementname" = "ASC"})
+     */
+    private $dataelementFieldOptionRelationColumn;
+
+    /**
+     * @var DataelementFieldOptionRelation $dataelementFieldOptionRelationRow
+     *
+     * @ORM\OneToMany(targetEntity="Hris\IntergrationBundle\Entity\DataelementFieldOptionRelation", mappedBy="rowFieldOptionGroup",cascade={"ALL"})
+     * @ORM\OrderBy({"dataelementname" = "ASC"})
+     */
+    private $dataelementFieldOptionRelationRow;
+
+    /**
      * @var \DateTime $datecreated
      *
      * @Gedmo\Timestampable(on="create")

@@ -31,6 +31,7 @@ use Gedmo\Mapping\Annotation as Gedmo;
 use Hris\FormBundle\Entity\FieldOptionMerge;
 use Hris\FormBundle\Entity\RelationalFilter;
 use Hris\FormBundle\Entity\FieldOptionGroup;
+use Hris\IntergrationBundle\Entity\DataelementFieldOptionRelation;
 use Symfony\Component\Validator\Constraints as Assert;
 
 /**
@@ -148,6 +149,14 @@ class FieldOption
      * @ORM\OrderBy({"removedFieldOptionValue" = "ASC"})
      */
     private $fieldOptionMerge;
+
+    /**
+     * @var DataelementFieldOptionRelation $dataelementFieldOptionRelation
+     *
+     * @ORM\OneToMany(targetEntity="Hris\IntergrationBundle\Entity\DataelementFieldOptionRelation", mappedBy="fieldOption",cascade={"ALL"})
+     * @ORM\OrderBy({"dataelementname" = "ASC"})
+     */
+    private $dataelementFieldOptionRelation;
 
     /**
      * @var \DateTime $datecreated
