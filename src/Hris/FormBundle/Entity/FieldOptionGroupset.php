@@ -29,6 +29,7 @@ use Doctrine\ORM\Mapping as ORM;
 use Gedmo\Mapping\Annotation as Gedmo;
 
 use Hris\FormBundle\Entity\FieldOptionGroup;
+use Hris\IntergrationBundle\Entity\DHISDataConnection;
 use Symfony\Component\Validator\Constraints as Assert;
 
 /**
@@ -88,6 +89,14 @@ class FieldOptionGroupset
      * @ORM\OrderBy({"name" = "ASC"})
      */
     private $fieldOptionGroup;
+
+    /**
+     * @var DHISDataConnection $dhisDataConnection
+     *
+     * @ORM\ManyToMany(targetEntity="Hris\IntergrationBundle\Entity\DHISDataConnection", mappedBy="fieldOptionGroupset")
+     * @ORM\OrderBy({"name" = "ASC"})
+     */
+    private $dhisDataConnection;
 
     /**
      * @var \DateTime $datecreated
