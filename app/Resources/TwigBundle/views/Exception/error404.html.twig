@@ -30,10 +30,10 @@
 {% endblock navigation_bar %}
 
 {% block content %}
-    <h1><small>That page does not exist!</small></h1>
+    <h1 style="text-align: center"><small>That page does not exist!</small></h1>
     <a href="{{ path('hris_dashboard_homepage') }}" class="btn">Back to home page</a>
     <br/>
-    <div>
+    <div class="offset3">
         <img src="{{ asset('img/404-error-page.jpg') }}" width="500" height="249">
     </div>
 {% endblock content %}

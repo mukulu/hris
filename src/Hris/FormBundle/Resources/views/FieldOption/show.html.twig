@@ -22,6 +22,16 @@
                 <td>{{ entity.value }}</td>
             </tr>
             <tr>
+                <th>Skip In Report</th>
+                <td>
+                    {% if entity.skipInReport %}
+                        True
+                    {% else %}
+                        False
+                    {% endif %}
+                </td>
+            </tr>
+            <tr>
                 <th>Description</th>
                 <td>{{ entity.description }}</td>
             </tr>

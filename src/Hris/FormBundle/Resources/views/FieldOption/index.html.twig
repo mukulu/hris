@@ -69,6 +69,7 @@
                     <th>Value</th>
                     <th>Sort</th>
                     <th>Field</th>
+                    <th>SkipInReport</th>
                     <th>Description</th>
                     <th>Actions</th>
                 </tr>
@@ -79,6 +80,7 @@
                     <td><a href="{{ path('fieldoption_show', { 'id': entity.id }) }}">{{ entity.value }}</a></td>
                     <td>{{ entity.sort }}</td>
                     <td>{{ entity.field }}</td>
+                    <td>{% if entity.skipInReport %} True {% else %} False {% endif %}</td>
                     <td>{{ entity.description }}</td>
                     <td>
                     <ul class="inline">

@@ -5,35 +5,22 @@
     {{ parent() }}
     <script src="{{ asset('bundles/obhighcharts/js/highcharts/highcharts.js') }}"></script>
     <script src="{{ asset('bundles/obhighcharts/js/highcharts/modules/exporting.js') }}"></script>
-    <script type="text/javascript" src="{{ asset('commons/js/jquery-ui.js') }}"></script>
+    <script type="text/javascript" src="{{ asset('commons/js/jquery-migrate-1.2.1.js') }}"></script>
+    <script type="text/javascript" src="{{ asset('commons/js/jquery-ui-personalized-1.6rc2.min.js') }}"></script>
     <script type="text/javascript">
-        {{ chart(combinationchart) }}
+        {{ chart(hardcodeddashboard) }}
         {{ chart(retirementchart) }}
         {{ chart(agechart) }}
         {%   for  entityChart in entitiesChart %}
             {{ chart(entityChart) }}
         {%  endfor %}
-        $( '.tab-content').resizable();
+        {{ chart(combinationchart) }}
+        $( '.tab-content').resizable({});
+        $( ".tab-content" ).mouseout(function() {
+            $(window).trigger('resize');
+        });
     </script>
 {%  endblock %}
-
-{% block stylesheets %}
-    {{ parent() }}
-    <link rel="stylesheet" href="{{ asset('commons/css/jquery-ui.css') }}" />
-    <style type="text/css">
-        .tab-content {
-            width: 100%;
-            height: 100%;
-            border-right-width:1px;
-            border-right-style:solid;
-            border-right-color:#DEDEDE;
-            border-bottom-width:1px;
-            border-bottom-style:solid;
-            border-bottom-color:#DEDEDE;
-            overflow: hidden;
-        }
-    </style>
-{% endblock stylesheets %}
 
 
 {% block notifications %}
@@ -52,12 +39,10 @@
 {% endblock message_alert %}
 
 {% block right_content %}
-
-
-
     <div class="tabbable">
         <ul class="nav nav-tabs">
-            <li class="active"><a href="#employment-distribution" data-toggle="tab">Combination Report</a></li>
+            <li class="active"><a href="#hardcodeddashboard" data-toggle="tab">Employment Trend</a> </li>
+            <li class=""><a href="#employment-distribution" data-toggle="tab">Combination Report</a></li>
             <li class=""><a href="#retirement-distribution" data-toggle="tab">Retirement Distribution</a></li>
             <li class=""><a href="#age-distribution" data-toggle="tab">Age Distribution</a></li>
             {% for entity in entities %}
@@ -65,9 +50,13 @@
             {% endfor %}
         </ul>
         <div class="tab-content">
-            <div class="tab-pane active" id="employment-distribution">
+            <div class="tab-pane active" id="hardcodeddashboard">
+                <h4>Employment Trend</h4>
+                <div id="dashboard_placeholder" class="ui-resizable" style="min-width: 400px; width:100%; min-height:400px; height: 400px; margin: 0 auto"></div>
+            </div>
+            <div class="tab-pane" id="employment-distribution">
                 <h4>The Employment Distribution Chart</h4>
-                <div id="chart_placeholder" style="min-width: 400px; width:100%; min-height:400px; height: 400px; margin: 0 auto"></div>
+                <div id="chart_placeholder" class="ui-resizable" style="min-width: 400px; width:100%; min-height:400px; height: 400px; margin: 0 auto"></div>
             </div>
             <div class="tab-pane" id="retirement-distribution">
                     <h4>Retirement Distribution Chart</h4>
@@ -85,7 +74,7 @@
             {% endfor %}
         </div><!-- /.tab-content -->
     </div>
-    
-    
-    
+
+
+
 {% endblock %}
