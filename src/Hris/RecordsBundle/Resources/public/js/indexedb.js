@@ -575,6 +575,8 @@ function offLineDataStorage(databaseName){
                     // All requests have succeeded and the transaction has committed.
                     console.log("All Records in " + tableName + " has been saved offline");
                     $('form').trigger("reset");
+                    window.scrollTo(0, 0);
+                    alert("Data Has Been Saved Successfully");
                 };
 
             };
