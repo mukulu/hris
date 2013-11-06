@@ -30,6 +30,7 @@ use Hris\UserBundle\Event\ConfigureMenuEvent as UserConfigureMenuEvent;
 use Hris\IndicatorBundle\Event\ConfigureMenuEvent as IndicatorConfigureMenuEvent;
 use Hris\OrganisationunitBundle\Event\ConfigureMenuEvent as OrganisationunitConfigureMenuEvent;
 use Hris\DataQualityBundle\Event\ConfigureMenuEvent as DataQualityConfigureMenuEvent;
+use Hris\IntergrationBundle\Event\ConfigureMenuEvent as IntergrationConfigureMenuEvent;
 use Hris\FormBundle\Event\ConfigureMenuEvent as FormConfigureMenuEvent;
 use Hris\RecordsBundle\Event\ConfigureMenuEvent as RecordsConfigureMenuEvent;
 use Hris\ReportsBundle\Event\ConfigureMenuEvent as ReportsConfigureMenuEvent;
@@ -101,6 +102,14 @@ class MainBuilder extends ContainerAware
             $securityContext->isGranted('ROLE_SUPER_USER')
         ){
             $this->container->get('event_dispatcher')->dispatch(DataQualityConfigureMenuEvent::CONFIGURE, new DataQualityConfigureMenuEvent($factory, $menu));
+        }
+        // Intergration Bundle
+        if(
+            $securityContext->isGranted('ROLE_INTERGRATION_BUNDLE_VIEW') ||
+            $securityContext->isGranted('ROLE_INTERGRATION_BUNDLE_MODIFY') ||
+            $securityContext->isGranted('ROLE_SUPER_USER')
+        ){
+            $this->container->get('event_dispatcher')->dispatch(IntergrationConfigureMenuEvent::CONFIGURE, new IntergrationConfigureMenuEvent($factory, $menu));
         }
         // Records Bundle
         if(

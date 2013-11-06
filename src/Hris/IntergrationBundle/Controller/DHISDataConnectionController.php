@@ -9,6 +9,7 @@ use Sensio\Bundle\FrameworkExtraBundle\Configuration\Route;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Template;
 use Hris\IntergrationBundle\Entity\DHISDataConnection;
 use Hris\IntergrationBundle\Form\DHISDataConnectionType;
+use JMS\SecurityExtraBundle\Annotation\Secure;
 
 /**
  * DHISDataConnection controller.
@@ -21,6 +22,7 @@ class DHISDataConnectionController extends Controller
     /**
      * Lists all DHISDataConnection entities.
      *
+     * @Secure(roles="ROLE_SUPER_USER,ROLE_DHISDATACONNECTION_LIST")
      * @Route("/", name="dhisdataconnection")
      * @Method("GET")
      * @Template()
@@ -38,6 +40,7 @@ class DHISDataConnectionController extends Controller
     /**
      * Creates a new DHISDataConnection entity.
      *
+     * @Secure(roles="ROLE_SUPER_USER,ROLE_DHISDATACONNECTION_CREATE")
      * @Route("/", name="dhisdataconnection_create")
      * @Method("POST")
      * @Template("HrisIntergrationBundle:DHISDataConnection:new.html.twig")
@@ -84,6 +87,7 @@ class DHISDataConnectionController extends Controller
     /**
      * Displays a form to create a new DHISDataConnection entity.
      *
+     * @Secure(roles="ROLE_SUPER_USER,ROLE_DHISDATACONNECTION_CREATE")
      * @Route("/new", name="dhisdataconnection_new")
      * @Method("GET")
      * @Template()
@@ -102,6 +106,7 @@ class DHISDataConnectionController extends Controller
     /**
      * Finds and displays a DHISDataConnection entity.
      *
+     * @Secure(roles="ROLE_SUPER_USER,ROLE_DHISDATACONNECTION_SHOW")
      * @Route("/{id}", name="dhisdataconnection_show")
      * @Method("GET")
      * @Template()
@@ -127,6 +132,7 @@ class DHISDataConnectionController extends Controller
     /**
      * Displays a form to edit an existing DHISDataConnection entity.
      *
+     * @Secure(roles="ROLE_SUPER_USER,ROLE_DHISDATACONNECTION_UPDATE")
      * @Route("/{id}/edit", name="dhisdataconnection_edit")
      * @Method("GET")
      * @Template()
@@ -172,6 +178,7 @@ class DHISDataConnectionController extends Controller
     /**
      * Edits an existing DHISDataConnection entity.
      *
+     * @Secure(roles="ROLE_SUPER_USER,ROLE_DHISDATACONNECTION_UPDATE")
      * @Route("/{id}", name="dhisdataconnection_update")
      * @Method("PUT")
      * @Template("HrisIntergrationBundle:DHISDataConnection:edit.html.twig")
@@ -205,6 +212,7 @@ class DHISDataConnectionController extends Controller
     /**
      * Deletes a DHISDataConnection entity.
      *
+     * @Secure(roles="ROLE_SUPER_USER,ROLE_DHISDATACONNECTION_DELETE")
      * @Route("/{id}", name="dhisdataconnection_delete")
      * @Method("DELETE")
      */
