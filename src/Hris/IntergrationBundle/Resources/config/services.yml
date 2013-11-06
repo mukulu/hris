@@ -1,0 +1,8 @@
+parameters:
+#    hris_data_quality.example.class: Hris\DataQualityBundle\Example
+
+#services:
+#    hris_dataquality.configure_menu_listener:
+#                class: Hris\DataQualityBundle\EventListener\ConfigureMenuListener
+#                tags:
+#                    - { name: kernel.event_listener, event: hris_dataquality.menu_configure, method: onMenuConfigure }

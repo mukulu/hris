@@ -48,6 +48,14 @@ class DHISDataConnection
     private $id;
 
     /**
+     * @var string $uid
+     *
+     * @Gedmo\Versioned
+     * @ORM\Column(name="uid", type="string", length=13, unique=true)
+     */
+    private $uid;
+
+    /**
      * @var string $name
      *
      * @Gedmo\Versioned
@@ -129,9 +137,26 @@ class DHISDataConnection
      */
     private $dataelementFieldOptionRelation;
 
+    /**
+     * @var \DateTime $datecreated
+     *
+     * @Gedmo\Timestampable(on="create")
+     * @ORM\Column(name="datecreated", type="datetime")
+     */
+    private $datecreated;
+
+    /**
+     * @var \DateTime $lastupdated
+     *
+     * @Gedmo\Timestampable(on="update")
+     * @ORM\Column(name="lastupdated", type="datetime", nullable=true)
+     */
+    private $lastupdated;
+
 
     public function __construct()
     {
+        $this->uid = uniqid();
         $this->fieldOptionGroupset = new \Doctrine\Common\Collections\ArrayCollection();
     }
 
@@ -371,5 +396,84 @@ class DHISDataConnection
     public function getDataelementFieldOptionRelation()
     {
         return $this->dataelementFieldOptionRelation;
+    }
+
+    /**
+     * Set datecreated
+     *
+     * @param \DateTime $datecreated
+     * @return DHISDataConnection
+     */
+    public function setDatecreated($datecreated)
+    {
+        $this->datecreated = $datecreated;
+
+        return $this;
+    }
+
+    /**
+     * Get datecreated
+     *
+     * @return \DateTime
+     */
+    public function getDatecreated()
+    {
+        return $this->datecreated;
+    }
+
+    /**
+     * Set lastupdated
+     *
+     * @param \DateTime $lastupdated
+     * @return DHISDataConnection
+     */
+    public function setLastupdated($lastupdated)
+    {
+        $this->lastupdated = $lastupdated;
+
+        return $this;
+    }
+
+    /**
+     * Get lastupdated
+     *
+     * @return \DateTime
+     */
+    public function getLastupdated()
+    {
+        return $this->lastupdated;
+    }
+
+    /**
+     * Set uid
+     *
+     * @param string $uid
+     * @return DHISDataConnection
+     */
+    public function setUid($uid)
+    {
+        $this->uid = $uid;
+
+        return $this;
+    }
+
+    /**
+     * Get uid
+     *
+     * @return string
+     */
+    public function getUid()
+    {
+        return $this->uid;
+    }
+
+    /**
+     * Get Entity verbose name
+     *
+     * @return string
+     */
+    public function __toString()
+    {
+        return $this->name;
     }
 }
