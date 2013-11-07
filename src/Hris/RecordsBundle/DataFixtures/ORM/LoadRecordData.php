@@ -37,6 +37,7 @@ use Hris\RecordsBundle\Entity\History;
 use Hris\RecordsBundle\Entity\Record;
 use Hris\RecordsBundle\Entity\Training;
 use Hris\UserBundle\DataFixtures\ORM\LoadUserData;
+use Symfony\Component\Stopwatch\Stopwatch;
 
 class LoadRecordData extends AbstractFixture implements OrderedFixtureInterface
 {
@@ -214,6 +215,9 @@ class LoadRecordData extends AbstractFixture implements OrderedFixtureInterface
 
 	public function load(ObjectManager $manager)
 	{
+        $stopwatch = new Stopwatch();
+        $stopwatch->start('dummyRecordGeneration');
+
         // Populate dummy forms
         $this->addDummyFemaleNames();
         $this->addDummyMaleNmes();
@@ -518,6 +522,23 @@ class LoadRecordData extends AbstractFixture implements OrderedFixtureInterface
             }
         }
 		$manager->flush();
+
+        /*
+         * Check Clock for time spent
+         */
+        $dummyRecordGenerationTime = $stopwatch->stop('dummyRecordGeneration');
+        $duration = $dummyRecordGenerationTime->getDuration()/1000;
+        unset($stopwatch);
+        if( $duration <60 ) {
+            $durationMessage = round($duration,2).' seconds';
+        }elseif( $duration >= 60 && $duration < 3600 ) {
+            $durationMessage = round(($duration/60),2) .' minutes';
+        }elseif( $duration >=3600 && $duration < 216000) {
+            $durationMessage = round(($duration/3600),2) .' hours';
+        }else {
+            $durationMessage = round(($duration/86400),2) .' hours';
+        }
+        echo "Dummy Records generation complete in ". $durationMessage .".\n\n";
 	}
 	
 	/**

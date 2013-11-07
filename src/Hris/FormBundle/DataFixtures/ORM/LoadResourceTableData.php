@@ -84,6 +84,8 @@ class LoadResourceTableData extends AbstractFixture implements OrderedFixtureInt
 
 	public function load(ObjectManager $manager)
 	{
+        $stopwatch = new Stopwatch();
+        $stopwatch->start('dummyResourceTableGeneration');
         // Populate dummy forms
         $this->addDummyResourceTables();
         // Seek dummy fields
@@ -120,6 +122,20 @@ class LoadResourceTableData extends AbstractFixture implements OrderedFixtureInt
         }
 		$manager->flush();
 
+        $dummyResourceTableGenerationLap = $stopwatch->lap('dummyResourceTableGeneration');
+        $dummyResourceTableGenerationDuration = round(($dummyResourceTableGenerationLap->getDuration()/1000),2);
+
+        if( $dummyResourceTableGenerationDuration <60 ) {
+            $dummyResourceTableGenerationDurationMessage = round($dummyResourceTableGenerationDuration,2).' sec.';
+        }elseif( $dummyResourceTableGenerationDuration >= 60 && $dummyResourceTableGenerationDuration < 3600 ) {
+            $dummyResourceTableGenerationDurationMessage = round(($dummyResourceTableGenerationDuration/60),2) .' min.';
+        }elseif( $dummyResourceTableGenerationDuration >=3600 && $dummyResourceTableGenerationDuration < 216000) {
+            $dummyResourceTableGenerationDurationMessage = round(($dummyResourceTableGenerationDuration/3600),2) .' hrs';
+        }else {
+            $dummyResourceTableGenerationDurationMessage = round(($dummyResourceTableGenerationDuration/86400),2) .' days';
+        }
+        echo "Dummy data schema generation complete in ".$dummyResourceTableGenerationDurationMessage."\n";
+
         // Generate resource tables
         $resourceTables = $manager->getRepository('HrisFormBundle:ResourceTable')->findAll();
         foreach($resourceTables as $resourceTableKey=>$resourceTable) {
@@ -131,6 +147,23 @@ class LoadResourceTableData extends AbstractFixture implements OrderedFixtureInt
                 else echo "Failed with:".$messageLog;
             }
         }
+
+        /*
+         * Check Clock for time spent
+         */
+        $dummyResourceTableGenerationTime = $stopwatch->stop('dummyResourceTableGeneration');
+        $duration = $dummyResourceTableGenerationTime->getDuration()/1000;
+        unset($stopwatch);
+        if( $duration <60 ) {
+            $durationMessage = round($duration,2).' seconds';
+        }elseif( $duration >= 60 && $duration < 3600 ) {
+            $durationMessage = round(($duration/60),2) .' minutes';
+        }elseif( $duration >=3600 && $duration < 216000) {
+            $durationMessage = round(($duration/3600),2) .' hours';
+        }else {
+            $durationMessage = round(($duration/86400),2) .' hours';
+        }
+        echo "Dummy Resource Tables generation and with _resoucetables complete in ". $durationMessage .".\n\n";
 	}
 	
 	/**

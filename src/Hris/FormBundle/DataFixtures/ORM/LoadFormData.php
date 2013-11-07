@@ -1027,7 +1027,7 @@ class LoadFormData extends AbstractFixture implements OrderedFixtureInterface
         }else {
             $durationMessage = round(($duration/86400),2) .' hours';
         }
-        echo "Dummy Form generation complete in ". $durationMessage .".\n\n";
+        //echo "Dummy Form generation complete in ". $durationMessage .".\n\n";
 	}
 	
 	/**

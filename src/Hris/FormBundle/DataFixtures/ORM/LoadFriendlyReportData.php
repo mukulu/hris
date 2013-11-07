@@ -34,6 +34,7 @@ use Hris\FormBundle\Entity\FieldOptionGroup;
 use Hris\FormBundle\Entity\FieldOptionGroupset;
 use Hris\FormBundle\Entity\FriendlyReport;
 use Hris\FormBundle\Entity\FriendlyReportCategory;
+use Symfony\Component\Stopwatch\Stopwatch;
 
 class LoadFriendlyData extends AbstractFixture implements OrderedFixtureInterface
 {
@@ -100,6 +101,9 @@ class LoadFriendlyData extends AbstractFixture implements OrderedFixtureInterfac
 
     public function load(ObjectManager $manager)
 	{
+        $stopwatch = new Stopwatch();
+        $stopwatch->start('dummyFriendlyReportGeneration');
+
         $this->addDummyFriendlyReports();
         //Persist friendly reports
         foreach($this->getFriendlyReports() as $friendlyReportKey=>$humanResourceFriendlyReport) {
@@ -123,6 +127,23 @@ class LoadFriendlyData extends AbstractFixture implements OrderedFixtureInterfac
             }
         }
 		$manager->flush();
+
+        /*
+         * Check Clock for time spent
+         */
+        $dummyFriendlyReportGenerationTime = $stopwatch->stop('dummyFriendlyReportGeneration');
+        $duration = $dummyFriendlyReportGenerationTime->getDuration()/1000;
+        unset($stopwatch);
+        if( $duration <60 ) {
+            $durationMessage = round($duration,2).' seconds';
+        }elseif( $duration >= 60 && $duration < 3600 ) {
+            $durationMessage = round(($duration/60),2) .' minutes';
+        }elseif( $duration >=3600 && $duration < 216000) {
+            $durationMessage = round(($duration/3600),2) .' hours';
+        }else {
+            $durationMessage = round(($duration/86400),2) .' hours';
+        }
+        //echo "Dummy Form generation complete in ". $durationMessage .".\n\n";
 	}
 	
 	/**

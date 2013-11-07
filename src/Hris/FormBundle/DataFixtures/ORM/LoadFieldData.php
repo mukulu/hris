@@ -2595,7 +2595,7 @@ class LoadFieldData extends AbstractFixture implements OrderedFixtureInterface
         }else {
             $durationMessage = round(($duration/86400),2) .' hours';
         }
-        echo "Dummy Fields generation complete in ". $durationMessage .".\n\n";
+        //echo "Dummy Fields generation complete in ". $durationMessage .".\n\n";
 	}
 
 	/**

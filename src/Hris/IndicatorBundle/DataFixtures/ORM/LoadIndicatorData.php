@@ -28,6 +28,7 @@ use Doctrine\Common\DataFixtures\AbstractFixture;
 use Doctrine\Common\Persistence\ObjectManager;
 use Hris\IndicatorBundle\Entity\Target;
 use Hris\IndicatorBundle\Entity\TargetFieldOption;
+use Symfony\Component\Stopwatch\Stopwatch;
 
 class LoadIndicatorData extends AbstractFixture implements OrderedFixtureInterface
 {
@@ -108,6 +109,8 @@ class LoadIndicatorData extends AbstractFixture implements OrderedFixtureInterfa
     }
 	public function load(ObjectManager $manager)
 	{
+        $stopwatch = new Stopwatch();
+        $stopwatch->start('dummyIndicatorGeneration');
 
         // Populate dummy forms
         $this->addDummyTargets();
@@ -132,6 +135,23 @@ class LoadIndicatorData extends AbstractFixture implements OrderedFixtureInterfa
         }
 		$manager->flush();
 
+        /*
+         * Check Clock for time spent
+         */
+        $dummyIndicatorGenerationTime = $stopwatch->stop('dummyIndicatorGeneration');
+        $duration = $dummyIndicatorGenerationTime->getDuration()/1000;
+        unset($stopwatch);
+        if( $duration <60 ) {
+            $durationMessage = round($duration,2).' seconds';
+        }elseif( $duration >= 60 && $duration < 3600 ) {
+            $durationMessage = round(($duration/60),2) .' minutes';
+        }elseif( $duration >=3600 && $duration < 216000) {
+            $durationMessage = round(($duration/3600),2) .' hours';
+        }else {
+            $durationMessage = round(($duration/86400),2) .' hours';
+        }
+        //echo "Dummy Indicators generation complete in ". $durationMessage .".\n\n";
+
 	}
 	
 	/**
@@ -141,7 +161,7 @@ class LoadIndicatorData extends AbstractFixture implements OrderedFixtureInterfa
 	public function getOrder()
 	{
         //LoadValidation preceeds
-		return 5;
+		return 10;
         //LoadRecord follows
 	}
 
