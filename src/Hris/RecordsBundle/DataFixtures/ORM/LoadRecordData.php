@@ -355,20 +355,20 @@ class LoadRecordData extends AbstractFixture implements OrderedFixtureInterface
                                     $endDateStart=40;
                                     $endDateStop=50;
                                 }elseif($formFieldMember->getField()->getName()=="DateofFirstAppointment") {
-                                    $beginDateStart-=18;
-                                    $beginDateStop-=18;
-                                    $endDateStart-=18;
-                                    $endDateStop-=18;
+                                    $beginDateStart-=36;
+                                    $beginDateStop-=36;
+                                    $endDateStart-=36;
+                                    $endDateStop-=36;
                                 }elseif($formFieldMember->getField()->getName()=="DateofConfirmation") {
-                                    $beginDateStart-=19;
-                                    $beginDateStop-=19;
-                                    $endDateStart-=19;
-                                    $endDateStop-=19;
+                                    $beginDateStart-=37;
+                                    $beginDateStop-=37;
+                                    $endDateStart-=37;
+                                    $endDateStop-=37;
                                 }elseif($formFieldMember->getField()->getName()=="DateofLastPromotion") {
-                                    $beginDateStart-=22;
-                                    $beginDateStop-=22;
-                                    $endDateStart-=20;//avoid negative 20-22 number(messes-up logic)
-                                    $endDateStop-=22;
+                                    $beginDateStart-=40;
+                                    $beginDateStop-=40;
+                                    $endDateStart-=40;
+                                    $endDateStop-=40;
                                 }
                                 $value[$valueKey] = new \DateTime($this->getRandDate(array($beginDateStart,$beginDateStop),array($endDateStart,$endDateStop)));
                                 //@todo remove hard-coding of instance
@@ -538,7 +538,7 @@ class LoadRecordData extends AbstractFixture implements OrderedFixtureInterface
         }else {
             $durationMessage = round(($duration/86400),2) .' hours';
         }
-        echo "Dummy Records generation complete in ". $durationMessage .".\n\n";
+        echo "\tDummy Records generation complete in ". $durationMessage .".\n\n";
 	}
 	
 	/**

@@ -30,6 +30,7 @@ use Doctrine\Common\Persistence\ObjectManager;
 use Hris\FormBundle\Entity\ResourceTable;
 use Hris\FormBundle\DataFixtures\ORM\LoadFieldData;
 use Hris\FormBundle\Entity\ResourceTableFieldMember;
+use Symfony\Component\Stopwatch\Stopwatch;
 
 class LoadResourceTableData extends AbstractFixture implements OrderedFixtureInterface
 {
@@ -134,7 +135,7 @@ class LoadResourceTableData extends AbstractFixture implements OrderedFixtureInt
         }else {
             $dummyResourceTableGenerationDurationMessage = round(($dummyResourceTableGenerationDuration/86400),2) .' days';
         }
-        echo "Dummy data schema generation complete in ".$dummyResourceTableGenerationDurationMessage."\n";
+        echo "\tDummy data schema generation complete in ".$dummyResourceTableGenerationDurationMessage."\n";
 
         // Generate resource tables
         $resourceTables = $manager->getRepository('HrisFormBundle:ResourceTable')->findAll();
@@ -147,23 +148,6 @@ class LoadResourceTableData extends AbstractFixture implements OrderedFixtureInt
                 else echo "Failed with:".$messageLog;
             }
         }
-
-        /*
-         * Check Clock for time spent
-         */
-        $dummyResourceTableGenerationTime = $stopwatch->stop('dummyResourceTableGeneration');
-        $duration = $dummyResourceTableGenerationTime->getDuration()/1000;
-        unset($stopwatch);
-        if( $duration <60 ) {
-            $durationMessage = round($duration,2).' seconds';
-        }elseif( $duration >= 60 && $duration < 3600 ) {
-            $durationMessage = round(($duration/60),2) .' minutes';
-        }elseif( $duration >=3600 && $duration < 216000) {
-            $durationMessage = round(($duration/3600),2) .' hours';
-        }else {
-            $durationMessage = round(($duration/86400),2) .' hours';
-        }
-        echo "Dummy Resource Tables generation and with _resoucetables complete in ". $durationMessage .".\n\n";
 	}
 	
 	/**
