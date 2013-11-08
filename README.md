@@ -1,5 +1,5 @@
-# HRIS
-====
+Human Resource Information System
+==================================
 
 Human Resource Information System(HRIS) is a software that enables organisations to collect,
 validate, analyse and present raw and statistical human resource information for reporting,
@@ -8,15 +8,55 @@ to fit organization specific requirements, its built with open meta-data models 
 and customizable user interface that allows user to adjust the system to peform, behave,
 look and feel based on organisation's specific requirements without the need for
 software development.
+For more information visit documentation site: [http://hris.readthedocs.org/](http://hris.readthedocs.org/)
 
 HRIS is a free software; you can redistribute it and/or modify it
 under the terms of the GNU General Public License; either version 2 of the License,
 or (at your option) any later version.
 
-## Installing Hris Software
+## 1. Installing Hris Software
 ----------------------------
 
-#### PHP5-INTL Dependency
+#### 1.1 Install through composer
+
+Composer is a dependency management library for PHP, it is an executable PHAR file which you can use to download hris3.
+Start by downloading composer anywhere onto your computer. If you have curl installed, it's
+as easy as:
+
+    curl -s https://getcomposer.org/installer | php
+
+Or if you don't hvae curl:
+
+    php -r "eval('?>'.file_get_contents('https://getcomposer.org/installer'));"
+
+For more information visit [http://getcomposer.org/](http://getcomposer.org/).
+
+Once you have composer downloaded you can install hris through:
+
+    php composer.phar create-project hrisproject/hris hris dev-master
+
+After installation, composer will ask if you want to remove version control history(i.e. git)
+Default is yes, But If you're developing hris say no.
+
+#### 1.2 Install source code from our [github repository](https://github.com/hrisproject/hris)
+
+    git clone https://github.com/hrisproject/hris.git
+
+Update dependencies through composer. Change directory into hris project and make sure composer is up to date
+before updating hris project:
+
+    php composer.phar self-update
+    php composer.phar update
+
+## 2. Configuring Hris Software
+
+To make hris project accessible from the web, make a symbolic link from your server's webroot to hris's web directory.
+To simplify you can change directory to where hris project is and make link. e.g.
+
+    cd /path/to/hris
+    ln -s ${PWD}/web/ /var/www/hris #Note: ${PWD} is current directoyr(/path/to/hris) and /var/www/ is webroot
+
+##### Hris depends on php5-intl for internationalization
 
 On Systems running Linux Operating systems run
 
@@ -26,26 +66,7 @@ On Systems running Mac OSX Operating systems run
 
 	brew install icu4c
 
-#### Download system source codes from our [github repository](https://github.com/hrisproject/hris) - https://github.com/hrisproject/hris
-	git clone https://github.com/hrisproject/hris.git
-	
-Install composer inside project directory - hris Note: hris now comes with composer pre-installed
-
-	curl -s https://getcomposer.org/installer | php
-	
-If you don't have curl, install composer with this script
-	php -r "eval('?>'.file_get_contents('https://getcomposer.org/installer'));"
-	
-Update your repository with latest dependecies
-
-	php composer.phar install
-	php composer.phar update
-	
-Symbolic Link your web directory to the webroot directory
-
-	ln -s ${PWD}/web/ /var/www/hris		#Assuming your current directory(PWD) is inside hris project and your webroot is on /var/www/
-	
-Set date time zone inside php.ini to your location,change line date.timezone to your locale, e.g in Dar-es-salaam, Tanzania
+Set date time zone of your server in php.ini, e.g in Dar-es-salaam, Tanzania
 
 	date.timezone = 'Africa/Dar_es_Salaam'
 	
@@ -53,29 +74,26 @@ Turn off short_open_tag inside php.ini to disable detection of PHP codes between
 
 	short_open_tag = Off
 	
-Give Web readwrite access to cache and log directory in your hris directory.
+Clear cache and logs and give Hris's Web directory readwrite access to cache and log directory in your hris directory.
 To enjoy both user and web read-write access in linux use the following commands:
+(We assume you're inside hris directory)
 
 	rm -rf app/cache/*
 	rm -rf app/logs/*
-	
-On Systems supporting chmod +a(e.g. Mac), you can give readwrite permission via
+
+On Mac and Systems supporting chmod +a, you can give readwrite permission via
 
 	sudo chmod +a "www-data allow delete,write,append,file_inherit,directory_inherit" app/cache app/logs
 	sudo chmod +a "`whoami` allow delete,write,append,file_inherit,directory_inherit" app/cache app/logs
 	
-On Systems that don't support chmod +a(e.g. Linux), you can give readwrite permission via
+On Linux and Systems that don't support chmod +a, you can give readwrite permission via
 
 	sudo setfacl -R -m u:www-data:rwx -m u:`whoami`:rwx app/cache app/logs
 	sudo setfacl -dR -m u:www-data:rwx -m u:`whoami`:rwx app/cache app/logs
 
 
-## Database Setup
------------------
-Database configuration can be found from hris/app/config/parameters.yml.
-
-Note: parameters.yml is autogenerated everytime composer updates dependencies.
-
+Database configuration can be found from hris/app/config/parameters.yml. The parameters.yml is autogenerated
+everytime composer updates dependencies. Use it to set your database connection settings.
 
 ### Parameters.yml:
 	database_driver: pdo_pgsql
@@ -92,13 +110,19 @@ Note: parameters.yml is autogenerated everytime composer updates dependencies.
 	secret: %secret_generated_key%
 	database_path: null
 
-### Generating database
+
+## 3. Other useful tools for configuration and development
+
+Hris is built based on symfony2, thus all the utilies of symfony2 works on hris
+Below are some of useful tools during confiuration(we assume you're inside hris project)
+
+### 3.1 Generating database
 	app/console doctrine:database:drop --force		#Drops Database if it exist
 	app/console doctrine:database:create			#Creates Fresh new database
 	app/console doctrine:schema:update --force		#Updates Database schema
-	app/console list								#List all commands offered
+	app/console doctrine:fixtures:load              #Load dummy data(users and hris metadata)
 	
-### Creating, Activating,Changing password, deactivate, demote & promote login-user from commandline
+### 3.2 Creating, Activating,Changing password, deactivate, demote & promote login-user from commandline
 	app/console fos:user:create						#Create User account
 	app/console fos:user:activate					#Activate a user
 	app/console fos:user:change-password			#Change the password of a user.
@@ -107,58 +131,10 @@ Note: parameters.yml is autogenerated everytime composer updates dependencies.
 	app/console fos:user:demote						#Demote a user by removing a role
 	app/console fos:user:promote					#Promotes a user by adding a role
 
-### Regenerating assets
+### 3.3 Regenerating assets
 	app/console assetic:dump
 	php app/console assets:install web
 
-
-### Shell Console
-	app/console --shell
-
-## Performance tuning
-	File php.ini can be used to tweak performance of the system 
-
-## Development
---------------
-### Knowledge base
-* [Git Source code management](http://git-scm.com/)
-* [Composer](http://getcomposer.org/)
-* [Symfony2](http://symfony.com/)
-* [PHPUnit](http://www.phpunit.de/manual/3.7/en/index.html)
-* [Doctrine](http://www.doctrine-project.org/)
-* [Twig](http://twig.sensiolabs.org/)
-* [{less} - The dynamic stylesheet language](http://lesscss.org/)
-* [Internationalization](http://symfony.com/doc/current/book/translation.html)
-
-## Eclipse Tricks
------------------
-Eclipse is the favoured IDE for HRIS development, followed by PHPStorm, the following are development plugins for eclipse.
-
-1. [Yedit - Eclipse plugin for YAML Files](http://code.google.com/p/yedit/) from Update site: http://dadacoalition.org/yedit
-2. [Symfony Eclipse Plugin](https://github.com/pulse00/Symfony-2-Eclipse-Plugin) from Update site: http://p2.dubture.com or [MarketPlace](http://marketplace.eclipse.org/marketplace-client-intro?mpc_install=220368)
-3. With those software sources, install plugins from the two sources, that is
-	Composer
-	Json Edit
-	Miscellaneous
-	Phing
-	Symfony
-	Twig
-	YEdit
-4. [Install PHP Tool Integration for testing](http://www.phpsrc.org/) offers PHPUnit test and Copy/Paste Detector, update site: http://www.phpsrc.org/eclipse/pti/
-5. [Less - Eclipse plugin](http://www.normalesup.org/~simonet/soft/ow/eclipse-less.fr.html) offers support for less syntax, update site: http://download.eclipse.org/modeling/tmf/xtext/updates/composite/releases/
-
-## Properties of HRIS
----------------------
-1. Web enabled
-2. Platform independent
-3. Runs on all major web browsers
-4. Runs on most relational databases
-5. Licenced under open source licence terms
-6. Works Off-line
-7. Loosely coupled with Bundle approach
-8. Interoperable
-9. Internationalized
-
-
-
+### 3.4 Running development server (Works with php 5.5 or higher)
+    app/console server:run                          #Runs development server on port 8000
 
