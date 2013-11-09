@@ -67,4 +67,73 @@ class TIISEmployeeFieldRelation
      */
     private $columnName;
 
+
+    /**
+     * Set columnName
+     *
+     * @param string $columnName
+     * @return TIISEmployeeFieldRelation
+     */
+    public function setColumnName($columnName)
+    {
+        $this->columnName = $columnName;
+    
+        return $this;
+    }
+
+    /**
+     * Get columnName
+     *
+     * @return string 
+     */
+    public function getColumnName()
+    {
+        return $this->columnName;
+    }
+
+    /**
+     * Set tiisDataConnection
+     *
+     * @param \Hris\IntergrationBundle\Entity\TIISDataConnection $tiisDataConnection
+     * @return TIISEmployeeFieldRelation
+     */
+    public function setTiisDataConnection(\Hris\IntergrationBundle\Entity\TIISDataConnection $tiisDataConnection)
+    {
+        $this->tiisDataConnection = $tiisDataConnection;
+    
+        return $this;
+    }
+
+    /**
+     * Get tiisDataConnection
+     *
+     * @return \Hris\IntergrationBundle\Entity\TIISDataConnection 
+     */
+    public function getTiisDataConnection()
+    {
+        return $this->tiisDataConnection;
+    }
+
+    /**
+     * Set field
+     *
+     * @param \Hris\FormBundle\Entity\Field $field
+     * @return TIISEmployeeFieldRelation
+     */
+    public function setField(\Hris\FormBundle\Entity\Field $field = null)
+    {
+        $this->field = $field;
+    
+        return $this;
+    }
+
+    /**
+     * Get field
+     *
+     * @return \Hris\FormBundle\Entity\Field 
+     */
+    public function getField()
+    {
+        return $this->field;
+    }
 }
