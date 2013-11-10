@@ -1,9 +1,9 @@
 {% extends '::base.html.twig' %}
 
 {% block right_content -%}
-    <h1><i class="icon-edit icon-largest" title="Edit"></i><small>DHISDataConnection edit</small></h1>
+    <h1><i class="icon-edit icon-largest" title="Edit"></i><small>TIIS DataConnection edit</small></h1>
     {{ form_start(edit_form) }}
-
+    
     {{ form(edit_form) }}
 
     <br/>
@@ -12,7 +12,7 @@
             {{ form_widget(edit_form.submit, {'attr': {'class': 'btn'} }) }}
         </li>
         <li>
-            <a href="{{ path('dhisdataconnection') }}" class="btn">
+            <a href="{{ path('tiisdataconnection') }}" class="btn">
                 Back to the list
             </a>
         </li>
@@ -40,7 +40,7 @@
                             {% endif %}
                         </div>
                         <div class="modal-footer">
-                            <form action="{{ path('dhisdataconnection_delete', { 'id': entity.id }) }}" method="post">
+                            <form action="{{ path('validation_delete', { 'id': entity.id }) }}" method="post">
                                 <input type="hidden" name="_method" value="DELETE" />
                                 {{ form_widget(delete_form) }}
                                 <button type="button" class="btn btn-default" data-dismiss="modal">Close</button>

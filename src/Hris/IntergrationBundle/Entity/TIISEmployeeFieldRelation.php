@@ -27,6 +27,8 @@ namespace Hris\IntergrationBundle\Entity;
 use Doctrine\ORM\Mapping as ORM;
 use Gedmo\Mapping\Annotation as Gedmo;
 use Symfony\Component\Validator\Constraints as Assert;
+use Hris\IntergrationBundle\Entity\TIISDataConnection;
+use Hris\FormBundle\Entity\Field;
 
 /**
  * TIISEmployeeFieldRelation
@@ -94,10 +96,10 @@ class TIISEmployeeFieldRelation
     /**
      * Set tiisDataConnection
      *
-     * @param \Hris\IntergrationBundle\Entity\TIISDataConnection $tiisDataConnection
+     * @param TIISDataConnection $tiisDataConnection
      * @return TIISEmployeeFieldRelation
      */
-    public function setTiisDataConnection(\Hris\IntergrationBundle\Entity\TIISDataConnection $tiisDataConnection)
+    public function setTiisDataConnection(TIISDataConnection $tiisDataConnection)
     {
         $this->tiisDataConnection = $tiisDataConnection;
     
@@ -107,7 +109,7 @@ class TIISEmployeeFieldRelation
     /**
      * Get tiisDataConnection
      *
-     * @return \Hris\IntergrationBundle\Entity\TIISDataConnection 
+     * @return TIISDataConnection 
      */
     public function getTiisDataConnection()
     {
@@ -117,10 +119,10 @@ class TIISEmployeeFieldRelation
     /**
      * Set field
      *
-     * @param \Hris\FormBundle\Entity\Field $field
+     * @param Field $field
      * @return TIISEmployeeFieldRelation
      */
-    public function setField(\Hris\FormBundle\Entity\Field $field = null)
+    public function setField(Field $field = null)
     {
         $this->field = $field;
     
@@ -130,7 +132,7 @@ class TIISEmployeeFieldRelation
     /**
      * Get field
      *
-     * @return \Hris\FormBundle\Entity\Field 
+     * @return Field 
      */
     public function getField()
     {

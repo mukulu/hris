@@ -10,45 +10,105 @@
                 <td>{{ entity.id }}</td>
             </tr>
             <tr>
+                <th>Uid</th>
+                <td>{{ entity.uid }}</td>
+            </tr>
+            <tr>
                 <th>Name</th>
                 <td>{{ entity.name }}</td>
             </tr>
             <tr>
-                <th>Datasetname</th>
-                <td>{{ entity.datasetName }}</td>
+                <th>Recordstablename</th>
+                <td>{{ entity.recordstablename }}</td>
             </tr>
             <tr>
-                <th>Datasetuid</th>
-                <td>{{ entity.datasetUid }}</td>
+                <th>Organisationunittablename</th>
+                <td>{{ entity.organisationunitTableName }}</td>
+            </tr>
+            <tr>
+                <th>Organisationunitlongnamecolumnname</th>
+                <td>{{ entity.organisationunitLongnameColumNname }}</td>
+            </tr>
+            <tr>
+                <th>Organisationunitcodecolumnname</th>
+                <td>{{ entity.organisationunitCodeColumnName }}</td>
+            </tr>
+            <tr>
+                <th>Organisationunitownershipcolumnname</th>
+                <td>{{ entity.organisationunitOwnershipColumnName }}</td>
+            </tr>
+            <tr>
+                <th>Recordsorganisationunitcolumnname</th>
+                <td>{{ entity.recordsOrganisationunitColumnName }}</td>
+            </tr>
+            <tr>
+                <th>Recordsinstancecolumnname</th>
+                <td>{{ entity.recordsInstanceColumnName }}</td>
+            </tr>
+            <tr>
+                <th>Tiisparentorganisationunitcode</th>
+                <td>{{ entity.tiisParentOrganisationunitCode }}</td>
+            </tr>
+            <tr>
+                <th>Hristopmostorganisationunitshrotname</th>
+                <td>{{ entity.hrisTopMostOrganisationunitShrotname }}</td>
+            </tr>
+            <tr>
+                <th>Hrisinstituiongroupname</th>
+                <td>{{ entity.hrisInstituionGroupName }}</td>
             </tr>
             <tr>
                 <th>Hosturl</th>
                 <td>{{ entity.hostUrl }}</td>
             </tr>
             <tr>
+                <th>Password</th>
+                <td>{{ entity.password }}</td>
+            </tr>
+            <tr>
                 <th>Username</th>
                 <td>{{ entity.username }}</td>
             </tr>
             <tr>
-                <th>Password</th>
-                <td>{{ entity.password }}</td>
+                <th>Database</th>
+                <td>{{ entity.database }}</td>
+            </tr>
+            <tr>
+                <th>Employeeformname</th>
+                <td>{{ entity.employeeFormName }}</td>
+            </tr>
+            <tr>
+                <th>Defaultnationality</th>
+                <td>{{ entity.defaultNationality }}</td>
+            </tr>
+            <tr>
+                <th>Defaulthrnationality</th>
+                <td>{{ entity.defaultHrNationality }}</td>
+            </tr>
+            <tr>
+                <th>Datecreated</th>
+                <td>{{ entity.datecreated|date('Y-m-d H:i:s') }}</td>
+            </tr>
+            <tr>
+                <th>Lastupdated</th>
+                <td>{{ entity.lastupdated|date('Y-m-d H:i:s') }}</td>
             </tr>
         </tbody>
     </table>
 
     <ul class="record_actions inline">
         <li>
-            <a href="{{ path('dhisdataconnection') }}" class="btn">
+            <a href="{{ path('tiisdataconnection') }}" class="btn">
                 Back to the list
             </a>
         </li>
         <li>
-            <a href="{{ path('dhisdataconnection_edit', { 'id': entity.id }) }}" class="btn">
+            <a href="{{ path('tiisdataconnection_edit', { 'id': entity.id }) }}" class="btn">
                 Edit
             </a>
         </li>
         <li>
-            <a class="btn" href="{{ path('dhisdataconnection_new') }}">
+            <a class="btn" href="{{ path('tiisdataconnection_new') }}">
                 Create a another
             </a>
         </li>
@@ -72,7 +132,7 @@
                             {% endif %}
                         </div>
                         <div class="modal-footer">
-                            <form action="{{ path('dhisdataconnection_delete', { 'id': entity.id }) }}" method="post">
+                            <form action="{{ path('tiisdataconnection_delete', { 'id': entity.id }) }}" method="post">
                                 <input type="hidden" class="btn btn-danger" name="_method" value="DELETE" />
                                 {{ form_widget(delete_form) }}
                                 <button type="button" class="btn btn-default" data-dismiss="modal">Close</button>
