@@ -34,8 +34,6 @@ class TIISDataConnectionType extends AbstractType
             ->add('employeeFormName')
             ->add('defaultNationality')
             ->add('defaultHrNationality')
-            ->add('datecreated')
-            ->add('lastupdated')
             ->add('organisationunit')
         ;
     }

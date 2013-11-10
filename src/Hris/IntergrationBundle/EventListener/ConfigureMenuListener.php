@@ -55,7 +55,7 @@ class ConfigureMenuListener
             )
         );
         $integrationModule->addChild('TIIS Integration',
-            array('uri'=>'#tiisdataconnection',
+            array('route'=>'tiisdataconnection',
                 'extras'=>array('tag'=>'div'),
                 'name'=>'TIIS Integration',
                 'attributes'=> array('class'=>'accordion-group'),
