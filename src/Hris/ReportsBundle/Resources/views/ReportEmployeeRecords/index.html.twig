@@ -61,6 +61,7 @@
                 selectableHeader: "<div class=''>Avaiable Forms</div>",
                 selectionHeader: "<div class=''>Selected Forms</div>"
             });
+            $( 'input[required="required"],select[required="required"]').closest(".control-group").children("label").prepend('<em class="required-asterisk">*</em>');
         });
     </script>
 {% endblock javascripts %}
@@ -74,16 +75,31 @@
 {% block right_content -%}
     <h1><small>Report Employee Records</small></h1>
 
-    {{ form_start(employeeRecordsForm, { 'method' : 'PUT','attr': {'class':'employeeRecordsForm','id':'employeeRecordsForm'} } ) }}
+    {{ form_start(employeeRecordsForm, { 'method' : 'PUT','attr': {'class':'employeeRecordsForm form-horizontal','id':'employeeRecordsForm'} } ) }}
 
-    <div>
-        {{ form_label( employeeRecordsForm.organisationunit ) }}
-        <div id="treeplaceholder"></div>
-        {{ form_errors( employeeRecordsForm.organisationunit ) }}
-        {{ form_widget( employeeRecordsForm.organisationunit ) }}
+    <div class="control-group">
+        {{ form_label( employeeRecordsForm.organisationunit,'Select Organisationunit', {'label_attr': {'class': 'control-label'} } ) }}
+        <div class="controls">
+            <div id="treeplaceholder"></div>
+            {{ form_errors( employeeRecordsForm.organisationunit ) }}
+            {{ form_widget( employeeRecordsForm.organisationunit ) }}
+        </div>
     </div>
     <br/>
-    {{ form_row( employeeRecordsForm.forms ) }}
+    <div class="control-group">
+        {{ form_label( employeeRecordsForm.forms,'Select Forms', {'label_attr': {'class': 'control-label'} } ) }}
+        <div class="controls">
+            {{ form_errors( employeeRecordsForm.forms ) }}
+            {{ form_widget( employeeRecordsForm.forms ) }}
+        </div>
+    </div>
+    <div class="control-group">
+        {{ form_label( employeeRecordsForm.withLowerLevels,'Select Forms', {'label_attr': {'class': 'control-label'} } ) }}
+        <div class="controls">
+            {{ form_errors( employeeRecordsForm.withLowerLevels ) }}
+            {{ form_widget( employeeRecordsForm.withLowerLevels ) }}
+        </div>
+    </div>
 
 
     {{ form_end(employeeRecordsForm) }}
