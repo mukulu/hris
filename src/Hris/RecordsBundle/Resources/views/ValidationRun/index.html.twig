@@ -77,6 +77,7 @@
                 selectableHeader: "<div class=''>Avaiable Forms</div>",
                 selectionHeader: "<div class=''>Selected Forms</div>"
             });
+            $( 'input[required="required"],select[required="required"]').closest(".control-group").children("label").prepend('<em class="required-asterisk">*</em>');
         });
     </script>
 {% endblock javascripts %}
@@ -89,17 +90,37 @@
 
 {% block right_content -%}
     <h1><small>Run Validation</small></h1>
-        {{ form_start(validationRunForm, {'action': path('validation_result'), 'method': 'POST','attr': {'class':'validationRunForm','id':'validationRunForm'} }) }}
-    <div>
-        {{ form_label( validationRunForm.organisationunit ) }}
-        <div id="treeplaceholder"></div>
-        {{ form_errors( validationRunForm.organisationunit ) }}
-        {{ form_widget( validationRunForm.organisationunit ) }}
+        {{ form_start(validationRunForm, {'action': path('validation_result'), 'method': 'POST','attr': {'class':'validationRunForm form-horizontal','id':'validationRunForm'} }) }}
+    <div class="control-group">
+        {{ form_label( validationRunForm.organisationunit,'Select Organisationunit', {'label_attr': {'class': 'control-label'} } ) }}
+        <div class="controls">
+            <div id="treeplaceholder"></div>
+            {{ form_errors( validationRunForm.organisationunit ) }}
+            {{ form_widget( validationRunForm.organisationunit ) }}
+        </div>
     </div>
     <br/>
-    {{ form_row( validationRunForm.organisationunitLevel ) }}
-    {{ form_row( validationRunForm.validations ) }}
-    {{ form_row( validationRunForm.forms ) }}
+    <div class="control-group">
+        {{ form_label( validationRunForm.withLowerLevels,'Use data for selected unit with lower level', {'label_attr': {'class': 'control-label'} } ) }}
+        <div class="controls">
+            {{ form_errors( validationRunForm.withLowerLevels ) }}
+            {{ form_widget( validationRunForm.withLowerLevels ) }}
+        </div>
+    </div>
+    <div class="control-group">
+        {{ form_label( validationRunForm.validations,'Select Validations', {'label_attr': {'class': 'control-label'} } ) }}
+        <div class="controls">
+            {{ form_errors( validationRunForm.validations ) }}
+            {{ form_widget( validationRunForm.validations ) }}
+        </div>
+    </div>
+    <div class="control-group">
+        {{ form_label( validationRunForm.forms,'Select Forms', {'label_attr': {'class': 'control-label'} } ) }}
+        <div class="controls">
+            {{ form_errors( validationRunForm.forms ) }}
+            {{ form_widget( validationRunForm.forms ) }}
+        </div>
+    </div>
 
     {{ form_end(validationRunForm) }}
 
