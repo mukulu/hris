@@ -75,8 +75,14 @@
         </div>
         <p>
             <input type="hidden" name="formId" value="{{ id }}">
-            <button name='Save' class="btn"> Save Records</button>
+            <!--<button name='Save' class="btn"> Save Records</button>
+            <button name='cancel' id="cancel" class="btn"> Save Records</button> -->
+            <button type="submit" name='Save' class="btn"> Save Records</button>
+            <a href="{{ path('record_viewrecords', { 'formid': id } ,'form') }}" class="btn">
+                Back to the list
+            </a>
         </p>
+
     </form>
 
 {% endblock %}
