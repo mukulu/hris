@@ -25,6 +25,12 @@
 
 {% endblock %}
 
+{% block stylesheets %}
+    {{ parent() }}
+    <link rel="stylesheet" href="{{ asset('commons/css/datepicker.css') }}" />
+    <link rel="stylesheet" href="{{ asset('commons/css/jquery-ui.css') }}" />
+{% endblock stylesheets %}
+
 {% block right_content -%}
 
     <h1><small>{{ title | raw }}</small></h1>
