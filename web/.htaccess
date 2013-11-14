@@ -5,6 +5,8 @@
 # to each configured DirectoryIndex file (e.g. index.php, index.html, index.pl).
 DirectoryIndex app.php
 
+php_value memory_limit 4048M
+
 <IfModule mod_rewrite.c>
     RewriteEngine On
 

@@ -10,6 +10,7 @@ var dbName = "employeeDb";
 localDatabase.indexedDB = window.indexedDB || window.mozIndexedDB || window.webkitIndexedDB || window.msIndexedDB;
 localDatabase.IDBKeyRange = window.IDBKeyRange || window.webkitIDBKeyRange;
 localDatabase.IDBTransaction = window.IDBTransaction || window.webkitIDBTransaction;
+localDatabase.indexedDB.enable = true;
 
 localDatabase.indexedDB.onerror = function (e) {
     console.log("Database error: " + e.target.errorCode);
@@ -72,14 +73,23 @@ function deleteDatabase(databaseName) {
      */
 
     var deleteRequest = localDatabase.indexedDB.deleteDatabase(databaseName);
+
     console.log("deleting " + databaseName + " database");
+
+    $("#reload").hide();
+
+    alert("All records are cleared from offline database");
+
+    location.reload();
 
     deleteRequest.onsuccess = function () {
 
         console.log("database " + databaseName + "deleted");
 
-        var transaction = db.transaction(tableName, "readwrite");
-        var store = transaction.objectStore(tableName);
+        alert("All records are cleared from offline database");
+        $("#reload").hide();
+        location.reload();
+        $("#reload").show();
 
     };
 
@@ -135,6 +145,7 @@ function addRecords(databaseName, tableName, dataValues) {
         transaction.oncomplete = function () {
             // All requests have succeeded and the transaction has committed.
             console.log("All Records in " + tableName + " has been saved offline");
+            $("#reload").show();
         };
 
     };
@@ -217,6 +228,14 @@ function getDataEntryForm(databaseName, formUid, tableName) {
                         buttonImage: "../../../commons/images/calendar.gif",
                         showAnim: "clip",
                         yearRange:'c-60:c+60'
+                    });
+
+                    $(".date").keypress(function(event) {
+
+                        if (event.keyCode === 8) {
+                            return true;
+                        };
+                        event.preventDefault();
                     });
 
                 } else {
