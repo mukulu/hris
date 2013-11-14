@@ -10,6 +10,7 @@ var dbName = "employeeDb";
 localDatabase.indexedDB = window.indexedDB || window.mozIndexedDB || window.webkitIndexedDB || window.msIndexedDB;
 localDatabase.IDBKeyRange = window.IDBKeyRange || window.webkitIDBKeyRange;
 localDatabase.IDBTransaction = window.IDBTransaction || window.webkitIDBTransaction;
+localDatabase.indexedDB.enable = true;
 
 localDatabase.indexedDB.onerror = function (e) {
     console.log("Database error: " + e.target.errorCode);
@@ -229,7 +230,13 @@ function getDataEntryForm(databaseName, formUid, tableName) {
                         yearRange:'c-60:c+60'
                     });
 
-                    $(".date").keypress(function(event) {event.preventDefault();});
+                    $(".date").keypress(function(event) {
+
+                        if (event.keyCode === 8) {
+                            return true;
+                        };
+                        event.preventDefault();
+                    });
 
                 } else {
                     // No match was found.
