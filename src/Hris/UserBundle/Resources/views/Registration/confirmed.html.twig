@@ -1,9 +1,11 @@
 {% extends "::base.html.twig" %}
 
-{% block right_content %}
+{% block content %}
+<div class="offset3">
     <h1><small>{{ 'registration.confirmed'|trans({'%username%': user.username}, 'FOSUserBundle') }}</small></h1>
     {% if app.session is not empty %}
         {% set targetUrl = app.session.get('_security.' ~ app.security.token.providerKey ~ '.target_path') %}
         <p><a href="{{ path('hris_homepage') }}" class="btn">{{ 'registration.to_dashboard'|trans({}, 'FOSUserBundle') }}</a></p>
     {% endif %}
-{% endblock right_content %}
+</div>
+{% endblock content %}

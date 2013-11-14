@@ -26,8 +26,8 @@ namespace Hris\IndicatorBundle\DataFixtures\ORM;
 use Doctrine\Common\DataFixtures\OrderedFixtureInterface;
 use Doctrine\Common\DataFixtures\AbstractFixture;
 use Doctrine\Common\Persistence\ObjectManager;
-
-use Hris\IndicatorBundle\Entity\Indicator;
+use Hris\IndicatorBundle\Entity\Target;
+use Hris\IndicatorBundle\Entity\TargetFieldOption;
 
 class LoadIndicatorData extends AbstractFixture implements OrderedFixtureInterface
 {
@@ -35,59 +35,103 @@ class LoadIndicatorData extends AbstractFixture implements OrderedFixtureInterfa
 	 * {@inheritDoc}
 	 * @see Doctrine\Common\DataFixtures.FixtureInterface::load()
 	 */
-    private $indicators;
+    private $targets;
 
     /**
-     * Returns array of validation fixtures.
+     * Returns array of target fixtures.
      *
      * @return mixed
      */
-    public function getIndicators()
+    public function getTargets()
     {
-        return $this->indicators;
+        return $this->targets;
     }
 
     /**
-     * Returns array of dummy indicators
+     * Returns array of dummy targets
      * @return array
      */
-    public function addDummyIndicators()
+    public function addDummyTargets()
     {
         // Load Public Data
-        $this->indicators = Array(
+        $this->targets = Array(
             0=>Array(
-                'name'=>'Proffesion Targets',
-                'description'=>'Targets for all professions',
-                'organisationunitGroup'=>'healthcentres'),
+                'name'=>'Health Centres Professions',
+                'description'=>'Professions for Health Centres',
+                'organisationunitGroup'=>'healthcentres',
+                'field'=>'Profession',
+                'targets'=>Array(
+                    Array('fieldOption'=>'Driver','target'=>2),
+                    Array('fieldOption'=>'Clinical Assistant','target'=>2),
+                    Array('fieldOption'=>'Dental Technologist','target'=>1),
+                    Array('fieldOption'=>'Nursing Officer','target'=>2),
+                    Array('fieldOption'=>'Assistant Medical Officer','target'=>2),
+                    Array('fieldOption'=>'Environmental Health Officer','target'=>1),
+                    Array('fieldOption'=>'Pharmacist','target'=>2),
+                    Array('fieldOption'=>'Medical Doctor','target'=>2)
+                )
+            ),
             1=>Array(
-                'name'=>'Proffesion Targets',
-                'description'=>'Targets for all professions in hospitals',
+                'name'=>'Hospital Professions',
+                'description'=>'Professions for Hospitals',
                 'organisationunitGroup'=>'hospitals',
-        ));
-        return $this->indicators;
+                'field'=>'Profession',
+                'targets'=>Array(
+                    Array('fieldOption'=>'Driver','target'=>4),
+                    Array('fieldOption'=>'Clinical Assistant','target'=>18),
+                    Array('fieldOption'=>'Dental Technologist','target'=>5),
+                    Array('fieldOption'=>'Nursing Officer','target'=>15),
+                    Array('fieldOption'=>'Assistant Medical Officer','target'=>6),
+                    Array('fieldOption'=>'Environmental Health Officer','target'=>5),
+                    Array('fieldOption'=>'Pharmacist','target'=>3),
+                    Array('fieldOption'=>'Medical Doctor','target'=>3)
+                )
+            ),
+            2=>Array(
+                'name'=>'Dispensary Professions',
+                'description'=>'Professions for Dispensaries',
+                'organisationunitGroup'=>'dispensaries',
+                'field'=>'Profession',
+                'targets'=>Array(
+                    Array('fieldOption'=>'Driver','target'=>1),
+                    Array('fieldOption'=>'Clinical Assistant','target'=>5),
+                    Array('fieldOption'=>'Dental Technologist','target'=>1),
+                    Array('fieldOption'=>'Nursing Officer','target'=>4),
+                    Array('fieldOption'=>'Assistant Medical Officer','target'=>2),
+                    Array('fieldOption'=>'Environmental Health Officer','target'=>2),
+                    Array('fieldOption'=>'Pharmacist','target'=>1),
+                    Array('fieldOption'=>'Medical Doctor','target'=>3)
+                )
+            )
+        );
+        return $this->targets;
     }
 	public function load(ObjectManager $manager)
 	{
-        /**
+
         // Populate dummy forms
-        $this->addDummyIndicators();
+        $this->addDummyTargets();
 
-        foreach($this->getIndicators() as $key=>$humanResourceIndicator) {
-            $indicator = new Indicator();
-            $indicator->setName($humanResourceIndicator['name']);
-            $indicator->setDescription($humanResourceIndicator['description']);
-            $organisationunitGroupByReference = $manager->merge($this->getReference( strtolower(str_replace(' ','',$humanResourceIndicator['organisationunitGroup'])).'-organisationunitgroup' ));
-            $indicator->setOrganisationunitGroup($organisationunitGroupByReference);
-            $fieldOptionGroupByReference = $manager->merge($this->getReference( strtolower(str_replace(' ','',$humanResourceIndicator['fieldOptionGroup'])).'-fieldoptiongroup' ));
-            $indicator->setFieldOptionGroup($fieldOptionGroupByReference);
-            $indicator->setYear($humanResourceIndicator['year']);
-            $indicator->setValue($humanResourceIndicator['value']);
-
-            $this->addReference(strtolower(str_replace(' ','',$humanResourceIndicator['name'])).'-form', $indicator);
-            $manager->persist($indicator);
+        foreach($this->getTargets() as $key=>$humanResourceTarget) {
+            $target = new Target();
+            $target->setName($humanResourceTarget['name']);
+            $target->setDescription($humanResourceTarget['description']);
+            $organisationunitGroupByReference = $manager->merge($this->getReference( strtolower(str_replace(' ','',$humanResourceTarget['organisationunitGroup'])).'-organisationunitgroup' ));
+            $target->setOrganisationunitGroup($organisationunitGroupByReference);
+            foreach($humanResourceTarget['targets'] as $targetKey=>$humaResourceTargetFieldOption) {
+                $targetFieldOption = new TargetFieldOption();
+                $fieldOptionReference = strtolower(str_replace(' ','',$humaResourceTargetFieldOption['fieldOption'])).str_replace('-field','',$humanResourceTarget['field']).'-fieldoption';
+                $fieldOptionByReference = $manager->merge($this->getReference( $fieldOptionReference ));
+                $targetFieldOption->setFieldOption($fieldOptionByReference);
+                $targetFieldOption->setTarget($target);
+                $targetFieldOption->setValue($humaResourceTargetFieldOption['target']);
+                $target->addTargetFieldOption($targetFieldOption);
+            }
+            $this->addReference(strtolower(str_replace(' ','',$humanResourceTarget['name'])).'-target', $target);
+            $manager->persist($target);
         }
 		$manager->flush();
-         * */
+
 	}
 	
 	/**
@@ -97,7 +141,7 @@ class LoadIndicatorData extends AbstractFixture implements OrderedFixtureInterfa
 	public function getOrder()
 	{
         //LoadValidation preceeds
-		return 10;
+		return 5;
         //LoadRecord follows
 	}
 

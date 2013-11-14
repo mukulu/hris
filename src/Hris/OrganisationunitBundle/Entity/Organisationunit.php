@@ -30,6 +30,7 @@ use Gedmo\Mapping\Annotation as Gedmo;
 
 use Hris\OrganisationunitBundle\Entity\OrganisationunitStructure;
 use Hris\OrganisationunitBundle\Entity\OrganisationunitGroup;
+use Hris\IntergrationBundle\Entity\DHISDataConnection;
 use Hris\UserBundle\Entity\User;
 use Symfony\Component\Validator\Constraints as Assert;
 
@@ -198,6 +199,14 @@ class Organisationunit
      * @ORM\Column(name="description", type="text", nullable=true)
      */
     private $description;
+
+    /**
+     * @var DHISDataConnection $dhisDataConnection
+     *
+     * @ORM\OneToMany(targetEntity="Hris\IntergrationBundle\Entity\DHISDataConnection", mappedBy="parentOrganisationunit",cascade={"ALL"})
+     * @ORM\OrderBy({"name" = "ASC"})
+     */
+    private $dhisDataConnection;
 
     /**
      * @var OrganisationunitCompleteness

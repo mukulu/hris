@@ -1,0 +1,3 @@
+dhis_data_integration:
+    resource: "@HrisIntergrationBundle/Controller/DHISDataConnectionController.php"
+    type: annotation

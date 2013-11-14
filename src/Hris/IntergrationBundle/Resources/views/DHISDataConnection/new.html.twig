@@ -1,0 +1,22 @@
+{% extends '::base.html.twig' %}
+
+{% block right_content -%}
+    <h1><small>DHISDataConnection creation</small></h1>
+
+    {{ form_start(form) }}
+
+    {{ form(form) }}
+
+    <br/>
+    <ul class="record_actions inline" style="float:left;">
+        <li>
+            {{ form_widget(form.submit, {'attr': {'class': 'btn'}}) }}
+        </li>
+        <li>
+            <a href="{{ path('dhisdataconnection') }}" class="btn">
+                Back to the list
+            </a>
+        </li>
+    </ul>
+    {{ form_end(form)  }}
+{% endblock %}

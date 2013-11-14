@@ -45,6 +45,7 @@ class AppKernel extends Kernel
         	new Stfalcon\Bundle\TinymceBundle\StfalconTinymceBundle(),
             new Liuggio\ExcelBundle\LiuggioExcelBundle(),
             new Hris\HelpCentreBundle\HrisHelpCentreBundle(),
+            new Hris\IntergrationBundle\HrisIntergrationBundle(),
         );
 
         if (in_array($this->getEnvironment(), array('dev', 'test'))) {

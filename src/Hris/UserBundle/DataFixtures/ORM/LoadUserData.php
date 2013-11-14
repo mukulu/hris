@@ -33,6 +33,7 @@ use Hris\MessageBundle\Entity\MessageMetadata;
 use Hris\MessageBundle\Entity\Thread;
 use Hris\MessageBundle\Entity\ThreadMetadata;
 use Hris\UserBundle\Entity\User;
+use Symfony\Component\Stopwatch\Stopwatch;
 
 class LoadUserData extends AbstractFixture implements OrderedFixtureInterface 
 {
@@ -59,7 +60,7 @@ class LoadUserData extends AbstractFixture implements OrderedFixtureInterface
                 'username'=>'admin',
                 'password'=>'district',
                 'email'=>'admin@localhost.local',
-                'role'=>'ROLE_SUPERUSER',
+                'role'=>'ROLE_SUPER_USER',
                 'enabled'=>True,
                 'phonenumber'=>'+255717000000',
                 'jobtitle'=>'System Administrator',
@@ -71,7 +72,7 @@ class LoadUserData extends AbstractFixture implements OrderedFixtureInterface
                 'username'=>'district',
                 'password'=>'district',
                 'email'=>'district@localhost.local',
-                'role'=>'ROLE_USER',
+                'role'=>'ROLE_DATA_MANAGER',
                 'enabled'=>True,
                 'phonenumber'=>'+255716000000',
                 'jobtitle'=>'Data Manager',
@@ -83,7 +84,7 @@ class LoadUserData extends AbstractFixture implements OrderedFixtureInterface
                 'username'=>'hospital',
                 'password'=>'district',
                 'email'=>'hospital@localhost.local',
-                'role'=>'ROLE_USER',
+                'role'=>'ROLE_DATA_MANAGER',
                 'enabled'=>True,
                 'phonenumber'=>'+255715000000',
                 'jobtitle'=>'Data Manager',
@@ -101,6 +102,9 @@ class LoadUserData extends AbstractFixture implements OrderedFixtureInterface
 	 */
 	public function load(ObjectManager $manager)
 	{
+        $stopwatch = new Stopwatch();
+        $stopwatch->start('dummyUsersGeneration');
+
         $this->addDummyUsers();
         foreach($this->getUsers() as $userKey=>$humanResourceUser) {
             $user = new User();
@@ -153,8 +157,23 @@ class LoadUserData extends AbstractFixture implements OrderedFixtureInterface
         }
 
 		$manager->flush();
-		
 
+        /*
+         * Check Clock for time spent
+         */
+        $dummyUsersGenerationTime = $stopwatch->stop('dummyUsersGeneration');
+        $duration = $dummyUsersGenerationTime->getDuration()/1000;
+        unset($stopwatch);
+        if( $duration <60 ) {
+            $durationMessage = round($duration,2).' seconds';
+        }elseif( $duration >= 60 && $duration < 3600 ) {
+            $durationMessage = round(($duration/60),2) .' minutes';
+        }elseif( $duration >=3600 && $duration < 216000) {
+            $durationMessage = round(($duration/3600),2) .' hours';
+        }else {
+            $durationMessage = round(($duration/86400),2) .' hours';
+        }
+        echo "Dummy users generation complete in ". $durationMessage .".\n\n";
 	}
 	
 	/**
