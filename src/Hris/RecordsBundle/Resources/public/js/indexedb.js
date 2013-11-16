@@ -227,7 +227,7 @@ function getDataEntryForm(databaseName, formUid, tableName) {
                         dateFormat: "dd/mm/yy",
                         buttonImage: "../../../commons/images/calendar.gif",
                         showAnim: "clip",
-                        yearRange:'c-60:c+60'
+                        yearRange:'c-60:c+0'
                     });
 
                     $(".date").keypress(function(event) {
