@@ -466,11 +466,12 @@ function getunits(parent){
     }
 }
 
-function populateForm(fieldUIDS, databaseName, dataValues, otherFields, orgunit) {
+function populateForm(fieldUIDS, databaseName, dataValues, otherFields, orgunit, orgUnitParent) {
 
     dataValues = JSON.parse(dataValues);
     otherFields = JSON.parse(otherFields);
     orgunit = JSON.parse(orgunit);
+    orgUnitParent = JSON.parse(orgUnitParent);
 
     var fieldUid = JSON.parse(fieldUIDS);
 
@@ -480,6 +481,15 @@ function populateForm(fieldUIDS, databaseName, dataValues, otherFields, orgunit)
             value: value["uid"],
             text: value["longname"],
             selected: "selected"
+        }));
+
+    });
+
+    //Populating Childrens Organizationunit
+    $.each(orgUnitParent, function (key, value) {
+        $("#units").append($('<option>', {
+            value: value[0]["uid"],
+            text: value[0]["longname"]
         }));
 
     });

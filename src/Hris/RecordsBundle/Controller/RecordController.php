@@ -579,6 +579,12 @@ class RecordController extends Controller
 
         $isEntryLevel = $user->getOrganisationunit()->getOrganisationunitStructure()->getLevel()->getDataentrylevel();
 
+        $orgUnitChildren = [];
+        if($isEntryLevel){
+            $orgUnitParent = $em->getRepository('HrisOrganisationunitBundle:Organisationunit')->find($user->getOrganisationunit()->getId());
+            $orgUnitChildren = $em->getRepository('HrisOrganisationunitBundle:Organisationunit')->getAllChildren($orgUnitParent);
+        }
+
         //getting fields with Select combo
         $selectFields = array();
         $key = NULL;
@@ -609,6 +615,7 @@ class RecordController extends Controller
             'fields' => json_encode($selectFields),
             'otherFields' => json_encode($otherFields),
             'entryLevel' => $isEntryLevel,
+            'organisation_unit_children' => json_encode($orgUnitChildren),
             'organisation_unit' => array_shift($orgUnit),
             'dataValues'=> json_encode($entity->getValue()),
             'selectedUnit'=> json_encode($selectedOrgunit),
