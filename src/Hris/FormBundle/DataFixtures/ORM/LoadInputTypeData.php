@@ -141,7 +141,7 @@ class LoadInputTypeData extends AbstractFixture implements OrderedFixtureInterfa
         }else {
             $durationMessage = round(($duration/86400),2) .' hours';
         }
-        echo "Dummy Input Types generation complete in ". $durationMessage .".\n\n";
+        //echo "Dummy Input Types generation complete in ". $durationMessage .".\n\n";
 	}
 	
 	/**

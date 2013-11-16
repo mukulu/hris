@@ -51,6 +51,7 @@ class SettingsController extends Controller
     public function showAction($username)
     {
         $em = $this->getDoctrine()->getManager();
+        $entity = NULL;
         // Create new settings if nothing found!
         try {
             $entity = $em->createQueryBuilder()->select('settings')
@@ -65,7 +66,7 @@ class SettingsController extends Controller
 
 
 
-        if (!$entity) {
+        if (empty($entity)) {
             return $this->redirect($this->generateUrl('settings_new', array('username' => $username)));
         }
 

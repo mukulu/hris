@@ -173,7 +173,7 @@ class LoadUserData extends AbstractFixture implements OrderedFixtureInterface
         }else {
             $durationMessage = round(($duration/86400),2) .' hours';
         }
-        echo "Dummy users generation complete in ". $durationMessage .".\n\n";
+        //echo "Dummy users generation complete in ". $durationMessage .".\n\n";
 	}
 	
 	/**

@@ -1698,7 +1698,7 @@ class LoadOrganisationunitData extends AbstractFixture implements OrderedFixture
         }else {
             $durationMessage = round(($duration/86400),2) .' hours';
         }
-        echo "Dummy Organisationunit generation complete in ". $durationMessage .".\n\n";
+        //echo "Dummy Organisationunit generation complete in ". $durationMessage .".\n\n";
 	}
 	
 	/**

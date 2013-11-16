@@ -30,23 +30,23 @@ use Symfony\Bundle\FrameworkBundle\Controller\Controller;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Method;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Route;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Template;
-use Hris\IntergrationBundle\Entity\DHISDataConnection;
-use Hris\IntergrationBundle\Form\DHISDataConnectionType;
+use Hris\IntergrationBundle\Entity\TIISDataConnection;
+use Hris\IntergrationBundle\Form\TIISDataConnectionType;
 use JMS\SecurityExtraBundle\Annotation\Secure;
 
 /**
- * DHISDataConnection controller.
+ * TIISDataConnection controller.
  *
- * @Route("/dhisdataconnection")
+ * @Route("/tiisdataconnection")
  */
-class DHISDataConnectionController extends Controller
+class TIISDataConnectionController extends Controller
 {
 
     /**
-     * Lists all DHISDataConnection entities.
+     * Lists all TIISDataConnection entities.
      *
-     * @Secure(roles="ROLE_SUPER_USER,ROLE_DHISDATACONNECTION_LIST")
-     * @Route("/", name="dhisdataconnection")
+     * @Secure(roles="ROLE_SUPER_USER,ROLE_TIISDATACONNECTION_LIST")
+     * @Route("/", name="tiisdataconnection")
      * @Method("GET")
      * @Template()
      */
@@ -54,23 +54,23 @@ class DHISDataConnectionController extends Controller
     {
         $em = $this->getDoctrine()->getManager();
 
-        $entities = $em->getRepository('HrisIntergrationBundle:DHISDataConnection')->findAll();
+        $entities = $em->getRepository('HrisIntergrationBundle:TIISDataConnection')->findAll();
 
         return array(
             'entities' => $entities,
         );
     }
     /**
-     * Creates a new DHISDataConnection entity.
+     * Creates a new TIISDataConnection entity.
      *
-     * @Secure(roles="ROLE_SUPER_USER,ROLE_DHISDATACONNECTION_CREATE")
-     * @Route("/", name="dhisdataconnection_create")
+     * @Secure(roles="ROLE_SUPER_USER,ROLE_TIISDATACONNECTION_CREATE")
+     * @Route("/", name="tiisdataconnection_create")
      * @Method("POST")
-     * @Template("HrisIntergrationBundle:DHISDataConnection:new.html.twig")
+     * @Template("HrisIntergrationBundle:TIISDataConnection:new.html.twig")
      */
     public function createAction(Request $request)
     {
-        $entity = new DHISDataConnection();
+        $entity = new TIISDataConnection();
         $form = $this->createCreateForm($entity);
         $form->handleRequest($request);
 
@@ -79,7 +79,7 @@ class DHISDataConnectionController extends Controller
             $em->persist($entity);
             $em->flush();
 
-            return $this->redirect($this->generateUrl('dhisdataconnection_show', array('id' => $entity->getId())));
+            return $this->redirect($this->generateUrl('tiisdataconnection_show', array('id' => $entity->getId())));
         }
 
         return array(
@@ -89,35 +89,35 @@ class DHISDataConnectionController extends Controller
     }
 
     /**
-    * Creates a form to create a DHISDataConnection entity.
+    * Creates a form to create a TIISDataConnection entity.
     *
-    * @param DHISDataConnection $entity The entity
+    * @param TIISDataConnection $entity The entity
     *
     * @return \Symfony\Component\Form\Form The form
     */
-    private function createCreateForm(DHISDataConnection $entity)
+    private function createCreateForm(TIISDataConnection $entity)
     {
-        $form = $this->createForm(new DHISDataConnectionType(), $entity, array(
-            'action' => $this->generateUrl('dhisdataconnection_create'),
+        $form = $this->createForm(new TIISDataConnectionType(), $entity, array(
+            'action' => $this->generateUrl('tiisdataconnection_create'),
             'method' => 'POST',
         ));
 
-        $form->add('submit', 'submit', array('attr' => array('class' => 'btn'),'label' => 'Create'));
+        $form->add('submit', 'submit', array('label' => 'Create'));
 
         return $form;
     }
 
     /**
-     * Displays a form to create a new DHISDataConnection entity.
+     * Displays a form to create a new TIISDataConnection entity.
      *
-     * @Secure(roles="ROLE_SUPER_USER,ROLE_DHISDATACONNECTION_CREATE")
-     * @Route("/new", name="dhisdataconnection_new")
+     * @Secure(roles="ROLE_SUPER_USER,ROLE_TIISDATACONNECTION_CREATE")
+     * @Route("/new", name="tiisdataconnection_new")
      * @Method("GET")
      * @Template()
      */
     public function newAction()
     {
-        $entity = new DHISDataConnection();
+        $entity = new TIISDataConnection();
         $form   = $this->createCreateForm($entity);
 
         return array(
@@ -127,10 +127,10 @@ class DHISDataConnectionController extends Controller
     }
 
     /**
-     * Finds and displays a DHISDataConnection entity.
+     * Finds and displays a TIISDataConnection entity.
      *
-     * @Secure(roles="ROLE_SUPER_USER,ROLE_DHISDATACONNECTION_SHOW")
-     * @Route("/{id}", name="dhisdataconnection_show")
+     * @Secure(roles="ROLE_SUPER_USER,ROLE_TIISDATACONNECTION_SHOW")
+     * @Route("/{id}", name="tiisdataconnection_show")
      * @Method("GET")
      * @Template()
      */
@@ -138,10 +138,10 @@ class DHISDataConnectionController extends Controller
     {
         $em = $this->getDoctrine()->getManager();
 
-        $entity = $em->getRepository('HrisIntergrationBundle:DHISDataConnection')->find($id);
+        $entity = $em->getRepository('HrisIntergrationBundle:TIISDataConnection')->find($id);
 
         if (!$entity) {
-            throw $this->createNotFoundException('Unable to find DHISDataConnection entity.');
+            throw $this->createNotFoundException('Unable to find TIISDataConnection entity.');
         }
 
         $deleteForm = $this->createDeleteForm($id);
@@ -153,10 +153,10 @@ class DHISDataConnectionController extends Controller
     }
 
     /**
-     * Displays a form to edit an existing DHISDataConnection entity.
+     * Displays a form to edit an existing TIISDataConnection entity.
      *
-     * @Secure(roles="ROLE_SUPER_USER,ROLE_DHISDATACONNECTION_UPDATE")
-     * @Route("/{id}/edit", name="dhisdataconnection_edit")
+     * @Secure(roles="ROLE_SUPER_USER,ROLE_TIISDATACONNECTION_UPDATE")
+     * @Route("/{id}/edit", name="tiisdataconnection_edit")
      * @Method("GET")
      * @Template()
      */
@@ -164,10 +164,10 @@ class DHISDataConnectionController extends Controller
     {
         $em = $this->getDoctrine()->getManager();
 
-        $entity = $em->getRepository('HrisIntergrationBundle:DHISDataConnection')->find($id);
+        $entity = $em->getRepository('HrisIntergrationBundle:TIISDataConnection')->find($id);
 
         if (!$entity) {
-            throw $this->createNotFoundException('Unable to find DHISDataConnection entity.');
+            throw $this->createNotFoundException('Unable to find TIISDataConnection entity.');
         }
 
         $editForm = $this->createEditForm($entity);
@@ -181,39 +181,39 @@ class DHISDataConnectionController extends Controller
     }
 
     /**
-    * Creates a form to edit a DHISDataConnection entity.
+    * Creates a form to edit a TIISDataConnection entity.
     *
-    * @param DHISDataConnection $entity The entity
+    * @param TIISDataConnection $entity The entity
     *
     * @return \Symfony\Component\Form\Form The form
     */
-    private function createEditForm(DHISDataConnection $entity)
+    private function createEditForm(TIISDataConnection $entity)
     {
-        $form = $this->createForm(new DHISDataConnectionType(), $entity, array(
-            'action' => $this->generateUrl('dhisdataconnection_update', array('id' => $entity->getId())),
+        $form = $this->createForm(new TIISDataConnectionType(), $entity, array(
+            'action' => $this->generateUrl('tiisdataconnection_update', array('id' => $entity->getId())),
             'method' => 'PUT',
         ));
 
-        $form->add('submit', 'submit', array('attr' => array('class' => 'btn'),'label' => 'Update'));
+        $form->add('submit', 'submit', array('label' => 'Update'));
 
         return $form;
     }
     /**
-     * Edits an existing DHISDataConnection entity.
+     * Edits an existing TIISDataConnection entity.
      *
-     * @Secure(roles="ROLE_SUPER_USER,ROLE_DHISDATACONNECTION_UPDATE")
-     * @Route("/{id}", name="dhisdataconnection_update")
+     * @Secure(roles="ROLE_SUPER_USER,ROLE_TIISDATACONNECTION_UPDATE")
+     * @Route("/{id}", name="tiisdataconnection_update")
      * @Method("PUT")
-     * @Template("HrisIntergrationBundle:DHISDataConnection:edit.html.twig")
+     * @Template("HrisIntergrationBundle:TIISDataConnection:edit.html.twig")
      */
     public function updateAction(Request $request, $id)
     {
         $em = $this->getDoctrine()->getManager();
 
-        $entity = $em->getRepository('HrisIntergrationBundle:DHISDataConnection')->find($id);
+        $entity = $em->getRepository('HrisIntergrationBundle:TIISDataConnection')->find($id);
 
         if (!$entity) {
-            throw $this->createNotFoundException('Unable to find DHISDataConnection entity.');
+            throw $this->createNotFoundException('Unable to find TIISDataConnection entity.');
         }
 
         $deleteForm = $this->createDeleteForm($id);
@@ -223,7 +223,7 @@ class DHISDataConnectionController extends Controller
         if ($editForm->isValid()) {
             $em->flush();
 
-            return $this->redirect($this->generateUrl('dhisdataconnection_show', array('id' => $id)));
+            return $this->redirect($this->generateUrl('tiisdataconnection_edit', array('id' => $id)));
         }
 
         return array(
@@ -233,10 +233,10 @@ class DHISDataConnectionController extends Controller
         );
     }
     /**
-     * Deletes a DHISDataConnection entity.
+     * Deletes a TIISDataConnection entity.
      *
-     * @Secure(roles="ROLE_SUPER_USER,ROLE_DHISDATACONNECTION_DELETE")
-     * @Route("/{id}", name="dhisdataconnection_delete")
+     * @Secure(roles="ROLE_SUPER_USER,ROLE_TIISDATACONNECTION_DELETE")
+     * @Route("/{id}", name="tiisdataconnection_delete")
      * @Method("DELETE")
      */
     public function deleteAction(Request $request, $id)
@@ -246,21 +246,21 @@ class DHISDataConnectionController extends Controller
 
         if ($form->isValid()) {
             $em = $this->getDoctrine()->getManager();
-            $entity = $em->getRepository('HrisIntergrationBundle:DHISDataConnection')->find($id);
+            $entity = $em->getRepository('HrisIntergrationBundle:TIISDataConnection')->find($id);
 
             if (!$entity) {
-                throw $this->createNotFoundException('Unable to find DHISDataConnection entity.');
+                throw $this->createNotFoundException('Unable to find TIISDataConnection entity.');
             }
 
             $em->remove($entity);
             $em->flush();
         }
 
-        return $this->redirect($this->generateUrl('dhisdataconnection'));
+        return $this->redirect($this->generateUrl('tiisdataconnection'));
     }
 
     /**
-     * Creates a form to delete a DHISDataConnection entity by id.
+     * Creates a form to delete a TIISDataConnection entity by id.
      *
      * @param mixed $id The entity id
      *
@@ -269,9 +269,9 @@ class DHISDataConnectionController extends Controller
     private function createDeleteForm($id)
     {
         return $this->createFormBuilder()
-            ->setAction($this->generateUrl('dhisdataconnection_delete', array('id' => $id)))
+            ->setAction($this->generateUrl('tiisdataconnection_delete', array('id' => $id)))
             ->setMethod('DELETE')
-            ->add('submit', 'submit', array('attr' => array('class' => 'btn'),'label' => 'Delete'))
+            ->add('submit', 'submit', array('label' => 'Delete'))
             ->getForm()
         ;
     }

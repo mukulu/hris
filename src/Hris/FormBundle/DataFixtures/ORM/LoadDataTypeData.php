@@ -66,7 +66,7 @@ class LoadDataTypeData extends AbstractFixture implements OrderedFixtureInterfac
         }else {
             $durationMessage = round(($duration/86400),2) .' hours';
         }
-        echo "Dummy Data Types generation complete in ". $durationMessage .".\n\n";
+        //echo "Dummy Data Types generation complete in ". $durationMessage .".\n\n";
 	}
 	
 	/**

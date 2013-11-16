@@ -154,6 +154,9 @@ class DHISDataConnection
     private $lastupdated;
 
 
+    /**
+     * Constructor
+     */
     public function __construct()
     {
         $this->uid = uniqid();

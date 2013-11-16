@@ -30,6 +30,7 @@ use Doctrine\Common\Persistence\ObjectManager;
 use Hris\FormBundle\Entity\ResourceTable;
 use Hris\FormBundle\DataFixtures\ORM\LoadFieldData;
 use Hris\FormBundle\Entity\ResourceTableFieldMember;
+use Symfony\Component\Stopwatch\Stopwatch;
 
 class LoadResourceTableData extends AbstractFixture implements OrderedFixtureInterface
 {
@@ -84,6 +85,8 @@ class LoadResourceTableData extends AbstractFixture implements OrderedFixtureInt
 
 	public function load(ObjectManager $manager)
 	{
+        $stopwatch = new Stopwatch();
+        $stopwatch->start('dummyResourceTableGeneration');
         // Populate dummy forms
         $this->addDummyResourceTables();
         // Seek dummy fields
@@ -119,6 +122,20 @@ class LoadResourceTableData extends AbstractFixture implements OrderedFixtureInt
             unset($resourceTable);
         }
 		$manager->flush();
+
+        $dummyResourceTableGenerationLap = $stopwatch->lap('dummyResourceTableGeneration');
+        $dummyResourceTableGenerationDuration = round(($dummyResourceTableGenerationLap->getDuration()/1000),2);
+
+        if( $dummyResourceTableGenerationDuration <60 ) {
+            $dummyResourceTableGenerationDurationMessage = round($dummyResourceTableGenerationDuration,2).' sec.';
+        }elseif( $dummyResourceTableGenerationDuration >= 60 && $dummyResourceTableGenerationDuration < 3600 ) {
+            $dummyResourceTableGenerationDurationMessage = round(($dummyResourceTableGenerationDuration/60),2) .' min.';
+        }elseif( $dummyResourceTableGenerationDuration >=3600 && $dummyResourceTableGenerationDuration < 216000) {
+            $dummyResourceTableGenerationDurationMessage = round(($dummyResourceTableGenerationDuration/3600),2) .' hrs';
+        }else {
+            $dummyResourceTableGenerationDurationMessage = round(($dummyResourceTableGenerationDuration/86400),2) .' days';
+        }
+        echo "\tDummy data schema generation complete in ".$dummyResourceTableGenerationDurationMessage."\n";
 
         // Generate resource tables
         $resourceTables = $manager->getRepository('HrisFormBundle:ResourceTable')->findAll();

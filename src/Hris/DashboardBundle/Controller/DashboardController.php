@@ -109,6 +109,14 @@ class DashboardController extends Controller
 
         $dashboardGenderChart = $reportAggregationController::aggregationEngine($organisationunit, $forms, $dashboardGenderField, $organisationunitGroups, TRUE, $dashboardGenderField);
 
+
+        $retirementKeys = $this->array_value_recursive('retirementdistribution',$dashboardRetirementChart);
+        $retirementValues = $this->array_value_recursive('total',$dashboardRetirementChart);
+        $retirements = array_combine($retirementKeys,$retirementValues);
+        $employmentKeys = $this->array_value_recursive('employmentdistribution',$dashboardEmplyomentChart);
+        $employmentValues = $this->array_value_recursive('total',$dashboardEmplyomentChart);
+        $employments = array_combine($employmentKeys,$employmentValues);
+
         /*
          * Prepare the combinationdashboardchart Chart
          */
@@ -116,20 +124,16 @@ class DashboardController extends Controller
         $emplyomentData = array();
         $retirementData = array();
         foreach($categories as $category){
-            $returnValue = $this->arraySearchAction(strval($category),$dashboardEmplyomentChart);
-            if( $returnValue != false){
-                $emplyomentData[] = $dashboardEmplyomentChart[$returnValue]['total'];
-            }else{
+            if(isset($employments[$category])) {
+                $emplyomentData[] = $employments[$category];
+            }else {
                 $emplyomentData[] = 0;
             }
-
-            $returnValue = $this->arraySearchAction(strval($category),$dashboardRetirementChart);
-            if( $returnValue != false){
-                $retirementData[] = $dashboardRetirementChart[$returnValue]['total'];
-            }else{
+            if(isset($retirements[$category])) {
+                $retirementData[] = $retirements[$category];
+            }else {
                 $retirementData[] = 0;
             }
-
         }
         //get the values data
         $series = array(
@@ -224,10 +228,9 @@ class DashboardController extends Controller
         $categories = range(date('Y'), date('Y')+10);
         $retirementData = array();
         foreach($categories as $category){
-            $returnValue = $this->arraySearchAction(strval($category),$dashboardRetirementChart);
-            if( $returnValue != false){
-                $retirementData[] = $dashboardRetirementChart[$returnValue]['total'];
-            }else{
+            if(isset($retirements[$category])) {
+                $retirementData[] = $retirements[$category];
+            }else {
                 $retirementData[] = 0;
             }
         }
@@ -327,93 +330,6 @@ class DashboardController extends Controller
 
         }
 
-        //Hardcoded charts
-        $hardcodedseries = array(
-            array(
-                'name'  => 'Employment',
-                'type'  => 'column',
-                'color' => '#0D0DC1',
-                'yAxis' => 1,
-                'data'  => array(1952,1058,1805,2082,2964,4243,3251,4979,2991,3171,426),
-            ),
-            array(
-                'name'  => 'Retirement',
-                'type'  => 'spline',
-                'color' => '#AA4643',
-                'data'  => array(994,1503,1119,1380,1289,1840,1633,2048,1496,2045,1836),
-                'dashStyle'=>'longdash',
-            ),
-            array(
-                'name'  => 'Sex',
-                'type'  => 'pie',
-                'center'=> array(100,30),
-                'size'=> 100,
-                'showInLegend'=> false,
-                'dataLabels'=> array('enabled'=>true),
-                'data'  => array(
-                    array(
-                        'name'=>'Female',
-                        'y'=> 41848,
-                        'color'=>'#66ECA0'
-                    ),
-                    array(
-                        'name'=>'Male',
-                        'y'=>20315,
-                        'color'=>'#9494d4'
-                    ),
-                ),
-            ),
-        );
-        $hardcodedyData = array(
-            array(
-                'labels' => array(
-                    'formatter' => new Expr('function () { return this.value + "" }'),
-                    'style'     => array('color' => '#0D0DC1')
-                ),
-                'title' => array(
-                    'text'  => 'Employments',
-                    'style' => array('color' => '#0D0DC1')
-                ),
-                'opposite' => true,
-            ),
-            array(
-                'labels' => array(
-                    'formatter' => new Expr('function () { return this.value + "" }'),
-                    'style'     => array('color' => '#AA4643')
-                ),
-                'gridLineWidth' => 0,
-                'title' => array(
-                    'text'  => 'Retirements',
-                    'style' => array('color' => '#AA4643')
-                ),
-            ),
-        );
-        $hardcodedCategories = array('2003', '2004', '2005', '2005', '2006', '2007', '2008', '2009', '2010', '2011', '2012', '2013');
-
-        $hardcodedDashboardchart = new Highchart();
-        $hardcodedDashboardchart->chart->renderTo('dashboard_placeholder'); // The #id of the div where to render the chart
-        $hardcodedDashboardchart->chart->type('column');
-        $hardcodedDashboardchart->title->text('Employment Distribution');
-        $hardcodedDashboardchart->subtitle->text('Ministry of Health And Social Welfare with lower levels');
-        $hardcodedDashboardchart->xAxis->categories($hardcodedCategories);
-        $hardcodedDashboardchart->yAxis($hardcodedyData);
-        $hardcodedDashboardchart->legend->enabled(false);
-        $hardcodedformatter = new Expr('function () {
-		 var unit = {
-			 "Retirement": "retirements",
-			 "Employment": "employments",
-			 "Sex":"employees"
-		 }[this.series.name];
-		 if(this.point.name) {
-			return ""+this.point.name+": <b>"+ this.y+"</b> "+ unit;
-		 }else {
-			return this.x + ": <b>" + this.y + "</b> " + unit;
-		 }
-	 }');
-    $hardcodedDashboardchart->tooltip->formatter($hardcodedformatter);
-    $hardcodedDashboardchart->series($hardcodedseries);
-
-
         return array(
             'combinationchart'=>$combinationdashboardchart,
             'retirementchart'=>$retirementChart,
@@ -421,7 +337,6 @@ class DashboardController extends Controller
             'unreadmessages'=>$unreadMessages,
             'entitiesChart' =>$entitiesChart,
             'entities' => $entities,
-            'hardcodeddashboard' => $hardcodedDashboardchart
         );
     }
     /**
@@ -721,5 +636,18 @@ class DashboardController extends Controller
         if($graph == 'pie')$dashboardchart->plotOptions->pie(array('allowPointSelect'=> true,'dataLabels'=> array ('format'=> '<b>{point.name}</b>: {point.percentage:.1f} %')));
         $dashboardchart->series($series);
         return $dashboardchart;
+    }
+
+    /**
+     * Get all values from specific key in a multidimensional array
+     *
+     * @param $key string
+     * @param $arr array
+     * @return null|string|array
+     */
+    public function array_value_recursive($key, array $arr){
+        $val = array();
+        array_walk_recursive($arr, function($v, $k) use($key, &$val){if($k == $key) array_push($val, $v);});
+        return count($val) > 1 ? $val : array_pop($val);
     }
 }

@@ -47,15 +47,8 @@ class ValidationRunType extends AbstractType
                 )
                 ))->addModelTransformer($transformer)
             )
-            ->add('organisationunitLevel','entity', array(
-                'class'=>'HrisOrganisationunitBundle:OrganisationunitLevel',
-                'query_builder' => function(EntityRepository $er) {
-                    return $er->createQueryBuilder('organisationunitLevel')
-                        ->orderBy('organisationunitLevel.level', 'ASC');
-                },
-                'constraints'=>array(
-                    new NotBlank(),
-                )
+            ->add('withLowerLevels','checkbox',array(
+                'required'=>False,
             ))
             ->add('validations','entity', array(
                 'class'=>'HrisDataQualityBundle:Validation',
