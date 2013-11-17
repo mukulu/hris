@@ -579,7 +579,7 @@ class RecordController extends Controller
 
         $isEntryLevel = $user->getOrganisationunit()->getOrganisationunitStructure()->getLevel()->getDataentrylevel();
 
-        $orgUnitChildren = [];
+        $orgUnitChildren = "";
         if($isEntryLevel){
             $orgUnitParent = $em->getRepository('HrisOrganisationunitBundle:Organisationunit')->find($user->getOrganisationunit()->getId());
             $orgUnitChildren = $em->getRepository('HrisOrganisationunitBundle:Organisationunit')->getAllChildren($orgUnitParent);
