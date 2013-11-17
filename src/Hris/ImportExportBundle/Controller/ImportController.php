@@ -157,7 +157,6 @@ class ImportController extends Controller
                         $fieldOptionsAssoc = zip_entry_read($entryValue, zip_entry_filesize($entryValue));
 
                         $this->LegacyUpdateFieldOptionsAssociationAction($fieldOptionsAssoc);
-                        die('End of the Show');
 
                     }
 
@@ -195,7 +194,7 @@ class ImportController extends Controller
                         $entryValue = $fileStrem['values.json'];
                         $records = zip_entry_read($entryValue, zip_entry_filesize($entryValue));
 
-                        //$this->legacyUpdateRecordsAction($records);
+                        $this->legacyUpdateRecordsAction($records);
 
                     }
 
@@ -207,7 +206,7 @@ class ImportController extends Controller
                         $entryValue = $fileStrem['history.json'];
                         $history = zip_entry_read($entryValue, zip_entry_filesize($entryValue));
 
-                        //$this->LegacyUpdateRecordsHistoryAction($history);
+                        $this->LegacyUpdateRecordsHistoryAction($history);
 
                     }
 
