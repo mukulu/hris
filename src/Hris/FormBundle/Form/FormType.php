@@ -35,7 +35,9 @@ class FormType extends AbstractType
         $builder
             ->add('name')
             ->add('title')
-            ->add('uniqueRecordFields')
+            ->add('uniqueRecordFields',null,array(
+                'required'=>False,
+            ))
             ->add('formFieldMembers','entity',array(
                 'class'=>'HrisFormBundle:Field',
                 'multiple'=>True,
