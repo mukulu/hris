@@ -882,11 +882,11 @@ class ImportController extends Controller
             $form = $em->getRepository('HrisFormBundle:Form')->findOneby(array('name' => $record['form_name']));
             $orgunit = $em->getRepository('HrisOrganisationunitBundle:Organisationunit')->findOneby(array('longname' => $record['orgunit_name']));
 
-            $recordObject = $em->getRepository('HrisRecordsBundle:Record')->findOneby(array('instance' => $record[0]['instance']));
+            $recordObjectCheck = $em->getRepository('HrisRecordsBundle:Record')->findOneby(array('instance' => $record[0]['instance']));
 
             $createdDate = new \DateTime($record[0]['inputDate']['date']);
 
-            if (empty($recordObject)) {
+            if (empty($recordObjectCheck)) {
 
                 $recordObject = new Record();
                 $recordObject->setForm($form);
