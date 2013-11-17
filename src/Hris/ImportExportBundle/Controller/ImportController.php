@@ -132,7 +132,7 @@ class ImportController extends Controller
                         $entryValue = $fileStrem['field.json'];
                         $fields = zip_entry_read($entryValue, zip_entry_filesize($entryValue));
 
-                        //$this->LegacyUpdateFieldsAction($fields);
+                        $this->LegacyUpdateFieldsAction($fields);
 
                     }
 
@@ -144,7 +144,19 @@ class ImportController extends Controller
                         $entryValue = $fileStrem['fieldOption.json'];
                         $fieldOptions = zip_entry_read($entryValue, zip_entry_filesize($entryValue));
 
-                        //$this->LegacyUpdateFieldOptionsAction($fieldOptions);
+                        $this->LegacyUpdateFieldOptionsAction($fieldOptions);
+
+                    }
+
+                    /*
+                     * Creating the variable to hold Field Options Association from import file
+                     */
+
+                    if (array_key_exists('fieldOptionAssociation.json', $fileStrem)) {
+                        $entryValue = $fileStrem['fieldOptionAssociation.json'];
+                        $fieldOptionsAssoc = zip_entry_read($entryValue, zip_entry_filesize($entryValue));
+
+                        $this->LegacyUpdateFieldOptionsAssociationAction($fieldOptionsAssoc);
 
                     }
 
@@ -169,7 +181,7 @@ class ImportController extends Controller
                         $organisationUnitGroup = zip_entry_read($entryValue, zip_entry_filesize($entryValue));
 
                         $this->LegacyUpdateOrganisationUnitsGroupsAction($organisationUnitGroup);
-                        die('End of the Show');
+
 
                     }
 
@@ -182,7 +194,7 @@ class ImportController extends Controller
                         $entryValue = $fileStrem['values.json'];
                         $records = zip_entry_read($entryValue, zip_entry_filesize($entryValue));
 
-                        //$this->legacyUpdateRecordsAction($records);
+                        $this->legacyUpdateRecordsAction($records);
 
                     }
 
@@ -194,7 +206,7 @@ class ImportController extends Controller
                         $entryValue = $fileStrem['history.json'];
                         $history = zip_entry_read($entryValue, zip_entry_filesize($entryValue));
 
-                        //$this->LegacyUpdateRecordsHistoryAction($history);
+                        $this->LegacyUpdateRecordsHistoryAction($history);
 
                     }
 
@@ -209,6 +221,8 @@ class ImportController extends Controller
                         $this->LegacyUpdateRecordsTrainingAction($training);
 
                     }
+
+                    $message = "Data Was Imported successfully.";
 
                 }
 
@@ -250,16 +264,10 @@ class ImportController extends Controller
                 }
 
             }
-        } else {
-            var_dump("Nothing works");
-            die();
         }
 
         return array(
-            'records' => $records,
-            'organisationUnit' => $organisationUnits,
-            'fieldOptions' => $fieldOptions,
-            'fields' => $fields,
+            'message' => $message,
         );
     }
 
@@ -608,6 +616,43 @@ class ImportController extends Controller
     }
 
     /**
+     * Importing Legacy fields Options.
+     */
+
+    public function LegacyUpdateFieldOptionsAssociationAction($fieldOptionsAssoc)
+    {
+        global $refFieldOptions;
+
+        $em = $this->getDoctrine()->getManager();
+
+        $fieldOptionAssoc = json_decode($fieldOptionsAssoc, True);
+
+        foreach ($fieldOptionAssoc as $key => $fieldOption) {
+
+            //getting the Object if Exist from the Database
+            $fieldOptionParent = $em->getRepository('HrisFormBundle:FieldOption')->findOneby(array('uid' => $refFieldOptions[$fieldOption['parent']]));
+            $fieldOptionChild = $em->getRepository('HrisFormBundle:FieldOption')->findOneby(array('uid' => $refFieldOptions[$fieldOption['child']]));
+
+            $optionRef = $fieldOptionParent->getChildFieldOption();
+
+            if ($optionRef->contains($fieldOptionChild)) {
+
+                continue;
+
+            } else {
+
+                $fieldOptionParent->addChildFieldOption($fieldOptionChild);
+                $em->persist($fieldOptionParent);
+
+            }
+        }
+        $em->flush();
+
+        return new Response('success');
+
+    }
+
+    /**
      * Importing Organisation Units.
      *
      * @Secure(roles="ROLE_SUPER_USER,ROLE_IMPORT_ORGANISATIONUNITS")
@@ -674,23 +719,24 @@ class ImportController extends Controller
         $organisationUnits = json_decode($organisationUnits, true);
 
         foreach ($organisationUnits as $key => $organisationUnit) {
-
+            $parent = null;
             $parent = $em->getRepository('HrisOrganisationunitBundle:Organisationunit')->findOneby(array('longname' => $organisationUnit['longname']));
-            //print $organisationUnit[0]['longname']." Parent: ".$organisationUnit['longname'].'<br>';
 
             $orgunitObjectCheck = $em->getRepository('HrisOrganisationunitBundle:Organisationunit')->findOneby(array('longname' => $organisationUnit[0]['longname'], 'parent' => $parent));
+
 
             if ($orgunitObjectCheck != NULL) {
 
                 $refOrganisationUnit[$organisationUnit[0]['id']] = $orgunitObjectCheck->getUid();
 
-                //print 'this record Exists '.$organisationUnit[0]['longname']." Parent: ".$organisationUnit['longname'].'<br>';
+               // print 'this record Exists '.$organisationUnit[0]['longname']." Parent: ".$organisationUnit['longname'].'<br>';
 
             } else {
                 $orgunitObject = new Organisationunit();
                 $orgunitObject->setUid(uniqid());
                 if ($parent != NULL){
                     $orgunitObject->setParent($parent);
+                    //print '<br>Parent Exists with LongName: '. $parent->getLongname();
                 }else{
                     $parent = NULL;
                     $orgunitObject->setParent($parent);
@@ -700,7 +746,7 @@ class ImportController extends Controller
                 $orgunitObject->setCode($organisationUnit[0]['code']);
 
                 $em->persist($orgunitObject);
-
+                $em->flush();
 
                 $refOrganisationUnit[$organisationUnit[0]['id']] = $orgunitObject->getUid();
 

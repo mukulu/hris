@@ -1,19 +1,16 @@
 {% extends '::base.html.twig' %}
 
-{% block javascripts %}
-    {{ parent() }}
-    <script type="text/javascript" src="{{ asset('bundles/hrisimportexport/js/importExport.js') }}"></script>
-
-    <script type="text/javascript">
-
-        //Import Data and Metadata
-        importData( '{{ fields | raw | escape('js') }}', '{{ fieldOptions | raw | escape('js') }}', '{{ organisationUnit | raw | escape('js') }}', '{{ records | raw | escape('js') }}' );
-
-    </script>
-
-{% endblock %}
+{% block message_alert %}
+    {% if message %}
+        <div class="alert alert-success">
+            <button type="button" class="close" data-dismiss="alert">&times;</button>
+            <small class="visible-phone"><strong>Success!</strong> {{ message }}</small>
+            <small class="hidden-phone"><strong>Success!</strong> {{ message }}</small>
+        </div>
+    {% endif %}
+{% endblock message_alert %}
 
 
 {% block right_content -%}
-<select size="30" name="status" id="status" style="width: 40%"></select>
+
 {% endblock %}
