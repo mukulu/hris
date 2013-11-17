@@ -132,7 +132,7 @@ class ImportController extends Controller
                         $entryValue = $fileStrem['field.json'];
                         $fields = zip_entry_read($entryValue, zip_entry_filesize($entryValue));
 
-                        //$this->LegacyUpdateFieldsAction($fields);
+                        $this->LegacyUpdateFieldsAction($fields);
 
                     }
 
@@ -144,7 +144,20 @@ class ImportController extends Controller
                         $entryValue = $fileStrem['fieldOption.json'];
                         $fieldOptions = zip_entry_read($entryValue, zip_entry_filesize($entryValue));
 
-                        //$this->LegacyUpdateFieldOptionsAction($fieldOptions);
+                        $this->LegacyUpdateFieldOptionsAction($fieldOptions);
+
+                    }
+
+                    /*
+                     * Creating the variable to hold Field Options Association from import file
+                     */
+
+                    if (array_key_exists('fieldOptionAssociation.json', $fileStrem)) {
+                        $entryValue = $fileStrem['fieldOptionAssociation.json'];
+                        $fieldOptionsAssoc = zip_entry_read($entryValue, zip_entry_filesize($entryValue));
+
+                        $this->LegacyUpdateFieldOptionsAssociationAction($fieldOptionsAssoc);
+                        die('End of the Show');
 
                     }
 
@@ -169,7 +182,7 @@ class ImportController extends Controller
                         $organisationUnitGroup = zip_entry_read($entryValue, zip_entry_filesize($entryValue));
 
                         $this->LegacyUpdateOrganisationUnitsGroupsAction($organisationUnitGroup);
-                        die('End of the Show');
+
 
                     }
 
@@ -598,6 +611,43 @@ class ImportController extends Controller
                 $em->persist($fieldOptionObject);
 
                 $refFieldOptions[$fieldOption[0]['id']] = $fieldOptionObject->getUid();
+
+            }
+        }
+        $em->flush();
+
+        return new Response('success');
+
+    }
+
+    /**
+     * Importing Legacy fields Options.
+     */
+
+    public function LegacyUpdateFieldOptionsAssociationAction($fieldOptionsAssoc)
+    {
+        global $refFieldOptions;
+
+        $em = $this->getDoctrine()->getManager();
+
+        $fieldOptionAssoc = json_decode($fieldOptionsAssoc, True);
+
+        foreach ($fieldOptionAssoc as $key => $fieldOption) {
+
+            //getting the Object if Exist from the Database
+            $fieldOptionParent = $em->getRepository('HrisFormBundle:FieldOption')->findOneby(array('uid' => $refFieldOptions[$fieldOption['parent']]));
+            $fieldOptionChild = $em->getRepository('HrisFormBundle:FieldOption')->findOneby(array('uid' => $refFieldOptions[$fieldOption['child']]));
+
+            $optionRef = $fieldOptionParent->getChildFieldOption();
+
+            if ($optionRef->contains($fieldOptionChild)) {
+
+                continue;
+
+            } else {
+
+                $fieldOptionParent->addChildFieldOption($fieldOptionChild);
+                $em->persist($fieldOptionParent);
 
             }
         }
