@@ -24,9 +24,13 @@
  */
 namespace Hris\ImportExportBundle\Controller;
 
+use Doctrine\Common\Collections\ArrayCollection;
+use Doctrine\Tests\Common\Annotations\Null;
 use Doctrine\Tests\Common\Annotations\True;
 use Hris\ImportExportBundle\Form\ImportType;
+use Hris\RecordsBundle\Entity\History;
 use Hris\RecordsBundle\Entity\Record;
+use Hris\RecordsBundle\Entity\Training;
 use Sonata\AdminBundle\Tests\Admin\FieldDescription;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Bundle\FrameworkBundle\Controller\Controller;
@@ -38,7 +42,10 @@ use Hris\ImportExportBundle\Form\ExportType;
 use Symfony\Component\HttpFoundation\Response;
 use Hris\FormBundle\Entity\Field;
 use Hris\FormBundle\Entity\FieldOption;
+use Hris\FormBundle\Entity\DataType;
+use Hris\FormBundle\Entity\InputType;
 use JMS\SecurityExtraBundle\Annotation\Secure;
+use Hris\OrganisationunitBundle\Entity\Organisationunit;
 use ZipArchive;
 
 /**
@@ -125,7 +132,7 @@ class ImportController extends Controller
                         $entryValue = $fileStrem['field.json'];
                         $fields = zip_entry_read($entryValue, zip_entry_filesize($entryValue));
 
-                        $this->LegacyUpdateFieldsAction($fields);
+                        //$this->LegacyUpdateFieldsAction($fields);
 
                     }
 
@@ -137,7 +144,7 @@ class ImportController extends Controller
                         $entryValue = $fileStrem['fieldOption.json'];
                         $fieldOptions = zip_entry_read($entryValue, zip_entry_filesize($entryValue));
 
-                        $this->LegacyUpdateFieldOptionsAction($fieldOptions);
+                        //$this->LegacyUpdateFieldOptionsAction($fieldOptions);
 
                     }
 
@@ -151,16 +158,56 @@ class ImportController extends Controller
 
                         $this->LegacyUpdateOrganisationUnitsAction($organisationUnits);
 
-                        die('End of the Show');
                     }
+
+                    /*
+                     * Creating the variable to hold Organisation units from import file
+                     */
+
+                    if (array_key_exists('orgUnitGroupMember.json', $fileStrem)) {
+                        $entryValue = $fileStrem['orgUnitGroupMember.json'];
+                        $organisationUnitGroup = zip_entry_read($entryValue, zip_entry_filesize($entryValue));
+
+                        $this->LegacyUpdateOrganisationUnitsGroupsAction($organisationUnitGroup);
+                        die('End of the Show');
+
+                    }
+
 
                     /*
                      * Creating the variable to hold Records from import file
                      */
 
-                    if (array_key_exists('records.json', $fileStrem)) {
-                        $entryValue = $fileStrem['records.json'];
+                    if (array_key_exists('values.json', $fileStrem)) {
+                        $entryValue = $fileStrem['values.json'];
                         $records = zip_entry_read($entryValue, zip_entry_filesize($entryValue));
+
+                        //$this->legacyUpdateRecordsAction($records);
+
+                    }
+
+                    /*
+                     * Creating the variable to hold History from import file
+                     */
+
+                    if (array_key_exists('history.json', $fileStrem)) {
+                        $entryValue = $fileStrem['history.json'];
+                        $history = zip_entry_read($entryValue, zip_entry_filesize($entryValue));
+
+                        //$this->LegacyUpdateRecordsHistoryAction($history);
+
+                    }
+
+                    /*
+                     * Creating the variable to hold Training from import file
+                     */
+
+                    if (array_key_exists('training.json', $fileStrem)) {
+                        $entryValue = $fileStrem['training.json'];
+                        $training = zip_entry_read($entryValue, zip_entry_filesize($entryValue));
+
+                        $this->LegacyUpdateRecordsTrainingAction($training);
+
                     }
 
                 }
@@ -413,13 +460,39 @@ class ImportController extends Controller
 
                 $refField[$field['id']] = $fieldObject->getUid();
 
-                print $field['id'];
-                print '<br>';
+                //print $field['id'];
+                //print '<br>';
 
             } else {
 
-                $dataType = $em->getRepository('HrisFormBundle:DataType')->findOneby(array('uid' => $field['dataType']['name']));
-                $inputType = $em->getRepository('HrisFormBundle:InputType')->findOneby(array('uid' => $field['inputType']['name']));
+                switch($field['dataType']['name']){
+                    case 'String': $dataType = 'String';
+                        break;
+                    case 'integer': $dataType = 'Integer';
+                        break;
+                    case 'double': $dataType = 'Double';
+                        break;
+                    case 'date': $dataType = 'Date';
+                        break;
+                    default: $dataType = $field['dataType']['name'];
+                        break;
+                }
+
+                switch($field['inputType']['name']){
+                    case 'combo': $inputType = 'Select';
+                        break;
+                    case 'text': $inputType = 'Text';
+                        break;
+                    case 'date': $inputType = 'Date';
+                        break;
+                    case 'textArea': $inputType = 'TextArea';
+                        break;
+                    default: $inputType = $field['inputType']['name'];
+                        break;
+                }
+
+                $dataTypeObj = $em->getRepository('HrisFormBundle:DataType')->findOneby(array('name' => $dataType));
+                $inputTypeObj = $em->getRepository('HrisFormBundle:InputType')->findOneby(array('name' => $inputType));
 
                 $fieldObject = new Field();
                 $fieldObject->setUid(uniqid());
@@ -427,12 +500,12 @@ class ImportController extends Controller
                 $fieldObject->setCaption($field['caption']);
                 $fieldObject->setCompulsory($field['compulsory']);
                 $fieldObject->setDescription($field['description']);
-                $fieldObject->setDataType($dataType);
-                $fieldObject->setInputType($inputType);
+                $fieldObject->setDataType($dataTypeObj);
+                $fieldObject->setInputType($inputTypeObj);
                 // $fieldObject->setDatecreated($field[0]['datecreated']);
                 $em->persist($fieldObject);
 
-                $refField[$field['id']] = $field['id'];
+                $refField[$field['id']] = $fieldObject->getUid();
 
             }
         }
@@ -468,8 +541,8 @@ class ImportController extends Controller
 
                 $refFieldOptions[$fieldOption[0]['uid']] = $fieldOptionObject->getUid();
 
-                print $fieldOption[0]['uid'];
-                print '<br>';
+                //print $fieldOption[0]['uid'];
+                //print '<br>';
 
             } else {
 
@@ -515,9 +588,6 @@ class ImportController extends Controller
 
                 $refFieldOptions[$fieldOption[0]['id']] = $fieldOptionObject->getUid();
 
-                print $fieldOption[0]['id'];
-                print '<br>';
-
             } else {
 
                 $fieldOptionObject = new FieldOption();
@@ -527,7 +597,7 @@ class ImportController extends Controller
                 //$fieldOptionObject->setDatecreated($fieldOption[0]['datecreated']);
                 $em->persist($fieldOptionObject);
 
-                $refFieldOptions[$fieldOption[0]['id']] = $fieldOption[0]['id'];
+                $refFieldOptions[$fieldOption[0]['id']] = $fieldOptionObject->getUid();
 
             }
         }
@@ -601,37 +671,79 @@ class ImportController extends Controller
 
         $em = $this->getDoctrine()->getManager();
 
-        $organisationUnits = json_decode($organisationUnits, True);
+        $organisationUnits = json_decode($organisationUnits, true);
 
         foreach ($organisationUnits as $key => $organisationUnit) {
 
-            //getting the Object if Exist from the Database
+            $parent = $em->getRepository('HrisOrganisationunitBundle:Organisationunit')->findOneby(array('longname' => $organisationUnit['longname']));
+            //print $organisationUnit[0]['longname']." Parent: ".$organisationUnit['longname'].'<br>';
 
-            $parent = $em->getRepository('HrisOrganisationunitBundle:Organisationunit')->findOneby(array('shortname' => $organisationUnit['shortname']));
-            $orgunitObject = $em->getRepository('HrisOrganisationunitBundle:Organisationunit')->findOneby(array('shortname' => $organisationUnit['shortname'], 'parent' => $parent));
+            $orgunitObjectCheck = $em->getRepository('HrisOrganisationunitBundle:Organisationunit')->findOneby(array('longname' => $organisationUnit[0]['longname'], 'parent' => $parent));
 
-            if (!empty($orgunitObject)) {
+            if ($orgunitObjectCheck != NULL) {
 
-                $refOrganisationUnit[$organisationUnit[0]['uid']] = $orgunitObject->getUid();
+                $refOrganisationUnit[$organisationUnit[0]['id']] = $orgunitObjectCheck->getUid();
 
-                print $organisationUnit[0]['uid'];
-                print '<br>';
+                //print 'this record Exists '.$organisationUnit[0]['longname']." Parent: ".$organisationUnit['longname'].'<br>';
 
             } else {
-
                 $orgunitObject = new Organisationunit();
-                $orgunitObject->setUid($organisationUnit[0]['uid']);
+                $orgunitObject->setUid(uniqid());
+                if ($parent != NULL){
+                    $orgunitObject->setParent($parent);
+                }else{
+                    $parent = NULL;
+                    $orgunitObject->setParent($parent);
+                }
                 $orgunitObject->setShortname($organisationUnit[0]['shortname']);
                 $orgunitObject->setLongname($organisationUnit[0]['longname']);
-                $orgunitObject->setParent($organisationUnit[0]['sort']);
                 $orgunitObject->setCode($organisationUnit[0]['code']);
-                $orgunitObject->setDescription($organisationUnit[0]['description']);
-                //$orgunitObject->setDatecreated($organisationUnit[0]['datecreated']);
 
                 $em->persist($orgunitObject);
 
-                $refOrganisationUnit[$organisationUnit[0]['uid']] = $organisationUnit[0]['uid'];
 
+                $refOrganisationUnit[$organisationUnit[0]['id']] = $orgunitObject->getUid();
+
+            }
+        }
+        $em->flush();
+
+        return new Response('success');
+
+    }
+
+    /**
+     * Importing Legacy Organisation Units Groups.
+     *
+     */
+
+    public function LegacyUpdateOrganisationUnitsGroupsAction($organisationUnitGroup)
+    {
+        global $refOrganisationUnit;
+
+        $em = $this->getDoctrine()->getManager();
+
+        $organisationUnitGroups = json_decode($organisationUnitGroup, true);
+
+        foreach ($organisationUnitGroups as $key => $organisationUnit) {
+
+            foreach($organisationUnit as $group => $facility){
+
+                $orgUnitObj = $em->getRepository('HrisOrganisationunitBundle:Organisationunit')->findOneby(array('longname' => $facility));
+
+                $orgUnitGroupObj = $em->getRepository('HrisOrganisationunitBundle:OrganisationunitGroup')->findOneby(array('name' => $group));
+
+                $orgunitObjectCheck = $orgUnitGroupObj->getOrganisationunit();
+
+                if ($orgunitObjectCheck->contains($orgUnitObj) || empty($orgUnitObj)) {
+
+                    continue;
+
+                } else {
+                    $orgUnitGroupObj->addOrganisationunit($orgUnitObj);
+
+                    $em->persist($orgUnitGroupObj);
+                }
             }
         }
         $em->flush();
@@ -672,11 +784,169 @@ class ImportController extends Controller
                 $recordObject->setOrganisationunit($orgunit);
                 $recordObject->setInstance($record[0]['instance']);
                 $recordObject->setUid($record[0]['uid']);
-                //$recordObject->setDatecreated($record[0]['datecreated']);
+                $recordObject->setValue($record[0]['value']);
+                $em->persist($recordObject);
 
             }
         }
 
+        $em->flush();
+
+        return new Response('success');
+
+    }
+
+    /**
+     * Importing Legacy Records.
+     *
+     */
+
+    public function legacyUpdateRecordsAction($records)
+    {
+        global $refOrganisationUnit, $refFieldOptions, $refField;
+
+        $em = $this->getDoctrine()->getManager();
+
+        $records = json_decode($records, True);
+
+        foreach ($records as $keys => $record) {
+
+            $value = $record[0]['value'];
+
+            foreach($value as $key => $valueInstance){
+                //checking if the Key Exists and substitute with the DB reference Key
+                if(isset($refField[$key])){
+                    unset ($value[$key]);
+
+                    //checking if the field is Select field for reference checking
+                    $field = $em->getRepository('HrisFormBundle:Field')->findOneby(array('uid' => $refField[$key]));
+
+                    if($field->getInputType()->getName() == 'Select'){
+                        if(isset($refFieldOptions[$valueInstance])){
+                            $valueInstance = $refFieldOptions[$valueInstance];
+                        }
+                    }
+
+                    $value[$refField[$key]] = $valueInstance;
+                }
+            }
+
+            //getting the Object if Exist from the Database
+
+            $form = $em->getRepository('HrisFormBundle:Form')->findOneby(array('name' => $record['form_name']));
+            $orgunit = $em->getRepository('HrisOrganisationunitBundle:Organisationunit')->findOneby(array('longname' => $record['orgunit_name']));
+
+            $recordObject = $em->getRepository('HrisRecordsBundle:Record')->findOneby(array('instance' => $record[0]['instance']));
+
+            $createdDate = new \DateTime($record[0]['inputDate']['date']);
+
+            if (empty($recordObject)) {
+
+                $recordObject = new Record();
+                $recordObject->setForm($form);
+                $recordObject->setOrganisationunit($orgunit);
+                $recordObject->setInstance($record[0]['instance']);
+                $recordObject->setUid(uniqid());
+                $recordObject->setValue($value);
+                $recordObject->setDatecreated($createdDate);
+                $recordObject->setUsername($record[0]['username']);
+
+                $em->persist($recordObject);
+
+            }
+        }
+
+        $em->flush();
+
+        return new Response('success');
+
+    }
+
+    /**
+     * Importing Legacy Record History.
+     */
+
+    public function LegacyUpdateRecordsHistoryAction($history)
+    {
+
+        $em = $this->getDoctrine()->getManager();
+
+        $recordHistories = json_decode($history, True);
+
+        foreach ($recordHistories as $key => $historyValue) {
+
+            //getting the Object if Exist from the Database
+            $field = $em->getRepository('HrisFormBundle:Field')->findOneby(array('name' => $historyValue['field_name']));
+            $recordObject = $em->getRepository('HrisRecordsBundle:Record')->findOneby(array('instance' => $historyValue[0]['instance']));
+
+            if (!empty($recordObject)){
+
+                $startDate = new \DateTime($historyValue[0]['startdate']['date']);
+                $historyObjectInstance = $em->getRepository('HrisRecordsBundle:History')->findOneby(array('record' => $recordObject, 'history' => $historyValue[0]['history'], 'startdate' => $startDate));
+
+                if (empty($historyObjectInstance)) {
+
+                    $historyObject = new History();
+                    $historyObject->setUid(uniqid());
+                    $historyObject->setField($field);
+                    $historyObject->setRecord($recordObject);
+                    $historyObject->setUsername($historyValue[0]['username']);
+                    $historyObject->setReason($historyValue[0]['reason']);
+                    $historyObject->setHistory($historyValue[0]['history']);
+                    $historyObject->setStartdate($startDate);
+                    $em->persist($historyObject);
+
+                }
+            }
+        }
+        $em->flush();
+
+        return new Response('success');
+
+    }
+
+    /**
+     * Importing Legacy Record Training.
+     */
+
+    public function LegacyUpdateRecordsTrainingAction($training)
+    {
+
+        $em = $this->getDoctrine()->getManager();
+
+        $recordTrainings = json_decode($training, True);
+
+        foreach ($recordTrainings as $key => $trainingValue) {
+
+            //getting the Object if Exist from the Database
+            $recordObject = $em->getRepository('HrisRecordsBundle:Record')->findOneby(array('instance' => $trainingValue['instance']));
+
+            if (!empty($recordObject)){
+
+                $startDate = new \DateTime($trainingValue['startdate']['date']);
+                $endDate = new \DateTime($trainingValue['enddate']['date']);
+                $coursename = rtrim($trainingValue['coursename']);
+                $courseLocation = rtrim($trainingValue['courselocation']);
+
+                $trainingObjectInstance = $em->getRepository('HrisRecordsBundle:Training')->findOneby(array('record' => $recordObject, 'coursename' => $coursename, 'courselocation' => $courseLocation, 'startdate' => $startDate, 'enddate' => $endDate));
+
+                if ($trainingObjectInstance == NULL) {
+
+                    $trainingObject = new Training();
+                    $trainingObject->setUid(uniqid());
+                    $trainingObject->setRecord($recordObject);
+                    $trainingObject->setUsername($trainingValue['username']);
+                    $trainingObject->setStartdate($startDate);
+                    $trainingObject->setEnddate($endDate);
+                    $trainingObject->setCoursename($coursename);
+                    $trainingObject->setCourselocation($courseLocation);
+                    $trainingObject->setSponsor($trainingValue['sponser']);
+
+                    $em->persist($trainingObject);
+
+                }
+            }
+        }
         $em->flush();
 
         return new Response('success');

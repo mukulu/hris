@@ -934,10 +934,10 @@ class Organisationunit
     /**
      * Set parent
      *
-     * @param \Hris\OrganisationunitBundle\Entity\Organisationunit $parent
+     * @param Organisationunit $parent
      * @return Organisationunit
      */
-    public function setParent(\Hris\OrganisationunitBundle\Entity\Organisationunit $parent = null)
+    public function setParent(Organisationunit $parent = null)
     {
         $this->parent = $parent;
 
