@@ -222,6 +222,8 @@ class ImportController extends Controller
 
                     }
 
+                    $message = "Data Was Imported successfully.";
+
                 }
 
                 /*
@@ -262,16 +264,10 @@ class ImportController extends Controller
                 }
 
             }
-        } else {
-            var_dump("Nothing works");
-            die();
         }
 
         return array(
-            'records' => $records,
-            'organisationUnit' => $organisationUnits,
-            'fieldOptions' => $fieldOptions,
-            'fields' => $fields,
+            'message' => $message,
         );
     }
 
