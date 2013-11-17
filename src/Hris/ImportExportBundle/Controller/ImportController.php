@@ -719,23 +719,24 @@ class ImportController extends Controller
         $organisationUnits = json_decode($organisationUnits, true);
 
         foreach ($organisationUnits as $key => $organisationUnit) {
-
+            $parent = null;
             $parent = $em->getRepository('HrisOrganisationunitBundle:Organisationunit')->findOneby(array('longname' => $organisationUnit['longname']));
-            //print $organisationUnit[0]['longname']." Parent: ".$organisationUnit['longname'].'<br>';
 
             $orgunitObjectCheck = $em->getRepository('HrisOrganisationunitBundle:Organisationunit')->findOneby(array('longname' => $organisationUnit[0]['longname'], 'parent' => $parent));
+
 
             if ($orgunitObjectCheck != NULL) {
 
                 $refOrganisationUnit[$organisationUnit[0]['id']] = $orgunitObjectCheck->getUid();
 
-                //print 'this record Exists '.$organisationUnit[0]['longname']." Parent: ".$organisationUnit['longname'].'<br>';
+               // print 'this record Exists '.$organisationUnit[0]['longname']." Parent: ".$organisationUnit['longname'].'<br>';
 
             } else {
                 $orgunitObject = new Organisationunit();
                 $orgunitObject->setUid(uniqid());
                 if ($parent != NULL){
                     $orgunitObject->setParent($parent);
+                    //print '<br>Parent Exists with LongName: '. $parent->getLongname();
                 }else{
                     $parent = NULL;
                     $orgunitObject->setParent($parent);
@@ -745,7 +746,7 @@ class ImportController extends Controller
                 $orgunitObject->setCode($organisationUnit[0]['code']);
 
                 $em->persist($orgunitObject);
-
+                $em->flush();
 
                 $refOrganisationUnit[$organisationUnit[0]['id']] = $orgunitObject->getUid();
 
