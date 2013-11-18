@@ -96,7 +96,7 @@ class DashboardController extends Controller
             (array('name'=> "AgeDistribution"));
 
         $dashboardGenderField = $entityManager->getRepository('HrisFormBundle:Field')->findOneByName
-            (array('name'=> "Sex"));
+            (array('name'=> "sex"));
 
         //get the data from the aggregation engine
         $organisationunit = $user->getOrganisationunit();
