@@ -29,11 +29,13 @@
                 $("#hris_recordsbundle_historytype_field option[value="+ removeField['id'] +"]").remove();
             });
 
+            $("#hris_recordsbundle_historytype_field").append(new Option("Organisation Unit Transfer", "0"));
+
             $(fields).on('change', function() {
                 // Empty FieldOptionSection contents
                 $( fieldOptionSection ).empty();
                 // Fetch fieldOptionTargets based on selected fields
-                postData={
+                postData = {
                     'fieldid': $('#hris_recordsbundle_historytype_field').val()
                 };
                 $.post(fieldOptionUrl,postData , function( fieldOptions ){

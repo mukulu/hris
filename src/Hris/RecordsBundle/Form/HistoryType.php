@@ -24,6 +24,7 @@
  */
 namespace Hris\RecordsBundle\Form;
 
+use Doctrine\Tests\Common\Annotations\False;
 use Symfony\Component\Form\AbstractType;
 use Symfony\Component\Form\FormBuilderInterface;
 use Symfony\Component\OptionsResolver\OptionsResolverInterface;
@@ -35,6 +36,7 @@ class HistoryType extends AbstractType
     {
         $builder
             ->add('field','entity',array(
+                'mapped' => False,
                 'class'=>'HrisFormBundle:Field',
                 'empty_value' => '--SELECT--',
                 'query_builder'=>function(EntityRepository $er) {

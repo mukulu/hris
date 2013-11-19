@@ -25,6 +25,7 @@
  */
 namespace Hris\RecordsBundle\Controller;
 
+use Hris\FormBundle\Entity\Field;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Bundle\FrameworkBundle\Controller\Controller;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Method;
@@ -91,41 +92,83 @@ class HistoryController extends Controller
         $user = $this->container->get('security.context')->getToken()->getUser();
 
         if ($form->isValid()) {
+            echo "Atleast im here";exit;
             $em = $this->getDoctrine()->getManager();
             $historyValue = $request->request->get('hris_recordsbundle_history');
             $historyFormData = $request->request->get('hris_recordsbundle_historytype');
-            $fieldOption = $this->getDoctrine()->getManager()->getRepository('HrisFormBundle:FieldOption')->findOneBy(array('uid'=>$historyValue['history']));
 
-            if(!empty($recordid)) {
-                $record = $this->getDoctrine()->getManager()->getRepository('HrisRecordsBundle:Record')->findOneBy(array('id'=>$recordid));
-                $field = $this->getDoctrine()->getManager()->getRepository('HrisFormBundle:Field')->findOneBy(array('id'=>$historyFormData['field']));
+            //Check if history is orgunit transfer or not
+            if( $historyFormData['hris_recordsbundle_historytype_field'] == 0){
 
-                //If History Set to update record
-                if($historyFormData['updaterecord']){
-                    $recordValue = $record->getValue();
-                    //Get Previous value before updating
-                    $previousValue = $recordValue[$field->getUid()];
-                    //Assign Record with the new update uid
-                    $recordValue[$field->getUid()] = $historyValue['history'];
+                echo "Im tryn to transfer";exit;
+                $orgunit = $this->getDoctrine()->getManager()->getRepository('OrganisationunitBundle:Organisationunit')->findOneBy(array('uid' =>$historyValue['history'] ));
+                if(!empty($recordid)) {
+                    $record = $this->getDoctrine()->getManager()->getRepository('HrisRecordsBundle:Record')->findOneBy(array('id'=>$recordid));
+                    //$field = $this->getDoctrine()->getManager()->getRepository('HrisFormBundle:Field')->findOneBy(array('id'=>$historyFormData['field']));
+                    $field = new Field();
 
-                    //Assign old value from records to history table
-                    $previousOption = $this->getDoctrine()->getManager()->getRepository('HrisFormBundle:FieldOption')->findOneBy(array('uid'=>$previousValue));
-                    $entity->setHistory($previousOption->getValue());
-                    $entity->setReason($historyFormData['reason']." Note: This is previous ".$field->getCaption()." held before changed to ".$fieldOption->getValue().".");
+                    //If History Set to update record
+                    if($historyFormData['updaterecord']){
 
-                    //Update new record value
-                    $record->setValue($recordValue);
+                        //Get Previous value before updating
+                        $recordOrgUnit = $record->getOrganisationunit();
+
+                        //Assign Record with the new orgunit
+                        $record->setOrganisationunit($orgunit);
+
+                        //Assign old orgunit from records to history table
+                        $entity->setHistory($recordOrgUnit->getLongname());
+                        $entity->setReason($historyFormData['reason']." Note: This is previous Organisation Unit held before changed to ".$orgunit->getLongname().".");
+                    }
+                    else{
+                        //Set History value
+                        $entity->setHistory($orgunit->getLongname());
+                    }
+                    $entity->setRecord($record);
                 }
-                else{
-                    //Set entity value assigned from the history form
-                    $entity->setHistory($fieldOption->getValue());
+                else {
+                    $record = NULL;
+                    $entity->setRecord($record);
                 }
-                $entity->setRecord($record);
             }
-            else {
-                $record = NULL;
-                $entity->setRecord($record);
+            else{
+
+                //If history is not orgunit transfer
+                $fieldOption = $this->getDoctrine()->getManager()->getRepository('HrisFormBundle:FieldOption')->findOneBy(array('uid'=>$historyValue['history']));
+                if(!empty($recordid)) {
+                    $record = $this->getDoctrine()->getManager()->getRepository('HrisRecordsBundle:Record')->findOneBy(array('id'=>$recordid));
+                    $field = $this->getDoctrine()->getManager()->getRepository('HrisFormBundle:Field')->findOneBy(array('id'=>$historyFormData['field']));
+
+                    //If History Set to update record
+                    if($historyFormData['updaterecord']){
+
+                        $recordValue = $record->getValue();
+                        //Get Previous value before updating
+                        $previousValue = $recordValue[$field->getUid()];
+                        //Assign Record with the new update uid
+                        $recordValue[$field->getUid()] = $historyValue['history'];
+
+                        //Assign old value from records to history table
+                        $previousOption = $this->getDoctrine()->getManager()->getRepository('HrisFormBundle:FieldOption')->findOneBy(array('uid'=>$previousValue));
+                        $entity->setHistory($previousOption->getValue());
+                        $entity->setReason($historyFormData['reason']." Note: This is previous ".$field->getCaption()." held before changed to ".$fieldOption->getValue().".");
+
+                        //Update new record value
+                        $record->setValue($recordValue);
+                    }
+                    else{
+                        //Set History value
+                            $entity->setHistory($fieldOption->getValue());
+                    }
+                    $entity->setRecord($record);
+                }
+                else {
+                    $record = NULL;
+                    $entity->setRecord($record);
+                }
             }
+
+
             $entity->setUsername($user->getUsername());
 
             //Update Record Table hasHistory column
@@ -143,6 +186,7 @@ class HistoryController extends Controller
             'form'   => $form->createView(),
             'recordid' => $recordid,
             'employeeName' => $this->getEmployeeName($recordid),
+            'removeFields' => null,
         );
     }
 
@@ -406,37 +450,33 @@ class HistoryController extends Controller
     {
         $em = $this->getDoctrine()->getManager();
         $fieldid = $this->getRequest()->request->get('fieldid');
-        $targetid = $this->getRequest()->request->get('targetid');
         $fieldOptionTargetNodes = NULL;
 
-        // Fetch existing targets and field options belonging to target
-        $fieldOptions = $em->getRepository('HrisFormBundle:FieldOption')->findBy(array('field'=>$fieldid));
+        if ($fieldid == 0){
+            $user = $this->container->get('security.context')->getToken()->getUser();
+            $userOrgunitId = $user -> getOrganisationunit()->getId();
+            $userOrgunit = $em->getRepository('HrisOrganisationunitBundle:Organisationunit')->find($userOrgunitId);
+            $children = $em->getRepository('HrisOrganisationunitBundle:Organisationunit')->getAllChildren($userOrgunit);
 
-        if(!empty($targetid) && !empty($fieldid)) {
-            $queryBuilder = $this->getDoctrine()->getManager()->createQueryBuilder();
-            $targetFieldOptions = $queryBuilder->select('targetFieldOption')
-                ->from('HrisIndicatorBundle:TargetFieldOption','targetFieldOption')
-                ->join('targetFieldOption.fieldOption','fieldOption')
-                ->join('fieldOption.field','field')
-                ->where('targetFieldOption.target=:targetid')
-                ->andWhere('field.id=:fieldid')
-                ->setParameters(array('targetid'=>$targetid,'fieldid'=>$fieldid))
-                ->getQuery()->getResult();
-            if(!empty($targetFieldOptions)) {
-                foreach($targetFieldOptions as $targetFieldOptionKey=>$targetFieldOption) {
-                    $fieldOptionTargetNodes[$targetFieldOption->getFieldOption()->getId()] = Array(
-                        'name' => $targetFieldOption->getFieldOption()->getValue(),
-                        'uid' => $targetFieldOption->getFieldOption()->getUid()
-                    );
-                }
+            foreach($children as $ch => $child){
+
+                $fieldOptionTargetNodes[] = Array(
+                    'name' => $child[0]['longname'],
+                    'uid' => $child[0]['uid'],
+                );
             }
         }
-        foreach($fieldOptions as $fieldOptionKey=>$fieldOption) {
-            if(!isset($fieldOptionTargetNodes[$fieldOption->getId()])) {
-                $fieldOptionTargetNodes[] = Array(
-                    'name' => $fieldOption->getValue(),
-                    'uid' => $fieldOption->getUid()
-                );
+        else{
+            // Fetch existing targets and field options belonging to target
+            $fieldOptions = $em->getRepository('HrisFormBundle:FieldOption')->findBy(array('field'=>$fieldid));
+
+            foreach($fieldOptions as $fieldOptionKey => $fieldOption) {
+                if(!isset($fieldOptionTargetNodes[$fieldOption->getId()])) {
+                    $fieldOptionTargetNodes[] = Array(
+                        'name' => $fieldOption->getValue(),
+                        'uid' => $fieldOption->getUid()
+                    );
+                }
             }
         }
 
