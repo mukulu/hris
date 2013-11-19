@@ -249,9 +249,11 @@ class RecordController extends Controller
             ->createQueryBuilder('o')
             ->select('o', 'f')
             ->join('o.field', 'f')
+            ->orderBy('o.value')
             ->getQuery()
             ->getArrayResult();
         //var_dump($field_Option_entities);
+
         $field_Option_Values = json_encode($field_Option_entities);
         $filed_Option_Table_Name = json_encode($em->getClassMetadata('HrisFormBundle:FieldOption')->getTableName());
 
@@ -269,6 +271,7 @@ class RecordController extends Controller
             ->where('o.uid = :uid')
             ->orWhere('o.parent = :parent')
             ->setParameters(array('uid' => $user->getOrganisationunit()->getUid(), 'parent' => $user->getOrganisationunit()))
+            ->orderBy('o.longname')
             ->getQuery()
             ->getArrayResult();
 
@@ -454,6 +457,7 @@ class RecordController extends Controller
             ->select('o')
             ->where('o.uid = :uid')
             ->setParameters(array('uid' => $user->getOrganisationunit()->getUid()))
+            ->orderBy('o.longname')
             ->getQuery()
             ->getArrayResult();
 
