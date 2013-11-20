@@ -98,7 +98,7 @@ class HistoryController extends Controller
             $historyFormData = $request->request->get('hris_recordsbundle_historytype');
 
             //Check if history is orgunit transfer or not
-            if( $historyFormData['hris_recordsbundle_historytype_field'] == 0){
+            /* if( $historyFormData['hris_recordsbundle_historytype_field'] == 0){
 
                 //echo "Im tryn to transfer";exit;
                 $orgunit = $this->getDoctrine()->getManager()->getRepository('OrganisationunitBundle:Organisationunit')->findOneBy(array('uid' =>$historyValue['history'] ));
@@ -130,8 +130,8 @@ class HistoryController extends Controller
                     $record = NULL;
                     $entity->setRecord($record);
                 }
-            }
-            else{
+            } */
+            //else{
 
                 //If history is not orgunit transfer
                 $fieldOption = $this->getDoctrine()->getManager()->getRepository('HrisFormBundle:FieldOption')->findOneBy(array('uid'=>$historyValue['history']));
@@ -166,7 +166,7 @@ class HistoryController extends Controller
                     $record = NULL;
                     $entity->setRecord($record);
                 }
-            }
+            //}
 
 
             $entity->setUsername($user->getUsername());
