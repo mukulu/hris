@@ -92,7 +92,7 @@ class HistoryController extends Controller
         $user = $this->container->get('security.context')->getToken()->getUser();
 
         if ($form->isValid()) {
-            echo "Atleast im here";exit;
+            //echo "Atleast im here";exit;
             $em = $this->getDoctrine()->getManager();
             $historyValue = $request->request->get('hris_recordsbundle_history');
             $historyFormData = $request->request->get('hris_recordsbundle_historytype');
@@ -100,7 +100,7 @@ class HistoryController extends Controller
             //Check if history is orgunit transfer or not
             if( $historyFormData['hris_recordsbundle_historytype_field'] == 0){
 
-                echo "Im tryn to transfer";exit;
+                //echo "Im tryn to transfer";exit;
                 $orgunit = $this->getDoctrine()->getManager()->getRepository('OrganisationunitBundle:Organisationunit')->findOneBy(array('uid' =>$historyValue['history'] ));
                 if(!empty($recordid)) {
                     $record = $this->getDoctrine()->getManager()->getRepository('HrisRecordsBundle:Record')->findOneBy(array('id'=>$recordid));
