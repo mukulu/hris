@@ -442,7 +442,7 @@ class ReportEmployeeRecordsController extends Controller
                                         }
                                     }
                                 }
-                                $derivedDate = new \DateTime($recordArray[strtolower($field->getName())]);
+                                $derivedDate = new \DateTime($recordArray[strtolower($valueKey)]);
                                 // Date Field Value
                                 $formattedDerivedDate = $derivedDate->format('d/m/Y');
                                 $expression = @@str_replace($match[0][0],$formattedDerivedDate,$fieldObject->getCalculatedExpression());
