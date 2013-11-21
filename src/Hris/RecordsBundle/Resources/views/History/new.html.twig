@@ -23,13 +23,14 @@
             var fieldOptionUrl = '{{ path('history_historyfieldption', {'_format':'json'}) }}';
             var fieldOptionNames='hris_recordsbundle_historytype_history';
             var fieldOptionSection='#historyFieldSection';
+            //var orgunitTransfer
 
 
             $.each([{id:{{ removeFields | join('},{id:') | raw }} }], function( removeFieldIndex, removeField ){
                 $("#hris_recordsbundle_historytype_field option[value="+ removeField['id'] +"]").remove();
             });
 
-            $("#hris_recordsbundle_historytype_field").append(new Option("Organisation Unit Transfer", "0"));
+            //$("#hris_recordsbundle_historytype_field").append(new Option('{{ orgunitTransfer.caption }}', '{{ orgunitTransfer.id }}' ));
 
             $(fields).on('change', function() {
                 // Empty FieldOptionSection contents
