@@ -96,17 +96,15 @@ class HistoryController extends Controller
             $em = $this->getDoctrine()->getManager();
             $historyValue = $request->request->get('hris_recordsbundle_history');
             $historyFormData = $request->request->get('hris_recordsbundle_historytype');
-            $field = $this->getDoctrine()->getManager()->getRepository('HrisFormBundle:Field')->findOneBy(array('id'=>$historyFormData['hris_recordsbundle_historytype_field']));
+            $field = $this->getDoctrine()->getManager()->getRepository('HrisFormBundle:Field')->findOneBy(array('id'=>$historyFormData['field']));
 
             //Check if history is orgunit transfer or not
             if( $field->getCaption() == "Organisation Unit Transfer" ){
 
                 //echo "Im tryn to transfer";exit;
-                $orgunit = $this->getDoctrine()->getManager()->getRepository('OrganisationunitBundle:Organisationunit')->findOneBy(array('uid' =>$historyValue['history'] ));
+                $orgunit = $this->getDoctrine()->getManager()->getRepository('HrisOrganisationunitBundle:Organisationunit')->findOneBy(array('uid' =>$historyValue['history'] ));
                 if(!empty($recordid)) {
                     $record = $this->getDoctrine()->getManager()->getRepository('HrisRecordsBundle:Record')->findOneBy(array('id'=>$recordid));
-                    //$field = $this->getDoctrine()->getManager()->getRepository('HrisFormBundle:Field')->findOneBy(array('id'=>$historyFormData['field']));
-                    $field = new Field();
 
                     //If History Set to update record
                     if($historyFormData['updaterecord']){
@@ -213,6 +211,7 @@ class HistoryController extends Controller
         }
 
         //Get all fields not associated with approptiate form
+        $orgunitTransferField = "Organisation Unit Transfer";
         $entityManager = $this->getDoctrine()->getManager();
         $subQuery = "SELECT field_id ";
         $subQuery .= "FROM hris_form_fieldmembers ";
@@ -222,18 +221,19 @@ class HistoryController extends Controller
         $query .= "FULL OUTER JOIN hris_form_fieldmembers as member on member.field_id = Field.id ";
         $query .= "FULL OUTER JOIN hris_form as Form on Form.id = member.form_id ";
         $query .= "WHERE ( Field.hashistory = true ";
-        $query .= "AND Field.id NOT IN ( ".$subQuery." )) ";
+        $query .= "AND Field.caption <> '".$orgunitTransferField."' ";
+        $query .= " AND Field.id NOT IN ( ".$subQuery." )) ";
         $query .= "OR Field.iscalculated = true";
         $results = $entityManager -> getConnection() -> executeQuery($query) -> fetchAll();
         $removeFields = $this->array_value_recursive('id' , $results);
 
         //Get Orgunit Transfer Field
-        $orgUnitTransferField = $this->getDoctrine()->getManager()->getRepository('HrisFormBundle:Field')->findOneBy(
+        /*$orgUnitTransferField = $this->getDoctrine()->getManager()->getRepository('HrisFormBundle:Field')->findOneBy(
             array('caption'=>'Organisation Unit Transfer'),
             array('caption'=>'ASC'),
             1,
             0
-        );
+        ); */
 
         //echo $orgUnitTransferField->getId()."--".$orgUnitTransferField->getCaption();exit;
 
@@ -246,7 +246,7 @@ class HistoryController extends Controller
             'record' => $record,
             'employeeName' => $this->getEmployeeName($recordid),
             'removeFields' => $removeFields,
-            'orgunitTransfer' => $orgUnitTransferField,
+            //'orgunitTransfer' => $orgUnitTransferField,
         );
     }
 
