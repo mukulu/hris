@@ -466,17 +466,17 @@ function getunits(parent){
     }
 }
 
-function populateForm(fieldUIDS, databaseName, dataValues, otherFields, orgunit, orgUnitParent) {
+function populateForm(fieldUIDS, databaseName, dataValues, otherFields, selectedOrgunit, orgunitChildren) {
 
     dataValues = JSON.parse(dataValues);
     otherFields = JSON.parse(otherFields);
-    orgunit = JSON.parse(orgunit);
-    orgUnitParent = JSON.parse(orgUnitParent);
+    selectedOrgunit = JSON.parse(selectedOrgunit);
+    orgunitChildren = JSON.parse(orgunitChildren);
 
     var fieldUid = JSON.parse(fieldUIDS);
 
     //Setting Organizationunit
-    $.each(orgunit, function (key, value) {
+    $.each(selectedOrgunit, function (key, value) {
         $("#units").append($('<option>', {
             value: value["uid"],
             text: value["longname"],
@@ -486,7 +486,7 @@ function populateForm(fieldUIDS, databaseName, dataValues, otherFields, orgunit,
     });
 
     //Populating Childrens Organizationunit
-    $.each(orgUnitParent, function (key, value) {
+    $.each(orgunitChildren, function (key, value) {
         $("#units").append($('<option>', {
             value: value[0]["uid"],
             text: value[0]["longname"]
