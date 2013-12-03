@@ -243,6 +243,7 @@ function getDataEntryForm(databaseName, formUid, tableName) {
 
                     report(null);
                 }
+
             };
 
         };
@@ -250,7 +251,8 @@ function getDataEntryForm(databaseName, formUid, tableName) {
     }
 
     getForm(function () {
-        //alert('Finished eating my sandwich.');
+        $('#pleaseWaitDialog').modal('hide');
+
     });
 
 }
@@ -473,6 +475,8 @@ function populateForm(fieldUIDS, databaseName, dataValues, otherFields, selected
     selectedOrgunit = JSON.parse(selectedOrgunit);
     orgunitChildren = JSON.parse(orgunitChildren);
 
+    //$('#pleaseWaitDialog').modal('show');
+
     var fieldUid = JSON.parse(fieldUIDS);
 
     //Setting Organizationunit
@@ -511,6 +515,7 @@ function populateForm(fieldUIDS, databaseName, dataValues, otherFields, selected
 
             var fielOptiondRequest = fieldOptionStore.openCursor();
 
+            var selectedElement = false
             var emptyElement = false
 
             fielOptiondRequest.onsuccess = function () {
@@ -520,18 +525,26 @@ function populateForm(fieldUIDS, databaseName, dataValues, otherFields, selected
 
                 if (cursorOption) {
 
-                    //Setting the first empty Option
-
-
-
                     if (field_uid == cursorOption.value.field) {
+
+                        //Setting the first empty Option
+
+                        if ( emptyElement == false ){
+
+                            $("#" + field_uid).append($('<option>', {
+                                value: '',
+                                text: '--'
+                            }));
+
+                            emptyElement = true;
+                        }
 
                         $("#" + field_uid).append($('<option>', {
                             value: cursorOption.value.uid,
                             text: decodeURIComponent(cursorOption.value.value)
                         }));
 
-                        if ( emptyElement == false ){
+                        if ( selectedElement == false ){
 
                             for (var keys in dataValues){
 
@@ -543,7 +556,7 @@ function populateForm(fieldUIDS, databaseName, dataValues, otherFields, selected
                                     selected: "selected"
                                 }))
 
-                                emptyElement = true;
+                                    selectedElement = true;
                                 }
                             }
                         }
@@ -574,6 +587,7 @@ function populateForm(fieldUIDS, databaseName, dataValues, otherFields, selected
 
             }
         }
+
     });
 
 }
