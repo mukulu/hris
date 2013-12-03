@@ -475,7 +475,7 @@ function populateForm(fieldUIDS, databaseName, dataValues, otherFields, selected
     selectedOrgunit = JSON.parse(selectedOrgunit);
     orgunitChildren = JSON.parse(orgunitChildren);
 
-    //$('#pleaseWaitDialog').modal('show');
+    $('#pleaseWaitDialog').modal('show');
 
     var fieldUid = JSON.parse(fieldUIDS);
 
@@ -498,7 +498,7 @@ function populateForm(fieldUIDS, databaseName, dataValues, otherFields, selected
 
     });
 
-    $.each(fieldUid, function (key, value) {
+    $.when.apply( $.each(fieldUid, function (key, value) {
 
         var field_uid = value;
 
@@ -588,7 +588,11 @@ function populateForm(fieldUIDS, databaseName, dataValues, otherFields, selected
             }
         }
 
-    });
+    })).done(function(){
+            setTimeout(function(){
+                $('#pleaseWaitDialog').modal('hide');
+            }, 10000);
+        });
 
 }
 
