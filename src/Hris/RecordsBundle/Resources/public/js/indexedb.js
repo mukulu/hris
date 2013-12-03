@@ -189,6 +189,8 @@ function getSingleRecord(databaseName, uid, tableName) {
 
 function getDataEntryForm(databaseName, formUid, tableName) {
 
+    $('#pleaseWaitDialog').modal('show');
+
     tableName = JSON.parse(tableName);
 
     var result = document.getElementById("result");
@@ -251,7 +253,6 @@ function getDataEntryForm(databaseName, formUid, tableName) {
     }
 
     getForm(function () {
-        $('#pleaseWaitDialog').modal('hide');
 
     });
 

@@ -14,8 +14,6 @@
         //getting field Options and append them on select statements
 
         $(window).load(function(){
-            $('#pleaseWaitDialog').modal('show');
-
             //Populating field Options
             populateForm( '{{ fields | raw | escape('js') }}', '{{ project_code | lower | raw }}', '{{ dataValues | raw | escape('js') }}', '{{ otherFields | raw | escape('js') }}', '{{ selectedUnit | raw | escape('js') }}', '{{ organisation_unit_children | raw | escape('js') }}' );
 
