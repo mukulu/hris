@@ -475,8 +475,6 @@ function populateForm(fieldUIDS, databaseName, dataValues, otherFields, selected
     selectedOrgunit = JSON.parse(selectedOrgunit);
     orgunitChildren = JSON.parse(orgunitChildren);
 
-    $('#pleaseWaitDialog').modal('show');
-
     var fieldUid = JSON.parse(fieldUIDS);
 
     //Setting Organizationunit
