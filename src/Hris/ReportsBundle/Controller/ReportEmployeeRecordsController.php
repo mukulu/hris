@@ -772,7 +772,7 @@ class ReportEmployeeRecordsController extends Controller
         $organisationUnit = $em->getRepository('HrisOrganisationunitBundle:Organisationunit')->find($organisationUnitid);
         $proffesionFieldId = $em->getRepository('HrisFormBundle:Field')->findOneBy(
                 array(
-                    'name'=>"Profession"
+                    'name'=>"profession"
                 ))->getId();;
         foreach($request->query->get('formsId') as $formIds){
             $form = $em->getRepository('HrisFormBundle:Form')->find($formIds);
@@ -842,7 +842,9 @@ class ReportEmployeeRecordsController extends Controller
             $query .= " AND ".$fieldOptionToExclude->getField()->getName()." !='".$fieldOptionToExclude->getValue()."'";
         }
 
-        $query .= " ORDER BY fieldoption.sort, ResourceTable.dateoffirstappointment";
+        $query .= " ORDER BY ResourceTable.profession, ResourceTable.first_appointment";
+        #CHANGE TO THIS WHEN ALL THE FIELD OPTIONS ARE SORTED
+        //$query .= " ORDER BY fieldoption.sort, ResourceTable.first_appointment";
 
         $report = $em -> getConnection() -> executeQuery($query) -> fetchAll();
 
