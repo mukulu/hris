@@ -221,6 +221,7 @@ class ReportFriendlyReportController extends Controller
                                 WHERE $categoryResourceTableName.$categoryFieldName='$categoryFieldOptionValue'
                                 ".( !empty($fieldOptionsToSkipQuery) ? str_replace($resourceTableAlias,$categoryResourceTableName," AND ( $fieldOptionsToSkipQuery )") : "" ) ."
                                 ".( !empty($organisationunitLevelsWhereClause) ? str_replace($resourceTableAlias,$categoryResourceTableName," AND ( $organisationunitLevelsWhereClause )") : "" ) ."
+                                ".( !empty($formsWhereClause) ? str_replace($resourceTableAlias,$categoryResourceTableName," AND ( $formsWhereClause )") : "" ) ."
                                 GROUP BY $categoryResourceTableName.$seriesFieldName
                             ) $categoryResourceTableName ON $categoryResourceTableName.$seriesFieldName= $resourceTableAlias.$seriesFieldName";
         }

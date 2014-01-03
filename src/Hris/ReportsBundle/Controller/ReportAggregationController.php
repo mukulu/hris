@@ -324,47 +324,6 @@ class ReportAggregationController extends Controller
         //get the records
         $report = $entityManager -> getConnection() -> executeQuery($query) -> fetchAll();
         return $report;
-        /*
-        $tabulationValues = '';
-        $tempFieldOption = '';
-        if ($fieldsTwo->getId() != $fields->getId()) {//when two fields are  selected
-            foreach ($report as $key => $reportValue) {
-
-                if($tempFieldOption != $reportValue[$fieldOne->getName()]){
-                    if($key != 0){ //first time of the loop or the last time of the loop
-                        foreach ($fieldTwoOption as $keys => $fieldTwoOptions) {
-                            if (!array_key_exists($fieldTwoOptions, $tempArray)) {
-                                $tempArray[$fieldTwoOptions] = 0;
-                            }
-                        }
-                        ksort($tempArray);
-                        $tabulationValues[$tempFieldOption] = $tempArray;
-
-                    }
-                    $tempFieldOption = $reportValue[$fieldOne->getName()];
-                    $tempArray = '';
-                    $tempArray[$reportValue[$fieldTwo->getName()]] = $reportValue['total'];
-
-                }else{
-                    $tempArray[$reportValue[$fieldTwo->getName()]] = $reportValue['total'];
-                }
-
-                if($key == count($report)-1){//deal with the last record
-                    foreach ($fieldTwoOption as $keys => $fieldTwoOptions) {
-                        if (!array_key_exists($fieldTwoOptions, $tempArray)) {
-                            $tempArray[$fieldTwoOptions] = 0;
-                        }
-                    }
-                    ksort($tempArray);
-                    $tabulationValues[$tempFieldOption] = $tempArray;
-                }
-            }
-
-        }else{//when one field is  selected
-            foreach ($report as $key => $reportValue) {
-                $tabulationValues[$reportValue[$fieldOne->getName()]] = $reportValue['total'];
-            }
-        }*/
     }
 
     /**
