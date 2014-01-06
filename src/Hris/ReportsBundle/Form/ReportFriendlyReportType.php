@@ -43,6 +43,7 @@ class ReportFriendlyReportType extends AbstractType
             ->add('genericReport','entity', array(
                 'class'=>'HrisFormBundle:FriendlyReport',
                 'multiple'=>false,
+                'empty_value' => '--SELECT--',
                 'constraints'=>array(
                     new NotBlank(),
                 )
