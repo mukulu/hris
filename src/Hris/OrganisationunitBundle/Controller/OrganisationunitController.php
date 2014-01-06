@@ -285,12 +285,19 @@ class OrganisationunitController extends Controller
         if ($editForm->isValid()) {
             // Persist completeness figures too
             $completenessFigures = $request->request->get('hris_organisationunitbundle_organisationunittype_completeness');
+            //Get rid of current expectations
+            $em->createQueryBuilder('organisationunitCompleteness')
+                ->delete('HrisOrganisationunitBundle:OrganisationunitCompleteness','organisationunitCompleteness')
+                ->where('organisationunitCompleteness.organisationunit= :organisationunitId')
+                ->setParameter('organisationunitId',$entity->getId())
+                ->getQuery()->getResult();
+            $em->flush();
             foreach($completenessForms as $completenessFormKey=>$completenessForm) {
                 if(isset($completenessFigures[$completenessForm->getUid()]) && !empty($completenessFigures[$completenessForm->getUid()])) {
                     $organisationunitCompleteness = new OrganisationunitCompleteness();
                     $organisationunitCompleteness->setOrganisationunit($entity);
                     $organisationunitCompleteness->setForm($completenessForm);
-                    $organisationunitCompleteness->setExpectation((int)$completenessFigures[$completenessForm->getUid()]);
+                    $organisationunitCompleteness->setExpectation($completenessFigures[$completenessForm->getUid()]);
                     $entity->addOrganisationunitCompletenes($organisationunitCompleteness);
                     unset($organisationunitCompleteness);
                 }
@@ -312,6 +319,7 @@ class OrganisationunitController extends Controller
             }
             $em->persist($entity);
             $em->flush();
+
 
             return $this->redirect($this->generateUrl('organisationunit_show', array('id' => $id)));
         }
