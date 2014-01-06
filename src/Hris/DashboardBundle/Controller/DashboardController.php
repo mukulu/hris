@@ -622,7 +622,9 @@ class DashboardController extends Controller
             'startOnTick'=>false
         );
         if(!isset($data)) $data = Array();
-        if( empty(array_filter($data,function($value){return($value>0);})) ) {
+        if(!isset($data)) $data = Array();
+        $arrayResult = array_filter($data,function($value){ return( $value > 0 ); } );
+        if( empty($arrayResult)) {
             $yData['max']= 5;
         }
 
