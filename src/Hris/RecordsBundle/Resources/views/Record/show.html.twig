@@ -9,12 +9,18 @@
                 <tr>
                     <th>{{ field.caption }}</th>
                     <td>
-                        {% if field.getInputType == 'Select' %}
-                            {{ optionMap[ entity.getValue( field.uid ) ] }}
-                        {% elseif field.getInputType == 'Date' %}
-                            {{ entity.getValue( field.uid ) | date('d/m/Y') }}
+                        {% if field.getIsCalculated %}
+                            {{ entity | calculateFieldExpression(field.getCalculatedExpression,entity.getForm.getSimpleField) }}
                         {% else %}
-                            {{ entity.getValue( field.uid ) }}
+                            {% if field.getInputType == 'Select' %}
+                                {% if field.uid in entity.getValue|keys %}
+                                    {{ optionMap[ entity.getValue( field.uid ) ] }}
+                                {% endif %}
+                            {% elseif field.getInputType == 'Date' %}
+                                {{ entity.getValue( field.uid ) | date('d/m/Y') }}
+                            {% else %}
+                                {{ entity.getValue( field.uid ) }}
+                            {% endif %}
                         {% endif %}
                     </td>
                 </tr>
