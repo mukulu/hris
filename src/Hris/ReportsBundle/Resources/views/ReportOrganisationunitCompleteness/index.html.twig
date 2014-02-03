@@ -73,6 +73,7 @@
                 selectableHeader: "<div class=''>Avaiable Forms</div>",
                 selectionHeader: "<div class=''>Selected Forms</div>"
             });
+            $( 'input[required="required"],select[required="required"]').closest(".control-group").children("label").prepend('<em class="required-asterisk">*</em>');
         });
     </script>
 {% endblock javascripts %}
@@ -96,19 +97,40 @@
         {% endfor %}
         </div>
     {% endif %}
-    {{ form_start(organisationunitCompletenessForm, { 'method' : 'PUT','attr': {'class':'organisationunitCompletenessForm','id':'organisationunitCompletenessForm'} } ) }}
+    {{ form_start(organisationunitCompletenessForm, { 'method' : 'PUT','attr': {'class':'organisationunitCompletenessForm form-horizontal','id':'organisationunitCompletenessForm'} } ) }}
 
-    <div>
-        {{ form_label( organisationunitCompletenessForm.organisationunit ) }}
-        <div id="treeplaceholder"></div>
-        {{ form_errors( organisationunitCompletenessForm.organisationunit ) }}
-        {{ form_widget( organisationunitCompletenessForm.organisationunit ) }}
+    <div class="control-group">
+        {{ form_label( organisationunitCompletenessForm.organisationunit,'Select Organisationunit', {'label_attr': {'class': 'control-label'} } ) }}
+        <div class="controls">
+            <div id="treeplaceholder"></div>
+            {{ form_errors( organisationunitCompletenessForm.organisationunit ) }}
+            {{ form_widget( organisationunitCompletenessForm.organisationunit ) }}
+        </div>
     </div>
     <br/>
-    {{ form_row( organisationunitCompletenessForm.organisationunitLevel ) }}
-    {{ form_row( organisationunitCompletenessForm.forms ) }}
+    <div class="control-group">
+        {{ form_label( organisationunitCompletenessForm.organisationunitLevel,'Organisationunit Level', {'label_attr': {'class': 'control-label'} } ) }}
+        <div class="controls">
+            {{ form_errors( organisationunitCompletenessForm.organisationunitLevel ) }}
+            {{ form_widget( organisationunitCompletenessForm.organisationunitLevel ) }}
+        </div>
+    </div>
+    <br/>
+    <div class="control-group">
+        {{ form_label( organisationunitCompletenessForm.forms,'Select Form', {'label_attr': {'class': 'control-label'} } ) }}
+        <div class="controls">
+            {{ form_errors( organisationunitCompletenessForm.forms ) }}
+            {{ form_widget( organisationunitCompletenessForm.forms ) }}
+        </div>
+    </div>
+    <br/>
+    <div class="control-group">
+        <div class="controls">
+            {{ form_end(organisationunitCompletenessForm) }}
+        </div>
+    </div>
 
-    {{ form_end(organisationunitCompletenessForm) }}
+
 
 
 {% endblock %}
