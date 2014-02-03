@@ -123,6 +123,8 @@ class ReportOrganisationunitCompletenessController extends Controller
         $em = $this->getDoctrine()->getManager();
 
         $organisationUnitid =$request->query->get('organisationUnitid');
+        $sameLevel = $request->query->get('sameLevel'); // View same level personal data .ie. CHMT & RHMT
+        if(!empty($sameLevel)) $this->sameLevel = True;
         $formsId = explode(",",$request->query->get('formids'));
         $forms = new ArrayCollection();
 
@@ -226,8 +228,8 @@ class ReportOrganisationunitCompletenessController extends Controller
         $column == 'A';
         $row += 2;
 
-        if ($this->organisationunitChildren){
-            if($this->organisationunitChildren){
+        if ($this->organisationunitChildren && ! $this->sameLevel){
+            if($this->organisationunitChildren && ! $this->sameLevel){
 
                 //write the table heading of the values
                 $excelService->excelObj->getActiveSheet()->getStyle($column.$row.':'.$mergeColumnTitle.($row+1))->applyFromArray($header_format);
@@ -269,7 +271,7 @@ class ReportOrganisationunitCompletenessController extends Controller
                 $excelService->excelObj->setActiveSheetIndex(0)
                     ->setCellValue($column++.$row,'Form name');
         }
-        if(($this->organisationunitChildren) || ($this->sameLevel)){
+        if(($this->organisationunitChildren) && ! $this->sameLevel ){
             $row++;
             $column = 'C';
             foreach($this->forms as $form){
@@ -284,7 +286,7 @@ class ReportOrganisationunitCompletenessController extends Controller
         $row++;
         $column = 'A';
         //Start populating the data
-        if($this->organisationunitChildren){
+        if( $this->organisationunitChildren && ! $this->sameLevel ){
 
             foreach( $this->organisationunitChildren as $childOrganisationunit){
                 $counter = $counter + 1;
@@ -325,6 +327,80 @@ class ReportOrganisationunitCompletenessController extends Controller
                 }
                 $row++;
                 $column = 'A';
+            }
+            // Root node completeness
+            $counter = $counter + 1;
+            //format of the row
+            if (($counter % 2) == 1)
+                $excelService->excelObj->getActiveSheet()->getStyle($column.$row.':'.$mergeColumnTitle.$row)->applyFromArray($text_format1);
+            else
+                $excelService->excelObj->getActiveSheet()->getStyle($column.$row.':'.$mergeColumnTitle.$row)->applyFromArray($text_format2);
+
+            $excelService->excelObj->setActiveSheetIndex(0)
+                ->setCellValue($column++.$row,$counter)
+                ->setCellValue($column++.$row,$this->rootNodeOrganisationunit->getLongname());
+            foreach($this->forms as $form){
+                # Entered records #
+                $excelService->excelObj->setActiveSheetIndex(0)
+                    ->setCellValue($column++.$row,$this->completenessMatrix[$this->rootNodeOrganisationunit->getId()][$form->getId()]);
+                # Expected records and Percentage #
+                if($this->expectedCompleteness[$this->rootNodeOrganisationunit->getId()][$form->getId()]){
+                    $excelService->excelObj->setActiveSheetIndex(0)
+                        ->setCellValue($column++.$row,$this->expectedCompleteness[$this->rootNodeOrganisationunit->getId()][$form->getId()]);
+                    if($this->completenessMatrix[$this->rootNodeOrganisationunit->getId()][$form->getId()] > $this->expectedCompleteness[$this->rootNodeOrganisationunit->getId()][$form->getId()])
+                        $excelService->excelObj->setActiveSheetIndex(0)
+                            ->setCellValue($column++.$row,'Above Expected');
+                    elseif($this->expectedCompleteness[$this->rootNodeOrganisationunit->getId()][$form->getId()]<=0)
+                        $excelService->excelObj->setActiveSheetIndex(0)
+                            ->setCellValue($column++.$row,'');
+                    else
+                        $excelService->excelObj->setActiveSheetIndex(0)
+                            ->setCellValue($column++.$row,round(($this->completenessMatrix[$this->rootNodeOrganisationunit->getId()][$form->getId()] / $this->expectedCompleteness[$this->rootNodeOrganisationunit->getId()][$form->getId()] )*100),2 );
+
+                }else{
+                    # Expected records & percentage#
+                    $excelService->excelObj->setActiveSheetIndex(0)
+                        ->setCellValue($column++.$row,'')
+                        ->setCellValue($column++.$row,'');
+                }
+            }
+            // Total completeness
+            $row++;
+            $column = 'A';
+            $counter = $counter + 1;
+            //format of the row
+            if (($counter % 2) == 1)
+                $excelService->excelObj->getActiveSheet()->getStyle($column.$row.':'.$mergeColumnTitle.$row)->applyFromArray($text_format1);
+            else
+                $excelService->excelObj->getActiveSheet()->getStyle($column.$row.':'.$mergeColumnTitle.$row)->applyFromArray($text_format2);
+
+            $excelService->excelObj->setActiveSheetIndex(0)
+                ->setCellValue($column++.$row,$counter)
+                ->setCellValue($column++.$row,'Total:'.$this->rootNodeOrganisationunit->getLongname().' and lower levels');
+            foreach($this->forms as $form){
+                # Entered records #
+                $excelService->excelObj->setActiveSheetIndex(0)
+                    ->setCellValue($column++.$row,$this->totalCompletenessMatrix[$form->getId()]);
+                # Expected records and Percentage #
+                if($this->totalExpectedCompleteness[$form->getId()]){
+                    $excelService->excelObj->setActiveSheetIndex(0)
+                        ->setCellValue($column++.$row,$this->totalExpectedCompleteness[$form->getId()]);
+                    if($this->totalCompletenessMatrix[$form->getId()] > $this->totalExpectedCompleteness[$form->getId()])
+                        $excelService->excelObj->setActiveSheetIndex(0)
+                            ->setCellValue($column++.$row,'Above Expected');
+                    elseif($this->totalExpectedCompleteness[$form->getId()]<=0)
+                        $excelService->excelObj->setActiveSheetIndex(0)
+                            ->setCellValue($column++.$row,'');
+                    else
+                        $excelService->excelObj->setActiveSheetIndex(0)
+                            ->setCellValue($column++.$row,round(($this->totalCompletenessMatrix[$form->getId()] / $this->totalExpectedCompleteness[$form->getId()] )*100),2 );
+
+                }else{
+                    # Expected records & percentage#
+                    $excelService->excelObj->setActiveSheetIndex(0)
+                        ->setCellValue($column++.$row,'')
+                        ->setCellValue($column++.$row,'');
+                }
             }
         }else{
             foreach($this->recordInstances as $recordInstance){
@@ -384,6 +460,8 @@ class ReportOrganisationunitCompletenessController extends Controller
 
         $queryBuilder = $this->getDoctrine()->getManager()->createQueryBuilder();
         $organisationunitId = $this->getRequest()->query->get('organisationunit');
+        $sameLevel = $this->getRequest()->query->get('sameLevel'); // View same level personal data .ie. CHMT & RHMT
+        if(!empty($sameLevel)) $this->sameLevel = True;
         $formIds = $this->getRequest()->query->get('forms');
 
         $em = $this->getDoctrine()->getManager();
@@ -500,7 +578,7 @@ class ReportOrganisationunitCompletenessController extends Controller
             $valueKey = call_user_func_array(array($fieldOptionToSkip->getField(), "get${recordFieldKey}"),array());
             $maskParameters[$maskIncr]='%"'.$valueKey.'":%';
         }
-        if (isset($this->organisationunitChildren)) {
+        if (isset($this->organisationunitChildren) && ! $this->sameLevel) {
 
             // user choose district and above show total records in the lower facilities
             $this->completenessMatrix=NULL;
@@ -731,7 +809,7 @@ class ReportOrganisationunitCompletenessController extends Controller
                                 $displayValue = $displayValue->format('d/m/Y');
                             }
                         }else {
-                            $displayValue = $dataValue[$valueKey];
+                            if(isset($dataValue[$valueKey])) $displayValue = $dataValue[$valueKey]; else $displayValue='';
                         }
                     }
                 }
@@ -807,7 +885,7 @@ class ReportOrganisationunitCompletenessController extends Controller
                     $valueKey = call_user_func_array(array($visibleField, "get${recordFieldKey}"),array());
 
                     if ($visibleField->getInputType()->getName() == 'Select') {
-                        if(isset($option[$dataValue[$valueKey]])) $displayValue = $option[$dataValue[$valueKey]];else $displayValue='&nbsp;';
+                        if(isset($dataValue[$valueKey]) && isset($option[$dataValue[$valueKey]])) $displayValue = $option[$dataValue[$valueKey]];else $displayValue='&nbsp;';
                     }
                     else if ($visibleField->getInputType()->getName() == 'Date') {
                         if(!empty($dataValue[$valueKey])) {
@@ -816,7 +894,7 @@ class ReportOrganisationunitCompletenessController extends Controller
                             $displayValue = $displayValue->format('d/m/Y');
                         }
                     }else {
-                        $displayValue = $dataValue[$valueKey];
+                        if(isset($dataValue[$valueKey])) $displayValue = $dataValue[$valueKey]; else $displayValue='';
                     }
                     $this->recordsToDisplay[$dataValueInstance->getInstance()][$visibleField->getUid()] = $displayValue;
                 }

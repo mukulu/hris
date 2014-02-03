@@ -53,6 +53,11 @@
                 <a class="btn" href="{{ path('report_organisationunit_completeness_generate_redirect', { 'organisationunit': rootNodeOrganisationunit.parent.id, 'forms': formIds }) }}">
                     Back To {{ rootNodeOrganisationunit.parent.getLongname() }}
                 </a>
+                {% if sameLevel %}
+                    <a class="btn" href="{{ path('report_organisationunit_completeness_generate_redirect', { 'organisationunit': rootNodeOrganisationunit.id, 'forms': formIds }) }}">
+                        Back To {{ rootNodeOrganisationunit.getLongname() }}
+                    </a>
+                {% endif %}
             </li>
         </ul>
     {% endif %}
@@ -60,7 +65,8 @@
     <table class="records_list dataTable table table-striped table-bordered table-hover" cellpadding="0" cellspacing="0" border="0">
         <thead>
         <tr>
-            {% if organisationunitChildren %}
+            {% if organisationunitChildren and not sameLevel %}
+                {# Display children completeness#}
                 {% if organisationunitChildren %}
                     <th rowspan="2">Sn</th>
                     <th rowspan="2">Organisationunit</th>
@@ -93,7 +99,7 @@
             {% endif %}
         </tr>
 
-        {% if organisationunitChildren or sameLevel %}
+        {% if organisationunitChildren and not sameLevel %}
             <tr>
             {% for form in forms %}
                 <th>Entered Records</th>
@@ -109,7 +115,7 @@
         <tbody>
             {% set counter = 0 %}
 
-            {% if organisationunitChildren %}
+            {% if organisationunitChildren and not sameLevel %}
                 {% for childOrganisationunit in organisationunitChildren %}
                     {% set counter = counter + 1 %}
                     <tr>
@@ -140,6 +146,64 @@
                         {% endfor %}
                     </tr>
                 {% endfor %}
+                {# Root node completeness #}
+                <tr>
+                    {% set counter = counter + 1 %}
+                    <td>{{ counter }}</td>
+                    <td><a href="{{ path('report_organisationunit_completeness_generate_redirect', { 'organisationunit': rootNodeOrganisationunit.id, 'forms': formIds, 'sameLevel':'true' }) }}">{{ rootNodeOrganisationunit.longname }}</a></td>
+                    {% for form in forms %}
+                        {# Entered records #}
+                        <td>{{ completenessMatrix[rootNodeOrganisationunit.id][form.id] }}</td>
+                        {# Expected records and Percentage #}
+                        {% if expectedCompleteness[rootNodeOrganisationunit.id][form.id] %}
+                            {# Entered records #}
+                            <td>{{ expectedCompleteness[rootNodeOrganisationunit.id][form.id] }}</td>
+                            {# Percentage #}
+                            {% if completenessMatrix[rootNodeOrganisationunit.id][form.id] > expectedCompleteness[rootNodeOrganisationunit.id][form.id] %}
+                                <td>Above Expected</td>
+                            {% elseif expectedCompleteness[rootNodeOrganisationunit.id][form.id]<=0 %}
+                                <td>-</td>
+                            {% else %}
+                                <td>{{ ( ( completenessMatrix[rootNodeOrganisationunit.id][form.id] / expectedCompleteness[rootNodeOrganisationunit.id][form.id] )*100 ) | round }}</td>
+                            {% endif %}
+
+                        {% else %}
+                            {# Entered records #}
+                            <td>-</td>
+                            {# Percentage #}
+                            <td>-</td>
+                        {% endif %}
+                    {% endfor %}
+                </tr>
+                {# Total of completeness #}
+                <tr>
+                    {% set counter = counter + 1 %}
+                    <td>{{ counter }}</td>
+                    <td>Total: {{ rootNodeOrganisationunit.longname }} and lower levels</td>
+                    {% for form in forms %}
+                        {# Entered records #}
+                        <td>{{ totalCompletenessMatrix[form.id] }}</td>
+                        {# Expected records and Percentage #}
+                        {% if totalExpectedCompleteness[form.id] %}
+                            {# Entered records #}
+                            <td>{{ totalExpectedCompleteness[form.id] }}</td>
+                            {# Percentage #}
+                            {% if totalCompletenessMatrix[form.id] > totalExpectedCompleteness[form.id] %}
+                                <td>Above Expected</td>
+                            {% elseif totalExpectedCompleteness[form.id]<=0 %}
+                                <td>-</td>
+                            {% else %}
+                                <td>{{ ( ( totalCompletenessMatrix[form.id] / totalExpectedCompleteness[form.id] )*100 ) | round }}</td>
+                            {% endif %}
+
+                        {% else %}
+                            {# Entered records #}
+                            <td>-</td>
+                            {# Percentage #}
+                            <td>-</td>
+                        {% endif %}
+                    {% endfor %}
+                </tr>
             {% else %}
                 {% for recordInstance in recordInstances %}
                     {% set counter = counter + 1 %}
@@ -155,9 +219,15 @@
         </tbody>
     </table>
     <div style="text-align: right">
-        <a class="btn" href="{{ path('report_organisationunit_completeness_download', { 'organisationUnitid': rootNodeOrganisationunit.id, 'formids':formIds } ) }}">
-            Download to Excel
-        </a>
+        {% if sameLevel %}
+            <a class="btn" href="{{ path('report_organisationunit_completeness_download', { 'organisationUnitid': rootNodeOrganisationunit.id, 'formids':formIds, 'sameLevel':'true' } ) }}">
+                Download to Excel
+            </a>
+        {% else %}
+            <a class="btn" href="{{ path('report_organisationunit_completeness_download', { 'organisationUnitid': rootNodeOrganisationunit.id, 'formids':formIds } ) }}">
+                Download to Excel
+            </a>
+        {% endif %}
     </div>
 </div>
 {% endblock %}
