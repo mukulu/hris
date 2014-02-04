@@ -18,7 +18,9 @@
 
 {% block fos_message_links %}
     <a href="{{ url('message_thread_new' )}}" class="btn">{% trans from 'FOSMessageBundle' %}Create a new message{% endtrans %}</a>
+    <a href="{{ url('message_feedback_new' )}}" class="btn">{% trans from 'FOSMessageBundle' %}Create a FeedBack{% endtrans %}</a>
 {% endblock fos_message_links %}
+
 
 {% block fos_message_content %}
     {% include 'HrisMessageBundle:Message:threads_list.html.twig' with {'threads': threads} %}

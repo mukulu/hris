@@ -54,4 +54,24 @@ class UserRepository extends EntityRepository
 
         return $result;
     }
+
+    /**
+     * Returns users within a certain user group
+     * @param $name
+     * @return \Doctrine\Common\Collections\Collection
+     */
+    public function getUsersFromGroup($name)
+    {
+        $queryBuilder = $this->getEntityManager()->createQueryBuilder();
+        $result = $queryBuilder->select('user')
+            ->from('HrisUserBundle:User','user')
+            ->join('user.groups','groups')
+            ->where('groups.name like :name')
+            ->setParameters(array(
+                    'name'=>"%$name%"
+                )
+            )->getQuery()->getResult();
+
+        return $result;
+    }
 }
