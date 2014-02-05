@@ -1,0 +1,35 @@
+{% extends 'HrisMessageBundle::layout.html.twig' %}
+{% block javascripts %}
+    {{ parent() }}
+    <script type="text/javascript" src="{{ asset('commons/js/jquery.tokeninput.js')}}"></script>
+    <script type="text/javascript">
+        $(document).ready(function () {
+            $("#message_recipients").tokenInput("", {
+                theme: "facebook",
+                prePopulate: [
+                    {% for userdata in usersdata %}
+                        {id:"{{ userdata.id }}", name:"{{ userdata.name }}" },
+                    {% endfor %}
+                ]
+            });
+            $("label:contains('Recipients')").css( "display", "none" );
+            $('.token-input-list-facebook').css( "display", "none" );
+        });
+    </script>
+{% endblock javascripts %}
+
+{% block stylesheets %}
+    {{ parent() }}
+    <link rel="stylesheet" type="text/css" href="{{ asset('commons/css/token-input-facebook.css')}}" />
+{% endblock stylesheets %}
+{% block fos_message_header %}
+    {% trans from 'FOSMessageBundle' %}Send a Feedback message{% endtrans %}
+{% endblock fos_message_header %}
+
+{% block fos_message_content %}
+    <form action="{{ url('message_thread_new') }}" method="post">
+        {{ form_widget( form ) }}
+
+        <input type="submit" value="Send" class="btn"/>
+    </form>
+{% endblock %}

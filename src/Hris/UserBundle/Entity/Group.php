@@ -53,7 +53,7 @@ class Group extends BaseGroup
      * @var string $name
      *
      * @Gedmo\Versioned
-     * @ORM\Column(name="name", type="string", length=13, unique=true)
+     * @ORM\Column(name="name", type="string", length=64, unique=true)
      */
     protected $name;
 
