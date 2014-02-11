@@ -112,10 +112,18 @@ class DashboardController extends Controller
 
         $retirementKeys = $this->array_value_recursive('retirementdistribution',$dashboardRetirementChart);
         $retirementValues = $this->array_value_recursive('total',$dashboardRetirementChart);
-        $retirements = array_combine($retirementKeys,$retirementValues);
+        if(!empty($retirementKeys) && !empty($retirementValues)) {
+            $retirements = array_combine($retirementKeys,$retirementValues);
+        }else{
+            $retirements = Array();
+        }
         $employmentKeys = $this->array_value_recursive('employmentdistribution',$dashboardEmplyomentChart);
         $employmentValues = $this->array_value_recursive('total',$dashboardEmplyomentChart);
-        $employments = array_combine($employmentKeys,$employmentValues);
+        if(!empty($employmentKeys) && !empty($employmentValues)) {
+            $employments = array_combine($employmentKeys,$employmentValues);
+        }else {
+            $employments = Array();
+        }
 
         /*
          * Prepare the combinationdashboardchart Chart
@@ -162,12 +170,12 @@ class DashboardController extends Controller
                 'data'  => array(
                     array(
                         'name'=>'Female',
-                        'y'=> $dashboardGenderChart[0]['total'],
+                        'y'=> !empty($dashboardGenderChart)? $dashboardGenderChart[0]['total'] : Array(),
                         'color'=>'#66ECA0'
                     ),
                     array(
                         'name'=>'Male',
-                        'y'=>$dashboardGenderChart[1]['total'],
+                        'y'=>!empty($dashboardGenderChart)? $dashboardGenderChart[1]['total'] : Array(),
                         'color'=>'#9494d4'
                     ),
                 ),
@@ -179,6 +187,7 @@ class DashboardController extends Controller
                     'formatter' => new Expr('function () { return this.value + "" }'),
                     'style'     => array('color' => '#0D0DC1')
                 ),
+                'min'=>1,
                 'title' => array(
                     'text'  => 'Employments',
                     'style' => array('color' => '#0D0DC1')
@@ -190,6 +199,7 @@ class DashboardController extends Controller
                     'formatter' => new Expr('function () { return this.value + "" }'),
                     'style'     => array('color' => '#AA4643')
                 ),
+                'min'=>1,
                 'gridLineWidth' => 0,
                 'title' => array(
                     'text'  => 'Retirements',
@@ -572,7 +582,6 @@ class DashboardController extends Controller
 
     private  function constructChartAction($fieldOne,$fieldTwo,$data,$organisationUnit,$categories, $graph, $title,$placeholder){
 
-
         if($fieldOne->getId() == $fieldTwo->getId()){
             $series = array(
                 array(
@@ -609,7 +618,15 @@ class DashboardController extends Controller
                     'style' => array('color' => '#AA4643')
                 ),
             ),
+            'min'=>0,
+            'startOnTick'=>false
         );
+        if(!isset($data)) $data = Array();
+        if(!isset($data)) $data = Array();
+        $arrayResult = array_filter($data,function($value){ return( $value > 0 ); } );
+        if( empty($arrayResult)) {
+            $yData['max']= 5;
+        }
 
         $dashboardchart = new Highchart();
         $dashboardchart->chart->renderTo($placeholder); // The #id of the div where to render the chart

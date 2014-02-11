@@ -6,6 +6,7 @@
 
 {% block fos_message_links %}
     <a href="{{ url('message_thread_new' )}}" class="btn">{% trans from 'FOSMessageBundle' %}Send a new message{% endtrans %}</a>
+    <a href="{{ url('message_feedback_new' )}}" class="btn">{% trans from 'FOSMessageBundle' %}Create a FeedBack{% endtrans %}</a>
 {% endblock fos_message_links %}
 
 
@@ -14,7 +15,7 @@
 {% for message in thread.messages %}
     <div class="messenger_thread_message highlight">
         <div class="messenger_thread_message_info">
-            <strong>{{ message.sender.firstname| capitalize }} {{ message.sender.surname }}</strong> <em class="pull-right">{{  message.createdAt|date }}</em>
+            <strong title="{% if message.sender.organisationunit %} {{ message.sender.jobTitle }} of {{ message.sender.organisationunit.longname }} {% endif %}">{{ message.sender.firstname| capitalize }} {{ message.sender.surname }}</strong> <em class="pull-right">{{  message.createdAt|date }}</em>
         </div>
 
         <div class="messenger_thread_message_body" id="message_{{ message.id }}">

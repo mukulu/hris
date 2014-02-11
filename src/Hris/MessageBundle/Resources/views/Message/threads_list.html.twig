@@ -16,7 +16,7 @@
     {% if threads %}
         {% for thread in threads %}
             <tr>
-                <td>
+                <td style="max-width: 200px;">
                     <a href="{{ url('message_thread_view', {'threadId': thread.id}) }}">{{ thread.subject }} </a>
                     {% if not fos_message_is_read(thread) %}
                         ({% trans from 'FOSMessageBundle' %}new{% endtrans %})
@@ -42,7 +42,7 @@
                         ----
                     {% endif %}
                 </td>
-                <td>
+                <td style="min-width: 30px;">
                     <ul class="inline">
                         <li>
                             <a href="{{ path('message_thread_view', {'threadId': thread.id}) }}"><i class="icon-info-sign icon-large" title="Show"></i></a>

@@ -25,7 +25,7 @@ as easy as:
 
     curl -s https://getcomposer.org/installer | php
 
-Or if you don't hvae curl:
+Or if you don't have curl:
 
     php -r "eval('?>'.file_get_contents('https://getcomposer.org/installer'));"
 
@@ -38,6 +38,13 @@ Once you have composer downloaded you can install hris through:
 After installation, composer will ask if you want to remove version control history(i.e. git)
 Default is yes, But If you're developing hris say no.
 
+Note: If downloading fails half-way(time-out or disconnected). Get into the already downloaded hris folder
+and continue downloading with composer update:
+
+    cd hris
+
+    php composer.phar update
+
 #### 1.2 Install source code from our [github repository](https://github.com/hrisproject/hris)
 
     git clone https://github.com/hrisproject/hris.git
@@ -48,6 +55,13 @@ before updating hris project:
     php composer.phar self-update
     php composer.phar update
 
+Note: If downloading fails half-way(time-out or disconnected). Get into the already downloaded hris folder
+and continue downloading with composer update:
+
+    cd hris
+
+    php composer.phar update
+
 ## 2. Configuring Hris Software
 
 To make hris project accessible from the web, make a symbolic link from your server's webroot to hris's web directory.
@@ -55,6 +69,11 @@ To simplify you can change directory to where hris project is and make link. e.g
 
     cd /path/to/hris
     ln -s ${PWD}/web/ /var/www/hris #Note: ${PWD} is current directoyr(/path/to/hris) and /var/www/ is webroot
+
+Note: If downloading fails half-way(time-out or disconnected). Get into the already downloaded hris folder
+and continue downloading with composer update:
+
+    php composer.phar update
 
 ##### Hris depends on php5-intl for internationalization
 

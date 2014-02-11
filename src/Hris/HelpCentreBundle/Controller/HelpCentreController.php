@@ -20,7 +20,7 @@ class HelpCentreController extends Controller
     /**
      * Lists all Topics and it's chapters.
      *
-     * @Secure(roles="ROLE_SUPER_USER,ROLE_HELPCENTRE_TOPICS")
+     * @Secure(roles="ROLE_SUPER_USER,ROLE_HELPCENTRE_TOPICS,ROLE_USER")
      * @Route("/", name="help_helpcentre")
      * @Method("GET")
      * @Template()
@@ -40,7 +40,7 @@ class HelpCentreController extends Controller
     /**
      * Finds and displays a Chapter contents.
      *
-     * @Secure(roles="ROLE_SUPER_USER,ROLE_HELPCENTRE_CHAPTER")
+     * @Secure(roles="ROLE_SUPER_USER,ROLE_HELPCENTRE_CHAPTER,ROLE_USER")
      * @Route("/{id}", name="help_chapter_show")
      * @Method("GET")
      * @Template()

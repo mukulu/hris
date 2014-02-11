@@ -240,6 +240,7 @@ class ReportEmployeeRecordsController extends Controller
         // Row count for the entire database(rows accessible by user)
         $selectQuery="SELECT COUNT(ResourceTable.instance) AS count $fromClause $organisationunitLevelsJoinClause WHERE $organisationunitLevelsWhereClause";
         if(!empty($onlyActiveEmployeeWhereClause)) $selectQuery .=" AND $onlyActiveEmployeeWhereClause";
+
         $entireDatabaseCount = $this->getDoctrine()->getManager()->getConnection()->executeQuery($selectQuery)->fetchColumn();
 
         /*
@@ -399,7 +400,7 @@ class ReportEmployeeRecordsController extends Controller
          * The Final Query(factoring pagination, searching and sorting)
          */
         $recordsToDisplayQuery="SELECT ".$selectColumnClause.$filteredRecordsWithLimitsWithoutSelectQuery;
-
+        //var_dump($recordsToDisplayQuery);exit();
         $recordsArray = $this->getDoctrine()->getManager()->getConnection()->fetchAll($recordsToDisplayQuery);
         /*
          * Output
@@ -432,7 +433,7 @@ class ReportEmployeeRecordsController extends Controller
                         if ($fieldObject->getInputType()->getName() == 'Select') {
                             $displayValue = $recordArray[strtolower($fieldObject->getName())];
                         }else if ($fieldObject->getInputType()->getName() == 'Date') {
-                            if($fieldObject->getIsCalculated()) {
+                            /**if($fieldObject->getIsCalculated()) {
 
                                 if(preg_match_all('/\#{([^\}]+)\}/',$fieldObject->getCalculatedExpression(),$match)) {
                                     foreach($fieldObjects as $fieldKey=>$field) {
@@ -454,7 +455,11 @@ class ReportEmployeeRecordsController extends Controller
                                     // Date Field Value
                                     $displayValue = $displayValue->format('d/m/Y');
                                 }
-                            }
+                            }**/
+                            #########
+                            #ABOVE SCRIPT WILL NEED TO BE REVIEWED AS WE ARE PULLING DATA FROM RESOURCE TABLES
+                            ##########
+                            $displayValue = $recordArray[strtolower($fieldObject->getName())];
                         } else {
                             $displayValue = $recordArray[strtolower($fieldObject->getName())];
                         }
@@ -772,7 +777,7 @@ class ReportEmployeeRecordsController extends Controller
         $organisationUnit = $em->getRepository('HrisOrganisationunitBundle:Organisationunit')->find($organisationUnitid);
         $proffesionFieldId = $em->getRepository('HrisFormBundle:Field')->findOneBy(
                 array(
-                    'name'=>"Profession"
+                    'name'=>"profession"
                 ))->getId();;
         foreach($request->query->get('formsId') as $formIds){
             $form = $em->getRepository('HrisFormBundle:Form')->find($formIds);
@@ -842,7 +847,9 @@ class ReportEmployeeRecordsController extends Controller
             $query .= " AND ".$fieldOptionToExclude->getField()->getName()." !='".$fieldOptionToExclude->getValue()."'";
         }
 
-        $query .= " ORDER BY fieldoption.sort, ResourceTable.dateoffirstappointment";
+        $query .= " ORDER BY ResourceTable.profession, ResourceTable.first_appointment";
+        #CHANGE TO THIS WHEN ALL THE FIELD OPTIONS ARE SORTED
+        //$query .= " ORDER BY fieldoption.sort, ResourceTable.first_appointment";
 
         $report = $em -> getConnection() -> executeQuery($query) -> fetchAll();
 

@@ -131,6 +131,41 @@ class MessageController extends ContainerAware
             'data' => $form->getData()
         ));
     }
+    /**
+     * Create a new Feedback thread technical team
+     *
+     * @Secure(roles="ROLE_SUPER_USER,ROLE_MESSAGE_CREATETHREAD")
+     * @Route("/newfeedback", name="message_feedback_new")
+     * @Method("GET")
+     * @Template()
+     * @return Response
+     */
+    public function newFeedbackAction()
+    {
+        $form = $this->container->get('fos_message.new_thread_form.factory')->create();
+        $entityManager = $this->container->get('doctrine.orm.entity_manager');
+
+        //get the detail for the active user
+        $currentUser = $this->container->get('security.context')->getToken()->getUser();
+
+        //Getting the Users Groups
+        $users = $entityManager->getRepository('HrisUserBundle:User')->getUsersFromGroup("Feedback Group");
+
+
+        //Add the User to the json response
+        foreach($users as $user){
+            if($currentUser->getUsername() != $user->getUsername())
+                    $arr[] = Array('id'=>$user->getUsername(),'name'=>$user->getFirstName().' '.$user->getSurname());
+        }
+            
+        return $this->container->get('templating')->renderResponse('HrisMessageBundle:Message:newFeedback.html.twig', array(
+            'form' => $form->createView(),
+            'data' => $form->getData(),
+            'usersdata' => $arr
+        ));
+    }
+
+
 
     /**
      * Create a new multi message thread
@@ -188,6 +223,8 @@ class MessageController extends ContainerAware
         }
         /*
         * Add the User groups to the json response
+         *
+
        foreach($userGroups as $userGroup){
            $arr[] = Array('id'=>$userGroup->getId(),'name'=>$userGroup->getName(),"url"=>$this->container->get('templating.helper.assets')->getUrl("commons/images/user.png"));
        }*/

@@ -63,6 +63,7 @@ class HistoryController extends Controller
         }
 
         //$entities = $em->getRepository('HrisRecordsBundle:History')->findAll();
+        $delete_forms = array();
         foreach($entities as $entity) {
             $delete_form= $this->createDeleteForm($entity->getId());
             $delete_forms[$entity->getId()] = $delete_form->createView();
@@ -150,6 +151,7 @@ class HistoryController extends Controller
                         //Assign old value from records to history table
                         $previousOption = $this->getDoctrine()->getManager()->getRepository('HrisFormBundle:FieldOption')->findOneBy(array('uid'=>$previousValue));
                         $entity->setHistory($previousOption->getValue());
+                        $entity->setField($field);
                         $entity->setReason($historyFormData['reason']." Note: This is previous ".$field->getCaption()." held before changed to ".$fieldOption->getValue().".");
 
                         //Update new record value
@@ -157,7 +159,8 @@ class HistoryController extends Controller
                     }
                     else{
                         //Set History value
-                            $entity->setHistory($fieldOption->getValue());
+                        $entity->setHistory($fieldOption->getValue());
+                        $entity->setField($field);
                     }
                     $entity->setRecord($record);
                 }

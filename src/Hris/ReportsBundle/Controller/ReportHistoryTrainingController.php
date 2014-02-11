@@ -361,7 +361,7 @@ class ReportHistoryTrainingController extends Controller
             }
 
             //Query all training data and count by start date year
-            $query = "SELECT R.firstname, R.middlename, R.surname, R.presentdesignation, T.coursename, T.courselocation, T.sponsor, T.startdate, T.enddate, R.level5_level_5 ";
+            $query = "SELECT R.firstname, R.middlename, R.surname, R.designation, T.coursename, T.courselocation, T.sponsor, T.startdate, T.enddate, R.level5_facility ";
             $query .= "FROM hris_record_training T ";
             $query .= "INNER JOIN hris_record as V on V.id = T.record_id ";
             $query .= "INNER JOIN ".$resourceTableName." as R on R.instance = V.instance ";
@@ -385,7 +385,7 @@ class ReportHistoryTrainingController extends Controller
                 }
 
                 //Query all history data and count by field option
-                $query = "SELECT R.firstname, R.middlename, R.surname, R.presentdesignation, H.history, H.reason, H.startdate, R.level5_level_5 ";
+                $query = "SELECT R.firstname, R.middlename, R.surname, R.designation, H.history, H.reason, H.startdate, R.level5_facility ";
                 $query .= "FROM hris_record_history H ";
                 $query .= "INNER JOIN hris_record as V on V.id = H.record_id ";
                 $query .= "INNER JOIN ".$resourceTableName." as R on R.instance = V.instance ";
