@@ -234,8 +234,6 @@ class RecordController extends Controller
         {
             if (preg_match("#($browser)[/ ]?([0-9.]*)#", $this->Agent, $match))
             {
-                    print 'Browser '.$match[1].'<br>' ;
-                    print 'Version '.(int) $match[2].'<br>' ;
 
                 switch($match[1]){
                     case 'chrome':
