@@ -259,14 +259,6 @@ class DashboardController extends Controller
         $ageChart = $this->constructChartAction($dashboardAgeField,$dashboardAgeField,$data,$organisationunit,$categories,'column','Age Distribution','agedistribution');
 
         /*
-         * Messaging
-         */
-        $provider = $this->get('fos_message.provider');
-
-        $unreadMessages = $provider->getNbUnreadMessages();
-        if(empty($unreadMessages)) $unreadMessages= 0;
-
-        /*
         * Prepare the User Defined Dashboard Charts
         */
         $entitiesChart = array();
@@ -344,7 +336,6 @@ class DashboardController extends Controller
             'combinationchart'=>$combinationdashboardchart,
             'retirementchart'=>$retirementChart,
             'agechart'=>$ageChart,
-            'unreadmessages'=>$unreadMessages,
             'entitiesChart' =>$entitiesChart,
             'entities' => $entities,
         );

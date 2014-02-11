@@ -34,6 +34,7 @@ twig:
 #            - ':Form:fields.html.twig'
 
     globals:
+            fos_message_provider:   "@fos_message.provider"
         # Place Global Variables here, and they will be available in all Twig Templetes.
             project: "Human Resource for Health Information System"
             project_code: "HRHIS"

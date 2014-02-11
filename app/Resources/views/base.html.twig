@@ -40,7 +40,7 @@
                                 <ul class="nav pull-right">
                                     <li><a class="pull-left visible-desktop" href="{{ path('hris_dashboard_homepage') }}"><i class="icon-time"></i>&nbsp;{{ "now"|date("jS F Y") }}</a></li>
                                     {% block notifications %}
-                                        <li><a class="pull-right visible-desktop" href="{{ path('message_inbox') }}"><i class="icon-comment" title="Unread Messages"></i>0</a></li>
+                                        <li><a class="pull-right visible-desktop" href="{{ path('message_inbox') }}"><i class="icon-comment" title="Unread Messages"></i>{{ fos_message_provider.getNbUnreadMessages }}</a></li>
                                     {% endblock notifications %}
                                     <li><a class="pull-right visible-desktop" href="{{ path('help_helpcentre') }}"><i class="icon-info-sign"></i>&nbsp;Help</a></li>
                                     <li class="dropdown">

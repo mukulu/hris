@@ -21,18 +21,13 @@
     </script>
 {%  endblock %}
 
-
-{% block notifications %}
-    <li><a class="pull-right visible-desktop" href="{{ path('message_inbox') }}"><i class="icon-comment"></i>{{ unreadmessages }}</a></li>
-{% endblock notifications %}
-
 {% block message_alert %}
     <div class="alert alert-success">
         <button type="button" class="close" data-dismiss="alert">&times;</button>
         <small class="visible-phone"><strong>Welcome!</strong> Please use navigation on top panel,</small>
         <small class="hidden-phone"><strong>Welcome!</strong> Please use navigation on your left,</small>
-        {% if unreadmessages > 0 %}
-            <small class="hidden-phone">You have <strong><a class="pull-right visible-desktop" href="{{ path('message_inbox') }}" title="Unread Messages"><strong>{{ unreadmessages }} unread message</strong></a></strong></small>
+        {% if fos_message_provider.getNbUnreadMessages > 0 %}
+            <small class="hidden-phone">You have <strong><a class="pull-right visible-desktop" href="{{ path('message_inbox') }}" title="Unread Messages"><strong>{{ fos_message_provider.getNbUnreadMessages }} unread message</strong></a></strong></small>
         {% endif %}
     </div>
 {% endblock message_alert %}
