@@ -35,22 +35,11 @@ function createDatabase(databaseName, tableName, columnNames, dataValues) {
         var created = false;
 
         for (var key in tableName) {
-            //var dataStore = db.createObjectStore(tableName[key], {keyPath: "id"});
+            var dataStore = db.createObjectStore(tableName[key], {keyPath: "id"});
+            console.log("data Store " + tableName[key] + " Created");
 
-            if (tableName[key] == 'hris_fieldoption'){
-                var dataStore = db.createObjectStore(tableName[key]);
-                console.log("data Store " + tableName[key] + " Created");
-
-                dataStore.createIndex('values', ['value'], { unique: false });
-                console.log("data Store Column UID  Added for the datastore " + tableName[key]);
-            }
-            else{
-                var dataStore = db.createObjectStore(tableName[key], {keyPath: "id"});
-                console.log("data Store " + tableName[key] + " Created");
-
-                dataStore.createIndex("uid", "uid", { unique: true });
-                console.log("data Store Column UID  Added for the datastore " + tableName[key]);
-            }
+            dataStore.createIndex("uid", "uid", { unique: true });
+            console.log("data Store Column UID  Added for the datastore " + tableName[key]);
 
             if (created == false) {
                 var dataStore = db.createObjectStore("field_option_association", {keyPath: "id"});
@@ -141,8 +130,6 @@ function addRecords(databaseName, tableName, dataValues) {
                     results += '"' + val + '" : "' + encodeURIComponent(dataValues[key][val]['uid']) + '", ';
                 } else if (val == "parent") {
                     results += '"' + val + '" : "' + encodeURIComponent(dataValues[key][val]['uid']) + '", ';
-                } else if (val == "value") {
-                    results += '"' + 'values' + '" : "' + encodeURIComponent(dataValues[key][val]['value']) + '", ';
                 } else {
                     results += '"' + val + '" : "' + encodeURIComponent(dataValues[key][val]) + '", ';
                 }
@@ -289,9 +276,8 @@ function loadFieldOptions(fieldUIDS, databaseName) {
 
             var fieldOptionTransaction = db.transaction("hris_fieldoption", "readonly");
             var fieldOptionStore = fieldOptionTransaction.objectStore("hris_fieldoption");
-            var index = fieldOptionStore.createIndex('value',['value']);
 
-            var fielOptiondRequest = index.openCursor();
+            var fielOptiondRequest = fieldOptionStore.openCursor();
 
             var emptyElement = false
 
