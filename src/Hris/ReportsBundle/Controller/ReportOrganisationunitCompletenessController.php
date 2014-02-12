@@ -578,7 +578,7 @@ class ReportOrganisationunitCompletenessController extends Controller
             $valueKey = call_user_func_array(array($fieldOptionToSkip->getField(), "get${recordFieldKey}"),array());
             $maskParameters[$maskIncr]='%"'.$valueKey.'":%';
         }
-        if (isset($this->organisationunitChildren) && ! $this->sameLevel) {
+        if (isset($this->organisationunitChildren) && (sizeof($this->organisationunitChildren) >0) && ! $this->sameLevel) {
 
             // user choose district and above show total records in the lower facilities
             $this->completenessMatrix=NULL;
