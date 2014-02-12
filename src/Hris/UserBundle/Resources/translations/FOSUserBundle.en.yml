@@ -52,16 +52,16 @@ registration:
     flash:
         user_created: The user has been created successfully
     email:
-        subject: HRIS: Registration - Welcome %username%! to HRIS
+        subject: HRHIS: Registration - Welcome %username% to HRHIS
         message: |
             Hello %username%!
-            Welcome to HRIS, Your account has been successfully created, you will be receiving any email notifications through this email.
+            Welcome to HRHIS, Your account has been successfully created, you will be receiving any email notifications through this email.
 
-            This is one time link use only! After clicking it make sure you complete registration and login.
-            To finish activating your HRIS account - please visit %confirmationUrl%
+            This link is only for one time use! After clicking it make sure you complete registration and login.
+            To finish activating your HRHIS account - please visit %confirmationUrl%
 
             Regards,
-            The HRIS Team.
+            The HRHIS Team.
 
 # Password resetting
 resetting:
@@ -77,16 +77,16 @@ resetting:
     flash:
         success: The password has been reset successfully
     email:
-        subject: HRIS: Reset Your HRIS Password
+        subject: HRHIS: Reset Your HRHIS Password
         message: |
             Hello %username%!
-            You have requested to reset your password of your HRIS User account.
+            You have requested to reset your password of your HRHIS User account.
 
-            This is one time link use only! After clicking it make sure you complete resetting password and login.
+            This link is only for one time use! After clicking it make sure you complete resetting password and login.
             To reset your password - please visit %confirmationUrl%
 
             Regards,
-            The HRIS Team.
+            The HRHIS Team.
 
 # Global strings
 layout:
