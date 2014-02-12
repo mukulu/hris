@@ -229,6 +229,7 @@ class RecordController extends Controller
         $this->Agent = strtolower($_SERVER['HTTP_USER_AGENT']);
 
         $rightBrowser = false;
+        $browserName = '';
 
         foreach($browsers as $browser)
         {
@@ -241,8 +242,7 @@ class RecordController extends Controller
                             $rightBrowser = true;
                             break;
                         }else{
-                            print 'You are using an old version of Chrome which is not suported. <a href="http://www.google.com/chrome/eula.html?system=true&standalone=1">click here to download chrome</a> and <a href="https://download.mozilla.org/?product=firefox-27.0&os=win&lang=en-US"> here for Firefox</a>';
-                            exit;
+                            $browserName = 'Chrome';
                         }
                         break;
                     case 'firefox':
@@ -250,8 +250,7 @@ class RecordController extends Controller
                             $rightBrowser = true;
                             break;
                         }else{
-                            print 'You are using an old version of Firefox which is not suported. <a href="http://www.google.com/chrome/eula.html?system=true&standalone=1">click here to download chrome</a> and <a href="https://download.mozilla.org/?product=firefox-27.0&os=win&lang=en-US"> here for Firefox</a>';
-                            exit;
+                            $browserName = 'Firefox';
                         }
                         break;
                 }
@@ -259,8 +258,29 @@ class RecordController extends Controller
         }
 
         if ($rightBrowser == false){
-            print 'You are using a browser which is not suported <a href="http://www.google.com/chrome/eula.html?system=true&standalone=1">click here to download chrome</a> and <a href="https://download.mozilla.org/?product=firefox-27.0&os=win&lang=en-US"> here for Firefox</a>';
-            exit;
+            if($browserName != ''){
+                $message = 'You are using an old version of '. $browserName .', which is not suported. <a href="http://www.google.com/chrome/eula.html?system=true&standalone=1">click here to download chrome</a> and <a href="https://download.mozilla.org/?product=firefox-27.0&os=win&lang=en-US"> here for Firefox</a>';
+            }else{
+                $message = 'You are using a browser which is not suported <a href="http://www.google.com/chrome/eula.html?system=true&standalone=1">click here to download chrome</a> and <a href="https://download.mozilla.org/?product=firefox-27.0&os=win&lang=en-US"> here for Firefox</a>';
+            }
+            return array(
+                'entities' => '',
+                'column_names' => '',
+                'table_names' => '',
+                'table_name' => '',
+                'data_values' => '',
+                'field_column_names' => '',
+                'field_table_name' => '',
+                'field_values' => '',
+                'field_option_values' => '',
+                'field_option_table_name' => '',
+                'option_associations_values' => '',
+                'option_associations_table' => '',
+                'organisation_Values' => '',
+                'organisation_unit_table' => '',
+                'message' => $message,
+                'channel'=>'',
+            );
         }
 
         /*
@@ -383,6 +403,7 @@ class RecordController extends Controller
             'organisation_Values' => $orgunit_Values,
             'organisation_unit_table' => $orgunit_table,
             'channel'=>$channel,
+            'message'=>'',
 
         );
     }
