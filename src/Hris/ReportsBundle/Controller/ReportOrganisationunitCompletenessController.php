@@ -885,7 +885,7 @@ class ReportOrganisationunitCompletenessController extends Controller
                     $valueKey = call_user_func_array(array($visibleField, "get${recordFieldKey}"),array());
 
                     if ($visibleField->getInputType()->getName() == 'Select') {
-                        if(isset($dataValue[$valueKey]) && isset($option[$dataValue[$valueKey]])) $displayValue = $option[$dataValue[$valueKey]];else $displayValue='&nbsp;';
+                        if(isset($dataValue[$valueKey]) && isset($option[$dataValue[$valueKey]])) $displayValue = $option[$dataValue[$valueKey]];else $displayValue='';
                     }
                     else if ($visibleField->getInputType()->getName() == 'Date') {
                         if(!empty($dataValue[$valueKey])) {
