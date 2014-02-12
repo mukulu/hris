@@ -11,7 +11,15 @@
 
 
 {% block fos_message_content %}
-
+    <div class="messenger_thread_message highlight"> To
+        {% for participant in thread.participants %}
+            <strong title="{% if participant.organisationunit %} {{ participant.jobTitle }} of {{ participant.organisationunit.longname }} {% endif %}">
+            {{ participant.firstname| capitalize }} {{ participant.surname| capitalize }}</strong>
+            {% if not loop.last %}
+             ,
+            {% endif %}
+        {% endfor %}
+    </div>
 {% for message in thread.messages %}
     <div class="messenger_thread_message highlight">
         <div class="messenger_thread_message_info">
