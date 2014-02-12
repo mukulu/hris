@@ -13,7 +13,7 @@
 {% block fos_message_content %}
     <div class="messenger_thread_message highlight"> To
         {% for participant in thread.participants %}
-            <strong title="{% if participant.organisationunit %} {{ participant.jobTitle }} of {{ participant.organisationunit.longname }} {% endif %}">
+            <strong title="{% if participant.organisationunit %} {{ participant.jobTitle }} of {{ participant.organisationunit.longname }} {% if participant.email %}<{{ participant.email }}>{% endif %} {% endif %}">
             {{ participant.firstname| capitalize }} {{ participant.surname| capitalize }}</strong>
             {% if not loop.last %}
              ,
@@ -23,11 +23,13 @@
 {% for message in thread.messages %}
     <div class="messenger_thread_message highlight">
         <div class="messenger_thread_message_info">
-            <strong title="{% if message.sender.organisationunit %} {{ message.sender.jobTitle }} of {{ message.sender.organisationunit.longname }} {% endif %}">{{ message.sender.firstname| capitalize }} {{ message.sender.surname }}</strong> <em class="pull-right">{{  message.createdAt|date }}</em>
+            <strong title="{% if message.sender.organisationunit %} {{ message.sender.jobTitle }} of {{ message.sender.organisationunit.longname }}{% if message.sender.email %}<{{ message.sender.email }}>{% endif %} {% endif %}">{{ message.sender.firstname| capitalize }} {{ message.sender.surname }}</strong> <em class="pull-right">{{  message.createdAt|date }}</em>
         </div>
 
         <div class="messenger_thread_message_body" id="message_{{ message.id }}">
             {{ message.body | nl2br }}
+            <br/>
+            <em style="color:#0088CC">{% if message.sender.organisationunit %} {% if message.sender.jobTitle %} {{ message.sender.jobTitle }} {% else %} {{ message.sender.firstname| capitalize }} {{ message.sender.surname }} {% endif %} of {{ message.sender.organisationunit.longname }} {% if message.sender.phoneNumber %}~ {{ message.sender.phoneNumber }} {% endif %} {% endif %}</em>
         </div>
     </div>
 {% endfor %}
