@@ -208,6 +208,82 @@ class RecordController extends Controller
         $em = $this->getDoctrine()->getManager();
 
         /*
+        * checking browser version
+        */
+
+        /*$u_agent = $_SERVER['HTTP_USER_AGENT'];
+        $ub = '';
+        if(preg_match('/Firefox/i',$u_agent))
+        {
+            print $ub = "firefox";
+        }
+        elseif(preg_match('/Chrome/i',$u_agent))
+        {
+            print $ub = "chrome";
+        }else{
+            print 'This browser is not supported';
+        }*/
+
+        $browsers = array("firefox", "chrome");
+
+        $this->Agent = strtolower($_SERVER['HTTP_USER_AGENT']);
+
+        $rightBrowser = false;
+        $browserName = '';
+
+        foreach($browsers as $browser)
+        {
+            if (preg_match("#($browser)[/ ]?([0-9.]*)#", $this->Agent, $match))
+            {
+
+                switch($match[1]){
+                    case 'chrome':
+                        if ((int) $match[2] >= 25){
+                            $rightBrowser = true;
+                            break;
+                        }else{
+                            $browserName = 'Chrome';
+                        }
+                        break;
+                    case 'firefox':
+                        if ((int) $match[2] >= 25){
+                            $rightBrowser = true;
+                            break;
+                        }else{
+                            $browserName = 'Firefox';
+                        }
+                        break;
+                }
+            }
+        }
+
+        if ($rightBrowser == false){
+            if($browserName != ''){
+                $message = 'You are using an old version of '. $browserName .', which is not suported. <a href="http://www.google.com/chrome/eula.html?system=true&standalone=1">click here to download chrome</a> and <a href="https://download.mozilla.org/?product=firefox-27.0&os=win&lang=en-US"> here for Firefox</a>';
+            }else{
+                $message = 'You are using a browser which is not suported <a href="http://www.google.com/chrome/eula.html?system=true&standalone=1">click here to download chrome</a> and <a href="https://download.mozilla.org/?product=firefox-27.0&os=win&lang=en-US"> here for Firefox</a>';
+            }
+            return array(
+                'entities' => '',
+                'column_names' => '',
+                'table_names' => '',
+                'table_name' => '',
+                'data_values' => '',
+                'field_column_names' => '',
+                'field_table_name' => '',
+                'field_values' => '',
+                'field_option_values' => '',
+                'field_option_table_name' => '',
+                'option_associations_values' => '',
+                'option_associations_table' => '',
+                'organisation_Values' => '',
+                'organisation_unit_table' => '',
+                'message' => $message,
+                'channel'=>'',
+            );
+        }
+
+        /*
          * Getting the Form Metadata and Values
          */
         $em = $this->getDoctrine()->getManager();
@@ -327,6 +403,7 @@ class RecordController extends Controller
             'organisation_Values' => $orgunit_Values,
             'organisation_unit_table' => $orgunit_table,
             'channel'=>$channel,
+            'message'=>'',
 
         );
     }

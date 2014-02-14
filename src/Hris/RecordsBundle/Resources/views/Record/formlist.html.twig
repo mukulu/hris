@@ -5,17 +5,22 @@
 
     <script type="text/javascript">
 
-       // getcopy();
+        $('#pleaseWaitDialog').modal('show');
 
-        //if (getcopy()){
+        $.when.apply().done(function(){
+            setTimeout(function(){
+                $('#pleaseWaitDialog').modal('hide');
+            }, 10000);
+        });
 
             /*
              Creating the Database if not Existing
              */
 
             var entryChannel = {{ channel | json_encode | raw }};
+            var messageAlert = {{ message | json_encode | raw }};
 
-            if ( entryChannel == 'dataentry'){
+            if ( entryChannel == 'dataentry' ){
 
                 createDatabase('{{ project_code | lower | raw }}','{{ table_names | raw | escape('js') }}', '{{ column_names | raw }}', '{{ data_values | raw | escape('js')}}');
 
@@ -35,7 +40,19 @@
 
 {% endblock %}
 
+{% block message_alert %}
+    {% if message %}
+        <div class="alert alert-error">
+            <button type="button" class="close" data-dismiss="alert">&times;</button>
+            <small class="visible-phone"><strong>Warning!</strong> {{ message | raw }}</small>
+            <small class="hidden-phone"><strong>Warning!</strong> {{ message | raw }}</small>
+        </div>
+    {% endif %}
+{% endblock message_alert %}
+
 {% block right_content -%}
+    {% if message %}
+    {% else %}
 <div class="container">
     {% if channel=='dataentry' %}
         <h1><small>Data Entry Forms</small></h1>
@@ -79,4 +96,16 @@
     <!--<button name='delete' onclick="deleteDatabase('{{ project_code | lower | raw }}')" class="btn">Clear Offline Data</button> -->
 
     <div id="result" />
+
+    <div class="modal fade" id="pleaseWaitDialog" data-backdrop="static" data-keyboard="false">
+        <div class="modal-header">
+            <h1>Loading Data ...</h1>
+        </div>
+        <div class="modal-body">
+            <div class="progress progress-striped active">
+                <div class="bar" style="width: 100%;"></div>
+            </div>
+        </div>
+    </div>
+    {% endif %}
     {% endblock %}
