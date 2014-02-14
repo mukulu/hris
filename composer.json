@@ -23,6 +23,7 @@
         "doctrine/doctrine-fixtures-bundle": "dev-master",
         "gedmo/doctrine-extensions": "dev-master",
         "friendsofsymfony/user-bundle": "*",
+        "sonata-project/core-bundle": "~2.2@dev",
         "knplabs/knp-menu-bundle": "dev-master",
         "knplabs/knp-menu": "dev-master",
         "stfalcon/tinymce-bundle": "dev-master",
