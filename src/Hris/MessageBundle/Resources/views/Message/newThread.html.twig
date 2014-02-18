@@ -22,8 +22,11 @@
         function addOrganisationunitRecepients() {
             postData={'organisationunits_list': $('input[name="'+inputboxname+'"]').val() };
             $.post(organisationunitListUsersURL,postData , function( usersList ){
-                //Show on console, found users
-                console.log(usersList);
+                $("#message_recipients").tokenInput("clear");
+                $.each(usersList, function(index, user) {
+                    $("#message_recipients").tokenInput("add", {"id":user['id'], "name":user['name']});
+                });
+
             });
         }
         Ext.define('OrganisationUnitTreeModel2', {
