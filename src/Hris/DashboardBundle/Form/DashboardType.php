@@ -25,6 +25,7 @@ class DashboardType extends AbstractType
     {
         // assuming $entityManager is passed in options
         $em = $options['em'];
+        $username = $this->getUsername();
         $transformer = new OrganisationunitToIdTransformer($em);
         $builder
             ->add('name')
@@ -44,6 +45,12 @@ class DashboardType extends AbstractType
             ->add('form','entity', array(
                 'class'=>'HrisFormBundle:Form',
                 'multiple'=>true,
+                'query_builder'=>function(EntityRepository $er) use ($username) {
+                    return $er->createQueryBuilder('form')
+                        ->join('form.user','user')
+                        ->andWhere("user.username='".$username."'")
+                        ->orderBy('form.name','ASC');
+                },
                 'constraints'=>array(
                     new NotBlank(),
                 )
@@ -116,5 +123,27 @@ class DashboardType extends AbstractType
     public function getName()
     {
         return 'hris_dashboardbundle_dashboardtype';
+    }
+    /**
+     * @var string
+     */
+    private $username;
+
+    /**
+     * @param $username
+     */
+    public function __construct ($username)
+    {
+        $this->username = $username;
+    }
+
+
+
+    /**
+     * @return string
+     */
+    public function getUsername()
+    {
+        return $this->username;
     }
 }
