@@ -388,7 +388,7 @@ class DashboardController extends Controller
     public function newAction()
     {
         $entity = new DashboardChart();
-        $aggregationForm = $this->createForm(new DashboardType(),$entity,array('em'=>$this->getDoctrine()->getManager()));
+        $aggregationForm = $this->createForm(new DashboardType($this->getUser()),$entity,array('em'=>$this->getDoctrine()->getManager()));
 
         return array(
             'aggregationForm'=>$aggregationForm->createView(),

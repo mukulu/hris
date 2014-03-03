@@ -593,6 +593,43 @@ class OrganisationunitController extends Controller
     }
 
     /**
+     * Returns Users Belonging to Organisationunit tree json.
+     *
+     * @Secure(roles="ROLE_SUPER_USER,ROLE_ORGANISATIONUNIT_USERS,ROLE_USER")
+     * @Route("/listusers.{_format}", requirements={"_format"="yml|xml|json"}, defaults={"_format"="json"}, name="organisationunit_list_users")
+     * @Method("POST")
+     * @Template()
+     */
+    public function listUsersAction($_format)
+    {
+        $em = $this->getDoctrine()->getManager();
+        $organisationunitsList = $this->getRequest()->request->get('organisationunits_list');
+        $user = $this->container->get('security.context')->getToken()->getUser();
+        $organisationunitUsersNodes = NULL;
+        if($organisationunitsList == NULL || $organisationunitsList==0) {
+           $entities = NULL;
+        }else {
+            $queryBuilder = $this->getDoctrine()->getManager()->createQueryBuilder();
+            $users = $queryBuilder->select('user')
+                ->from('HrisUserBundle:User','user')
+                ->join('user.organisationunit','organisationunit')
+                ->where($queryBuilder->expr()->in('organisationunit.id',$organisationunitsList))
+                ->getQuery()->getResult();
+            foreach($users as $key=>$user) {
+                $organisationunitUsersNodes[] = Array(
+                    'id' => $user->getId(),
+                    'name' => $user->getFirstName().' '.$user->getSurname(),
+                );
+            }
+        }
+        $serializer = $this->container->get('serializer');
+
+        return array(
+            'entities' => $serializer->serialize($organisationunitUsersNodes,$_format)
+        );
+    }
+
+    /**
      * Displays form for performing Hierarchy Operation
      *
      * @Secure(roles="ROLE_SUPER_USER,ROLE_ORGANISATIONUNIT_LISTHIERARCHY,ROLE_USER")
