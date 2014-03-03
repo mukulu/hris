@@ -880,7 +880,8 @@ class ImportController extends Controller
             //getting the Object if Exist from the Database
 
             $form = $em->getRepository('HrisFormBundle:Form')->findOneby(array('name' => $record['form_name']));
-            $orgunit = $em->getRepository('HrisOrganisationunitBundle:Organisationunit')->findOneby(array('longname' => $record['orgunit_name']));
+            $orgunitParent = $em->getRepository('HrisOrganisationunitBundle:Organisationunit')->findOneby(array('longname' => $record['orgunit_parent']));
+            $orgunit = $em->getRepository('HrisOrganisationunitBundle:Organisationunit')->findOneby(array('longname' => $record['orgunit_name'], 'parent' => $orgunitParent));
 
             $recordObjectCheck = $em->getRepository('HrisRecordsBundle:Record')->findOneby(array('instance' => $record[0]['instance']));
 
