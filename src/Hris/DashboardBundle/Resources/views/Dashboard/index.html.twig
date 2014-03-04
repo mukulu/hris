@@ -27,7 +27,7 @@
         <small class="visible-phone"><strong>Welcome!</strong> Please use navigation on top panel,</small>
         <small class="hidden-phone"><strong>Welcome!</strong> Please use navigation on your left,</small>
         {% if fos_message_provider.getNbUnreadMessages > 0 %}
-            <small class="hidden-phone">You have <strong><a class="pull-right visible-desktop" href="{{ path('message_inbox') }}" title="Unread Messages"><strong>{{ fos_message_provider.getNbUnreadMessages }} unread message</strong></a></strong></small>
+            <small class="hidden-phone"><strong><a class="pull-right visible-desktop" style="color:#E92B2B;" href="{{ path('message_inbox') }}" title="Unread Messages">You have <strong>{{ fos_message_provider.getNbUnreadMessages }} unread message</strong></a></strong></small>
         {% endif %}
     </div>
 {% endblock message_alert %}
