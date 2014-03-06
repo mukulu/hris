@@ -56,6 +56,9 @@ class RegistrationFormType extends AbstractType
             ))
             ->add('firstName')
             ->add('surname')
+            ->add('phonenumber')
+            ->add('jobTitle')
+            ->add('description', null, array('label' => 'Duty post details'))
         ;
     }
 
