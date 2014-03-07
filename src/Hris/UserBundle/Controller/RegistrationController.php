@@ -86,7 +86,7 @@ class RegistrationController extends ContainerAware
 
             $userEntity = $entityManager->getRepository('HrisUserBundle:User')->findOneBy(array('username'=>$form->getData()->getUsername()));
 
-            $messageBody="Hellow!, \nThis is self registration notification for ". $userEntity->getFirstname(). " ". $userEntity->getSurname()
+            $messageBody="Hellow! \nThis is an automated self registration notification for ". $userEntity->getFirstname(). " ". $userEntity->getSurname()
                         ." registered with username:".$userEntity->getUsername()." working as ".$userEntity->getJobTitle()
                         ."\n\nKindly activate him/her for duty post ".$userEntity->getDescription()
                         ." and notify him/her via phone number:".$userEntity->getPhonenumber()
