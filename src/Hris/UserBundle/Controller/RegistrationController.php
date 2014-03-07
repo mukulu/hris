@@ -35,6 +35,7 @@ use Symfony\Component\HttpKernel\Exception\NotFoundHttpException;
 use Symfony\Component\Security\Core\Exception\AccessDeniedException;
 use Symfony\Component\Security\Core\Exception\AccountStatusException;
 use FOS\UserBundle\Model\UserInterface;
+use Symfony\Component\Form\Form;
 use JMS\SecurityExtraBundle\Annotation\Secure;
 
 /**
@@ -83,9 +84,15 @@ class RegistrationController extends ContainerAware
 
             $userEntity = $entityManager->getRepository('HrisUserBundle:User')->findOneBy(array('username'=>$form->getData()->getUsername()));
 
-            $messageBody="New user ". $userEntity->getFirstname(). " ". $userEntity->getSurname() ." has been registered with username:".$userEntity->getUsername()." with job title ".$userEntity->getJobTitle()." for ".$userEntity->getDescription()." has self registered himself, kindly notify him/her via phone number:".$userEntity->getPhonenumber()." and email:".$userEntity->getEmail()." after you have assigned him/her with role and duty post.";
+            $messageBody="Hellow!, \nThis is self registration notification for ". $userEntity->getFirstname(). " ". $userEntity->getSurname()
+                        ." registered with username:".$userEntity->getUsername()." working as ".$userEntity->getJobTitle()
+                        ."\n\nKindly activate him/her for duty post ".$userEntity->getDescription()
+                        ." and notify him/her via phone number:".$userEntity->getPhonenumber()
+                        ." and email:".$userEntity->getEmail()
+                        ." after you have assigned him/her with role and duty post.";
             $messageSubject='USER SELF REGISTRATION';
             $formHandler = $this->container->get('fos_message.new_thread_form.handler');
+            $sender = $this->container->get('fos_message.sender');
 
             $newThreadMessage = new NewThreadMultipleMessage();
             $newThreadMessage->setSubject($messageSubject);
@@ -98,8 +105,7 @@ class RegistrationController extends ContainerAware
                 $userCollection->add($user);
                 $newThreadMessage->addRecipient($user);
             }
-
-            $formHandler->sendMessage($newThreadMessage);
+            $sender->send($formHandler->composeMessage($newThreadMessage));
             return $response;
         }
 
