@@ -26,6 +26,8 @@
 
 namespace Hris\UserBundle\Controller;
 
+use Doctrine\Common\Collections\ArrayCollection;
+use FOS\MessageBundle\FormModel\NewThreadMultipleMessage;
 use Symfony\Component\DependencyInjection\ContainerAware;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\HttpFoundation\RedirectResponse;
@@ -77,6 +79,27 @@ class RegistrationController extends ContainerAware
                 $this->authenticateUser($user, $response);
             }
 
+            $entityManager = $this->container->get('doctrine.orm.entity_manager');
+
+            $userEntity = $entityManager->getRepository('HrisUserBundle:User')->findOneBy(array('username'=>$form->getData()->getUsername()));
+
+            $messageBody="New user ". $userEntity->getFirstname(). " ". $userEntity->getSurname() ." has been registered with username:".$userEntity->getUsername()." with job title ".$userEntity->getJobTitle()." for ".$userEntity->getDescription()." has self registered himself, kindly notify him/her via phone number:".$userEntity->getPhonenumber()." and email:".$userEntity->getEmail()." after you have assigned him/her with role and duty post.";
+            $messageSubject='USER SELF REGISTRATION';
+            $formHandler = $this->container->get('fos_message.new_thread_form.handler');
+
+            $newThreadMessage = new NewThreadMultipleMessage();
+            $newThreadMessage->setSubject($messageSubject);
+            $newThreadMessage->setBody($messageBody);
+            //Getting the Users Groups
+            $users = $entityManager->getRepository('HrisUserBundle:User')->getUsersFromGroup("Feedback Group");
+            //Populate recipients from Feedback user group
+            $userCollection = new ArrayCollection();
+            foreach($users as $user){
+                $userCollection->add($user);
+                $newThreadMessage->addRecipient($user);
+            }
+
+            $formHandler->sendMessage($newThreadMessage);
             return $response;
         }
 
