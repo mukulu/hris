@@ -45,7 +45,7 @@ class MessageController extends ContainerAware
     /**
      * Displays the authenticated participant inbox
      *
-     * @Secure(roles="ROLE_SUPER_USER,ROLE_MESSAGE_INBOX")
+     * @Secure(roles="ROLE_SUPER_USER,ROLE_MESSAGE_INBOX,ROLE_USER")
      * @Route("/", name="message_inbox")
      * @Method("GET")
      * @Template()
@@ -63,7 +63,7 @@ class MessageController extends ContainerAware
     /**
      * Displays the authenticated participant sent mails
      *
-     * @Secure(roles="ROLE_SUPER_USER,ROLE_MESSAGE_SENT")
+     * @Secure(roles="ROLE_SUPER_USER,ROLE_MESSAGE_SENT,ROLE_USER")
      * @Route("/sent", name="message_sent")
      * @Method("GET")
      * @Template()
@@ -81,7 +81,7 @@ class MessageController extends ContainerAware
     /**
      * Displays a thread, also allows to reply to it
      *
-     * @Secure(roles="ROLE_SUPER_USER,ROLE_MESSAGE_THREAD")
+     * @Secure(roles="ROLE_SUPER_USER,ROLE_MESSAGE_THREAD,ROLE_USER")
      * @Route("/{threadId}", requirements={"threadId"="\d+"}, name="message_thread_view")
      * @Method("GET|POST")
      * @Template()
@@ -109,7 +109,7 @@ class MessageController extends ContainerAware
     /**
      * Create a new message thread
      *
-     * @Secure(roles="ROLE_SUPER_USER,ROLE_MESSAGE_CREATETHREAD")
+     * @Secure(roles="ROLE_SUPER_USER,ROLE_MESSAGE_CREATETHREAD,ROLE_USER")
      * @Route("/new", name="message_thread_new")
      * @Method("GET|POST")
      * @Template()
@@ -134,7 +134,7 @@ class MessageController extends ContainerAware
     /**
      * Create a new Feedback thread technical team
      *
-     * @Secure(roles="ROLE_SUPER_USER,ROLE_MESSAGE_CREATETHREAD")
+     * @Secure(roles="ROLE_SUPER_USER,ROLE_MESSAGE_CREATETHREAD,ROLE_USER")
      * @Route("/newfeedback", name="message_feedback_new")
      * @Method("GET")
      * @Template()
@@ -170,7 +170,7 @@ class MessageController extends ContainerAware
     /**
      * Create a new multi message thread
      *
-     * @Secure(roles="ROLE_SUPER_USER,ROLE_MESSAGE_MULTIMESSAGECREATETHREAD")
+     * @Secure(roles="ROLE_SUPER_USER,ROLE_MESSAGE_MULTIMESSAGECREATETHREAD,ROLE_USER")
      * @Route("/new/multimessage", name="multi_message_thread_new")
      * @Method("GET|POST")
      * @Template()
@@ -195,7 +195,7 @@ class MessageController extends ContainerAware
     /**
      * Returns Users searched json.
      *
-     * @Secure(roles="ROLE_SUPER_USER,ROLE_MESSAGE_SEARCHUSERS")
+     * @Secure(roles="ROLE_SUPER_USER,ROLE_MESSAGE_SEARCHUSERS,ROLE_USER")
      * @Route("/searchusers",  name="search_users")
      * @Method("GET")
      * @Template()
@@ -242,7 +242,7 @@ class MessageController extends ContainerAware
     /**
      * Deletes a thread
      *
-     * @Secure(roles="ROLE_SUPER_USER,ROLE_MESSAGE_DELETE")
+     * @Secure(roles="ROLE_SUPER_USER,ROLE_MESSAGE_DELETE,ROLE_USER")
      * @Route("/{threadId}/delete", requirements={"threadId"="\d+"}, name="message_thread_delete")
      * @Method("POST|DELETE")
      * @Template()
@@ -261,7 +261,7 @@ class MessageController extends ContainerAware
     /**
      * Searches for messages in the inbox and sentbox
      *
-     * @Secure(roles="ROLE_SUPER_USER,ROLE_MESSAGE_SEARCH")
+     * @Secure(roles="ROLE_SUPER_USER,ROLE_MESSAGE_SEARCH,ROLE_USER")
      * @Route("/search", name="message_search")
      * @Method("GET")
      * @Template()

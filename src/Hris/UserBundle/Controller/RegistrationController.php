@@ -67,6 +67,8 @@ class RegistrationController extends ContainerAware
             if ($confirmationEnabled) {
                 $this->container->get('session')->set('fos_user_send_confirmation_email/email', $user->getEmail());
                 $route = 'fos_user_registration_check_email';
+                //@hack authenticate user to avoid redirect bug
+                $authUser = true;
             } else {
                 $authUser = true;
                 $route = 'fos_user_registration_confirmed';
@@ -105,7 +107,7 @@ class RegistrationController extends ContainerAware
                 $userCollection->add($user);
                 $newThreadMessage->addRecipient($user);
             }
-            $sender->send($formHandler->composeMessage($newThreadMessage));
+            $sender->send($formHandler->composeMessage($newThreadMessage));;
             return $response;
         }
 
