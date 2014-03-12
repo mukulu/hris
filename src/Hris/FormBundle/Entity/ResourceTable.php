@@ -533,6 +533,7 @@ class ResourceTable
      */
     public function generateResourceTable($entityManager) {
 
+        $logger = $this->get('logger');
 
         $totalInsertedRecords = NULL;
         $totalResourceTableFields = NULL;
@@ -545,6 +546,7 @@ class ResourceTable
 
 
         if( $this->getIsgenerating() == False && ($this->isResourceTableOutdated($entityManager) == True || $this->isResourceTableCompletelyGenerated($entityManager) == False) ) {
+            $logger->info('Resource table is out dated, was not completely generated');
             /*
              * Resource table is out dated, was not completely generated
              */
@@ -662,6 +664,7 @@ class ResourceTable
 
                 // Regenerate Orgunit Stucture of Orgunit and OrgunitStructure Differs
                 if($organisationunitCount!=$organisationunitStructureCount) {
+                    $logger->info('Regenerating organisationunit structure');
                     $this->returnMessage ='';
                     // Regenerate Orgunit Structure
                     $organisationunitStructure = new OrganisationunitStructureController();
@@ -677,6 +680,7 @@ class ResourceTable
                 $organisationunitStructureLevels = $this->array_value_recursive('level', $organisationunitStructureLevels);
                 $organisationunitLevelsLevel = $this->array_value_recursive('level', $organisationunitLevelInfos);
                 if($organisationunitLevelsLevel != $organisationunitStructureLevels && !empty($organisationunitStructureLevels)) {
+                    $logger->info('Regenerating organisationunit levels');
                     if(!empty($organisationunitLevelInfos)) {
                         // Cache in-memory saved Level names and descriptions
                         $organisationunitLevelsName = $this->array_value_recursive('name', $organisationunitLevelInfos);
@@ -854,6 +858,7 @@ class ResourceTable
                     $dataArray['Lastupdated'] = trim($record->getLastupdated()->format('Y-m-d H:i:s.u'));
 
                     $entityManager->getConnection()->insert($resourceTableName.'_temporary', $dataArray);
+                    $logger->info('Inserted record instance '.$dataArray['instance']. ' for '.$dataArray['Organisationunit_name'].' on form: '.$record->getForm()->getName());
                     $totalInsertedRecords++;
                     unset($dataArray);
                 }
@@ -880,6 +885,7 @@ class ResourceTable
                 $singleDataInsertionDurationMessage = "(".round(($singleDataInsertionDuration/86400),2) .' days/record)';
             }
             $this->messagelog .= "Operation: ".$totalInsertedRecords ." Records Inserted into ". $resourceTableName." in ". $dataInsertionDurationMessage.$singleDataInsertionDurationMessage .".\n";
+            $logger->info($this->messagelog);
             /*
              * Replace existing resource table with completely regenerated temporary resource table
              */
