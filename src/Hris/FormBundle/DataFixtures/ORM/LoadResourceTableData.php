@@ -26,19 +26,35 @@ namespace Hris\FormBundle\DataFixtures\ORM;
 use Doctrine\Common\DataFixtures\OrderedFixtureInterface;
 use Doctrine\Common\DataFixtures\AbstractFixture;
 use Doctrine\Common\Persistence\ObjectManager;
+use Doctrine\Common\DataFixtures\FixtureInterface;
+use Symfony\Component\DependencyInjection\ContainerAwareInterface;
+use Symfony\Component\DependencyInjection\ContainerInterface;
 
 use Hris\FormBundle\Entity\ResourceTable;
 use Hris\FormBundle\DataFixtures\ORM\LoadFieldData;
 use Hris\FormBundle\Entity\ResourceTableFieldMember;
 use Symfony\Component\Stopwatch\Stopwatch;
 
-class LoadResourceTableData extends AbstractFixture implements OrderedFixtureInterface
+class LoadResourceTableData implements FixtureInterface, ContainerAwareInterface, OrderedFixtureInterface
 {
 	/**
 	 * {@inheritDoc}
 	 * @see Doctrine\Common\DataFixtures.FixtureInterface::load()
 	 */
     private $resourceTables;
+
+    /**
+     * @var ContainerInterface
+     */
+    private $container;
+
+    /**
+     * {@inheritDoc}
+     */
+    public function setContainer(ContainerInterface $container = null)
+    {
+        $this->container = $container;
+    }
 
     /**
      * Returns array of form fixtures.
@@ -85,6 +101,8 @@ class LoadResourceTableData extends AbstractFixture implements OrderedFixtureInt
 
 	public function load(ObjectManager $manager)
 	{
+        $logger = $this->container->get('logger');
+
         $stopwatch = new Stopwatch();
         $stopwatch->start('dummyResourceTableGeneration');
         // Populate dummy forms
@@ -142,7 +160,7 @@ class LoadResourceTableData extends AbstractFixture implements OrderedFixtureInt
         foreach($resourceTables as $resourceTableKey=>$resourceTable) {
             // Ugly hack to generate resource table for "All Fields" only
             if($resourceTable->getName() == "All Fields") {
-                $success = $resourceTable->generateResourceTable($manager);
+                $success = $resourceTable->generateResourceTable($manager,$logger);
                 $messageLog = $resourceTable->getMessageLog();
                 if($success) echo $messageLog;
                 else echo "Failed with:".$messageLog;

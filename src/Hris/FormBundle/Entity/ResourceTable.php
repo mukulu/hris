@@ -531,9 +531,7 @@ class ResourceTable
      * @param $entityManager
      * @return string
      */
-    public function generateResourceTable($entityManager) {
-
-        $logger = $this->get('logger');
+    public function generateResourceTable($entityManager,$logger = NULL) {
 
         $totalInsertedRecords = NULL;
         $totalResourceTableFields = NULL;
