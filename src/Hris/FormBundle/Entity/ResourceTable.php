@@ -33,6 +33,7 @@ use Doctrine\Tests\Common\Annotations\True;
 use Gedmo\Mapping\Annotation as Gedmo;
 
 use Hris\FormBundle\Entity\ResourceTableFieldMember;
+use Hris\OrganisationunitBundle\Controller\OrganisationunitStructureController;
 use Hris\RecordsBundle\Entity\Record;
 use Symfony\Component\Stopwatch\Stopwatch;
 use Symfony\Component\Validator\Constraints as Assert;
