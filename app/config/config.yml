@@ -114,27 +114,7 @@ monolog:
         main:
             type: fingers_crossed
             action_level: warning
-            handler: grouped
-        grouped:
-            type:    group
-            members: [streamed, buffered]
-        streamed:
-            type:  stream
-            path:  "%kernel.logs_dir%/%kernel.environment%.log"
-            level: debug
-        buffered:
-            type: buffer
-            handler: swift
-        swift:
-            type: swift_mailer
-            from_email: "hrismailer@gmail.com"
-            to_email: "hrhis_udsm_team@googlegroups.com"
-            subject: "CRITICAL: RAISED SERVER EXCEPTIONS NEEDS ATTENTION"
-            level: debug
-        mail:
-            type: fingers_crossed
-            action_level: critical
-            handler: buffered
+            handler: file
         syslog:
             type: stream
             path: /var/log/symfony.log
