@@ -361,7 +361,7 @@ class ReportHistoryTrainingController extends Controller
             }
 
             //Query all training data and count by start date year
-            $query = "SELECT R.firstname, R.middlename, R.surname, R.designation, T.coursename, T.courselocation, T.sponsor, T.startdate, T.enddate, R.level5_facility ";
+            $query = "SELECT R.firstname, R.middlename, R.surname, R.profession, T.coursename, T.courselocation, T.sponsor, T.startdate, T.enddate, R.level5_facility ";
             $query .= "FROM hris_record_training T ";
             $query .= "INNER JOIN hris_record as V on V.id = T.record_id ";
             $query .= "INNER JOIN ".$resourceTableName." as R on R.instance = V.instance ";
@@ -385,7 +385,7 @@ class ReportHistoryTrainingController extends Controller
                 }
 
                 //Query all history data and count by field option
-                $query = "SELECT R.firstname, R.middlename, R.surname, R.designation, H.history, H.reason, H.startdate, R.level5_facility ";
+                $query = "SELECT R.firstname, R.middlename, R.surname, R.profession, H.history, H.reason, H.startdate, R.level5_facility ";
                 $query .= "FROM hris_record_history H ";
                 $query .= "INNER JOIN hris_record as V on V.id = H.record_id ";
                 $query .= "INNER JOIN ".$resourceTableName." as R on R.instance = V.instance ";
@@ -450,8 +450,8 @@ class ReportHistoryTrainingController extends Controller
         }
 
         // ask the service for a Excel5
-        $excelService = $this->get('xls.service_xls5');
-        $excelService->excelObj->getProperties()->setCreator("HRHIS3")
+        $excelService = $this->get('phpexcel')->createPHPExcelObject();
+        $excelService->getProperties()->setCreator("HRHIS3")
             ->setLastModifiedBy("HRHIS3")
             ->setTitle($title)
             ->setSubject("Office 2005 XLSX Test Document")
@@ -615,13 +615,12 @@ class ReportHistoryTrainingController extends Controller
         // Set active sheet index to the first sheet, so Excel opens this as the first sheet
         $excelService->excelObj->setActiveSheetIndex(0);
 
-        //create the response
-
-        $response = $excelService->getResponse();
-        $response->headers->set('Content-Type', 'application/vnd.ms-excel; charset=utf-8');
-        $response->headers->set('Content-Disposition', 'attachment; filename='.$title.'.xls');
-
-        // If you are using a https connection, you have to set those two headers and use sendHeaders() for compatibility with IE <9
+        // create the writer
+        $writer = $this->get('phpexcel')->createWriter($excelService, 'Excel5');
+        // create the response
+        $response = $this->get('phpexcel')->createStreamedResponse($writer);
+        $response->headers->set('Content-Type', 'text/vnd.ms-excel; charset=utf-8');
+        $response->headers->set('Content-Disposition', 'attachment;filename='.$title.'.xls');
         $response->headers->set('Pragma', 'public');
         $response->headers->set('Cache-Control', 'maxage=1');
         //$response->sendHeaders();
@@ -677,8 +676,8 @@ class ReportHistoryTrainingController extends Controller
 
 
         // ask the service for a Excel5
-        $excelService = $this->get('xls.service_xls5');
-        $excelService->excelObj->getProperties()->setCreator("HRHIS3")
+        $excelService = $this->get('phpexcel')->createPHPExcelObject();
+        $excelService->getProperties()->setCreator("HRHIS3")
             ->setLastModifiedBy("HRHIS3")
             ->setTitle($title)
             ->setSubject("Office 2005 XLSX Test Document")
@@ -775,7 +774,7 @@ class ReportHistoryTrainingController extends Controller
             $excelService->excelObj->setActiveSheetIndex(0)
                 ->setCellValue($column++.$row, 'SN')
                 ->setCellValue($column++.$row, 'Name')
-                ->setCellValue($column++.$row, 'Designation')
+                ->setCellValue($column++.$row, 'Profession')
                 ->setCellValue($column++.$row, 'History')
                 ->setCellValue($column++.$row, 'Reason')
                 ->setCellValue($column++.$row, 'Date')
@@ -801,11 +800,11 @@ class ReportHistoryTrainingController extends Controller
                 $excelService->excelObj->setActiveSheetIndex(0)
                     ->setCellValue($column++.$row, $i++)
                     ->setCellValue($column++.$row, $result['firstname']." ".$result['middlename']." ".$result['surname'])
-                    ->setCellValue($column++.$row, $result['presentdesignation'])
+                    ->setCellValue($column++.$row, $result['profession'])
                     ->setCellValue($column++.$row, $result['history'])
                     ->setCellValue($column++.$row, $result['reason'])
                     ->setCellValue($column++.$row, $result['startdate'])
-                    ->setCellValue($column.$row, $result['level5_level_5']);
+                    ->setCellValue($column.$row, $result['level5_facility']);
 
                 /*foreach ($items as $item) {
                     $excelService->excelObj->setActiveSheetIndex(0)->setCellValue($column++.$row, $item);
@@ -823,7 +822,7 @@ class ReportHistoryTrainingController extends Controller
             $excelService->excelObj->setActiveSheetIndex(0)
                 ->setCellValue($column++.$row, 'SN')
                 ->setCellValue($column++.$row, 'Name')
-                ->setCellValue($column++.$row, 'Designation')
+                ->setCellValue($column++.$row, 'Profession')
                 ->setCellValue($column++.$row, 'Course Name')
                 ->setCellValue($column++.$row, 'Course Location')
                 ->setCellValue($column++.$row, 'Sponsor')
@@ -845,13 +844,13 @@ class ReportHistoryTrainingController extends Controller
                 $excelService->excelObj->setActiveSheetIndex(0)
                     ->setCellValue($column++.$row, $i++)
                     ->setCellValue($column++.$row, $result['firstname']." ".$result['middlename']." ".$result['surname'])
-                    ->setCellValue($column++.$row, $result['presentdesignation'])
+                    ->setCellValue($column++.$row, $result['profession'])
                     ->setCellValue($column++.$row, $result['coursename'])
                     ->setCellValue($column++.$row, $result['courselocation'])
                     ->setCellValue($column++.$row, $result['sponsor'])
                     ->setCellValue($column++.$row, $result['startdate'])
                     ->setCellValue($column++.$row, $result['enddate'])
-                    ->setCellValue($column.$row, $result['level5_level_5']);
+                    ->setCellValue($column.$row, $result['level5_facility']);
 
             }
         }
@@ -862,13 +861,12 @@ class ReportHistoryTrainingController extends Controller
         // Set active sheet index to the first sheet, so Excel opens this as the first sheet
         $excelService->excelObj->setActiveSheetIndex(0);
 
-        //create the response
-
-        $response = $excelService->getResponse();
-        $response->headers->set('Content-Type', 'application/vnd.ms-excel; charset=utf-8');
-        $response->headers->set('Content-Disposition', 'attachment; filename='.$title.'.xls');
-
-        // If you are using a https connection, you have to set those two headers and use sendHeaders() for compatibility with IE <9
+        // create the writer
+        $writer = $this->get('phpexcel')->createWriter($excelService, 'Excel5');
+        // create the response
+        $response = $this->get('phpexcel')->createStreamedResponse($writer);
+        $response->headers->set('Content-Type', 'text/vnd.ms-excel; charset=utf-8');
+        $response->headers->set('Content-Disposition', 'attachment;filename='.$title.'.xls');
         $response->headers->set('Pragma', 'public');
         $response->headers->set('Cache-Control', 'maxage=1');
         //$response->sendHeaders();
