@@ -585,8 +585,8 @@ class ReportEmployeeRecordsController extends Controller
         $report = $em -> getConnection() -> executeQuery($query) -> fetchAll();
 
         // ask the service for a Excel5
-        $excelService = $this->get('xls.service_xls5');
-        $excelService->excelObj->getProperties()->setCreator("HRHIS3")
+        $excelService = $this->get('phpexcel')->createPHPExcelObject();
+        $excelService->getProperties()->setCreator("HRHIS3")
             ->setLastModifiedBy("HRHIS3")
             ->setTitle($title)
             ->setSubject("Office 2005 XLSX Test Document")
@@ -598,9 +598,9 @@ class ReportEmployeeRecordsController extends Controller
         $column = 'A';
         $row  = 1;
         $date = "Date: ".date("jS F Y");
-        $excelService->excelObj->getActiveSheet()->getDefaultRowDimension()->setRowHeight(15);
-        $excelService->excelObj->getActiveSheet()->getDefaultColumnDimension()->setWidth(15);
-        $excelService->excelObj->setActiveSheetIndex(0)
+        $excelService->getActiveSheet()->getDefaultRowDimension()->setRowHeight(15);
+        $excelService->getActiveSheet()->getDefaultColumnDimension()->setWidth(15);
+        $excelService->setActiveSheetIndex(0)
             ->setCellValue($column.$row++, $title)
             ->setCellValue($column.$row, $date);
         //add style to the header
@@ -656,8 +656,8 @@ class ReportEmployeeRecordsController extends Controller
             ),
         );
 
-        $excelService->excelObj->getActiveSheet()->getRowDimension('1')->setRowHeight(30);
-        $excelService->excelObj->getActiveSheet()->getRowDimension('2')->setRowHeight(20);
+        $excelService->getActiveSheet()->getRowDimension('1')->setRowHeight(30);
+        $excelService->getActiveSheet()->getRowDimension('2')->setRowHeight(20);
 
         //reset the colomn and row number
         $column == 'A';
@@ -670,30 +670,30 @@ class ReportEmployeeRecordsController extends Controller
         }
 
         //apply the styles
-        $excelService->excelObj->getActiveSheet()->getStyle('A1:'.$columnmerge.'2')->applyFromArray($heading_format);
-        $excelService->excelObj->getActiveSheet()->mergeCells('A1:'.$columnmerge.'1');
-        $excelService->excelObj->getActiveSheet()->mergeCells('A2:'.$columnmerge.'2');
+        $excelService->getActiveSheet()->getStyle('A1:'.$columnmerge.'2')->applyFromArray($heading_format);
+        $excelService->getActiveSheet()->mergeCells('A1:'.$columnmerge.'1');
+        $excelService->getActiveSheet()->mergeCells('A2:'.$columnmerge.'2');
 
         //write the table heading of the values
-        $excelService->excelObj->getActiveSheet()->getStyle('A4:'.$columnmerge.'4')->applyFromArray($header_format);
-        $excelService->excelObj->setActiveSheetIndex(0)
+        $excelService->getActiveSheet()->getStyle('A4:'.$columnmerge.'4')->applyFromArray($header_format);
+        $excelService->setActiveSheetIndex(0)
             ->setCellValue($column++.$row, 'SN');
         foreach ($results as $key => $value) {
-            $excelService->excelObj->setActiveSheetIndex(0)
+            $excelService->setActiveSheetIndex(0)
                 ->setCellValue($column++.$row, $value['caption']);
         }
         // Make Levels of orgunit
         foreach($orgunitLevels as $orgunitLevelLevelKey=>$orgunitLevel) {
-            $excelService->excelObj->setActiveSheetIndex(0)
+            $excelService->setActiveSheetIndex(0)
                 ->setCellValue($column++.$row, $orgunitLevel->getName());
         }
         // Make Groupset Column
         foreach($groupsets as $groupsetKey=>$groupset) {
-            $excelService->excelObj->setActiveSheetIndex(0)
+            $excelService->setActiveSheetIndex(0)
                 ->setCellValue($column++.$row, $groupset->getName());
         }
         // Calculated fields
-        $excelService->excelObj->setActiveSheetIndex(0)
+        $excelService->setActiveSheetIndex(0)
             ->setCellValue($column++.$row, 'Form Name')
             ->setCellValue($column.$row, 'Duty Post');
 
@@ -705,50 +705,58 @@ class ReportEmployeeRecordsController extends Controller
 
             //format of the row
             if (($row % 2) == 1)
-                $excelService->excelObj->getActiveSheet()->getStyle($column.$row.':'.$columnmerge.$row)->applyFromArray($text_format1);
+                $excelService->getActiveSheet()->getStyle($column.$row.':'.$columnmerge.$row)->applyFromArray($text_format1);
             else
-                $excelService->excelObj->getActiveSheet()->getStyle($column.$row.':'.$columnmerge.$row)->applyFromArray($text_format2);
+                $excelService->getActiveSheet()->getStyle($column.$row.':'.$columnmerge.$row)->applyFromArray($text_format2);
 
             //Display the serial number
-            $excelService->excelObj->setActiveSheetIndex(0)
+            $excelService->setActiveSheetIndex(0)
                 ->setCellValue($column++.$row, $i++);
 
             foreach ($results as $key => $value) {
-                $excelService->excelObj->setActiveSheetIndex(0)
+                $excelService->setActiveSheetIndex(0)
                     ->setCellValue($column++.$row, $rows[strtolower($value['name'])]);
             }
 
             // Make Levels of orgunit
             foreach($orgunitLevels as $orgunitLevelLevelKey=>$orgunitLevel) {
                 $orgunitLevelName = "level".$orgunitLevel->getLevel()."_".str_replace(' ','_',str_replace('.','_',str_replace('/','_',$orgunitLevel->getName()))) ;
-                $excelService->excelObj->setActiveSheetIndex(0)
+                $excelService->setActiveSheetIndex(0)
                     ->setCellValue($column++.$row,  $rows[strtolower($orgunitLevelName)]);
             }
 
             // Make Groupset Column
             foreach($groupsets as $groupsetKey=>$groupset) {
-                $excelService->excelObj->setActiveSheetIndex(0)
+                $excelService->setActiveSheetIndex(0)
                     ->setCellValue($column++.$row,  $rows[strtolower($groupset->getName())]);
             }
             // Calculated fields
-            $excelService->excelObj->setActiveSheetIndex(0)
+            $excelService->setActiveSheetIndex(0)
                 ->setCellValue($column++.$row,  $rows["form_name"])
                 ->setCellValue($column.$row,  $rows["longname"]);
 
         }
-        $excelService->excelObj->getActiveSheet()->setTitle('List of Records');
+        $excelService->getActiveSheet()->setTitle('List of Records');
 
 
         // Set active sheet index to the first sheet, so Excel opens this as the first sheet
-        $excelService->excelObj->setActiveSheetIndex(0);
+        $excelService->setActiveSheetIndex(0);
 
         //create the response
+        // create the writer
+        $writer = $this->get('phpexcel')->createWriter($excelService, 'Excel5');
+        // create the response
+        $response = $this->get('phpexcel')->createStreamedResponse($writer);
         $title = str_replace(',',' ',$title);
-        $response = $excelService->getResponse();
-        $response->headers->set('Content-Type', 'application/vnd.ms-excel; charset=utf-8');
-        $response->headers->set('Content-Disposition', 'attachment; filename='.$title.'.xls');
+        //$response = $excelService->getResponse();
+       // $response->headers->set('Content-Type', 'application/vnd.ms-excel; charset=utf-8');
+        //$response->headers->set('Content-Disposition', 'attachment; filename='.$title.'.xls');
 
         // If you are using a https connection, you have to set those two headers and use sendHeaders() for compatibility with IE <9
+        //$response->headers->set('Pragma', 'public');
+        //$response->headers->set('Cache-Control', 'maxage=1');
+        $response->headers->set('Content-Type', 'text/vnd.ms-excel; charset=utf-8');
+        $response->headers->set('Content-Disposition', 'attachment;filename='.$title.'.xls');
         $response->headers->set('Pragma', 'public');
         $response->headers->set('Cache-Control', 'maxage=1');
         //$response->sendHeaders();
@@ -854,8 +862,8 @@ class ReportEmployeeRecordsController extends Controller
         $report = $em -> getConnection() -> executeQuery($query) -> fetchAll();
 
         // ask the service for a Excel5
-        $excelService = $this->get('xls.service_xls5');
-        $excelService->excelObj->getProperties()->setCreator("HRHIS3")
+        $excelService = $this->get('phpexcel')->createPHPExcelObject();
+        $excelService->getProperties()->setCreator("HRHIS3")
             ->setLastModifiedBy("HRHIS3")
             ->setTitle($title)
             ->setSubject("Office 2005 XLSX Test Document")
@@ -867,9 +875,9 @@ class ReportEmployeeRecordsController extends Controller
         $column = 'A';
         $row  = 1;
         $date = "Date: ".date("jS F Y");
-        $excelService->excelObj->getActiveSheet()->getDefaultRowDimension()->setRowHeight(15);
-        $excelService->excelObj->getActiveSheet()->getDefaultColumnDimension()->setWidth(15);
-        $excelService->excelObj->setActiveSheetIndex(0)
+        $excelService->getActiveSheet()->getDefaultRowDimension()->setRowHeight(15);
+        $excelService->getActiveSheet()->getDefaultColumnDimension()->setWidth(15);
+        $excelService->setActiveSheetIndex(0)
             ->setCellValue($column.$row++, $title)
             ->setCellValue($column.$row, $date);
         //add style to the header
@@ -925,8 +933,8 @@ class ReportEmployeeRecordsController extends Controller
             ),
         );
 
-        $excelService->excelObj->getActiveSheet()->getRowDimension('1')->setRowHeight(30);
-        $excelService->excelObj->getActiveSheet()->getRowDimension('2')->setRowHeight(20);
+        $excelService->getActiveSheet()->getRowDimension('1')->setRowHeight(30);
+        $excelService->getActiveSheet()->getRowDimension('2')->setRowHeight(20);
 
         //reset the colomn and row number
         $column == 'A';
@@ -939,9 +947,9 @@ class ReportEmployeeRecordsController extends Controller
         }
 
         //apply the styles
-        $excelService->excelObj->getActiveSheet()->getStyle('A1:'.$columnmerge.'2')->applyFromArray($heading_format);
-        $excelService->excelObj->getActiveSheet()->mergeCells('A1:'.$columnmerge.'1');
-        $excelService->excelObj->getActiveSheet()->mergeCells('A2:'.$columnmerge.'2');
+        $excelService->getActiveSheet()->getStyle('A1:'.$columnmerge.'2')->applyFromArray($heading_format);
+        $excelService->getActiveSheet()->mergeCells('A1:'.$columnmerge.'1');
+        $excelService->getActiveSheet()->mergeCells('A2:'.$columnmerge.'2');
 
         //write the values
         $i =1; //count the row
@@ -952,33 +960,33 @@ class ReportEmployeeRecordsController extends Controller
             if($currentProfessional != $rows['profession'] ){
                 //write the heading for the professional
                 $row++;
-                $excelService->excelObj->getActiveSheet()->getStyle($column.$row.':D'.$row)->applyFromArray($heading_format);
-                $excelService->excelObj->getActiveSheet()->mergeCells($column.$row.':D'.$row);
-                $excelService->excelObj->setActiveSheetIndex(0)
+                $excelService->getActiveSheet()->getStyle($column.$row.':D'.$row)->applyFromArray($heading_format);
+                $excelService->getActiveSheet()->mergeCells($column.$row.':D'.$row);
+                $excelService->setActiveSheetIndex(0)
                     ->setCellValue($column.$row, $rows['profession']);
 
                 //Write the heading for the data
                 $row++;
                 $column = 'A';//reset to the first column
-                $excelService->excelObj->getActiveSheet()->getStyle($column.$row.':'.$columnmerge.$row)->applyFromArray($header_format);
-                $excelService->excelObj->setActiveSheetIndex(0)
+                $excelService->getActiveSheet()->getStyle($column.$row.':'.$columnmerge.$row)->applyFromArray($header_format);
+                $excelService->setActiveSheetIndex(0)
                     ->setCellValue($column++.$row, 'SN');
                 foreach ($results as $key => $value) {
-                    $excelService->excelObj->setActiveSheetIndex(0)
+                    $excelService->setActiveSheetIndex(0)
                         ->setCellValue($column++.$row, $value['caption']);
                 }
                 // Make Levels of orgunit
                 foreach($orgunitLevels as $orgunitLevelLevelKey=>$orgunitLevel) {
-                    $excelService->excelObj->setActiveSheetIndex(0)
+                    $excelService->setActiveSheetIndex(0)
                         ->setCellValue($column++.$row, $orgunitLevel->getName());
                 }
                 // Make Groupset Column
                 foreach($groupsets as $groupsetKey=>$groupset) {
-                    $excelService->excelObj->setActiveSheetIndex(0)
+                    $excelService->setActiveSheetIndex(0)
                         ->setCellValue($column++.$row, $groupset->getName());
                 }
                 // Calculated fields
-                $excelService->excelObj->setActiveSheetIndex(0)
+                $excelService->setActiveSheetIndex(0)
                     ->setCellValue($column++.$row, 'Form Name')
                     ->setCellValue($column.$row, 'Duty Post');
 
@@ -989,52 +997,60 @@ class ReportEmployeeRecordsController extends Controller
 
             //format of the row
             if (($row % 2) == 1)
-                $excelService->excelObj->getActiveSheet()->getStyle($column.$row.':'.$columnmerge.$row)->applyFromArray($text_format1);
+                $excelService->getActiveSheet()->getStyle($column.$row.':'.$columnmerge.$row)->applyFromArray($text_format1);
             else
-                $excelService->excelObj->getActiveSheet()->getStyle($column.$row.':'.$columnmerge.$row)->applyFromArray($text_format2);
+                $excelService->getActiveSheet()->getStyle($column.$row.':'.$columnmerge.$row)->applyFromArray($text_format2);
 
             //Display the serial number
-            $excelService->excelObj->setActiveSheetIndex(0)
+            $excelService->setActiveSheetIndex(0)
                 ->setCellValue($column++.$row, $i++);
 
             foreach ($results as $key => $value) {
-                $excelService->excelObj->setActiveSheetIndex(0)
+                $excelService->setActiveSheetIndex(0)
                     ->setCellValue($column++.$row, $rows[strtolower($value['name'])]);
             }
 
             // Make Levels of orgunit
             foreach($orgunitLevels as $orgunitLevelLevelKey=>$orgunitLevel) {
                 $orgunitLevelName = "level".$orgunitLevel->getLevel()."_".str_replace(' ','_',str_replace('.','_',str_replace('/','_',$orgunitLevel->getName()))) ;
-                $excelService->excelObj->setActiveSheetIndex(0)
+                $excelService->setActiveSheetIndex(0)
                     ->setCellValue($column++.$row,  $rows[strtolower($orgunitLevelName)]);
             }
 
             // Make Groupset Column
             foreach($groupsets as $groupsetKey=>$groupset) {
-                $excelService->excelObj->setActiveSheetIndex(0)
+                $excelService->setActiveSheetIndex(0)
                     ->setCellValue($column++.$row,  $rows[strtolower($groupset->getName())]);
             }
             // Calculated fields
-            $excelService->excelObj->setActiveSheetIndex(0)
+            $excelService->setActiveSheetIndex(0)
                 ->setCellValue($column++.$row,  $rows["form_name"])
                 ->setCellValue($column.$row,  $rows["longname"]);
 
             $currentProfessional = $rows['profession'];
 
         }
-        $excelService->excelObj->getActiveSheet()->setTitle('List of Records');
+        $excelService->getActiveSheet()->setTitle('List of Records');
 
 
         // Set active sheet index to the first sheet, so Excel opens this as the first sheet
-        $excelService->excelObj->setActiveSheetIndex(0);
+        $excelService->setActiveSheetIndex(0);
 
         //create the response
+        // create the writer
+        $writer = $this->get('phpexcel')->createWriter($excelService, 'Excel5');
+        // create the response
+        $response = $this->get('phpexcel')->createStreamedResponse($writer);
         $title = str_replace(',',' ',$title);
-        $response = $excelService->getResponse();
-        $response->headers->set('Content-Type', 'application/vnd.ms-excel; charset=utf-8');
-        $response->headers->set('Content-Disposition', 'attachment; filename='.$title.'.xls');
+        //$response = $excelService->getResponse();
+        //$response->headers->set('Content-Type', 'application/vnd.ms-excel; charset=utf-8');
+        //$response->headers->set('Content-Disposition', 'attachment; filename='.$title.'.xls');
 
         // If you are using a https connection, you have to set those two headers and use sendHeaders() for compatibility with IE <9
+        //$response->headers->set('Pragma', 'public');
+        //$response->headers->set('Cache-Control', 'maxage=1');
+        $response->headers->set('Content-Type', 'text/vnd.ms-excel; charset=utf-8');
+        $response->headers->set('Content-Disposition', 'attachment;filename='.$title.'.xls');
         $response->headers->set('Pragma', 'public');
         $response->headers->set('Cache-Control', 'maxage=1');
         //$response->sendHeaders();

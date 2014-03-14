@@ -33,7 +33,7 @@
         "ob/highcharts-bundle": "dev-master",
         "jms/security-extra-bundle": "dev-master",
         "jms/serializer-bundle": "dev-master",
-        "liuggio/excelbundle": ">=1.0.4",
+        "liuggio/excelbundle": "~2.0",
         "friendsofsymfony/message-bundle": "dev-master"
     },
     "scripts": {
