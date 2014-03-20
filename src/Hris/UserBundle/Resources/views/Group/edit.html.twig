@@ -1,9 +1,36 @@
 {% extends '::base.html.twig' %}
 
+{% block javascripts %}
+    {{ parent() }}
+    <script type="text/javascript" language="javascript" src="{{ asset('commons/js/jquery.multi-select.js') }}"></script>
+    <script type="text/javascript" language="javascript" src="{{ asset('commons/js/jquery.validate.js') }}"></script>
+    <script type="text/javascript">
+        $( document ).ready(function() {
+            // validate signup form on keyup and submit
+            $("#fos_user_group_form").validate({ ignore:[] });
+            $('#fos_user_group_form_roles').multiSelect({
+                selectableHeader: "<div class=''>Avaiable Roles</div>",
+                selectionHeader: "<div class=''>Selected Roles</div>"
+            });
+            $( 'input[required="required"],select[required="required"]').closest(".control-group").children("label").prepend('<em class="required-asterisk">*</em>');
+        });
+    </script>
+{% endblock javascripts %}
+
+{% block stylesheets %}
+    {{ parent() }}
+    <link rel="stylesheet" type="text/css" media="all" href="{{ asset('commons/css/multi-select.css') }}">
+    <style type="text/css">
+        #fos_user_group_form_roles {
+            width:500px;
+        }
+    </style>
+{% endblock stylesheets %}
+
 {% block right_content -%}
     <h1><i class="icon-edit icon-largest" title="Edit"></i><small>Group edit</small></h1>
 
-    <form action="{{ path('user_group_edit', { 'id': group.id }) }}" method="POST" {{ form_enctype(form) }}>
+    <form id="fos_user_group_form" action="{{ path('user_group_edit', { 'id': group.id }) }}" method="POST" {{ form_enctype(form) }}>
         <input type="hidden" name="_method" value="PUT" />
         {{ form_widget(form) }}
         <br/>

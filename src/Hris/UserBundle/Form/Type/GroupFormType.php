@@ -29,6 +29,7 @@ namespace Hris\UserBundle\Form\Type;
 use Symfony\Component\Form\AbstractType;
 use Symfony\Component\Form\FormBuilderInterface;
 use Symfony\Component\OptionsResolver\OptionsResolverInterface;
+use Symfony\Component\Yaml\Parser;
 
 class GroupFormType extends AbstractType
 {
@@ -42,6 +43,30 @@ class GroupFormType extends AbstractType
         $this->class = $class;
     }
 
+    private function getRoleNames()
+    {
+        $pathToSecurity = __DIR__ . '/../../../../..' . '/app/config/security.yml';
+        $yaml = new Parser();
+        $userRoles = array();
+        $rolesArray = $yaml->parse(file_get_contents($pathToSecurity));
+        $rolesCaptured = $rolesArray['security']['role_hierarchy'];
+        //print_r($rolesCaptured);
+        foreach($rolesCaptured as $key=>$value) {
+            if(!is_array($value)) {
+                $userRoles[]=$value;
+            }else {
+                $userRoles=array_merge($userRoles,$value);
+            }
+        }
+        $userRoles = array_unique($userRoles);
+        //sort for display purposes
+        asort($userRoles);
+        foreach($userRoles as $key=>$value) {
+            $sortedRoles[$value]=$value;
+        }
+        return $sortedRoles;
+    }
+
     public function buildForm(FormBuilderInterface $builder, array $options)
     {
         $builder
@@ -52,6 +77,10 @@ class GroupFormType extends AbstractType
             )
             ->add('description',null,array(
                 'required'=>false,
+            ))
+            ->add('roles', 'choice', array(
+                'multiple'=>true,
+                'choices'   => $this->getRoleNames(),
             ))
         ;
     }
