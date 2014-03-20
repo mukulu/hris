@@ -78,6 +78,10 @@
                 selectableHeader: "<div class=''>Avaiable Groups</div>",
                 selectionHeader: "<div class=''>Selected Groups</div>"
             });
+            $('#hris_userbundle_usertype_form').multiSelect({
+                selectableHeader: "<div class=''>Avaiable Forms</div>",
+                selectionHeader: "<div class=''>Selected Forms</div>"
+            });
             $( 'input[required="required"],select[required="required"]').closest(".control-group").children("label").prepend('<em class="required-asterisk">*</em>');
         });
     </script>
@@ -90,8 +94,8 @@
     <link rel="stylesheet" href="{{ asset('commons/css/jquery-ui.css') }}" />
     <link rel="stylesheet" type="text/css" media="all" href="{{ asset('commons/css/multi-select.css') }}">
     <style type="text/css">
-        #fos_user_group_form_roles {
-            width:500px;
+        #ms-hris_userbundle_usertype_roles {
+            width:890px;
         }
     </style>
 {% endblock stylesheets %}
