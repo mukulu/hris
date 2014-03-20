@@ -47,6 +47,7 @@ class UserNewType extends AbstractType
         $rolesCaptured = $rolesArray['security']['role_hierarchy'];
         //print_r($rolesCaptured);
         foreach($rolesCaptured as $key=>$value) {
+            $userRoles[]=$key;
             if(!is_array($value)) {
                 $userRoles[]=$value;
             }else {
