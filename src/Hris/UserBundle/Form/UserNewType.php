@@ -30,9 +30,38 @@ use Symfony\Component\Form\AbstractType;
 use Symfony\Component\Form\FormBuilderInterface;
 use Symfony\Component\OptionsResolver\OptionsResolverInterface;
 use Symfony\Component\Validator\Constraints\NotBlank;
+use Symfony\Component\Yaml\Parser;
 
 class UserNewType extends AbstractType
 {
+    /**
+     * Generates an array of roles based on roles stipulated in security configurations
+     * @return mixed
+     */
+    private function getRoleNames()
+    {
+        $pathToSecurity = __DIR__ . '/../../../..' . '/app/config/security.yml';
+        $yaml = new Parser();
+        $userRoles = array();
+        $rolesArray = $yaml->parse(file_get_contents($pathToSecurity));
+        $rolesCaptured = $rolesArray['security']['role_hierarchy'];
+        //print_r($rolesCaptured);
+        foreach($rolesCaptured as $key=>$value) {
+            if(!is_array($value)) {
+                $userRoles[]=$value;
+            }else {
+                $userRoles=array_merge($userRoles,$value);
+            }
+        }
+        $userRoles = array_unique($userRoles);
+        //sort for display purposes
+        asort($userRoles);
+        foreach($userRoles as $key=>$value) {
+            $sortedRoles[$value]=$value;
+        }
+        return $sortedRoles;
+    }
+
     public function buildForm(FormBuilderInterface $builder, array $options)
     {
         // assuming $entityManager is passed in options
@@ -101,7 +130,10 @@ class UserNewType extends AbstractType
                 'format' => 'dd/MM/yyyy',
                 'attr' => array('class' => 'date')
             ))
-            ->add('roles')
+            ->add('roles', 'choice', array(
+                'multiple'=>true,
+                'choices'   => $this->getRoleNames(),
+            ))
             ->add('groups',null,array(
                 'required'=>False,
             ))

@@ -43,6 +43,10 @@ class GroupFormType extends AbstractType
         $this->class = $class;
     }
 
+    /**
+     * Generates an array of roles based on roles stipulated in security configurations
+     * @return mixed
+     */
     private function getRoleNames()
     {
         $pathToSecurity = __DIR__ . '/../../../../..' . '/app/config/security.yml';
