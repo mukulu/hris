@@ -108,6 +108,8 @@ class ReportOrganisationunitCompletenessController extends Controller
             'recordsToDisplay'=>$this->recordsToDisplay,
             'recordInstances'=>$this->recordInstances,
             'parent'=>$this->parent,
+            'lowerLevels'=> $this->lowerLevels,
+            'selectedLevel'=>$this->organisationunit->getOrganisationunitStructure()->getLevel(),
         );
     }
 
@@ -484,11 +486,31 @@ class ReportOrganisationunitCompletenessController extends Controller
             'recordsToDisplay'=>$this->recordsToDisplay,
             'recordInstances'=>$this->recordInstances,
             'parent'=>$this->parent,
+            'lowerLevels' => $this->lowerLevels,
+            'selectedLevel'=>$this->organisationunit->getOrganisationunitStructure()->getLevel(),
         );
     }
     
     public function processCompletenessFigures()
     {
+        /*
+		 * Filter out organisationunit by selected parent and desired level
+		 */
+        $selectedParentStructure = $this->getDoctrine()->getManager()->getRepository('HrisOrganisationunitBundle:OrganisationunitStructure')->findOneBy(array('organisationunit'=>$this->organisationunit));
+        $queryBuilder = $this->getDoctrine()->getManager()->createQueryBuilder();
+
+        // Fetching higher level headings[level<= levelPrefereed] excluding highest level
+        $this->lowerLevels = $queryBuilder->select('DISTINCT(organisationunitLevel.level),organisationunitLevel.name')
+            ->from('HrisOrganisationunitBundle:OrganisationunitLevel','organisationunitLevel')
+            ->where($queryBuilder->expr()->lt('organisationunitLevel.level',':lowerLevel'))
+            ->andWhere($queryBuilder->expr()->gt('organisationunitLevel.level',':selectedLevel'))
+            ->setParameters(array(
+                'lowerLevel'=>$this->organisationunitLevel->getLevel(),
+                'selectedLevel'=>$selectedParentStructure->getLevel()->getLevel()
+            ))
+            ->orderBy('organisationunitLevel.level','DESC')->getQuery()->getResult();
+
+
         // Create FormIds
         $formIds = NULL;
         foreach($this->forms as $formKey=>$formObject) {
@@ -1000,5 +1022,10 @@ class ReportOrganisationunitCompletenessController extends Controller
      * @var OrganisationunitLevel
      */
     private $organisationunitLevel;
+
+    /**
+     * @var array
+     */
+    private $lowerLevels;
 
 }

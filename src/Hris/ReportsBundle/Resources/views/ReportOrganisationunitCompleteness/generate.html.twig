@@ -139,7 +139,28 @@
                     {% set counter = counter + 1 %}
                     <tr>
                         <td>{{ counter }}</td>
-                        <td><a href="{{ path('report_organisationunit_completeness_generate_redirect', { 'organisationunit': childOrganisationunit.id, 'forms': formIds }) }}">{{ childOrganisationunit.longname }}</a></td>
+                        <td><a href="{{ path('report_organisationunit_completeness_generate_redirect', { 'organisationunit': childOrganisationunit.id, 'forms': formIds }) }}">
+
+                                {% for lowerLevel in lowerLevels %}
+
+                                    {% if selectedLevel.getLevel() - lowerLevel.level == 0 %}
+                                        {{ childOrganisationunit.getLongname() }}
+                                    {% elseif  lowerLevel.level - selectedLevel.getLevel() == 1 %}
+                                        {{ childOrganisationunit.getParent().getLongname() }}
+                                    {% elseif lowerLevel.level - selectedLevel.getLevel() == 2 %}
+                                        {{ childOrganisationunit.getParent().getParent().getLongname() }}
+                                    {% elseif  lowerLevel.level - selectedLevel.getLevel() == 3 %}
+                                        {{ childOrganisationunit.getParent().getParent().getParent().getLongname() }}
+                                    {% elseif lowerLevel.level - selectedLevel.getLevel() == 4 %}
+                                        {{ childOrganisationunit.getParent().getParent().getParent().getParent().getLongname() }}
+                                    {% elseif  lowerLevel.level - selectedLevel.getLevel() == 5 %}
+                                        {{ childOrganisationunit.getParent().getParent().getParent().getParent().getParent().getLongname() }}
+                                    {% endif %}
+                                    >
+                                {% endfor %}
+                                {{ childOrganisationunit.getLongname() }}
+                            </a>
+                        </td>
                         {% for form in forms %}
                             {# Entered records #}
                             <td>{{ completenessMatrix[childOrganisationunit.id][form.id] }}</td>
