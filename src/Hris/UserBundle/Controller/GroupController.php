@@ -90,8 +90,6 @@ class GroupController extends ContainerAware
 
         $process = $formHandler->process($group);
 
-        $form->get('roles')->setData($group->getRoles());
-
         if ($process) {
             $this->setFlash('fos_user_success', 'group.flash.updated');
             $groupUrl =  $this->container->get('router')->generate('user_group_show', array('id' => $group->getId()));
