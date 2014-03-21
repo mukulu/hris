@@ -14,7 +14,7 @@
     {% if threads %}
         {% for thread in threads %}
             <tr>
-                <td style="max-width: 200px;">
+                <td style="max-width: 300px;">
 
                     {% spaceless %}
                         {{ thread.createdBy }},
@@ -33,10 +33,7 @@
 
                 </td>
                 <td>
-                    <a href="{{ url('message_thread_view', {'threadId': thread.id}) }}">{{ thread.subject }} </a>
-                    {% if not fos_message_is_read(thread) %}
-                        ({% trans from 'FOSMessageBundle' %}new{% endtrans %})
-                    {% endif %}
+                    <a href="{{ url('message_thread_view', {'threadId': thread.id}) }}">{{ thread.subject }}{% if not fos_message_is_read(thread) %}<div class="newMessage">new</div>{% endif %}</a>
                 </td>
                 <td>
                     {{ thread.createdAt|date }}
