@@ -52,7 +52,7 @@ class ReportHistoryTrainingController extends Controller
     /**
      * Show Report HistoryTraining
      *
-     * @Secure(roles="ROLE_SUPER_USER,ROLE_REPORTHISTORY_GENERATE,ROLE_USER")
+     * @Secure(roles="ROLE_SUPER_USER,ROLE_REPORTHISTORY_GENERATE")
      * @Route("/", name="report_historytraining")
      * @Method("GET")
      * @Template()
@@ -70,7 +70,7 @@ class ReportHistoryTrainingController extends Controller
     /**
      * Generate aggregated reports
      *
-     * @Secure(roles="ROLE_SUPER_USER,ROLE_REPORTHISTORY_GENERATE,ROLE_USER")
+     * @Secure(roles="ROLE_SUPER_USER,ROLE_REPORTHISTORY_GENERATE")
      * @Route("/", name="report_historytraining_generate")
      * @Method("PUT")
      * @Template()
@@ -405,7 +405,7 @@ class ReportHistoryTrainingController extends Controller
     /**
      * Download History reports
      *
-     * @Secure(roles="ROLE_SUPER_USER,ROLE_REPORTHISTORY_DOWNLOAD,ROLE_USER")
+     * @Secure(roles="ROLE_SUPER_USER,ROLE_REPORTHISTORY_DOWNLOAD")
      * @Route("/download", name="report_historytraining_download")
      * @Method("GET")
      * @Template()
@@ -631,7 +631,7 @@ class ReportHistoryTrainingController extends Controller
     /**
      * Download history reports by Cadre
      *
-     * @Secure(roles="ROLE_SUPER_USER,ROLE_REPORTHISTORY_DOWNLOADBYCADRE,ROLE_USER")
+     * @Secure(roles="ROLE_SUPER_USER,ROLE_REPORTHISTORY_DOWNLOADBYCADRE")
      * @Route("/records", name="report_historytraining_download_records")
      * @Method("GET")
      * @Template()
@@ -877,7 +877,7 @@ class ReportHistoryTrainingController extends Controller
      * Returns Fields json.
      *
      *
-     * @Secure(roles="ROLE_SUPER_USER,ROLE_REPORTHISTORY_GENERATE,ROLE_USER")
+     * @Secure(roles="ROLE_SUPER_USER,ROLE_REPORTHISTORY_GENERATE")
      * @Route("/reportFormFields.{_format}", requirements={"_format"="yml|xml|json"}, defaults={"_format"="json"}, name="report_formfields")
      * @Method("POST")
      * @Template()
