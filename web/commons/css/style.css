@@ -158,3 +158,10 @@ table.dataentry > tbody > tr > td.whitebg {background-color:#ffffff;width:288px;
     font-weight:bold;
     font-size:15pt;
 }
+.newMessage {
+    background-color: #e9b330;
+    float:right;
+    padding: 0 4px 0 4px;
+    border-radius: 2px;
+    color:white;
+}

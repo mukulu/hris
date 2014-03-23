@@ -45,7 +45,7 @@ class ReportOrganisationunitCompletenessController extends Controller
     /**
      * Show Report Form for generation of Organisation unit completeness
      *
-     * @Secure(roles="ROLE_SUPER_USER,ROLE_REPORTORGANISATIONUNITCOMPLETENESS_GENERATE,ROLE_USER")
+     * @Secure(roles="ROLE_SUPER_USER,ROLE_REPORTORGANISATIONUNITCOMPLETENESS_GENERATE")
      * @Route("/", name="report_organisationunit_completeness")
      * @Method("GET")
      * @Template()
@@ -62,7 +62,7 @@ class ReportOrganisationunitCompletenessController extends Controller
     /**
      * Generate Report for Organisationunit Completeness
      *
-     * @Secure(roles="ROLE_SUPER_USER,ROLE_REPORTORGANISATIONUNITCOMPLETENESS_GENERATE,ROLE_USER")
+     * @Secure(roles="ROLE_SUPER_USER,ROLE_REPORTORGANISATIONUNITCOMPLETENESS_GENERATE")
      * @Route("/", name="report_organisationunit_completeness_generate")
      * @Method("PUT")
      * @Template()
@@ -108,6 +108,8 @@ class ReportOrganisationunitCompletenessController extends Controller
             'recordsToDisplay'=>$this->recordsToDisplay,
             'recordInstances'=>$this->recordInstances,
             'parent'=>$this->parent,
+            'lowerLevels'=> $this->lowerLevels,
+            'selectedLevel'=>$this->organisationunit->getOrganisationunitStructure()->getLevel(),
         );
     }
 
@@ -138,8 +140,8 @@ class ReportOrganisationunitCompletenessController extends Controller
         $this->processCompletenessFigures();
 
         // ask the service for a Excel5
-        $excelService = $this->get('xls.service_xls5');
-        $excelService->excelObj->getProperties()->setCreator("HRHIS3")
+        $excelService = $this->get('phpexcel')->createPHPExcelObject();
+        $excelService->getProperties()->setCreator("HRHIS3")
             ->setLastModifiedBy("HRHIS3")
             ->setTitle($this->title)
             ->setSubject("Office 2005 XLSX Test Document")
@@ -205,24 +207,24 @@ class ReportOrganisationunitCompletenessController extends Controller
         $column = 'A';
         $row  = 1;
         $date = "Date: ".date("jS F Y");
-        $excelService->excelObj->getActiveSheet()->getDefaultRowDimension()->setRowHeight(15);
-        $excelService->excelObj->getActiveSheet()->getDefaultColumnDimension()->setWidth(15);
+        $excelService->getActiveSheet()->getDefaultRowDimension()->setRowHeight(15);
+        $excelService->getActiveSheet()->getDefaultColumnDimension()->setWidth(15);
         //Merge the Title Rows
         $mergeColumnTitle = 'A';
         if($this->visibleFields)
             for($i=1; $i < count($this->visibleFields) + 2; $i++) $mergeColumnTitle++;
         else
             for($i=1; $i < count($this->forms)*3 + 2; $i++) $mergeColumnTitle++;
-        $excelService->excelObj->getActiveSheet()->mergeCells($column.$row.':'.$mergeColumnTitle.$row);
-        $excelService->excelObj->setActiveSheetIndex(0)
+        $excelService->getActiveSheet()->mergeCells($column.$row.':'.$mergeColumnTitle.$row);
+        $excelService->setActiveSheetIndex(0)
             ->setCellValue($column.$row++, $this->title);
-        $excelService->excelObj->getActiveSheet()->mergeCells($column.$row.':'.$mergeColumnTitle.$row);
-        $excelService->excelObj->setActiveSheetIndex(0)
+        $excelService->getActiveSheet()->mergeCells($column.$row.':'.$mergeColumnTitle.$row);
+        $excelService->setActiveSheetIndex(0)
             ->setCellValue($column.$row, $date);
         //Apply the heading Format and Set the Row dimension for the headers
-        $excelService->excelObj->getActiveSheet()->getStyle('A1:'.$mergeColumnTitle.'2')->applyFromArray($heading_format);
-        $excelService->excelObj->getActiveSheet()->getRowDimension('1')->setRowHeight(30);
-        $excelService->excelObj->getActiveSheet()->getRowDimension('2')->setRowHeight(20);
+        $excelService->getActiveSheet()->getStyle('A1:'.$mergeColumnTitle.'2')->applyFromArray($heading_format);
+        $excelService->getActiveSheet()->getRowDimension('1')->setRowHeight(30);
+        $excelService->getActiveSheet()->getRowDimension('2')->setRowHeight(20);
 
         //reset the colomn and row number
         $column == 'A';
@@ -232,12 +234,12 @@ class ReportOrganisationunitCompletenessController extends Controller
             if($this->organisationunitChildren && ! $this->sameLevel){
 
                 //write the table heading of the values
-                $excelService->excelObj->getActiveSheet()->getStyle($column.$row.':'.$mergeColumnTitle.($row+1))->applyFromArray($header_format);
-                $excelService->excelObj->getActiveSheet()->mergeCells($column.$row.':'.$column.($row+1));
-                $excelService->excelObj->setActiveSheetIndex(0)
+                $excelService->getActiveSheet()->getStyle($column.$row.':'.$mergeColumnTitle.($row+1))->applyFromArray($header_format);
+                $excelService->getActiveSheet()->mergeCells($column.$row.':'.$column.($row+1));
+                $excelService->setActiveSheetIndex(0)
                     ->setCellValue($column++.$row, 'SN');
-                $excelService->excelObj->getActiveSheet()->mergeCells($column.$row.':'.$column.($row+1));
-                $excelService->excelObj->setActiveSheetIndex(0)
+                $excelService->getActiveSheet()->mergeCells($column.$row.':'.$column.($row+1));
+                $excelService->setActiveSheetIndex(0)
                     ->setCellValue($column++.$row, 'Organisationunit');
             }
             foreach($this->forms as $forms){
@@ -254,28 +256,28 @@ class ReportOrganisationunitCompletenessController extends Controller
                 if($this->organisationunitChildren){
                     $mergeColumn = $column;
                     for($i = 1; $i < $colspan; $i++)  $mergeColumn++;
-                    $excelService->excelObj->getActiveSheet()->mergeCells($column.$row.':'.$mergeColumn.$row);
-                    $excelService->excelObj->setActiveSheetIndex(0)
+                    $excelService->getActiveSheet()->mergeCells($column.$row.':'.$mergeColumn.$row);
+                    $excelService->setActiveSheetIndex(0)
                         ->setCellValue($column++.$row,$forms->getName());
                     for($i = 1; $i < $colspan; $i++)  $column++;
                 }
             }
         }elseif($this->visibleFields){
             //Headers for records compeleteness
-            $excelService->excelObj->setActiveSheetIndex(0)
+            $excelService->setActiveSheetIndex(0)
                     ->setCellValue($column++.$row,'SN');
             foreach($this->visibleFields as $visibleField){
-                $excelService->excelObj->setActiveSheetIndex(0)
+                $excelService->setActiveSheetIndex(0)
                     ->setCellValue($column++.$row,$visibleField->getCaption());
             }
-                $excelService->excelObj->setActiveSheetIndex(0)
+                $excelService->setActiveSheetIndex(0)
                     ->setCellValue($column++.$row,'Form name');
         }
         if(($this->organisationunitChildren) && ! $this->sameLevel ){
             $row++;
             $column = 'C';
             foreach($this->forms as $form){
-                $excelService->excelObj->setActiveSheetIndex(0)
+                $excelService->setActiveSheetIndex(0)
                     ->setCellValue($column++.$row,'Entered Records')
                     ->setCellValue($column++.$row,'Expected Records')
                     ->setCellValue($column++.$row,'Percentage');
@@ -292,35 +294,35 @@ class ReportOrganisationunitCompletenessController extends Controller
                 $counter = $counter + 1;
                 //format of the row
                 if (($counter % 2) == 1)
-                    $excelService->excelObj->getActiveSheet()->getStyle($column.$row.':'.$mergeColumnTitle.$row)->applyFromArray($text_format1);
+                    $excelService->getActiveSheet()->getStyle($column.$row.':'.$mergeColumnTitle.$row)->applyFromArray($text_format1);
                 else
-                    $excelService->excelObj->getActiveSheet()->getStyle($column.$row.':'.$mergeColumnTitle.$row)->applyFromArray($text_format2);
+                    $excelService->getActiveSheet()->getStyle($column.$row.':'.$mergeColumnTitle.$row)->applyFromArray($text_format2);
 
-                $excelService->excelObj->setActiveSheetIndex(0)
+                $excelService->setActiveSheetIndex(0)
                     ->setCellValue($column++.$row,$counter)
                     ->setCellValue($column++.$row,$childOrganisationunit->getLongname());
 
                 foreach($this->forms as $form){
                     # Entered records #
-                    $excelService->excelObj->setActiveSheetIndex(0)
+                    $excelService->setActiveSheetIndex(0)
                         ->setCellValue($column++.$row,$this->completenessMatrix[$childOrganisationunit->getId()][$form->getId()]);
                     # Expected records and Percentage #
                     if($this->expectedCompleteness[$childOrganisationunit->getId()][$form->getId()]){
-                        $excelService->excelObj->setActiveSheetIndex(0)
+                        $excelService->setActiveSheetIndex(0)
                             ->setCellValue($column++.$row,$this->expectedCompleteness[$childOrganisationunit->getId()][$form->getId()]);
                         if($this->completenessMatrix[$childOrganisationunit->getId()][$form->getId()] > $this->expectedCompleteness[$childOrganisationunit->getId()][$form->getId()])
-                            $excelService->excelObj->setActiveSheetIndex(0)
+                            $excelService->setActiveSheetIndex(0)
                                 ->setCellValue($column++.$row,'Above Expected');
                         elseif($this->expectedCompleteness[$childOrganisationunit->getId()][$form->getId()]<=0)
-                            $excelService->excelObj->setActiveSheetIndex(0)
+                            $excelService->setActiveSheetIndex(0)
                                 ->setCellValue($column++.$row,'');
                         else
-                            $excelService->excelObj->setActiveSheetIndex(0)
+                            $excelService->setActiveSheetIndex(0)
                                 ->setCellValue($column++.$row,round(($this->completenessMatrix[$childOrganisationunit->getId()][$form->getId()] / $this->expectedCompleteness[$childOrganisationunit->getId()][$form->getId()] )*100),2 );
 
                     }else{
                         # Expected records & percentage#
-                        $excelService->excelObj->setActiveSheetIndex(0)
+                        $excelService->setActiveSheetIndex(0)
                             ->setCellValue($column++.$row,'')
                             ->setCellValue($column++.$row,'');
                     }
@@ -332,34 +334,34 @@ class ReportOrganisationunitCompletenessController extends Controller
             $counter = $counter + 1;
             //format of the row
             if (($counter % 2) == 1)
-                $excelService->excelObj->getActiveSheet()->getStyle($column.$row.':'.$mergeColumnTitle.$row)->applyFromArray($text_format1);
+                $excelService->getActiveSheet()->getStyle($column.$row.':'.$mergeColumnTitle.$row)->applyFromArray($text_format1);
             else
-                $excelService->excelObj->getActiveSheet()->getStyle($column.$row.':'.$mergeColumnTitle.$row)->applyFromArray($text_format2);
+                $excelService->getActiveSheet()->getStyle($column.$row.':'.$mergeColumnTitle.$row)->applyFromArray($text_format2);
 
-            $excelService->excelObj->setActiveSheetIndex(0)
+            $excelService->setActiveSheetIndex(0)
                 ->setCellValue($column++.$row,$counter)
                 ->setCellValue($column++.$row,$this->rootNodeOrganisationunit->getLongname());
             foreach($this->forms as $form){
                 # Entered records #
-                $excelService->excelObj->setActiveSheetIndex(0)
+                $excelService->setActiveSheetIndex(0)
                     ->setCellValue($column++.$row,$this->completenessMatrix[$this->rootNodeOrganisationunit->getId()][$form->getId()]);
                 # Expected records and Percentage #
                 if($this->expectedCompleteness[$this->rootNodeOrganisationunit->getId()][$form->getId()]){
-                    $excelService->excelObj->setActiveSheetIndex(0)
+                    $excelService->setActiveSheetIndex(0)
                         ->setCellValue($column++.$row,$this->expectedCompleteness[$this->rootNodeOrganisationunit->getId()][$form->getId()]);
                     if($this->completenessMatrix[$this->rootNodeOrganisationunit->getId()][$form->getId()] > $this->expectedCompleteness[$this->rootNodeOrganisationunit->getId()][$form->getId()])
-                        $excelService->excelObj->setActiveSheetIndex(0)
+                        $excelService->setActiveSheetIndex(0)
                             ->setCellValue($column++.$row,'Above Expected');
                     elseif($this->expectedCompleteness[$this->rootNodeOrganisationunit->getId()][$form->getId()]<=0)
-                        $excelService->excelObj->setActiveSheetIndex(0)
+                        $excelService->setActiveSheetIndex(0)
                             ->setCellValue($column++.$row,'');
                     else
-                        $excelService->excelObj->setActiveSheetIndex(0)
+                        $excelService->setActiveSheetIndex(0)
                             ->setCellValue($column++.$row,round(($this->completenessMatrix[$this->rootNodeOrganisationunit->getId()][$form->getId()] / $this->expectedCompleteness[$this->rootNodeOrganisationunit->getId()][$form->getId()] )*100),2 );
 
                 }else{
                     # Expected records & percentage#
-                    $excelService->excelObj->setActiveSheetIndex(0)
+                    $excelService->setActiveSheetIndex(0)
                         ->setCellValue($column++.$row,'')
                         ->setCellValue($column++.$row,'');
                 }
@@ -370,34 +372,34 @@ class ReportOrganisationunitCompletenessController extends Controller
             $counter = $counter + 1;
             //format of the row
             if (($counter % 2) == 1)
-                $excelService->excelObj->getActiveSheet()->getStyle($column.$row.':'.$mergeColumnTitle.$row)->applyFromArray($text_format1);
+                $excelService->getActiveSheet()->getStyle($column.$row.':'.$mergeColumnTitle.$row)->applyFromArray($text_format1);
             else
-                $excelService->excelObj->getActiveSheet()->getStyle($column.$row.':'.$mergeColumnTitle.$row)->applyFromArray($text_format2);
+                $excelService->getActiveSheet()->getStyle($column.$row.':'.$mergeColumnTitle.$row)->applyFromArray($text_format2);
 
-            $excelService->excelObj->setActiveSheetIndex(0)
+            $excelService->setActiveSheetIndex(0)
                 ->setCellValue($column++.$row,$counter)
                 ->setCellValue($column++.$row,'Total:'.$this->rootNodeOrganisationunit->getLongname().' and lower levels');
             foreach($this->forms as $form){
                 # Entered records #
-                $excelService->excelObj->setActiveSheetIndex(0)
+                $excelService->setActiveSheetIndex(0)
                     ->setCellValue($column++.$row,$this->totalCompletenessMatrix[$form->getId()]);
                 # Expected records and Percentage #
                 if($this->totalExpectedCompleteness[$form->getId()]){
-                    $excelService->excelObj->setActiveSheetIndex(0)
+                    $excelService->setActiveSheetIndex(0)
                         ->setCellValue($column++.$row,$this->totalExpectedCompleteness[$form->getId()]);
                     if($this->totalCompletenessMatrix[$form->getId()] > $this->totalExpectedCompleteness[$form->getId()])
-                        $excelService->excelObj->setActiveSheetIndex(0)
+                        $excelService->setActiveSheetIndex(0)
                             ->setCellValue($column++.$row,'Above Expected');
                     elseif($this->totalExpectedCompleteness[$form->getId()]<=0)
-                        $excelService->excelObj->setActiveSheetIndex(0)
+                        $excelService->setActiveSheetIndex(0)
                             ->setCellValue($column++.$row,'');
                     else
-                        $excelService->excelObj->setActiveSheetIndex(0)
+                        $excelService->setActiveSheetIndex(0)
                             ->setCellValue($column++.$row,round(($this->totalCompletenessMatrix[$form->getId()] / $this->totalExpectedCompleteness[$form->getId()] )*100),2 );
 
                 }else{
                     # Expected records & percentage#
-                    $excelService->excelObj->setActiveSheetIndex(0)
+                    $excelService->setActiveSheetIndex(0)
                         ->setCellValue($column++.$row,'')
                         ->setCellValue($column++.$row,'');
                 }
@@ -407,17 +409,17 @@ class ReportOrganisationunitCompletenessController extends Controller
                 $counter = $counter + 1;
                 //format of the row
                 if (($counter % 2) == 1)
-                    $excelService->excelObj->getActiveSheet()->getStyle($column.$row.':'.$mergeColumnTitle.$row)->applyFromArray($text_format1);
+                    $excelService->getActiveSheet()->getStyle($column.$row.':'.$mergeColumnTitle.$row)->applyFromArray($text_format1);
                 else
-                    $excelService->excelObj->getActiveSheet()->getStyle($column.$row.':'.$mergeColumnTitle.$row)->applyFromArray($text_format2);
-                $excelService->excelObj->setActiveSheetIndex(0)
+                    $excelService->getActiveSheet()->getStyle($column.$row.':'.$mergeColumnTitle.$row)->applyFromArray($text_format2);
+                $excelService->setActiveSheetIndex(0)
                     ->setCellValue($column++.$row,$counter);
 
                 foreach($this->visibleFields as $visibleField){
-                    $excelService->excelObj->setActiveSheetIndex(0)
+                    $excelService->setActiveSheetIndex(0)
                         ->setCellValue($column++.$row,$this->recordsToDisplay[$recordInstance][$visibleField->getUid()]);
                 }
-                $excelService->excelObj->setActiveSheetIndex(0)
+                $excelService->setActiveSheetIndex(0)
                     ->setCellValue($column++.$row,$this->recordsToDisplay[$recordInstance]['form']);
                 $row++;
                 $column = 'A';
@@ -428,19 +430,18 @@ class ReportOrganisationunitCompletenessController extends Controller
 
 
 
-        $excelService->excelObj->getActiveSheet()->setTitle('Completeness Report');
+        $excelService->getActiveSheet()->setTitle('Completeness Report');
 
 
         // Set active sheet index to the first sheet, so Excel opens this as the first sheet
-        $excelService->excelObj->setActiveSheetIndex(0);
+        $excelService->setActiveSheetIndex(0);
 
-        //create the response
-
-        $response = $excelService->getResponse();
-        $response->headers->set('Content-Type', 'application/vnd.ms-excel; charset=utf-8');
-        $response->headers->set('Content-Disposition','attachment;filename='.$this->title.'.xls');
-
-        // If you are using a https connection, you have to set those two headers and use sendHeaders() for compatibility with IE <9
+        // create the writer
+        $writer = $this->get('phpexcel')->createWriter($excelService, 'Excel5');
+        // create the response
+        $response = $this->get('phpexcel')->createStreamedResponse($writer);
+        $response->headers->set('Content-Type', 'text/vnd.ms-excel; charset=utf-8');
+        $response->headers->set('Content-Disposition', 'attachment;filename='.$this->title.'.xls');
         $response->headers->set('Pragma', 'public');
         $response->headers->set('Cache-Control', 'maxage=1');
         //$response->sendHeaders();
@@ -450,7 +451,7 @@ class ReportOrganisationunitCompletenessController extends Controller
     /**
      * Generate a Report Redirect for Organisationunit Completeness
      *
-     * @Secure(roles="ROLE_SUPER_USER,ROLE_REPORTORGANISATIONUNITCOMPLETENESS_GENERATE,ROLE_USER")
+     * @Secure(roles="ROLE_SUPER_USER,ROLE_REPORTORGANISATIONUNITCOMPLETENESS_GENERATE")
      * @Route("/generate/redirect", name="report_organisationunit_completeness_generate_redirect")
      * @Method("GET")
      * @Template("HrisReportsBundle:ReportOrganisationunitCompleteness:generate.html.twig")
@@ -485,11 +486,31 @@ class ReportOrganisationunitCompletenessController extends Controller
             'recordsToDisplay'=>$this->recordsToDisplay,
             'recordInstances'=>$this->recordInstances,
             'parent'=>$this->parent,
+            'lowerLevels' => $this->lowerLevels,
+            'selectedLevel'=>$this->organisationunit->getOrganisationunitStructure()->getLevel(),
         );
     }
     
     public function processCompletenessFigures()
     {
+        /*
+		 * Filter out organisationunit by selected parent and desired level
+		 */
+        $selectedParentStructure = $this->getDoctrine()->getManager()->getRepository('HrisOrganisationunitBundle:OrganisationunitStructure')->findOneBy(array('organisationunit'=>$this->organisationunit));
+        $queryBuilder = $this->getDoctrine()->getManager()->createQueryBuilder();
+
+        // Fetching higher level headings[level<= levelPrefereed] excluding highest level
+        $this->lowerLevels = $queryBuilder->select('DISTINCT(organisationunitLevel.level),organisationunitLevel.name')
+            ->from('HrisOrganisationunitBundle:OrganisationunitLevel','organisationunitLevel')
+            ->where($queryBuilder->expr()->lt('organisationunitLevel.level',':lowerLevel'))
+            ->andWhere($queryBuilder->expr()->gt('organisationunitLevel.level',':selectedLevel'))
+            ->setParameters(array(
+                'lowerLevel'=>$this->organisationunitLevel->getLevel(),
+                'selectedLevel'=>$selectedParentStructure->getLevel()->getLevel()
+            ))
+            ->orderBy('organisationunitLevel.level','DESC')->getQuery()->getResult();
+
+
         // Create FormIds
         $formIds = NULL;
         foreach($this->forms as $formKey=>$formObject) {
@@ -1001,5 +1022,10 @@ class ReportOrganisationunitCompletenessController extends Controller
      * @var OrganisationunitLevel
      */
     private $organisationunitLevel;
+
+    /**
+     * @var array
+     */
+    private $lowerLevels;
 
 }

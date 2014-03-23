@@ -73,9 +73,9 @@
                                 <a href="{{ path('user_group_edit', { 'id': group.id }) }}"><i class="icon-edit icon-large" title="Edit"></i></a>
                             </li>
                             <li>
-                                <a data-toggle="modal" href="#deleteModalFor{{ group.name }}"><i class="icon-remove-sign icon-large" title="Delete"></i></a>
+                                <a data-toggle="modal" href="#deleteModalFor{{ group.uid }}"><i class="icon-remove-sign icon-large" title="Delete"></i></a>
                                 <!-- Modal -->
-                                <div class="modal fade" id="deleteModalFor{{ group.name }}">
+                                <div class="modal fade" id="deleteModalFor{{ group.uid }}">
                                     <div class="modal-dialog">
                                         <div class="modal-content">
                                             <div class="modal-header">

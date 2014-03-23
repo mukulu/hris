@@ -111,14 +111,14 @@ swiftmailer:
 # Monolog configuration
 monolog:
     handlers:
-        syslog:
-            type: stream
-            path: /var/log/symfony.log
-            level: error
         main:
             type: fingers_crossed
             action_level: warning
             handler: file
+        syslog:
+            type: stream
+            path: /var/log/symfony.log
+            level: error
         file:
             type: stream
             level: debug

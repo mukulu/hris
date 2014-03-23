@@ -65,6 +65,14 @@ class User extends BaseUser implements ParticipantInterface
     private $uid;
 
     /**
+     * @var string $description
+     *
+     * @Gedmo\Versioned
+     * @ORM\Column(name="description", type="text", nullable=true)
+     */
+    private $description;
+
+    /**
      * @var string $username
      * @Gedmo\Versioned
      * @Assert\NotBlank(groups={"registration"})
@@ -571,5 +579,28 @@ class User extends BaseUser implements ParticipantInterface
     public function getSurname()
     {
         return $this->surname;
+    }
+
+    /**
+     * Set description
+     *
+     * @param string $description
+     * @return Group
+     */
+    public function setDescription($description)
+    {
+        $this->description = $description;
+
+        return $this;
+    }
+
+    /**
+     * Get description
+     *
+     * @return string
+     */
+    public function getDescription()
+    {
+        return $this->description;
     }
 }

@@ -51,8 +51,14 @@
             </tr>
             <tr>
                 <th>Fieldrelation</th>
-                <td>{{ entity.fieldrelation }}</td>
+                <td>{% if entity.fieldrelation %} True {% else %} False {% endif %}</td>
             </tr>
+            {% if entity.fieldrelation %}
+            <tr>
+                <th>Related Fields</th>
+                <td>{{ entity.childField | join(', ') }}</td>
+            </tr>
+            {% endif %}
             <tr>
                 <th>Datecreated</th>
                 <td>{{ entity.datecreated|date('Y-m-d H:i:s') }}</td>

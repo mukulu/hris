@@ -1,6 +1,7 @@
 {% extends "::base.html.twig" %}
 {% block javascripts %}
     {{ parent() }}
+    <script type="text/javascript" language="javascript" src="{{ asset('commons/js/jquery.multi-select.js') }}"></script>
     <script type="text/javascript" language="javascript" src="{{ asset('commons/js/jquery.validate.js') }}"></script>
     <script type="text/javascript" language="javascript" src="{{ asset('commons/js/ext-all.js') }}"></script>
     <script type="text/javascript" src="{{ asset('commons/js/jquery-ui.js') }}"></script>
@@ -67,6 +68,20 @@
         $( document ).ready(function() {
             // validate signup form on keyup and submit
             $("#fos_user_registration_register").validate({ ignore:".date" });
+            $("#hris_userbundle_usertype").validate({ ignore:[] });
+            $('#hris_userbundle_usertype_roles').multiSelect({
+                selectableHeader: "<div class=''>Avaiable Roles</div>",
+                selectionHeader: "<div class=''>Selected Roles</div>"
+            });
+            $('#hris_userbundle_usertype_groups').multiSelect({
+                selectableHeader: "<div class=''>Avaiable Groups</div>",
+                selectionHeader: "<div class=''>Selected Groups</div>"
+            });
+            $('#hris_userbundle_usertype_form').multiSelect({
+                selectableHeader: "<div class=''>Avaiable Forms</div>",
+                selectionHeader: "<div class=''>Selected Forms</div>"
+            });
+            $( 'input[required="required"],select[required="required"]').closest(".control-group").children("label").prepend('<em class="required-asterisk">*</em>');
         });
     </script>
 {% endblock javascripts %}
@@ -76,6 +91,12 @@
     <link rel="stylesheet" type="text/css" media="all" href="{{ asset('commons/css/ext-standard.css') }}">
     <link rel="stylesheet" href="{{ asset('commons/css/datepicker.css') }}" />
     <link rel="stylesheet" href="{{ asset('commons/css/jquery-ui.css') }}" />
+    <link rel="stylesheet" type="text/css" media="all" href="{{ asset('commons/css/multi-select.css') }}">
+    <style type="text/css">
+        #ms-hris_userbundle_usertype_roles {
+            width:890px;
+        }
+    </style>
 {% endblock stylesheets %}
 
 {% block right_content %}

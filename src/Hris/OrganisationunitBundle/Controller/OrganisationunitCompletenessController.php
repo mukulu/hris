@@ -44,7 +44,7 @@ class OrganisationunitCompletenessController extends Controller
     /**
      * Lists all OrganisationunitCompleteness entities.
      *
-     * @Secure(roles="ROLE_SUPER_USER,ROLE_ORGANISATIONUNITCOMPLETENESS_LIST,ROLE_USER")
+     * @Secure(roles="ROLE_SUPER_USER,ROLE_ORGANISATIONUNITCOMPLETENESS_LIST")
      * @Route("/", name="organisationunitcompleteness")
      * @Route("/list", name="organisationunitcompleteness_list")
      * @Method("GET")
@@ -60,10 +60,11 @@ class OrganisationunitCompletenessController extends Controller
             'entities' => $entities,
         );
     }
+
     /**
      * Creates a new OrganisationunitCompleteness entity.
      *
-     * @Secure(roles="ROLE_SUPER_USER,ROLE_ORGANISATIONUNITCOMPLETENESS_CREATE,ROLE_USER")
+     * @Secure(roles="ROLE_SUPER_USER,ROLE_ORGANISATIONUNITCOMPLETENESS_CREATE")
      * @Route("/", name="organisationunitcompleteness_create")
      * @Method("POST")
      * @Template("HrisOrganisationunitBundle:OrganisationunitCompleteness:new.html.twig")
@@ -89,9 +90,63 @@ class OrganisationunitCompletenessController extends Controller
     }
 
     /**
+     * Update organisationunit completeness through ajax.
+     *
+     * @Secure(roles="ROLE_SUPER_USER,ROLE_ORGANISATIONUNITCOMPLETENESS_AJAXUPDATE")
+     * @Route("/ajaxupdate", name="organisationunitcompleteness_ajaxupdate")
+     * @Method("POST")
+     * @Template()
+     */
+    public function ajaxUpdateAction(Request $request)
+    {
+        $em = $this->getDoctrine()->getManager();
+        // Persist completeness figures too
+        $completenessValue = $request->request->get('value');
+        $completenessId= $request->request->get('id');
+        $idArray= explode('_',$completenessId);
+        $organisationunitId=$idArray[1];
+        $formId=$idArray[2];
+        // Check if Stored completeness exist already
+        $queryBuilder = $this->getDoctrine()->getManager()->createQueryBuilder();
+        $storedCompletenessIds = $queryBuilder->select('organisationunitCompleteness.id')
+            ->from('HrisOrganisationunitBundle:Organisationunit','organisationunit')
+            ->join('organisationunit.organisationunitCompleteness','organisationunitCompleteness')
+            ->join('organisationunitCompleteness.form','form')
+            ->join('organisationunit.organisationunitStructure','organisationunitStructure')
+            ->andWhere($queryBuilder->expr()->in('form.id',$formId))
+            ->andWhere('organisationunit.id=:organisationunitId')
+            ->andWhere('organisationunit.active=True')
+            ->setParameters(array('organisationunitId'=>$organisationunitId))
+            ->getQuery()->getResult();
+
+        if(!empty($storedCompletenessIds)) {
+            // Update existing completeness
+            $storedCompletenessId = $this->array_value_recursive('id',$storedCompletenessIds);
+            $entity = $em->getRepository('HrisOrganisationunitBundle:OrganisationunitCompleteness')->find($storedCompletenessId);
+            $entity->setExpectation($completenessValue);
+        }else {
+            // Insert new completeness
+            $entity  = new OrganisationunitCompleteness();
+            // Organisationunit object
+            $organisationunit = $em->getRepository('HrisOrganisationunitBundle:Organisationunit')->find($organisationunitId);
+            $form = $em->getRepository('HrisFormBundle:Form')->find($formId);
+            $entity->setOrganisationunit($organisationunit);
+            $entity->setForm($form);
+            $entity->setExpectation($completenessValue);
+        }
+        // Persist & flush
+        $em->persist($entity);
+        $em->flush();
+
+        return array(
+            'completenessValue' => $completenessValue,
+        );
+    }
+
+    /**
      * Displays a form to create a new OrganisationunitCompleteness entity.
      *
-     * @Secure(roles="ROLE_SUPER_USER,ROLE_ORGANISATIONUNITCOMPLETENESS_CREATE,ROLE_USER")
+     * @Secure(roles="ROLE_SUPER_USER,ROLE_ORGANISATIONUNITCOMPLETENESS_CREATE")
      * @Route("/new", name="organisationunitcompleteness_new")
      * @Method("GET")
      * @Template()
@@ -110,7 +165,7 @@ class OrganisationunitCompletenessController extends Controller
     /**
      * Finds and displays a OrganisationunitCompleteness entity.
      *
-     * @Secure(roles="ROLE_SUPER_USER,ROLE_ORGANISATIONUNITCOMPLETENESS_SHOW,ROLE_USER")
+     * @Secure(roles="ROLE_SUPER_USER,ROLE_ORGANISATIONUNITCOMPLETENESS_SHOW")
      * @Route("/{id}", requirements={"id"="\d+"}, requirements={"id"="\d+"}, name="organisationunitcompleteness_show")
      * @Method("GET")
      * @Template()
@@ -136,7 +191,7 @@ class OrganisationunitCompletenessController extends Controller
     /**
      * Displays a form to edit an existing OrganisationunitCompleteness entity.
      *
-     * @Secure(roles="ROLE_SUPER_USER,ROLE_ORGANISATIONUNITCOMPLETENESS_UPDATE,ROLE_USER")
+     * @Secure(roles="ROLE_SUPER_USER,ROLE_ORGANISATIONUNITCOMPLETENESS_UPDATE")
      * @Route("/{id}/edit", requirements={"id"="\d+"}, name="organisationunitcompleteness_edit")
      * @Method("GET")
      * @Template()
@@ -164,7 +219,7 @@ class OrganisationunitCompletenessController extends Controller
     /**
      * Edits an existing OrganisationunitCompleteness entity.
      *
-     * @Secure(roles="ROLE_SUPER_USER,ROLE_ORGANISATIONUNITCOMPLETENESS_UPDATE,ROLE_USER")
+     * @Secure(roles="ROLE_SUPER_USER,ROLE_ORGANISATIONUNITCOMPLETENESS_UPDATE")
      * @Route("/{id}", requirements={"id"="\d+"}, name="organisationunitcompleteness_update")
      * @Method("PUT")
      * @Template("HrisOrganisationunitBundle:OrganisationunitCompleteness:edit.html.twig")
@@ -199,7 +254,7 @@ class OrganisationunitCompletenessController extends Controller
     /**
      * Deletes a OrganisationunitCompleteness entity.
      *
-     * @Secure(roles="ROLE_SUPER_USER,ROLE_ORGANISATIONUNITCOMPLETENESS_DELETE,ROLE_USER")
+     * @Secure(roles="ROLE_SUPER_USER,ROLE_ORGANISATIONUNITCOMPLETENESS_DELETE")
      * @Route("/{id}", requirements={"id"="\d+"}, name="organisationunitcompleteness_delete")
      * @Method("DELETE")
      */
@@ -236,5 +291,18 @@ class OrganisationunitCompletenessController extends Controller
             ->add('id', 'hidden')
             ->getForm()
         ;
+    }
+
+    /**
+     * Get all values from specific key in a multidimensional array
+     *
+     * @param $key string
+     * @param $arr array
+     * @return null|string|array
+     */
+    public function array_value_recursive($key, array $arr){
+        $val = array();
+        array_walk_recursive($arr, function($v, $k) use($key, &$val){if($k == $key) array_push($val, $v);});
+        return count($val) > 1 ? $val : array_pop($val);
     }
 }

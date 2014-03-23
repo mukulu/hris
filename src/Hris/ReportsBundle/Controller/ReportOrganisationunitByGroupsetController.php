@@ -44,7 +44,7 @@ class ReportOrganisationunitByGroupsetController extends Controller
     /**
      * Show Report Form for generation of Organisation unit by groupset
      *
-     * @Secure(roles="ROLE_SUPER_USER,ROLE_REPORTORGANISATIONUNITGROUPSET_GENERATE,ROLE_USER")
+     * @Secure(roles="ROLE_SUPER_USER,ROLE_REPORTORGANISATIONUNITGROUPSET_GENERATE")
      * @Route("/", name="report_organisationunit_groupset")
      * @Method("GET")
      * @Template()
@@ -62,7 +62,7 @@ class ReportOrganisationunitByGroupsetController extends Controller
     /**
      * Generate Report for Organisationunit by Groupset
      *
-     * @Secure(roles="ROLE_SUPER_USER,ROLE_REPORTORGANISATIONUNITGROUPSET_GENERATE,ROLE_USER")
+     * @Secure(roles="ROLE_SUPER_USER,ROLE_REPORTORGANISATIONUNITGROUPSET_GENERATE")
      * @Route("/", name="report_organisationunit_groupset_generate")
      * @Method("PUT")
      * @Template()
@@ -91,7 +91,7 @@ class ReportOrganisationunitByGroupsetController extends Controller
     /**
      * Generate a Report Redirect for Organisationunit by Groupset
      *
-     * @Secure(roles="ROLE_SUPER_USER,ROLE_REPORTORGANISATIONUNITGROUPSET_GENERATE,ROLE_USER")
+     * @Secure(roles="ROLE_SUPER_USER,ROLE_REPORTORGANISATIONUNITGROUPSET_GENERATE")
      * @Route("/redirect", name="report_organisationunit_groupset_generate_redirect")
      * @Method("GET")
      * @Template("HrisReportsBundle:ReportOrganisationunitByGroupset:generate.html.twig")
@@ -124,7 +124,7 @@ class ReportOrganisationunitByGroupsetController extends Controller
     /**
      * Generate Report for Organisationunit by Group
      *
-     * @Secure(roles="ROLE_SUPER_USER,ROLE_REPORTORGANISATIONUNITGROUPSET_GENERATE,ROLE_USER")
+     * @Secure(roles="ROLE_SUPER_USER,ROLE_REPORTORGANISATIONUNITGROUPSET_GENERATE")
      * @Route("/organisationunitgroup", name="report_organisationunit_group_generate")
      * @Method("GET")
      * @Template()

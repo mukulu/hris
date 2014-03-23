@@ -58,6 +58,9 @@ class FieldType extends AbstractType
             ->add('isCalculated',null,array(
                 'required'=>false,
             ))
+            ->add('fieldrelation',null,array(
+                'required'=>false,
+            ))
             ->add('calculatedExpression',null,array(
                 'required'=>false,
             ))

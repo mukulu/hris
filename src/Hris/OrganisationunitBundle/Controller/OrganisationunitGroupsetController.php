@@ -44,7 +44,7 @@ class OrganisationunitGroupsetController extends Controller
     /**
      * Lists all OrganisationunitGroupset entities.
      *
-     * @Secure(roles="ROLE_SUPER_USER,ROLE_ORGANISATIONUNITGROUPSET_LIST,ROLE_USER")
+     * @Secure(roles="ROLE_SUPER_USER,ROLE_ORGANISATIONUNITGROUPSET_LIST")
      * @Route("/", name="organisationunitgroupset")
      * @Route("/list", name="organisationunitgroupset_list")
      * @Method("GET")
@@ -70,7 +70,7 @@ class OrganisationunitGroupsetController extends Controller
     /**
      * Creates a new OrganisationunitGroupset entity.
      *
-     * @Secure(roles="ROLE_SUPER_USER,ROLE_ORGANISATIONUNITGROUPSET_CREATE,ROLE_USER")
+     * @Secure(roles="ROLE_SUPER_USER,ROLE_ORGANISATIONUNITGROUPSET_CREATE")
      * @Route("/", name="organisationunitgroupset_create")
      * @Method("POST")
      * @Template("HrisOrganisationunitBundle:OrganisationunitGroupset:new.html.twig")
@@ -98,7 +98,7 @@ class OrganisationunitGroupsetController extends Controller
     /**
      * Displays a form to create a new OrganisationunitGroupset entity.
      *
-     * @Secure(roles="ROLE_SUPER_USER,ROLE_ORGANISATIONUNITGROUPSET_CREATE,ROLE_USER")
+     * @Secure(roles="ROLE_SUPER_USER,ROLE_ORGANISATIONUNITGROUPSET_CREATE")
      * @Route("/new", name="organisationunitgroupset_new")
      * @Method("GET")
      * @Template()
@@ -117,7 +117,7 @@ class OrganisationunitGroupsetController extends Controller
     /**
      * Finds and displays a OrganisationunitGroupset entity.
      *
-     * @Secure(roles="ROLE_SUPER_USER,ROLE_ORGANISATIONUNITGROUPSET_SHOW,ROLE_USER")
+     * @Secure(roles="ROLE_SUPER_USER,ROLE_ORGANISATIONUNITGROUPSET_SHOW")
      * @Route("/{id}", requirements={"id"="\d+"}, name="organisationunitgroupset_show")
      * @Method("GET")
      * @Template()
@@ -143,7 +143,7 @@ class OrganisationunitGroupsetController extends Controller
     /**
      * Displays a form to edit an existing OrganisationunitGroupset entity.
      *
-     * @Secure(roles="ROLE_SUPER_USER,ROLE_ORGANISATIONUNITGROUPSET_UPDATE,ROLE_USER")
+     * @Secure(roles="ROLE_SUPER_USER,ROLE_ORGANISATIONUNITGROUPSET_UPDATE")
      * @Route("/{id}/edit", requirements={"id"="\d+"}, name="organisationunitgroupset_edit")
      * @Method("GET")
      * @Template()
@@ -171,7 +171,7 @@ class OrganisationunitGroupsetController extends Controller
     /**
      * Edits an existing OrganisationunitGroupset entity.
      *
-     * @Secure(roles="ROLE_SUPER_USER,ROLE_ORGANISATIONUNITGROUPSET_UPDATE,ROLE_USER")
+     * @Secure(roles="ROLE_SUPER_USER,ROLE_ORGANISATIONUNITGROUPSET_UPDATE")
      * @Route("/{id}", requirements={"id"="\d+"}, name="organisationunitgroupset_update")
      * @Method("PUT")
      * @Template("HrisOrganisationunitBundle:OrganisationunitGroupset:edit.html.twig")
@@ -206,7 +206,7 @@ class OrganisationunitGroupsetController extends Controller
     /**
      * Deletes a OrganisationunitGroupset entity.
      *
-     * @Secure(roles="ROLE_SUPER_USER,ROLE_ORGANISATIONUNITGROUPSET_DELETE,ROLE_USER")
+     * @Secure(roles="ROLE_SUPER_USER,ROLE_ORGANISATIONUNITGROUPSET_DELETE")
      * @Route("/{id}", requirements={"id"="\d+"}, name="organisationunitgroupset_delete")
      * @Method("DELETE")
      */

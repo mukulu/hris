@@ -2,11 +2,9 @@
 
     <thead>
         <tr>
+            <th>{% trans from 'FOSMessageBundle' %}participants{% endtrans %}</th>
             <th>{% trans from 'FOSMessageBundle' %}subject{% endtrans %}</th>
-            <th>{% trans from 'FOSMessageBundle' %}starter{% endtrans %}</th>
             <th>{% trans from 'FOSMessageBundle' %}startdate{% endtrans %}</th>
-            <th>{% trans from 'FOSMessageBundle' %}messages{% endtrans %}</th>
-            <th>{% trans from 'FOSMessageBundle' %}last_message{% endtrans %}</th>
             <th>{% trans from 'FOSMessageBundle' %}actions{% endtrans %}</th>
         </tr>
     </thead>
@@ -16,31 +14,29 @@
     {% if threads %}
         {% for thread in threads %}
             <tr>
-                <td style="max-width: 200px;">
-                    <a href="{{ url('message_thread_view', {'threadId': thread.id}) }}">{{ thread.subject }} </a>
-                    {% if not fos_message_is_read(thread) %}
-                        ({% trans from 'FOSMessageBundle' %}new{% endtrans %})
-                    {% endif %}
+                <td style="max-width: 300px;">
+
+                    {% spaceless %}
+                        {{ thread.createdBy }},
+                        {% for participant in thread.getParticipants() | slice(0,3) %}
+                            {% if loop.index0 > 1 %},{% endif %}{% if participant.username != thread.createdBy.username %}{{ participant }}{% endif %}
+                        {% endfor %}
+                        {% if thread.getParticipants() | length > 3 %}
+                            {% if thread.createdBy in thread.getParticipants() %}
+                                and {{ thread.getParticipants() | length - 3 }} others
+                            {% else %}
+                                and {{ thread.getParticipants() | length - 4 }} others
+                            {% endif %}
+                        {% endif %}
+                        ({{ thread.messages|length }})
+                    {% endspaceless %}
+
                 </td>
                 <td>
-                    {{ thread.createdBy }}
+                    <a href="{{ url('message_thread_view', {'threadId': thread.id}) }}">{{ thread.subject }}{% if not fos_message_is_read(thread) %}<div class="newMessage">new</div>{% endif %}</a>
                 </td>
                 <td>
                     {{ thread.createdAt|date }}
-                </td>
-                <td>
-                    {{ thread.messages|length }}
-                </td>
-                <td>
-                    {% if thread.lastMessage %}
-                        <a href="{{ url('message_thread_view', {'threadId': thread.id}) }}#message_{{ thread.lastMessage.id }}" title="{% trans from 'FOSMessageBundle' %}goto_last{% endtrans %}">
-                            →
-                        </a>
-                        on {{ thread.lastMessage.createdAt|date("jS F") }}
-                        by {{ thread.lastMessage.sender.firstname }} {{ thread.lastMessage.sender.surname }}
-                    {% else %}
-                        ----
-                    {% endif %}
                 </td>
                 <td style="min-width: 30px;">
                     <ul class="inline">

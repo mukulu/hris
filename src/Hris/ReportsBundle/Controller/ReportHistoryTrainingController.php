@@ -52,7 +52,7 @@ class ReportHistoryTrainingController extends Controller
     /**
      * Show Report HistoryTraining
      *
-     * @Secure(roles="ROLE_SUPER_USER,ROLE_REPORTHISTORY_GENERATE,ROLE_USER")
+     * @Secure(roles="ROLE_SUPER_USER,ROLE_REPORTHISTORY_GENERATE")
      * @Route("/", name="report_historytraining")
      * @Method("GET")
      * @Template()
@@ -70,7 +70,7 @@ class ReportHistoryTrainingController extends Controller
     /**
      * Generate aggregated reports
      *
-     * @Secure(roles="ROLE_SUPER_USER,ROLE_REPORTHISTORY_GENERATE,ROLE_USER")
+     * @Secure(roles="ROLE_SUPER_USER,ROLE_REPORTHISTORY_GENERATE")
      * @Route("/", name="report_historytraining_generate")
      * @Method("PUT")
      * @Template()
@@ -361,7 +361,7 @@ class ReportHistoryTrainingController extends Controller
             }
 
             //Query all training data and count by start date year
-            $query = "SELECT R.firstname, R.middlename, R.surname, R.designation, T.coursename, T.courselocation, T.sponsor, T.startdate, T.enddate, R.level5_facility ";
+            $query = "SELECT R.firstname, R.middlename, R.surname, R.profession, T.coursename, T.courselocation, T.sponsor, T.startdate, T.enddate, R.level5_facility ";
             $query .= "FROM hris_record_training T ";
             $query .= "INNER JOIN hris_record as V on V.id = T.record_id ";
             $query .= "INNER JOIN ".$resourceTableName." as R on R.instance = V.instance ";
@@ -385,7 +385,7 @@ class ReportHistoryTrainingController extends Controller
                 }
 
                 //Query all history data and count by field option
-                $query = "SELECT R.firstname, R.middlename, R.surname, R.designation, H.history, H.reason, H.startdate, R.level5_facility ";
+                $query = "SELECT R.firstname, R.middlename, R.surname, R.profession, H.history, H.reason, H.startdate, R.level5_facility ";
                 $query .= "FROM hris_record_history H ";
                 $query .= "INNER JOIN hris_record as V on V.id = H.record_id ";
                 $query .= "INNER JOIN ".$resourceTableName." as R on R.instance = V.instance ";
@@ -405,7 +405,7 @@ class ReportHistoryTrainingController extends Controller
     /**
      * Download History reports
      *
-     * @Secure(roles="ROLE_SUPER_USER,ROLE_REPORTHISTORY_DOWNLOAD,ROLE_USER")
+     * @Secure(roles="ROLE_SUPER_USER,ROLE_REPORTHISTORY_DOWNLOAD")
      * @Route("/download", name="report_historytraining_download")
      * @Method("GET")
      * @Template()
@@ -450,8 +450,8 @@ class ReportHistoryTrainingController extends Controller
         }
 
         // ask the service for a Excel5
-        $excelService = $this->get('xls.service_xls5');
-        $excelService->excelObj->getProperties()->setCreator("HRHIS3")
+        $excelService = $this->get('phpexcel')->createPHPExcelObject();
+        $excelService->getProperties()->setCreator("HRHIS3")
             ->setLastModifiedBy("HRHIS3")
             ->setTitle($title)
             ->setSubject("Office 2005 XLSX Test Document")
@@ -463,9 +463,9 @@ class ReportHistoryTrainingController extends Controller
         $column = 'A';
         $row  = 1;
         $date = "Date: ".date("jS F Y");
-        $excelService->excelObj->getActiveSheet()->getDefaultRowDimension()->setRowHeight(15);
-        $excelService->excelObj->getActiveSheet()->getDefaultColumnDimension()->setWidth(15);
-        $excelService->excelObj->setActiveSheetIndex(0)
+        $excelService->getActiveSheet()->getDefaultRowDimension()->setRowHeight(15);
+        $excelService->getActiveSheet()->getDefaultColumnDimension()->setWidth(15);
+        $excelService->setActiveSheetIndex(0)
             ->setCellValue($column.$row++, $title)
             ->setCellValue($column.$row, $date);
         //add style to the header
@@ -521,8 +521,8 @@ class ReportHistoryTrainingController extends Controller
             ),
         );
 
-        $excelService->excelObj->getActiveSheet()->getRowDimension('1')->setRowHeight(30);
-        $excelService->excelObj->getActiveSheet()->getRowDimension('2')->setRowHeight(20);
+        $excelService->getActiveSheet()->getRowDimension('1')->setRowHeight(30);
+        $excelService->getActiveSheet()->getRowDimension('2')->setRowHeight(20);
 
         //reset the colomn and row number
         $column == 'A';
@@ -539,13 +539,13 @@ class ReportHistoryTrainingController extends Controller
             }*/
 
             //apply the styles
-            $excelService->excelObj->getActiveSheet()->getStyle('A1:D2')->applyFromArray($heading_format);
-            $excelService->excelObj->getActiveSheet()->mergeCells('A1:D1');
-            $excelService->excelObj->getActiveSheet()->mergeCells('A2:D2');
+            $excelService->getActiveSheet()->getStyle('A1:D2')->applyFromArray($heading_format);
+            $excelService->getActiveSheet()->mergeCells('A1:D1');
+            $excelService->getActiveSheet()->mergeCells('A2:D2');
 
             //write the table heading of the values
-            $excelService->excelObj->getActiveSheet()->getStyle('A4:D4')->applyFromArray($header_format);
-            $excelService->excelObj->setActiveSheetIndex(0)
+            $excelService->getActiveSheet()->getStyle('A4:D4')->applyFromArray($header_format);
+            $excelService->setActiveSheetIndex(0)
                 ->setCellValue($column++.$row, 'SN')
                 ->setCellValue($column++.$row, $fields->getCaption())
                 ->setCellValue($column.$row, 'Value');
@@ -553,7 +553,7 @@ class ReportHistoryTrainingController extends Controller
             /*$fieldOptions = $em->getRepository('HrisFormBundle:FieldOption')->findBy(array('field'=>$fieldsTwo));
 
             foreach ($fieldOptions as $fieldOption) {
-                $excelService->excelObj->setActiveSheetIndex(0)->setCellValue($column++.$row, $fieldOption->getValue());
+                $excelService->setActiveSheetIndex(0)->setCellValue($column++.$row, $fieldOption->getValue());
             }*/
 
             //write the values
@@ -564,28 +564,28 @@ class ReportHistoryTrainingController extends Controller
 
                 //format of the row
                 if (($row % 2) == 1)
-                    $excelService->excelObj->getActiveSheet()->getStyle($column.$row.':D'.$row)->applyFromArray($text_format1);
+                    $excelService->getActiveSheet()->getStyle($column.$row.':D'.$row)->applyFromArray($text_format1);
                 else
-                    $excelService->excelObj->getActiveSheet()->getStyle($column.$row.':D'.$row)->applyFromArray($text_format2);
-                $excelService->excelObj->setActiveSheetIndex(0)
+                    $excelService->getActiveSheet()->getStyle($column.$row.':D'.$row)->applyFromArray($text_format2);
+                $excelService->setActiveSheetIndex(0)
                     ->setCellValue($column++.$row, $i++)
                     ->setCellValue($column++.$row, $result['data'])
                     ->setCellValue($column++.$row, $result['total']);
 
                 /*foreach ($items as $item) {
-                    $excelService->excelObj->setActiveSheetIndex(0)->setCellValue($column++.$row, $item);
+                    $excelService->setActiveSheetIndex(0)->setCellValue($column++.$row, $item);
                 }*/
             }
 
         }elseif ($reportType == "training" ){
             //apply the styles
-            $excelService->excelObj->getActiveSheet()->getStyle('A1:C2')->applyFromArray($heading_format);
-            $excelService->excelObj->getActiveSheet()->mergeCells('A1:C1');
-            $excelService->excelObj->getActiveSheet()->mergeCells('A2:C2');
+            $excelService->getActiveSheet()->getStyle('A1:C2')->applyFromArray($heading_format);
+            $excelService->getActiveSheet()->mergeCells('A1:C1');
+            $excelService->getActiveSheet()->mergeCells('A2:C2');
 
             //write the table heading of the values
-            $excelService->excelObj->getActiveSheet()->getStyle('A4:C4')->applyFromArray($header_format);
-            $excelService->excelObj->setActiveSheetIndex(0)
+            $excelService->getActiveSheet()->getStyle('A4:C4')->applyFromArray($header_format);
+            $excelService->setActiveSheetIndex(0)
                 ->setCellValue($column++.$row, 'SN')
                 ->setCellValue($column++.$row, 'Year')
                 ->setCellValue($column.$row, 'Value');
@@ -598,10 +598,10 @@ class ReportHistoryTrainingController extends Controller
 
                 //format of the row
                 if (($row % 2) == 1)
-                    $excelService->excelObj->getActiveSheet()->getStyle($column.$row.':C'.$row)->applyFromArray($text_format1);
+                    $excelService->getActiveSheet()->getStyle($column.$row.':C'.$row)->applyFromArray($text_format1);
                 else
-                    $excelService->excelObj->getActiveSheet()->getStyle($column.$row.':C'.$row)->applyFromArray($text_format2);
-                    $excelService->excelObj->setActiveSheetIndex(0)
+                    $excelService->getActiveSheet()->getStyle($column.$row.':C'.$row)->applyFromArray($text_format2);
+                    $excelService->setActiveSheetIndex(0)
                     ->setCellValue($column++.$row, $i++)
                     ->setCellValue($column++.$row, $result['data'])
                     ->setCellValue($column.$row, $result['total']);
@@ -609,19 +609,18 @@ class ReportHistoryTrainingController extends Controller
             }
         }
 
-        $excelService->excelObj->getActiveSheet()->setTitle('Training-History Report');
+        $excelService->getActiveSheet()->setTitle('Training-History Report');
 
 
         // Set active sheet index to the first sheet, so Excel opens this as the first sheet
-        $excelService->excelObj->setActiveSheetIndex(0);
+        $excelService->setActiveSheetIndex(0);
 
-        //create the response
-
-        $response = $excelService->getResponse();
-        $response->headers->set('Content-Type', 'application/vnd.ms-excel; charset=utf-8');
-        $response->headers->set('Content-Disposition', 'attachment; filename='.$title.'.xls');
-
-        // If you are using a https connection, you have to set those two headers and use sendHeaders() for compatibility with IE <9
+        // create the writer
+        $writer = $this->get('phpexcel')->createWriter($excelService, 'Excel5');
+        // create the response
+        $response = $this->get('phpexcel')->createStreamedResponse($writer);
+        $response->headers->set('Content-Type', 'text/vnd.ms-excel; charset=utf-8');
+        $response->headers->set('Content-Disposition', 'attachment;filename='.$title.'.xls');
         $response->headers->set('Pragma', 'public');
         $response->headers->set('Cache-Control', 'maxage=1');
         //$response->sendHeaders();
@@ -632,7 +631,7 @@ class ReportHistoryTrainingController extends Controller
     /**
      * Download history reports by Cadre
      *
-     * @Secure(roles="ROLE_SUPER_USER,ROLE_REPORTHISTORY_DOWNLOADBYCADRE,ROLE_USER")
+     * @Secure(roles="ROLE_SUPER_USER,ROLE_REPORTHISTORY_DOWNLOADBYCADRE")
      * @Route("/records", name="report_historytraining_download_records")
      * @Method("GET")
      * @Template()
@@ -677,8 +676,8 @@ class ReportHistoryTrainingController extends Controller
 
 
         // ask the service for a Excel5
-        $excelService = $this->get('xls.service_xls5');
-        $excelService->excelObj->getProperties()->setCreator("HRHIS3")
+        $excelService = $this->get('phpexcel')->createPHPExcelObject();
+        $excelService->getProperties()->setCreator("HRHIS3")
             ->setLastModifiedBy("HRHIS3")
             ->setTitle($title)
             ->setSubject("Office 2005 XLSX Test Document")
@@ -690,9 +689,9 @@ class ReportHistoryTrainingController extends Controller
         $column = 'A';
         $row  = 1;
         $date = "Date: ".date("jS F Y");
-        $excelService->excelObj->getActiveSheet()->getDefaultRowDimension()->setRowHeight(15);
-        $excelService->excelObj->getActiveSheet()->getDefaultColumnDimension()->setWidth(20);
-        $excelService->excelObj->setActiveSheetIndex(0)
+        $excelService->getActiveSheet()->getDefaultRowDimension()->setRowHeight(15);
+        $excelService->getActiveSheet()->getDefaultColumnDimension()->setWidth(20);
+        $excelService->setActiveSheetIndex(0)
             ->setCellValue($column.$row++, $title)
             ->setCellValue($column.$row, $date);
         //add style to the header
@@ -748,8 +747,8 @@ class ReportHistoryTrainingController extends Controller
             ),
         );
 
-        $excelService->excelObj->getActiveSheet()->getRowDimension('1')->setRowHeight(30);
-        $excelService->excelObj->getActiveSheet()->getRowDimension('2')->setRowHeight(20);
+        $excelService->getActiveSheet()->getRowDimension('1')->setRowHeight(30);
+        $excelService->getActiveSheet()->getRowDimension('2')->setRowHeight(20);
 
         //reset the colomn and row number
         $column == 'A';
@@ -766,16 +765,16 @@ class ReportHistoryTrainingController extends Controller
             }*/
 
             //apply the styles
-            $excelService->excelObj->getActiveSheet()->getStyle('A1:G2')->applyFromArray($heading_format);
-            $excelService->excelObj->getActiveSheet()->mergeCells('A1:G1');
-            $excelService->excelObj->getActiveSheet()->mergeCells('A2:G2');
+            $excelService->getActiveSheet()->getStyle('A1:G2')->applyFromArray($heading_format);
+            $excelService->getActiveSheet()->mergeCells('A1:G1');
+            $excelService->getActiveSheet()->mergeCells('A2:G2');
 
             //write the table heading of the values
-            $excelService->excelObj->getActiveSheet()->getStyle('A4:G4')->applyFromArray($header_format);
-            $excelService->excelObj->setActiveSheetIndex(0)
+            $excelService->getActiveSheet()->getStyle('A4:G4')->applyFromArray($header_format);
+            $excelService->setActiveSheetIndex(0)
                 ->setCellValue($column++.$row, 'SN')
                 ->setCellValue($column++.$row, 'Name')
-                ->setCellValue($column++.$row, 'Designation')
+                ->setCellValue($column++.$row, 'Profession')
                 ->setCellValue($column++.$row, 'History')
                 ->setCellValue($column++.$row, 'Reason')
                 ->setCellValue($column++.$row, 'Date')
@@ -784,7 +783,7 @@ class ReportHistoryTrainingController extends Controller
             /*$fieldOptions = $em->getRepository('HrisFormBundle:FieldOption')->findBy(array('field'=>$fieldsTwo));
 
             foreach ($fieldOptions as $fieldOption) {
-                $excelService->excelObj->setActiveSheetIndex(0)->setCellValue($column++.$row, $fieldOption->getValue());
+                $excelService->setActiveSheetIndex(0)->setCellValue($column++.$row, $fieldOption->getValue());
             }*/
 
             //write the values
@@ -795,35 +794,35 @@ class ReportHistoryTrainingController extends Controller
 
                 //format of the row
                 if (($row % 2) == 1)
-                    $excelService->excelObj->getActiveSheet()->getStyle($column.$row.':G'.$row)->applyFromArray($text_format1);
+                    $excelService->getActiveSheet()->getStyle($column.$row.':G'.$row)->applyFromArray($text_format1);
                 else
-                    $excelService->excelObj->getActiveSheet()->getStyle($column.$row.':G'.$row)->applyFromArray($text_format2);
-                $excelService->excelObj->setActiveSheetIndex(0)
+                    $excelService->getActiveSheet()->getStyle($column.$row.':G'.$row)->applyFromArray($text_format2);
+                $excelService->setActiveSheetIndex(0)
                     ->setCellValue($column++.$row, $i++)
                     ->setCellValue($column++.$row, $result['firstname']." ".$result['middlename']." ".$result['surname'])
-                    ->setCellValue($column++.$row, $result['presentdesignation'])
+                    ->setCellValue($column++.$row, $result['profession'])
                     ->setCellValue($column++.$row, $result['history'])
                     ->setCellValue($column++.$row, $result['reason'])
                     ->setCellValue($column++.$row, $result['startdate'])
-                    ->setCellValue($column.$row, $result['level5_level_5']);
+                    ->setCellValue($column.$row, $result['level5_facility']);
 
                 /*foreach ($items as $item) {
-                    $excelService->excelObj->setActiveSheetIndex(0)->setCellValue($column++.$row, $item);
+                    $excelService->setActiveSheetIndex(0)->setCellValue($column++.$row, $item);
                 }*/
             }
 
         }elseif ($reportType == "training" ){
             //apply the styles
-            $excelService->excelObj->getActiveSheet()->getStyle('A1:I2')->applyFromArray($heading_format);
-            $excelService->excelObj->getActiveSheet()->mergeCells('A1:I1');
-            $excelService->excelObj->getActiveSheet()->mergeCells('A2:I2');
+            $excelService->getActiveSheet()->getStyle('A1:I2')->applyFromArray($heading_format);
+            $excelService->getActiveSheet()->mergeCells('A1:I1');
+            $excelService->getActiveSheet()->mergeCells('A2:I2');
 
             //write the table heading of the values
-            $excelService->excelObj->getActiveSheet()->getStyle('A4:I4')->applyFromArray($header_format);
-            $excelService->excelObj->setActiveSheetIndex(0)
+            $excelService->getActiveSheet()->getStyle('A4:I4')->applyFromArray($header_format);
+            $excelService->setActiveSheetIndex(0)
                 ->setCellValue($column++.$row, 'SN')
                 ->setCellValue($column++.$row, 'Name')
-                ->setCellValue($column++.$row, 'Designation')
+                ->setCellValue($column++.$row, 'Profession')
                 ->setCellValue($column++.$row, 'Course Name')
                 ->setCellValue($column++.$row, 'Course Location')
                 ->setCellValue($column++.$row, 'Sponsor')
@@ -839,36 +838,35 @@ class ReportHistoryTrainingController extends Controller
 
                 //format of the row
                 if (($row % 2) == 1)
-                    $excelService->excelObj->getActiveSheet()->getStyle($column.$row.':I'.$row)->applyFromArray($text_format1);
+                    $excelService->getActiveSheet()->getStyle($column.$row.':I'.$row)->applyFromArray($text_format1);
                 else
-                    $excelService->excelObj->getActiveSheet()->getStyle($column.$row.':I'.$row)->applyFromArray($text_format2);
-                $excelService->excelObj->setActiveSheetIndex(0)
+                    $excelService->getActiveSheet()->getStyle($column.$row.':I'.$row)->applyFromArray($text_format2);
+                $excelService->setActiveSheetIndex(0)
                     ->setCellValue($column++.$row, $i++)
                     ->setCellValue($column++.$row, $result['firstname']." ".$result['middlename']." ".$result['surname'])
-                    ->setCellValue($column++.$row, $result['presentdesignation'])
+                    ->setCellValue($column++.$row, $result['profession'])
                     ->setCellValue($column++.$row, $result['coursename'])
                     ->setCellValue($column++.$row, $result['courselocation'])
                     ->setCellValue($column++.$row, $result['sponsor'])
                     ->setCellValue($column++.$row, $result['startdate'])
                     ->setCellValue($column++.$row, $result['enddate'])
-                    ->setCellValue($column.$row, $result['level5_level_5']);
+                    ->setCellValue($column.$row, $result['level5_facility']);
 
             }
         }
 
-        $excelService->excelObj->getActiveSheet()->setTitle('List of Records');
+        $excelService->getActiveSheet()->setTitle('List of Records');
 
 
         // Set active sheet index to the first sheet, so Excel opens this as the first sheet
-        $excelService->excelObj->setActiveSheetIndex(0);
+        $excelService->setActiveSheetIndex(0);
 
-        //create the response
-
-        $response = $excelService->getResponse();
-        $response->headers->set('Content-Type', 'application/vnd.ms-excel; charset=utf-8');
-        $response->headers->set('Content-Disposition', 'attachment; filename='.$title.'.xls');
-
-        // If you are using a https connection, you have to set those two headers and use sendHeaders() for compatibility with IE <9
+        // create the writer
+        $writer = $this->get('phpexcel')->createWriter($excelService, 'Excel5');
+        // create the response
+        $response = $this->get('phpexcel')->createStreamedResponse($writer);
+        $response->headers->set('Content-Type', 'text/vnd.ms-excel; charset=utf-8');
+        $response->headers->set('Content-Disposition', 'attachment;filename='.$title.'.xls');
         $response->headers->set('Pragma', 'public');
         $response->headers->set('Cache-Control', 'maxage=1');
         //$response->sendHeaders();
@@ -879,7 +877,7 @@ class ReportHistoryTrainingController extends Controller
      * Returns Fields json.
      *
      *
-     * @Secure(roles="ROLE_SUPER_USER,ROLE_REPORTHISTORY_GENERATE,ROLE_USER")
+     * @Secure(roles="ROLE_SUPER_USER,ROLE_REPORTHISTORY_GENERATE")
      * @Route("/reportFormFields.{_format}", requirements={"_format"="yml|xml|json"}, defaults={"_format"="json"}, name="report_formfields")
      * @Method("POST")
      * @Template()

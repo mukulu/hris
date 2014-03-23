@@ -165,6 +165,8 @@ class ResourceTableController extends Controller
     {
         $em = $this->getDoctrine()->getManager();
 
+        $logger = $this->get('logger');
+
         $entity = $em->getRepository('HrisFormBundle:ResourceTable')->find($id);
 
         if (!$entity) {
@@ -178,7 +180,7 @@ class ResourceTableController extends Controller
 
         $deleteForm = $this->createDeleteForm($id);
 
-        $success = $entity->generateResourceTable($em);
+        $success = $entity->generateResourceTable($em,$logger);
         $messageLog = rtrim($entity->getMessageLog(),"\n");
         $messageLogArray = explode("\n",$messageLog);
         $messages = NULL;

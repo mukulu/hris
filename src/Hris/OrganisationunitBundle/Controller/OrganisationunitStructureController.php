@@ -49,7 +49,7 @@ class OrganisationunitStructureController extends Controller
     /**
      * Lists all OrganisationunitStructure entities.
      *
-     * @Secure(roles="ROLE_SUPER_USER,ROLE_ORGANISATIONUNITSTRUCTURE_LIST,ROLE_USER")
+     * @Secure(roles="ROLE_SUPER_USER,ROLE_ORGANISATIONUNITSTRUCTURE_LIST")
      * @Route("/", name="organisationunitstructure")
      * @Route("/list", name="organisationunitstructure_list")
      * @Method("GET")
@@ -68,7 +68,7 @@ class OrganisationunitStructureController extends Controller
     /**
      * Creates a new OrganisationunitStructure entity.
      *
-     * @Secure(roles="ROLE_SUPER_USER,ROLE_ORGANISATIONUNITSTRUCTURE_CREATE,ROLE_USER")
+     * @Secure(roles="ROLE_SUPER_USER,ROLE_ORGANISATIONUNITSTRUCTURE_CREATE")
      * @Route("/", name="organisationunitstructure_create")
      * @Method("POST")
      * @Template("HrisOrganisationunitBundle:OrganisationunitStructure:new.html.twig")
@@ -96,7 +96,7 @@ class OrganisationunitStructureController extends Controller
     /**
      * Displays a form to create a new OrganisationunitStructure entity.
      *
-     * @Secure(roles="ROLE_SUPER_USER,ROLE_ORGANISATIONUNITSTRUCTURE_CREATE,ROLE_USER")
+     * @Secure(roles="ROLE_SUPER_USER,ROLE_ORGANISATIONUNITSTRUCTURE_CREATE")
      * @Route("/new", name="organisationunitstructure_new")
      * @Method("GET")
      * @Template()
@@ -115,7 +115,7 @@ class OrganisationunitStructureController extends Controller
     /**
      * Finds and displays a OrganisationunitStructure entity.
      *
-     * @Secure(roles="ROLE_SUPER_USER,ROLE_ORGANISATIONUNITSTRUCTURE_SHOW,ROLE_USER")
+     * @Secure(roles="ROLE_SUPER_USER,ROLE_ORGANISATIONUNITSTRUCTURE_SHOW")
      * @Route("/{id}", requirements={"id"="\d+"}, name="organisationunitstructure_show")
      * @Method("GET")
      * @Template()
@@ -141,7 +141,7 @@ class OrganisationunitStructureController extends Controller
     /**
      * Displays a form to edit an existing OrganisationunitStructure entity.
      *
-     * @Secure(roles="ROLE_SUPER_USER,ROLE_ORGANISATIONUNITSTRUCTURE_UPDATE,ROLE_USER")
+     * @Secure(roles="ROLE_SUPER_USER,ROLE_ORGANISATIONUNITSTRUCTURE_UPDATE")
      * @Route("/{id}/edit", requirements={"id"="\d+"}, name="organisationunitstructure_edit")
      * @Method("GET")
      * @Template()
@@ -169,7 +169,7 @@ class OrganisationunitStructureController extends Controller
     /**
      * Edits an existing OrganisationunitStructure entity.
      *
-     * @Secure(roles="ROLE_SUPER_USER,ROLE_ORGANISATIONUNITSTRUCTURE_UPDATE,ROLE_USER")
+     * @Secure(roles="ROLE_SUPER_USER,ROLE_ORGANISATIONUNITSTRUCTURE_UPDATE")
      * @Route("/{id}", requirements={"id"="\d+"}, name="organisationunitstructure_update")
      * @Method("PUT")
      * @Template("HrisOrganisationunitBundle:OrganisationunitStructure:edit.html.twig")
@@ -204,7 +204,7 @@ class OrganisationunitStructureController extends Controller
     /**
      * Deletes a OrganisationunitStructure entity.
      *
-     * @Secure(roles="ROLE_SUPER_USER,ROLE_ORGANISATIONUNITSTRUCTURE_DELETE,ROLE_USER")
+     * @Secure(roles="ROLE_SUPER_USER,ROLE_ORGANISATIONUNITSTRUCTURE_DELETE")
      * @Route("/{id}", requirements={"id"="\d+"}, name="organisationunitstructure_delete")
      * @Method("DELETE")
      */

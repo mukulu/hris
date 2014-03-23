@@ -56,14 +56,16 @@ class MainBuilder extends ContainerAware
         if(
             $securityContext->isGranted('ROLE_HELPCENTRE_BUNDLE_VIEW') ||
             $securityContext->isGranted('ROLE_HELPCENTRE_BUNDLE_MODIFY') ||
+            $securityContext->isGranted('ROLE_HELPCENTRE_BUNDLE_MENU') ||
             $securityContext->isGranted('ROLE_SUPER_USER')
         ){
             $this->container->get('event_dispatcher')->dispatch(HelpCentreConfigureMenuEvent::CONFIGURE, new HelpCentreConfigureMenuEvent($factory, $menu));
         }
         // User Bundle
         if(
-            $securityContext->isGranted('ROLE_SUPER_USER_BUNDLE_VIEW') ||
-            $securityContext->isGranted('ROLE_SUPER_USER_BUNDLE_MODIFY') ||
+            $securityContext->isGranted('ROLE_USER_BUNDLE_VIEW') ||
+            $securityContext->isGranted('ROLE_USER_BUNDLE_MODIFY') ||
+            $securityContext->isGranted('ROLE_USER_BUNDLE_MENU') ||
             $securityContext->isGranted('ROLE_SUPER_USER')
         ){
             $this->container->get('event_dispatcher')->dispatch(UserConfigureMenuEvent::CONFIGURE, new UserConfigureMenuEvent($factory, $menu));
@@ -72,6 +74,7 @@ class MainBuilder extends ContainerAware
         if(
             $securityContext->isGranted('ROLE_FORM_BUNDLE_VIEW') ||
             $securityContext->isGranted('ROLE_FORM_BUNDLE_MODIFY') ||
+            $securityContext->isGranted('ROLE_FORM_BUNDLE_MENU') ||
             $securityContext->isGranted('ROLE_RESOURCETABLE_BUNDLE_VIEW') ||
             $securityContext->isGranted('ROLE_RESOURCETABLE_BUNDLE_MODIFY') ||
             $securityContext->isGranted('ROLE_SUPER_USER')
@@ -83,6 +86,7 @@ class MainBuilder extends ContainerAware
         if(
             $securityContext->isGranted('ROLE_TARGET_BUNDLE_VIEW') ||
             $securityContext->isGranted('ROLE_TARGET_BUNDLE_MODIFY') ||
+            $securityContext->isGranted('ROLE_TARGET_BUNDLE_MENU') ||
             $securityContext->isGranted('ROLE_SUPER_USER')
         ){
             $this->container->get('event_dispatcher')->dispatch(IndicatorConfigureMenuEvent::CONFIGURE, new IndicatorConfigureMenuEvent($factory, $menu));
@@ -91,6 +95,7 @@ class MainBuilder extends ContainerAware
         if(
             $securityContext->isGranted('ROLE_ORGANISATIONUNIT_BUNDLE_VIEW') ||
             $securityContext->isGranted('ROLE_ORGANISATIONUNIT_BUNDLE_MODIFY') ||
+            $securityContext->isGranted('ROLE_ORGANISATIONUNIT_BUNDLE_MENU') ||
             $securityContext->isGranted('ROLE_SUPER_USER')
         ){
             $this->container->get('event_dispatcher')->dispatch(OrganisationunitConfigureMenuEvent::CONFIGURE, new OrganisationunitConfigureMenuEvent($factory, $menu));
@@ -99,6 +104,7 @@ class MainBuilder extends ContainerAware
         if(
             $securityContext->isGranted('ROLE_DATAQUALITY_BUNDLE_VIEW') ||
             $securityContext->isGranted('ROLE_DATAQUALITY_BUNDLE_MODIFY') ||
+            $securityContext->isGranted('ROLE_DATAQUALITY_BUNDLE_MENU') ||
             $securityContext->isGranted('ROLE_SUPER_USER')
         ){
             $this->container->get('event_dispatcher')->dispatch(DataQualityConfigureMenuEvent::CONFIGURE, new DataQualityConfigureMenuEvent($factory, $menu));
@@ -107,6 +113,7 @@ class MainBuilder extends ContainerAware
         if(
             $securityContext->isGranted('ROLE_INTERGRATION_BUNDLE_VIEW') ||
             $securityContext->isGranted('ROLE_INTERGRATION_BUNDLE_MODIFY') ||
+            $securityContext->isGranted('ROLE_INTERGRATION_BUNDLE_MENU') ||
             $securityContext->isGranted('ROLE_SUPER_USER')
         ){
             $this->container->get('event_dispatcher')->dispatch(IntergrationConfigureMenuEvent::CONFIGURE, new IntergrationConfigureMenuEvent($factory, $menu));
@@ -115,6 +122,7 @@ class MainBuilder extends ContainerAware
         if(
             $securityContext->isGranted('ROLE_RECORDS_BUNDLE_VIEW') ||
             $securityContext->isGranted('ROLE_RECORDS_BUNDLE_MODIFY') ||
+            $securityContext->isGranted('ROLE_RECORDS_BUNDLE_MENU') ||
             $securityContext->isGranted('ROLE_SUPER_USER')
         ){
             $this->container->get('event_dispatcher')->dispatch(RecordsConfigureMenuEvent::CONFIGURE, new RecordsConfigureMenuEvent($factory, $menu));
@@ -123,6 +131,7 @@ class MainBuilder extends ContainerAware
         if(
             $securityContext->isGranted('ROLE_REPORTS_BUNDLE_VIEW') ||
             $securityContext->isGranted('ROLE_REPORTS_BUNDLE_MODIFY') ||
+            $securityContext->isGranted('ROLE_REPORTS_BUNDLE_MENU') ||
             $securityContext->isGranted('ROLE_SUPER_USER')
         ){
             $this->container->get('event_dispatcher')->dispatch(ReportsConfigureMenuEvent::CONFIGURE, new ReportsConfigureMenuEvent($factory, $menu));
@@ -131,6 +140,7 @@ class MainBuilder extends ContainerAware
         if(
             $securityContext->isGranted('ROLE_IMPORTEXPORT_BUNDLE_VIEW') ||
             $securityContext->isGranted('ROLE_IMPORTEXPORT_BUNDLE_MODIFY') ||
+            $securityContext->isGranted('ROLE_IMPORTEXPORT_BUNDLE_MENU') ||
             $securityContext->isGranted('ROLE_SUPER_USER')
         ){
             $this->container->get('event_dispatcher')->dispatch(ImportExportConfigureMenuEvent::CONFIGURE, new ImportExportConfigureMenuEvent($factory, $menu));

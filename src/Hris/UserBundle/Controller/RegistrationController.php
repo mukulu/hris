@@ -26,6 +26,8 @@
 
 namespace Hris\UserBundle\Controller;
 
+use Doctrine\Common\Collections\ArrayCollection;
+use FOS\MessageBundle\FormModel\NewThreadMultipleMessage;
 use Symfony\Component\DependencyInjection\ContainerAware;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\HttpFoundation\RedirectResponse;
@@ -33,6 +35,7 @@ use Symfony\Component\HttpKernel\Exception\NotFoundHttpException;
 use Symfony\Component\Security\Core\Exception\AccessDeniedException;
 use Symfony\Component\Security\Core\Exception\AccountStatusException;
 use FOS\UserBundle\Model\UserInterface;
+use Symfony\Component\Form\Form;
 use JMS\SecurityExtraBundle\Annotation\Secure;
 
 /**
@@ -64,6 +67,8 @@ class RegistrationController extends ContainerAware
             if ($confirmationEnabled) {
                 $this->container->get('session')->set('fos_user_send_confirmation_email/email', $user->getEmail());
                 $route = 'fos_user_registration_check_email';
+                //@hack authenticate user to avoid redirect bug
+                $authUser = true;
             } else {
                 $authUser = true;
                 $route = 'fos_user_registration_confirmed';
@@ -77,6 +82,32 @@ class RegistrationController extends ContainerAware
                 $this->authenticateUser($user, $response);
             }
 
+            $entityManager = $this->container->get('doctrine.orm.entity_manager');
+
+            $userEntity = $entityManager->getRepository('HrisUserBundle:User')->findOneBy(array('username'=>$form->getData()->getUsername()));
+
+            $messageBody="Hellow! \nThis is an automated self registration notification for ". $userEntity->getFirstname(). " ". $userEntity->getSurname()
+                        ." registered with username:".$userEntity->getUsername()." working as ".$userEntity->getJobTitle()
+                        ."\n\nKindly activate him/her for duty post ".$userEntity->getDescription()
+                        ." and notify him/her via phone number:".$userEntity->getPhonenumber()
+                        ." and email:".$userEntity->getEmail()
+                        ." after you have assigned him/her with role and duty post.";
+            $messageSubject='USER SELF REGISTRATION';
+            $formHandler = $this->container->get('fos_message.new_thread_form.handler');
+            $sender = $this->container->get('fos_message.sender');
+
+            $newThreadMessage = new NewThreadMultipleMessage();
+            $newThreadMessage->setSubject($messageSubject);
+            $newThreadMessage->setBody($messageBody);
+            //Getting the Users Groups
+            $users = $entityManager->getRepository('HrisUserBundle:User')->getUsersFromGroup("Feedback Group");
+            //Populate recipients from Feedback user group
+            $userCollection = new ArrayCollection();
+            foreach($users as $user){
+                $userCollection->add($user);
+                $newThreadMessage->addRecipient($user);
+            }
+            $sender->send($formHandler->composeMessage($newThreadMessage));;
             return $response;
         }
 

@@ -129,6 +129,8 @@ everytime composer updates dependencies. Use it to set your database connection 
 	secret: %secret_generated_key%
 	database_path: null
 
+Note: Make sure php data base connector is installed, for ubuntu it's php5-pgsql for PostgreSQL and php5-mysql for MySQL,
+for improved performance, php5-memcache, php5-memcached may come in handy.
 
 ## 3. Other useful tools for configuration and development
 
