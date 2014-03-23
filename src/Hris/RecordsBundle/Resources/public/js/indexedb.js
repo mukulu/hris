@@ -573,7 +573,8 @@ function populateForm(fieldUIDS, databaseName, dataValues, otherFields, selected
                                 if (Object.prototype.toString.call(dataValues[keyValue]) == "[object Object]"){
 
                                     var date = dataValues[keyValue]["date"].split(" ");
-                                    $('#' + value).val(date[0]);
+                                    var newdate = date[0].split("-").reverse().join("/");
+                                    $('#' + value).val(newdate);
                                     //alert(dataValues[keyValue]["date"]);
                                 }else{
                                     $('#' + value).val(dataValues[keyValue]);
