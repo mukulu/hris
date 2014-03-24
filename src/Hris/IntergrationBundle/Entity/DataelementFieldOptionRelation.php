@@ -31,7 +31,7 @@ use Symfony\Component\Validator\Constraints as Assert;
 /**
  * Hris\IntergrationBundle\Entity\DataelementFieldOptionRelation
  *
- * @ORM\Table(name="hris_intergration_dhis_dataelementfieldoptionrelation")
+ * @ORM\Table(name="hris_intergration_dhis_dataelementfieldoptionrelation",uniqueConstraints={@ORM\UniqueConstraint(name="unique_hrfieldoptiongroups_idx", columns={"dhis_data_connection_id","column_fieldoption_group_id","row_fieldoption_group_id"}),@ORM\UniqueConstraint(name="unique_dhisdataelement_idx", columns={"dhis_data_connection_id", "dataelementUid","categoryComboUid"})})
  * @ORM\Entity(repositoryClass="Hris\IntergrationBundle\Entity\DataelementFieldOptionRelationRepository")
  */
 class DataelementFieldOptionRelation
@@ -64,14 +64,20 @@ class DataelementFieldOptionRelation
     private $dataelementname;
 
     /**
-     * @var FieldOption $fieldOption
+     * @var string $categoryComboUid
      *
-     * @ORM\ManyToOne(targetEntity="Hris\FormBundle\Entity\FieldOption",inversedBy="dataelementFieldOptionRelation")
-     * @ORM\JoinColumns({
-     *   @ORM\JoinColumn(name="fieldoption_id", referencedColumnName="id", onDelete="CASCADE")
-     * })
+     * @ORM\Column(name="categoryComboUid", type="string", length=16, nullable=false)
+     * @ORM\Id
+     * @ORM\GeneratedValue(strategy="NONE")
      */
-    private $fieldOption;
+    private $categoryComboUid;
+
+    /**
+     * @var string $categoryComboname
+     *
+     * @ORM\Column(name="categoryComboname", type="string", length=255, nullable=false)
+     */
+    private $categoryComboname;
 
     /**
      * @var FieldOptionGroup $columnFieldOptionGroup
@@ -142,6 +148,52 @@ class DataelementFieldOptionRelation
     }
 
     /**
+     * Set categoryComboUid
+     *
+     * @param string $categoryComboUid
+     * @return CategoryComboFieldOptionRelation
+     */
+    public function setCategoryComboUid($categoryComboUid)
+    {
+        $this->categoryComboUid = $categoryComboUid;
+
+        return $this;
+    }
+
+    /**
+     * Get categoryComboUid
+     *
+     * @return string
+     */
+    public function getCategoryComboUid()
+    {
+        return $this->categoryComboUid;
+    }
+
+    /**
+     * Set categoryComboname
+     *
+     * @param string $categoryComboname
+     * @return CategoryComboFieldOptionRelation
+     */
+    public function setCategoryComboname($categoryComboname)
+    {
+        $this->categoryComboname = $categoryComboname;
+
+        return $this;
+    }
+
+    /**
+     * Get categoryComboname
+     *
+     * @return string
+     */
+    public function getCategoryComboname()
+    {
+        return $this->categoryComboname;
+    }
+
+    /**
      * Set dhisDataConnection
      *
      * @param \Hris\IntergrationBundle\Entity\DHISDataConnection $dhisDataConnection
@@ -162,29 +214,6 @@ class DataelementFieldOptionRelation
     public function getDhisDataConnection()
     {
         return $this->dhisDataConnection;
-    }
-
-    /**
-     * Set fieldOption
-     *
-     * @param \Hris\FormBundle\Entity\FieldOption $fieldOption
-     * @return DataelementFieldOptionRelation
-     */
-    public function setFieldOption(\Hris\FormBundle\Entity\FieldOption $fieldOption = null)
-    {
-        $this->fieldOption = $fieldOption;
-    
-        return $this;
-    }
-
-    /**
-     * Get fieldOption
-     *
-     * @return \Hris\FormBundle\Entity\FieldOption 
-     */
-    public function getFieldOption()
-    {
-        return $this->fieldOption;
     }
 
     /**

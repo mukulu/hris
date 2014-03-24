@@ -5,25 +5,56 @@
     <script type="text/javascript" src="{{ asset('commons/js/jquery.jeditable.mini.js') }}"></script>
     <script type="text/javascript">
         $( document ).ready(function() {
-            var inputBoxes = $("td#datasetHtmlContents :input:not([readonly])");
+            var fieldOptionTargetUrl = '{{ path('target_targetfieldption', {'_format':'json'}) }}';
+            {# Capture field option groups from hrhis #}
+            var fieldOptionGroupList = new Array();
+            {% for fieldOptionGroupset in entity.fieldOptionGroupset %}
+            fieldOptionGroupList[{{ loop.index0 }}] = "{{ fieldOptionGroupset.fieldOptionGroup | join(',') }}".split(',');
+            {% endfor %}
 
+            {# Capture data elements options from dhis #}
+            var inputBoxes = $("td#datasetHtmlContents :input:not([readonly])");
             // Loop accross the field options constructing inputbox and it's value
-            var incr=0;
+            var dhisDataelementUids = new Array();
+            var dhisDataelementNames = new Array();
+            var dhisComboUids = new Array();
+            var dhisComboNames = new Array();
             $.each(inputBoxes, function(inputBoxIndex, inputBox) {
+                //Prepare dataelement and uid names
+                dataelementUids = $(inputBox).attr('id').split(/\-/);
+                dataelementNames = $(inputBox).val().split(/\-/);
+                dhisDataelementUids[inputBoxIndex]=dataelementUids[0].replace('[','').trim();
+                dhisDataelementNames[inputBoxIndex]=dataelementNames[0].replace('[','').trim();
+                dhisComboUids[inputBoxIndex]=dataelementUids[1].replace(']','').trim();
+                dhisComboNames[inputBoxIndex]=dataelementNames[1].replace(']','').trim().split(/\(/)[1].replace(')','').trim();
+                //Push dataelement and combo matches for insertion into database
+                postData={
+                    'connectionId':{{ entity.id }},
+                    'dhisDataelementUids': dhisDataelementUids[inputBoxIndex],
+                    'dhisDataelementNames': dhisDataelementNames[inputBoxIndex],
+                    'dhisComboUids':dhisComboUids[inputBoxIndex],
+                    'dhisComboNames':dhisComboNames[inputBoxIndex]
+                };
+                $.post(fieldOptionTargetUrl,postData , function( results ){
+                    console.log(results);
+                });
+
                 $(inputBox).after('<label class="dblclick" id="'+$(inputBox).attr('id')+'" '+' title="'+$(inputBox).attr('title')+'" style="background-color:yellow;"'+'>'+$(inputBox).val()+'</label>');
                 $(inputBox).remove();
             });
-            {# Editable expected figures #}
-            $(".dblclick").editable("{{ path('organisationunitcompleteness_ajaxupdate') }}", {
-                tooltip   : "Doubleclick to edit...",
-                event     : "dblclick",
-                style  : "inherit",
-                callback : function(value, settings) {
-                    console.log(this);
-                    console.log(value);
-                    console.log(settings);
-                }
-            });
+            {#&#123;&#35; Editable expected figures &#35;&#125;#}
+            {#$(".dblclick").editable("{{ path('organisationunitcompleteness_ajaxupdate') }}", {#}
+                {#tooltip   : "Doubleclick to edit...",#}
+                {#event     : "dblclick",#}
+                {#style  : "inherit",#}
+                {#callback : function(value, settings) {#}
+                    {#console.log(this);#}
+                    {#console.log(value);#}
+                    {#console.log(settings);#}
+                {#}#}
+            {#});#}
+
+            console.log(fieldOptionGroupList);
         });
     </script>
 {% endblock javascripts %}

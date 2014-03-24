@@ -234,6 +234,75 @@ class DHISDataConnectionController extends Controller
             'delete_form' => $deleteForm->createView(),
         );
     }
+
+    /**
+     * Persists Dataelement Field Option relation and return json response on success.
+     *
+     * @Secure(roles="ROLE_SUPER_USER,ROLE_DHISDATACONNECTION_UPDATERELATION")
+     * @Route("/updateRelation.{_format}", requirements={"_format"="yml|xml|json"}, defaults={"_format"="json"}, name="dhisdataconnection_updaterelation")
+     * @Method("POST")
+     * @Template()
+     */
+    public function updateRelationAction($_format)
+    {
+        $em = $this->getDoctrine()->getManager();
+        $connectionId = $this->getRequest()->request->get('connectionId');
+        $dhisDataelementUids = $this->getRequest()->request->get('dhisDataelementUids');
+        $dhisDataelementNames = $this->getRequest()->request->get('dhisDataelementNames');
+        $dhisComboUids = $this->getRequest()->request->get('dhisComboUids');
+        $dhisComboNames = $this->getRequest()->request->get('dhisComboNames');
+        $fieldOptionTargetNodes = NULL;
+
+        // Fetch existing targets and field options belonging to target
+        $entity = $em->getRepository('HrisIntergrationBundle:DHISDataConnection')->find($connectionId);
+
+        //Get rid of current fields
+        $em->createQueryBuilder('dataelementFieldOptionRelation')
+            ->delete('HrisIntergrationBundle:DataelementFieldOptionRelation','dataelementFieldOptionRelation')
+            ->where('dataelementFieldOptionRelation.dhisDataConnection= :dhisDataConnection')
+            ->andWhere('dataelementFieldOptionRelation.dataelementUid= :dataelementUid')
+            ->andWhere('dataelementFieldOptionRelation.categoryComboUid= :categoryComboUid')
+            ->setParameters(array('dhisDataConnection'=>$entity,'dataelementUid'=>$dhisDataelementUids,'categoryComboUid'=>$dhisComboUids))
+            ->getQuery()->getResult();
+        $em->flush();
+
+//        if(!empty($connectionId) && !empty($dhisDataelementUids)) {
+//            $queryBuilder = $this->getDoctrine()->getManager()->createQueryBuilder();
+//            $targetFieldOptions = $queryBuilder->select('targetFieldOption')
+//                ->from('HrisIndicatorBundle:TargetFieldOption','targetFieldOption')
+//                ->join('targetFieldOption.fieldOption','fieldOption')
+//                ->join('fieldOption.field','field')
+//                ->where('targetFieldOption.target=:targetid')
+//                ->andWhere('field.id=:fieldid')
+//                ->setParameters(array('targetid'=>$targetid,'fieldid'=>$fieldid))
+//                ->getQuery()->getResult();
+//            if(!empty($targetFieldOptions)) {
+//                foreach($targetFieldOptions as $targetFieldOptionKey=>$targetFieldOption) {
+//                    $fieldOptionTargetNodes[$targetFieldOption->getFieldOption()->getId()] = Array(
+//                        'name' => $targetFieldOption->getFieldOption()->getValue(),
+//                        'id' => $targetFieldOption->getFieldOption()->getId(),
+//                        'value' => $targetFieldOption->getValue()
+//                    );
+//                }
+//            }
+//        }
+//        foreach($fieldOptions as $fieldOptionKey=>$fieldOption) {
+//            if(!isset($fieldOptionTargetNodes[$fieldOption->getId()])) {
+//                $fieldOptionTargetNodes[] = Array(
+//                    'name' => $fieldOption->getValue(),
+//                    'id' => $fieldOption->getId(),
+//                    'value' => ''
+//                );
+//            }
+//        }
+
+        $serializer = $this->container->get('serializer');
+
+        return array(
+            'entities' => $serializer->serialize($fieldOptionTargetNodes,$_format)
+        );
+    }
+
     /**
      * Deletes a DHISDataConnection entity.
      *
