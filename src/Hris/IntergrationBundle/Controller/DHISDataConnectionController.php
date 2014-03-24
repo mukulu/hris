@@ -100,6 +100,7 @@ class DHISDataConnectionController extends Controller
         $form = $this->createForm(new DHISDataConnectionType(), $entity, array(
             'action' => $this->generateUrl('dhisdataconnection_create'),
             'method' => 'POST',
+            'em'=>$this->getDoctrine()->getManager(),
         ));
 
         $form->add('submit', 'submit', array('attr' => array('class' => 'btn'),'label' => 'Create'));
@@ -192,6 +193,7 @@ class DHISDataConnectionController extends Controller
         $form = $this->createForm(new DHISDataConnectionType(), $entity, array(
             'action' => $this->generateUrl('dhisdataconnection_update', array('id' => $entity->getId())),
             'method' => 'PUT',
+            'em'=>$this->getDoctrine()->getManager(),
         ));
 
         $form->add('submit', 'submit', array('attr' => array('class' => 'btn'),'label' => 'Update'));

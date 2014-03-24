@@ -80,6 +80,14 @@ class DHISDataConnection
     private $datasetUid;
 
     /**
+     * @var string $datasetHtml
+     *
+     * @Gedmo\Versioned
+     * @ORM\Column(name="dataset_html", type="text", nullable=true)
+     */
+    private $datasetHtml;
+
+    /**
      * @var string $hostUrl
      *
      * @Gedmo\Versioned
@@ -241,6 +249,29 @@ class DHISDataConnection
     public function getDatasetUid()
     {
         return $this->datasetUid;
+    }
+
+    /**
+     * Set datasetHtml
+     *
+     * @param string $datasetHtml
+     * @return DHISDataConnection
+     */
+    public function setDatasetHtml($datasetHtml)
+    {
+        $this->datasetHtml = $datasetHtml;
+
+        return $this;
+    }
+
+    /**
+     * Get datasetHtml
+     *
+     * @return string
+     */
+    public function getDatasetHtml()
+    {
+        return $this->datasetHtml;
     }
 
     /**
