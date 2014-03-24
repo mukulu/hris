@@ -33,7 +33,7 @@ use Symfony\Component\Validator\Constraints as Assert;
  * Hris\IntergrationBundle\Entity\DHISDataConnection
  *
  * @Gedmo\Loggable
- * @ORM\Table(name="hris_intergration_dhis_data_connection",uniqueConstraints={@ORM\UniqueConstraint(name="unique_serverdatasetname_idx", columns={"host_url","dataset_name"}),@ORM\UniqueConstraint(name="unique_serverdatasetuid_idx", columns={"host_url", "dataset_uid"})})
+ * @ORM\Table(name="hris_intergration_dhis_dataconnection",uniqueConstraints={@ORM\UniqueConstraint(name="unique_serverdatasetname_idx", columns={"host_url","dataset_name"}),@ORM\UniqueConstraint(name="unique_serverdatasetuid_idx", columns={"host_url", "dataset_uid"})})
  * @ORM\Entity(repositoryClass="Hris\IntergrationBundle\Entity\DHISDataConnectionRepository")
  */
 class DHISDataConnection
@@ -115,7 +115,7 @@ class DHISDataConnection
      * @var \Doctrine\Common\Collections\ArrayCollection
      *
      * @ORM\ManyToMany(targetEntity="Hris\FormBundle\Entity\FieldOptionGroupset", inversedBy="dhisDataConnection")
-     * @ORM\JoinTable(name="hris_intergration_fieldoptiongroupset_member",
+     * @ORM\JoinTable(name="hris_intergration_dhis_fieldoptiongroupsetmember",
      *   joinColumns={
      *     @ORM\JoinColumn(name="dhis_data_connection_id", referencedColumnName="id")
      *   },

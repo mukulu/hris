@@ -31,7 +31,7 @@ use Symfony\Component\Validator\Constraints as Assert;
 /**
  * Hris\IntergrationBundle\Entity\DataelementFieldOptionRelation
  *
- * @ORM\Table(name="hris_intergration_dataelementfieldoption_relation")
+ * @ORM\Table(name="hris_intergration_dhis_dataelementfieldoptionrelation")
  * @ORM\Entity(repositoryClass="Hris\IntergrationBundle\Entity\DataelementFieldOptionRelationRepository")
  */
 class DataelementFieldOptionRelation

@@ -1,5 +1,37 @@
 {% extends '::base.html.twig' %}
 
+{% block javascripts %}
+    {{ parent() }}
+    <script type="text/javascript" src="{{ asset('commons/js/jquery.jeditable.mini.js') }}"></script>
+    <script type="text/javascript">
+        $( document ).ready(function() {
+            var inputBoxes = $("td#datasetHtmlContents :input:not([readonly])");
+
+            // Loop accross the field options constructing inputbox and it's value
+            var incr=0;
+            $.each(inputBoxes, function(inputBoxIndex, inputBox) {
+                $(inputBox).after('<label class="dblclick" id="'+$(inputBox).attr('id')+'" '+' title="'+$(inputBox).attr('title')+'" style="background-color:yellow;"'+'>'+$(inputBox).val()+'</label>');
+                $(inputBox).remove();
+            });
+            {# Editable expected figures #}
+            $(".dblclick").editable("{{ path('organisationunitcompleteness_ajaxupdate') }}", {
+                tooltip   : "Doubleclick to edit...",
+                event     : "dblclick",
+                style  : "inherit",
+                callback : function(value, settings) {
+                    console.log(this);
+                    console.log(value);
+                    console.log(settings);
+                }
+            });
+        });
+    </script>
+{% endblock javascripts %}
+
+{% block stylesheets %}
+    {{ parent() }}
+{% endblock stylesheets %}
+
 {% block right_content -%}
     <h1><i class="icon-circle-info icon-largest" title="Show"></i> <small>{{ entity.name | capitalize }}'s Details</small></h1>
 
@@ -34,8 +66,12 @@
                 <td>{{ entity.password }}</td>
             </tr>
             <tr>
+                <th>Field Option Groupset</th>
+                <td>{{ entity.fieldOptionGroupset | join(',') }}</td>
+            </tr>
+            <tr>
                 <th>Dataset</th>
-                <td>{{ entity.datasetHtml | raw }}</td>
+                <td id="datasetHtmlContents">{{ entity.datasetHtml | raw }}</td>
             </tr>
         </tbody>
     </table>
