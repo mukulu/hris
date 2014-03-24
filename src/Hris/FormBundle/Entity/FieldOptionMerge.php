@@ -290,7 +290,7 @@ class FieldOptionMerge
      */
     public function __toString()
     {
-        $fieldOptionMergeName = 'Merged Option:'.$this->getMergedFieldOption()->__toString().' Removed Option:'.$this->getField()->__toString();
+        $fieldOptionMergeName = $this->getRemovedFieldOptionValue();
         return $fieldOptionMergeName;
     }
 

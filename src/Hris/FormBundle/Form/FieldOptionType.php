@@ -32,12 +32,50 @@ use Symfony\Component\Validator\Constraints\NotBlank;
 
 class FieldOptionType extends AbstractType
 {
+
+    /**
+     * @return integer
+     */
+    public function getFieldId()
+    {
+        return $this->fieldId;
+    }
+
+    /**
+     * @return string
+     */
+    public function getFieldOptionValue()
+    {
+        return $this->fieldOptionValue;
+    }
+
+    /**
+     * @var integer
+     */
+    private $fieldId;
+
+    /**
+     * @var string
+     */
+    private $fieldOptionValue;
+
+    /**
+     * @param $fieldId
+     * @param $fieldOptionValue
+     */
+    public function __construct ($fieldId,$fieldOptionValue=null)
+    {
+        $this->fieldId = $fieldId;
+        $this->fieldOptionValue = $fieldOptionValue;
+    }
     /**
      * @param FormBuilderInterface $builder
      * @param array $options
      */
     public function buildForm(FormBuilderInterface $builder, array $options)
     {
+        $fieldId = $this->getFieldId();
+        $fieldOptionValue = $this->getFieldOptionValue();
         $builder
             ->add('field','entity',array(
                 'class'=>'HrisFormBundle:Field',
@@ -56,16 +94,67 @@ class FieldOptionType extends AbstractType
                 'required'=>False,
             ))
             ->add('value')
+            ->add('description',null,array(
+                'required'=>false,
+            ))
             ->add('skipInReport',null,array(
                 'required'=>False,
             ))
-            ->add('childFieldOption',null,array(
-                'required'=>False,
-            ))
-            ->add('fieldOptionMerge',null,array(
+            ->add('childFieldOption','entity', array(
+                'class'=>'HrisFormBundle:FieldOption',
+                'multiple'=>true,
+                'query_builder'=>function(EntityRepository $er) use ($fieldId) {
+                        return $er->createQueryBuilder('fieldOption')
+                            ->join('fieldOption.field','field')
+                            ->andWhere("field.id='".$fieldId."'")
+                            ->orderBy('fieldOption.value','ASC');
+                    },
+                'constraints'=>array(
+                    new NotBlank(),
+                ),
                 'required'=>False,
             ))
         ;
+
+        if(!empty($this->fieldOptionValue)) {
+            $builder
+                ->add('fieldOptionMerge','entity', array(
+                    'class'=>'HrisFormBundle:FieldOption',
+                    'multiple'=>true,
+                    'query_builder'=>function(EntityRepository $er) use ($fieldId,$fieldOptionValue) {
+                            return $er->createQueryBuilder('fieldOption')
+                                ->join('fieldOption.field','field')
+                                ->andWhere("field.id='".$fieldId."'")
+                                ->andWhere("fieldOption.value!='".$fieldOptionValue."'")
+                                ->orderBy('fieldOption.value','ASC');
+                        },
+                    'constraints'=>array(
+                        new NotBlank(),
+                    ),
+                    'mapped'=>False,
+                    'required'=>False,
+                ))
+                ;
+        }else {
+            $builder
+                ->add('fieldOptionMerge','entity', array(
+                    'class'=>'HrisFormBundle:FieldOption',
+                    'multiple'=>true,
+                    'query_builder'=>function(EntityRepository $er) use ($fieldId) {
+                            return $er->createQueryBuilder('fieldOption')
+                                ->join('fieldOption.field','field')
+                                ->andWhere("field.id='".$fieldId."'")
+                                ->orderBy('fieldOption.value','ASC');
+                        },
+                    'constraints'=>array(
+                        new NotBlank(),
+                    ),
+                    'mapped'=>False,
+                    'required'=>False,
+                ))
+            ;
+        }
+
     }
 
     /**

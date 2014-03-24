@@ -274,6 +274,7 @@ class ResourceTableController extends Controller
                 $resourceTableFieldMember->setResourceTable($entity);
                 $resourceTableFieldMember->setSort($incr++);
                 $entity->addResourceTableFieldMember($resourceTableFieldMember);
+                unset($field);
             }
 
             $em->persist($entity);

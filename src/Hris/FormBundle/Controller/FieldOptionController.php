@@ -24,6 +24,8 @@
  */
 namespace Hris\FormBundle\Controller;
 
+use Doctrine\Common\Collections\ArrayCollection;
+use Hris\FormBundle\Entity\FieldOptionMerge;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Bundle\FrameworkBundle\Controller\Controller;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Method;
@@ -78,45 +80,6 @@ class FieldOptionController extends Controller
     }
 
     /**
-     * Creates a new FieldOption entity.
-     *
-     * @Secure(roles="ROLE_SUPER_USER,ROLE_FIELDOPTION_CREATE")
-     * @Route("/", name="fieldoption_create")
-     * @Route("/{fieldid}/field", requirements={"fieldid"="\d+"}, name="fieldoption_create_byfield")
-     * @Method("POST")
-     * @Template("HrisFormBundle:FieldOption:new.html.twig")
-     */
-    public function createAction(Request $request,$fieldid=NULL)
-    {
-        $entity  = new FieldOption();
-        $form = $this->createForm(new FieldOptionType(), $entity);
-        $form->submit($request);
-
-        // Serve to redirect page to filtered options by field
-        if(!empty($fieldid)) {
-            $em = $this->getDoctrine()->getManager();
-            $field = $em->getRepository('HrisFormBundle:Field')->findOneBy(array('id'=>$fieldid));
-        }else {
-            $field=NULL;
-        }
-
-        if ($form->isValid()) {
-            $em = $this->getDoctrine()->getManager();
-            $em->persist($entity);
-            $em->flush();
-
-            return $this->redirect($this->generateUrl('fieldoption_show', array( 'id' => $entity->getId() )));
-        }
-
-
-        return array(
-            'entity' => $entity,
-            'form'   => $form->createView(),
-            'field'  => $field,
-        );
-    }
-
-    /**
      * Displays a form to create a new FieldOption entity.
      *
      * @Secure(roles="ROLE_SUPER_USER,ROLE_FIELDOPTION_CREATE")
@@ -128,7 +91,7 @@ class FieldOptionController extends Controller
     public function newAction($fieldid=NULL)
     {
         $entity = new FieldOption();
-        $form   = $this->createForm(new FieldOptionType(), $entity);
+        $form   = $this->createForm(new FieldOptionType($fieldid), $entity);
 
         // Serve requests from field option page filtered by field
         if(!empty($fieldid)) {
@@ -146,6 +109,58 @@ class FieldOptionController extends Controller
             'entity' => $entity,
             'form'   => $form->createView(),
             'field' => $field,
+        );
+    }
+
+    /**
+     * Creates a new FieldOption entity.
+     *
+     * @Secure(roles="ROLE_SUPER_USER,ROLE_FIELDOPTION_CREATE")
+     * @Route("/", name="fieldoption_create")
+     * @Route("/{fieldid}/field", requirements={"fieldid"="\d+"}, name="fieldoption_create_byfield")
+     * @Method("POST")
+     * @Template("HrisFormBundle:FieldOption:new.html.twig")
+     */
+    public function createAction(Request $request,$fieldid=NULL)
+    {
+        $entity  = new FieldOption();
+        $form = $this->createForm(new FieldOptionType($fieldid), $entity);
+        $form->submit($request);
+
+        // Serve to redirect page to filtered options by field
+        if(!empty($fieldid)) {
+            $em = $this->getDoctrine()->getManager();
+            $field = $em->getRepository('HrisFormBundle:Field')->findOneBy(array('id'=>$fieldid));
+        }else {
+            $field=NULL;
+        }
+
+        if ($form->isValid()) {
+            $requestcontent = $request->request->get('hris_formbundle_fieldoptiontype');
+            $fieldOptionIds = $requestcontent['fieldOptionMerge'];
+            // Append option merges selected
+            foreach($fieldOptionIds as $fieldOptionIdKey=>$fieldOptionId) {
+                $fieldOption = $this->getDoctrine()->getRepository('HrisFormBundle:FieldOption')->findOneBy(array('id'=>$fieldOptionId));
+                $fieldOptionMerge = new FieldOptionMerge();
+                $fieldOptionMerge->setField($entity->getField());
+                $fieldOptionMerge->setMergedFieldOption($entity);
+                $fieldOptionMerge->setRemovedFieldOptionValue($fieldOption->getValue());
+                $fieldOptionMerge->setRemovedFieldOptionUid($fieldOption->getUid());
+                $em->persist($fieldOptionMerge);
+            }
+
+            $em = $this->getDoctrine()->getManager();
+            $em->persist($entity);
+            $em->flush();
+
+            return $this->redirect($this->generateUrl('fieldoption_show', array( 'id' => $entity->getId() )));
+        }
+
+
+        return array(
+            'entity' => $entity,
+            'form'   => $form->createView(),
+            'field'  => $field,
         );
     }
 
@@ -193,7 +208,16 @@ class FieldOptionController extends Controller
             throw $this->createNotFoundException('Unable to find FieldOption entity.');
         }
 
-        $editForm = $this->createForm(new FieldOptionType(), $entity);
+        $editForm = $this->createForm(new FieldOptionType($entity->getField()->getId(),$entity->getValue()), $entity);
+
+        $fieldOptionMerges = $em->getRepository('HrisFormBundle:FieldOptionMerge')->findBy(array('mergedFieldOption'=>$entity));
+        $mergedOptions = new ArrayCollection();
+        foreach($fieldOptionMerges as $fieldOptionMergeKey=>$fieldOptionMerge) {
+            $removedFieldOption = $em->getRepository('HrisFormBundle:FieldOption')->findOneBy(array('uid'=>$fieldOptionMerge->getRemovedFieldOptionUid()));
+            $mergedOptions->add($removedFieldOption);
+        }
+        $editForm->get('fieldOptionMerge')->setData($mergedOptions);
+
         $deleteForm = $this->createDeleteForm($id);
 
         return array(
@@ -222,10 +246,32 @@ class FieldOptionController extends Controller
         }
 
         $deleteForm = $this->createDeleteForm($id);
-        $editForm = $this->createForm(new FieldOptionType(), $entity);
+        $editForm = $this->createForm(new FieldOptionType($entity->getField()->getId()), $entity);
         $editForm->submit($request);
 
         if ($editForm->isValid()) {
+            $requestcontent = $request->request->get('hris_formbundle_fieldoptiontype');
+            $fieldOptionIds = $requestcontent['fieldOptionMerge'];
+            // Clear ResourceTableFieldMembers
+            //Get rid of current fields
+            $em->createQueryBuilder('fieldOptionMerge')
+                ->delete('HrisFormBundle:FieldOptionMerge','fieldOptionMerge')
+                ->where('fieldOptionMerge.mergedFieldOption= :mergedFieldOption')
+                ->setParameter('mergedFieldOption',$entity)
+                ->getQuery()->getResult();
+            $em->flush();
+            foreach($fieldOptionIds as $fieldOptionIdKey=>$fieldOptionId) {
+                $fieldOption = $this->getDoctrine()->getRepository('HrisFormBundle:FieldOption')->findOneBy(array('id'=>$fieldOptionId));
+                $fieldOptionMerge = new FieldOptionMerge();
+
+                $fieldOptionMerge->setField($entity->getField());
+                $fieldOptionMerge->setMergedFieldOption($entity);
+                $fieldOptionMerge->setRemovedFieldOptionValue($fieldOption->getValue());
+                $fieldOptionMerge->setRemovedFieldOptionUid($fieldOption->getUid());
+                $em->persist($fieldOptionMerge);
+                unset($fieldOption);
+            }
+
             $em->persist($entity);
             $em->flush();
 

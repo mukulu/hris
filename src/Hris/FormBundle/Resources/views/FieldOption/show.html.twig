@@ -36,6 +36,14 @@
                 <td>{{ entity.description }}</td>
             </tr>
             <tr>
+                <th>Related Field Options</th>
+                <td>{{ entity.childFieldOption | join(', ') }}</td>
+            </tr>
+            <tr>
+                <th>Merged Field Options</th>
+                <td>{{ entity.fieldOptionMerge | join(', ') }}</td>
+            </tr>
+            <tr>
                 <th>Datecreated</th>
                 <td>{{ entity.datecreated|date('Y-m-d H:i:s') }}</td>
             </tr>
