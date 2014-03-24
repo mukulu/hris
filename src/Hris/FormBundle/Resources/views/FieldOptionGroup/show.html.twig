@@ -22,6 +22,14 @@
                 <td>{{ entity.description }}</td>
             </tr>
             <tr>
+                <th>Operator</th>
+                <td>{{ entity.operator }}</td>
+            </tr>
+            <tr>
+                <th>Field Options</th>
+                <td>{{ entity.fieldOption | join(', ') }}</td>
+            </tr>
+            <tr>
                 <th>Datecreated</th>
                 <td>{{ entity.datecreated|date('Y-m-d H:i:s') }}</td>
             </tr>
@@ -41,6 +49,11 @@
         <li>
             <a href="{{ path('fieldoptiongroup_edit', { 'id': entity.id }) }}" class="btn">
                 Edit
+            </a>
+        </li>
+        <li>
+            <a class="btn" href="{{ path('fieldoptiongroup_new') }}">
+                Create a new entry
             </a>
         </li>
         <li>

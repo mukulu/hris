@@ -51,6 +51,11 @@ class FieldOptionGroupType extends AbstractType
                 )
             ))
             ->add('fieldOption')
+            ->add('operator', 'choice', array(
+                'empty_value' => '--SELECT--',
+                'choices'   => array('and' => 'AND', 'or' => 'OR', 'nand' => 'NAND', 'nor' => 'NOR', 'not' => 'NOT'),
+                'required' => false,
+            ))
         ;
     }
 

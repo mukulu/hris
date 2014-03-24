@@ -75,6 +75,14 @@ class FieldOptionGroup
      * @ORM\Column(name="description", type="text", nullable=true)
      */
     private $description;
+
+    /**
+     * @var string $operator
+     *
+     * @Gedmo\Versioned
+     * @ORM\Column(name="operator", type="string", length=64, nullable=true)
+     */
+    private $operator;
     
     /**
      * @var FieldOption $fieldOption
@@ -245,6 +253,29 @@ class FieldOptionGroup
     public function getDescription()
     {
         return $this->description;
+    }
+
+    /**
+     * Set operator
+     *
+     * @param string $operator
+     * @return FieldOptionGroup
+     */
+    public function setOperator($operator)
+    {
+        $this->operator = $operator;
+
+        return $this;
+    }
+
+    /**
+     * Get operator
+     *
+     * @return string
+     */
+    public function getOperator()
+    {
+        return $this->operator;
     }
 
     /**
