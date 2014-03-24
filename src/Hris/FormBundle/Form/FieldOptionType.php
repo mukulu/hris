@@ -100,21 +100,42 @@ class FieldOptionType extends AbstractType
             ->add('skipInReport',null,array(
                 'required'=>False,
             ))
-            ->add('childFieldOption','entity', array(
-                'class'=>'HrisFormBundle:FieldOption',
-                'multiple'=>true,
-                'query_builder'=>function(EntityRepository $er) use ($fieldId) {
-                        return $er->createQueryBuilder('fieldOption')
-                            ->join('fieldOption.field','field')
-                            ->andWhere("field.id='".$fieldId."'")
-                            ->orderBy('fieldOption.value','ASC');
-                    },
-                'constraints'=>array(
-                    new NotBlank(),
-                ),
-                'required'=>False,
-            ))
         ;
+        if(!empty($this->fieldOptionValue)) {
+            $builder
+                ->add('childFieldOption','entity', array(
+                    'class'=>'HrisFormBundle:FieldOption',
+                    'multiple'=>true,
+                    'query_builder'=>function(EntityRepository $er) use ($fieldId,$fieldOptionValue) {
+                            return $er->createQueryBuilder('fieldOption')
+                                ->join('fieldOption.field','field')
+                                ->andWhere("field.id='".$fieldId."'")
+                                ->orderBy('fieldOption.value','ASC');
+                        },
+                    'constraints'=>array(
+                        new NotBlank(),
+                    ),
+                    'required'=>False,
+                ))
+            ;
+        }else {
+            $builder
+                ->add('childFieldOption','entity', array(
+                    'class'=>'HrisFormBundle:FieldOption',
+                    'multiple'=>true,
+                    'query_builder'=>function(EntityRepository $er) use ($fieldId) {
+                            return $er->createQueryBuilder('fieldOption')
+                                ->join('fieldOption.field','field')
+                                ->andWhere("field.id='".$fieldId."'")
+                                ->orderBy('fieldOption.value','ASC');
+                        },
+                    'constraints'=>array(
+                        new NotBlank(),
+                    ),
+                    'required'=>False,
+                ))
+            ;
+        }
 
         if(!empty($this->fieldOptionValue)) {
             $builder
