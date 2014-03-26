@@ -742,8 +742,17 @@ class RecordController extends Controller
         foreach ($fields as $key => $field){
             $recordValue = $this->get('request')->request->get($field->getName());
 
+            /*
             if($field->getDataType()->getName() == "Date"){
                 $recordValue = new \DateTime($recordValue);
+            }
+            */
+
+            if($field->getDataType()->getName() == "Date" && $recordValue != null){
+
+                $recordValue = DateTime::createFromFormat('d/m/Y', $recordValue)->format('Y-m-d');
+                $recordValue = new \DateTime($recordValue);
+
             }
 
             /**
