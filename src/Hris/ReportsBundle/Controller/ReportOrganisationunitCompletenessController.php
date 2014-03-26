@@ -91,6 +91,8 @@ class ReportOrganisationunitCompletenessController extends Controller
                 return $this->redirect($this->generateUrl('report_organisationunit_completeness'));
             }
         }
+        // If lowest level is selected(no organisationunitLevel is sent through the form)
+        if(empty($this->organisationunitLevel)) $this->organisationunitLevel = $this->organisationunit->getOrganisationunitStructure()->getLevel();
         $this->processCompletenessFigures();
 
         return array(
@@ -467,7 +469,14 @@ class ReportOrganisationunitCompletenessController extends Controller
 
         $em = $this->getDoctrine()->getManager();
         $this->organisationunit = $em->getRepository('HrisOrganisationunitBundle:Organisationunit')->findOneBy(array('id'=>$organisationunitId));
-        $this->organisationunitLevel = $this->getDoctrine()->getManager()->getRepository('HrisOrganisationunitBundle:OrganisationunitLevel')->findOneBy(array('level' => ($this->organisationunit->getOrganisationunitStructure()->getLevel()->getLevel()+1) ));
+        $lowestLevel = $queryBuilder->select('MAX(organisationunitLevel.level)')->from('HrisOrganisationunitBundle:OrganisationunitLevel','organisationunitLevel')->getQuery()->getSingleScalarResult();
+        $levelBelowSelected = $this->organisationunit->getOrganisationunitStructure()->getLevel()->getLevel()+1;
+        if($levelBelowSelected > $lowestLevel) {
+            $this->organisationunitLevel = $this->organisationunit->getOrganisationunitStructure()->getLevel();
+            $this->sameLevel = True;
+        }else {
+            $this->organisationunitLevel = $this->getDoctrine()->getManager()->getRepository('HrisOrganisationunitBundle:OrganisationunitLevel')->findOneBy(array('level' => ($this->organisationunit->getOrganisationunitStructure()->getLevel()->getLevel()+1) ));
+        }
         $this->forms = $queryBuilder->select('form')->from('HrisFormBundle:Form','form')->where($queryBuilder->expr()->in('form.id',$formIds))->getQuery()->getResult();
 
         $this->processCompletenessFigures();
