@@ -5,7 +5,7 @@
     <script type="text/javascript" src="{{ asset('commons/js/jquery.jeditable.mini.js') }}"></script>
     <script type="text/javascript">
         $( document ).ready(function() {
-            var fieldOptionTargetUrl = '{{ path('target_targetfieldption', {'_format':'json'}) }}';
+            var fieldOptionTargetUrl = '{{ path('dhisdataconnection_updaterelation', {'_format':'json'}) }}';
             {# Capture field option groups from hrhis #}
             var fieldOptionGroupList = new Array();
             {% for fieldOptionGroupset in entity.fieldOptionGroupset %}
@@ -19,7 +19,9 @@
             var dhisDataelementNames = new Array();
             var dhisComboUids = new Array();
             var dhisComboNames = new Array();
+            var incr=0;
             $.each(inputBoxes, function(inputBoxIndex, inputBox) {
+                incr=incr+1;
                 //Prepare dataelement and uid names
                 dataelementUids = $(inputBox).attr('id').split(/\-/);
                 dataelementNames = $(inputBox).val().split(/\-/);

@@ -25,6 +25,7 @@
  */
 namespace Hris\IntergrationBundle\Controller;
 
+use Hris\IntergrationBundle\Entity\DataelementFieldOptionRelation;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Bundle\FrameworkBundle\Controller\Controller;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Method;
@@ -33,6 +34,7 @@ use Sensio\Bundle\FrameworkExtraBundle\Configuration\Template;
 use Hris\IntergrationBundle\Entity\DHISDataConnection;
 use Hris\IntergrationBundle\Form\DHISDataConnectionType;
 use JMS\SecurityExtraBundle\Annotation\Secure;
+use Doctrine\ORM\ORMException;
 
 /**
  * DHISDataConnection controller.
@@ -261,45 +263,37 @@ class DHISDataConnectionController extends Controller
             ->delete('HrisIntergrationBundle:DataelementFieldOptionRelation','dataelementFieldOptionRelation')
             ->where('dataelementFieldOptionRelation.dhisDataConnection= :dhisDataConnection')
             ->andWhere('dataelementFieldOptionRelation.dataelementUid= :dataelementUid')
+            ->andWhere('dataelementFieldOptionRelation.dataelementname= :dataelementname')
             ->andWhere('dataelementFieldOptionRelation.categoryComboUid= :categoryComboUid')
-            ->setParameters(array('dhisDataConnection'=>$entity,'dataelementUid'=>$dhisDataelementUids,'categoryComboUid'=>$dhisComboUids))
+            ->andWhere('dataelementFieldOptionRelation.categoryComboname= :categoryComboname')
+            ->setParameters(array('dhisDataConnection'=>$entity,'dataelementUid'=>$dhisDataelementUids,'categoryComboUid'=>$dhisComboUids,'categoryComboname'=>$dhisComboNames,'dataelementname'=>$dhisDataelementNames))
             ->getQuery()->getResult();
         $em->flush();
+        //Insert relation
+        $dataelementFieldOptionRelation = new DataelementFieldOptionRelation();
+        $dataelementFieldOptionRelation->setDhisDataConnection($entity);
+        $dataelementFieldOptionRelation->setCategoryComboname($dhisComboNames);
+        $dataelementFieldOptionRelation->setCategoryComboUid($dhisComboUids);
+        $dataelementFieldOptionRelation->setDataelementname($dhisDataelementNames);
+        $dataelementFieldOptionRelation->setDataelementUid($dhisDataelementUids);
+        $dataelementFieldOptionRelation->setColumnFieldOptionGroup($em->getRepository('HrisFormBundle:FieldOptionGroup')->findOneBy(array('name'=>$dhisDataelementNames)));
+        $dataelementFieldOptionRelation->setRowFieldOptionGroup($em->getRepository('HrisFormBundle:FieldOptionGroup')->findOneBy(array('name'=>$dhisComboNames)));
 
-//        if(!empty($connectionId) && !empty($dhisDataelementUids)) {
-//            $queryBuilder = $this->getDoctrine()->getManager()->createQueryBuilder();
-//            $targetFieldOptions = $queryBuilder->select('targetFieldOption')
-//                ->from('HrisIndicatorBundle:TargetFieldOption','targetFieldOption')
-//                ->join('targetFieldOption.fieldOption','fieldOption')
-//                ->join('fieldOption.field','field')
-//                ->where('targetFieldOption.target=:targetid')
-//                ->andWhere('field.id=:fieldid')
-//                ->setParameters(array('targetid'=>$targetid,'fieldid'=>$fieldid))
-//                ->getQuery()->getResult();
-//            if(!empty($targetFieldOptions)) {
-//                foreach($targetFieldOptions as $targetFieldOptionKey=>$targetFieldOption) {
-//                    $fieldOptionTargetNodes[$targetFieldOption->getFieldOption()->getId()] = Array(
-//                        'name' => $targetFieldOption->getFieldOption()->getValue(),
-//                        'id' => $targetFieldOption->getFieldOption()->getId(),
-//                        'value' => $targetFieldOption->getValue()
-//                    );
-//                }
-//            }
-//        }
-//        foreach($fieldOptions as $fieldOptionKey=>$fieldOption) {
-//            if(!isset($fieldOptionTargetNodes[$fieldOption->getId()])) {
-//                $fieldOptionTargetNodes[] = Array(
-//                    'name' => $fieldOption->getValue(),
-//                    'id' => $fieldOption->getId(),
-//                    'value' => ''
-//                );
-//            }
-//        }
+        $result = NULL;
+
+        try{
+            $em->persist($dataelementFieldOptionRelation);
+            $em->flush();
+            $result= 'success';
+
+        } catch(ORMException $e){
+            $result= 'failed';
+        }
 
         $serializer = $this->container->get('serializer');
 
         return array(
-            'entities' => $serializer->serialize($fieldOptionTargetNodes,$_format)
+            'entities' => $serializer->serialize($result,$_format)
         );
     }
 
