@@ -271,7 +271,7 @@ class DHISDataConnectionController extends Controller
         $em->flush();
         $columnFieldOptionGroup = $em->getRepository('HrisFormBundle:FieldOptionGroup')->findOneBy(array('name'=>$dhisDataelementNames));
         $rowFieldOptionGroup = $em->getRepository('HrisFormBundle:FieldOptionGroup')->findOneBy(array('name'=>$dhisComboNames));
-        if(!empty($columnFieldOptionGroup) && !empty($rowFieldOptionGroup)) {
+        if(sizeof($columnFieldOptionGroup) && sizeof($rowFieldOptionGroup)) {
             //Insert relation
             $dataelementFieldOptionRelation = new DataelementFieldOptionRelation();
             $dataelementFieldOptionRelation->setDhisDataConnection($entity);
@@ -295,7 +295,6 @@ class DHISDataConnectionController extends Controller
         }else {
             $result= 'failed';
         }
-
 
         $serializer = $this->container->get('serializer');
 
