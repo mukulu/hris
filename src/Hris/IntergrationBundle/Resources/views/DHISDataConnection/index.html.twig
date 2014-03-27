@@ -74,6 +74,12 @@
                     <li>
                         <a href="{{ path('dhisdataconnection_edit', { 'id': entity.id }) }}"><i class="icon-edit icon-large" title="Edit"></i></a>
                     </li>
+                    <li>
+                        <a href="{{ path('dhisdataconnection_showmapping', { 'id': entity.id }) }}"><i class="icon-circle-arrow-down icon-large" title="Update database mapping"></i></a>
+                    </li>
+                    <li>
+                        <a href="{{ path('dhisdataconnection_syncdata', { 'id': entity.id }) }}"><i class="icon-cogwheel icon-large" title="Update DHIS2 HRH Data"></i></a>
+                    </li>
                 </ul>
                 </td>
             </tr>

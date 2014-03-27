@@ -1,0 +1,31 @@
+{% extends '::base.html.twig' %}
+
+{% block right_content -%}
+    <h1><i class="icon-circle-info icon-largest" title="Show"></i> <small>{{ entity.name | capitalize }}'s Syncing Details</small></h1>
+
+    <div class="alert alert-success">
+        <small class="hidden-phone"><strong> SYNC OPERATION IN PROGRESS </strong></small>
+    </div>
+
+    <table class="record_properties table table-striped table-bordered table-hover">
+        <tbody>
+            <tr>
+                <th>Datasetname</th>
+                <td>{{ entity.datasetName }}</td>
+            </tr>
+            <tr>
+                <th>Datasetuid</th>
+                <td>{{ entity.datasetUid }}</td>
+            </tr>
+            <tr>
+                <th>Hosturl</th>
+                <td>{{ entity.hostUrl }}</td>
+            </tr>
+            <tr>
+                <th>Field Option Groupset</th>
+                <td>{{ entity.fieldOptionGroupset | join(',') }}</td>
+            </tr>
+        </tbody>
+    </table>
+
+{% endblock %}

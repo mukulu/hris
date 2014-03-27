@@ -331,6 +331,59 @@ class DHISDataConnectionController extends Controller
     }
 
     /**
+     * Displays dataset html forms for mapping hrhis fieldoption groups with dhis
+     * dataelement and combooption.
+     *
+     * @Secure(roles="ROLE_SUPER_USER,ROLE_DHISDATACONNECTION_SHOWMAPPING")
+     * @Route("/mapping/{id}", name="dhisdataconnection_showmapping")
+     * @Method("GET")
+     * @Template()
+     */
+    public function showMappingAction($id)
+    {
+        $em = $this->getDoctrine()->getManager();
+
+        $entity = $em->getRepository('HrisIntergrationBundle:DHISDataConnection')->find($id);
+
+        if (!$entity) {
+            throw $this->createNotFoundException('Unable to find DHISDataConnection entity.');
+        }
+
+        $deleteForm = $this->createDeleteForm($id);
+
+        return array(
+            'entity'      => $entity,
+            'delete_form' => $deleteForm->createView(),
+        );
+    }
+
+    /**
+     * Sync HRH data with DHIS2 Dataset aggregated values.
+     *
+     * @Secure(roles="ROLE_SUPER_USER,ROLE_DHISDATACONNECTION_SYNCDATA")
+     * @Route("/syncdata/{id}", name="dhisdataconnection_syncdata")
+     * @Method("GET")
+     * @Template()
+     */
+    public function syncDataAction($id)
+    {
+        $em = $this->getDoctrine()->getManager();
+
+        $entity = $em->getRepository('HrisIntergrationBundle:DHISDataConnection')->find($id);
+
+        if (!$entity) {
+            throw $this->createNotFoundException('Unable to find DHISDataConnection entity.');
+        }
+
+        $deleteForm = $this->createDeleteForm($id);
+
+        return array(
+            'entity'      => $entity,
+            'delete_form' => $deleteForm->createView(),
+        );
+    }
+
+    /**
      * Creates a form to delete a DHISDataConnection entity by id.
      *
      * @param mixed $id The entity id
