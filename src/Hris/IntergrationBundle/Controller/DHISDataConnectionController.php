@@ -269,26 +269,33 @@ class DHISDataConnectionController extends Controller
             ->setParameters(array('dhisDataConnection'=>$entity,'dataelementUid'=>$dhisDataelementUids,'categoryComboUid'=>$dhisComboUids,'categoryComboname'=>$dhisComboNames,'dataelementname'=>$dhisDataelementNames))
             ->getQuery()->getResult();
         $em->flush();
-        //Insert relation
-        $dataelementFieldOptionRelation = new DataelementFieldOptionRelation();
-        $dataelementFieldOptionRelation->setDhisDataConnection($entity);
-        $dataelementFieldOptionRelation->setCategoryComboname($dhisComboNames);
-        $dataelementFieldOptionRelation->setCategoryComboUid($dhisComboUids);
-        $dataelementFieldOptionRelation->setDataelementname($dhisDataelementNames);
-        $dataelementFieldOptionRelation->setDataelementUid($dhisDataelementUids);
-        $dataelementFieldOptionRelation->setColumnFieldOptionGroup($em->getRepository('HrisFormBundle:FieldOptionGroup')->findOneBy(array('name'=>$dhisDataelementNames)));
-        $dataelementFieldOptionRelation->setRowFieldOptionGroup($em->getRepository('HrisFormBundle:FieldOptionGroup')->findOneBy(array('name'=>$dhisComboNames)));
+        $columnFieldOptionGroup = $em->getRepository('HrisFormBundle:FieldOptionGroup')->findOneBy(array('name'=>$dhisDataelementNames));
+        $rowFieldOptionGroup = $em->getRepository('HrisFormBundle:FieldOptionGroup')->findOneBy(array('name'=>$dhisComboNames));
+        if(!empty($columnFieldOptionGroup) && !empty($rowFieldOptionGroup)) {
+            //Insert relation
+            $dataelementFieldOptionRelation = new DataelementFieldOptionRelation();
+            $dataelementFieldOptionRelation->setDhisDataConnection($entity);
+            $dataelementFieldOptionRelation->setCategoryComboname($dhisComboNames);
+            $dataelementFieldOptionRelation->setCategoryComboUid($dhisComboUids);
+            $dataelementFieldOptionRelation->setDataelementname($dhisDataelementNames);
+            $dataelementFieldOptionRelation->setDataelementUid($dhisDataelementUids);
+            $dataelementFieldOptionRelation->setColumnFieldOptionGroup($columnFieldOptionGroup);
+            $dataelementFieldOptionRelation->setRowFieldOptionGroup($rowFieldOptionGroup);
 
-        $result = NULL;
+            $result = NULL;
 
-        try{
-            $em->persist($dataelementFieldOptionRelation);
-            $em->flush();
-            $result= 'success';
+            try{
+                $em->persist($dataelementFieldOptionRelation);
+                $em->flush();
+                $result= 'success';
 
-        } catch(ORMException $e){
+            } catch(ORMException $e){
+                $result= 'failed';
+            }
+        }else {
             $result= 'failed';
         }
+
 
         $serializer = $this->container->get('serializer');
 
