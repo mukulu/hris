@@ -181,14 +181,26 @@ class OrganisationunitGroupsetController extends Controller
         $em = $this->getDoctrine()->getManager();
 
         $entity = $em->getRepository('HrisOrganisationunitBundle:OrganisationunitGroupset')->find($id);
+        // Get previous members of this groupset.
+        $organisationunitGroupsPreviously = $entity->getOrganisationunitGroup();
 
-        if (!$entity) {
-            throw $this->createNotFoundException('Unable to find OrganisationunitGroupset entity.');
-        }
-
-        $deleteForm = $this->createDeleteForm($id);
         $editForm = $this->createForm(new OrganisationunitGroupsetType(), $entity);
         $editForm->bind($request);
+//        $organisationunitGroups = $editForm->getData()->getOrganisationunitGroup();
+//
+//        foreach($organisationunitGroups as $organisationunitGroupKey=>$organisationunitGroup) {
+//            $em->persist($organisationunitGroup);
+//            if(empty($organisationunitGroup->getOrganisationunitGroupset())) {
+//                // Update membership of the group to this groupset.
+//            }
+//        }
+//        // Go through previous list of groupset members and unassign membership if not in current list
+//        foreach($organisationunitGroupsPreviously as $organisationunitGroupsPreviouslyKey=>$organisationunitGroupPreviously) {
+//            if(!in_array($organisationunitGroupPreviously,$organisationunitGroups)) {
+//                //Unassign the removed group from this dataset
+//
+//            }
+//        }
 
         if ($editForm->isValid()) {
             $em->persist($entity);

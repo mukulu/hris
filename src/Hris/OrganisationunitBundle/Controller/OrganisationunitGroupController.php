@@ -208,7 +208,7 @@ class OrganisationunitGroupController extends Controller
             $em->persist($entity);
             $em->flush();
 
-            return $this->redirect($this->generateUrl('organisationunitgroup_edit', array('id' => $id)));
+            return $this->redirect($this->generateUrl('organisationunitgroup_show', array('id' => $id)));
         }
 
         return array(

@@ -37,7 +37,9 @@ class OrganisationunitGroupsetType extends AbstractType
             ->add('code')
             ->add('description')
             ->add('dhisUid')
-            ->add('organisationunitGroup',null,array('multiple'=>true))
+            ->add('organisationunitGroup',null,array(
+                'by_reference'=>false,
+            ))
         ;
     }
 

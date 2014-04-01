@@ -36,6 +36,10 @@ class OrganisationunitGroupType extends AbstractType
             ->add('name')
             ->add('code')
             ->add('description')
+            ->add('organisationunitGroupset',null,array(
+                'required'=>False,
+                'empty_value' => '--SELECT--',
+            ))
             ->add('dhisUid')
         ;
     }
