@@ -9,7 +9,7 @@
             <form action="{{ path('organisationunit_create') }}" method="post" {{ form_enctype(form) }}>
     {% endif %}
         {{ form_widget(form) }}
-        {% if organisationunitGroupset is defined %}
+        {% if organisationunitGroupsets is defined %}
             <div id="hris_organisationunitbundle_orgnisationunittype_groupsets">
                 {% for organisationunitGroupset in organisationunitGroupsets %}
                     <label for="hris_organisationunitbundle_orgnisationunittype_groupsets_{{ organisationunitGroupset.uid }}">Organisationunit {{ organisationunitGroupset.name }}</label>
@@ -23,7 +23,7 @@
             </div>
         {% endif %}
 
-        {% if completenessForm is defined %}
+        {% if completenessForms is defined %}
             <div id="hris_organisationunitbundle_organisationunittype_completeness">
                 {% for completenessForm in completenessForms %}
                     <label for="hris_organisationunitbundle_organisationunittype_completeness{{ completenessForm.uid }}">{{ completenessForm.name }} Expectation</label>
