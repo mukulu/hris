@@ -20,6 +20,26 @@ framework:
 monolog:
     handlers:
         main:
+            type: fingers_crossed
+            action_level: critical
+            handler: grouped
+        grouped:
+            type: group
+            members: [streamed,buffered]
+        streamed:
+            type: stream
+            path: "%kernel.logs_dir%/%kernel.environment%.log"
+            level: debug
+        buffered:
+            type: buffer
+            handler: swift
+        swift:
+            type: swift_mailer
+            from_email: john.f.mukulu@gmail.com
+            to_email: [john.f.mukulu@gmail.com,lepebina@gmail.com,senyoni@gmail.com,yusuphk@gmail.com,ismailkoleleni@gmail.com]
+            subject: HRHIS SERVER: CRITICAL EXCEPTION!
+            level: debug
+        other:
             type:         fingers_crossed
             action_level: error
             handler:      nested
