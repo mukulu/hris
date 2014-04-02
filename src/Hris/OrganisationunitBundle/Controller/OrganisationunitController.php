@@ -145,12 +145,19 @@ class OrganisationunitController extends Controller
             $em->flush();
 
             return $this->redirect($this->generateUrl('organisationunit_show', array('id' => $entity->getId())));
-        }
+        }else {
+            $completenessForms = $this->getDoctrine()->getManager()->getRepository('HrisFormBundle:Form')->findAll();
 
+            //Support addition of group and groupset
+            $organisationunitGroupsets = $this->getDoctrine()->getManager()->getRepository('HrisOrganisationunitBundle:OrganisationunitGroupset')->findAll();
+
+        }
 
         return array(
             'entity' => $entity,
             'form'   => $form->createView(),
+            'completenessForms'=>$completenessForms,
+            'organisationunitGroupsets'=>$organisationunitGroupsets,
         );
     }
 
@@ -322,6 +329,12 @@ class OrganisationunitController extends Controller
 
 
             return $this->redirect($this->generateUrl('organisationunit_show', array('id' => $id)));
+        }else {
+            $completenessForms = $this->getDoctrine()->getManager()->getRepository('HrisFormBundle:Form')->findAll();
+
+            //Support addition of group and groupset
+            $organisationunitGroupsets = $this->getDoctrine()->getManager()->getRepository('HrisOrganisationunitBundle:OrganisationunitGroupset')->findAll();
+
         }
 
         return array(
