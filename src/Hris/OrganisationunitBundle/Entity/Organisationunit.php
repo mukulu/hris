@@ -33,6 +33,7 @@ use Hris\OrganisationunitBundle\Entity\OrganisationunitGroup;
 use Hris\IntergrationBundle\Entity\DHISDataConnection;
 use Hris\UserBundle\Entity\User;
 use Symfony\Component\Validator\Constraints as Assert;
+use Symfony\Bridge\Doctrine\Validator\Constraints\UniqueEntity;
 
 /**
  * Hris\OrganisationunitBundle\Entity\Organisationunit
@@ -41,6 +42,8 @@ use Symfony\Component\Validator\Constraints as Assert;
  * @ORM\Entity(repositoryClass="Hris\OrganisationunitBundle\Entity\OrganisationunitRepository")
  * @Gedmo\Loggable
  * @Gedmo\SoftDeleteable(fieldName="deletedAt")
+ * @UniqueEntity(fields="code", message="Code already exists")
+ * @UniqueEntity(fields="shortname", message="Shortname already exists")
  */
 class Organisationunit
 {
