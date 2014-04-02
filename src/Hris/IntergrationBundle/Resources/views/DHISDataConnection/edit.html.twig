@@ -69,7 +69,42 @@
     {{ form_errors( edit_form.parentOrganisationunit ) }}
     {{ form_widget( edit_form.parentOrganisationunit ) }}
     <div id="treeplaceholder"></div>
+    {{ form_label( edit_form.name ) }}
+    {{ form_errors( edit_form.name ) }}
+    {{ form_widget( edit_form.name ) }}
 
+    {{ form_label( edit_form.datasetName ) }}
+    {{ form_errors( edit_form.datasetName ) }}
+    {{ form_widget( edit_form.datasetName ) }}
+
+    {{ form_label( edit_form.datasetUid ) }}
+    {{ form_errors( edit_form.datasetUid ) }}
+    {{ form_widget( edit_form.datasetUid ) }}
+
+
+    {{ form_label( edit_form.hostUrl ) }}
+    {{ form_errors( edit_form.hostUrl ) }}
+    {{ form_widget( edit_form.hostUrl ) }}
+
+
+    {{ form_label( edit_form.username ) }}
+    {{ form_errors( edit_form.username ) }}
+    {{ form_widget( edit_form.username ) }}
+
+
+    {{ form_label( edit_form.password ) }}
+    {{ form_errors( edit_form.password ) }}
+    {{ form_widget( edit_form.password ) }}
+
+
+    {{ form_label( edit_form.fieldOptionGroupset ) }}
+    {{ form_errors( edit_form.fieldOptionGroupset ) }}
+    {{ form_widget( edit_form.fieldOptionGroupset ) }}
+
+    {{ tinymce_init() }}
+    {{ form_label( edit_form.datasetHtml ) }}
+    {{ form_errors( edit_form.datasetHtml ) }}
+    {{ form_widget(edit_form.datasetHtml, { 'attr': { 'class': 'tinymce', 'data-theme' : 'advanced' } } ) }}
     {{ form(edit_form) }}
 
     <br/>

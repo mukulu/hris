@@ -358,7 +358,7 @@ class DHISDataConnectionController extends Controller
     }
 
     /**
-     * Sync HRH data with DHIS2 Dataset aggregated values.
+     * Displays interface for Syncing HRH data with DHIS2 Dataset aggregated values.
      *
      * @Secure(roles="ROLE_SUPER_USER,ROLE_DHISDATACONNECTION_SYNCDATA")
      * @Route("/syncdata/{id}", name="dhisdataconnection_syncdata")
@@ -380,6 +380,34 @@ class DHISDataConnectionController extends Controller
         return array(
             'entity'      => $entity,
             'delete_form' => $deleteForm->createView(),
+        );
+    }
+
+    /**
+     * Generates export file with DHIS2 Dataset aggregated values.
+     *
+     * @Secure(roles="ROLE_SUPER_USER,ROLE_DHISDATACONNECTION_SYNCDATA")
+     * @Route("/syncdata/{id}/aggregation.{_format}", requirements={"_format"="yml|xml|json"}, defaults={"_format"="json"}, name="dhisdataconnection_aggregation")
+     * @Method("POST")
+     * @Template()
+     */
+    public function aggregationAction($id)
+    {
+        $em = $this->getDoctrine()->getManager();
+
+        $entity = $em->getRepository('HrisIntergrationBundle:DHISDataConnection')->find($id);
+
+        // Aggregate data for entire organisationunit tree
+
+
+        if (!$entity) {
+            throw $this->createNotFoundException('Unable to find DHISDataConnection entity.');
+        }
+
+
+        $result = 'success';
+        return array(
+            'result'      => $result,
         );
     }
 

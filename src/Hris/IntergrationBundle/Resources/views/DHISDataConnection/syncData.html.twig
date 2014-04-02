@@ -1,5 +1,24 @@
 {% extends '::base.html.twig' %}
 
+{% block javascripts %}
+    {{ parent() }}
+    <script type="text/javascript" src="{{ asset('commons/js/jquery.jeditable.mini.js') }}"></script>
+    <script type="text/javascript">
+        $( document ).ready(function() {
+            var fieldOptionTargetUrl = '{{ path('dhisdataconnection_aggregation', {'id': entity.id,'_format':'json'}) }}';
+            //Push dataelement and combo matches for insertion into database
+            postData={
+                'connectionId':{{ entity.id }}
+            };
+            $.post(fieldOptionTargetUrl,postData).success(function(){
+                $('#resultsSection').html('<div class="alert alert-success"><strong> Aggregation successful </strong></div>');
+            }).fail(function(){
+                $('#resultsSection').html('<div class="alert alert-error"><strong> Aggregation failed </strong></div>');
+            });
+        });
+    </script>
+{% endblock javascripts %}
+
 {% block right_content -%}
     <h1><i class="icon-circle-info icon-largest" title="Show"></i> <small>{{ entity.name | capitalize }}'s Syncing Details</small></h1>
 
@@ -27,5 +46,57 @@
             </tr>
         </tbody>
     </table>
+
+    <ul class="record_actions inline">
+        <li>
+            <a href="{{ path('dhisdataconnection') }}" class="btn">
+                Back to the list
+            </a>
+        </li>
+        <li>
+            <a href="{{ path('dhisdataconnection_edit', { 'id': entity.id }) }}" class="btn">
+                Edit
+            </a>
+        </li>
+        <li>
+            <a class="btn" href="{{ path('dhisdataconnection_new') }}">
+                Create a another
+            </a>
+        </li>
+        <li>
+            <a data-toggle="modal" href="#deleteModalFor{{ entity.uid }}" class="btn btn-danger">Delete {{ entity.name | capitalize }}</a>
+
+            <!-- Modal -->
+            <div class="modal fade" id="deleteModalFor{{ entity.uid }}">
+                <div class="modal-dialog">
+                    <div class="modal-content">
+                        <div class="modal-header">
+                            <button type="button" class="close" data-dismiss="modal" aria-hidden="true">×</button>
+                            <h4 class="modal-title"><i class="icon-circle-remove icon-largest" title="Delete"></i>Deleting {{ entity.name | capitalize }}</h4>
+                        </div>
+                        <div class="modal-body">
+                            Are you sure you want to delete <strong>{{ entity.name | capitalize }}</strong> that was created on <em>{{ entity.datecreated|date('d/m/Y') }}</em>
+                            {% if entity.lastUpdated %}
+                                and last updated on {{ entity.lastupdated|date('H:i:s d/m/Y') }} ??
+                            {% else %}
+                                and never updated ??
+                            {% endif %}
+                        </div>
+                        <div class="modal-footer">
+                            <form action="{{ path('dhisdataconnection_delete', { 'id': entity.id }) }}" method="post">
+                                <input type="hidden" class="btn btn-danger" name="_method" value="DELETE" />
+                                {{ form_widget(delete_form) }}
+                                <button type="button" class="btn btn-default" data-dismiss="modal">Close</button>
+                                <button type="submit" class="btn btn-danger">Delete</button>
+                            </form>
+
+                        </div>
+                    </div><!-- /.modal-content -->
+                </div><!-- /.modal-dialog -->
+            </div><!-- /.modal -->
+
+        </li>
+    </ul>
+    <div id="resultsSection"></div>
 
 {% endblock %}
