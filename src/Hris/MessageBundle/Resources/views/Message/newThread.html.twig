@@ -16,6 +16,7 @@
     <script type="text/javascript" language="javascript" src="{{ asset('commons/js/ext-all.js') }}"></script>
 
     <script type="text/javascript">
+        var currentUserId= '{{ app.user }}';
         var treeplaceholder='treeplaceholder';
         var inputboxname="organisationunits_list";
         var organisationunitListUsersURL = '{{ path('organisationunit_list_users',{'_format':'json'}) }}';
@@ -24,7 +25,7 @@
             $.post(organisationunitListUsersURL,postData , function( usersList ){
                 $("#message_recipients").tokenInput("clear");
                 $.each(usersList, function(index, user) {
-                    $("#message_recipients").tokenInput("add", {"id":user['id'], "name":user['name']});
+                    if( currentUserId!=user['id'] ) $("#message_recipients").tokenInput("add", {"id":user['id'], "name":user['name']});
                 });
 
             });

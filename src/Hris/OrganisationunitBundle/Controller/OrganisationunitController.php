@@ -617,7 +617,7 @@ class OrganisationunitController extends Controller
                 ->getQuery()->getResult();
             foreach($users as $key=>$user) {
                 $organisationunitUsersNodes[] = Array(
-                    'id' => $user->getId(),
+                    'id' => $user->getUsername(),
                     'name' => $user->getFirstName().' '.$user->getSurname(),
                 );
             }
