@@ -41,6 +41,12 @@ class GenerateResourceTableCommand extends ContainerAwareCommand
             ->addOption('extensive', null, InputOption::VALUE_NONE, 'If set, then resource table will be generated with organisation unit hierarchy')
             ->addOption('standard', null, InputOption::VALUE_NONE,'If set, then resource table will be generated without organisation unit hierarchy')
             ->addOption('forced',null,InputOption::VALUE_NONE,'If set, then currently generating resource table will be destroyed and regenerated')
+            ->setHelp(<<<EOT
+The <info>hris:resourcetable:generate</info> command regenerates resource table (gracefully creates "All Fields" resource table)
+
+  <info>php app/console hris:resourcetable:generate</info>
+EOT
+            );
         ;
     }
 
