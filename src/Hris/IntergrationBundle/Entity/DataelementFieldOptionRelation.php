@@ -261,4 +261,14 @@ class DataelementFieldOptionRelation
     {
         return $this->rowFieldOptionGroup;
     }
+
+    /**
+     * Get Entity verbose name
+     *
+     * @return string
+     */
+    public function __toString()
+    {
+        return $this->getColumnFieldOptionGroup().'>'.$this->getRowFieldOptionGroup().'>'.$this->getCategoryComboname().'>'.$this->getDataelementname();
+    }
 }
