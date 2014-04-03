@@ -10,12 +10,40 @@
                 <td>{{ entity.username }}</td>
             </tr>
             <tr>
-                <th>Usernamecanonical</th>
-                <td>{{ entity.usernameCanonical }}</td>
+                <th>Firstname</th>
+                <td>{{ entity.firstName }}</td>
+            </tr>
+            <tr>
+                <th>Middlename</th>
+                <td>{{ entity.middleName }}</td>
+            </tr>
+            <tr>
+                <th>Surname</th>
+                <td>{{ entity.surname }}</td>
+            </tr>
+            <tr>
+                <th>Phone Number</th>
+                <td>{{ entity.phoneNumber }}</td>
             </tr>
             <tr>
                 <th>Email</th>
                 <td>{{ entity.email }}</td>
+            </tr>
+            <tr>
+                <th>Job Title</th>
+                <td>{{ entity.jobTitle }}</td>
+            </tr>
+            <tr>
+                <th>Organisationunit</th>
+                <td>{{ entity.organisationunit }}</td>
+            </tr>
+            <tr>
+                <th>Groups</th>
+                <td>{{ entity.groups | join(',')}}</td>
+            </tr>
+            <tr>
+                <th>Usernamecanonical</th>
+                <td>{{ entity.usernameCanonical }}</td>
             </tr>
             <tr>
                 <th>Emailcanonical</th>
@@ -125,6 +153,11 @@
         <li>
             <a href="{{ path('user_edit', { 'id': entity.id }) }}" class="btn">
                 Edit
+            </a>
+        </li>
+        <li>
+            <a class="btn" href="{{ path('user_new') }}">
+                Create a new user
             </a>
         </li>
         <li>

@@ -61,7 +61,7 @@
             <tbody>
             {% for entity in entities %}
                 <tr {% if entity.enabled!=1 %}class="error"{% endif %}>
-                    <td><a href="{{ path('user_show', { 'id': entity.id }) }}">{{ entity.username }}</a></td>
+                    <td><a title="{{ entity.firstName }} {{ entity.middleName }} {{ entity.surname }} {% if entity.jobTitle %} ({{ entity.jobTitle }}) {% endif %} {% if entity.email %} <{{ entity.email }}> {% endif %} {% if entity.phoneNumber %}{{ entity.phoneNumber }}{% endif %} {% if entity.roles %} Roles: {{ entity.roles | join(',') }} {% endif %} {% if entity.groups %} Groups: {{ entity.groups | join(',') }}{% endif %}" href="{{ path('user_show', { 'id': entity.id }) }}">{{ entity.username }}</a></td>
                     <td>{{ entity.firstname }}</td>
                     <td>{{ entity.surname }}</td>
                     <td>{{ entity.form | join(', ') | replace({'Employee Form':''}) }}</td>

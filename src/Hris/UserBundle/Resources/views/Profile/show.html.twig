@@ -40,12 +40,24 @@
             <td>{{ user.lastLogin|date('Y-m-d H:i:s') }}</td>
         </tr>
         <tr>
+            <th>Forms</th>
+            <td>{{ user.form | join(', ') }}</td>
+        </tr>
+        <tr>
             <th>Roles</th>
-            <td>
-                {% for role in user.roles %}
-                {{ role }},
-                {% endfor %}
-            </td>
+            <td>{{ user.roles | join(', ') }}</td>
+        </tr>
+        <tr>
+            <th>Groups</th>
+            <td>{{ user.groups | join(', ') }}</td>
+        </tr>
+        <tr>
+            <th>Organisationunit</th>
+            <td>{{ user.organisationunit }}</td>
+        </tr>
+        <tr>
+            <th>Datecreated</th>
+            <td>{{ user.datecreated|date('Y-m-d H:i:s') }}</td>
         </tr>
         <tr>
             <th>Lastupdated</th>
