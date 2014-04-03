@@ -197,13 +197,13 @@ class ReportFriendlyReportController extends Controller
         foreach($friendlyReport->getFriendlyReportCategory() as $friendlyReportCategoryKey=>$friendlyReportCategory) {
             if(!isset($pastFirstCategory)) $pastFirstCategory=True;// Initiate first category
             foreach($friendlyReportCategory->getFieldOptionGroup()->getFieldOption() as $fieldOptionKey=>$fieldOption ) {
-                $queryColumnNames[] = str_replace(' ','',$fieldOption->getValue());
+                $queryColumnNames[] = str_replace('-','_',str_replace(' ','',$fieldOption->getValue()));
                 $categoryFieldNames[] = $fieldOption->getField()->getName();
                 $categoryFieldName = $fieldOption->getField()->getName();
-                $categoryFieldOptionValue=$fieldOption->getValue();
-                $categoryFieldOptionValues[]=$fieldOption->getValue();
+                $categoryFieldOptionValue=str_replace('-','_',$fieldOption->getValue());
+                $categoryFieldOptionValues[]=str_replace('-','_',$fieldOption->getValue());
                 $categoryResourceTableName=$resourceTableAlias.str_replace(' ','',$categoryFieldOptionValue);
-                $queryColumnWhereClause[$fieldOption->getValue()] = "$categoryResourceTableName.$categoryFieldName='".str_replace(' ','',$categoryFieldOptionValue)."'";
+                $queryColumnWhereClause[str_replace('-','_',$fieldOption->getValue())] = "$categoryResourceTableName.$categoryFieldName='".str_replace(' ','',$categoryFieldOptionValue)."'";
             }
         }
 
@@ -257,6 +257,8 @@ class ReportFriendlyReportController extends Controller
         $columns = " DISTINCT $resourceTableAlias.$seriesFieldName as $seriesFieldName,".implode(',',$queryColumnNames).( !empty($targetColumns) ? ','.$targetColumns : '');
         if(!empty($targetJoinClause)) $joinClause .=$targetJoinClause;
         $selectQuery="SELECT $columns $fromClause $joinClause WHERE $organisationunitLevelsWhereClause".( !empty($fieldOptionsToSkipQuery) ? " AND ( $fieldOptionsToSkipQuery )" : "" );
+
+
         $friendlyReportResults = $this->getDoctrine()->getManager()->getConnection()->fetchAll($selectQuery);
 
 
