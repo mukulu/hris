@@ -84,6 +84,11 @@
                 <td>{{ entity.description }}</td>
             </tr>
 
+            <tr>
+                <th>Group Membership</th>
+                <td>{{ entity.organisationunitGroup | join(',') }}</td>
+            </tr>
+
             {% for completenessForm in completenessForms %}
             <tr>
                 <th>{{ completenessForm.name }} Expectation</th>
