@@ -410,9 +410,6 @@ class OrganisationunitController extends Controller
             // Root organisationunits called make user's orgunit, a root node and it's children count
             $organisationunit = $this->container->get('security.context')->getToken()->getUser()->getOrganisationunit();
 
-            if(empty($organisationunit))
-                $organisationunit =  $this->getDoctrine()->getManager()->createQuery('SELECT organisationunit FROM HrisOrganisationunitBundle:Organisationunit organisationunit WHERE organisationunit.parent IS NULL')->getSingleResult();
-
             $organisationunitQuery = $em->createQuery("SELECT organisationunit.id,organisationunit.longname,
                                                         (
                                                             SELECT COUNT(lowerOrganisationunit.id)
@@ -420,8 +417,8 @@ class OrganisationunitController extends Controller
                                                             WHERE lowerOrganisationunit.parent=organisationunit
                                                         ) AS lowerChildrenCount
                                                         FROM HrisOrganisationunitBundle:Organisationunit organisationunit
-                                                        WHERE organisationunit.id=:organisationunitid
-                                                        GROUP BY organisationunit.id,organisationunit.longname")->setParameter('organisationunitid',$organisationunit);;
+                                                        WHERE organisationunit.parent IS NULL
+                                                        GROUP BY organisationunit.id,organisationunit.longname");
             try {
                 $entities = $organisationunitQuery->getArrayResult();
             } catch(NoResultException $e) {
