@@ -1,5 +1,33 @@
 {% extends 'HrisMessageBundle::layout.html.twig' %}
 
+{% block javascripts %}
+    {{ parent() }}
+    <script type="text/javascript" src="{{ asset('commons/js/readmore.min.js') }}"></script>
+    <script type="text/javascript" src="{{ asset('commons/js/prettify.min.js') }}"></script>
+
+    <script type="text/javascript">
+        $( document ).ready(function() {
+            $('.messenger_thread_message').readmore();
+
+            // Wait a tick before firing Readmore on the #info block to give Prettify time to finish painting.
+            setTimeout(function() {
+                $('#messenger_thread_message').readmore({
+                    moreLink: '<a href="#">See all</a>',
+                    lessLink: '<a href="#">Hide</a>',
+                    speed:75,
+                    maxHeight: 212,
+                    afterToggle: function(trigger, element, expanded) {
+                        if(! expanded) { // The "Close" link was clicked
+                            $('html, body').animate( { scrollTop: element.offset().top }, {duration: 100 } );
+                        }
+                    }
+                });
+            }, 100);
+
+        });
+    </script>
+{%  endblock %}
+
 {% block fos_message_header %}
     {{ thread.subject }}
 {% endblock fos_message_header %}
@@ -13,7 +41,7 @@
 {% block fos_message_content %}
     <div class="messenger_thread_message highlight"> To
         {% for participant in thread.participants %}
-            <strong title="{% if participant.organisationunit %} {{ participant.jobTitle }} of {{ participant.organisationunit.longname }} {% if participant.email %}<{{ participant.email }}>{% endif %} {% endif %}">
+            <strong title="{% if participant.organisationunit %} {{ participant.jobTitle }} of {{ participant.organisationunit.longname }} {% if participant.email %}<{{ participant.email }}>{% endif %}{% if participant.phoneNumber %} Phone: {{ participant.phoneNumber }} {% endif %} {% endif %}">
             {{ participant.firstname| capitalize }} {{ participant.surname| capitalize }}</strong>
             {% if not loop.last %}
              ,
@@ -23,7 +51,7 @@
 {% for message in thread.messages %}
     <div class="messenger_thread_message highlight">
         <div class="messenger_thread_message_info">
-            <strong title="{% if message.sender.organisationunit %} {{ message.sender.jobTitle }} of {{ message.sender.organisationunit.longname }}{% if message.sender.email %}<{{ message.sender.email }}>{% endif %} {% endif %}">{{ message.sender.firstname| capitalize }} {{ message.sender.surname }}</strong> <em class="pull-right">{{  message.createdAt|date }}</em>
+            <strong title="{% if message.sender.organisationunit %} {{ message.sender.jobTitle }} of {{ message.sender.organisationunit.longname }}{% if message.sender.email %}<{{ message.sender.email }}>{% endif %}{% if message.sender.phoneNumber %} Phone: {{ message.sender.phoneNumber }} {% endif %} {% endif %}">{{ message.sender.firstname| capitalize }} {{ message.sender.surname }}</strong> <em class="pull-right">{{  message.createdAt|date }}</em>
         </div>
 
         <div class="messenger_thread_message_body" id="message_{{ message.id }}">

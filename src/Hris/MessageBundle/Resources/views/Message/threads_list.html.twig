@@ -17,15 +17,15 @@
                 <td style="max-width: 300px;">
 
                     {% spaceless %}
-                        {{ thread.createdBy }},
+                        <strong title="{% if thread.createdBy.organisationunit %} {{ thread.createdBy.jobTitle }} of {{ thread.createdBy.organisationunit.longname }} {% if thread.createdBy.email %}<{{ thread.createdBy.email }}>{% endif %}{% if thread.createdBy.phoneNumber %} Phone: {{ thread.createdBy.phoneNumber }} {% endif %} {% endif %}">{{ thread.createdBy }}</strong>,
                         {% for participant in thread.getParticipants() | slice(0,3) %}
-                            {% if loop.index0 > 1 %},{% endif %}{% if participant.username != thread.createdBy.username %}{{ participant }}{% endif %}
+                            {% if loop.index0 > 1 %},{% endif %}{% if participant.username != thread.createdBy.username %}<strong title="{% if participant.organisationunit %} {{ participant.jobTitle }} of {{ participant.organisationunit.longname }} {% if participant.email %}<{{ participant.email }}>{% endif %}{% if participant.phoneNumber %} Phone: {{ participant.phoneNumber }} {% endif %} {% endif %}">{{ participant }}</strong>{% endif %}
                         {% endfor %}
                         {% if thread.getParticipants() | length > 3 %}
                             {% if thread.createdBy in thread.getParticipants() %}
-                                and {{ thread.getParticipants() | length - 3 }} others
+                                and <strong title="{{ thread.getParticipants() | join(',') }}">{{ thread.getParticipants() | length - 3 }} others</strong>
                             {% else %}
-                                and {{ thread.getParticipants() | length - 4 }} others
+                                and <strong title="{{ thread.getParticipants() | join(',') }}">{{ thread.getParticipants() | length - 4 }} others</strong>
                             {% endif %}
                         {% endif %}
                         ({{ thread.messages|length }})
