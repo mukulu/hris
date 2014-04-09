@@ -41,7 +41,7 @@ twig:
             project_site: "https://github.com/hrisproject/hris"
             version: "3.0"
             copyright: "Human Resource Information System 2012"
-            client_name: "Ministry of Health And Social Welfare"
+            client_name: "Ministry of Health and Social Welfare"
             client_code: "MOHSW"
 
     cache:                     "%kernel.cache_dir%/twig"
