@@ -126,15 +126,16 @@ class ReportOrganisationunitCompletenessController extends Controller
     {
         $em = $this->getDoctrine()->getManager();
 
-        $organisationUnitid =$request->query->get('organisationUnitid');
+        $organisationunitId =$request->query->get('organisationunitId');
+        $organisationunitLevelId = $request->query->get('organisationunitLevel');
         $sameLevel = $request->query->get('sameLevel'); // View same level personal data .ie. CHMT & RHMT
         if(!empty($sameLevel)) $this->sameLevel = True;
         $formsId = explode(",",$request->query->get('formids'));
         $forms = new ArrayCollection();
 
         //Get the objects from the the variables
-        $this->organisationunit = $em->getRepository('HrisOrganisationunitBundle:Organisationunit')->find($organisationUnitid);
-        $this->organisationunitLevel = $em->getRepository('HrisOrganisationunitBundle:OrganisationunitLevel')->findOneBy(array('level'=>$this->organisationunit->getOrganisationunitStructure()->getLevel()->getLevel()+1));
+        $this->organisationunit = $em->getRepository('HrisOrganisationunitBundle:Organisationunit')->find($organisationunitId);
+        $this->organisationunitLevel = $em->getRepository('HrisOrganisationunitBundle:OrganisationunitLevel')->findOneBy(array('id'=>$organisationunitLevelId));
         foreach($formsId as $formId){
             $forms->add($em->getRepository('HrisFormBundle:Form')->find($formId)) ;
         }
@@ -293,6 +294,7 @@ class ReportOrganisationunitCompletenessController extends Controller
         if( $this->organisationunitChildren && ! $this->sameLevel ){
 
             foreach( $this->organisationunitChildren as $childOrganisationunit){
+                $longNamePrefix = NULL;
                 $counter = $counter + 1;
                 //format of the row
                 if (($counter % 2) == 1)
@@ -300,15 +302,36 @@ class ReportOrganisationunitCompletenessController extends Controller
                 else
                     $excelService->getActiveSheet()->getStyle($column.$row.':'.$mergeColumnTitle.$row)->applyFromArray($text_format2);
 
+                foreach($this->lowerLevels as $lowerLevelKey=>$lowerLevel) {
+                    if( $lowerLevel['level'] - $this->organisationunit->getOrganisationunitStructure()->getLevel()->getLevel() == 0 ) {
+                        $longNamePrefix = $childOrganisationunit->getLongname(). $longNamePrefix;
+                    }elseif( $lowerLevel['level'] - $this->organisationunit->getOrganisationunitStructure()->getLevel()->getLevel() == 1 ) {
+                        $longNamePrefix = $childOrganisationunit->getParent()->getLongname(). $longNamePrefix;
+                    }elseif( $lowerLevel['level'] - $this->organisationunit->getOrganisationunitStructure()->getLevel()->getLevel() == 2 ) {
+                        $longNamePrefix = $childOrganisationunit->getParent()->getParent()->getLongname(). $longNamePrefix;
+                    }elseif( $lowerLevel['level'] - $this->organisationunit->getOrganisationunitStructure()->getLevel()->getLevel() == 3 ) {
+                        $longNamePrefix = $childOrganisationunit->getParent()->getParent()->getParent()->getLongname(). $longNamePrefix;
+                    }elseif( $lowerLevel['level'] - $this->organisationunit->getOrganisationunitStructure()->getLevel()->getLevel() == 4 ) {
+                        $longNamePrefix = $childOrganisationunit->getParent()->getParent()->getParent()->getParent()->getLongname(). $longNamePrefix;
+                    }elseif( $lowerLevel['level'] - $this->organisationunit->getOrganisationunitStructure()->getLevel()->getLevel() == 5 ) {
+                        $longNamePrefix = $childOrganisationunit->getParent()->getParent()->getParent()->getParent()->getParent()->getLongname(). $longNamePrefix;
+                    }
+                    // Separator
+                    $longNamePrefix = $longNamePrefix.' > ';
+                }
+
                 $excelService->setActiveSheetIndex(0)
                     ->setCellValue($column++.$row,$counter)
-                    ->setCellValue($column++.$row,$childOrganisationunit->getLongname());
+                    ->setCellValue($column++.$row,$longNamePrefix.$childOrganisationunit->getLongname());
+                $excelService->getActiveSheet()->getStyle($column.$row.':'.$mergeColumnTitle.$row)->getAlignment()->setVertical(\PHPExcel_Style_Alignment::HORIZONTAL_LEFT);
+                $excelService->getActiveSheet()->getStyle($column.$row.':'.$mergeColumnTitle.$row)->getAlignment()->setVertical(\PHPExcel_Style_Alignment::HORIZONTAL_JUSTIFY);
+                $excelService->getActiveSheet()->getStyle($column.$row.':'.$mergeColumnTitle.$row)->getAlignment()->setVertical(\PHPExcel_Style_Alignment::VERTICAL_JUSTIFY);
 
                 foreach($this->forms as $form){
-                    # Entered records #
+                    // Entered records
                     $excelService->setActiveSheetIndex(0)
                         ->setCellValue($column++.$row,$this->completenessMatrix[$childOrganisationunit->getId()][$form->getId()]);
-                    # Expected records and Percentage #
+                    // Expected records and Percentage
                     if($this->expectedCompleteness[$childOrganisationunit->getId()][$form->getId()]){
                         $excelService->setActiveSheetIndex(0)
                             ->setCellValue($column++.$row,$this->expectedCompleteness[$childOrganisationunit->getId()][$form->getId()]);
@@ -323,7 +346,7 @@ class ReportOrganisationunitCompletenessController extends Controller
                                 ->setCellValue($column++.$row,round(($this->completenessMatrix[$childOrganisationunit->getId()][$form->getId()] / $this->expectedCompleteness[$childOrganisationunit->getId()][$form->getId()] )*100),2 );
 
                     }else{
-                        # Expected records & percentage#
+                        //# Expected records & percentage#
                         $excelService->setActiveSheetIndex(0)
                             ->setCellValue($column++.$row,'')
                             ->setCellValue($column++.$row,'');
@@ -344,7 +367,7 @@ class ReportOrganisationunitCompletenessController extends Controller
                 ->setCellValue($column++.$row,$counter)
                 ->setCellValue($column++.$row,$this->rootNodeOrganisationunit->getLongname());
             foreach($this->forms as $form){
-                # Entered records #
+                // Entered records
                 $excelService->setActiveSheetIndex(0)
                     ->setCellValue($column++.$row,$this->completenessMatrix[$this->rootNodeOrganisationunit->getId()][$form->getId()]);
                 # Expected records and Percentage #
@@ -362,7 +385,7 @@ class ReportOrganisationunitCompletenessController extends Controller
                             ->setCellValue($column++.$row,round(($this->completenessMatrix[$this->rootNodeOrganisationunit->getId()][$form->getId()] / $this->expectedCompleteness[$this->rootNodeOrganisationunit->getId()][$form->getId()] )*100),2 );
 
                 }else{
-                    # Expected records & percentage#
+                    // Expected records & percentage
                     $excelService->setActiveSheetIndex(0)
                         ->setCellValue($column++.$row,'')
                         ->setCellValue($column++.$row,'');
@@ -382,10 +405,10 @@ class ReportOrganisationunitCompletenessController extends Controller
                 ->setCellValue($column++.$row,$counter)
                 ->setCellValue($column++.$row,'Total:'.$this->rootNodeOrganisationunit->getLongname().' and lower levels');
             foreach($this->forms as $form){
-                # Entered records #
+                // Entered records
                 $excelService->setActiveSheetIndex(0)
                     ->setCellValue($column++.$row,$this->totalCompletenessMatrix[$form->getId()]);
-                # Expected records and Percentage #
+                //# Expected records and Percentage #
                 if($this->totalExpectedCompleteness[$form->getId()]){
                     $excelService->setActiveSheetIndex(0)
                         ->setCellValue($column++.$row,$this->totalExpectedCompleteness[$form->getId()]);

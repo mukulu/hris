@@ -260,11 +260,11 @@
     </table>
     <div style="text-align: right">
         {% if sameLevel %}
-            <a class="btn" href="{{ path('report_organisationunit_completeness_download', { 'organisationUnitid': rootNodeOrganisationunit.id, 'formids':formIds, 'sameLevel':'true' } ) }}">
+            <a class="btn" href="{{ path('report_organisationunit_completeness_download', { 'organisationunitId': rootNodeOrganisationunit.id, 'formids':formIds, 'sameLevel':'true' } ) }}">
                 Download to Excel
             </a>
         {% else %}
-            <a class="btn" href="{{ path('report_organisationunit_completeness_download', { 'organisationUnitid': rootNodeOrganisationunit.id, 'formids':formIds } ) }}">
+            <a class="btn" href="{{ path('report_organisationunit_completeness_download', { 'organisationunitId': rootNodeOrganisationunit.id, 'formids':formIds,'organisationunitLevel': level.id } ) }}">
                 Download to Excel
             </a>
         {% endif %}
