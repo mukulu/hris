@@ -213,7 +213,7 @@ class ReportFriendlyReportController extends Controller
             $categoryFieldName=$categoryFieldNames[$queryColumnNameKey];
             $categoryFieldOptionValue=$categoryFieldOptionValues[$queryColumnNameKey];
             $categoryResourceTableName=$resourceTableAlias.str_replace(' ','',$categoryFieldOptionValue);
-            $joinClause .= " INNER JOIN
+            $joinClause .= " LEFT JOIN
                             (
                                 SELECT COUNT($categoryResourceTableName.".str_replace(' ','',$categoryFieldName).") AS ".str_replace(' ','',$categoryFieldOptionValue).", $categoryResourceTableName.$seriesFieldName
                                 FROM $resourceTableName $categoryResourceTableName
@@ -257,7 +257,6 @@ class ReportFriendlyReportController extends Controller
         $columns = " DISTINCT $resourceTableAlias.$seriesFieldName as $seriesFieldName,".implode(',',$queryColumnNames).( !empty($targetColumns) ? ','.$targetColumns : '');
         if(!empty($targetJoinClause)) $joinClause .=$targetJoinClause;
         $selectQuery="SELECT $columns $fromClause $joinClause WHERE $organisationunitLevelsWhereClause".( !empty($fieldOptionsToSkipQuery) ? " AND ( $fieldOptionsToSkipQuery )" : "" );
-
 
         $friendlyReportResults = $this->getDoctrine()->getManager()->getConnection()->fetchAll($selectQuery);
 
