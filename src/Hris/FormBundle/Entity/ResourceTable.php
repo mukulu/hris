@@ -759,7 +759,7 @@ class ResourceTable
                             $dataArray[$field->getName()]=$dataValue[$valueKey];
                             if ($field->getInputType()->getName() == 'Select') {
 
-                                if (!empty($dataValue[$valueKey])){
+                                if (isset($fieldOptionMap[$dataValue[$valueKey]])){
                                     // Resolve actual value from stored key
                                     $dataArray[$field->getName()] = trim($fieldOptionMap[$dataValue[$valueKey]]);
                                 } else{
