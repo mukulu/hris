@@ -617,6 +617,7 @@ class ResourceTable
                     //$resourceTable->addColumn($field->getName().'_last_updated_month_and_year', "string",array('length'=>64, 'notnull'=>false));
                 }
                 $totalResourceTableFields++;
+                unset($field);
             }
 
             // Make OrganisationunitLevels of orgunit
@@ -723,6 +724,7 @@ class ResourceTable
                     $recordFieldOptionKey = ucfirst(Record::getFieldOptionKey());
                     $fieldOptionMap[call_user_func_array(array($fieldOption, "get${recordFieldOptionKey}"),array()) ] =   $fieldOption->getValue();
                 }
+                unset($fieldOptions);
                 foreach ($records as $recordKey => $record) {
                     $currentInstance = $record->getInstance();
                     $dataValue = $record->getValue();
@@ -733,6 +735,7 @@ class ResourceTable
                     $employmentDuration=NULL;
                     $dataArray['instance'] = $record->getInstance();
                     foreach($this->getResourceTableFieldMember() as $resourceTableKey=> $resourceTableFieldMember) {
+                        unset($field);
                         $field = $resourceTableFieldMember->getField();
                         // Field Options
                         /**
@@ -848,13 +851,15 @@ class ResourceTable
                     foreach($organisationunitLevels as $organisationunitLevelKey=>$organisationunitLevel) {
                         $organisationunitLevelName = str_replace(' ','_',"level".$organisationunitLevel->getLevel()."_".str_replace(',','_',str_replace('.','_',str_replace('/','_',$organisationunitLevel->getName())))); ;
                         $organisationunitStructure=$record->getOrganisationunit()->getOrganisationunitStructure();
-
                         $nLevelParent=$organisationunitStructure->getParentByNLevelsBack($record->getOrganisationunit(),($organisationunitStructure->getLevel()->getLevel()-$organisationunitLevel->getLevel()));
                         if(!empty($nLevelParent)) $dataArray[$organisationunitLevelName] = $nLevelParent->getLongname();
 
                         $thisrganisationunitLevel = $entityManager->getRepository('HrisOrganisationunitBundle:OrganisationunitLevel')->findOneBy(array('level'=>$organisationunitStructure->getLevel()->getLevel()));
                         $organisationunitLevelName = str_replace(' ','_',"level".$thisrganisationunitLevel->getLevel()."_".str_replace(',','_',str_replace('.','_',str_replace('/','_',$thisrganisationunitLevel->getName())))); ;
                         $dataArray[$organisationunitLevelName] = $record->getOrganisationunit()->getLongname();
+                        unset($nLevelParent);
+                        unset($organisationunitLevelName);
+                        unset($organisationunitStructure);
                     }
                     // Fill in Groupset Columns
                     foreach($organisationunitGroupsets as $organisationunitGroupsetKey=>$organisationunitGroupset) {
@@ -872,7 +877,7 @@ class ResourceTable
                         }
                         if(!isset($organisationunitGroupNames)) $organisationunitGroupNames= NULL;
                         $dataArray[$organisationunitGroupset->getName()] = $organisationunitGroupNames;
-                        $organisationunitGroupNames = NULL;
+                        unset($organisationunitGroupNames);
                     }
 
                     // Form and Orgunit
@@ -887,8 +892,11 @@ class ResourceTable
                     $logger->info('Inserted record instance '.$dataArray['instance']. ' for '.$dataArray['Organisationunit_name'].' on form: '.$record->getForm()->getName());
                     $totalInsertedRecords++;
                     unset($dataArray);
+                    unset($dataValue);
+                    unset($currentInstance);
                 }
             }
+            unset($records);
             $dataInsertionLap = $stopwatch->lap('resourceTableGeneration');
             $dataInsertionDuration = round(($dataInsertionLap->getDuration()/1000),2) - $schemaGenerationDuration;
             $singleDataInsertionDuration = round(($dataInsertionDuration/$totalInsertedRecords),2);
