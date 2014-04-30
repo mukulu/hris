@@ -5,7 +5,7 @@
     <script type="text/javascript" src="{{ asset('commons/js/jquery.jeditable.mini.js') }}"></script>
     <script type="text/javascript">
         $( document ).ready(function() {
-            var fieldOptionTargetUrl = '{{ path('dhisdataconnection_aggregation', {'id': entity.id,'_format':'json'}) }}';
+            var fieldOptionTargetUrl = '{{ path('dhisdataconnection_aggregation', {'id': entity.id,'_format':'xml'}) }}';
             //Push dataelement and combo matches for insertion into database
             postData={
                 'connectionId':{{ entity.id }}
@@ -35,6 +35,10 @@
             <tr>
                 <th>Datasetuid</th>
                 <td>{{ entity.datasetUid }}</td>
+            </tr>
+            <tr>
+                <th>Parent Organisationunit</th>
+                <td>{{ entity.parentOrganisationunit }}</td>
             </tr>
             <tr>
                 <th>Hosturl</th>
