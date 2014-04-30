@@ -48,6 +48,9 @@ twig:
     charset:                   "%kernel.charset%"
     debug:                     "%kernel.debug%"
     strict_variables:          "%kernel.debug%"
+
+bc_bootstrap:
+    less_filter: lessphp
     
 # Assetic Configuration
 assetic:
