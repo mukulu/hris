@@ -39,13 +39,17 @@ class FriendlyReportType extends AbstractType
     {
         $builder
             ->add('name')
+            ->add('type','choice',array(
+                'choices' =>array('default'=>'Default','sql'=>'SQL'),
+                'required'=>False,
+            ))
             ->add('description')
             ->add('sort')
             ->add('serie')
             ->add('friendlyReportCategory','entity',array(
                     'class'=>'HrisFormBundle:FieldOptionGroup',
                     'multiple'=>True,
-                    'required'=>True,
+                    'required'=>False,
                     'mapped'=>False,
             ))
             ->add('useTargets',null,array(
@@ -57,6 +61,7 @@ class FriendlyReportType extends AbstractType
             ->add('showDeficitSurplus',null,array(
                 'required'=>False,
             ))
+            ->add('sql')
         ;
     }
 

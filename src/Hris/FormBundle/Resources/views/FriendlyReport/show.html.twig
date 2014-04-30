@@ -14,6 +14,10 @@
                 <td>{{ entity.uid }}</td>
             </tr>
             <tr>
+                <th>Type</th>
+                <td>{{ entity.type }}</td>
+            </tr>
+            <tr>
                 <th>Name</th>
                 <td>{{ entity.name }}</td>
             </tr>
@@ -48,6 +52,10 @@
             <tr>
                 <th>Lastupdated</th>
                 <td>{{ entity.lastupdated|date('Y-m-d H:i:s') }}</td>
+            </tr>
+            <tr>
+                <th>SQL</th>
+                <td>{{ entity.sql }}</td>
             </tr>
         </tbody>
     </table>

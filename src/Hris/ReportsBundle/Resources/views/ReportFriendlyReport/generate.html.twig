@@ -36,72 +36,96 @@
 {% block right_content -%}
     <div class="container">
         <h1><small>{{ title }}</small></h1>
-        <table class="records_list dataTable table table-striped table-bordered table-hover" cellpadding="0" cellspacing="0" border="0">
-            <thead>
-            <tr>
-                <th>{{ friendlyReport.getSerie.getName }}</th>
-                {% set totalOptions = '' %}
-                {% set totalOptionsPreviouslySet = 'false' %}
-                {% for key,friendlyReportCategory in friendlyReport.getFriendlyReportCategory %}
-                    {% set optionsCount = 0 %}
-                    {% set incr = 1 %}
-                    {% for fieldOption in  friendlyReportCategory.getFieldOptionGroup.getFieldOption %}
-                        {% set optionsCount = optionsCount + 1  %}
-                        <th >{{ fieldOption.getValue }}</th>
+        {% if friendlyReport.type == 'sql' %}
+            <table class="records_list dataTable table table-striped table-bordered table-hover" cellpadding="0" cellspacing="0" border="0">
+                <thead>
+                    <tr>
+                    {% for friendlyReportResult in friendlyReportResults | slice(0,1) %}
+                        {% for columnTitle,columnData in friendlyReportResult %}
+                            <th>{{ columnTitle | capitalize }}</th>
+                        {% endfor %}
                     {% endfor %}
-                    {% if totalOptionsPreviouslySet =='false' %}
-                        {% set totalOptions = { key : optionsCount } %}
-                        {% set totalOptionsPreviouslySet = 'true' %}
-                    {% else %}
-                        {% set totalOptions = totalOptions|merge({ incr : optionsCount }) %}
-                    {% endif %}
-                    {% set incr = incr +1 %}
+                    </tr>
+                </thead>
+                <tbody>
+                {% for friendlyReportResult in friendlyReportResults %}
+                    <tr>
+                    {% for columnTitle,columnData in friendlyReportResult %}
+                        <td>{{ columnData }}</td>
+                    {% endfor %}
+                    </tr>
                 {% endfor %}
-
-                {% if targets is not empty %}
-                    {% for target in targets %}
-                        <th>{{ target.getName }}</th>
+                </tbody>
+            </table>
+        {% else %}
+            <table class="records_list dataTable table table-striped table-bordered table-hover" cellpadding="0" cellspacing="0" border="0">
+                <thead>
+                <tr>
+                    <th>{{ friendlyReport.getSerie.getName }}</th>
+                    {% set totalOptions = '' %}
+                    {% set totalOptionsPreviouslySet = 'false' %}
+                    {% for key,friendlyReportCategory in friendlyReport.getFriendlyReportCategory %}
+                        {% set optionsCount = 0 %}
+                        {% set incr = 1 %}
+                        {% for fieldOption in  friendlyReportCategory.getFieldOptionGroup.getFieldOption %}
+                            {% set optionsCount = optionsCount + 1  %}
+                            <th >{{ fieldOption.getValue }}</th>
+                        {% endfor %}
+                        {% if totalOptionsPreviouslySet =='false' %}
+                            {% set totalOptions = { key : optionsCount } %}
+                            {% set totalOptionsPreviouslySet = 'true' %}
+                        {% else %}
+                            {% set totalOptions = totalOptions|merge({ incr : optionsCount }) %}
+                        {% endif %}
+                        {% set incr = incr +1 %}
                     {% endfor %}
-                {% endif %}
 
-                {% if friendlyReport.showDeficitSurplus %}
-                    <th>Deficit/Surplus(-/+)</th>
-                {% endif %}
+                    {% if targets is not empty %}
+                        {% for target in targets %}
+                            <th>{{ target.getName }}</th>
+                        {% endfor %}
+                    {% endif %}
 
-                <th>Total</th>
-            </tr>
-            </thead>
-            <tbody>
-                    {# If repetition is allowed repeat option groups for previous category #}
-                    {% for friendlyReportResult in friendlyReportResults %}
-                        {# Go through result rows#}
-                        <tr>
-                            {# Use slice to split columns by options in friendly report category #}
-                            {% set lastSlice = 0 %}
-                            {# Use fieldOptionValueTotal to keep track of total for fieldOption per report category#}
+                    {% if friendlyReport.showDeficitSurplus %}
+                        <th>Deficit/Surplus(-/+)</th>
+                    {% endif %}
+
+                    <th>Total</th>
+                </tr>
+                </thead>
+                <tbody>
+                {# If repetition is allowed repeat option groups for previous category #}
+                {% for friendlyReportResult in friendlyReportResults %}
+                    {# Go through result rows#}
+                    <tr>
+                        {# Use slice to split columns by options in friendly report category #}
+                        {% set lastSlice = 0 %}
+                        {# Use fieldOptionValueTotal to keep track of total for fieldOption per report category#}
+                        {% set fieldOptionValueTotal=0 %}
+                        {# Go through options of single report category(avoid repetition) #}
+                        {% for totalOption in totalOptions %}
+                            {# Total field options #}
                             {% set fieldOptionValueTotal=0 %}
-                            {# Go through options of single report category(avoid repetition) #}
-                            {% for totalOption in totalOptions %}
-                                {# Total field options #}
-                                {% set fieldOptionValueTotal=0 %}
-                                {% for fieldOptionValue in  friendlyReportResult|slice(lastSlice, totalOption+( totalOptions|length > 1? 0:1 ))  %} {# Make slice skip targets if therei's more than one category  i.e. 0#}
-                                    {% set fieldOptionValueTotal = fieldOptionValueTotal + fieldOptionValue %}
-                                {% endfor %}
-                                {% set lastSlice = totalOption+1 %}
+                            {% for fieldOptionValue in  friendlyReportResult|slice(lastSlice, totalOption+( totalOptions|length > 1? 0:1 ))  %} {# Make slice skip targets if therei's more than one category  i.e. 0#}
+                                {% set fieldOptionValueTotal = fieldOptionValueTotal + fieldOptionValue %}
                             {% endfor %}
+                            {% set lastSlice = totalOption+1 %}
+                        {% endfor %}
 
-                            {% for fieldOptionValue in  friendlyReportResult %}
-                                <td>{{ fieldOptionValue }}</td>
-                            {% endfor %}
+                        {% for fieldOptionValue in  friendlyReportResult %}
+                            <td>{{ fieldOptionValue }}</td>
+                        {% endfor %}
 
-                            {% if friendlyReport.showDeficitSurplus %}
-                                <th>{{ (fieldOptionValueTotal*2 - (friendlyReportResult|sum)) }}</th>
-                            {% endif %}
+                        {% if friendlyReport.showDeficitSurplus %}
+                            <th>{{ (fieldOptionValueTotal*2 - (friendlyReportResult|sum)) }}</th>
+                        {% endif %}
 
-                            <td>{{ fieldOptionValueTotal }}</td>
-                        </tr>
-                    {% endfor %}
-            </tbody>
-        </table>
+                        <td>{{ fieldOptionValueTotal }}</td>
+                    </tr>
+                {% endfor %}
+                </tbody>
+            </table>
+        {% endif %}
+
     </div>
 {% endblock %}
