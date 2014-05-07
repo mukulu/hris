@@ -1,0 +1,89 @@
+{% extends '::base.html.twig' %}
+{% block javascripts %}
+    {{ parent() }}
+    <script type="text/javascript" src="{{ asset('commons/js/jquery.dataTables.js') }}"></script>
+    <script type="text/javascript" src="{{ asset('commons/js/jquery.dataTables.ZeroClipboard.js') }}"></script>
+    <script type="text/javascript" src="{{ asset('commons/js/jquery.dataTables.TableTools.min.js') }}"></script>
+    <script type="text/javascript" src="{{ asset('commons/js/dt_settings.js') }}"></script>
+    <script type="text/javascript">
+        $(document).ready(function() {
+            $('.records_list').dataTable( {
+                "sDom": "<'row'<'span6'TRl><'span6'f>r>t<'row'<'span6'i><'span6'p>>",
+                "oTableTools": {
+                    "aButtons": [
+                        {"sExtends":"copy","mColumns":"visible"},
+                        {"sExtends":"xls","mColumns":"visible"},
+                        {"sExtends":"pdf","mColumns":"visible"}
+                    ],
+                    "sSwfPath": "{{ asset('commons/swf/copy_cvs_xls_pdf.swf') }}"
+                },
+                "sPdfOrientation": "landscape",
+                "sPaginationType": "bootstrap",
+                "oLanguage": {
+                    "sLengthMenu": "_MENU_ records per page"
+                },
+                "aLengthMenu": [[10, 25, 50,100,200, -1], [10, 25, 50,100,200, "All"]]
+            } );
+        } );
+    </script>
+{% endblock javascripts %}
+
+{% block stylesheets %}
+    {{ parent() }}
+    <link rel="stylesheet" href="{{ asset('commons/css/dt_bootstrap.css') }}" />
+{% endblock stylesheets %}
+
+{% block right_content -%}
+
+<div class="container">
+    <h1><small>{{ title }}</small></h1>
+
+    <ul class="inline">
+        <li>
+            <a class="btn" href="{{ path('report_organisationunit_groupset_generate_redirect', { 'organisationunit': organisationunit.id, 'organisationunitGroupset': organisationunitGroup.organisationunitGroupset.id }) }}">
+                Back To {{ organisationunitGroup.organisationunitGroupset.name }}
+            </a>
+        </li>
+    </ul>
+
+    <table class="records_list dataTable table table-striped table-bordered table-hover" cellpadding="0" cellspacing="0" border="0">
+        <thead>
+        <tr>
+            <th>No.</th>
+            {% for lowerLevel in lowerLevels %}
+                <th>{{ lowerLevel.name }}</th>
+            {% endfor %}
+        </tr>
+        </thead>
+        <tbody>
+            {% set counter = 1 %}
+            {% for organisationunitStructure in organisationunitStructures %}
+                <tr>
+                    <td>{{ counter }}</td>
+                    {% for lowerLevel in lowerLevels %}
+                        {% if organisationunitStructure.level.level - lowerLevel.level == 0 %}
+                            <td>{{ organisationunitStructure.organisationunit.longname }}</td>
+                        {% elseif organisationunitStructure.level.level - lowerLevel.level == 1 %}
+                            <td>{{ organisationunitStructure.organisationunit.parent.longname }}</td>
+                        {% elseif organisationunitStructure.level.level - lowerLevel.level == 2 %}
+                            <td>{{ organisationunitStructure.organisationunit.parent.parent.longname }}</td>
+                        {% elseif organisationunitStructure.level.level - lowerLevel.level == 3 %}
+                            <td>{{ organisationunitStructure.organisationunit.parent.parent.parent.longname }}</td>
+                        {% elseif organisationunitStructure.level.level - lowerLevel.level == 4 %}
+                            <td>{{ organisationunitStructure.organisationunit.parent.parent.parent.parent.longname }}</td>
+                        {% elseif organisationunitStructure.level.level - lowerLevel.level == 5 %}
+                            <td>{{ organisationunitStructure.organisationunit.parent.parent.parent.parent.parent.longname }}</td>
+                        {% elseif organisationunitStructure.level.level - lowerLevel.level == 6 %}
+                            <td>{{ organisationunitStructure.organisationunit.parent.parent.parent.parent.parent.parent.longname }}</td>
+                        {% else %}
+                            <td></td>
+                        {% endif %}
+                    {% endfor %}
+                </tr>
+                {% set counter = counter + 1 %}
+            {% endfor %}
+        </tbody>
+    </table>
+</div>
+
+{% endblock %}

@@ -1,7 +1,13 @@
 {% extends '::base.html.twig' %}
 {% block javascripts %}
     {{ parent() }}
+    <script type="text/javascript" src="{{ asset('bundles/hrisrecords/js/jquery.timer.js') }}"></script>
     <script type="text/javascript" src="{{ asset('bundles/hrisrecords/js/indexedb.js') }}"></script>
+    <script type="text/javascript" src="{{ asset('bundles/hrisrecords/js/dataentry.js') }}"></script>
+    <script type="text/javascript" src="{{ asset('commons/js/jquery-ui.js') }}"></script>
+    <script type="text/javascript">
+
+    </script>
 
     <script type="text/javascript">
 
@@ -13,23 +19,71 @@
             loadFieldOptions('{{ fields | raw | escape('js') }}', '{{ project_code | lower | raw }}');
         });
 
+        //Submitting the form without reloading it
+
+        offLineDataStorage('{{ project_code | lower | raw }}');
+
+        //Starting a timer to make sure data is sent to the main server when internet is available
+
+        sendDataToServer('{{ project_code | lower | raw }}');
+
     </script>
 
 {% endblock %}
 
+{% block stylesheets %}
+    {{ parent() }}
+    <link rel="stylesheet" href="{{ asset('commons/css/datepicker.css') }}" />
+    <link rel="stylesheet" href="{{ asset('commons/css/jquery-ui.css') }}" />
+{% endblock stylesheets %}
+
+{% block message_alert %}
+    {% if message %}
+        <div class="alert alert-success">
+            <button type="button" class="close" data-dismiss="alert">&times;</button>
+            <small class="visible-phone"><strong>Success!</strong> {{ message }}</small>
+            <small class="hidden-phone"><strong>Success!</strong> {{ message }}</small>
+        </div>
+    {% endif %}
+{% endblock message_alert %}
+
 {% block right_content -%}
 
-    <h1>{{ title | raw }}</h1>
+    <h1><small>{{ title | raw }}</small></h1>
 
     <form action="{{ path('record_create') }}" method="post">
+        {% if entryLevel %}
+            Duty Post
+            <select name="orgunitParent" onchange="getunits(this)" required>
+                <option value="">
+                    --
+                </option>
+                <option value="{{ organisation_unit['uid'] }}">
+                    {{ organisation_unit['longname'] }}
+                </option>
+            </select>
+            <br />
+            Work Station
+            <select name="unit" id="units" >
 
+            </select>
+        {% else %}
+            <input name="orgunitParent" type="hidden" value="{{ organisation_unit['uid'] }}">
+        {% endif %}
 
         <div id="result" />
         </div>
         <p>
             <input type="hidden" name="formId" value="{{ id }}">
-            <button name='Save' class="btn"> Save Records</button>
+            <button type="submit" name='Save' class="btn"> Save Records</button>
+            <a href="{{ path('record_viewrecords', { 'formid': id } ,'form') }}" class="btn">
+                Back to the list
+            </a>
+            <a href="{{ path('record_form_list') }}" class="btn">
+                Cancel
+            </a>
         </p>
+
     </form>
 
 {% endblock %}

@@ -83,7 +83,7 @@ class Record
      * @Gedmo\Versioned
      * @ORM\ManyToOne(targetEntity="Hris\OrganisationunitBundle\Entity\Organisationunit")
      * @ORM\JoinColumns({
-     *   @ORM\JoinColumn(name="organisationunit_id", referencedColumnName="id", nullable=true, onDelete="CASCADE")
+     *   @ORM\JoinColumn(name="organisationunit_id", referencedColumnName="id", nullable=false, onDelete="CASCADE")
      * })
      */
     private $organisationunit;
@@ -133,12 +133,28 @@ class Record
     private $hashistory;
 
     /**
+     * @var History $history
+     *
+     * @ORM\OneToMany(targetEntity="Hris\RecordsBundle\Entity\History", mappedBy="record",cascade={"ALL"})
+     * @ORM\OrderBy({"history" = "ASC"})
+     */
+    private $history;
+
+    /**
      * @var boolean $hastraining
      *
      * @Gedmo\Versioned
      * @ORM\Column(name="hastraining", type="boolean")
      */
     private $hastraining;
+
+    /**
+     * @var Training $training
+     *
+     * @ORM\OneToMany(targetEntity="Hris\RecordsBundle\Entity\Training", mappedBy="record",cascade={"ALL"})
+     * @ORM\OrderBy({"coursename" = "ASC"})
+     */
+    private $training;
 
     /**
      * @var \DateTime $datecreated
@@ -345,6 +361,39 @@ class Record
     }
 
     /**
+     * Add history
+     *
+     * @param History $history
+     * @return Record
+     */
+    public function addHistory(History $history)
+    {
+        $this->history[$history->getId()] = $history;
+
+        return $this;
+    }
+
+    /**
+     * Remove history
+     *
+     * @param History $history
+     */
+    public function removeHistory(History $history)
+    {
+        $this->history->removeElement($history);
+    }
+
+    /**
+     * Get history
+     *
+     * @return \Doctrine\Common\Collections\Collection
+     */
+    public function getHistory()
+    {
+        return $this->history;
+    }
+
+    /**
      * Set hastraining
      *
      * @param boolean $hastraining
@@ -365,6 +414,39 @@ class Record
     public function getHastraining()
     {
         return $this->hastraining;
+    }
+
+    /**
+     * Add training
+     *
+     * @param Training $training
+     * @return Record
+     */
+    public function addTraining(Training $training)
+    {
+        $this->training[$training->getId()] = $training;
+
+        return $this;
+    }
+
+    /**
+     * Remove training
+     *
+     * @param Training $training
+     */
+    public function removeTraining(Training $training)
+    {
+        $this->training->removeElement($training);
+    }
+
+    /**
+     * Get training
+     *
+     * @return \Doctrine\Common\Collections\Collection
+     */
+    public function getTraining()
+    {
+        return $this->training;
     }
 
     /**
@@ -475,11 +557,21 @@ class Record
     /**
      * Get value
      *
-     * @return array 
+     * @return mixed
      */
-    public function getValue()
+    public function getValue($uid=NULL,$format=NULL)
     {
-        return $this->value;
+        if(!empty($uid)) {
+            if(gettype($this->value[$uid])=="array") {
+                $output = new \DateTime($this->value[$uid]['date'],new \DateTimeZone($this->value[$uid]['timezone']));
+                if(!empty($format)) $output = $output->format($format);
+            }else {
+                $output = $this->value[$uid];
+            }
+        }else {
+            $output = $this->value;
+        }
+        return $output;
     }
 
     /**

@@ -6,3 +6,12 @@ services:
                     class: Hris\ReportsBundle\EventListener\ConfigureMenuListener
                     tags:
                         - { name: kernel.event_listener, event: hris_reports.menu_configure, method: onMenuConfigure }
+
+    hris.twig.sum_expression:
+            class: Hris\ReportsBundle\Twig\Extension\SumExtension
+            tags:
+                - { name: twig.extension}
+    hris.twig.round_expression:
+                class: Hris\ReportsBundle\Twig\Extension\RoundExtension
+                tags:
+                    - { name: twig.extension}

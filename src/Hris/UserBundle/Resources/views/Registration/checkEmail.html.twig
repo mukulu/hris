@@ -1,6 +1,8 @@
 {% extends "::base.html.twig" %}
 
-{% block right_content %}
-    <h1><small>{{ 'registration.check_email'|trans({'%email%': user.email}, 'FOSUserBundle') }}</small></h1>
-    <a href="{{ path('fos_user_security_login') }}" class="btn">{{ 'resetting.to_login'|trans({}, 'FOSUserBundle') }}</a>
-{% endblock right_content %}
+{% block content %}
+    <div class="offset3">
+        <h1><small>{{ 'registration.check_email'|trans({'%email%': user.email}, 'FOSUserBundle') }}</small></h1>
+        <a href="{{ path('fos_user_security_login') }}" class="btn">{{ 'resetting.to_login'|trans({}, 'FOSUserBundle') }}</a>
+    </div>
+{% endblock content %}

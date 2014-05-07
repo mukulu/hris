@@ -43,6 +43,7 @@ use Hris\ReportsBundle\Entity\Report;
 use Hris\ReportsBundle\Form\ReportType;
 use Ob\HighchartsBundle\Highcharts\Highchart;
 use Zend\Json\Expr;
+use JMS\SecurityExtraBundle\Annotation\Secure;
 
 /**
  * Report Friendly Report controller for generation of friendlier
@@ -75,6 +76,7 @@ class ReportFriendlyReportController extends Controller
     /**
      * Show Report Aggregation
      *
+     * @Secure(roles="ROLE_SUPER_USER,ROLE_REPORTFRIENDLYREPORT_GENERATE")
      * @Route("/", name="report_friendlyreport")
      * @Method("GET")
      * @Template()
@@ -82,7 +84,7 @@ class ReportFriendlyReportController extends Controller
     public function indexAction()
     {
 
-        $friendlyReportForm = $this->createForm(new ReportFriendlyReportType(),null,array('em'=>$this->getDoctrine()->getManager()));
+        $friendlyReportForm = $this->createForm(new ReportFriendlyReportType($this->getUser()),null,array('em'=>$this->getDoctrine()->getManager()));
 
         return array(
             'friendlyReportForm'=>$friendlyReportForm->createView(),
@@ -92,6 +94,7 @@ class ReportFriendlyReportController extends Controller
     /**
      * Generate friendly reports
      *
+     * @Secure(roles="ROLE_SUPER_USER,ROLE_REPORTFRIENDLYREPORT_GENERATE")
      * @Route("/", name="report_friendlyreport_generate")
      * @Method("PUT")
      * @Template()
@@ -99,25 +102,36 @@ class ReportFriendlyReportController extends Controller
     public function generateAction(Request $request)
     {
         $entityManager = $this->getDoctrine()->getManager();
-        $friendlyReportForm = $this->createForm(new ReportFriendlyReportType(),null,array('em'=>$this->getDoctrine()->getManager()));
+        $friendlyReportForm = $this->createForm(new ReportFriendlyReportType($this->getUser()),null,array('em'=>$this->getDoctrine()->getManager()));
         $friendlyReportForm->bind($request);
 
         if ($friendlyReportForm->isValid()) {
             $friendlyReportFormData = $friendlyReportForm->getData();
             $friendlyReport = $friendlyReportFormData['genericReport'];
             $organisationunit = $friendlyReportFormData['organisationunit'];
+            $targets = $friendlyReportFormData['targets'];
+            $targetValues = $targets->getValues();
             $forms = $friendlyReportFormData['forms'];
-            $organisationunitGroupset = $friendlyReportFormData['organisationunitGroupset'];
-            $organisationunitGroup = $friendlyReportFormData['organisationunitGroup'];
+            $organisationunitGroupset = (isset($friendlyReportFormData['organisationunitGroupset'])) ? $friendlyReportFormData['organisationunitGroupset'] : null;
+            $organisationunitGroup = (isset($friendlyReportFormData['organisationunitGroup'])) ? $friendlyReportFormData['organisationunitGroup'] : null;
             // Create FormIds
             $formIds = NULL;
             foreach($forms as $formKey=>$formObject) {
                 if(empty($formIds)) $formIds=$formObject->getId();else $formIds.=','.$formObject->getId();
             }
+            // Create target columns if targets have been passed
+            $targetColumns = NULL;
+            if(isset($targets) && !empty($targets)) {
+                foreach($targets as $targetKey=>$target) {
+                    $targetColumns = empty($targetColumns) ? str_replace(' ','',$target->getName()) : $targetColumns.",".str_replace(' ','',$target->getName());
+                }
+            }
             // Create OrganisationunitGroupIds
             $organisationunitGroupIds = NULL;
-            foreach($organisationunitGroup as $organisationunitGroupKey=>$organisationunitGroupObject) {
-                if(empty($organisationunitGroupIds)) $organisationunitGroupIds=$organisationunitGroupObject->getId();else $organisationunitGroupIds.=','.$organisationunitGroupObject->getId();
+            if(isset($organisationunitGroup) && !empty($organisationunitGroup)) {
+                foreach($organisationunitGroup as $organisationunitGroupKey=>$organisationunitGroupObject) {
+                    if(empty($organisationunitGroupIds)) $organisationunitGroupIds=$organisationunitGroupObject->getId();else $organisationunitGroupIds.=','.$organisationunitGroupObject->getId();
+                }
             }
         }
         $title = $friendlyReport->getName().' for '. $organisationunit->getLongname().' and lower levels';
@@ -128,83 +142,152 @@ class ReportFriendlyReportController extends Controller
 
 
 
+        if($friendlyReport->getType()=="sql") {
+            $selectQuery = $friendlyReport->getSQL();
 
+            // Get Standard Resource table name
+            $resourceTableName = str_replace(' ','_',trim(strtolower(ResourceTable::getStandardResourceTableName())));
+            $resourceTableAlias="ResourceTable";
+            $organisationUnitJoinClause=" INNER JOIN hris_organisationunit as Organisationunit ON Organisationunit.id = $resourceTableAlias.organisationunit_id
+                                            INNER JOIN hris_organisationunitstructure AS Structure ON Structure.organisationunit_id = $resourceTableAlias.organisationunit_id ";
 
-        /*
+            // Clause for filtering target organisationunits
+            $organisationunitId = $organisationunit->getId();
+            // With Lower Levels
+            $organisationunit = $this->getDoctrine()->getManager()->getRepository('HrisOrganisationunitBundle:Organisationunit')->find($organisationunitId);
+            $organisationunitLevelsWhereClause = " Structure.level".$organisationunit->getOrganisationunitStructure()->getLevel()->getLevel()."_id=$organisationunitId AND Structure.level_id >= ( SELECT hris_organisationunitlevel.level FROM hris_organisationunitstructure INNER JOIN hris_organisationunitlevel ON hris_organisationunitstructure.level_id=hris_organisationunitlevel.id  WHERE hris_organisationunitstructure.organisationunit_id=$organisationunitId ) ";
+            // Clause for filtering target forms
+            $formsWhereClause=" $resourceTableAlias.form_id IN ($formIds) ";
+            $selectQuery = str_replace('#{organisationunitJoinClause}',$organisationUnitJoinClause,$selectQuery);
+            $selectQuery = str_replace('#{organisationunitWhereClause}',$organisationunitLevelsWhereClause,$selectQuery);
+            $selectQuery = str_replace('#{formWhereClause}',$formsWhereClause,$selectQuery);
+            $sqlQueries = explode(';',$selectQuery);
+            foreach($sqlQueries as $sqlKey=>$sqlQuery) {
+                $friendlyReportResults = $this->getDoctrine()->getManager()->getConnection()->fetchAll($sqlQuery);
+            }
+            $adjustedColspan = NULL;
+            $reversedRepetition = NULL;
+            $target = NULL;
+            $colspanCounter = NULL;
+            $groupPositionCounter = NULL;
+        }else {
+            /*
          * Initializing query for friendly report calculation
          */
-        // Get Standard Resource table name
-        $resourceTableName = str_replace(' ','_',trim(strtolower(ResourceTable::getStandardResourceTableName())));
-        $resourceTableAlias="ResourceTable";
-        $organisationUnitJoinClause=" INNER JOIN hris_organisationunit as Organisationunit ON Organisationunit.id = $resourceTableAlias.organisationunit_id
+            // Get Standard Resource table name
+            $resourceTableName = str_replace(' ','_',trim(strtolower(ResourceTable::getStandardResourceTableName())));
+            $resourceTableAlias="ResourceTable";
+            $organisationUnitJoinClause=" INNER JOIN hris_organisationunit as Organisationunit ON Organisationunit.id = $resourceTableAlias.organisationunit_id
                                             INNER JOIN hris_organisationunitstructure AS Structure ON Structure.organisationunit_id = $resourceTableAlias.organisationunit_id ";
-        $joinClause = $organisationUnitJoinClause;
-        $fromClause=" FROM $resourceTableName $resourceTableAlias ";
-
-        // Clause for filtering target organisationunits
-        $organisationunitId = $organisationunit->getId();
-        // With Lower Levels
-        $organisationunit = $this->getDoctrine()->getManager()->getRepository('HrisOrganisationunitBundle:Organisationunit')->find($organisationunitId);
-        $organisationunitLevelsWhereClause = " Structure.level".$organisationunit->getOrganisationunitStructure()->getLevel()->getLevel()."_id=$organisationunitId AND Structure.level_id >= ( SELECT hris_organisationunitlevel.level FROM hris_organisationunitstructure INNER JOIN hris_organisationunitlevel ON hris_organisationunitstructure.level_id=hris_organisationunitlevel.id  WHERE hris_organisationunitstructure.organisationunit_id=$organisationunitId ) ";
-        // Clause for filtering target forms
-        $formsWhereClause=" $resourceTableAlias.form_id IN ($formIds) ";
-
-        // Query for Options to exclude from reports
-        $fieldOptionsToSkip = $this->getDoctrine()->getManager()->getRepository('HrisFormBundle:FieldOption')->findBy (array('skipInReport' =>True));
-        //filter the records with exclude report tag
-        foreach($fieldOptionsToSkip as $key => $fieldOptionToSkip){
-            if(empty($fieldOptionsToSkipQuery)) {
-                $fieldOptionsToSkipQuery = "$resourceTableAlias.".$fieldOptionToSkip->getField()->getName()." !='".$fieldOptionToSkip->getValue()."'";
+            if(!empty($targetValues)) {
+                $indicatorTargetJoinClause = " INNER JOIN hris_organisationunitgroup_members as OrganisationunitGroupMembers ON OrganisationunitGroupMembers.organisationunit_id=$resourceTableAlias.organisationunit_id
+                                      INNER JOIN hris_organisationunitgroup as OrganisationunitGroup ON OrganisationunitGroup.id=OrganisationunitGroupMembers.organisationunitgroup_id
+	                                  INNER JOIN hris_indicator_target as IndicatorTarget ON IndicatorTarget.organisationunitgroup_id=OrganisationunitGroup.id";
+                $organisationUnitJoinClause .= $indicatorTargetJoinClause;
             }else {
-                $fieldOptionsToSkipQuery .= " AND $resourceTableAlias.".$fieldOptionToSkip->getField()->getName()." !='".$fieldOptionToSkip->getValue()."'";
+                $indicatorTargetJoinClause = NULL;
             }
-        }
+            $joinClause = $organisationUnitJoinClause;
+            $fromClause=" FROM $resourceTableName $resourceTableAlias ";
 
-        // Deducing colspan for cells in the header
-        $groupPositionCounter=0;$previousColspan= 1;$colspan = NULL;$repetition = NULL;
-        // Row count for the entire database(rows accessible by user)
-        // Combination of serie and category columns
-        $seriesFieldName=$friendlyReport->getSerie()->getField()->getName();
+            // Clause for filtering target organisationunits
+            $organisationunitId = $organisationunit->getId();
+            // With Lower Levels
+            $organisationunit = $this->getDoctrine()->getManager()->getRepository('HrisOrganisationunitBundle:Organisationunit')->find($organisationunitId);
+            $organisationunitLevelsWhereClause = " Structure.level".$organisationunit->getOrganisationunitStructure()->getLevel()->getLevel()."_id=$organisationunitId AND Structure.level_id >= ( SELECT hris_organisationunitlevel.level FROM hris_organisationunitstructure INNER JOIN hris_organisationunitlevel ON hris_organisationunitstructure.level_id=hris_organisationunitlevel.id  WHERE hris_organisationunitstructure.organisationunit_id=$organisationunitId ) ";
+            // Clause for filtering target forms
+            $formsWhereClause=" $resourceTableAlias.form_id IN ($formIds) ";
 
-        /*
-         * Go through categories and construct viable columns for SQL
-         */
-        foreach($friendlyReport->getFriendlyReportCategory() as $friendlyReportCategoryKey=>$friendlyReportCategory) {
-            if(!isset($pastFirstCategory)) $pastFirstCategory=True;// Initiate first category
-            foreach($friendlyReportCategory->getFieldOptionGroup()->getFieldOption() as $fieldOptionKey=>$fieldOption ) {
-                $queryColumnNames[] = $fieldOption->getValue();
-                $categoryFieldNames[] = $fieldOption->getField()->getName();
-                $categoryFieldName = $fieldOption->getField()->getName();
-                $categoryFieldOptionValue=$fieldOption->getValue();
-                $categoryFieldOptionValues[]=$fieldOption->getValue();
-                $categoryResourceTableName=$categoryResourceTableName=$resourceTableAlias.$categoryFieldOptionValue;
-                $queryColumnWhereClause[$fieldOption->getValue()] = "$categoryResourceTableName.$categoryFieldName='$categoryFieldOptionValue'";
-                if(!isset($totalColumnWhereClause[$fieldOption->getField()->getName()])) $totalColumnWhereClause[$fieldOption->getField()->getName()]= $fieldOption->getValue();
-                else $totalColumnWhereClause[$fieldOption->getField()->getName()].=",".$fieldOption->getValue();
+            // Query for Options to exclude from reports
+            $fieldOptionsToSkip = $this->getDoctrine()->getManager()->getRepository('HrisFormBundle:FieldOption')->findBy (array('skipInReport' =>True));
+            //filter the records with exclude report tag
+
+            if($friendlyReport->getIgnoreSkipInReport() == False) {
+                foreach($fieldOptionsToSkip as $key => $fieldOptionToSkip){
+                    if(empty($fieldOptionsToSkipQuery)) {
+                        $fieldOptionsToSkipQuery = "$resourceTableAlias.".$fieldOptionToSkip->getField()->getName()." !='".$fieldOptionToSkip->getValue()."'";
+                    }else {
+                        $fieldOptionsToSkipQuery .= " AND $resourceTableAlias.".$fieldOptionToSkip->getField()->getName()." !='".$fieldOptionToSkip->getValue()."'";
+                    }
+                }
             }
-        }
 
-        foreach($queryColumnNames as $queryColumnNameKey=>$queryColumnName) {
-            // construction of category column query in relation to serie
-            // randomize resourcetable alias
-            $categoryFieldName=$categoryFieldNames[$queryColumnNameKey];
-            $categoryFieldOptionValue=$categoryFieldOptionValues[$queryColumnNameKey];
-            $categoryResourceTableName=$resourceTableAlias.$categoryFieldOptionValue;
-            $joinClause .= " INNER JOIN
+            // Deducing colspan for cells in the header
+            $groupPositionCounter=0;$previousColspan= 1;$colspan = NULL;$repetition = NULL;
+            // Row count for the entire database(rows accessible by user)
+            // Combination of serie and category columns
+            $seriesFieldName=$friendlyReport->getSerie()->getField()->getName();
+
+            /*
+             * Go through categories and construct viable columns for SQL
+             */
+            foreach($friendlyReport->getFriendlyReportCategory() as $friendlyReportCategoryKey=>$friendlyReportCategory) {
+                if(!isset($pastFirstCategory)) $pastFirstCategory=True;// Initiate first category
+                foreach($friendlyReportCategory->getFieldOptionGroup()->getFieldOption() as $fieldOptionKey=>$fieldOption ) {
+                    $queryColumnNames[] = str_replace('-','_',str_replace(' ','',$fieldOption->getValue()));
+                    $categoryFieldNames[] = $fieldOption->getField()->getName();
+                    $categoryFieldName = $fieldOption->getField()->getName();
+                    $categoryFieldOptionValue=str_replace('-','_',$fieldOption->getValue());
+                    $categoryFieldOptionValues[]=str_replace('-','_',$fieldOption->getValue());
+                    $categoryResourceTableName=$resourceTableAlias.str_replace(' ','',$categoryFieldOptionValue);
+                    $queryColumnWhereClause[str_replace('-','_',$fieldOption->getValue())] = "$categoryResourceTableName.$categoryFieldName='".str_replace(' ','',$categoryFieldOptionValue)."'";
+                }
+            }
+
+            foreach($queryColumnNames as $queryColumnNameKey=>$queryColumnName) {
+                // construction of category column query in relation to serie
+                // randomize resourcetable alias
+                $categoryFieldName=$categoryFieldNames[$queryColumnNameKey];
+                $categoryFieldOptionValue=$categoryFieldOptionValues[$queryColumnNameKey];
+                $categoryResourceTableName=$resourceTableAlias.str_replace(' ','',$categoryFieldOptionValue);
+                $joinClause .= " LEFT JOIN
                             (
-                                SELECT COUNT($categoryResourceTableName.$categoryFieldName) AS $categoryFieldOptionValue, $categoryResourceTableName.$seriesFieldName
+                                SELECT COUNT($categoryResourceTableName.".str_replace(' ','',$categoryFieldName).") AS ".str_replace(' ','',$categoryFieldOptionValue).", $categoryResourceTableName.$seriesFieldName
                                 FROM $resourceTableName $categoryResourceTableName
                                 ".str_replace($resourceTableAlias,$categoryResourceTableName,$organisationUnitJoinClause)."
                                 WHERE $categoryResourceTableName.$categoryFieldName='$categoryFieldOptionValue'
                                 ".( !empty($fieldOptionsToSkipQuery) ? str_replace($resourceTableAlias,$categoryResourceTableName," AND ( $fieldOptionsToSkipQuery )") : "" ) ."
                                 ".( !empty($organisationunitLevelsWhereClause) ? str_replace($resourceTableAlias,$categoryResourceTableName," AND ( $organisationunitLevelsWhereClause )") : "" ) ."
+                                ".( !empty($formsWhereClause) ? str_replace($resourceTableAlias,$categoryResourceTableName," AND ( $formsWhereClause )") : "" ) ."
                                 GROUP BY $categoryResourceTableName.$seriesFieldName
                             ) $categoryResourceTableName ON $categoryResourceTableName.$seriesFieldName= $resourceTableAlias.$seriesFieldName";
-        }
-        $columns = " DISTINCT $resourceTableAlias.$seriesFieldName as $seriesFieldName,".implode(',',$queryColumnNames);
+            }
 
-        $selectQuery="SELECT $columns $fromClause $joinClause WHERE $organisationunitLevelsWhereClause".( !empty($fieldOptionsToSkipQuery) ? " AND ( $fieldOptionsToSkipQuery )" : "" );
-        $friendlyReportResults = $this->getDoctrine()->getManager()->getConnection()->fetchAll($selectQuery);
+            //Target join clause
+            $targetJoinClause = NULL;
+            if(isset($targets) && !empty($targets)) {
+                foreach($targets as $targetKey=>$target) {
+                    $targetColumn = str_replace(' ','',$target->getName());
+                    $targetJoinClause .= " LEFT JOIN (
+                                                    SELECT hris_fieldoption.value as ".$targetColumn."fieldOption,(
+                                                        hris_indicator_targetfieldoption.value *
+                                                        (
+                                                            SELECT count(Organisationunit.id) FROM hris_organisationunit AS Organisationunit
+                                                            INNER JOIN hris_organisationunitstructure AS Structure2 ON Structure2.organisationunit_id = Organisationunit.id
+                                                            INNER JOIN hris_organisationunitgroup_members as OrganisationunitGroupMembers ON OrganisationunitGroupMembers.organisationunit_id=Organisationunit.id
+                                                            INNER JOIN hris_organisationunitgroup as OrganisationunitGroup ON OrganisationunitGroup.id=OrganisationunitGroupMembers.organisationunitgroup_id
+                                                            INNER JOIN hris_indicator_target as IndicatorTarget ON IndicatorTarget.organisationunitgroup_id=OrganisationunitGroup.id
+                                                            WHERE ".str_replace('Structure','Structure2',$organisationunitLevelsWhereClause)."
+                                                            AND IndicatorTarget.id=".$target->getId()."
+                                                        )
+
+                                                    ) as $targetColumn FROM hris_fieldoption
+                                                    INNER JOIN hris_indicator_targetfieldoption ON hris_indicator_targetfieldoption.fieldoption_id=hris_fieldoption.id
+                                                    INNER JOIN hris_indicator_target ON hris_indicator_target.id=hris_indicator_targetfieldoption.target_id
+                                                    WHERE hris_indicator_target.id=".$target->getId()."
+                                                    ORDER BY ".$targetColumn."fieldOption
+                                        ) HrisTargetValues".$targetColumn." ON HrisTargetValues".$targetColumn.".".$targetColumn."fieldOption = $resourceTableAlias.$seriesFieldName";
+                }
+            }
+
+
+            $columns = " DISTINCT $resourceTableAlias.$seriesFieldName as $seriesFieldName,".implode(',',$queryColumnNames).( !empty($targetColumns) ? ','.$targetColumns : '');
+            if(!empty($targetJoinClause)) $joinClause .=$targetJoinClause;
+            $selectQuery="SELECT $columns $fromClause $joinClause WHERE $organisationunitLevelsWhereClause".( !empty($fieldOptionsToSkipQuery) ? " AND ( $fieldOptionsToSkipQuery )" : "" );
+
+            $friendlyReportResults = $this->getDoctrine()->getManager()->getConnection()->fetchAll($selectQuery);
+        }
+
 
 
         foreach($friendlyReport->getFriendlyReportCategory() as $friendlyReportCategoryKey=>$friendlyReportCategory) {
@@ -239,6 +322,7 @@ class ReportFriendlyReportController extends Controller
             'colspan'=>$adjustedColspan,
             'repetition'=>$reversedRepetition,
             'friendlyReportResults'=>$friendlyReportResults,
+            'targets'=>$targets,
         );
     }
 

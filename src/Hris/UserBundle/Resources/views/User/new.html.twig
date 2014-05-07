@@ -1,8 +1,22 @@
 {% extends "::base.html.twig" %}
 {% block javascripts %}
     {{ parent() }}
+    <script type="text/javascript" language="javascript" src="{{ asset('commons/js/jquery.multi-select.js') }}"></script>
+    <script type="text/javascript" language="javascript" src="{{ asset('commons/js/jquery.validate.js') }}"></script>
     <script type="text/javascript" language="javascript" src="{{ asset('commons/js/ext-all.js') }}"></script>
+    <script type="text/javascript" src="{{ asset('commons/js/jquery-ui.js') }}"></script>
     <script type="text/javascript">
+        $( ".date" ).datepicker( {
+            changeMonth: true,
+            changeYear: true,
+            showOn: "both",
+            buttonImage: "{{ asset('commons/images/calendar.gif') }}",
+            buttonImageOnly: true,
+            dateFormat: "dd/mm/yy",
+            showAnim: "clip",
+            minDate: "+0D",
+            yearRange:'c-60:c+60'
+        });
         var treeplaceholder="treeplaceholder";
         var inputboxname="hris_userbundle_usertype[organisationunit]";
         var urlExtension="";
@@ -51,21 +65,58 @@
 
             });
         });
+        $( document ).ready(function() {
+            // validate signup form on keyup and submit
+            $("#fos_user_registration_register").validate({ ignore:".date" });
+            $("#hris_userbundle_usertype").validate({ ignore:[] });
+            $('#hris_userbundle_usertype_roles').multiSelect({
+                selectableHeader: "<div class=''>Avaiable Roles</div>",
+                selectionHeader: "<div class=''>Selected Roles</div>"
+            });
+            $('#hris_userbundle_usertype_groups').multiSelect({
+                selectableHeader: "<div class=''>Avaiable Groups</div>",
+                selectionHeader: "<div class=''>Selected Groups</div>"
+            });
+            $('#hris_userbundle_usertype_form').multiSelect({
+                selectableHeader: "<div class=''>Avaiable Forms</div>",
+                selectionHeader: "<div class=''>Selected Forms</div>"
+            });
+            $( 'input[required="required"],select[required="required"]').closest(".control-group").children("label").prepend('<em class="required-asterisk">*</em>');
+        });
     </script>
 {% endblock javascripts %}
 
 {% block stylesheets %}
     {{ parent() }}
     <link rel="stylesheet" type="text/css" media="all" href="{{ asset('commons/css/ext-standard.css') }}">
+    <link rel="stylesheet" href="{{ asset('commons/css/datepicker.css') }}" />
+    <link rel="stylesheet" href="{{ asset('commons/css/jquery-ui.css') }}" />
+    <link rel="stylesheet" type="text/css" media="all" href="{{ asset('commons/css/multi-select.css') }}">
+    <style type="text/css">
+        #ms-hris_userbundle_usertype_roles {
+            width:890px;
+        }
+    </style>
 {% endblock stylesheets %}
 
 {% block right_content %}
     <h1><small>User creation</small></h1>
-    <form action="{{ path('user_create') }}" {{ form_enctype(form) }} method="POST" class="fos_user_registration_register">
+    <form action="{{ path('user_create') }}" {{ form_enctype(form) }} method="POST" class="fos_user_registration_register" id="fos_user_registration_register">
+        {{ form_label( form.organisationunit ) }}
+        {{ form_errors( form.organisationunit ) }}
+        {{ form_widget( form.organisationunit ) }}
         <div id="treeplaceholder"></div>
         {{ form_widget(form) }}
-        <div>
-            <input type="submit" value="{{ 'registration.submit'|trans({}, 'FOSUserBundle') }}" />
-        </div>
+        <br/>
+        <ul class="record_actions inline" style="float:left;">
+            <li>
+                <button type="submit" class="btn">{{ 'registration.submit'|trans({}, 'FOSUserBundle') }}</button>
+            </li>
+            <li>
+                <a href="{{ path('user') }}" class="btn">
+                    Back to the list
+                </a>
+            </li>
+        </ul>
     </form>
 {% endblock right_content %}

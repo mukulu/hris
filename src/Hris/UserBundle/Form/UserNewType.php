@@ -23,13 +23,46 @@
  *
  */
 namespace Hris\UserBundle\Form;
+use Doctrine\ORM\Mapping\UniqueConstraint;
+use Symfony\Bridge\Doctrine\Validator\Constraints\UniqueEntity;
+use Symfony\Bridge\Doctrine\Validator\Constraints\UniqueEntityValidator;
 use Symfony\Component\Form\AbstractType;
 use Symfony\Component\Form\FormBuilderInterface;
 use Symfony\Component\OptionsResolver\OptionsResolverInterface;
 use Symfony\Component\Validator\Constraints\NotBlank;
+use Symfony\Component\Yaml\Parser;
 
 class UserNewType extends AbstractType
 {
+    /**
+     * Generates an array of roles based on roles stipulated in security configurations
+     * @return mixed
+     */
+    private function getRoleNames()
+    {
+        $pathToSecurity = __DIR__ . '/../../../..' . '/app/config/security.yml';
+        $yaml = new Parser();
+        $userRoles = array();
+        $rolesArray = $yaml->parse(file_get_contents($pathToSecurity));
+        $rolesCaptured = $rolesArray['security']['role_hierarchy'];
+        //print_r($rolesCaptured);
+        foreach($rolesCaptured as $key=>$value) {
+            $userRoles[]=$key;
+            if(!is_array($value)) {
+                $userRoles[]=$value;
+            }else {
+                $userRoles=array_merge($userRoles,$value);
+            }
+        }
+        $userRoles = array_unique($userRoles);
+        //sort for display purposes
+        asort($userRoles);
+        foreach($userRoles as $key=>$value) {
+            $sortedRoles[$value]=$value;
+        }
+        return $sortedRoles;
+    }
+
     public function buildForm(FormBuilderInterface $builder, array $options)
     {
         // assuming $entityManager is passed in options
@@ -37,8 +70,24 @@ class UserNewType extends AbstractType
         $transformer = new OrganisationunitToIdTransformer($em);
 
         $builder
-            ->add('username', null, array('label' => 'form.username', 'translation_domain' => 'FOSUserBundle'))
-            ->add('email', 'email', array('label' => 'form.email', 'translation_domain' => 'FOSUserBundle'))
+            ->add('username', null, array(
+                'label' => 'form.username',
+                'translation_domain' => 'FOSUserBundle',
+                'constraints'=>array(
+                    new NotBlank(),
+                    new UniqueConstraint('columns',array('username','email')),
+                )
+            ))
+            ->add('email', 'email', array(
+                'label' => 'form.email',
+                'translation_domain' => 'FOSUserBundle',
+                'constraints'=> Array (
+                    new UniqueEntity(array(
+                        'fields'=>array('username'),
+                        'groups'=>array('registration'),
+                    )),
+                )
+            ))
             ->add('plainPassword', 'repeated', array(
                 'type' => 'password',
                 'required'=> true,
@@ -48,7 +97,7 @@ class UserNewType extends AbstractType
                 'invalid_message' => 'fos_user.password.mismatch',
             ))
             ->add($builder->create('organisationunit','hidden',array(
-                    'required'=>true,
+                    'required'=>True,
                     'constraints'=> array(
                         new NotBlank(),
                     )
@@ -56,13 +105,39 @@ class UserNewType extends AbstractType
             )
             ->add('phonenumber')
             ->add('jobTitle')
-            ->add('firstName')
+            ->add('firstName',null,array(
+                'required'=>True,
+            ))
             ->add('middleName')
-            ->add('surname')
+            ->add('surname',null,array(
+                'required'=>True,
+            ))
+            ->add('form')
             ->add('enabled',null,array(
                 'required'=>false,
             ))
-            ->add('roles')
+            ->add('locked',null,array(
+                'required'=>false,
+            ))
+            ->add('expiresAt','date',array(
+                'required'=>false,
+                'widget' => 'single_text',
+                'format' => 'dd/MM/yyyy',
+                'attr' => array('class' => 'date')
+            ))
+            ->add('credentialsExpireAt','date',array(
+                'required'=>false,
+                'widget' => 'single_text',
+                'format' => 'dd/MM/yyyy',
+                'attr' => array('class' => 'date')
+            ))
+            ->add('roles', 'choice', array(
+                'multiple'=>true,
+                'choices'   => $this->getRoleNames(),
+            ))
+            ->add('groups',null,array(
+                'required'=>False,
+            ))
         ;
     }
 

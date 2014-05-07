@@ -2,8 +2,30 @@
 {% block javascripts %}
     {{ parent() }}
     <script type="text/javascript" src="{{ asset('commons/js/jquery.dataTables.js') }}"></script>
+    <script type="text/javascript" src="{{ asset('commons/js/jquery.dataTables.ZeroClipboard.js') }}"></script>
+    <script type="text/javascript" src="{{ asset('commons/js/jquery.dataTables.TableTools.min.js') }}"></script>
     <script type="text/javascript" src="{{ asset('commons/js/dt_settings.js') }}"></script>
-    <script>window["_GOOG_TRANS_EXT_VER"] = "1";</script>
+    <script type="text/javascript">
+        $(document).ready(function() {
+            $('.records_list').dataTable( {
+                "sDom": "<'row'<'span6'TRl><'span6'f>r>t<'row'<'span6'i><'span6'p>>",
+                "oTableTools": {
+                    "aButtons": [
+                        {"sExtends":"copy","mColumns":"visible"},
+                        {"sExtends":"xls","mColumns":"visible"},
+                        {"sExtends":"pdf","mColumns":"visible"}
+                    ],
+                    "sSwfPath": "{{ asset('commons/swf/copy_cvs_xls_pdf.swf') }}"
+                },
+                "sPdfOrientation": "landscape",
+                "sPaginationType": "bootstrap",
+                "oLanguage": {
+                    "sLengthMenu": "_MENU_ records per page"
+                },
+                "aLengthMenu": [[10, 25, 50,100,200, -1], [10, 25, 50,100,200, "All"]]
+            } );
+        } );
+    </script>
 {% endblock javascripts %}
 
 {% block stylesheets %}
@@ -28,11 +50,11 @@
                 <tr>
                     <th>Name</th>
                     <th>Caption</th>
+                    <th>InputType</th>
+                    <th>DataType</th>
                     <th>Compulsory</th>
                     <th>Unique</th>
                     <th>Calculated</th>
-                    <th>Hashistory</th>
-                    <th>Skip in report</th>
                     <th>Actions</th>
                 </tr>
             </thead>
@@ -41,6 +63,8 @@
                 <tr>
                     <td><a href="{{ path('field_show', { 'id': entity.id }) }}">{{ entity.name }}</a></td>
                     <td>{{ entity.caption }}</td>
+                    <td>{{ entity.inputType }}</td>
+                    <td>{{ entity.dataType }}</td>
                     <td>{% if entity.compulsory %}
                             TRUE
                         {% else %}
@@ -59,18 +83,6 @@
                             FALSE
                         {% endif %}
                     </td>
-                    <td>{% if entity.hashistory %}
-                        TRUE
-                        {% else %}
-                        FALSE
-                        {% endif %}
-                    </td>
-                    <td>{% if entity.skipInReport %}
-                        TRUE
-                        {% else %}
-                        FALSE
-                        {% endif %}
-                    </td>
                     <td>
                     <ul class="inline">
                         <li>
@@ -78,6 +90,20 @@
                         </li>
                         <li>
                             <a href="{{ path('field_edit', { 'id': entity.id }) }}"><i class="icon-edit icon-large" title="Edit"></i></a>
+                        </li>
+                        <li>
+                            {% if entity.inputType.name =='Select' %}
+                                <a href="{{ path('fieldoption_list_byfield', { 'fieldid': entity.id }) }}"><i class="icon-circle-arrow-down icon-large" title="List Field Options"></i></a>
+                            {% else %}
+                                &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+                            {% endif %}
+                        </li>
+                        <li>
+                            {% if entity.inputType.name =='Select' %}
+                                <a href="{{ path('fieldoptionmerge_new_byfield', { 'fieldid': entity.id }) }}"><i class="icon-fire icon-large" title="Merge Field Options"></i></a>
+                            {% else %}
+                                &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+                            {% endif %}
                         </li>
                         <li>
                             <a data-toggle="modal" href="#deleteModalFor{{ entity.uid }}"><i class="icon-remove-sign icon-large" title="Delete"></i></a>

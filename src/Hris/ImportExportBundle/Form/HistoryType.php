@@ -38,7 +38,7 @@ class HistoryType extends AbstractType
             ->add('object')
             ->add('status')
             ->add('count')
-            ->add('user')
+            ->add('username')
             ->add('starttime')
             ->add('finishtime')
         ;

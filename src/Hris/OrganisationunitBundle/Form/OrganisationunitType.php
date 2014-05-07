@@ -36,7 +36,9 @@ class OrganisationunitType extends AbstractType
             ->add('code')
             ->add('shortname')
             ->add('longname')
-            ->add('active')
+            ->add('active',null,array(
+                'required'=>False,
+            ))
             ->add('address')
             ->add('email')
             ->add('phonenumber')

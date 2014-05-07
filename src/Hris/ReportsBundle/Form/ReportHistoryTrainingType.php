@@ -20,6 +20,7 @@
  *
  * @since 2012
  * @author John Francis Mukulu <john.f.mukulu@gmail.com>
+ * @author Ismail Yusuf Koleleni <ismailkoleleni@gmail.com>
  *
  */
 namespace Hris\ReportsBundle\Form;
@@ -37,9 +38,11 @@ class ReportHistoryTrainingType extends AbstractType
     {
         // assuming $entityManager is passed in options
         $em = $options['em'];
+        $username = $this->getUsername();
         $transformer = new OrganisationunitToIdTransformer($em);
         $builder
             ->add($builder->create('organisationunit','hidden',array(
+                    'required'=>True,
                     'constraints'=> array(
                         new NotBlank(),
                     )
@@ -50,17 +53,24 @@ class ReportHistoryTrainingType extends AbstractType
             ))
             ->add('reportType','choice',array(
                 'choices'=>array(
-                    ''=>'--SELECT--',
+                    '' => '--SELECT--',
                     'history'=>'History Report',
                     'training'=>'In Service Training Report'
                 ),
+                'required'=>True,
                 'constraints'=>array(
                     new NotBlank(),
                 )
             ))
             ->add('forms','entity', array(
                 'class'=>'HrisFormBundle:Form',
-                //'multiple'=>true,
+                'required'=>True,
+                'query_builder'=>function(EntityRepository $er) use ($username) {
+                    return $er->createQueryBuilder('form')
+                        ->join('form.user','user')
+                        ->andWhere("user.username='".$username."'")
+                        ->orderBy('form.name','ASC');
+                },
                 'constraints'=>array(
                     new NotBlank(),
                 )
@@ -72,10 +82,7 @@ class ReportHistoryTrainingType extends AbstractType
                     return $er->createQueryBuilder('field')
                         ->where('field.hashistory=True')
                         ->orderBy('field.name','ASC');
-                },
-                'constraints'=> array(
-                    new NotBlank(),
-                )
+                }
             ))
             ->add('graphType','choice',array(
                 'choices'=>array(
@@ -87,7 +94,9 @@ class ReportHistoryTrainingType extends AbstractType
                     new NotBlank(),
                 )
             ))
-            ->add('submit','submit')
+            ->add('Generate Report','submit',array(
+                'attr' => array('class' => 'btn'),
+            ))
         ;
     }
 
@@ -104,5 +113,26 @@ class ReportHistoryTrainingType extends AbstractType
     public function getName()
     {
         return 'hris_reportsbundle_reporthistorytrainingtype';
+    }
+
+    /**
+     * @param $username
+     */
+    public function __construct ($username)
+    {
+        $this->username = $username;
+    }
+
+    /**
+     * @var string
+     */
+    private $username;
+
+    /**
+     * @return string
+     */
+    public function getUsername()
+    {
+        return $this->username;
     }
 }

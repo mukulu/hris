@@ -28,6 +28,7 @@ use Doctrine\Common\DataFixtures\AbstractFixture;
 use Doctrine\Common\Persistence\ObjectManager;
 
 use Hris\DataQualityBundle\Entity\Validation;
+use Symfony\Component\Stopwatch\Stopwatch;
 
 class LoadValidationData extends AbstractFixture implements OrderedFixtureInterface
 {
@@ -90,6 +91,8 @@ class LoadValidationData extends AbstractFixture implements OrderedFixtureInterf
     }
 	public function load(ObjectManager $manager)
 	{
+        $stopwatch = new Stopwatch();
+        $stopwatch->start('dummyValidationGeneration');
         // Populate dummy forms
         $this->addDummyValidations();
 
@@ -104,6 +107,23 @@ class LoadValidationData extends AbstractFixture implements OrderedFixtureInterf
             $manager->persist($validation);
         }
 		$manager->flush();
+
+        /*
+         * Check Clock for time spent
+         */
+        $dummyValidationGenerationTime = $stopwatch->stop('dummyValidationGeneration');
+        $duration = $dummyValidationGenerationTime->getDuration()/1000;
+        unset($stopwatch);
+        if( $duration <60 ) {
+            $durationMessage = round($duration,2).' seconds';
+        }elseif( $duration >= 60 && $duration < 3600 ) {
+            $durationMessage = round(($duration/60),2) .' minutes';
+        }elseif( $duration >=3600 && $duration < 216000) {
+            $durationMessage = round(($duration/3600),2) .' hours';
+        }else {
+            $durationMessage = round(($duration/86400),2) .' hours';
+        }
+        //echo "Dummy Validations generation complete in ". $durationMessage .".\n\n";
 	}
 	
 	/**

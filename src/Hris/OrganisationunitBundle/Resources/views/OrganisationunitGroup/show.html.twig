@@ -26,6 +26,14 @@
                 <td>{{ entity.code }}</td>
             </tr>
             <tr>
+                <th>Organisationunit Groupset</th>
+                <td>{{ entity.organisationunitGroupset }}</td>
+            </tr>
+            <tr>
+                <th>Organisationunit Members</th>
+                <td>{{ entity.organisationunit | length }}</td>
+            </tr>
+            <tr>
                 <th>Datecreated</th>
                 <td>{{ entity.datecreated|date('Y-m-d H:i:s') }}</td>
             </tr>

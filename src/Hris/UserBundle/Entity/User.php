@@ -24,12 +24,16 @@
  */
 namespace Hris\UserBundle\Entity;
 
+use Doctrine\Common\Collections\ArrayCollection;
 use Gedmo\Mapping\Annotation as Gedmo;
 use FOS\UserBundle\Entity\User as BaseUser;
 use Doctrine\ORM\Mapping as ORM;
 use Symfony\Component\Validator\Constraints as Assert;
-
+use Hris\UserBundle\Entity\Group;
+use FOS\MessageBundle\Model\ParticipantInterface;
+use Hris\FormBundle\Entity\Form;
 use Hris\OrganisationunitBundle\Entity\Organisationunit;
+use Symfony\Bridge\Doctrine\Validator\Constraints\UniqueEntity;
 
 /**
  * Hris\UserBundle\Entity\User
@@ -38,8 +42,10 @@ use Hris\OrganisationunitBundle\Entity\Organisationunit;
  * @ORM\Entity(repositoryClass="Hris\UserBundle\Entity\UserRepository")
  * @Gedmo\Loggable
  * @Gedmo\SoftDeleteable(fieldName="deletedAt")
+ * @UniqueEntity(fields={"email"}, groups={"registration"}, message="Email exists")
+ * @UniqueEntity(fields={"username"}, groups={"registration"}, message="Username exists")
  */
-class User extends BaseUser
+class User extends BaseUser implements ParticipantInterface
 {
     /**
      * @var integer $id
@@ -59,8 +65,17 @@ class User extends BaseUser
     private $uid;
 
     /**
+     * @var string $description
+     *
+     * @Gedmo\Versioned
+     * @ORM\Column(name="description", type="text", nullable=true)
+     */
+    private $description;
+
+    /**
      * @var string $username
      * @Gedmo\Versioned
+     * @Assert\NotBlank(groups={"registration"})
      */
     protected $username;
 
@@ -73,6 +88,8 @@ class User extends BaseUser
     /**
      * @var string
      * @Gedmo\Versioned
+     * @Assert\NotBlank(groups={"registration"})
+     * @Assert\Email(groups={"registration"})
      */
     protected $email;
 
@@ -159,19 +176,50 @@ class User extends BaseUser
     private $organisationunit;
 
     /**
+     * @var Group $groups
+     *
+     * @ORM\ManyToMany(targetEntity="Hris\UserBundle\Entity\Group", inversedBy="users")
+     * @ORM\JoinTable(name="hris_user_group_members",
+     *   joinColumns={
+	 *     @ORM\JoinColumn(name="user_id", referencedColumnName="id", onDelete="CASCADE")
+	 *   },
+     *   inverseJoinColumns={
+	 *     @ORM\JoinColumn(name="group_id", referencedColumnName="id", onDelete="CASCADE")
+	 *   }
+     * )
+     */
+    protected $groups;
+
+    /**
+     * @var Form $form
+     *
+     * @ORM\ManyToMany(targetEntity="Hris\FormBundle\Entity\Form", inversedBy="user")
+     * @ORM\JoinTable(name="hris_user_formmembers",
+     *   joinColumns={
+     *     @ORM\JoinColumn(name="user_id", referencedColumnName="id", onDelete="CASCADE")
+     *   },
+     *   inverseJoinColumns={
+     *     @ORM\JoinColumn(name="form_id", referencedColumnName="id", onDelete="CASCADE")
+     *   }
+     * )
+     * @ORM\OrderBy({"name" = "ASC"})
+     */
+    private $form;
+
+    /**
      * @var \DateTime $datecreated
      * @Gedmo\Timestampable(on="create")
      * @ORM\Column(name="datecreated", type="datetime")
      */
     private $datecreated;
-    
+
     /**
      * @var \DateTime $lastupdated
      * @Gedmo\Timestampable(on="update")
      * @ORM\Column(name="lastupdated", type="datetime", nullable=true)
      */
     private $lastupdated;
-    
+
     /**
      * @ORM\Column(name="deletedAt", type="datetime", nullable=true)
      */
@@ -184,16 +232,24 @@ class User extends BaseUser
     {
         parent::__construct();
         $this->uid = uniqid();
+        $this->groups = new ArrayCollection();
+        $this->form = new ArrayCollection();
         if(empty($this->datecreated))
         {
             $this->datecreated = new \DateTime('now');
         }
+        if(empty($this->expiresAt)) {
+            $this->expiresAt = new \DateTime('now +1 year');
+        }
+        if(empty($this->credentialsExpireAt)) {
+            $this->credentialsExpireAt = new \DateTime('now +1 year');
+        }
     }
-    
+
     /**
      * Get id
      *
-     * @return integer 
+     * @return integer
      */
     public function getId()
     {
@@ -232,14 +288,14 @@ class User extends BaseUser
     public function setLastupdated($lastupdated)
     {
         $this->lastupdated = $lastupdated;
-    
+
         return $this;
     }
 
     /**
      * Get lastupdated
      *
-     * @return \DateTime 
+     * @return \DateTime
      */
     public function getLastupdated()
     {
@@ -255,20 +311,20 @@ class User extends BaseUser
     public function setDatecreated($datecreated)
     {
         $this->datecreated = $datecreated;
-    
+
         return $this;
     }
 
     /**
      * Get datecreated
      *
-     * @return \DateTime 
+     * @return \DateTime
      */
     public function getDatecreated()
     {
         return $this->datecreated;
     }
-    
+
     /**
      * Get deletedAt
      *
@@ -278,7 +334,7 @@ class User extends BaseUser
     {
     	return $this->deletedAt;
     }
-    
+
     /**
      * Set deletedAt
      *
@@ -330,18 +386,84 @@ class User extends BaseUser
         $this->organisationunit = $organisationunit;
 
         $organisationunit->addUser($this);
-    
+
         return $this;
     }
 
     /**
      * Get organisationunit
      *
-     * @return \Hris\OrganisationunitBundle\Entity\Organisationunit 
+     * @return \Hris\OrganisationunitBundle\Entity\Organisationunit
      */
     public function getOrganisationunit()
     {
         return $this->organisationunit;
+    }
+
+    /**
+     * Add form
+     *
+     * @param Form $form
+     * @return User
+     */
+    public function addForm(Form $form)
+    {
+        $this->form[$form->getId()] = $form;
+
+        return $this;
+    }
+
+    /**
+     * Remove form
+     *
+     * @param Form $form
+     */
+    public function removeForm(Form $form)
+    {
+        $this->form->removeElement($form);
+    }
+
+    /**
+     * Get form
+     *
+     * @return \Doctrine\Common\Collections\Collection
+     */
+    public function getForm()
+    {
+        return $this->form;
+    }
+
+    /**
+     * Add groups
+     *
+     * @param Group $groups
+     * @return User
+     */
+    public function addGroups(Group $groups)
+    {
+        $this->groups[$groups->getId()] = $groups;
+
+        return $this;
+    }
+
+    /**
+     * Remove groups
+     *
+     * @param Group $groups
+     */
+    public function removeGroups(Group $groups)
+    {
+        $this->groups->removeElement($groups);
+    }
+
+    /**
+     * Get groups
+     *
+     * @return \Doctrine\Common\Collections\Collection
+     */
+    public function getGroups()
+    {
+        return $this->groups;
     }
 
     /**
@@ -353,14 +475,14 @@ class User extends BaseUser
     public function setPhonenumber($phonenumber)
     {
         $this->phonenumber = $phonenumber;
-    
+
         return $this;
     }
 
     /**
      * Get phonenumber
      *
-     * @return string 
+     * @return string
      */
     public function getPhonenumber()
     {
@@ -376,14 +498,14 @@ class User extends BaseUser
     public function setJobTitle($jobTitle)
     {
         $this->jobTitle = $jobTitle;
-    
+
         return $this;
     }
 
     /**
      * Get jobTitle
      *
-     * @return string 
+     * @return string
      */
     public function getJobTitle()
     {
@@ -399,14 +521,14 @@ class User extends BaseUser
     public function setFirstName($firstName)
     {
         $this->firstName = $firstName;
-    
+
         return $this;
     }
 
     /**
      * Get firstName
      *
-     * @return string 
+     * @return string
      */
     public function getFirstName()
     {
@@ -422,14 +544,14 @@ class User extends BaseUser
     public function setMiddleName($middleName)
     {
         $this->middleName = $middleName;
-    
+
         return $this;
     }
 
     /**
      * Get middleName
      *
-     * @return string 
+     * @return string
      */
     public function getMiddleName()
     {
@@ -445,17 +567,40 @@ class User extends BaseUser
     public function setSurname($surname)
     {
         $this->surname = $surname;
-    
+
         return $this;
     }
 
     /**
      * Get surname
      *
-     * @return string 
+     * @return string
      */
     public function getSurname()
     {
         return $this->surname;
+    }
+
+    /**
+     * Set description
+     *
+     * @param string $description
+     * @return Group
+     */
+    public function setDescription($description)
+    {
+        $this->description = $description;
+
+        return $this;
+    }
+
+    /**
+     * Get description
+     *
+     * @return string
+     */
+    public function getDescription()
+    {
+        return $this->description;
     }
 }

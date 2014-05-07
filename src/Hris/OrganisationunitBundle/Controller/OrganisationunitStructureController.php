@@ -33,6 +33,7 @@ use Sensio\Bundle\FrameworkExtraBundle\Configuration\Template;
 use Hris\OrganisationunitBundle\Entity\OrganisationunitStructure;
 use Hris\OrganisationunitBundle\Form\OrganisationunitStructureType;
 use Symfony\Component\Stopwatch\Stopwatch;
+use JMS\SecurityExtraBundle\Annotation\Secure;
 
 /**
  * OrganisationunitStructure controller.
@@ -48,6 +49,7 @@ class OrganisationunitStructureController extends Controller
     /**
      * Lists all OrganisationunitStructure entities.
      *
+     * @Secure(roles="ROLE_SUPER_USER,ROLE_ORGANISATIONUNITSTRUCTURE_LIST")
      * @Route("/", name="organisationunitstructure")
      * @Route("/list", name="organisationunitstructure_list")
      * @Method("GET")
@@ -66,6 +68,7 @@ class OrganisationunitStructureController extends Controller
     /**
      * Creates a new OrganisationunitStructure entity.
      *
+     * @Secure(roles="ROLE_SUPER_USER,ROLE_ORGANISATIONUNITSTRUCTURE_CREATE")
      * @Route("/", name="organisationunitstructure_create")
      * @Method("POST")
      * @Template("HrisOrganisationunitBundle:OrganisationunitStructure:new.html.twig")
@@ -93,6 +96,7 @@ class OrganisationunitStructureController extends Controller
     /**
      * Displays a form to create a new OrganisationunitStructure entity.
      *
+     * @Secure(roles="ROLE_SUPER_USER,ROLE_ORGANISATIONUNITSTRUCTURE_CREATE")
      * @Route("/new", name="organisationunitstructure_new")
      * @Method("GET")
      * @Template()
@@ -111,6 +115,7 @@ class OrganisationunitStructureController extends Controller
     /**
      * Finds and displays a OrganisationunitStructure entity.
      *
+     * @Secure(roles="ROLE_SUPER_USER,ROLE_ORGANISATIONUNITSTRUCTURE_SHOW")
      * @Route("/{id}", requirements={"id"="\d+"}, name="organisationunitstructure_show")
      * @Method("GET")
      * @Template()
@@ -136,6 +141,7 @@ class OrganisationunitStructureController extends Controller
     /**
      * Displays a form to edit an existing OrganisationunitStructure entity.
      *
+     * @Secure(roles="ROLE_SUPER_USER,ROLE_ORGANISATIONUNITSTRUCTURE_UPDATE")
      * @Route("/{id}/edit", requirements={"id"="\d+"}, name="organisationunitstructure_edit")
      * @Method("GET")
      * @Template()
@@ -163,6 +169,7 @@ class OrganisationunitStructureController extends Controller
     /**
      * Edits an existing OrganisationunitStructure entity.
      *
+     * @Secure(roles="ROLE_SUPER_USER,ROLE_ORGANISATIONUNITSTRUCTURE_UPDATE")
      * @Route("/{id}", requirements={"id"="\d+"}, name="organisationunitstructure_update")
      * @Method("PUT")
      * @Template("HrisOrganisationunitBundle:OrganisationunitStructure:edit.html.twig")
@@ -197,6 +204,7 @@ class OrganisationunitStructureController extends Controller
     /**
      * Deletes a OrganisationunitStructure entity.
      *
+     * @Secure(roles="ROLE_SUPER_USER,ROLE_ORGANISATIONUNITSTRUCTURE_DELETE")
      * @Route("/{id}", requirements={"id"="\d+"}, name="organisationunitstructure_delete")
      * @Method("DELETE")
      */
@@ -257,7 +265,7 @@ class OrganisationunitStructureController extends Controller
         /*
          * Check Clock for time spent
         */
-        $organisationunitStructureGenerationTime = $stopwatch->stop('resourceTableGeneration');
+        $organisationunitStructureGenerationTime = $stopwatch->stop('organisationnunitStructureRegeneration');
         $duration = $organisationunitStructureGenerationTime->getDuration()/60;
         $duration = round($duration, 2);
 
@@ -354,5 +362,74 @@ class OrganisationunitStructureController extends Controller
             }
         }
         return $parentNLevelsBack;
+    }
+
+    /**
+     * 	Persist Organisationunit in structure
+     * 	provided parent is set and entityManager
+     * 	is not yet flushed.
+     *
+     * 	@return NULL
+     */
+    public function persistInOrganisationunitStructure($entityManager,$organisationunit) {
+        $organisationunitStructure = $entityManager->getRepository('HrisOrganisationunitBundle:OrganisationunitStructure')->findOneBy(array('organisationunit'=>$organisationunit));
+        if(empty($organisationunitStructure)) {
+            $organisationunitStructure = new OrganisationunitStructure();
+            if($organisationunit->getParent() != NULL) {
+                $parentStructure = $organisationunit->getParent()->getOrganisationunitStructure();
+                $parentLevel = $parentStructure->getLevel()->getLevel();
+            }else {
+                $parentStructure=NULL;
+                $parentLevel=0;
+            }
+        }else {
+            $parentStructure = $organisationunitStructure->getOrganisationunit()->getParent()->getOrganisationunitStructure();
+            $parentLevel = $parentStructure->getLevel()->getLevel();
+        }
+
+        $organisationunitStructure->setLevel($entityManager->getRepository('HrisOrganisationunitBundle:OrganisationunitLevel')->findOneBy(array('level'=>($parentLevel+1))));
+        $organisationunitStructure->setOrganisationunit($organisationunit);
+        // Clear level values;
+        $organisationunitStructure->setLevel1Organisationunit();
+        $organisationunitStructure->setLevel2Organisationunit();
+        $organisationunitStructure->setLevel3Organisationunit();
+        $organisationunitStructure->setLevel4Organisationunit();
+        $organisationunitStructure->setLevel5Organisationunit();
+        $organisationunitStructure->setLevel6Organisationunit();
+        // Assign them afresh
+        if($parentLevel >= 1) {
+            $organisationunitStructure->setLevel1Organisationunit($organisationunit->getParent());
+        }
+        if($parentLevel >= 2 ) {
+            $organisationunitStructure->setLevel1Organisationunit($parentStructure->getLevel1Organisationunit());
+            $organisationunitStructure->setLevel2Organisationunit($organisationunit->getParent());
+        }
+        if($parentLevel >= 3 ) {
+            $organisationunitStructure->setLevel1Organisationunit($parentStructure->getLevel1Organisationunit());
+            $organisationunitStructure->setLevel2Organisationunit($parentStructure->getLevel2Organisationunit());
+            $organisationunitStructure->setLevel3Organisationunit($organisationunit->getParent());
+        }
+        if($parentLevel >= 4 ) {
+            $organisationunitStructure->setLevel1Organisationunit($parentStructure->getLevel1Organisationunit());
+            $organisationunitStructure->setLevel2Organisationunit($parentStructure->getLevel2Organisationunit());
+            $organisationunitStructure->setLevel3Organisationunit($parentStructure->getLevel3Organisationunit());
+            $organisationunitStructure->setLevel4Organisationunit($organisationunit->getParent());
+        }
+        if($parentLevel >= 5 ) {
+            $organisationunitStructure->setLevel1Organisationunit($parentStructure->getLevel1Organisationunit());
+            $organisationunitStructure->setLevel2Organisationunit($parentStructure->getLevel2Organisationunit());
+            $organisationunitStructure->setLevel3Organisationunit($parentStructure->getLevel3Organisationunit());
+            $organisationunitStructure->setLevel4Organisationunit($parentStructure->getLevel4Organisationunit());
+            $organisationunitStructure->setLevel5Organisationunit($organisationunit->getParent());
+        }
+        if($parentLevel >= 6 ) {
+            $organisationunitStructure->setLevel1Organisationunit($parentStructure->getLevel1Organisationunit());
+            $organisationunitStructure->setLevel2Organisationunit($parentStructure->getLevel2Organisationunit());
+            $organisationunitStructure->setLevel3Organisationunit($parentStructure->getLevel3Organisationunit());
+            $organisationunitStructure->setLevel4Organisationunit($parentStructure->getLevel4Organisationunit());
+            $organisationunitStructure->setLevel5Organisationunit($parentStructure->getLevel5Organisationunit());
+            $organisationunitStructure->setLevel6Organisationunit($organisationunit->getParent());
+        }
+        $entityManager->persist($organisationunitStructure);
     }
 }

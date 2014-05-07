@@ -30,6 +30,7 @@ use Symfony\Bundle\FrameworkBundle\Controller\Controller;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Method;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Route;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Template;
+use JMS\SecurityExtraBundle\Annotation\Secure;
 
 /**
  * Report Organisationunit By Levels controller.
@@ -42,6 +43,7 @@ class ReportOrganisationunitByLevelsController extends Controller
     /**
      * Show Report Form for generation of Organisation unit by levels
      *
+     * @Secure(roles="ROLE_SUPER_USER,ROLE_REPORTORGANISATIONUNITLEVELS_GENERATE")
      * @Route("/", name="report_organisationunit_levels")
      * @Method("GET")
      * @Template()
@@ -59,6 +61,7 @@ class ReportOrganisationunitByLevelsController extends Controller
     /**
      * Generate Report for Organisationunit by Levels
      *
+     * @Secure(roles="ROLE_SUPER_USER,ROLE_REPORTORGANISATIONUNITLEVELS_GENERATE")
      * @Route("/", name="report_organisationunit_levels_generate")
      * @Method("PUT")
      * @Template()

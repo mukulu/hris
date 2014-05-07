@@ -1,9 +1,59 @@
 {% extends '::base.html.twig' %}
 
+{% block javascripts %}
+    {{ parent() }}
+    <script type="text/javascript" language="javascript" src="{{ asset('commons/js/jquery.multi-select.js') }}"></script>
+    <script type="text/javascript" language="javascript" src="{{ asset('commons/js/jquery.quicksearch.js') }}"></script>
+    <script type="text/javascript">
+        $( document ).ready(function() {
+            $('#hris_formbundle_fieldoptiontype_childFieldOption').multiSelect({
+                selectableHeader: "<input type='text' class='search-input' style=\"width:150px;\" autocomplete='off' placeholder='Search available Options'>",
+                selectionHeader: "<input type='text' class='search-input' style=\"width:150px;\" autocomplete='off' placeholder='Search selected Options'>",
+                afterInit: function(ms) {
+                    var that = this,
+                            $selectableSearch = that.$selectableUl.prev(),
+                            $selectionSearch = that.$selectionUl.prev(),
+                            selectableSearchString = '#' + that.$container.attr('id') + ' .ms-elem-selectable:not(.ms-selected)',
+                            selectionSearchString = '#' + that.$container.attr('id') + ' .ms-elem-selection.ms-selected';
+
+                    that.qs1 = $selectableSearch.quicksearch(selectableSearchString)
+                            .on('keydown', function(e) {
+                                if (e.which === 40) {
+                                    that.$selectableUl.focus();
+                                    return false;
+                                }
+                            });
+
+                    that.qs2 = $selectionSearch.quicksearch(selectionSearchString)
+                            .on('keydown', function(e) {
+                                if (e.which == 40) {
+                                    that.$selectionUl.focus();
+                                    return false;
+                                }
+                            });
+                }
+            });
+            $('#hris_formbundle_fieldoptiontype_fieldOptionMerge').multiSelect({
+                selectableHeader: "<div class=''>Avaiable Merged Options</div>",
+                selectionHeader: "<div class=''>Selected Merged Options</div>"
+            });
+        });
+    </script>
+{% endblock javascripts %}
+
+{% block stylesheets %}
+    {{ parent() }}
+    <link rel="stylesheet" type="text/css" media="all" href="{{ asset('commons/css/multi-select.css') }}">
+{% endblock stylesheets %}
+
 {% block right_content -%}
     <h1><small>FieldOption creation</small></h1>
 
-    <form action="{{ path('fieldoption_create') }}" method="post" {{ form_enctype(form) }}>
+    {% if field is empty %}
+        <form action="{{ path('fieldoption_create') }}" method="post" {{ form_enctype(form) }}>
+    {% else %}
+        <form action="{{ path('fieldoption_create_byfield', { 'fieldid': field.id }) }}" method="post" {{ form_enctype(form) }}>
+    {% endif %}
         {{ form_widget(form) }}
         <br/>
         <ul class="record_actions inline" style="float:left;">
@@ -11,9 +61,15 @@
                 <button type="submit" class="btn">Create</button>
             </li>
             <li>
-                <a href="{{ path('fieldoption') }}" class="btn">
-                    Back to the list
-                </a>
+                {% if field is empty %}
+                    <a href="{{ path('fieldoption') }}" class="btn">
+                        Back to the list
+                    </a>
+                {% else %}
+                    <a href="{{ path('fieldoption_list_byfield', { 'fieldid': field.id }) }}" class="btn">
+                        Back to the list
+                    </a>
+                {% endif %}
             </li>
         </ul>
     </form>

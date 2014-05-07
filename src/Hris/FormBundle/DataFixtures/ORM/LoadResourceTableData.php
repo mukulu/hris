@@ -26,18 +26,35 @@ namespace Hris\FormBundle\DataFixtures\ORM;
 use Doctrine\Common\DataFixtures\OrderedFixtureInterface;
 use Doctrine\Common\DataFixtures\AbstractFixture;
 use Doctrine\Common\Persistence\ObjectManager;
+use Doctrine\Common\DataFixtures\FixtureInterface;
+use Symfony\Component\DependencyInjection\ContainerAwareInterface;
+use Symfony\Component\DependencyInjection\ContainerInterface;
 
 use Hris\FormBundle\Entity\ResourceTable;
 use Hris\FormBundle\DataFixtures\ORM\LoadFieldData;
 use Hris\FormBundle\Entity\ResourceTableFieldMember;
+use Symfony\Component\Stopwatch\Stopwatch;
 
-class LoadResourceTableData extends AbstractFixture implements OrderedFixtureInterface
+class LoadResourceTableData implements FixtureInterface, ContainerAwareInterface, OrderedFixtureInterface
 {
 	/**
 	 * {@inheritDoc}
 	 * @see Doctrine\Common\DataFixtures.FixtureInterface::load()
 	 */
     private $resourceTables;
+
+    /**
+     * @var ContainerInterface
+     */
+    private $container;
+
+    /**
+     * {@inheritDoc}
+     */
+    public function setContainer(ContainerInterface $container = null)
+    {
+        $this->container = $container;
+    }
 
     /**
      * Returns array of form fixtures.
@@ -84,6 +101,10 @@ class LoadResourceTableData extends AbstractFixture implements OrderedFixtureInt
 
 	public function load(ObjectManager $manager)
 	{
+        $logger = $this->container->get('logger');
+
+        $stopwatch = new Stopwatch();
+        $stopwatch->start('dummyResourceTableGeneration');
         // Populate dummy forms
         $this->addDummyResourceTables();
         // Seek dummy fields
@@ -112,18 +133,34 @@ class LoadResourceTableData extends AbstractFixture implements OrderedFixtureInt
                     $this->addReference($referenceName, $resourceTableMember);
                     $manager->persist($resourceTableMember);
                     $resourceTable->addResourceTableFieldMember($resourceTableMember);
+                    unset($resourceTableMember);
                 }
             }
             $manager->persist($resourceTable);
+            unset($resourceTable);
         }
 		$manager->flush();
+
+        $dummyResourceTableGenerationLap = $stopwatch->lap('dummyResourceTableGeneration');
+        $dummyResourceTableGenerationDuration = round(($dummyResourceTableGenerationLap->getDuration()/1000),2);
+
+        if( $dummyResourceTableGenerationDuration <60 ) {
+            $dummyResourceTableGenerationDurationMessage = round($dummyResourceTableGenerationDuration,2).' sec.';
+        }elseif( $dummyResourceTableGenerationDuration >= 60 && $dummyResourceTableGenerationDuration < 3600 ) {
+            $dummyResourceTableGenerationDurationMessage = round(($dummyResourceTableGenerationDuration/60),2) .' min.';
+        }elseif( $dummyResourceTableGenerationDuration >=3600 && $dummyResourceTableGenerationDuration < 216000) {
+            $dummyResourceTableGenerationDurationMessage = round(($dummyResourceTableGenerationDuration/3600),2) .' hrs';
+        }else {
+            $dummyResourceTableGenerationDurationMessage = round(($dummyResourceTableGenerationDuration/86400),2) .' days';
+        }
+        echo "\tDummy data schema generation complete in ".$dummyResourceTableGenerationDurationMessage."\n";
 
         // Generate resource tables
         $resourceTables = $manager->getRepository('HrisFormBundle:ResourceTable')->findAll();
         foreach($resourceTables as $resourceTableKey=>$resourceTable) {
             // Ugly hack to generate resource table for "All Fields" only
             if($resourceTable->getName() == "All Fields") {
-                $success = $resourceTable->generateResourceTable($manager);
+                $success = $resourceTable->generateResourceTable($manager,$logger);
                 $messageLog = $resourceTable->getMessageLog();
                 if($success) echo $messageLog;
                 else echo "Failed with:".$messageLog;
@@ -137,6 +174,7 @@ class LoadResourceTableData extends AbstractFixture implements OrderedFixtureInt
 	 */
 	public function getOrder()
 	{
+        //LoadRecordData preceeds
 		return 12;
 	}
 

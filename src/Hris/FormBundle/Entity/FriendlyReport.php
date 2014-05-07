@@ -32,6 +32,7 @@ use Hris\FormBundle\Entity\RelationalFilter;
 use Hris\FormBundle\Entity\ArithmeticFilter;
 use Hris\FormBundle\Entity\FriendlyReportCategory;
 use Hris\FormBundle\Entity\FieldOptionGroup;
+use Hris\IndicatorBundle\Entity\Target;
 use Symfony\Component\Validator\Constraints as Assert;
 
 /**
@@ -69,6 +70,14 @@ class FriendlyReport
     private $name;
 
     /**
+     * @var string $type
+     *
+     * @Gedmo\Versioned
+     * @ORM\Column(name="type", type="string", length=13, nullable=true)
+     */
+    private $type;
+
+    /**
      * @var string $description
      *
      * @Gedmo\Versioned
@@ -102,6 +111,38 @@ class FriendlyReport
      * @ORM\OrderBy({"sort" = "ASC"})
      */
     private $friendlyReportCategory;
+
+    /**
+     * @var boolean $ignoreSkipInReport
+     *
+     * @Gedmo\Versioned
+     * @ORM\Column(name="ignoreSkipInReport", type="boolean", nullable=true)
+     */
+    private $ignoreSkipInReport;
+
+    /**
+     * @var boolean $useTargets
+     *
+     * @Gedmo\Versioned
+     * @ORM\Column(name="useTargets", type="boolean", nullable=true)
+     */
+    private $useTargets;
+
+    /**
+     * @var boolean $showDeficitSurplus
+     *
+     * @Gedmo\Versioned
+     * @ORM\Column(name="showDeficitSurplus", type="boolean", nullable=true)
+     */
+    private $showDeficitSurplus;
+
+    /**
+     * @var string $sql
+     *
+     * @Gedmo\Versioned
+     * @ORM\Column(name="sql", type="text", nullable=true)
+     */
+    private $sql;
     
     /**
      * @var ArithmeticFilter $arithmeticFilter
@@ -186,6 +227,29 @@ class FriendlyReport
     }
 
     /**
+     * Set type
+     *
+     * @param string $type
+     * @return FriendlyReport
+     */
+    public function setType($type)
+    {
+        $this->type = $type;
+
+        return $this;
+    }
+
+    /**
+     * Get type
+     *
+     * @return string
+     */
+    public function getType()
+    {
+        return $this->type;
+    }
+
+    /**
      * Set description
      *
      * @param string $description
@@ -241,6 +305,8 @@ class FriendlyReport
         $this->relationalFilter = new ArrayCollection();
         $this->sort = 0;
         $this->uid = uniqid();
+        $this->showDeficitSurplus = False;
+        $this->type = 'default';
     }
     
     /**
@@ -443,6 +509,98 @@ class FriendlyReport
     public function getSerie()
     {
         return $this->serie;
+    }
+
+    /**
+     * Set useTargets
+     *
+     * @param boolean $useTargets
+     * @return FriendlyReport
+     */
+    public function setUseTargets($useTargets)
+    {
+        $this->useTargets = $useTargets;
+
+        return $this;
+    }
+
+    /**
+     * Get useTargets
+     *
+     * @return boolean
+     */
+    public function getUseTargets()
+    {
+        return $this->useTargets;
+    }
+
+    /**
+     * Set showDeficitSurplus
+     *
+     * @param boolean $showDeficitSurplus
+     * @return FriendlyReport
+     */
+    public function setShowDeficitSurplus($showDeficitSurplus)
+    {
+        $this->showDeficitSurplus = $showDeficitSurplus;
+
+        return $this;
+    }
+
+    /**
+     * Get showDeficitSurplus
+     *
+     * @return boolean
+     */
+    public function getShowDeficitSurplus()
+    {
+        return $this->showDeficitSurplus;
+    }
+    
+    /**
+     * Set ignoreSkipInReport
+     *
+     * @param boolean $ignoreSkipInReport
+     * @return FriendlyReport
+     */
+    public function setIgnoreSkipInReport($ignoreSkipInReport)
+    {
+        $this->ignoreSkipInReport = $ignoreSkipInReport;
+
+        return $this;
+    }
+
+    /**
+     * Get ignoreSkipInReport
+     *
+     * @return boolean
+     */
+    public function getIgnoreSkipInReport()
+    {
+        return $this->ignoreSkipInReport;
+    }
+
+    /**
+     * Set sql
+     *
+     * @param string $sql
+     * @return FriendlyReport
+     */
+    public function setSql($sql)
+    {
+        $this->sql = $sql;
+
+        return $this;
+    }
+
+    /**
+     * Get sql
+     *
+     * @return string
+     */
+    public function getSql()
+    {
+        return $this->sql;
     }
 
     /**

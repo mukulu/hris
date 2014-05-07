@@ -2,8 +2,30 @@
 {% block javascripts %}
     {{ parent() }}
     <script type="text/javascript" src="{{ asset('commons/js/jquery.dataTables.js') }}"></script>
+    <script type="text/javascript" src="{{ asset('commons/js/jquery.dataTables.ZeroClipboard.js') }}"></script>
+    <script type="text/javascript" src="{{ asset('commons/js/jquery.dataTables.TableTools.min.js') }}"></script>
     <script type="text/javascript" src="{{ asset('commons/js/dt_settings.js') }}"></script>
-    <script>window["_GOOG_TRANS_EXT_VER"] = "1";</script>
+    <script type="text/javascript">
+        $(document).ready(function() {
+            $('.records_list').dataTable( {
+                "sDom": "<'row'<'span6'TRl><'span6'f>r>t<'row'<'span6'i><'span6'p>>",
+                "oTableTools": {
+                    "aButtons": [
+                        {"sExtends":"copy","mColumns":"visible"},
+                        {"sExtends":"xls","mColumns":"visible"},
+                        {"sExtends":"pdf","mColumns":"visible"}
+                    ],
+                    "sSwfPath": "{{ asset('commons/swf/copy_cvs_xls_pdf.swf') }}"
+                },
+                "sPdfOrientation": "landscape",
+                "sPaginationType": "bootstrap",
+                "oLanguage": {
+                    "sLengthMenu": "_MENU_ records per page"
+                },
+                "aLengthMenu": [[10, 25, 50,100,200, -1], [10, 25, 50,100,200, "All"]]
+            } );
+        } );
+    </script>
 {% endblock javascripts %}
 
 {% block stylesheets %}
@@ -16,9 +38,27 @@
         <h1><small>FieldOption list</small></h1>
 
         <ul class="inline">
+            {% if field is empty %}
             <li>
                 <a class="btn" href="{{ path('fieldoption_new') }}">
                     Create a new entry
+                </a>
+            </li>
+            {% else %}
+            <li>
+                <a class="btn" href="{{ path('fieldoption_new_byfield', { 'fieldid': field.id }) }}">
+                    Create a new entry
+                </a>
+            </li>
+            <li>
+                <a href="{{ path('fieldoption') }}" class="btn">
+                    Back to all Options list
+                </a>
+            </li>
+            {% endif %}
+            <li>
+                <a class="btn" href="{{ path('fieldoptionmerge') }}">
+                    Merged Field Options
                 </a>
             </li>
         </ul>
@@ -27,7 +67,9 @@
             <thead>
                 <tr>
                     <th>Value</th>
+                    <th>Sort</th>
                     <th>Field</th>
+                    <th>SkipInReport</th>
                     <th>Description</th>
                     <th>Actions</th>
                 </tr>
@@ -36,7 +78,9 @@
             {% for entity in entities %}
                 <tr>
                     <td><a href="{{ path('fieldoption_show', { 'id': entity.id }) }}">{{ entity.value }}</a></td>
+                    <td>{{ entity.sort }}</td>
                     <td>{{ entity.field }}</td>
+                    <td>{% if entity.skipInReport %} True {% else %} False {% endif %}</td>
                     <td>{{ entity.description }}</td>
                     <td>
                     <ul class="inline">
@@ -65,7 +109,11 @@
                                             {% endif %}
                                         </div>
                                         <div class="modal-footer">
+                                            {% if field is empty %}
                                             <form action="{{ path('fieldoption_delete', { 'id': entity.id }) }}" method="post">
+                                            {% else %}
+                                            <form action="{{ path('fieldoption_delete_byfield', { 'id': entity.id, 'fieldid': field.id }) }}" method="post">
+                                            {% endif %}
                                                 <input type="hidden" name="_method" value="DELETE" />
                                                 {{ form_widget(delete_forms[entity.id] ) }}
                                                 <button type="button" class="btn btn-default" data-dismiss="modal">Close</button>

@@ -30,10 +30,12 @@ use Hris\UserBundle\Event\ConfigureMenuEvent as UserConfigureMenuEvent;
 use Hris\IndicatorBundle\Event\ConfigureMenuEvent as IndicatorConfigureMenuEvent;
 use Hris\OrganisationunitBundle\Event\ConfigureMenuEvent as OrganisationunitConfigureMenuEvent;
 use Hris\DataQualityBundle\Event\ConfigureMenuEvent as DataQualityConfigureMenuEvent;
+use Hris\IntergrationBundle\Event\ConfigureMenuEvent as IntergrationConfigureMenuEvent;
 use Hris\FormBundle\Event\ConfigureMenuEvent as FormConfigureMenuEvent;
 use Hris\RecordsBundle\Event\ConfigureMenuEvent as RecordsConfigureMenuEvent;
 use Hris\ReportsBundle\Event\ConfigureMenuEvent as ReportsConfigureMenuEvent;
 use Hris\ImportExportBundle\Event\ConfigureMenuEvent as ImportExportConfigureMenuEvent;
+use Hris\HelpCentreBundle\Event\ConfigureMenuEvent as HelpCentreConfigureMenuEvent;
 
 use Knp\Menu\FactoryInterface;
 use Symfony\Component\DependencyInjection\ContainerAware;
@@ -43,21 +45,106 @@ class MainBuilder extends ContainerAware
 {
     public function build(FactoryInterface $factory)
     {
+        $securityContext = $this->container->get('security.context');
         $menu = $factory->createItem('root');
         $menu->setExtra('tag','div');
         $menu->setExtra('menulevel','rootmenu');
 
         $menu->setCurrentUri($this->container->get('request')->getRequestUri());
 
-        $this->container->get('event_dispatcher')->dispatch(UserConfigureMenuEvent::CONFIGURE, new UserConfigureMenuEvent($factory, $menu));
-        $this->container->get('event_dispatcher')->dispatch(IndicatorConfigureMenuEvent::CONFIGURE, new IndicatorConfigureMenuEvent($factory, $menu));
-        $this->container->get('event_dispatcher')->dispatch(OrganisationunitConfigureMenuEvent::CONFIGURE, new OrganisationunitConfigureMenuEvent($factory, $menu));
-        $this->container->get('event_dispatcher')->dispatch(DataQualityConfigureMenuEvent::CONFIGURE, new DataQualityConfigureMenuEvent($factory, $menu));
-        $this->container->get('event_dispatcher')->dispatch(FormConfigureMenuEvent::CONFIGURE, new FormConfigureMenuEvent($factory, $menu));
-        $this->container->get('event_dispatcher')->dispatch(RecordsConfigureMenuEvent::CONFIGURE, new RecordsConfigureMenuEvent($factory, $menu));
-        $this->container->get('event_dispatcher')->dispatch(ReportsConfigureMenuEvent::CONFIGURE, new ReportsConfigureMenuEvent($factory, $menu));
-        $this->container->get('event_dispatcher')->dispatch(ImportExportConfigureMenuEvent::CONFIGURE, new ImportExportConfigureMenuEvent($factory, $menu));
+        // HelpCentre Bundle
+        if(
+            $securityContext->isGranted('ROLE_HELPCENTRE_BUNDLE_VIEW') ||
+            $securityContext->isGranted('ROLE_HELPCENTRE_BUNDLE_MODIFY') ||
+            $securityContext->isGranted('ROLE_HELPCENTRE_BUNDLE_MENU') ||
+            $securityContext->isGranted('ROLE_SUPER_USER')
+        ){
+            $this->container->get('event_dispatcher')->dispatch(HelpCentreConfigureMenuEvent::CONFIGURE, new HelpCentreConfigureMenuEvent($factory, $menu));
+        }
+        // User Bundle
+        if(
+            $securityContext->isGranted('ROLE_USER_BUNDLE_VIEW') ||
+            $securityContext->isGranted('ROLE_USER_BUNDLE_MODIFY') ||
+            $securityContext->isGranted('ROLE_USER_BUNDLE_MENU') ||
+            $securityContext->isGranted('ROLE_SUPER_USER')
+        ){
+            $this->container->get('event_dispatcher')->dispatch(UserConfigureMenuEvent::CONFIGURE, new UserConfigureMenuEvent($factory, $menu));
+        }
+        // Form & ResourceTable Bundle
+        if(
+            $securityContext->isGranted('ROLE_FORM_BUNDLE_VIEW') ||
+            $securityContext->isGranted('ROLE_FORM_BUNDLE_MODIFY') ||
+            $securityContext->isGranted('ROLE_FORM_BUNDLE_MENU') ||
+            $securityContext->isGranted('ROLE_RESOURCETABLE_BUNDLE_VIEW') ||
+            $securityContext->isGranted('ROLE_RESOURCETABLE_BUNDLE_MODIFY') ||
+            $securityContext->isGranted('ROLE_SUPER_USER')
+        ){
+            $this->container->get('event_dispatcher')->dispatch(FormConfigureMenuEvent::CONFIGURE, new FormConfigureMenuEvent($factory, $menu));
+        }
 
+        // Target Bundle
+        if(
+            $securityContext->isGranted('ROLE_TARGET_BUNDLE_VIEW') ||
+            $securityContext->isGranted('ROLE_TARGET_BUNDLE_MODIFY') ||
+            $securityContext->isGranted('ROLE_TARGET_BUNDLE_MENU') ||
+            $securityContext->isGranted('ROLE_SUPER_USER')
+        ){
+            $this->container->get('event_dispatcher')->dispatch(IndicatorConfigureMenuEvent::CONFIGURE, new IndicatorConfigureMenuEvent($factory, $menu));
+        }
+        // Organisationunit Bundle
+        if(
+            $securityContext->isGranted('ROLE_ORGANISATIONUNIT_BUNDLE_VIEW') ||
+            $securityContext->isGranted('ROLE_ORGANISATIONUNIT_BUNDLE_MODIFY') ||
+            $securityContext->isGranted('ROLE_ORGANISATIONUNIT_BUNDLE_MENU') ||
+            $securityContext->isGranted('ROLE_SUPER_USER')
+        ){
+            $this->container->get('event_dispatcher')->dispatch(OrganisationunitConfigureMenuEvent::CONFIGURE, new OrganisationunitConfigureMenuEvent($factory, $menu));
+        }
+        // DataQuality Bundle
+        if(
+            $securityContext->isGranted('ROLE_DATAQUALITY_BUNDLE_VIEW') ||
+            $securityContext->isGranted('ROLE_DATAQUALITY_BUNDLE_MODIFY') ||
+            $securityContext->isGranted('ROLE_DATAQUALITY_BUNDLE_MENU') ||
+            $securityContext->isGranted('ROLE_SUPER_USER')
+        ){
+            $this->container->get('event_dispatcher')->dispatch(DataQualityConfigureMenuEvent::CONFIGURE, new DataQualityConfigureMenuEvent($factory, $menu));
+        }
+        // Intergration Bundle
+        if(
+            $securityContext->isGranted('ROLE_INTERGRATION_BUNDLE_VIEW') ||
+            $securityContext->isGranted('ROLE_INTERGRATION_BUNDLE_MODIFY') ||
+            $securityContext->isGranted('ROLE_INTERGRATION_BUNDLE_MENU') ||
+            $securityContext->isGranted('ROLE_SUPER_USER')
+        ){
+            $this->container->get('event_dispatcher')->dispatch(IntergrationConfigureMenuEvent::CONFIGURE, new IntergrationConfigureMenuEvent($factory, $menu));
+        }
+        // Records Bundle
+        if(
+            $securityContext->isGranted('ROLE_RECORDS_BUNDLE_VIEW') ||
+            $securityContext->isGranted('ROLE_RECORDS_BUNDLE_MODIFY') ||
+            $securityContext->isGranted('ROLE_RECORDS_BUNDLE_MENU') ||
+            $securityContext->isGranted('ROLE_SUPER_USER')
+        ){
+            $this->container->get('event_dispatcher')->dispatch(RecordsConfigureMenuEvent::CONFIGURE, new RecordsConfigureMenuEvent($factory, $menu));
+        }
+        // Reports Bundle
+        if(
+            $securityContext->isGranted('ROLE_REPORTS_BUNDLE_VIEW') ||
+            $securityContext->isGranted('ROLE_REPORTS_BUNDLE_MODIFY') ||
+            $securityContext->isGranted('ROLE_REPORTS_BUNDLE_MENU') ||
+            $securityContext->isGranted('ROLE_SUPER_USER')
+        ){
+            $this->container->get('event_dispatcher')->dispatch(ReportsConfigureMenuEvent::CONFIGURE, new ReportsConfigureMenuEvent($factory, $menu));
+        }
+        // ImportExport Bundle
+        if(
+            $securityContext->isGranted('ROLE_IMPORTEXPORT_BUNDLE_VIEW') ||
+            $securityContext->isGranted('ROLE_IMPORTEXPORT_BUNDLE_MODIFY') ||
+            $securityContext->isGranted('ROLE_IMPORTEXPORT_BUNDLE_MENU') ||
+            $securityContext->isGranted('ROLE_SUPER_USER')
+        ){
+            $this->container->get('event_dispatcher')->dispatch(ImportExportConfigureMenuEvent::CONFIGURE, new ImportExportConfigureMenuEvent($factory, $menu));
+        }
         return $menu;
     }
 }

@@ -31,6 +31,7 @@ use Sensio\Bundle\FrameworkExtraBundle\Configuration\Route;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Template;
 use Hris\ReportsBundle\Entity\Report;
 use Hris\ReportsBundle\Form\ReportType;
+use JMS\SecurityExtraBundle\Annotation\Secure;
 
 /**
  * Report controller.
@@ -43,6 +44,7 @@ class ReportController extends Controller
     /**
      * Lists all Report entities.
      *
+     * @Secure(roles="ROLE_SUPER_USER,ROLE_REPORTSHARING_LIST")
      * @Route("/", name="report")
      * @Route("/list", name="report_list")
      * @Method("GET")
@@ -54,13 +56,21 @@ class ReportController extends Controller
 
         $entities = $em->getRepository('HrisReportsBundle:Report')->findAll();
 
+        $delete_forms = NULL;
+        foreach($entities as $entity) {
+            $delete_form= $this->createDeleteForm($entity->getId());
+            $delete_forms[$entity->getId()] = $delete_form->createView();
+        }
+
         return array(
             'entities' => $entities,
+            'delete_forms' => $delete_forms,
         );
     }
     /**
      * Creates a new Report entity.
      *
+     * @Secure(roles="ROLE_SUPER_USER,ROLE_REPORTSHARING_CREATE")
      * @Route("/", name="report_create")
      * @Method("POST")
      * @Template("HrisReportsBundle:Report:new.html.twig")
@@ -88,6 +98,7 @@ class ReportController extends Controller
     /**
      * Displays a form to create a new Report entity.
      *
+     * @Secure(roles="ROLE_SUPER_USER,ROLE_REPORTSHARING_CREATE")
      * @Route("/new", name="report_new")
      * @Method("GET")
      * @Template()
@@ -106,6 +117,7 @@ class ReportController extends Controller
     /**
      * Finds and displays a Report entity.
      *
+     * @Secure(roles="ROLE_SUPER_USER,ROLE_REPORTSHARING_SHOW")
      * @Route("/{id}", requirements={"id"="\d+"}, name="report_show")
      * @Method("GET")
      * @Template()
@@ -131,6 +143,7 @@ class ReportController extends Controller
     /**
      * Displays a form to edit an existing Report entity.
      *
+     * @Secure(roles="ROLE_SUPER_USER,ROLE_REPORTSHARING_UPDATE")
      * @Route("/{id}/edit", requirements={"id"="\d+"}, name="report_edit")
      * @Method("GET")
      * @Template()
@@ -158,6 +171,7 @@ class ReportController extends Controller
     /**
      * Edits an existing Report entity.
      *
+     * @Secure(roles="ROLE_SUPER_USER,ROLE_REPORTSHARING_UPDATE")
      * @Route("/{id}", requirements={"id"="\d+"}, name="report_update")
      * @Method("PUT")
      * @Template("HrisReportsBundle:Report:edit.html.twig")
@@ -192,6 +206,7 @@ class ReportController extends Controller
     /**
      * Deletes a Report entity.
      *
+     * @Secure(roles="ROLE_SUPER_USER,ROLE_REPORTSHARING_DELETE")
      * @Route("/{id}", requirements={"id"="\d+"}, name="report_delete")
      * @Method("DELETE")
      */

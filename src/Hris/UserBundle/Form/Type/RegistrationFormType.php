@@ -45,6 +45,8 @@ class RegistrationFormType extends AbstractType
     public function buildForm(FormBuilderInterface $builder, array $options)
     {
         $builder
+            ->add('firstName')
+            ->add('surname')
             ->add('username', null, array('label' => 'form.username', 'translation_domain' => 'FOSUserBundle'))
             ->add('email', 'email', array('label' => 'form.email', 'translation_domain' => 'FOSUserBundle'))
             ->add('plainPassword', 'repeated', array(
@@ -54,8 +56,9 @@ class RegistrationFormType extends AbstractType
                 'second_options' => array('label' => 'form.password_confirmation'),
                 'invalid_message' => 'fos_user.password.mismatch',
             ))
-            ->add('firstName')
-            ->add('surname')
+            ->add('phonenumber')
+            ->add('jobTitle',null,array('label'=>'Job title/Position'))
+            ->add('description', null, array('label' => 'Duty Post/Organisation'))
         ;
     }
 

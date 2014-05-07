@@ -40,6 +40,7 @@ class ReportOrganisationunitByGroupsetType extends AbstractType
 
         $builder
             ->add($builder->create('organisationunit','hidden',array(
+                'required'=>True,
                 'constraints'=> array(
                     new NotBlank(),
                 )
@@ -51,7 +52,9 @@ class ReportOrganisationunitByGroupsetType extends AbstractType
                     new NotBlank(),
                 )
             ))
-            ->add('submit','submit')
+            ->add('Generate Report','submit',array(
+                'attr' => array('class' => 'btn'),
+            ))
         ;
     }
 

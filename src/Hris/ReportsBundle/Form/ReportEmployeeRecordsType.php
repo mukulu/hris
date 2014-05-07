@@ -37,9 +37,11 @@ class ReportEmployeeRecordsType extends AbstractType
     {
         // assuming $entityManager is passed in options
         $em = $options['em'];
+        $username = $this->getUsername();
         $transformer = new OrganisationunitToIdTransformer($em);
         $builder
             ->add($builder->create('organisationunit','hidden',array(
+                    'required'=>True,
                     'constraints'=> array(
                         new NotBlank(),
                     )
@@ -54,11 +56,19 @@ class ReportEmployeeRecordsType extends AbstractType
             ->add('forms','entity', array(
                 'class'=>'HrisFormBundle:Form',
                 'multiple'=>true,
+                'query_builder'=>function(EntityRepository $er) use ($username) {
+                    return $er->createQueryBuilder('form')
+                        ->join('form.user','user')
+                        ->andWhere("user.username='".$username."'")
+                        ->orderBy('form.name','ASC');
+                },
                 'constraints'=>array(
                     new NotBlank(),
                 )
             ))
-            ->add('submit','submit')
+            ->add('Generate Report','submit',array(
+                'attr' => array('class' => 'btn'),
+            ))
         ;
     }
 
@@ -75,5 +85,26 @@ class ReportEmployeeRecordsType extends AbstractType
     public function getName()
     {
         return 'hris_reportsbundle_reportemployeerecordstype';
+    }
+
+    /**
+     * @param $username
+     */
+    public function __construct ($username)
+    {
+        $this->username = $username;
+    }
+
+    /**
+     * @var string
+     */
+    private $username;
+
+    /**
+     * @return string
+     */
+    public function getUsername()
+    {
+        return $this->username;
     }
 }

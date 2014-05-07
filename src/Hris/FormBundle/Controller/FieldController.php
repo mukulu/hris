@@ -31,6 +31,7 @@ use Sensio\Bundle\FrameworkExtraBundle\Configuration\Route;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Template;
 use Hris\FormBundle\Entity\Field;
 use Hris\FormBundle\Form\FieldType;
+use JMS\SecurityExtraBundle\Annotation\Secure;
 
 /**
  * Field controller.
@@ -43,6 +44,7 @@ class FieldController extends Controller
     /**
      * Lists all Field entities.
      *
+     * @Secure(roles="ROLE_SUPER_USER,ROLE_FIELD_LIST")
      * @Route("/", name="field")
      * @Route("/list", name="field_list")
      * @Method("GET")
@@ -54,6 +56,7 @@ class FieldController extends Controller
 
         $entities = $em->getRepository('HrisFormBundle:Field')->findAll();
 
+        $delete_forms = NULL;
         foreach($entities as $entity) {
             $delete_form= $this->createDeleteForm($entity->getId());
             $delete_forms[$entity->getId()] = $delete_form->createView();
@@ -64,9 +67,12 @@ class FieldController extends Controller
             'delete_forms' => $delete_forms,
         );
     }
+
+
     /**
      * Creates a new Field entity.
      *
+     * @Secure(roles="ROLE_SUPER_USER,ROLE_FIELD_CREATE")
      * @Route("/", name="field_create")
      * @Method("POST")
      * @Template("HrisFormBundle:Field:new.html.twig")
@@ -94,6 +100,7 @@ class FieldController extends Controller
     /**
      * Displays a form to create a new Field entity.
      *
+     * @Secure(roles="ROLE_SUPER_USER,ROLE_FIELD_CREATE")
      * @Route("/new", name="field_new")
      * @Method("GET")
      * @Template()
@@ -112,6 +119,7 @@ class FieldController extends Controller
     /**
      * Finds and displays a Field entity.
      *
+     * @Secure(roles="ROLE_SUPER_USER,ROLE_FIELD_SHOW")
      * @Route("/{id}", requirements={"id"="\d+"}, name="field_show")
      * @Method("GET")
      * @Template()
@@ -137,6 +145,7 @@ class FieldController extends Controller
     /**
      * Displays a form to edit an existing Field entity.
      *
+     * @Secure(roles="ROLE_SUPER_USER,ROLE_FIELD_UPDATE")
      * @Route("/{id}/edit", requirements={"id"="\d+"}, name="field_edit")
      * @Method("GET")
      * @Template()
@@ -164,6 +173,7 @@ class FieldController extends Controller
     /**
      * Edits an existing Field entity.
      *
+     * @Secure(roles="ROLE_SUPER_USER,ROLE_FIELD_UPDATE")
      * @Route("/{id}", requirements={"id"="\d+"}, name="field_update")
      * @Method("PUT")
      * @Template("HrisFormBundle:Field:edit.html.twig")
@@ -186,7 +196,7 @@ class FieldController extends Controller
             $em->persist($entity);
             $em->flush();
 
-            return $this->redirect($this->generateUrl('field_edit', array('id' => $id)));
+            return $this->redirect($this->generateUrl('field_show', array('id' => $id)));
         }
 
         return array(
@@ -198,6 +208,7 @@ class FieldController extends Controller
     /**
      * Deletes a Field entity.
      *
+     * @Secure(roles="ROLE_SUPER_USER,ROLE_FIELD_DELETE")
      * @Route("/{id}", requirements={"id"="\d+"}, name="field_delete")
      * @Method("DELETE")
      */

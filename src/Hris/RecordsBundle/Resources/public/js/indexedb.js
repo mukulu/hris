@@ -10,12 +10,14 @@ var dbName = "employeeDb";
 localDatabase.indexedDB = window.indexedDB || window.mozIndexedDB || window.webkitIndexedDB || window.msIndexedDB;
 localDatabase.IDBKeyRange = window.IDBKeyRange || window.webkitIDBKeyRange;
 localDatabase.IDBTransaction = window.IDBTransaction || window.webkitIDBTransaction;
+localDatabase.indexedDB.enable = true;
 
 localDatabase.indexedDB.onerror = function (e) {
     console.log("Database error: " + e.target.errorCode);
 };
 
 var replaceOptionString = "";
+
 
 function createDatabase(databaseName, tableName, columnNames, dataValues) {
     /*
@@ -46,6 +48,13 @@ function createDatabase(databaseName, tableName, columnNames, dataValues) {
                 dataStore.createIndex("fieldoption", "fieldoption", { unique: false });
                 console.log("data Store Column UID  Added for the datastore 'field_option_Association' ");
                 created = true;
+
+                var dataStore = db.createObjectStore("offline_datavalues", {keyPath: "id"});
+                console.log("data Store 'offline_datavalues' Created");
+
+                dataStore.createIndex("status", "status", { unique: false });
+                console.log("data Store Column status  Added for the datastore 'offline_datavalues' ");
+                created = true;
             }
         }
 
@@ -53,7 +62,7 @@ function createDatabase(databaseName, tableName, columnNames, dataValues) {
 
     openRequest.onsuccess = function () {
         db = openRequest.result;
-        console.log("this is done deal");
+        console.log("database has been generated");
     };
 
 }
@@ -64,14 +73,23 @@ function deleteDatabase(databaseName) {
      */
 
     var deleteRequest = localDatabase.indexedDB.deleteDatabase(databaseName);
+
     console.log("deleting " + databaseName + " database");
+
+    $("#reload").hide();
+
+    alert("All records are cleared from offline database");
+
+    location.reload();
 
     deleteRequest.onsuccess = function () {
 
         console.log("database " + databaseName + "deleted");
 
-        var transaction = db.transaction(tableName, "readwrite");
-        var store = transaction.objectStore(tableName);
+        alert("All records are cleared from offline database");
+        $("#reload").hide();
+        location.reload();
+        $("#reload").show();
 
     };
 
@@ -95,7 +113,6 @@ function addRecords(databaseName, tableName, dataValues) {
 
     openRequest.onsuccess = function () {
         db = openRequest.result;
-        console.log("this is done deal");
 
         var transaction = db.transaction(tableName, "readwrite");
         var store = transaction.objectStore(tableName);
@@ -111,6 +128,8 @@ function addRecords(databaseName, tableName, dataValues) {
                     results += '"' + val + '" : "' + encodeURIComponent(dataValues[key][val]['date']) + '", ';
                 } else if (val == "field") {
                     results += '"' + val + '" : "' + encodeURIComponent(dataValues[key][val]['uid']) + '", ';
+                } else if (val == "parent") {
+                    results += '"' + val + '" : "' + encodeURIComponent(dataValues[key][val]['uid']) + '", ';
                 } else {
                     results += '"' + val + '" : "' + encodeURIComponent(dataValues[key][val]) + '", ';
                 }
@@ -118,7 +137,6 @@ function addRecords(databaseName, tableName, dataValues) {
 
             results = results.slice(0, -2);
             results += '}';
-            console.log(results);
             store.put(JSON.parse(results));
             console.log("Results has been update");
             var results = '{';
@@ -126,7 +144,8 @@ function addRecords(databaseName, tableName, dataValues) {
 
         transaction.oncomplete = function () {
             // All requests have succeeded and the transaction has committed.
-            console.log("All transaction done");
+            console.log("All Records in " + tableName + " has been saved offline");
+            $("#reload").show();
         };
 
     };
@@ -137,8 +156,6 @@ function getSingleRecord(databaseName, uid, tableName) {
 
     tableName = JSON.parse(tableName);
 
-    console.log(uid);
-
     var result = document.getElementById("result");
     result.innerHTML = "";
 
@@ -146,8 +163,6 @@ function getSingleRecord(databaseName, uid, tableName) {
 
     openRequest.onsuccess = function () {
         db = openRequest.result;
-        console.log("this is done deal");
-
 
         var transaction = db.transaction(tableName, "readonly");
         var store = transaction.objectStore(tableName);
@@ -161,7 +176,6 @@ function getSingleRecord(databaseName, uid, tableName) {
 
                 var jsonStr = JSON.stringify(decodeURIComponent(matching.hypertext));
                 result.innerHTML = decodeURIComponent(matching.hypertext);
-                console.log(decodeURIComponent(matching.hypertext));
 
             } else {
                 // No match was found.
@@ -173,11 +187,11 @@ function getSingleRecord(databaseName, uid, tableName) {
 
 }
 
-function getDataEntryForm(databaseName, uid, tableName) {
+function getDataEntryForm(databaseName, formUid, tableName) {
+
+    $('#pleaseWaitDialog').modal('show');
 
     tableName = JSON.parse(tableName);
-
-    console.log(uid);
 
     var result = document.getElementById("result");
     result.innerHTML = "";
@@ -188,14 +202,12 @@ function getDataEntryForm(databaseName, uid, tableName) {
 
         openRequest.onsuccess = function () {
             db = openRequest.result;
-            console.log("this is done deal");
-
 
             var transaction = db.transaction(tableName, "readonly");
             var store = transaction.objectStore(tableName);
             var index = store.index("uid");
 
-            var request = index.get(uid);
+            var request = index.get(formUid);
             request.onsuccess = function () {
                 var matching = request.result;
                 if (matching !== undefined) {
@@ -207,10 +219,33 @@ function getDataEntryForm(databaseName, uid, tableName) {
 
                     result.innerHTML = hypertext;
 
+                    //formatting dates
+
+                    $( ".date" ).datepicker( {
+                        changeMonth: true,
+                        changeYear: true,
+                        showOn: "both",
+                        buttonImageOnly: true,
+                        dateFormat: "dd/mm/yy",
+                        buttonImage: "../../../commons/images/calendar.gif",
+                        showAnim: "clip",
+                        yearRange:'c-60:c+0'
+                    });
+
+                    $(".date").keypress(function(event) {
+
+                        if (event.keyCode === 8) {
+                            return true;
+                        };
+                        event.preventDefault();
+                    });
+
                 } else {
                     // No match was found.
+
                     report(null);
                 }
+
             };
 
         };
@@ -218,7 +253,7 @@ function getDataEntryForm(databaseName, uid, tableName) {
     }
 
     getForm(function () {
-        //alert('Finished eating my sandwich.');
+
     });
 
 }
@@ -227,13 +262,9 @@ function loadFieldOptions(fieldUIDS, databaseName) {
 
     var fieldUid = JSON.parse(fieldUIDS);
 
-    console.log(fieldUid);
-
     $.each(fieldUid, function (key, value) {
-        console.log(key + ": " + value);
 
         var field_uid = value;
-
 
         //getting all the field Combos
 
@@ -248,6 +279,8 @@ function loadFieldOptions(fieldUIDS, databaseName) {
 
             var fielOptiondRequest = fieldOptionStore.openCursor();
 
+            var emptyElement = false
+
             fielOptiondRequest.onsuccess = function () {
 
                 var cursorOption = fielOptiondRequest.result;
@@ -255,8 +288,19 @@ function loadFieldOptions(fieldUIDS, databaseName) {
 
                 if (cursorOption) {
 
+                    //Setting the first empty Option
+
+                    if ( emptyElement == false ){
+
+                        $("#" + field_uid).append($('<option>', {
+                            value: '',
+                            text: '--'
+                        }));
+
+                        emptyElement = true;
+                    }
+
                     if (field_uid == cursorOption.value.field) {
-                        console.log(decodeURIComponent(cursorOption.value.value) + " uid " + field_uid + " field_id " + cursorOption.value.uid);
 
                         $("#" + field_uid).append($('<option>', {
                             value: cursorOption.value.uid,
@@ -268,6 +312,20 @@ function loadFieldOptions(fieldUIDS, databaseName) {
                 }
                 else {
                     console.log('No more Matching Fields Options');
+
+                    $("select").each(function () {
+
+                        // Keep track of the selected option.
+                        var selectedValue = $(this).val();
+
+                        // Sort all the options by text. I could easily sort these by val.
+                        $(this).html($("option", $(this)).sort(function (a, b) {
+                            return a.text == b.text ? 0 : a.text < b.text ? -1 : 1
+                        }));
+
+                        // Select one option.
+                        $(this).val(selectedValue);
+                    });
                 }
 
             }
@@ -305,10 +363,14 @@ function changeRelatedFieldOptions(field_uid) {
 
                 if ( removeElement == false ){
                     $("#" + cursorOption.value.fieldref).find('option').remove();
+
+                    $("#" + cursorOption.value.fieldref).append($('<option>', {
+                        value: '',
+                        text: '--'
+                    }));
+
                     removeElement = true;
                 }
-
-                console.log(decodeURIComponent(cursorOption.value.fieldoptionref) + " uid " + field_uid + " fieldoptionUID " + cursorOption.value.fieldoptionrefuid);
 
                 $("#" + cursorOption.value.fieldref).append($('<option>', {
                     value: cursorOption.value.fieldoptionrefuid,
@@ -323,4 +385,331 @@ function changeRelatedFieldOptions(field_uid) {
         }
     }
 
+}
+
+function isUnique(field_uid) {
+
+    var optionUid = $("#" + field_uid).val();
+
+    //getting all the field Combos
+
+    var openRequest = localDatabase.indexedDB.open("hrhis");
+
+    openRequest.onsuccess = function () {
+
+        var db = openRequest.result;
+
+        var fieldOptionTransaction = db.transaction("field_option_association", "readonly");
+        var fieldOptionStore = fieldOptionTransaction.objectStore("field_option_association");
+
+        var index = fieldOptionStore.index("fieldoption");
+
+        var request = index.openCursor(IDBKeyRange.only(optionUid));
+
+        var removeElement = false
+
+        request.onsuccess = function () {
+
+            var cursorOption = request.result;
+
+            if (cursorOption) {
+
+                if ( removeElement == false ){
+                    $("#" + cursorOption.value.fieldref).find('option').remove();
+                    removeElement = true;
+                }
+
+                $("#" + cursorOption.value.fieldref).append($('<option>', {
+                    value: cursorOption.value.fieldoptionrefuid,
+                    text: decodeURIComponent(cursorOption.value.fieldoptionref)
+                }));
+                cursorOption.continue();
+            }
+            else {
+                console.log('No more Matching Fields Options');
+            }
+
+        }
+    }
+
+}
+
+function getunits(parent){
+
+    var parentUid = $(parent).val();
+
+    //getting all the field Combos
+
+    var openRequest = localDatabase.indexedDB.open('hrhis');
+
+    openRequest.onsuccess = function () {
+
+        var db = openRequest.result;
+
+        var orgunitTransaction = db.transaction("hris_organisationunit", "readonly");
+        var orgunitStore = orgunitTransaction.objectStore("hris_organisationunit");
+
+        var orgunitRequest = orgunitStore.openCursor();
+
+        $("#units").find('option').remove();
+
+        $("#units").append($('<option>', {
+            value: '',
+            text: '--'
+        }));
+
+        orgunitRequest.onsuccess = function () {
+
+            var cursorOption = orgunitRequest.result;
+
+
+            if (cursorOption) {
+
+                if (parentUid == cursorOption.value.parent) {
+
+                    $("#units").append($('<option>', {
+                        value: cursorOption.value.uid,
+                        text: decodeURIComponent(cursorOption.value.longname)
+                    }));
+                }
+
+                cursorOption.continue();
+            }
+            else {
+                console.log('No more Matching Fields Options');
+            }
+
+        }
+    }
+}
+
+function populateForm(fieldUIDS, databaseName, dataValues, otherFields, selectedOrgunit, orgunitChildren) {
+
+    dataValues = JSON.parse(dataValues);
+    otherFields = JSON.parse(otherFields);
+    selectedOrgunit = JSON.parse(selectedOrgunit);
+    orgunitChildren = JSON.parse(orgunitChildren);
+
+    var fieldUid = JSON.parse(fieldUIDS);
+
+    //Setting Organizationunit
+    $.each(selectedOrgunit, function (key, value) {
+        $("#units").append($('<option>', {
+            value: value["uid"],
+            text: value["longname"],
+            selected: "selected"
+        }));
+
+    });
+
+    //Populating Childrens Organizationunit
+    $.each(orgunitChildren, function (key, value) {
+        $("#units").append($('<option>', {
+            value: value[0]["uid"],
+            text: value[0]["longname"]
+        }));
+
+    });
+
+    $.when.apply( $.each(fieldUid, function (key, value) {
+
+        var field_uid = value;
+
+        //getting all the field Combos
+
+        var openRequest = localDatabase.indexedDB.open(databaseName);
+
+        openRequest.onsuccess = function () {
+
+            var db = openRequest.result;
+
+            var fieldOptionTransaction = db.transaction("hris_fieldoption", "readonly");
+            var fieldOptionStore = fieldOptionTransaction.objectStore("hris_fieldoption");
+
+            var fielOptiondRequest = fieldOptionStore.openCursor();
+
+            var selectedElement = false
+            var emptyElement = false
+
+            fielOptiondRequest.onsuccess = function () {
+
+                var cursorOption = fielOptiondRequest.result;
+
+
+                if (cursorOption) {
+
+                    if (field_uid == cursorOption.value.field) {
+
+                        //Setting the first empty Option
+
+                        if ( emptyElement == false ){
+
+                            $("#" + field_uid).append($('<option>', {
+                                value: '',
+                                text: '--'
+                            }));
+
+                            emptyElement = true;
+                        }
+
+                        $("#" + field_uid).append($('<option>', {
+                            value: cursorOption.value.uid,
+                            text: decodeURIComponent(cursorOption.value.value)
+                        }));
+
+                        if ( selectedElement == false ){
+
+                            for (var keys in dataValues){
+
+                                if (field_uid == keys && cursorOption.value.uid == dataValues[keys]){
+
+                                $("#" + field_uid).append($('<option>', {
+                                    value: cursorOption.value.uid,
+                                    text: decodeURIComponent(cursorOption.value.value),
+                                    selected: "selected"
+                                }))
+
+                                    selectedElement = true;
+                                }
+                            }
+                        }
+                    }
+
+                    cursorOption.continue();
+                }
+                else {
+                    console.log('No more Matching Fields Options');
+
+                    $.each(otherFields, function (key, value) {
+                        for ( var keyValue in dataValues){
+                            if(value == keyValue){
+
+                                if (Object.prototype.toString.call(dataValues[keyValue]) == "[object Object]"){
+
+                                    var date = dataValues[keyValue]["date"].split(" ");
+                                    var newdate = date[0].split("-").reverse().join("/");
+                                    $('#' + value).val(newdate);
+                                    //alert(dataValues[keyValue]["date"]);
+                                }else{
+                                    $('#' + value).val(dataValues[keyValue]);
+                                }
+
+                            }
+                        }
+                    });
+                }
+
+            }
+        }
+
+    })).done(function(){
+            setTimeout(function(){
+                $('#pleaseWaitDialog').modal('hide');
+            }, 10000);
+        });
+
+}
+
+function offLineDataStorage(databaseName){
+    $(function () {
+        $('form').on('submit', function (e) {
+
+            e.preventDefault();
+
+            tableName = "offline_datavalues";
+            dataValues = $('form').serialize();
+
+
+            var openRequest = localDatabase.indexedDB.open(databaseName);
+
+            openRequest.onsuccess = function () {
+                db = openRequest.result;
+
+                var transaction = db.transaction(tableName, "readwrite");
+                var store = transaction.objectStore(tableName);
+
+                var uuid = Math.floor((Math.random()*10000)+1);
+
+                store.put({id: uuid, status: 'false', data: dataValues});
+
+                transaction.oncomplete = function () {
+                    // All requests have succeeded and the transaction has committed.
+                    console.log("All Records in " + tableName + " has been saved offline");
+                    $('form').trigger("reset");
+                    window.scrollTo(0, 0);
+                    alert("Data Has Been Saved Successfully");
+                };
+
+            };
+
+        });
+
+    });
+}
+
+
+function sendDataToServer(databaseName){
+
+    var timer = $.timer(function() {
+
+        var openRequest = localDatabase.indexedDB.open(databaseName);
+
+        openRequest.onsuccess = function () {
+
+            var db = openRequest.result;
+
+            var transaction = db.transaction("offline_datavalues", "readonly");
+
+            var store = transaction.objectStore("offline_datavalues");
+
+            var index = store.index("status");
+
+            var dataRequest = index.openCursor(IDBKeyRange.only("false"));
+
+            var state = false;
+
+
+            dataRequest.onsuccess = function () {
+
+                var cursorOption = dataRequest.result;
+
+
+                if (cursorOption) {
+
+                    var dataValues = JSON.stringify(cursorOption.value.data);
+
+                    var uuid = cursorOption.value.id;
+                    var value = cursorOption.value.data;
+
+                    $.ajax({
+                        type: 'POST',
+                        url: '../',
+                        data: decodeURIComponent(cursorOption.value.data),
+                        success: function () {
+                            $('form').trigger("reset");
+                            console.log('data has been submitted to the server');
+
+                            var transactionUpdate = db.transaction("offline_datavalues", "readwrite");
+
+                            var storeUpdate = transactionUpdate.objectStore("offline_datavalues");
+
+                            storeUpdate.put({id: uuid, status: 'true', data: value});
+                        },
+                        error: function(){
+                            console.log('form was not submitted, no internet connection');
+                        }
+                    });
+
+                    cursorOption.continue();
+                }
+                else {
+                    console.log('No more Matching Fields Options');
+                }
+
+            }
+
+        }
+    });
+
+    timer.set({ time : 5000, autostart : true });
 }

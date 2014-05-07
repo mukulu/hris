@@ -2,6 +2,8 @@
 
 {% block javascripts %}
     {{ parent() }}
+    <script type="text/javascript" language="javascript" src="{{ asset('commons/js/jquery.multi-select.js') }}"></script>
+    <script type="text/javascript" language="javascript" src="{{ asset('commons/js/jquery.validate.js') }}"></script>
     <script type="text/javascript" language="javascript" src="{{ asset('commons/js/ext-all.js') }}"></script>
     <script type="text/javascript">
         var treeplaceholder="treeplaceholder";
@@ -64,12 +66,22 @@
 
             });
         });
+        $( document ).ready(function() {
+            // validate signup form on keyup and submit
+            $("#organisationunitCompletenessForm").validate({ ignore:[] });
+            $('#hris_reportsbundle_reportorganisationunitcompletenesstype_forms').multiSelect({
+                selectableHeader: "<div class=''>Avaiable Forms</div>",
+                selectionHeader: "<div class=''>Selected Forms</div>"
+            });
+            $( 'input[required="required"],select[required="required"]').closest(".control-group").children("label").prepend('<em class="required-asterisk">*</em>');
+        });
     </script>
 {% endblock javascripts %}
 
 {% block stylesheets %}
     {{ parent() }}
     <link rel="stylesheet" type="text/css" media="all" href="{{ asset('commons/css/ext-standard.css') }}">
+    <link rel="stylesheet" type="text/css" media="all" href="{{ asset('commons/css/multi-select.css') }}">
 {% endblock stylesheets %}
 
 {% block right_content -%}
@@ -85,18 +97,40 @@
         {% endfor %}
         </div>
     {% endif %}
-    {{ form_start(organisationunitCompletenessForm, { 'method' : 'PUT' } ) }}
+    {{ form_start(organisationunitCompletenessForm, { 'method' : 'PUT','attr': {'class':'organisationunitCompletenessForm form-horizontal','id':'organisationunitCompletenessForm'} } ) }}
 
-    <div>
-        <div id="treeplaceholder"></div>
-        {{ form_errors( organisationunitCompletenessForm.organisationunit ) }}
-        {{ form_widget( organisationunitCompletenessForm.organisationunit ) }}
+    <div class="control-group">
+        {{ form_label( organisationunitCompletenessForm.organisationunit,'Select Organisationunit', {'label_attr': {'class': 'control-label'} } ) }}
+        <div class="controls">
+            <div id="treeplaceholder"></div>
+            {{ form_errors( organisationunitCompletenessForm.organisationunit ) }}
+            {{ form_widget( organisationunitCompletenessForm.organisationunit ) }}
+        </div>
     </div>
     <br/>
-    {{ form_row( organisationunitCompletenessForm.organisationunitLevel ) }}
-    {{ form_row( organisationunitCompletenessForm.forms ) }}
+    <div class="control-group">
+        {{ form_label( organisationunitCompletenessForm.organisationunitLevel,'Organisationunit Level', {'label_attr': {'class': 'control-label'} } ) }}
+        <div class="controls">
+            {{ form_errors( organisationunitCompletenessForm.organisationunitLevel ) }}
+            {{ form_widget( organisationunitCompletenessForm.organisationunitLevel ) }}
+        </div>
+    </div>
+    <br/>
+    <div class="control-group">
+        {{ form_label( organisationunitCompletenessForm.forms,'Select Form', {'label_attr': {'class': 'control-label'} } ) }}
+        <div class="controls">
+            {{ form_errors( organisationunitCompletenessForm.forms ) }}
+            {{ form_widget( organisationunitCompletenessForm.forms ) }}
+        </div>
+    </div>
+    <br/>
+    <div class="control-group">
+        <div class="controls">
+            {{ form_end(organisationunitCompletenessForm) }}
+        </div>
+    </div>
 
-    {{ form_end(organisationunitCompletenessForm) }}
+
 
 
 {% endblock %}

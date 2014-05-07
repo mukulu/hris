@@ -24,6 +24,8 @@
  */
 namespace Hris\FormBundle\Controller;
 
+use Doctrine\Common\Collections\ArrayCollection;
+use Hris\FormBundle\Entity\ResourceTableFieldMember;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Bundle\FrameworkBundle\Controller\Controller;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Method;
@@ -31,6 +33,7 @@ use Sensio\Bundle\FrameworkExtraBundle\Configuration\Route;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Template;
 use Hris\FormBundle\Entity\ResourceTable;
 use Hris\FormBundle\Form\ResourceTableType;
+use JMS\SecurityExtraBundle\Annotation\Secure;
 
 /**
  * ResourceTable controller.
@@ -43,6 +46,7 @@ class ResourceTableController extends Controller
     /**
      * Lists all ResourceTable entities.
      *
+     * @Secure(roles="ROLE_SUPER_USER,ROLE_RESOURCETABLE_LIST")
      * @Route("/", name="resourcetable")
      * @Route("/list", name="resourcetable_list")
      * @Method("GET")
@@ -52,6 +56,7 @@ class ResourceTableController extends Controller
     {
         $em = $this->getDoctrine()->getManager();
 
+        $delete_forms = NULL;
         $entities = $em->getRepository('HrisFormBundle:ResourceTable')->findAll();
         foreach($entities as $entity) {
             $delete_form= $this->createDeleteForm($entity->getId());
@@ -66,6 +71,7 @@ class ResourceTableController extends Controller
     /**
      * Creates a new ResourceTable entity.
      *
+     * @Secure(roles="ROLE_SUPER_USER,ROLE_RESOURCETABLE_CREATE")
      * @Route("/", name="resourcetable_create")
      * @Method("POST")
      * @Template("HrisFormBundle:ResourceTable:new.html.twig")
@@ -78,6 +84,18 @@ class ResourceTableController extends Controller
 
         if ($form->isValid()) {
             $em = $this->getDoctrine()->getManager();
+            $incr=1;
+            $requestcontent = $request->request->get('hris_formbundle_resourcetabletype');
+            $fieldIds = $requestcontent['fields'];
+            foreach($fieldIds as $fieldIdKey=>$fieldId) {
+                $field = $this->getDoctrine()->getRepository('HrisFormBundle:Field')->findOneBy(array('id'=>$fieldId));
+                $resourceTableFieldMember = new ResourceTableFieldMember();
+                $resourceTableFieldMember->setField($field);
+                $resourceTableFieldMember->setResourceTable($entity);
+                $resourceTableFieldMember->setSort($incr++);
+                $entity->addResourceTableFieldMember($resourceTableFieldMember);
+            }
+
             $em->persist($entity);
             $em->flush();
 
@@ -93,6 +111,7 @@ class ResourceTableController extends Controller
     /**
      * Displays a form to create a new ResourceTable entity.
      *
+     * @Secure(roles="ROLE_SUPER_USER,ROLE_RESOURCETABLE_CREATE")
      * @Route("/new", name="resourcetable_new")
      * @Method("GET")
      * @Template()
@@ -111,6 +130,7 @@ class ResourceTableController extends Controller
     /**
      * Finds and displays a ResourceTable entity.
      *
+     * @Secure(roles="ROLE_SUPER_USER,ROLE_RESOURCETABLE_SHOW")
      * @Route("/{id}", requirements={"id"="\d+"}, name="resourcetable_show")
      * @Method("GET")
      * @Template()
@@ -136,6 +156,7 @@ class ResourceTableController extends Controller
     /**
      * Finds and generates a ResourceTable entity.
      *
+     * @Secure(roles="ROLE_SUPER_USER,ROLE_RESOURCETABLE_GENERATE")
      * @Route("/{id}/generate/{context}", requirements={"id"="\d+","context"="graceful|forced"}, defaults={"context"="graceful"}, name="resourcetable_generate")
      * @Method("GET")
      * @Template()
@@ -143,6 +164,8 @@ class ResourceTableController extends Controller
     public function generateAction($id,$context)
     {
         $em = $this->getDoctrine()->getManager();
+
+        $logger = $this->get('logger');
 
         $entity = $em->getRepository('HrisFormBundle:ResourceTable')->find($id);
 
@@ -157,7 +180,7 @@ class ResourceTableController extends Controller
 
         $deleteForm = $this->createDeleteForm($id);
 
-        $success = $entity->generateResourceTable($em);
+        $success = $entity->generateResourceTable($em,$logger);
         $messageLog = rtrim($entity->getMessageLog(),"\n");
         $messageLogArray = explode("\n",$messageLog);
         $messages = NULL;
@@ -177,6 +200,7 @@ class ResourceTableController extends Controller
     /**
      * Displays a form to edit an existing ResourceTable entity.
      *
+     * @Secure(roles="ROLE_SUPER_USER,ROLE_RESOURCETABLE_UPDATE")
      * @Route("/{id}/edit", requirements={"id"="\d+"}, name="resourcetable_edit")
      * @Method("GET")
      * @Template()
@@ -192,6 +216,14 @@ class ResourceTableController extends Controller
         }
 
         $editForm = $this->createForm(new ResourceTableType(), $entity);
+
+        $resourceTAbleFieldMembers = $em->getRepository('HrisFormBundle:ResourceTableFieldMember')->findBy(array('resourceTable'=>$entity));
+        $fields = new ArrayCollection();
+        foreach($resourceTAbleFieldMembers as $resourceTAbleFieldMemberKey=>$resourceTAbleFieldMember) {
+            $fields->add($resourceTAbleFieldMember->getField());
+        }
+        $editForm->get('fields')->setData($fields);
+
         $deleteForm = $this->createDeleteForm($id);
 
         return array(
@@ -204,6 +236,7 @@ class ResourceTableController extends Controller
     /**
      * Edits an existing ResourceTable entity.
      *
+     * @Secure(roles="ROLE_SUPER_USER,ROLE_RESOURCETABLE_UPDATE")
      * @Route("/{id}", requirements={"id"="\d+"}, name="resourcetable_update")
      * @Method("PUT")
      * @Template("HrisFormBundle:ResourceTable:edit.html.twig")
@@ -223,10 +256,31 @@ class ResourceTableController extends Controller
         $editForm->bind($request);
 
         if ($editForm->isValid()) {
+            $incr=1;
+            $requestcontent = $request->request->get('hris_formbundle_resourcetabletype');
+            $fieldIds = $requestcontent['fields'];
+            // Clear ResourceTableFieldMembers
+            //Get rid of current fields
+            $em->createQueryBuilder('resourceTableFieldMember')
+                ->delete('HrisFormBundle:ResourceTableFieldMember','resourceTableFieldMember')
+                ->where('resourceTableFieldMember.resourceTable= :resourceTable')
+                ->setParameter('resourceTable',$entity)
+                ->getQuery()->getResult();
+            $em->flush();
+            foreach($fieldIds as $fieldIdKey=>$fieldId) {
+                $field = $this->getDoctrine()->getRepository('HrisFormBundle:Field')->findOneBy(array('id'=>$fieldId));
+                $resourceTableFieldMember = new ResourceTableFieldMember();
+                $resourceTableFieldMember->setField($field);
+                $resourceTableFieldMember->setResourceTable($entity);
+                $resourceTableFieldMember->setSort($incr++);
+                $entity->addResourceTableFieldMember($resourceTableFieldMember);
+                unset($field);
+            }
+
             $em->persist($entity);
             $em->flush();
 
-            return $this->redirect($this->generateUrl('resourcetable_edit', array('id' => $id)));
+            return $this->redirect($this->generateUrl('resourcetable_show', array('id' => $id)));
         }
 
         return array(
@@ -238,6 +292,7 @@ class ResourceTableController extends Controller
     /**
      * Deletes a ResourceTable entity.
      *
+     * @Secure(roles="ROLE_SUPER_USER,ROLE_RESOURCETABLE_DELETE")
      * @Route("/{id}", requirements={"id"="\d+"}, name="resourcetable_delete")
      * @Method("DELETE")
      */

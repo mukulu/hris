@@ -14,6 +14,10 @@
                 <td>{{ entity.uid }}</td>
             </tr>
             <tr>
+                <th>Type</th>
+                <td>{{ entity.type }}</td>
+            </tr>
+            <tr>
                 <th>Name</th>
                 <td>{{ entity.name }}</td>
             </tr>
@@ -34,8 +38,24 @@
                 <td>{{ entity.friendlyReportCategory|join(', ') }}</td>
             </tr>
             <tr>
+                <th>Use Targets</th>
+                <td>{{ entity.useTargets ? 'True' : 'False' }}</td>
+            </tr>
+            <tr>
+                <th>Ignore Skip In Report</th>
+                <td>{{ entity.ignoreSkipInReport ? 'True' : 'False' }}</td>
+            </tr>
+            <tr>
+                <th>Show Deficit/Surplus</th>
+                <td>{{ entity.showDeficitSurplus ? 'True' : 'False' }}</td>
+            </tr>
+            <tr>
                 <th>Lastupdated</th>
                 <td>{{ entity.lastupdated|date('Y-m-d H:i:s') }}</td>
+            </tr>
+            <tr>
+                <th>SQL</th>
+                <td>{{ entity.sql }}</td>
             </tr>
         </tbody>
     </table>

@@ -1,20 +1,96 @@
 {% extends '::base.html.twig' %}
 
+{% block javascripts %}
+    {{ parent() }}
+    <script type="text/javascript" language="javascript" src="{{ asset('commons/js/ext-all.js') }}"></script>
+    <script type="text/javascript" language="javascript" src="{{ asset('commons/js/jquery.validate.js') }}"></script>
+    <script type="text/javascript" src="{{ asset('commons/js/jquery-ui.js') }}"></script>
+    <script type="text/javascript">
+        $( ".date" ).datepicker( {
+            changeMonth: true,
+            changeYear: true,
+            showOn: "both",
+            buttonImage: "{{ asset('commons/images/calendar.gif') }}",
+            buttonImageOnly: true,
+            dateFormat: "dd/mm/yy",
+            showAnim: "clip",
+            maxDate: "+0D",
+            yearRange:'c-60:c+60'
+        });
+
+        $( document ).ready(function() {
+            var fields='#hris_recordsbundle_historytype_field';
+            var fieldOptionUrl = '{{ path('history_historyfieldption', {'_format':'json'}) }}';
+            var fieldOptionNames='hris_recordsbundle_historytype_history';
+            var fieldOptionSection='#historyFieldSection';
+            //var orgunitTransfer
+
+
+            $.each([{id:{{ removeFields | join('},{id:') | raw }} }], function( removeFieldIndex, removeField ){
+                $("#hris_recordsbundle_historytype_field option[value="+ removeField['id'] +"]").remove();
+            });
+
+            //$("#hris_recordsbundle_historytype_field").append(new Option('', '' ));
+
+            $(fields).on('change', function() {
+                // Empty FieldOptionSection contents
+                $( fieldOptionSection ).empty();
+                // Fetch fieldOptionTargets based on selected fields
+                postData = {
+                    'fieldid': $('#hris_recordsbundle_historytype_field').val()
+                };
+                $.post(fieldOptionUrl,postData , function( fieldOptions ){
+                    $(fieldOptionSection).find('option').remove();
+                    if (jQuery.isEmptyObject(fieldOptions)){
+                        $(fieldOptionSection).prepend('<h1><small>Field Has No Options</small></h1>');
+                    }else {
+
+                        $(fieldOptionSection).prepend('<select name="hris_recordsbundle_history[history]" id="hris_recordsbundle_history_history"> </select>');
+
+                        $(fieldOptionSection).prepend('<label for="hris_recordsbundle_history_history">History</label>');
+                        // Loop accross the field options constructing history options
+                         $.each(fieldOptions, function(historyFieldOptionIndex, historyFieldOption) {
+                             $("#hris_recordsbundle_history_history").append(new Option(historyFieldOption['name'], historyFieldOption['uid']));
+                         });
+                    }
+                });
+            });
+        });
+    </script>
+{% endblock javascripts %}
+
+{% block stylesheets %}
+    {{ parent() }}
+    <link rel="stylesheet" type="text/css" media="all" href="{{ asset('commons/css/ext-standard.css') }}">
+    <link rel="stylesheet" href="{{ asset('commons/css/datepicker.css') }}" />
+    <link rel="stylesheet" href="{{ asset('commons/css/jquery-ui.css') }}" />
+{% endblock stylesheets %}
+
 {% block right_content -%}
-    <h1>History creation</h1>
+    <h1><small>New History for {{ employeeName }}</small></h1>
 
-    <form action="{{ path('history_create') }}" method="post" {{ form_enctype(form) }}>
-        {{ form_widget(form) }}
-        <p>
-            <button type="submit">Create</button>
-        </p>
-    </form>
+    <form action="{{ path('history_create', {'recordid': recordid } ) }}" method="post" {{ form_enctype(form) }}>
 
-        <ul class="record_actions">
-    <li>
-        <a href="{{ path('history') }}">
-            Back to the list
-        </a>
-    </li>
-</ul>
+    {{ form_row( form.field ) }}
+
+    <div id="historyFieldSection">History<br/><br/></div>
+
+    {{ form_row( form.startdate ) }}
+    {{ form_row( form.reason ) }}
+
+    {{ form_row( form.updaterecord ) }}
+
+    <ul class="record_actions inline" style="..." >
+        <li>
+            <button type="submit" class="btn">Create</button>
+        </li>
+        <li>
+            <a href="{{ path('history_list_byrecord', { 'recordid': recordid }) }}" class="btn">
+                Back to the list
+            </a>
+        </li>
+    </ul>
+
+    {{ form_end(form) }}
+
 {% endblock %}

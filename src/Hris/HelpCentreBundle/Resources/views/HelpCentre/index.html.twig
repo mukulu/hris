@@ -1,0 +1,81 @@
+{% extends '::base.html.twig' %}
+{% block javascripts %}
+    {{ parent() }}
+    <script type="text/javascript" src="{{ asset('commons/js/jquery.dataTables.js') }}"></script>
+    <script type="text/javascript" src="{{ asset('commons/js/jquery.dataTables.ZeroClipboard.js') }}"></script>
+    <script type="text/javascript" src="{{ asset('commons/js/jquery.dataTables.TableTools.min.js') }}"></script>
+    <script type="text/javascript" src="{{ asset('commons/js/dt_settings.js') }}"></script>
+    <script type="text/javascript">
+        $(document).ready(function() {
+            $('.records_list').dataTable( {
+                "sDom": "<'row'<'span6'TRl><'span6'f>r>t<'row'<'span6'i><'span6'p>>",
+                "oTableTools": {
+                    "aButtons": [
+                        {"sExtends":"copy","mColumns":"visible"},
+                        {"sExtends":"xls","mColumns":"visible"},
+                        {"sExtends":"pdf","mColumns":"visible"}
+                    ],
+                    "sSwfPath": "{{ asset('commons/swf/copy_cvs_xls_pdf.swf') }}"
+                },
+                "sPdfOrientation": "landscape",
+                "sPaginationType": "bootstrap",
+                "oLanguage": {
+                    "sLengthMenu": "_MENU_ records per page"
+                },
+                "aLengthMenu": [[10, 25, 50,100,200, -1], [10, 25, 50,100,200, "All"]]
+            } );
+        } );
+    </script>
+{% endblock javascripts %}
+
+{% block stylesheets %}
+    {{ parent() }}
+    <link rel="stylesheet" href="{{ asset('commons/css/dt_bootstrap.css') }}" />
+{% endblock stylesheets %}
+
+{% block content -%}
+
+    <h1><small>Help Centre</small></h1>
+    <div class="container-fluid" style="margin-top:10px;">
+        <div class="row-fluid">
+            <div class="span2">
+                {% block left_content %}
+                    <!--Sidebar content-->
+                    {{ knp_menu_render('HrisUserBundle:MainBuilder:build',{'template':':Menu:knp_menu.html.twig'}) }}
+                {% endblock left_content %}
+            </div>
+
+            <div class="span9" style="padding-left:15px;">
+
+                <table class="records_list dataTable table table-striped table-bordered table-hover">
+                    <thead>
+                    <tr>
+                        <th>Name</th>
+                        <th>Description</th>
+                        <th>Actions</th>
+                    </tr>
+                    </thead>
+                    <tbody>
+                    {% for entity in entities %}
+                        <tr>
+                            <td><a href="{{ path('help_topic_show', { 'id': entity.id }) }}">{{ entity.name }}</a></td>
+                            <td>{{ entity.description }}</td>
+                            <td>
+                                <ul class="inline">
+                                    <li>
+                                        <a href="{{ path('help_topic_show', { 'id': entity.id }) }}"><i class="icon-info-sign icon-large" title="Show"></i></a>
+                                    </li>
+                                    <li>
+                                        <a href="{{ path('help_topic_edit', { 'id': entity.id }) }}"><i class="icon-edit icon-large" title="Edit"></i></a>
+                                    </li>
+                                </ul>
+                            </td>
+                        </tr>
+                    {% endfor %}
+                    </tbody>
+                </table>
+            </div>
+        </div>
+    </div>
+
+{% endblock %}

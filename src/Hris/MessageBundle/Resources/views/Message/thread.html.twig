@@ -1,0 +1,82 @@
+{% extends 'HrisMessageBundle::layout.html.twig' %}
+
+{% block javascripts %}
+    {{ parent() }}
+    <script type="text/javascript" src="{{ asset('commons/js/readmore.min.js') }}"></script>
+    <script type="text/javascript" src="{{ asset('commons/js/prettify.min.js') }}"></script>
+
+    <script type="text/javascript">
+        $( document ).ready(function() {
+            $('.messenger_thread_message').readmore();
+
+            // Wait a tick before firing Readmore on the #info block to give Prettify time to finish painting.
+            setTimeout(function() {
+                $('#messenger_thread_message').readmore({
+                    moreLink: '<a href="#">See all</a>',
+                    lessLink: '<a href="#">Hide</a>',
+                    speed:75,
+                    maxHeight: 212,
+                    afterToggle: function(trigger, element, expanded) {
+                        if(! expanded) { // The "Close" link was clicked
+                            $('html, body').animate( { scrollTop: element.offset().top }, {duration: 100 } );
+                        }
+                    }
+                });
+            }, 100);
+
+        });
+    </script>
+{%  endblock %}
+
+{% block fos_message_header %}
+    {{ thread.subject }}
+{% endblock fos_message_header %}
+
+{% block fos_message_links %}
+    <a href="{{ url('message_thread_new' )}}" class="btn">{% trans from 'FOSMessageBundle' %}Send a new message{% endtrans %}</a>
+    <a href="{{ url('message_feedback_new' )}}" class="btn">{% trans from 'FOSMessageBundle' %}Create a FeedBack{% endtrans %}</a>
+{% endblock fos_message_links %}
+
+
+{% block fos_message_content %}
+    <div class="messenger_thread_message highlight"> To
+        {% for participant in thread.participants %}
+            <strong title="{% if participant.organisationunit %} {{ participant.jobTitle }} of {{ participant.organisationunit.longname }} {% if participant.email %}<{{ participant.email }}>{% endif %}{% if participant.phoneNumber %} Phone: {{ participant.phoneNumber }} {% endif %} {% endif %}">
+            {{ participant.firstname| capitalize }} {{ participant.surname| capitalize }}</strong>
+            {% if not loop.last %}
+             ,
+            {% endif %}
+        {% endfor %}
+    </div>
+{% for message in thread.messages %}
+    <div class="messenger_thread_message highlight">
+        <div class="messenger_thread_message_info">
+            <strong title="{% if message.sender.organisationunit %} {{ message.sender.jobTitle }} of {{ message.sender.organisationunit.longname }}{% if message.sender.email %}<{{ message.sender.email }}>{% endif %}{% if message.sender.phoneNumber %} Phone: {{ message.sender.phoneNumber }} {% endif %} {% endif %}">{{ message.sender.firstname| capitalize }} {{ message.sender.surname }}</strong> <em class="pull-right">{{  message.createdAt|date }}</em>
+        </div>
+
+        <div class="messenger_thread_message_body" id="message_{{ message.id }}">
+            {{ message.body | nl2br }}
+            <br/>
+            <em style="color:#0088CC">{% if message.sender.organisationunit %} {% if message.sender.jobTitle %} {{ message.sender.jobTitle }} {% else %} {{ message.sender.firstname| capitalize }} {{ message.sender.surname }} {% endif %} of {{ message.sender.organisationunit.longname }} {% if message.sender.phoneNumber %}~ {{ message.sender.phoneNumber }} {% endif %} {% endif %}</em>
+        </div>
+    </div>
+{% endfor %}
+
+    {{ form_start(form, {'action': path('message_thread_view', {'threadId': thread.id}), 'method': 'POST'}) }}
+    <div id="message">
+        {{ form_widget(form.body, {'attr': {'style': 'width:295px;'}}) }}
+    </div>
+    <br/>
+    <ul class="record_actions inline" style="float:left;">
+        <li>
+            <input type="submit" value="Reply" class="btn"/>
+        </li>
+        <li>
+            <a href="{{ path('message_inbox') }}" class="btn">
+                Back to Conversations
+            </a>
+        </li>
+    </ul>
+    {{ form_end(form)  }}
+
+{% endblock %}

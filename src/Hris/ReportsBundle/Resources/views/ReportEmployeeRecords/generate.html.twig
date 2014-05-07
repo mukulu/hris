@@ -11,7 +11,16 @@
         jQuery.fn.dataTableExt.oApi.fnSetFilteringDelay=function(a,b){var c=this,b=typeof b=="undefined"?500:b;this.each(function(a){$.fn.dataTableExt.iApiIndex=a;var d=this,e=null,f=null,g=$("input",c.fnSettings().aanFeatures.f);g.unbind("keyup").bind("keyup",function(){var h=d;if(f===null||f!=g.val()){window.clearTimeout(e);f=g.val();e=window.setTimeout(function(){$.fn.dataTableExt.iApiIndex=a;c.fnFilter(g.val())},b)}});return this});return this}
         $(document).ready( function () {
             oTable = $('.records_list').dataTable( {
-                "sDom": "<'row'<'span6'l><'span6'f>r>t<'row'<'span6'i><'span6'p>>",
+                "sDom": "<'row'<'span6'TRl><'span6'f>r>t<'row'<'span6'i><'span6'p>>",
+                "oTableTools": {
+                    "aButtons": [
+                        {"sExtends":"copy","mColumns":"visible","sTitle": "{{ title }}" },
+                        {"sExtends":"xls","mColumns":"visible"},
+                        {"sExtends":"pdf","mColumns":"visible"}
+                    ],
+                    "sSwfPath": "{{ asset('commons/swf/copy_cvs_xls_pdf.swf') }}"
+                },
+                "sPdfOrientation": "landscape",
                 "sPaginationType": "bootstrap",
                 "oLanguage": {
                     "sLengthMenu": "_MENU_ records per page"
@@ -25,8 +34,7 @@
                 "sServerMethod":"POST",
                 "fnServerData": function ( sSource, aoData, fnCallback ) {$.ajax( {"dataType": "json", "type": "POST", "url": sSource, "data": aoData, "success": fnCallback} );},
                 "bJQueryUI": true,
-                "aLengthMenu": [[10, 25, 50,100,200, -1], [10, 25, 50,100,200, "All"]],"sPdfOrientation": "landscape",
-                "oTableTools": {"aButtons": [ {"sExtends":"copy","mColumns":"visible","sTitle": "{{ title }}" }, {"sExtends":"xls","mColumns":"visible"}, {"sExtends":"pdf","mColumns":"visible"} ] }
+                "aLengthMenu": [[10, 25, 50,100,200, -1], [10, 25, 50,100,200, "All"]]
             }).fnSetFilteringDelay().columnFilter({ aoColumns: {{ dataTableAjaxColumns|raw }} });
         });
     </script>
@@ -54,8 +62,6 @@
                         <th>{{ formField.caption }}</th>
                     {% endfor %}
                 {% endif %}
-                <th>Age</th>
-                <th>Employment Duration</th>
                 <th>Last Updated</th>
                 <th>Duty Post</th>
             </tr>

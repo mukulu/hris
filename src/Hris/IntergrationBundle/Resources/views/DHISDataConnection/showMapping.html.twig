@@ -1,0 +1,148 @@
+{% extends '::base.html.twig' %}
+
+{% block javascripts %}
+    {{ parent() }}
+    <script type="text/javascript" src="{{ asset('commons/js/jquery.jeditable.mini.js') }}"></script>
+    <script type="text/javascript">
+        $( document ).ready(function() {
+            var fieldOptionTargetUrl = '{{ path('dhisdataconnection_updaterelation', {'_format':'json'}) }}';
+            {# Capture field option groups from hrhis #}
+            var fieldOptionGroupList = new Array();
+            {% for fieldOptionGroupset in entity.fieldOptionGroupset %}
+            fieldOptionGroupList[{{ loop.index0 }}] = "{{ fieldOptionGroupset.fieldOptionGroup | join(',') }}".split(',');
+            {% endfor %}
+
+            {# Capture data elements options from dhis #}
+            var inputBoxes = $("td#datasetHtmlContents :input:not([readonly])");
+            // Loop accross the field options constructing inputbox and it's value
+            var dhisDataelementUids = new Array();
+            var dhisDataelementNames = new Array();
+            var dhisComboUids = new Array();
+            var dhisComboNames = new Array();
+            var incr=0;
+            $.each(inputBoxes, function(inputBoxIndex, inputBox) {
+                incr=incr+1;
+                //Prepare dataelement and uid names
+                dataelementUids = $(inputBox).attr('id').split(/\-/);
+                dataelementNames = $(inputBox).val().split(/\-/);
+                dhisDataelementUids[inputBoxIndex]=dataelementUids[0].replace('[','').trim();
+                dhisDataelementNames[inputBoxIndex]=dataelementNames[0].replace('[','').trim();
+                dhisComboUids[inputBoxIndex]=dataelementUids[1].replace(']','').trim();
+                dhisComboNames[inputBoxIndex]=dataelementNames[1].replace(']','').trim().split(/\(/)[1].replace(')','').trim();
+                //Push dataelement and combo matches for insertion into database
+                postData={
+                    'connectionId':{{ entity.id }},
+                    'dhisDataelementUids': dhisDataelementUids[inputBoxIndex],
+                    'dhisDataelementNames': dhisDataelementNames[inputBoxIndex],
+                    'dhisComboUids':dhisComboUids[inputBoxIndex],
+                    'dhisComboNames':dhisComboNames[inputBoxIndex]
+                };
+                $.post(fieldOptionTargetUrl,postData , function( results ){
+                    console.log(results);
+                    if(results=='success') {
+                        $(inputBox).after('<label class="dblclick" id="'+$(inputBox).attr('id')+'" '+' title="'+$(inputBox).attr('title')+'" style="background-color:green;-webkit-border-top-right-radius: 6px;-webkit-border-bottom-right-radius: 6px;-webkit-border-top-left-radius: 6px;-webkit-border-bottom-left-radius: 6px;-moz-border-top-right-radius: 6px;-moz-border-bottom-right-radius: 6px;-moz-border-top-left-radius: 6px;-moz-border-bottom-left-radius: 6px;"'+'>'+$(inputBox).val()+'</label>');
+                        $(inputBox).remove();
+                    }else {
+                        $(inputBox).after('<label class="dblclick" id="'+$(inputBox).attr('id')+'" '+' title="'+$(inputBox).attr('title')+'" style="background-color:red;-webkit-border-top-right-radius: 6px;-webkit-border-bottom-right-radius: 6px;-webkit-border-top-left-radius: 6px;-webkit-border-bottom-left-radius: 6px;-moz-border-top-right-radius: 6px;-moz-border-bottom-right-radius: 6px;-moz-border-top-left-radius: 6px;-moz-border-bottom-left-radius: 6px;"'+'>'+$(inputBox).val()+'</label>');
+                        $(inputBox).remove();
+                    }
+                });
+
+            });
+            {#&#123;&#35; Editable expected figures &#35;&#125;#}
+            {#$(".dblclick").editable("{{ path('organisationunitcompleteness_ajaxupdate') }}", {#}
+                {#tooltip   : "Doubleclick to edit...",#}
+                {#event     : "dblclick",#}
+                {#style  : "inherit",#}
+                {#callback : function(value, settings) {#}
+                    {#console.log(this);#}
+                    {#console.log(value);#}
+                    {#console.log(settings);#}
+                {#}#}
+            {#});#}
+
+            //console.log(fieldOptionGroupList);
+        });
+    </script>
+{% endblock javascripts %}
+
+{% block stylesheets %}
+    {{ parent() }}
+{% endblock stylesheets %}
+
+{% block right_content -%}
+    <h1><i class="icon-circle-info icon-largest" title="Show"></i> <small>{{ entity.name | capitalize }}'s Details</small></h1>
+
+    <table class="record_properties table table-striped table-bordered table-hover">
+        <tbody>
+            <tr>
+                <th>Parent Organisationunit</th>
+                <td>{{ entity.parentOrganisationunit }}</td>
+            </tr>
+            <tr>
+                <th>Datasetname</th>
+                <td>{{ entity.datasetName }}</td>
+            </tr>
+            <tr>
+                <th>Datasetuid</th>
+                <td>{{ entity.datasetUid }}</td>
+            </tr>
+            <tr>
+                <th>Dataset</th>
+                <td id="datasetHtmlContents">{{ entity.datasetHtml | raw }}</td>
+            </tr>
+        </tbody>
+    </table>
+
+    <ul class="record_actions inline">
+        <li>
+            <a href="{{ path('dhisdataconnection') }}" class="btn">
+                Back to the list
+            </a>
+        </li>
+        <li>
+            <a href="{{ path('dhisdataconnection_edit', { 'id': entity.id }) }}" class="btn">
+                Edit
+            </a>
+        </li>
+        <li>
+            <a class="btn" href="{{ path('dhisdataconnection_new') }}">
+                Create a another
+            </a>
+        </li>
+        <li>
+            <a data-toggle="modal" href="#deleteModalFor{{ entity.uid }}" class="btn btn-danger">Delete {{ entity.name | capitalize }}</a>
+
+            <!-- Modal -->
+            <div class="modal fade" id="deleteModalFor{{ entity.uid }}">
+                <div class="modal-dialog">
+                    <div class="modal-content">
+                        <div class="modal-header">
+                            <button type="button" class="close" data-dismiss="modal" aria-hidden="true">×</button>
+                            <h4 class="modal-title"><i class="icon-circle-remove icon-largest" title="Delete"></i>Deleting {{ entity.name | capitalize }}</h4>
+                        </div>
+                        <div class="modal-body">
+                            Are you sure you want to delete <strong>{{ entity.name | capitalize }}</strong> that was created on <em>{{ entity.datecreated|date('d/m/Y') }}</em>
+                            {% if entity.lastUpdated %}
+                                and last updated on {{ entity.lastupdated|date('H:i:s d/m/Y') }} ??
+                            {% else %}
+                                and never updated ??
+                            {% endif %}
+                        </div>
+                        <div class="modal-footer">
+                            <form action="{{ path('dhisdataconnection_delete', { 'id': entity.id }) }}" method="post">
+                                <input type="hidden" class="btn btn-danger" name="_method" value="DELETE" />
+                                {{ form_widget(delete_form) }}
+                                <button type="button" class="btn btn-default" data-dismiss="modal">Close</button>
+                                <button type="submit" class="btn btn-danger">Delete</button>
+                            </form>
+
+                        </div>
+                    </div><!-- /.modal-content -->
+                </div><!-- /.modal-dialog -->
+            </div><!-- /.modal -->
+
+        </li>
+    </ul>
+
+{% endblock %}

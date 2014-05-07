@@ -22,16 +22,13 @@ class AppKernel extends Kernel
             new JMS\SecurityExtraBundle\JMSSecurityExtraBundle(),
             new JMS\DiExtraBundle\JMSDiExtraBundle($this),
             new JMS\SerializerBundle\JMSSerializerBundle(),
-            new Sonata\AdminBundle\SonataAdminBundle(),
-            new Sonata\BlockBundle\SonataBlockBundle(),
-            new Sonata\CacheBundle\SonataCacheBundle(),
-            new Sonata\jQueryBundle\SonatajQueryBundle(),
-            new Sonata\DoctrineORMAdminBundle\SonataDoctrineORMAdminBundle(),
             new Knp\Bundle\MenuBundle\KnpMenuBundle(),
         	new FOS\UserBundle\FOSUserBundle(),
-        	new Bc\Bundle\BootstrapBundle\BcBootstrapBundle(),
+            new FOS\MessageBundle\FOSMessageBundle(),
+            new Bc\Bundle\BootstrapBundle\BcBootstrapBundle(),
             new Ob\HighchartsBundle\ObHighchartsBundle(),
             new Hris\UserBundle\HrisUserBundle(),
+            new Hris\MessageBundle\HrisMessageBundle(),
             new Hris\DashboardBundle\HrisDashboardBundle(),
             new Hris\OrganisationunitBundle\HrisOrganisationunitBundle(),
             new Hris\FormBundle\HrisFormBundle(),
@@ -42,6 +39,8 @@ class AppKernel extends Kernel
             new Hris\ImportExportBundle\HrisImportExportBundle(),
         	new Stfalcon\Bundle\TinymceBundle\StfalconTinymceBundle(),
             new Liuggio\ExcelBundle\LiuggioExcelBundle(),
+            new Hris\HelpCentreBundle\HrisHelpCentreBundle(),
+            new Hris\IntergrationBundle\HrisIntergrationBundle(),
         );
 
         if (in_array($this->getEnvironment(), array('dev', 'test'))) {

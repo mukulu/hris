@@ -28,6 +28,7 @@ use Hris\FormBundle\Entity\Form;
 use Hris\FormBundle\Entity\ResourceTable;
 use Hris\OrganisationunitBundle\Entity\Organisationunit;
 use Hris\FormBundle\Entity\Field;
+use Hris\RecordsBundle\Entity\Record;
 use Hris\ReportsBundle\Form\ReportAggregationType;
 use Hris\ReportsBundle\Form\ReportEmployeeRecordsType;
 use Symfony\Component\HttpFoundation\Request;
@@ -53,6 +54,7 @@ class ReportEmployeeRecordsController extends Controller
     /**
      * Show Report Employee Records Form
      *
+     * @Secure(roles="ROLE_SUPER_USER,ROLE_REPORTRECORDS_LIST")
      * @Route("/", name="report_employeerecords")
      * @Method("GET")
      * @Template()
@@ -60,7 +62,7 @@ class ReportEmployeeRecordsController extends Controller
     public function indexAction()
     {
 
-        $employeeRecordsForm = $this->createForm(new ReportEmployeeRecordsType(),null,array('em'=>$this->getDoctrine()->getManager()));
+        $employeeRecordsForm = $this->createForm(new ReportEmployeeRecordsType($this->getUser()),null,array('em'=>$this->getDoctrine()->getManager()));
 
         return array(
             'employeeRecordsForm'=>$employeeRecordsForm->createView(),
@@ -70,6 +72,7 @@ class ReportEmployeeRecordsController extends Controller
     /**
      * Generate employee records reports
      *
+     * @Secure(roles="ROLE_SUPER_USER,ROLE_REPORTRECORDS_LIST")
      * @Route("/", name="report_employeerecords_generate")
      * @Method("PUT")
      * @Template()
@@ -78,7 +81,7 @@ class ReportEmployeeRecordsController extends Controller
     {
         $serializer = $this->container->get('serializer');
 
-        $employeeRecordsForm = $this->createForm(new ReportEmployeeRecordsType(),null,array('em'=>$this->getDoctrine()->getManager()));
+        $employeeRecordsForm = $this->createForm(new ReportEmployeeRecordsType($this->getUser()),null,array('em'=>$this->getDoctrine()->getManager()));
         $employeeRecordsForm->bind($request);
 
         if ($employeeRecordsForm->isValid()) {
@@ -99,12 +102,12 @@ class ReportEmployeeRecordsController extends Controller
             if(empty($formNames)) {
                 $formNames = $form->getTitle();
             }else {
-                if(count($formNames)==$incr) $formNames.=$form->getTitle();
+                if(count($forms)==$incr) $formNames.=' and '.$form->getTitle(); else $formNames.=','.$form->getTitle();
             }
             // Accrue visible fields
             foreach($form->getFormVisibleFields() as $visibleFieldKey=>$visibleField) {
 
-                if(!in_array($visibleField->getField(),$visibleFields) && !$visibleField->getField()->getIsCalculated()) $visibleFields[] =$visibleField->getField();
+                if(!in_array($visibleField->getField(),$visibleFields)) $visibleFields[] =$visibleField->getField();
             }
             // Accrue form fields
             foreach($form->getFormFieldMember() as $formFieldKey=>$formField) {
@@ -128,12 +131,10 @@ class ReportEmployeeRecordsController extends Controller
             }
         }else {
             foreach ($form->getFormFieldMember() as $key => $fieldObject) {
-                if( !$fieldObject->getField()->getIsCalculated() ) {
                     if(empty($visibleFieldUids)) $visibleFieldUids  = $fieldObject->getField()->getId();
                     else $visibleFieldUids .=','.$fieldObject->getField()->getId();
                     $individualSearchClause .= '{type:"text"},';
                     $visibleFieldsCounter++;
-                }
             }
         }
         $visibleFieldParameters['name'] = 'visibleFields';
@@ -174,9 +175,8 @@ class ReportEmployeeRecordsController extends Controller
     /**
      * Returns Employee records json.
      *
-     * @Secure(roles="ROLE_RECORDS_EMPLOYEE_RECORDS,ROLE_USER")
-     *
-     * @Route("/{_format}", requirements={"_format"="json|"}, defaults={"format"="json"}, name="report_employeerecords_ajax")
+     * @Secure(roles="ROLE_SUPER_USER,ROLE_REPORTRECORDS_LIST")
+     * @Route("/{_format}", requirements={"_format"="json|"}, defaults={"_format"="json"}, name="report_employeerecords_ajax")
      * @Method("POST")
      * @Template()
      */
@@ -206,7 +206,7 @@ class ReportEmployeeRecordsController extends Controller
         }
         //preparing array of Fields
         $queryBuilder = $this->getDoctrine()->getManager()->createQueryBuilder();
-        $fieldObjects = $queryBuilder->select('field')->from('HrisFormBundle:Field','field')->where($queryBuilder->expr()->in('field.id',$visibleFieldIds))->andWhere('field.isCalculated=False')->getQuery()->getResult();
+        $fieldObjects = $queryBuilder->select('field')->from('HrisFormBundle:Field','field')->where($queryBuilder->expr()->in('field.id',$visibleFieldIds))->getQuery()->getResult();
         foreach ($fieldObjects as $key => $fieldObject) {
             $field[strtolower($fieldObject->getName())] = $fieldObject->getId();
             $fieldKeys[strtolower($fieldObject->getName())]=$key; // Used later in tracing FieldObject for resolving fieldOptions
@@ -230,9 +230,9 @@ class ReportEmployeeRecordsController extends Controller
         // Clause for filtering target organisationunits
         if ($withLowerLevels=="true") {
             $organisationunit = $this->getDoctrine()->getManager()->getRepository('HrisOrganisationunitBundle:Organisationunit')->find($organisationunitId);
-            $organisationunitLevelsWhereClause = " Structure.level".$organisationunit->getOrganisationunitStructure()->getLevel()->getLevel()."_id=$organisationunitId AND Structure.level_id >= ( SELECT hris_organisationunitlevel.level FROM hris_organisationunitstructure INNER JOIN hris_organisationunitlevel ON hris_organisationunitstructure.level_id=hris_organisationunitlevel.id  WHERE hris_organisationunitstructure.organisationunit_id=$organisationunitId ) ";
+            $organisationunitLevelsWhereClause = " Structure.level".$organisationunit->getOrganisationunitStructure()->getLevel()->getLevel()."_id=$organisationunitId AND Structure.level_id >= ( SELECT hris_organisationunitlevel.level FROM hris_organisationunitstructure INNER JOIN hris_organisationunitlevel ON hris_organisationunitstructure.level_id=hris_organisationunitlevel.id  WHERE hris_organisationunitstructure.organisationunit_id=$organisationunitId )  AND Organisationunit.active=True";
         }else {
-            $organisationunitLevelsWhereClause = " ResourceTable.organisationunit_id=$organisationunitId ";
+            $organisationunitLevelsWhereClause = " ResourceTable.organisationunit_id=$organisationunitId AND Organisationunit.active=True";
         }
         // Clause for filtering target forms
         $formsWhereClause=" ResourceTable.form_id IN ($formIds) ";
@@ -240,12 +240,13 @@ class ReportEmployeeRecordsController extends Controller
         // Row count for the entire database(rows accessible by user)
         $selectQuery="SELECT COUNT(ResourceTable.instance) AS count $fromClause $organisationunitLevelsJoinClause WHERE $organisationunitLevelsWhereClause";
         if(!empty($onlyActiveEmployeeWhereClause)) $selectQuery .=" AND $onlyActiveEmployeeWhereClause";
+
         $entireDatabaseCount = $this->getDoctrine()->getManager()->getConnection()->executeQuery($selectQuery)->fetchColumn();
 
         /*
          * Individual column filtering
          */
-        for ( $i=1 ; $i<count($visibleFieldIds) ; $i++ )
+        for ( $i=0 ; $i<count($visibleFieldIds) ; $i++ )
         {
             if ( isset($_POST['bSearchable_'.$i]) && $_POST['bSearchable_'.$i] == "true" && $_POST['sSearch_'.$i] != '' )
             {
@@ -312,39 +313,21 @@ class ReportEmployeeRecordsController extends Controller
         }
 
         // Putting select column clause together the query
-        $birthDateNotPresent=True;
-        $firstAppointmentNotPresent=True;
-        foreach($visibleFields as $key=>$visibleFieldObject) {
+        for ( $i=0 ; $i<count($visibleFieldIds) ; $i++ )
+        {
             // Building the Select column clause
             if(isset($selectColumnClause)) {
-                $selectColumnClause.=",ResourceTable.".strtolower($visibleFieldObject->getName())." as ".strtolower($visibleFieldObject->getName());
+                $selectColumnClause.=",ResourceTable.".strtolower($fieldObjects[$visibleFieldKeysById[$visibleFieldIds[$i]]]->getName())." as ".strtolower($fieldObjects[$visibleFieldKeysById[$visibleFieldIds[$i]]]->getName());
             }else {
-                $selectColumnClause="ResourceTable.".strtolower($visibleFieldObject->getName())." as ".strtolower($visibleFieldObject->getName());
-            }
-            if($visibleFieldObject->getName()=="dateoffirstappointment") {
-                $firstAppointmentNotPresent=False;
-            }
-            if($visibleFieldObject->getName()=="birthdate") {
-                $birthDateNotPresent=False;
+                $selectColumnClause="ResourceTable.".strtolower($fieldObjects[$visibleFieldKeysById[$visibleFieldIds[$i]]]->getName())." as ".strtolower($fieldObjects[$visibleFieldKeysById[$visibleFieldIds[$i]]]->getName());
             }
         }
         if(isset($selectColumnClause)) {
             $selectColumnClause.=",ResourceTable.instance as instance,ResourceTable.lastupdated as lastupdated,ResourceTable.organisationunit_name as organisationunit_name";
-            if($firstAppointmentNotPresent==True) {
-                $selectColumnClause .=",ResourceTable.dateoffirstappointment as dateoffirstappointment";
-            }
-            if($birthDateNotPresent == True) {
-                $selectColumnClause .=",ResourceTable.birthdate as birthdate";
-            }
         }else {
             $selectColumnClause="ResourceTable.instance as instance,ResourceTable.lastupdated as lastupdated,ResourceTable.organisationunit_name as organisationunit_name";
-            if($firstAppointmentNotPresent==True) {
-                $selectColumnClause .=",ResourceTable.dateoffirstappointment as dateoffirstappointment";
-            }
-            if($birthDateNotPresent == True) {
-                $selectColumnClause .=",ResourceTable.birthdate as birthdate";
-            }
         }
+        // Constructing where clause
         $whereClause=NULL;
         if(!empty($onlyActiveEmployeeWhereClause)) {
             $whereClause=" WHERE $organisationunitLevelsWhereClause AND $onlyActiveEmployeeWhereClause AND $formsWhereClause";
@@ -417,7 +400,7 @@ class ReportEmployeeRecordsController extends Controller
          * The Final Query(factoring pagination, searching and sorting)
          */
         $recordsToDisplayQuery="SELECT ".$selectColumnClause.$filteredRecordsWithLimitsWithoutSelectQuery;
-
+        //var_dump($recordsToDisplayQuery);exit();
         $recordsArray = $this->getDoctrine()->getManager()->getConnection()->fetchAll($recordsToDisplayQuery);
         /*
          * Output
@@ -444,80 +427,45 @@ class ReportEmployeeRecordsController extends Controller
                     }else {
                         $counter++;
                     }
-                    for ( $i=0 ; $i<count($visibleFieldIds)-1 ; $i++ ) {
-                        $fieldObject = $fieldObjects[$i];
+                    for ( $i=0 ; $i<count($visibleFieldIds) ; $i++ ) {
+                        $fieldObject = $fieldObjects[$visibleFieldKeysById[$visibleFieldIds[$i]]];
+                        //$fieldObject = $fieldObjects[$i];
                         if ($fieldObject->getInputType()->getName() == 'Select') {
                             $displayValue = $recordArray[strtolower($fieldObject->getName())];
                         }else if ($fieldObject->getInputType()->getName() == 'Date') {
-                            if(isset($recordArray[strtolower($fieldObject->getName())])) {
-                                $displayValue = new \DateTime($recordArray[strtolower($fieldObject->getName())]);
+                            /**if($fieldObject->getIsCalculated()) {
+
+                                if(preg_match_all('/\#{([^\}]+)\}/',$fieldObject->getCalculatedExpression(),$match)) {
+                                    foreach($fieldObjects as $fieldKey=>$field) {
+                                        if($field->getName()==$match[1][0]) {
+                                            // Translates to $field->getName()
+                                            $valueKey = $field->getName();
+                                        }
+                                    }
+                                }
+                                $derivedDate = new \DateTime($recordArray[strtolower($valueKey)]);
                                 // Date Field Value
-                                $displayValue = $displayValue->format('d/m/Y');
-                            }
+                                $formattedDerivedDate = $derivedDate->format('d/m/Y');
+                                $expression = @@str_replace($match[0][0],$formattedDerivedDate,$fieldObject->getCalculatedExpression());
+
+                                $displayValue = eval("return $expression;");
+                            }else {
+                                if(isset($recordArray[strtolower($fieldObject->getName())])) {
+                                    $displayValue = new \DateTime($recordArray[strtolower($fieldObject->getName())]);
+                                    // Date Field Value
+                                    $displayValue = $displayValue->format('d/m/Y');
+                                }
+                            }**/
+                            #########
+                            #ABOVE SCRIPT WILL NEED TO BE REVIEWED AS WE ARE PULLING DATA FROM RESOURCE TABLES
+                            ##########
+                            $displayValue = $recordArray[strtolower($fieldObject->getName())];
                         } else {
                             $displayValue = $recordArray[strtolower($fieldObject->getName())];
                         }
                         if(!empty($displayValue)) $row[]=$displayValue; else $row[] = "";
-                    }
-                    // Employment duration calcuation @wild hack and hard coded
-                    if(isset($recordArray["dateoffirstappointment"])) {
-                        $firstAppointment = new \DateTime($recordArray["dateoffirstappointment"]);
-                        if (!empty($firstAppointment)){
-                            if(gettype($firstAppointment)=="object") {
-                                $correctFormat="Y-m-d";
-                                $firstAppointment = $firstAppointment->format($correctFormat);
-                            }else {
-                                // Workaround for dates that got saved as d/m/Y instead of Y-m-d
-                                $correctFormat = 'd/m/Y';
-                                $firstAppointmentDateObject = \DateTime::createFromFormat($correctFormat, $firstAppointment);
-                                if(empty($firstAppointmentDateObject)) {
-                                    $correctFormat = 'Y-m-d';
-                                    $firstAppointment = \DateTime::createFromFormat($correctFormat, $firstAppointment);
-                                }else {
-                                    $correctFormat="Y-m-d";
-                                    $firstAppointment = $firstAppointmentDateObject->format('Y-m-d');
-                                }
-                            }
-                            $datediff = $this->dateDiff("-", date($correctFormat), $firstAppointment);
-                            if (round($datediff / 12, 0) < 12) {
-                                $employmentDuration = round($datediff / 12, 0) . "(m)";
-                            } else {
-                                $employmentDuration = floor($datediff / 365) . "(y) " . floor(($datediff % 365) / 30) . "(m)";
-                            }
-                        }else {
-                            $employmentDuration = "";
-                        }
-                    }
-                    if(isset($recordArray["birthdate"])) {
-                        // Hard coding calculated fields
-                        // Calculating age and retirement
-                        $birthdate = new \DateTime($recordArray["birthdate"]);
-                        $correctFormat = 'Y-m-d';
-                        if (!empty($birthdate)){
-                            if(gettype($birthdate)=="object") {
-                                $birthdate = $birthdate->format('Y-m-d');
-                            }else {
-                                // Workaround for dates that got saved as d/m/Y instead of Y-m-d
-                                $correctFormat = 'd/m/Y';
-                                $birthdate = \DateTime::createFromFormat($correctFormat, $birthdate);
-                                $birthdate = $birthdate->format('Y-m-d');
-                            }
 
-                        }
-                        if (!empty($birthdate)) {
-
-                            $age = round($this->dateDiff("-", date($correctFormat), $birthdate) / 365, 0);
-                            $date = explode('-', $birthdate);
-                            $retirementDate = $date[2] . '/' . $date[1] . '/' . ($date[0] + 60);
-                            $birthdate = $date[2] . '/' . $date[1] . '/' . $date[0];
-                        } else {
-                            $age = "";
-                            $retirementDate = "";
-                        }
                     }
-                    if(isset($age)) $row[] = $age;else $row[]='';
-                    if(isset($employmentDuration)) $row[] = $employmentDuration;else $row[]='';
-                    if(isset($retirementDate)) $row[] = $retirementDate;else $row[]='';
                     $lastUpdated = new \DateTime($recordArray["lastupdated"]);
                     $row[] = $lastUpdated->format('d/m/Y');
                     $row[] = $recordArray["organisationunit_name"];
@@ -552,6 +500,7 @@ class ReportEmployeeRecordsController extends Controller
     /**
      * Download records reports
      *
+     * @Secure(roles="ROLE_SUPER_USER,ROLE_REPORTRECORDS_DOWNLOAD")
      * @Route("/download", name="report_employeerecords_download")
      * @Method("GET")
      * @Template()
@@ -585,7 +534,7 @@ class ReportEmployeeRecordsController extends Controller
 
         $selectedOrgunitStructure = $em->getRepository('HrisOrganisationunitBundle:OrganisationunitStructure')->findOneBy(array('organisationunit' => $organisationUnit->getId()));
 
-        $resourceTableName = "_resource_all_fields";
+        $resourceTableName = ResourceTable::getStandardResourceTableName();
 
         $sql = "SELECT * FROM (SELECT DISTINCT ON (field_id) field_id, form_id, sort, name,caption FROM hris_form_fieldmembers inner join hris_field ON hris_field.id=hris_form_fieldmembers.field_id WHERE form_id in ($formid)) as T order by T.sort";
 
@@ -616,11 +565,6 @@ class ReportEmployeeRecordsController extends Controller
         }
 
         // Calculated fields
-        $query .= "ResourceTable.age ,";
-        $query .= "ResourceTable.age_group ,";
-        $query .= "ResourceTable.employment_duration ,";
-        $query .= "ResourceTable.retirement_date ,";
-        $query .= "ResourceTable.retirement_date_year ,";
         $query .= "ResourceTable.form_name ,";
 
         $query .= " Orgunit.longname FROM ".$resourceTableName." ResourceTable inner join hris_organisationunit as Orgunit ON Orgunit.id = ResourceTable.organisationunit_id INNER JOIN hris_organisationunitstructure AS Structure ON Structure.organisationunit_id = ResourceTable.organisationunit_id";
@@ -641,8 +585,8 @@ class ReportEmployeeRecordsController extends Controller
         $report = $em -> getConnection() -> executeQuery($query) -> fetchAll();
 
         // ask the service for a Excel5
-        $excelService = $this->get('xls.service_xls5');
-        $excelService->excelObj->getProperties()->setCreator("HRHIS3")
+        $excelService = $this->get('phpexcel')->createPHPExcelObject();
+        $excelService->getProperties()->setCreator("HRHIS3")
             ->setLastModifiedBy("HRHIS3")
             ->setTitle($title)
             ->setSubject("Office 2005 XLSX Test Document")
@@ -654,9 +598,9 @@ class ReportEmployeeRecordsController extends Controller
         $column = 'A';
         $row  = 1;
         $date = "Date: ".date("jS F Y");
-        $excelService->excelObj->getActiveSheet()->getDefaultRowDimension()->setRowHeight(15);
-        $excelService->excelObj->getActiveSheet()->getDefaultColumnDimension()->setWidth(15);
-        $excelService->excelObj->setActiveSheetIndex(0)
+        $excelService->getActiveSheet()->getDefaultRowDimension()->setRowHeight(15);
+        $excelService->getActiveSheet()->getDefaultColumnDimension()->setWidth(15);
+        $excelService->setActiveSheetIndex(0)
             ->setCellValue($column.$row++, $title)
             ->setCellValue($column.$row, $date);
         //add style to the header
@@ -712,8 +656,8 @@ class ReportEmployeeRecordsController extends Controller
             ),
         );
 
-        $excelService->excelObj->getActiveSheet()->getRowDimension('1')->setRowHeight(30);
-        $excelService->excelObj->getActiveSheet()->getRowDimension('2')->setRowHeight(20);
+        $excelService->getActiveSheet()->getRowDimension('1')->setRowHeight(30);
+        $excelService->getActiveSheet()->getRowDimension('2')->setRowHeight(20);
 
         //reset the colomn and row number
         $column == 'A';
@@ -721,40 +665,35 @@ class ReportEmployeeRecordsController extends Controller
         $row += 2;
 
         //calculate the width of the styles
-        for ($i = 1; $i < (count($results)+2+sizeof($orgunitLevels)+sizeof($groupsets)+6); $i++) {
+        for ($i = 1; $i < (count($results)+2+sizeof($orgunitLevels)+sizeof($groupsets)+1); $i++) {
             $columnmerge++;
         }
 
         //apply the styles
-        $excelService->excelObj->getActiveSheet()->getStyle('A1:'.$columnmerge.'2')->applyFromArray($heading_format);
-        $excelService->excelObj->getActiveSheet()->mergeCells('A1:'.$columnmerge.'1');
-        $excelService->excelObj->getActiveSheet()->mergeCells('A2:'.$columnmerge.'2');
+        $excelService->getActiveSheet()->getStyle('A1:'.$columnmerge.'2')->applyFromArray($heading_format);
+        $excelService->getActiveSheet()->mergeCells('A1:'.$columnmerge.'1');
+        $excelService->getActiveSheet()->mergeCells('A2:'.$columnmerge.'2');
 
         //write the table heading of the values
-        $excelService->excelObj->getActiveSheet()->getStyle('A4:'.$columnmerge.'4')->applyFromArray($header_format);
-        $excelService->excelObj->setActiveSheetIndex(0)
+        $excelService->getActiveSheet()->getStyle('A4:'.$columnmerge.'4')->applyFromArray($header_format);
+        $excelService->setActiveSheetIndex(0)
             ->setCellValue($column++.$row, 'SN');
         foreach ($results as $key => $value) {
-            $excelService->excelObj->setActiveSheetIndex(0)
+            $excelService->setActiveSheetIndex(0)
                 ->setCellValue($column++.$row, $value['caption']);
         }
         // Make Levels of orgunit
         foreach($orgunitLevels as $orgunitLevelLevelKey=>$orgunitLevel) {
-            $excelService->excelObj->setActiveSheetIndex(0)
+            $excelService->setActiveSheetIndex(0)
                 ->setCellValue($column++.$row, $orgunitLevel->getName());
         }
         // Make Groupset Column
         foreach($groupsets as $groupsetKey=>$groupset) {
-            $excelService->excelObj->setActiveSheetIndex(0)
+            $excelService->setActiveSheetIndex(0)
                 ->setCellValue($column++.$row, $groupset->getName());
         }
         // Calculated fields
-        $excelService->excelObj->setActiveSheetIndex(0)
-            ->setCellValue($column++.$row, 'Age')
-            ->setCellValue($column++.$row, 'Age Group')
-            ->setCellValue($column++.$row, 'Employment Duration')
-            ->setCellValue($column++.$row, 'Retirement Date')
-            ->setCellValue($column++.$row, 'Retirement Date Year')
+        $excelService->setActiveSheetIndex(0)
             ->setCellValue($column++.$row, 'Form Name')
             ->setCellValue($column.$row, 'Duty Post');
 
@@ -766,64 +705,68 @@ class ReportEmployeeRecordsController extends Controller
 
             //format of the row
             if (($row % 2) == 1)
-                $excelService->excelObj->getActiveSheet()->getStyle($column.$row.':'.$columnmerge.$row)->applyFromArray($text_format1);
+                $excelService->getActiveSheet()->getStyle($column.$row.':'.$columnmerge.$row)->applyFromArray($text_format1);
             else
-                $excelService->excelObj->getActiveSheet()->getStyle($column.$row.':'.$columnmerge.$row)->applyFromArray($text_format2);
+                $excelService->getActiveSheet()->getStyle($column.$row.':'.$columnmerge.$row)->applyFromArray($text_format2);
 
             //Display the serial number
-            $excelService->excelObj->setActiveSheetIndex(0)
+            $excelService->setActiveSheetIndex(0)
                 ->setCellValue($column++.$row, $i++);
 
             foreach ($results as $key => $value) {
-                $excelService->excelObj->setActiveSheetIndex(0)
+                $excelService->setActiveSheetIndex(0)
                     ->setCellValue($column++.$row, $rows[strtolower($value['name'])]);
             }
 
             // Make Levels of orgunit
             foreach($orgunitLevels as $orgunitLevelLevelKey=>$orgunitLevel) {
                 $orgunitLevelName = "level".$orgunitLevel->getLevel()."_".str_replace(' ','_',str_replace('.','_',str_replace('/','_',$orgunitLevel->getName()))) ;
-                $excelService->excelObj->setActiveSheetIndex(0)
+                $excelService->setActiveSheetIndex(0)
                     ->setCellValue($column++.$row,  $rows[strtolower($orgunitLevelName)]);
             }
 
             // Make Groupset Column
             foreach($groupsets as $groupsetKey=>$groupset) {
-                $excelService->excelObj->setActiveSheetIndex(0)
+                $excelService->setActiveSheetIndex(0)
                     ->setCellValue($column++.$row,  $rows[strtolower($groupset->getName())]);
             }
             // Calculated fields
-            $excelService->excelObj->setActiveSheetIndex(0)
-                ->setCellValue($column++.$row,  $rows["age"])
-                ->setCellValue($column++.$row,  $rows["age_group"])
-                ->setCellValue($column++.$row,  $rows["employment_duration"])
-                ->setCellValue($column++.$row,  $rows["retirement_date"])
-                ->setCellValue($column++.$row,  $rows["retirement_date_year"])
+            $excelService->setActiveSheetIndex(0)
                 ->setCellValue($column++.$row,  $rows["form_name"])
                 ->setCellValue($column.$row,  $rows["longname"]);
 
         }
-        $excelService->excelObj->getActiveSheet()->setTitle('List of Records');
+        $excelService->getActiveSheet()->setTitle('List of Records');
 
 
         // Set active sheet index to the first sheet, so Excel opens this as the first sheet
-        $excelService->excelObj->setActiveSheetIndex(0);
+        $excelService->setActiveSheetIndex(0);
 
         //create the response
-
-        $response = $excelService->getResponse();
-        $response->headers->set('Content-Type', 'application/vnd.ms-excel; charset=utf-8');
-        $response->headers->set('Content-Disposition', 'attachment; filename='.$title.'.xls');
+        // create the writer
+        $writer = $this->get('phpexcel')->createWriter($excelService, 'Excel5');
+        // create the response
+        $response = $this->get('phpexcel')->createStreamedResponse($writer);
+        $title = str_replace(',',' ',$title);
+        //$response = $excelService->getResponse();
+       // $response->headers->set('Content-Type', 'application/vnd.ms-excel; charset=utf-8');
+        //$response->headers->set('Content-Disposition', 'attachment; filename='.$title.'.xls');
 
         // If you are using a https connection, you have to set those two headers and use sendHeaders() for compatibility with IE <9
+        //$response->headers->set('Pragma', 'public');
+        //$response->headers->set('Cache-Control', 'maxage=1');
+        $response->headers->set('Content-Type', 'text/vnd.ms-excel; charset=utf-8');
+        $response->headers->set('Content-Disposition', 'attachment;filename='.$title.'.xls');
         $response->headers->set('Pragma', 'public');
         $response->headers->set('Cache-Control', 'maxage=1');
-        $response->sendHeaders();
+        //$response->sendHeaders();
         return $response;
 
     }
     /**
      * Download records reports
      *
+     * @Secure(roles="ROLE_SUPER_USER,ROLE_REPORTRECORDS_DOWNLOADBYCADRE")
      * @Route("/download_bycarde", name="report_employeerecords_download_bycarde")
      * @Method("GET")
      * @Template()
@@ -840,6 +783,10 @@ class ReportEmployeeRecordsController extends Controller
         $formNames = '';
         $formid = '';
         $organisationUnit = $em->getRepository('HrisOrganisationunitBundle:Organisationunit')->find($organisationUnitid);
+        $proffesionFieldId = $em->getRepository('HrisFormBundle:Field')->findOneBy(
+                array(
+                    'name'=>"profession"
+                ))->getId();;
         foreach($request->query->get('formsId') as $formIds){
             $form = $em->getRepository('HrisFormBundle:Form')->find($formIds);
             $formNames .= $form->getName().',';
@@ -858,7 +805,7 @@ class ReportEmployeeRecordsController extends Controller
 
         $selectedOrgunitStructure = $em->getRepository('HrisOrganisationunitBundle:OrganisationunitStructure')->findOneBy(array('organisationunit' => $organisationUnit->getId()));
 
-        $resourceTableName = "_resource_all_fields";
+        $resourceTableName = ResourceTable::getStandardResourceTableName();
 
         $sql = "SELECT * FROM (SELECT DISTINCT ON (field_id) field_id, form_id, sort, name,caption FROM hris_form_fieldmembers inner join hris_field ON hris_field.id=hris_form_fieldmembers.field_id WHERE form_id in ($formid)) as T order by T.sort";
 
@@ -889,14 +836,11 @@ class ReportEmployeeRecordsController extends Controller
         }
 
         // Calculated fields
-        $query .= "ResourceTable.age ,";
-        $query .= "ResourceTable.age_group ,";
-        $query .= "ResourceTable.employment_duration ,";
-        $query .= "ResourceTable.retirement_date ,";
-        $query .= "ResourceTable.retirement_date_year ,";
         $query .= "ResourceTable.form_name ,";
 
+        //From Clause
         $query .= " Orgunit.longname FROM ".$resourceTableName." ResourceTable inner join hris_organisationunit as Orgunit ON Orgunit.id = ResourceTable.organisationunit_id INNER JOIN hris_organisationunitstructure AS Structure ON Structure.organisationunit_id = ResourceTable.organisationunit_id";
+        $query .= " INNER JOIN ( SELECT * FROM hris_fieldoption where field_id=".$proffesionFieldId.") AS fieldoption ON fieldoption.value = ResourceTable.profession ";
         $query .= " WHERE ResourceTable.form_id in (".$formid.")";
         if($withLowerLevels){
             $query .= " AND Structure.level".$selectedOrgunitStructure->getLevel()->getLevel()."_id=".$organisationUnit->getId();
@@ -911,12 +855,15 @@ class ReportEmployeeRecordsController extends Controller
             $query .= " AND ".$fieldOptionToExclude->getField()->getName()." !='".$fieldOptionToExclude->getValue()."'";
         }
 
-        $query .= " ORDER BY ResourceTable.profession, ResourceTable.dateoffirstappointment";
+        $query .= " ORDER BY ResourceTable.profession, ResourceTable.first_appointment";
+        #CHANGE TO THIS WHEN ALL THE FIELD OPTIONS ARE SORTED
+        //$query .= " ORDER BY fieldoption.sort, ResourceTable.first_appointment";
+
         $report = $em -> getConnection() -> executeQuery($query) -> fetchAll();
 
         // ask the service for a Excel5
-        $excelService = $this->get('xls.service_xls5');
-        $excelService->excelObj->getProperties()->setCreator("HRHIS3")
+        $excelService = $this->get('phpexcel')->createPHPExcelObject();
+        $excelService->getProperties()->setCreator("HRHIS3")
             ->setLastModifiedBy("HRHIS3")
             ->setTitle($title)
             ->setSubject("Office 2005 XLSX Test Document")
@@ -928,9 +875,9 @@ class ReportEmployeeRecordsController extends Controller
         $column = 'A';
         $row  = 1;
         $date = "Date: ".date("jS F Y");
-        $excelService->excelObj->getActiveSheet()->getDefaultRowDimension()->setRowHeight(15);
-        $excelService->excelObj->getActiveSheet()->getDefaultColumnDimension()->setWidth(15);
-        $excelService->excelObj->setActiveSheetIndex(0)
+        $excelService->getActiveSheet()->getDefaultRowDimension()->setRowHeight(15);
+        $excelService->getActiveSheet()->getDefaultColumnDimension()->setWidth(15);
+        $excelService->setActiveSheetIndex(0)
             ->setCellValue($column.$row++, $title)
             ->setCellValue($column.$row, $date);
         //add style to the header
@@ -986,8 +933,8 @@ class ReportEmployeeRecordsController extends Controller
             ),
         );
 
-        $excelService->excelObj->getActiveSheet()->getRowDimension('1')->setRowHeight(30);
-        $excelService->excelObj->getActiveSheet()->getRowDimension('2')->setRowHeight(20);
+        $excelService->getActiveSheet()->getRowDimension('1')->setRowHeight(30);
+        $excelService->getActiveSheet()->getRowDimension('2')->setRowHeight(20);
 
         //reset the colomn and row number
         $column == 'A';
@@ -995,14 +942,14 @@ class ReportEmployeeRecordsController extends Controller
         $row += 2;
 
         //calculate the width of the styles
-        for ($i = 1; $i < (count($results)+2+sizeof($orgunitLevels)+sizeof($groupsets)+6); $i++) {
+        for ($i = 1; $i < (count($results)+2+sizeof($orgunitLevels)+sizeof($groupsets)+1); $i++) {
             $columnmerge++;
         }
 
         //apply the styles
-        $excelService->excelObj->getActiveSheet()->getStyle('A1:'.$columnmerge.'2')->applyFromArray($heading_format);
-        $excelService->excelObj->getActiveSheet()->mergeCells('A1:'.$columnmerge.'1');
-        $excelService->excelObj->getActiveSheet()->mergeCells('A2:'.$columnmerge.'2');
+        $excelService->getActiveSheet()->getStyle('A1:'.$columnmerge.'2')->applyFromArray($heading_format);
+        $excelService->getActiveSheet()->mergeCells('A1:'.$columnmerge.'1');
+        $excelService->getActiveSheet()->mergeCells('A2:'.$columnmerge.'2');
 
         //write the values
         $i =1; //count the row
@@ -1013,100 +960,100 @@ class ReportEmployeeRecordsController extends Controller
             if($currentProfessional != $rows['profession'] ){
                 //write the heading for the professional
                 $row++;
-                $excelService->excelObj->getActiveSheet()->getStyle($column.$row.':D'.$row)->applyFromArray($heading_format);
-                $excelService->excelObj->getActiveSheet()->mergeCells($column.$row.':D'.$row);
-                $excelService->excelObj->setActiveSheetIndex(0)
+                $excelService->getActiveSheet()->getStyle($column.$row.':D'.$row)->applyFromArray($heading_format);
+                $excelService->getActiveSheet()->mergeCells($column.$row.':D'.$row);
+                $excelService->setActiveSheetIndex(0)
                     ->setCellValue($column.$row, $rows['profession']);
 
                 //Write the heading for the data
                 $row++;
                 $column = 'A';//reset to the first column
-                $excelService->excelObj->getActiveSheet()->getStyle($column.$row.':'.$columnmerge.$row)->applyFromArray($header_format);
-                $excelService->excelObj->setActiveSheetIndex(0)
+                $excelService->getActiveSheet()->getStyle($column.$row.':'.$columnmerge.$row)->applyFromArray($header_format);
+                $excelService->setActiveSheetIndex(0)
                     ->setCellValue($column++.$row, 'SN');
                 foreach ($results as $key => $value) {
-                    $excelService->excelObj->setActiveSheetIndex(0)
+                    $excelService->setActiveSheetIndex(0)
                         ->setCellValue($column++.$row, $value['caption']);
                 }
                 // Make Levels of orgunit
                 foreach($orgunitLevels as $orgunitLevelLevelKey=>$orgunitLevel) {
-                    $excelService->excelObj->setActiveSheetIndex(0)
+                    $excelService->setActiveSheetIndex(0)
                         ->setCellValue($column++.$row, $orgunitLevel->getName());
                 }
                 // Make Groupset Column
                 foreach($groupsets as $groupsetKey=>$groupset) {
-                    $excelService->excelObj->setActiveSheetIndex(0)
+                    $excelService->setActiveSheetIndex(0)
                         ->setCellValue($column++.$row, $groupset->getName());
                 }
                 // Calculated fields
-                $excelService->excelObj->setActiveSheetIndex(0)
-                    ->setCellValue($column++.$row, 'Age')
-                    ->setCellValue($column++.$row, 'Age Group')
-                    ->setCellValue($column++.$row, 'Employment Duration')
-                    ->setCellValue($column++.$row, 'Retirement Date')
-                    ->setCellValue($column++.$row, 'Retirement Date Year')
+                $excelService->setActiveSheetIndex(0)
                     ->setCellValue($column++.$row, 'Form Name')
                     ->setCellValue($column.$row, 'Duty Post');
 
-                $i =0;//reset the serial number
+                $i =1;//reset the serial number
+                $row++;
+                $column = 'A';//return to the 1st column
             }
 
             //format of the row
             if (($row % 2) == 1)
-                $excelService->excelObj->getActiveSheet()->getStyle($column.$row.':'.$columnmerge.$row)->applyFromArray($text_format1);
+                $excelService->getActiveSheet()->getStyle($column.$row.':'.$columnmerge.$row)->applyFromArray($text_format1);
             else
-                $excelService->excelObj->getActiveSheet()->getStyle($column.$row.':'.$columnmerge.$row)->applyFromArray($text_format2);
+                $excelService->getActiveSheet()->getStyle($column.$row.':'.$columnmerge.$row)->applyFromArray($text_format2);
 
             //Display the serial number
-            $excelService->excelObj->setActiveSheetIndex(0)
+            $excelService->setActiveSheetIndex(0)
                 ->setCellValue($column++.$row, $i++);
 
             foreach ($results as $key => $value) {
-                $excelService->excelObj->setActiveSheetIndex(0)
+                $excelService->setActiveSheetIndex(0)
                     ->setCellValue($column++.$row, $rows[strtolower($value['name'])]);
             }
 
             // Make Levels of orgunit
             foreach($orgunitLevels as $orgunitLevelLevelKey=>$orgunitLevel) {
                 $orgunitLevelName = "level".$orgunitLevel->getLevel()."_".str_replace(' ','_',str_replace('.','_',str_replace('/','_',$orgunitLevel->getName()))) ;
-                $excelService->excelObj->setActiveSheetIndex(0)
+                $excelService->setActiveSheetIndex(0)
                     ->setCellValue($column++.$row,  $rows[strtolower($orgunitLevelName)]);
             }
 
             // Make Groupset Column
             foreach($groupsets as $groupsetKey=>$groupset) {
-                $excelService->excelObj->setActiveSheetIndex(0)
+                $excelService->setActiveSheetIndex(0)
                     ->setCellValue($column++.$row,  $rows[strtolower($groupset->getName())]);
             }
             // Calculated fields
-            $excelService->excelObj->setActiveSheetIndex(0)
-                ->setCellValue($column++.$row,  $rows["age"])
-                ->setCellValue($column++.$row,  $rows["age_group"])
-                ->setCellValue($column++.$row,  $rows["employment_duration"])
-                ->setCellValue($column++.$row,  $rows["retirement_date"])
-                ->setCellValue($column++.$row,  $rows["retirement_date_year"])
+            $excelService->setActiveSheetIndex(0)
                 ->setCellValue($column++.$row,  $rows["form_name"])
                 ->setCellValue($column.$row,  $rows["longname"]);
 
             $currentProfessional = $rows['profession'];
 
         }
-        $excelService->excelObj->getActiveSheet()->setTitle('List of Records');
+        $excelService->getActiveSheet()->setTitle('List of Records');
 
 
         // Set active sheet index to the first sheet, so Excel opens this as the first sheet
-        $excelService->excelObj->setActiveSheetIndex(0);
+        $excelService->setActiveSheetIndex(0);
 
         //create the response
-
-        $response = $excelService->getResponse();
-        $response->headers->set('Content-Type', 'application/vnd.ms-excel; charset=utf-8');
-        $response->headers->set('Content-Disposition', 'attachment; filename='.$title.'.xls');
+        // create the writer
+        $writer = $this->get('phpexcel')->createWriter($excelService, 'Excel5');
+        // create the response
+        $response = $this->get('phpexcel')->createStreamedResponse($writer);
+        $title = str_replace(',',' ',$title);
+        //$response = $excelService->getResponse();
+        //$response->headers->set('Content-Type', 'application/vnd.ms-excel; charset=utf-8');
+        //$response->headers->set('Content-Disposition', 'attachment; filename='.$title.'.xls');
 
         // If you are using a https connection, you have to set those two headers and use sendHeaders() for compatibility with IE <9
+        //$response->headers->set('Pragma', 'public');
+        //$response->headers->set('Cache-Control', 'maxage=1');
+        $response->headers->set('Content-Type', 'text/vnd.ms-excel; charset=utf-8');
+        $response->headers->set('Content-Disposition', 'attachment;filename='.$title.'.xls');
         $response->headers->set('Pragma', 'public');
         $response->headers->set('Cache-Control', 'maxage=1');
-        $response->sendHeaders();
+        //$response->sendHeaders();
         return $response;
 
     }

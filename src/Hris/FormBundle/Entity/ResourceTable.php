@@ -33,6 +33,7 @@ use Doctrine\Tests\Common\Annotations\True;
 use Gedmo\Mapping\Annotation as Gedmo;
 
 use Hris\FormBundle\Entity\ResourceTableFieldMember;
+use Hris\OrganisationunitBundle\Controller\OrganisationunitStructureController;
 use Hris\RecordsBundle\Entity\Record;
 use Symfony\Component\Stopwatch\Stopwatch;
 use Symfony\Component\Validator\Constraints as Assert;
@@ -530,8 +531,7 @@ class ResourceTable
      * @param $entityManager
      * @return string
      */
-    public function generateResourceTable($entityManager) {
-
+    public function generateResourceTable($entityManager,$logger = NULL) {
 
         $totalInsertedRecords = NULL;
         $totalResourceTableFields = NULL;
@@ -544,6 +544,7 @@ class ResourceTable
 
 
         if( $this->getIsgenerating() == False && ($this->isResourceTableOutdated($entityManager) == True || $this->isResourceTableCompletelyGenerated($entityManager) == False) ) {
+            $logger->info('Resource table is out dated, was not completely generated');
             /*
              * Resource table is out dated, was not completely generated
              */
@@ -567,15 +568,16 @@ class ResourceTable
             }else {
                 $this->messagelog = '';
             }
-            if( $schemaManager->tablesExist($resourceTableName) ) {
-                $schemaManager->dropTable($resourceTableName);
-                $this->messagelog .="Operation: Dropping existent resource table\n";
-            }
 
             /**
              * @var $resourceTable String
              */
-            $resourceTable = new Table($resourceTableName);//Create database table
+
+            // Cleanup any residue temporary resourcetable left
+            if( $schemaManager->tablesExist($resourceTableName.'_temporary') ) {
+                $schemaManager->dropTable($resourceTableName.'_temporary');
+            }
+            $resourceTable = new Table($resourceTableName.'_temporary');//Create database table
 
             // Create primary key
             $resourceTable->addColumn('id', "integer",array('nullable'=>true,'precision'=>0, 'scale'=>0));
@@ -583,7 +585,7 @@ class ResourceTable
             $resourceTable->setPrimaryKey(array('id'),'IDX_'.uniqid(''));
             $resourceTable->addIndex(array('id'),'IDX_'.uniqid(''));
 
-            // Create other column in the resource table
+            // Create other columns(fields, organisationunits,etc) in the resource table
             foreach($this->getResourceTableFieldMember() as $resourceTableKey=> $resourceTableFieldMember) {
                 $field = $resourceTableFieldMember->getField();
 
@@ -594,7 +596,7 @@ class ResourceTable
                 }elseif($field->getDataType()->getName() == "Double") {
                     $resourceTable->addColumn($field->getName(), "float",array('notnull'=>false,'precision'=>0, 'scale'=>0));
                 }elseif($field->getDataType()->getName() == "Date") {
-                    $resourceTable->addColumn($field->getName(), "datetime",array('notnull'=>false,'precision'=>0, 'scale'=>0));
+                    $resourceTable->addColumn($field->getName(), "date",array('notnull'=>false,'precision'=>0, 'scale'=>0));
                     // Additional analysis columns
                     //$resourceTable->addColumn($field->getName().'_day', "string",array('length'=>64, 'notnull'=>false));
                     //$resourceTable->addColumn($field->getName().'_month_number', "integer",array('notnull'=>false,'precision'=>0, 'scale'=>0));
@@ -605,8 +607,9 @@ class ResourceTable
                 }
                 // @todo implement after creation of history date class
                 // Add History date field for fields with history
-                if($field->getHashistory()== True) {
-                    $resourceTable->addColumn($field->getName().'_last_updated', "datetime",array('notnull'=>false,'precision'=>0, 'scale'=>0));
+                if($field->getHashistory()) {
+                    $resourceTable->addColumn($field->getName().'_last_updated', "date",array('notnull'=>false,'precision'=>0, 'scale'=>0));
+                    // Additional analysis columns
                     //$resourceTable->addColumn($field->getName().'_last_updated_day', "string",array('length'=>64, 'notnull'=>false));
                     //$resourceTable->addColumn($field->getName().'_last_updated_month_number', "integer",array('notnull'=>false,'precision'=>0, 'scale'=>0));
                     $resourceTable->addColumn($field->getName().'_last_updated_month_text', "string",array('length'=>64, 'notnull'=>false));
@@ -614,6 +617,7 @@ class ResourceTable
                     //$resourceTable->addColumn($field->getName().'_last_updated_month_and_year', "string",array('length'=>64, 'notnull'=>false));
                 }
                 $totalResourceTableFields++;
+                unset($field);
             }
 
             // Make OrganisationunitLevels of orgunit
@@ -628,17 +632,6 @@ class ResourceTable
             foreach($organisationunitGroupsets as $organisationunitGroupsetKey=>$organisationunitGroupset) {
                 $resourceTable->addColumn($organisationunitGroupset->getName(), "string",array('length'=>64, 'notnull'=>false));
             }
-            // Calculated fields
-            // @todo implement calculated fields feature and remove hard-coding
-            $resourceTable->addColumn("Age", "integer",array('notnull'=>false,'precision'=>0, 'scale'=>0));
-            $resourceTable->addColumn("Age_group", "string",array('length'=>64, 'notnull'=>false));
-            $resourceTable->addColumn("Employment_duration", "string",array('length'=>64, 'notnull'=>false));
-            $resourceTable->addColumn("Retirement_date", "datetime",array('notnull'=>false,'precision'=>0, 'scale'=>0));
-            //$resourceTable->addColumn('retirement_date_day', "string",array('length'=>64, 'notnull'=>false));
-            //$resourceTable->addColumn('retirement_date_month_number', "integer",array('notnull'=>false,'precision'=>0, 'scale'=>0));
-            $resourceTable->addColumn('Retirement_date_month_text', "string",array('length'=>64, 'notnull'=>false));
-            $resourceTable->addColumn('Retirement_date_year', "integer",array('notnull'=>false,'precision'=>0, 'scale'=>0));
-            //$resourceTable->addColumn('retirement_date_month_and_year', "string",array('length'=>64, 'notnull'=>false));
 
             // Form and Organisationunit name
             $resourceTable->addColumn("Organisationunit_name", "string",array('length'=>64, 'notnull'=>false));
@@ -650,7 +643,11 @@ class ResourceTable
 
             // Creating table
             $schemaManager->createTable($resourceTable);
-            $this->messagelog .='Operation: '. $resourceTableName.' with '. $totalResourceTableFields ." Fields Generated Successfully.\n";
+            unset($resourceTable);
+            $schemaGenerationLap = $stopwatch->lap('resourceTableGeneration');
+            $schemaGenerationDuration = round(($schemaGenerationLap->getDuration()/1000),2);
+
+            $this->messagelog .='Operation: Table named '. $resourceTableName.' with '. $totalResourceTableFields ." Fields Generated in ".$schemaGenerationDuration." seconds.\n";
 
             // Populating data into created table
             $queryBuilder = $entityManager->createQueryBuilder()->select('record')->from('HrisRecordsBundle:Record', 'record')
@@ -665,6 +662,60 @@ class ResourceTable
             }
             if (!empty($records)) {
 
+                /**
+                 * Make sure organisationunitstructure is uptodate for good measure
+                 */
+                // Check and Notify if organisationunit structure doesn't exist
+                $queryBuilder = $entityManager->createQueryBuilder();
+                $organisationunitStructureCount =  $queryBuilder->select('count( organisationunitStructure.id )')->from('HrisOrganisationunitBundle:OrganisationunitStructure','organisationunitStructure')->getQuery()->getSingleScalarResult();
+                $queryBuilder = $entityManager->createQueryBuilder();
+                $organisationunitCount =  $queryBuilder->select('count( organisationunit.id )')->from('HrisOrganisationunitBundle:Organisationunit','organisationunit')->getQuery()->getSingleScalarResult();
+
+                // Regenerate Orgunit Stucture of Orgunit and OrgunitStructure Differs
+                if($organisationunitCount!=$organisationunitStructureCount) {
+                    $logger->info('Regenerating organisationunit structure');
+                    $this->returnMessage ='';
+                    // Regenerate Orgunit Structure
+                    $organisationunitStructure = new OrganisationunitStructureController();
+                    $this->returnMessage = $organisationunitStructure->regenerateOrganisationunitStructure($entityManager);
+                }else {
+                    $this->returnMessage='Organisationunit structure is complete!';
+                };
+
+
+                // Regenerate Levels if OrgunitLevel and DISTINCT OrgunitStructure.level differs
+                $organisationunitStructureLevels = $entityManager->createQuery('SELECT DISTINCT organisationunitLevel.level FROM HrisOrganisationunitBundle:OrganisationunitStructure organisationunitStructure INNER JOIN organisationunitStructure.level organisationunitLevel ORDER BY organisationunitLevel.level ')->getResult();
+                $organisationunitLevelInfos = $entityManager->createQuery('SELECT organisationunitLevel.level,organisationunitLevel.name,organisationunitLevel.description FROM HrisOrganisationunitBundle:OrganisationunitLevel organisationunitLevel ORDER BY organisationunitLevel.level ')->getResult();
+                $organisationunitStructureLevels = $this->array_value_recursive('level', $organisationunitStructureLevels);
+                $organisationunitLevelsLevel = $this->array_value_recursive('level', $organisationunitLevelInfos);
+                if($organisationunitLevelsLevel != $organisationunitStructureLevels && !empty($organisationunitStructureLevels)) {
+                    $logger->info('Regenerating organisationunit levels');
+                    if(!empty($organisationunitLevelInfos)) {
+                        // Cache in-memory saved Level names and descriptions
+                        $organisationunitLevelsName = $this->array_value_recursive('name', $organisationunitLevelInfos);
+                        $organisationunitLevelsDescription = $this->array_value_recursive('description', $organisationunitLevelInfos);
+                        $organisationunitLevelsName = array_combine($organisationunitLevelsLevel,$organisationunitLevelsName);
+                        $organisationunitLevelsDescription = array_combine($organisationunitLevelsLevel,$organisationunitLevelsDescription);
+                        $qb = $entityManager->createQueryBuilder('organisationunitLevel')->delete('HrisOrganisationunitBundle:OrganisationunitLevel','organisationunitLevel')->getQuery() -> getResult();
+                    }
+                    foreach($organisationunitStructureLevels as $key => $organisationunitStructureLevel) {
+                        // Update Levels
+                        $organisationunitLevel = new OrganisationunitLevel();
+                        if(in_array($organisationunitStructureLevel,$organisationunitLevelsLevel)) {
+                            $organisationunitLevel->setName($organisationunitLevelsName[$organisationunitStructureLevel]);
+                            $organisationunitLevel->setDescription($organisationunitLevelsDescription[$organisationunitStructureLevel]);
+                            $organisationunitLevel->setLevel($organisationunitStructureLevel);
+                            $entityManager->persist($organisationunitLevel);
+                        }else {
+                            $organisationunitLevel->setName('Level'.$organisationunitStructureLevel);
+                            $organisationunitLevel->setDescription('Level'.$organisationunitStructureLevel);
+                            $organisationunitLevel->setLevel($organisationunitStructureLevel);
+                            $entityManager->persist($organisationunitLevel);
+                        }
+                    }
+                    $entityManager->flush();
+                }
+
                 $dataArray=NULL;
                 $id=0;
                 //Prepare field Option map, converting from stored FieldOption key in record value array to actual text value
@@ -673,6 +724,7 @@ class ResourceTable
                     $recordFieldOptionKey = ucfirst(Record::getFieldOptionKey());
                     $fieldOptionMap[call_user_func_array(array($fieldOption, "get${recordFieldOptionKey}"),array()) ] =   $fieldOption->getValue();
                 }
+                unset($fieldOptions);
                 foreach ($records as $recordKey => $record) {
                     $currentInstance = $record->getInstance();
                     $dataValue = $record->getValue();
@@ -683,6 +735,7 @@ class ResourceTable
                     $employmentDuration=NULL;
                     $dataArray['instance'] = $record->getInstance();
                     foreach($this->getResourceTableFieldMember() as $resourceTableKey=> $resourceTableFieldMember) {
+                        unset($field);
                         $field = $resourceTableFieldMember->getField();
                         // Field Options
                         /**
@@ -693,46 +746,58 @@ class ResourceTable
                         $recordFieldKey = ucfirst(Record::getFieldKey());
                         $valueKey = call_user_func_array(array($field, "get${recordFieldKey}"),array());
 
+                        if($field->getIsCalculated()){
+
+                            if(preg_match_all('/\#{([^\}]+)\}/',$field->getCalculatedExpression(),$match)) {
+                                $fields = $entityManager->getRepository('HrisFormBundle:Field')->findOneBy (
+                                    array('name' => $match[1][0])
+                                );
+                                // @todo mechanism to notified on flawed formula(resulting in no match in db)
+                                $valueKey = @@call_user_func_array(array($fields, "get${recordFieldKey}"),array());
+                            }
+                        }
+
                         if(isset($dataValue[$valueKey])) {
+
                             $dataArray[$field->getName()]=$dataValue[$valueKey];
                             if ($field->getInputType()->getName() == 'Select') {
-                                if (!empty($dataValue[$valueKey])){
+
+                                if (isset($fieldOptionMap[$dataValue[$valueKey]])){
                                     // Resolve actual value from stored key
                                     $dataArray[$field->getName()] = trim($fieldOptionMap[$dataValue[$valueKey]]);
                                 } else{
                                     $dataArray[$field->getName()] = NULL;
                                 }
                             }else if ($field->getInputType()->getName() == 'Date') {
-                                if(!empty($dataValue[$valueKey])) {
-                                    $displayValue = new \DateTime($dataValue[$valueKey]['date'],new \DateTimeZone ($dataValue[$valueKey]['timezone']));
-                                    $dataArray[$field->getName()] = trim($displayValue->format('Y-m-d H:i:s.u')); //working on date format fix
-                                    //$dataArray[$field->getName().'_day'] = trim($displayValue->format('l'));
-                                    //$dataArray[$field->getName().'_month_number'] = trim($displayValue->format('m'));
-                                    $dataArray[$field->getName().'_month_text'] = trim($displayValue->format('F'));
-                                    $dataArray[$field->getName().'_year'] = trim($displayValue->format('Y'));
-                                    //$dataArray[$field->getName().'_month_and_year'] = trim($displayValue->format('F Y'));
-                                }else{
-                                    $dataArray[$field->getName()] = NULL;
-                                }
 
-                                // @todo implement calculated fields feature and remove hard-coding
-                                // Set Calculated Retirement Date Field values
-                                if ($field->getName()=="Birthdate"){
-                                    $birthDate = new \DateTime($dataValue[$valueKey]['date'],new \DateTimeZone ($dataValue[$valueKey]['timezone']));
-                                    $birthDate = $birthDate->format('Y-m-d');
-                                    $age = round($this->dateDiff("-", date("Y-m-d"), $birthDate) / 365, 0);
-                                    $retirementDate = new \DateTime($dataValue[$valueKey]['date'],new \DateTimeZone ($dataValue[$valueKey]['timezone']));
-                                    $retirementDate->add(new \DateInterval('P60Y'));
-                                }
-                                // Set Calculated Employment Date Field values
-                                if ($field->getName()=="DateofFirstAppointment"){
-                                    $firstAppointment = new \DateTime($dataValue[$valueKey]['date'],new \DateTimeZone ($dataValue[$valueKey]['timezone']));
-                                    $firstAppointment = $firstAppointment->format('Y-m-d');
-                                    $datediff = $this->dateDiff("-", date("Y-m-d"), $firstAppointment);
-                                    if (round($datediff / 12, 0) < 12) {
-                                        $employmentDuration = round($datediff / 12, 0) . "m";
-                                    } else {
-                                        $employmentDuration = floor($datediff / 365) . "y " . floor(($datediff % 365) / 30) . "m";
+                                if($field->getIsCalculated() == true){
+
+                                        if(!empty($dataValue[$valueKey])) {
+                                            $displayValue = new \DateTime($dataValue[$valueKey]['date'],new \DateTimeZone ($dataValue[$valueKey]['timezone']));
+                                            $datavalue = str_replace($match[0][0],$displayValue->format('Y-m-d'),$field->getCalculatedExpression());
+
+                                            $dataArray[$field->getName()] = eval("return $datavalue;");
+                                            //$dataArray[$field->getName()] = trim($displayValue->format('Y-m-d H:i:s.u')); //working on date format fix
+                                            if($field->getDataType()->getName() == 'Date') {
+                                                $dataArray[$field->getName().'_month_text'] = trim($displayValue->format('F'));
+                                                $dataArray[$field->getName().'_year'] = trim($displayValue->format('Y'));
+                                            }
+
+                                        }else{
+                                        $dataArray[$field->getName()] = NULL;
+                                    }
+
+                                }else{
+                                    if(!empty($dataValue[$valueKey])) {
+                                        $displayValue = new \DateTime($dataValue[$valueKey]['date'],new \DateTimeZone ($dataValue[$valueKey]['timezone']));
+                                        $dataArray[$field->getName()] = trim($displayValue->format('Y-m-d')); //working on date format fix
+                                        //$dataArray[$field->getName().'_day'] = trim($displayValue->format('l'));
+                                        //$dataArray[$field->getName().'_month_number'] = trim($displayValue->format('m'));
+                                        $dataArray[$field->getName().'_month_text'] = trim($displayValue->format('F'));
+                                        $dataArray[$field->getName().'_year'] = trim($displayValue->format('Y'));
+                                        //$dataArray[$field->getName().'_month_and_year'] = trim($displayValue->format('F Y'));
+                                    }else{
+                                        $dataArray[$field->getName()] = NULL;
                                     }
                                 }
 
@@ -763,74 +828,56 @@ class ResourceTable
                         }
 
                         // @todo implement after creation of history date class
-                        // Add history date data for fields  with history
-                        if($field->getHasHistory()==True && $field->getInputType()->getName() == 'Select' && !empty($dataValue[$valueKey])) {
+                        if($field->getHashistory() && $field->getInputType()->getName() == "Select" && isset($dataValue[$valueKey]) ) {
                             // Fetch history date with instance same as our current data
-                            $historyDates = $entityManager->getRepository('HrisRecordsBundle:HistoryDate')
-                                ->findOneBy(
-                                    array('instance'=>$record->getInstance(),
-                                        'history'=>trim($fieldOptionMap[$dataValue[$valueKey]]),
-                                        'field'=>$field
-                                    )
-                                );
-                            //$lastHistoryDate = $historyDates[count($historyDates)-1];
+                            $historyDates = $entityManager->getRepository('HrisRecordsBundle:HistoryDate')->findOneBy(array(
+                                                                                                                    'instance'=>$record->getInstance(),
+                                                                                                                    'history'=>$dataValue[$valueKey],
+                                                                                                                    'field'=>$field
+                                                                                                                    ));
                             if(!empty($historyDates)) {
-                                $dataArray[$field->getName().'_last_updated'] = trim($historyDates->getPreviousdate()->format('Y-m-d H:i:s.u'));
-                                //$dataArray[$field->getName().'_last_updated_day'] = trim($historyDates->getPreviousdate()->format('l'));
-                                //$dataArray[$field->getName().'_last_updated_month_number'] = trim($historyDates->getPreviousdate()->format('m'));
-                                $dataArray[$field->getName().'_last_updated_month_text'] = trim($historyDates->getPreviousdate()->format('F'));
-                                $dataArray[$field->getName().'_last_updated_year'] = trim($historyDates->getPreviousdate()->format('Y'));
-                                //$dataArray[$field->getName().'_last_updated_month_and_year'] = trim($historyDates->getPreviousdate()->format('F Y'));
+                                if(!empty($historyDates)) {
+                                    $dataArray[$field->getName().'_last_updated'] = trim($historyDates->getPreviousdate()->format('Y-m-d H:i:s.u'));
+                                    //$dataArray[$field->getName().'_last_updated_day'] = trim($historyDates->getPreviousdate()->format('l'));
+                                    //$dataArray[$field->getName().'_last_updated_month_number'] = trim($historyDates->getPreviousdate()->format('m'));
+                                    $dataArray[$field->getName().'_last_updated_month_text'] = trim($historyDates->getPreviousdate()->format('F'));
+                                    $dataArray[$field->getName().'_last_updated_year'] = trim($historyDates->getPreviousdate()->format('Y'));
+                                    //$dataArray[$field->getName().'_last_updated_month_and_year'] = trim($historyDates->getPreviousdate()->format('F Y'));
+                                }
                             }
                         }
-                    }
-
-                    // @todo implement calculated fields feature and remove hard-coding
-                    // Fill in  calculated fields after finishing all fields in a record
-                    // Calculated Fields
-                    if(!empty($age)) {
-                        $dataArray['Age'] = $age;
-                        $dataArray['Age_group'] = ((floor($age/5))*5) .'-'.(((floor($age/5))*5)+4);
-                    }else {
-                        $dataArray['Age']=NULL;
-                    }
-                    if(!empty($retirementDate)) {
-                        $dataArray['Retirement_date'] = trim($retirementDate->format('Y-m-d H:i:s.u'));
-                        //$dataArray['retirement_date_day'] = trim($retirementDate->format('l'));
-                        //$dataArray['retirement_date_month_number'] = trim($retirementDate->format('m'));
-                        $dataArray['Retirement_date_month_text'] = trim($retirementDate->format('F'));
-                        $dataArray['Retirement_date_year'] = trim($retirementDate->format('Y'));
-                        //$dataArray['retirement_date_month_and_year'] = trim($retirementDate->format('F Y'));
-                    }else {
-                        $dataArray['Retirement_date'] =NULL;
-                    }
-                    if(!empty($employmentDuration)) {
-                        $dataArray['Employment_duration'] = $employmentDuration;
-                    }else {
-                        $dataArray['Employment_duration'] =NULL;
                     }
                     // Fill in Levels
                     foreach($organisationunitLevels as $organisationunitLevelKey=>$organisationunitLevel) {
                         $organisationunitLevelName = str_replace(' ','_',"level".$organisationunitLevel->getLevel()."_".str_replace(',','_',str_replace('.','_',str_replace('/','_',$organisationunitLevel->getName())))); ;
                         $organisationunitStructure=$record->getOrganisationunit()->getOrganisationunitStructure();
-
                         $nLevelParent=$organisationunitStructure->getParentByNLevelsBack($record->getOrganisationunit(),($organisationunitStructure->getLevel()->getLevel()-$organisationunitLevel->getLevel()));
-                        $dataArray[$organisationunitLevelName] = $nLevelParent->getLongname();
+                        if(!empty($nLevelParent)) $dataArray[$organisationunitLevelName] = $nLevelParent->getLongname();
 
                         $thisrganisationunitLevel = $entityManager->getRepository('HrisOrganisationunitBundle:OrganisationunitLevel')->findOneBy(array('level'=>$organisationunitStructure->getLevel()->getLevel()));
                         $organisationunitLevelName = str_replace(' ','_',"level".$thisrganisationunitLevel->getLevel()."_".str_replace(',','_',str_replace('.','_',str_replace('/','_',$thisrganisationunitLevel->getName())))); ;
                         $dataArray[$organisationunitLevelName] = $record->getOrganisationunit()->getLongname();
+                        unset($nLevelParent);
+                        unset($organisationunitLevelName);
+                        unset($organisationunitStructure);
                     }
                     // Fill in Groupset Columns
                     foreach($organisationunitGroupsets as $organisationunitGroupsetKey=>$organisationunitGroupset) {
                         $organisationunitGroupsetNames=NULL;
                         foreach($organisationunitGroupset->getOrganisationunitGroup() as $organisationunitGroupKey=>$organisationunitGroup) {
                             if( $organisationunitGroup->getOrganisationunit()->contains($record->getOrganisationunit()) ) {
-                                if(empty($organisationunitGroupNames)) $organisationunitGroupNames=$organisationunitGroup->getName();else $organisationunitGroupNames.=','.$organisationunitGroupNames=$organisationunitGroup->getName();
+                                if(empty($organisationunitGroupNames)) {
+                                    $organisationunitGroupNames=$organisationunitGroup->getName();
+                                }else {
+                                    if(!preg_match("/".$organisationunitGroup->getName()."/",$organisationunitGroupNames)) {
+                                        $organisationunitGroupNames.=','.$organisationunitGroupNames=$organisationunitGroup->getName();
+                                    }
+                                }
                             }
                         }
-                        if(empty($organisationunitGroupNames)) $organisationunitGroupNames= NULL;
+                        if(!isset($organisationunitGroupNames)) $organisationunitGroupNames= NULL;
                         $dataArray[$organisationunitGroupset->getName()] = $organisationunitGroupNames;
+                        unset($organisationunitGroupNames);
                     }
 
                     // Form and Orgunit
@@ -841,11 +888,61 @@ class ResourceTable
                     $dataArray['Form_id'] = $record->getForm()->getId();
                     $dataArray['Lastupdated'] = trim($record->getLastupdated()->format('Y-m-d H:i:s.u'));
 
-                    $entityManager->getConnection()->insert($resourceTableName, $dataArray);
+                    $entityManager->getConnection()->insert($resourceTableName.'_temporary', $dataArray);
+                    $logger->info('Inserted record instance '.$dataArray['instance']. ' for '.$dataArray['Organisationunit_name'].' on form: '.$record->getForm()->getName());
                     $totalInsertedRecords++;
                     unset($dataArray);
+                    unset($dataValue);
+                    unset($currentInstance);
                 }
             }
+            unset($records);
+            $dataInsertionLap = $stopwatch->lap('resourceTableGeneration');
+            $dataInsertionDuration = round(($dataInsertionLap->getDuration()/1000),2) - $schemaGenerationDuration;
+            $singleDataInsertionDuration = round(($dataInsertionDuration/$totalInsertedRecords),2);
+            if( $dataInsertionDuration <60 ) {
+                $dataInsertionDurationMessage = round($dataInsertionDuration,2).' sec.';
+            }elseif( $dataInsertionDuration >= 60 && $dataInsertionDuration < 3600 ) {
+                $dataInsertionDurationMessage = round(($dataInsertionDuration/60),2) .' min.';
+            }elseif( $dataInsertionDuration >=3600 && $dataInsertionDuration < 216000) {
+                $dataInsertionDurationMessage = round(($dataInsertionDuration/3600),2) .' hrs';
+            }else {
+                $dataInsertionDurationMessage = round(($dataInsertionDuration/86400),2) .' days';
+            }
+            if( $singleDataInsertionDuration <60 ) {
+                $singleDataInsertionDurationMessage = "(".round($singleDataInsertionDuration,2).' sec./record)';
+            }elseif( $singleDataInsertionDuration >= 60 && $singleDataInsertionDuration < 3600 ) {
+                $singleDataInsertionDurationMessage = "(".round(($singleDataInsertionDuration/60),2) .' min./record)';
+            }elseif( $singleDataInsertionDuration >=3600 && $singleDataInsertionDuration < 216000) {
+                $singleDataInsertionDurationMessage = "(".round(($singleDataInsertionDuration/3600),2) .' hrs/record)';
+            }else {
+                $singleDataInsertionDurationMessage = "(".round(($singleDataInsertionDuration/86400),2) .' days/record)';
+            }
+            $this->messagelog .= "Operation: ".$totalInsertedRecords ." Records Inserted into ". $resourceTableName." in ". $dataInsertionDurationMessage.$singleDataInsertionDurationMessage .".\n";
+            $logger->info($this->messagelog);
+            /*
+             * Replace existing resource table with completely regenerated temporary resource table
+             */
+            // Drop table if it exists
+            if( $schemaManager->tablesExist($resourceTableName) ) {
+                $schemaManager->dropTable($resourceTableName);
+            }
+            $schemaManager->renameTable($resourceTableName.'_temporary', $resourceTableName);
+            unset($schemaManager);
+            $stopwatch->lap('resourceTableGeneration');
+            $offlineDuration = round(($dataInsertionLap->getDuration()/1000),2) - ($schemaGenerationDuration+$dataInsertionDuration);
+
+            if( $offlineDuration <60 ) {
+                $offlineDurationMessage = round($offlineDuration,2).' sec.';
+            }elseif( $offlineDuration >= 60 && $offlineDuration < 3600 ) {
+                $offlineDurationMessage = round(($offlineDuration/60),2) .' min.';
+            }elseif( $offlineDuration >=3600 && $offlineDuration < 216000) {
+                $offlineDurationMessage = round(($offlineDuration/3600),2) .' hrs';
+            }else {
+                $offlineDurationMessage = round(($offlineDuration/86400),2) .' days';
+            }
+            $this->messagelog .= "Reports Offline Time: Resourcetable was offline for ". $offlineDurationMessage ."\n";
+
             // Update last generated after running the script
             $this->setLastgenerated(new \DateTime('now'));
             $this->setIsgenerating(False);
@@ -859,17 +956,17 @@ class ResourceTable
              * Check Clock for time spent
             */
             $resourceTableGenerationTime = $stopwatch->stop('resourceTableGeneration');
-            $duration = $resourceTableGenerationTime->getDuration()/60;
-            $duration = round($duration, 2);
-
-            if( $duration < 1 ) {
-                $durationMessage = ($duration*60).' seconds';
-            }else if ( $duration >= 60 ) {
-                $durationMessage = ( $duration / 60 ) . " minutes";
+            $duration = $resourceTableGenerationTime->getDuration()/1000;
+            unset($stopwatch);
+            if( $duration <60 ) {
+                $durationMessage = round($duration,2).' seconds';
+            }elseif( $duration >= 60 && $duration < 3600 ) {
+                $durationMessage = round(($duration/60),2) .' minutes';
+            }elseif( $duration >=3600 && $duration < 216000) {
+                $durationMessage = round(($duration/3600),2) .' hours';
             }else {
-                $durationMessage = $duration . " hours";
+                $durationMessage = round(($duration/86400),2) .' hours';
             }
-            $this->messagelog .= "Operation: ".$totalInsertedRecords ." Records Inserted into ". $resourceTableName .".\n";
             $this->messagelog .= "Operation: Resource Table generation completeted in ". $durationMessage .".\n\n";
             return True;
         }else {

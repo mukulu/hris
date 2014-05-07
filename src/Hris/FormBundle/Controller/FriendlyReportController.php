@@ -33,6 +33,7 @@ use Sensio\Bundle\FrameworkExtraBundle\Configuration\Route;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Template;
 use Hris\FormBundle\Entity\FriendlyReport;
 use Hris\FormBundle\Form\FriendlyReportType;
+use JMS\SecurityExtraBundle\Annotation\Secure;
 
 /**
  * FriendlyReport controller.
@@ -45,6 +46,7 @@ class FriendlyReportController extends Controller
     /**
      * Lists all FriendlyReport entities.
      *
+     * @Secure(roles="ROLE_SUPER_USER,ROLE_FRIENDLYREPORT_LIST")
      * @Route("/", name="friendlyreport")
      * @Route("/list", name="friendlyreport_list")
      * @Method("GET")
@@ -56,14 +58,22 @@ class FriendlyReportController extends Controller
 
         $entities = $em->getRepository('HrisFormBundle:FriendlyReport')->findAll();
 
+        $delete_forms = NULL;
+        foreach($entities as $entity) {
+            $delete_form= $this->createDeleteForm($entity->getId());
+            $delete_forms[$entity->getId()] = $delete_form->createView();
+        }
+
         return array(
             'entities' => $entities,
+            'delete_forms' => $delete_forms,
         );
     }
 
     /**
      * Displays a form to create a new FriendlyReport entity.
      *
+     * @Secure(roles="ROLE_SUPER_USER,ROLE_FRIENDLYREPORT_CREATE")
      * @Route("/new", name="friendlyreport_new")
      * @Method("GET")
      * @Template()
@@ -82,6 +92,7 @@ class FriendlyReportController extends Controller
     /**
      * Creates a new FriendlyReport entity.
      *
+     * @Secure(roles="ROLE_SUPER_USER,ROLE_FRIENDLYREPORT_CREATE")
      * @Route("/", name="friendlyreport_create")
      * @Method("POST")
      * @Template("HrisFormBundle:FriendlyReport:new.html.twig")
@@ -121,6 +132,7 @@ class FriendlyReportController extends Controller
     /**
      * Finds and displays a FriendlyReport entity.
      *
+     * @Secure(roles="ROLE_SUPER_USER,ROLE_FRIENDLYREPORT_SHOW")
      * @Route("/{id}", requirements={"id"="\d+"}, requirements={"id"="\d+"}, name="friendlyreport_show")
      * @Method("GET")
      * @Template()
@@ -146,6 +158,7 @@ class FriendlyReportController extends Controller
     /**
      * Displays a form to edit an existing FriendlyReport entity.
      *
+     * @Secure(roles="ROLE_SUPER_USER,ROLE_FRIENDLYREPORT_UPDATE")
      * @Route("/{id}/edit", requirements={"id"="\d+"}, name="friendlyreport_edit")
      * @Method("GET")
      * @Template()
@@ -180,6 +193,7 @@ class FriendlyReportController extends Controller
     /**
      * Edits an existing FriendlyReport entity.
      *
+     * @Secure(roles="ROLE_SUPER_USER,ROLE_FRIENDLYREPORT_UPDATE")
      * @Route("/{id}", requirements={"id"="\d+"}, name="friendlyreport_update")
      * @Method("PUT")
      * @Template("HrisFormBundle:FriendlyReport:edit.html.twig")
@@ -203,7 +217,13 @@ class FriendlyReportController extends Controller
             $requestcontent = $request->request->get('hris_formbundle_friendlyreporttype');
             $fieldOptionGroupIds = $requestcontent['friendlyReportCategory'];
             // Clear Report categories
-            $entity->removeAllFriendlyReportCategory();
+            //Get rid of current expectations
+            $em->createQueryBuilder('friendlyReportCategory')
+                ->delete('HrisFormBundle:FriendlyReportCategory','friendlyReportCategory')
+                ->where('friendlyReportCategory.friendlyReport= :friendlyReport')
+                ->setParameter('friendlyReport',$entity)
+                ->getQuery()->getResult();
+            $em->flush();
             foreach($fieldOptionGroupIds as $fieldOptionGroupIdKey=>$fieldOptionGroupId) {
                 $fieldOptionGroup = $this->getDoctrine()->getRepository('HrisFormBundle:FieldOptionGroup')->findOneBy(array('id'=>$fieldOptionGroupId));
                 $friendlyReportCategory = new FriendlyReportCategory();
@@ -216,7 +236,7 @@ class FriendlyReportController extends Controller
             $em->persist($entity);
             $em->flush();
 
-            return $this->redirect($this->generateUrl('friendlyreport_edit', array('id' => $id)));
+            return $this->redirect($this->generateUrl('friendlyreport_show', array('id' => $id)));
         }
 
         return array(
@@ -228,6 +248,7 @@ class FriendlyReportController extends Controller
     /**
      * Deletes a FriendlyReport entity.
      *
+     * @Secure(roles="ROLE_SUPER_USER,ROLE_FRIENDLYREPORT_DELETE")
      * @Route("/{id}", requirements={"id"="\d+"}, name="friendlyreport_delete")
      * @Method("DELETE")
      */

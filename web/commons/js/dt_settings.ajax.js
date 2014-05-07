@@ -1,6 +1,8 @@
 /* Set the defaults for DataTables initialisation */
 $.extend( true, $.fn.dataTable.defaults, {
-	"sDom": "<'row-fluid'<'span6'l><'span6'f>r>t<'row-fluid'<'span6'i><'span6'p>>",
+    "sDom": "<'row-fluid'<'span6'l><'span6'f>r>t<'row-fluid'<'span6'i><'span6'p>>",
+    "oTableTools": {"aButtons": [ {"sExtends":"copy","mColumns":"visible"}, {"sExtends":"xls","mColumns":"visible"}, {"sExtends":"pdf","mColumns":"visible"} ] },
+    "sPdfOrientation": "landscape",
 	"sPaginationType": "bootstrap",
 	"oLanguage": {
 		"sLengthMenu": "_MENU_ records per page"

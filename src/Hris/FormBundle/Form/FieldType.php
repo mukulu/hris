@@ -34,6 +34,8 @@ class FieldType extends AbstractType
     {
         $builder
             ->add('name')
+            ->add('dataType')
+            ->add('inputType')
             ->add('caption')
             ->add('description',null,array(
                 'required'=>false,
@@ -44,20 +46,27 @@ class FieldType extends AbstractType
             ->add('isUnique',null,array(
                 'required'=>false,
             ))
-            ->add('isCalculated',null,array(
-                'required'=>false,
-            ))
-            ->add('calculatedExpression',null,array(
-                'required'=>false,
-            ))
             ->add('hashistory',null,array(
+                'required'=>false,
+            ))
+            ->add('hastarget',null,array(
                 'required'=>false,
             ))
             ->add('skipInReport',null,array(
                 'required'=>false,
             ))
-            ->add('dataType')
-            ->add('inputType')
+            ->add('isCalculated',null,array(
+                'required'=>false,
+            ))
+            ->add('fieldrelation',null,array(
+                'required'=>false,
+            ))
+            ->add('calculatedExpression',null,array(
+                'required'=>false,
+            ))
+            ->add('childField',null,array(
+                'required'=>false,
+            ))
         ;
     }
 

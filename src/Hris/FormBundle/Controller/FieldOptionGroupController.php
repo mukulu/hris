@@ -31,6 +31,7 @@ use Sensio\Bundle\FrameworkExtraBundle\Configuration\Route;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Template;
 use Hris\FormBundle\Entity\FieldOptionGroup;
 use Hris\FormBundle\Form\FieldOptionGroupType;
+use JMS\SecurityExtraBundle\Annotation\Secure;
 
 /**
  * FieldOptionGroup controller.
@@ -43,6 +44,7 @@ class FieldOptionGroupController extends Controller
     /**
      * Lists all FieldOptionGroup entities.
      *
+     * @Secure(roles="ROLE_SUPER_USER,ROLE_FIELDOPTIONGROUP_LIST")
      * @Route("/", name="fieldoptiongroup")
      * @Route("/list", name="fieldoptiongroup_list")
      * @Method("GET")
@@ -54,6 +56,7 @@ class FieldOptionGroupController extends Controller
 
         $entities = $em->getRepository('HrisFormBundle:FieldOptionGroup')->findAll();
 
+        $delete_forms = NULL;
         foreach($entities as $entity) {
             $delete_form= $this->createDeleteForm($entity->getId());
             $delete_forms[$entity->getId()] = $delete_form->createView();
@@ -67,6 +70,7 @@ class FieldOptionGroupController extends Controller
     /**
      * Creates a new FieldOptionGroup entity.
      *
+     * @Secure(roles="ROLE_SUPER_USER,ROLE_FIELDOPTIONGROUP_CREATE")
      * @Route("/", name="fieldoptiongroup_create")
      * @Method("POST")
      * @Template("HrisFormBundle:FieldOptionGroup:new.html.twig")
@@ -94,6 +98,7 @@ class FieldOptionGroupController extends Controller
     /**
      * Displays a form to create a new FieldOptionGroup entity.
      *
+     * @Secure(roles="ROLE_SUPER_USER,ROLE_FIELDOPTIONGROUP_CREATE")
      * @Route("/new", name="fieldoptiongroup_new")
      * @Method("GET")
      * @Template()
@@ -112,6 +117,7 @@ class FieldOptionGroupController extends Controller
     /**
      * Finds and displays a FieldOptionGroup entity.
      *
+     * @Secure(roles="ROLE_SUPER_USER,ROLE_FIELDOPTIONGROUP_SHOW")
      * @Route("/{id}", requirements={"id"="\d+"}, requirements={"id"="\d+"}, name="fieldoptiongroup_show")
      * @Method("GET")
      * @Template()
@@ -137,6 +143,7 @@ class FieldOptionGroupController extends Controller
     /**
      * Displays a form to edit an existing FieldOptionGroup entity.
      *
+     * @Secure(roles="ROLE_SUPER_USER,ROLE_FIELDOPTIONGROUP_UPDATE")
      * @Route("/{id}/edit", requirements={"id"="\d+"}, name="fieldoptiongroup_edit")
      * @Method("GET")
      * @Template()
@@ -164,6 +171,7 @@ class FieldOptionGroupController extends Controller
     /**
      * Edits an existing FieldOptionGroup entity.
      *
+     * @Secure(roles="ROLE_SUPER_USER,ROLE_FIELDOPTIONGROUP_UPDATE")
      * @Route("/{id}", requirements={"id"="\d+"}, name="fieldoptiongroup_update")
      * @Method("PUT")
      * @Template("HrisFormBundle:FieldOptionGroup:edit.html.twig")
@@ -186,7 +194,7 @@ class FieldOptionGroupController extends Controller
             $em->persist($entity);
             $em->flush();
 
-            return $this->redirect($this->generateUrl('fieldoptiongroup_edit', array('id' => $id)));
+            return $this->redirect($this->generateUrl('fieldoptiongroup_show', array('id' => $id)));
         }
 
         return array(
@@ -198,6 +206,7 @@ class FieldOptionGroupController extends Controller
     /**
      * Deletes a FieldOptionGroup entity.
      *
+     * @Secure(roles="ROLE_SUPER_USER,ROLE_FIELDOPTIONGROUP_DELETE")
      * @Route("/{id}", requirements={"id"="\d+"}, name="fieldoptiongroup_delete")
      * @Method("DELETE")
      */

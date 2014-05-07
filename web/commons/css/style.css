@@ -60,8 +60,22 @@ tbody > tr > td > ul.inline {
     margin: 0px 0px -25px 25px;
 }
 
+.highlight {
+    display: block;
+    padding: 9px 14px;
+    margin-bottom: 14px;
+    background-color: #F7F7F9;
+    border: 1px solid #E1E1E8;
+    border-radius: 4px;
+}
 /* Sticky footer styles
  -------------------------------------------------- */
+label.error {
+    float: none;
+    color: #ff0000;
+    padding-left: .5em;
+    vertical-align: top;
+}
 
 html,
 body {
@@ -80,7 +94,7 @@ body {
 #push,
 #footer {
     height: 60px;
-    margin-top:55px;
+    margin-top:65px;
 }
 #footer {
     background-color: #f5f5f5;
@@ -94,8 +108,18 @@ body {
         padding-right: 20px;
     }
 }
-
-
+/** Search input box **/
+input[type="text"].search-query.span2 {
+    -webkit-transition: all 0.4s linear;
+    -moz-transition: all 0.4s linear;
+    transition: all 0.4s linear;
+}
+.search-query:focus {
+    width:100%;
+}
+input.span2, textarea.span2, .uneditable-input.span2 {
+    width: 100px;
+}
 
 /* Custom page CSS
 -------------------------------------------------- */
@@ -120,3 +144,24 @@ table.dataentry > tbody > tr > td {background-color:#d6dff7;padding: 0in 5.4pt;h
 table.dataentry > tbody > tr > td > span {font-size: 14.0pt;width: 216.3pt;color: #1f497d;}
 table.dataentry > tbody > tr > td > em {font-size: 14.0pt;font-style: normal;color: #1f497d;}
 table.dataentry > tbody > tr > td.whitebg {background-color:#ffffff;width:288px;}
+
+/* forms css */
+.form-horizontal .control-label {
+    text-align: left;
+}
+#treeplaceholder {
+    max-width:380px;
+}
+.required-asterisk {
+    color:#FF0000;
+    float:right;
+    font-weight:bold;
+    font-size:15pt;
+}
+.newMessage {
+    background-color: #e9b330;
+    float:right;
+    padding: 0 4px 0 4px;
+    border-radius: 2px;
+    color:white;
+}

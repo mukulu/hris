@@ -20,3 +20,7 @@ fos_user_change_password:
 user:
     resource: "@HrisUserBundle/Controller/UserController.php"
     type: annotation
+
+user_group:
+    resource: "@HrisUserBundle/Controller/GroupController.php"
+    type: annotation

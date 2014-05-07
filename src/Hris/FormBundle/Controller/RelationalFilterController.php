@@ -31,6 +31,7 @@ use Sensio\Bundle\FrameworkExtraBundle\Configuration\Route;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Template;
 use Hris\FormBundle\Entity\RelationalFilter;
 use Hris\FormBundle\Form\RelationalFilterType;
+use JMS\SecurityExtraBundle\Annotation\Secure;
 
 /**
  * RelationalFilter controller.
@@ -43,6 +44,7 @@ class RelationalFilterController extends Controller
     /**
      * Lists all RelationalFilter entities.
      *
+     * @Secure(roles="ROLE_SUPER_USER,ROLE_RELATIONALFILTER_LIST")
      * @Route("/", name="relationalfilter")
      * @Route("/list", name="relationalfilter_list")
      * @Method("GET")
@@ -61,6 +63,7 @@ class RelationalFilterController extends Controller
     /**
      * Creates a new RelationalFilter entity.
      *
+     * @Secure(roles="ROLE_SUPER_USER,ROLE_RELATIONALFILTER_CREATE")
      * @Route("/", name="relationalfilter_create")
      * @Method("POST")
      * @Template("HrisFormBundle:RelationalFilter:new.html.twig")
@@ -88,6 +91,7 @@ class RelationalFilterController extends Controller
     /**
      * Displays a form to create a new RelationalFilter entity.
      *
+     * @Secure(roles="ROLE_SUPER_USER,ROLE_RELATIONALFILTER_CREATE")
      * @Route("/new", name="relationalfilter_new")
      * @Method("GET")
      * @Template()
@@ -106,6 +110,7 @@ class RelationalFilterController extends Controller
     /**
      * Finds and displays a RelationalFilter entity.
      *
+     * @Secure(roles="ROLE_SUPER_USER,ROLE_RELATIONALFILTER_SHOW")
      * @Route("/{id}", requirements={"id"="\d+"}, requirements={"id"="\d+"}, name="relationalfilter_show")
      * @Method("GET")
      * @Template()
@@ -131,6 +136,7 @@ class RelationalFilterController extends Controller
     /**
      * Displays a form to edit an existing RelationalFilter entity.
      *
+     * @Secure(roles="ROLE_SUPER_USER,ROLE_RELATIONALFILTER_UPDATE")
      * @Route("/{id}/edit", requirements={"id"="\d+"}, name="relationalfilter_edit")
      * @Method("GET")
      * @Template()
@@ -158,6 +164,7 @@ class RelationalFilterController extends Controller
     /**
      * Edits an existing RelationalFilter entity.
      *
+     * @Secure(roles="ROLE_SUPER_USER,ROLE_RELATIONALFILTER_UPDATE")
      * @Route("/{id}", requirements={"id"="\d+"}, name="relationalfilter_update")
      * @Method("PUT")
      * @Template("HrisFormBundle:RelationalFilter:edit.html.twig")
@@ -192,6 +199,7 @@ class RelationalFilterController extends Controller
     /**
      * Deletes a RelationalFilter entity.
      *
+     * @Secure(roles="ROLE_SUPER_USER,ROLE_RELATIONALFILTER_DELETE")
      * @Route("/{id}", requirements={"id"="\d+"}, name="relationalfilter_delete")
      * @Method("DELETE")
      */

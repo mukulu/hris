@@ -6,15 +6,42 @@
     <form class="form-horizontal" action="{{ path('organisationunit_update', { 'id': entity.id }) }}" method="post" {{ form_enctype(edit_form) }}>
         <input type="hidden" name="_method" value="PUT" />
         {{ form_widget(edit_form) }}
+
+        {% if organisationunitGroupsets is defined %}
+            <div id="hris_organisationunitbundle_orgnisationunittype_groupsets">
+                {% for organisationunitGroupset in organisationunitGroupsets %}
+                    <label for="hris_organisationunitbundle_orgnisationunittype_groupsets_{{ organisationunitGroupset.uid }}">Organisationunit {{ organisationunitGroupset.name }}</label>
+                    <select id="hris_organisationunitbundle_orgnisationunittype_groupsets_{{ organisationunitGroupset.uid }}" name="hris_organisationunitbundle_orgnisationunittype_groupsets[{{ organisationunitGroupset.uid }}]" required="required">
+                        <option value=""></option>
+                        {% for organisationunitGroup in organisationunitGroupset.getOrganisationunitGroup %}
+                            <option value="{{ organisationunitGroup.id }}" {% if entity.getOrganisationunitGroup.contains(organisationunitGroup) %} selected="selected"{% endif %}>{{ organisationunitGroup.name }}</option>
+                        {% endfor %}
+                    </select>
+                {% endfor %}
+            </div>
+        {% endif %}
+
+        {% if completenessForms is defined %}
+            <div id="hris_organisationunitbundle_organisationunittype_completeness">
+                {% for completenessForm in completenessForms %}
+                    <label for="hris_organisationunitbundle_organisationunittype_completeness{{ completenessForm.uid }}">{{ completenessForm.name }} Expectation</label>
+                    <input type="number" name="hris_organisationunitbundle_organisationunittype_completeness[{{ completenessForm.uid }}]"
+                           id="hris_organisationunitbundle_organisationunittype_completeness{{ completenessForm.uid }}"
+                           value="{{ completenessExpectation[completenessForm.uid] }}"/>
+                {% endfor %}
+            </div>
+        {% endif %}
         <br/>
         <ul class="record_actions inline" style="float:left;">
             <li>
                 <button type="submit" class="btn">Edit</button>
             </li>
             <li>
-                <a href="{{ path('organisationunit_list_parent', { 'parent': entity.parent.id }) }}" class="btn">
-                    Back to the list
-                </a>
+                {% if entity.parent is not empty %}
+                    <a href="{{ path('organisationunit_list_parent', { 'parent': entity.parent.id }) }}" class="btn">Back to the list</a>
+                {% else %}
+                    <a href="{{ path('organisationunit_list') }}" class="btn">Back to the list</a>
+                {% endif %}
             </li>
         </ul>
     </form>

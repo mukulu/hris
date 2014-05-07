@@ -41,6 +41,7 @@ class ReportOrganisationunitByLevelsType extends AbstractType
 
         $builder
             ->add($builder->create('organisationunit','hidden',array(
+                'required'=>True,
                 'constraints'=> array(
                     new NotBlank(),
                 )
@@ -56,7 +57,9 @@ class ReportOrganisationunitByLevelsType extends AbstractType
                     new NotBlank(),
                 )
             ))
-            ->add('submit','submit')
+            ->add('Generate Report','submit',array(
+                'attr' => array('class' => 'btn'),
+            ))
         ;
     }
 

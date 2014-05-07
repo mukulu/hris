@@ -2,8 +2,30 @@
 {% block javascripts %}
     {{ parent() }}
     <script type="text/javascript" src="{{ asset('commons/js/jquery.dataTables.js') }}"></script>
+    <script type="text/javascript" src="{{ asset('commons/js/jquery.dataTables.ZeroClipboard.js') }}"></script>
+    <script type="text/javascript" src="{{ asset('commons/js/jquery.dataTables.TableTools.min.js') }}"></script>
     <script type="text/javascript" src="{{ asset('commons/js/dt_settings.js') }}"></script>
-    <script>window["_GOOG_TRANS_EXT_VER"] = "1";</script>
+    <script type="text/javascript">
+        $(document).ready(function() {
+            $('.records_list').dataTable( {
+                "sDom": "<'row'<'span6'TRl><'span6'f>r>t<'row'<'span6'i><'span6'p>>",
+                "oTableTools": {
+                    "aButtons": [
+                        {"sExtends":"copy","mColumns":"visible"},
+                        {"sExtends":"xls","mColumns":"visible"},
+                        {"sExtends":"pdf","mColumns":"visible"}
+                    ],
+                    "sSwfPath": "{{ asset('commons/swf/copy_cvs_xls_pdf.swf') }}"
+                },
+                "sPdfOrientation": "landscape",
+                "sPaginationType": "bootstrap",
+                "oLanguage": {
+                    "sLengthMenu": "_MENU_ records per page"
+                },
+                "aLengthMenu": [[10, 25, 50,100,200, -1], [10, 25, 50,100,200, "All"]]
+            } );
+        } );
+    </script>
 {% endblock javascripts %}
 
 {% block stylesheets %}
@@ -28,12 +50,10 @@
         <table class="records_list dataTable table table-striped table-bordered table-hover" cellpadding="0" cellspacing="0" border="0">
             <thead>
                 <tr>
-                    <th>Username</th>
+                    <th style="width:90px;">Username</th>
                     <th>Firstname</th>
                     <th>Surname</th>
-                    <th>Email</th>
-                    <th>Lastlogin</th>
-                    <th>Roles</th>
+                    <th>Forms</th>
                     <th>Organisationunit</th>
                     <th>Actions</th>
                 </tr>
@@ -41,15 +61,10 @@
             <tbody>
             {% for entity in entities %}
                 <tr {% if entity.enabled!=1 %}class="error"{% endif %}>
-                    <td><a href="{{ path('user_show', { 'id': entity.id }) }}">{{ entity.username }}</a></td>
+                    <td><a title="{{ entity.firstName }} {{ entity.middleName }} {{ entity.surname }} {% if entity.jobTitle %} ({{ entity.jobTitle }}) {% endif %} {% if entity.email %} <{{ entity.email }}> {% endif %} {% if entity.phoneNumber %}{{ entity.phoneNumber }}{% endif %} {% if entity.roles %} Roles: {{ entity.roles | join(',') }} {% endif %} {% if entity.groups %} Groups: {{ entity.groups | join(',') }}{% endif %}" href="{{ path('user_show', { 'id': entity.id }) }}">{{ entity.username }}</a></td>
                     <td>{{ entity.firstname }}</td>
                     <td>{{ entity.surname }}</td>
-                    <td>{{ entity.email }}</td>
-                    <td>{% if entity.lastLogin %}{{ entity.lastLogin|date('H:i:s d/m/Y') }}{% endif %}</td>
-                    <td>{% for role in entity.roles %}
-                            {{ role }},
-                        {% endfor %}
-                    </td>
+                    <td>{{ entity.form | join(', ') | replace({'Employee Form':''}) }}</td>
                     <td>{{ entity.organisationunit }}</td>
                     <td>
                     <ul class="inline">

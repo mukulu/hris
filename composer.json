@@ -23,9 +23,8 @@
         "doctrine/doctrine-fixtures-bundle": "dev-master",
         "gedmo/doctrine-extensions": "dev-master",
         "friendsofsymfony/user-bundle": "*",
-        "sonata-project/cache-bundle": "master-dev",
-        "sonata-project/doctrine-orm-admin-bundle": "master-dev",
-        "sonata-project/admin-bundle": "dev-master",
+        "sonata-project/core-bundle": "~2.2@dev",
+        "knplabs/knp-menu-bundle": "~1.1",
         "stfalcon/tinymce-bundle": "dev-master",
         "braincrafted/bootstrap-bundle": "dev-master",
         "twitter/bootstrap": "2.3.2.0",
@@ -34,7 +33,8 @@
         "ob/highcharts-bundle": "dev-master",
         "jms/security-extra-bundle": "dev-master",
         "jms/serializer-bundle": "dev-master",
-        "liuggio/excelbundle": ">=1.0.4"
+        "liuggio/excelbundle": "~2.0",
+        "friendsofsymfony/message-bundle": "dev-master"
     },
     "scripts": {
         "post-install-cmd": [

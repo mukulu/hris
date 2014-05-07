@@ -31,6 +31,8 @@ use Hris\FormBundle\Entity\Form;
 use Hris\FormBundle\Entity\FormFieldMember;
 use Hris\FormBundle\DataFixtures\ORM\LoadFieldData;
 use Hris\FormBundle\Entity\FormVisibleFields;
+use Hris\UserBundle\Entity\User;
+use Symfony\Component\Stopwatch\Stopwatch;
 
 class LoadFormData extends AbstractFixture implements OrderedFixtureInterface
 {
@@ -65,7 +67,7 @@ class LoadFormData extends AbstractFixture implements OrderedFixtureInterface
                     0=>'Firstname',
                     1=>'Middlename',
                     2=>'Surname',
-                    3=>'Birthdate',
+                    3=>'DateOfBirth',
                     4=>'Sex',
                     5=>'MaritalStatus',
                     6=>'Nationality',
@@ -97,18 +99,18 @@ class LoadFormData extends AbstractFixture implements OrderedFixtureInterface
                 ),
                 'visibleFields'=>Array(
                     0=>'Firstname',
-                    1=>'Middlename',
                     2=>'Surname',
-                    3=>'Birthdate',
-                    4=>'Sex',
+                    3=>'DateOfBirth',
                     16=>'Profession',
-                    17=>'PresentDesignation',
+                    18=>'Age',
+                    19=>'EmploymentDuration',
+                    20=>'RetirementDate'
                 ),
                 'uniqueFields'=>Array(
                     0=>'Firstname',
                     1=>'Middlename',
                     2=>'Surname',
-                    3=>'Birthdate'
+                    3=>'DateOfBirth'
                 ),
                 'hypertext'=>'
                 <table class="dataentry" border="1">
@@ -123,7 +125,7 @@ class LoadFormData extends AbstractFixture implements OrderedFixtureInterface
                             <tr>
                                 <td><em>1.</em></td>
                                 <td><span>First Name</span></td>
-                                <td class="whitebg"><input type="text" name="Firstname" id="Firstname"/></td>
+                                <td class="whitebg"><input type="text" name="Firstname" id="Firstname" required="required"/></td>
                             </tr>
                             <tr>
                                 <td><span>2.</span></td>
@@ -133,42 +135,42 @@ class LoadFormData extends AbstractFixture implements OrderedFixtureInterface
                             <tr>
                                 <td><span>3.</span></td>
                                 <td><span>Surname</span></td>
-                                <td class="whitebg"><input type="text" name="Surname" id="Surname"/></td>
+                                <td class="whitebg"><input type="text" name="Surname" id="Surname" required="required"/></td>
                             </tr>
                             <tr>
                                 <td><span>4.</span></td>
                                 <td><span>Date of Birth</span></td>
-                                <td><input type="date" name="DateofBirth" id="DateofBirth" /></td>
+                                <td><input type="date" name="DateOfBirth" id="DateOfBirth" class="date" required="required"/></td>
                             </tr>
                             <tr>
                                 <td><span>5.</span></td>
                                 <td><span>Sex</span></td>
-                                <td class="whitebg"><select name="Sex" id="Sex" onload="loadFieldOptions(\'Sex\')" onchange="changeRelatedFieldOptions(\'Sex\')"></select></td>
+                                <td class="whitebg"><select name="Sex" id="Sex" onload="loadFieldOptions(\'Sex\')" onchange="changeRelatedFieldOptions(\'Sex\')" required="required"></select></td>
                             </tr>
                             <tr>
                                 <td><span>6.</span></td>
                                 <td><span>Marital Status</span></td>
-                                <td><select name="MaritalStatus" id="MaritalStatus" onload="loadFieldOptions(\'MaritalStatus\')" onchange="changeRelatedFieldOptions(\'MaritalStatus\')"></select></td>
+                                <td><select name="MaritalStatus" id="MaritalStatus" onload="loadFieldOptions(\'MaritalStatus\')" onchange="changeRelatedFieldOptions(\'MaritalStatus\')" required="required"></select></td>
                             </tr>
                             <tr>
                                 <td><span>7.</span></td>
                                 <td><span>Nationality</span></td>
-                                <td class="whitebg"><select name="Nationality" id="Nationality" onload="loadFieldOptions(\'Nationality\')" onchange="changeRelatedFieldOptions(\'Nationality\')"></select></td>
+                                <td class="whitebg"><select name="Nationality" id="Nationality" onload="loadFieldOptions(\'Nationality\')" onchange="changeRelatedFieldOptions(\'Nationality\')" required="required"></select></td>
                             </tr>
                             <tr>
                                 <td><span>8.</span></td>
                                 <td><span>Religion</span></td>
-                                <td><select name="Religion" id="Religion" onload="loadFieldOptions(\'Religion\')" onchange="changeRelatedFieldOptions(\'Religion\')"></select></td>
+                                <td><select name="Religion" id="Religion" onload="loadFieldOptions(\'Religion\')" onchange="changeRelatedFieldOptions(\'Religion\')" required="required"></select></td>
                             </tr>
                             <tr>
                                 <td><span>9.</span></td>
                                 <td><span>Basic Education Level</span></td>
-                                <td class="whitebg"><select name="BasicEducationLevel" id="BasicEducationLevel" onload="loadFieldOptions(\'BasicEducationLevel\')" onchange="changeRelatedFieldOptions(\'BasicEducationLevel\')"></select></td>
+                                <td class="whitebg"><select name="BasicEducationLevel" id="BasicEducationLevel" onload="loadFieldOptions(\'BasicEducationLevel\')" onchange="changeRelatedFieldOptions(\'BasicEducationLevel\')" required="required"></select></td>
                             </tr>
                             <tr>
                                 <td><span>10.</span></td>
                                 <td><span>Profession Education Level</span></td>
-                                <td><select name="ProfessionEducationLevel" id="ProfessionEducationLevel" onload="loadFieldOptions(\'ProfessionEducationLevel\')" onchange="changeRelatedFieldOptions(\'ProfessionEducationLevel\')"></select></td>
+                                <td><select name="ProfessionEducationLevel" id="ProfessionEducationLevel" onload="loadFieldOptions(\'ProfessionEducationLevel\')" onchange="changeRelatedFieldOptions(\'ProfessionEducationLevel\')" required="required"></select></td>
                             </tr>
                             <tr>
                                 <td><span>11.</span></td>
@@ -183,12 +185,12 @@ class LoadFormData extends AbstractFixture implements OrderedFixtureInterface
                             <tr>
                                 <td><span>13.</span></td>
                                 <td><span>Check Number</span></td>
-                                <td class="whitebg"><input type="text" name="CheckNumber" id="CheckNumber"/></td>
+                                <td class="whitebg"><input type="text" name="CheckNumber" id="CheckNumber" required="required" unique/></td>
                             </tr>
                             <tr>
                                 <td><span>14.</span></td>
                                 <td><span>Employer`s File Number</span></td>
-                                <td><input type="text" name="EmployersFileNumber" id="EmployersFileNumber"/></td>
+                                <td><input type="text" name="EmployersFileNumber" id="EmployersFileNumber" required="required" unique/></td>
                             </tr>
                             <tr>
                                 <td><span>15.</span></td>
@@ -198,32 +200,32 @@ class LoadFormData extends AbstractFixture implements OrderedFixtureInterface
                             <tr>
                                 <td><span>16.</span></td>
                                 <td><span>Terms of Employment</span></td>
-                                <td><select name="TermsofEmployment" id="TermsofEmployment" onload="loadFieldOptions(\'TermsofEmployment\')" onchange="changeRelatedFieldOptions(\'TermsofEmployment\')"></select></td>
+                                <td><select name="TermsofEmployment" id="TermsofEmployment" onload="loadFieldOptions(\'TermsofEmployment\')" onchange="changeRelatedFieldOptions(\'TermsofEmployment\')" required="required"></select></td>
                             </tr>
                             <tr>
                                 <td><span>17.</span></td>
                                 <td><span>Profession</span></td>
-                                <td class="whitebg"><select name="Profession" id="Profession" onload="loadFieldOptions(\'Profession\')" onchange="changeRelatedFieldOptions(\'Profession\')"></select></td>
+                                <td class="whitebg"><select name="Profession" id="Profession" onload="loadFieldOptions(\'Profession\')" onchange="changeRelatedFieldOptions(\'Profession\')" required="required"></select></td>
                             </tr>
                             <tr>
                                 <td><span>18.</span></td>
                                 <td><span>Present Designation</span></td>
-                                <td><select name="PresentDesignation" id="PresentDesignation" onload="loadFieldOptions(\'PresentDesignation\')" onchange="changeRelatedFieldOptions(\'PresentDesignation\')"></select></td>
+                                <td><select name="PresentDesignation" id="PresentDesignation" onload="loadFieldOptions(\'PresentDesignation\')" onchange="changeRelatedFieldOptions(\'PresentDesignation\')" required="required"></select></td>
                             </tr>
                             <tr>
                                 <td><span>19.</span></td>
                                 <td><span>Superlative Substantive Position</span></td>
-                                <td class="whitebg"><select name="SuperlativeSubstantivePosition" id="SuperlativeSubstantivePosition" onload="loadFieldOptions(\'SuperlativeSubstantivePosition\')" onchange="changeRelatedFieldOptions(\'SuperlativeSubstantivePosition\')"></select></td>
+                                <td class="whitebg"><select name="SuperlativeSubstantivePosition" id="SuperlativeSubstantivePosition" onload="loadFieldOptions(\'SuperlativeSubstantivePosition\')" onchange="changeRelatedFieldOptions(\'SuperlativeSubstantivePosition\')" required="required"></select></td>
                             </tr>
                             <tr>
                                 <td><span>20.</span></td>
                                 <td><span>Department</span></td>
-                                <td><select name="Department" id="Department" onload="loadFieldOptions(\'Department\')" onchange="changeRelatedFieldOptions(\'Department\')"></select></td>
+                                <td><select name="Department" id="Department" onload="loadFieldOptions(\'Department\')" onchange="changeRelatedFieldOptions(\'Department\')" required="required"></select></td>
                             </tr>
                             <tr>
                                 <td><span>21.</span></td>
                                 <td><span>Salary Scale</span></td>
-                                <td class="whitebg"><select name="SalaryScale" id="SalaryScale" onload="loadFieldOptions(\'SalaryScale\')" onchange="changeRelatedFieldOptions(\'SalaryScale\')"></select></td>
+                                <td class="whitebg"><select name="SalaryScale" id="SalaryScale" onload="loadFieldOptions(\'SalaryScale\')" onchange="changeRelatedFieldOptions(\'SalaryScale\')" required="required"></select></td>
                             </tr>
                             <tr>
                                 <td><span>22.</span></td>
@@ -233,27 +235,27 @@ class LoadFormData extends AbstractFixture implements OrderedFixtureInterface
                             <tr>
                                 <td><span>23.</span></td>
                                 <td><span>Date of First Appointment</span></td>
-                                <td class="whitebg"><input type="date" name="DateofFirstAppointment" id="DateofFirstAppointment" /></td>
+                                <td class="whitebg"><input type="date" name="DateofFirstAppointment" id="DateofFirstAppointment" class="date" required="required"/></td>
                             </tr>
                             <tr>
                                 <td><span>24.</span></td>
                                 <td><span>Date of Confirmation</span></td>
-                                <td><input type="date" name="DateofConfirmation" id="DateofConfirmation" /></td>
+                                <td><input type="date" name="DateofConfirmation" class="date" id="DateofConfirmation" /></td>
                             </tr>
                             <tr>
                                 <td><span>25.</span></td>
                                 <td><span>Date of Last Promotion</span></td>
-                                <td class="whitebg"><input type="date" name="DateofLastPromotion" id="DateofLastPromotion" /></td>
+                                <td class="whitebg"><input type="date" name="DateofLastPromotion" class="date" id="DateofLastPromotion" /></td>
                             </tr>
                             <tr>
                                 <td><span>26.</span></td>
                                 <td><span>Employer</span></td>
-                                <td><select name="Employer" id="Employer" onload="loadFieldOptions(\'Employer\')" onchange="changeRelatedFieldOptions(\'Employer\')"></select></td>
+                                <td><select name="Employer" id="Employer" onload="loadFieldOptions(\'Employer\')" onchange="changeRelatedFieldOptions(\'Employer\')" required="required"></select></td>
                             </tr>
                             <tr>
                                 <td><span>27.</span></td>
                                 <td><span>Employment Status</span></td>
-                                <td class="whitebg"><select name="EmploymentStatus" id="EmploymentStatus" onload="loadFieldOptions(\'EmploymentStatus\')" onchange="changeRelatedFieldOptions(\'EmploymentStatus\')"></select></td>
+                                <td class="whitebg"><select name="EmploymentStatus" id="EmploymentStatus" onload="loadFieldOptions(\'EmploymentStatus\')" onchange="changeRelatedFieldOptions(\'EmploymentStatus\')" required="required"></select></td>
                             </tr>
                             <tr>
                                 <td><span>28.</span></td>
@@ -263,7 +265,7 @@ class LoadFormData extends AbstractFixture implements OrderedFixtureInterface
                             <tr>
                                 <td><span>29.</span></td>
                                 <td><span>Contacts of Employee</span></td>
-                                <td class="whitebg"><textarea name="ContactsofEmployee" id="ContactsofEmployee"></textarea></td>
+                                <td class="whitebg"><textarea name="ContactsofEmployee" id="ContactsofEmployee" required="required"></textarea></td>
                             </tr>
                             <tr>
                                 <td><span>30.</span></td>
@@ -290,7 +292,7 @@ class LoadFormData extends AbstractFixture implements OrderedFixtureInterface
                     0=>'Firstname',
                     1=>'Middlename',
                     2=>'Surname',
-                    3=>'Birthdate',
+                    3=>'DateOfBirth',
                     4=>'Sex',
                     5=>'MaritalStatus',
                     6=>'Nationality',
@@ -316,18 +318,18 @@ class LoadFormData extends AbstractFixture implements OrderedFixtureInterface
                 ),
                 'visibleFields'=>Array(
                     0=>'Firstname',
-                    1=>'Middlename',
                     2=>'Surname',
-                    3=>'Birthdate',
-                    4=>'Sex',
+                    3=>'DateOfBirth',
                     16=>'Profession',
-                    17=>'PresentDesignation',
+                    18=>'Age',
+                    19=>'EmploymentDuration',
+                    20=>'RetirementDate'
                 ),
                 'uniqueFields'=>Array(
                     0=>'Firstname',
                     1=>'Middlename',
                     2=>'Surname',
-                    3=>'Birthdate'
+                    3=>'DateOfBirth'
                 ),
                 'hypertext'=>'
                 <table class="dataentry" border="1">
@@ -342,7 +344,7 @@ class LoadFormData extends AbstractFixture implements OrderedFixtureInterface
                             <tr>
                                 <td><em>1.</em></td>
                                 <td><span>First Name</span></td>
-                                <td class="whitebg"><input type="text" name="Firstname" id="Firstname"/></td>
+                                <td class="whitebg"><input type="text" name="Firstname" id="Firstname" required="required"/></td>
                             </tr>
                             <tr>
                                 <td><span>2.</span></td>
@@ -352,42 +354,42 @@ class LoadFormData extends AbstractFixture implements OrderedFixtureInterface
                             <tr>
                                 <td><span>3.</span></td>
                                 <td><span>Surname</span></td>
-                                <td class="whitebg"><input type="text" name="Surname" id="Surname"/></td>
+                                <td class="whitebg"><input type="text" name="Surname" id="Surname" required="required"/></td>
                             </tr>
                             <tr>
                                 <td><span>4.</span></td>
                                 <td><span>Date of Birth</span></td>
-                                <td><input type="date" name="DateofBirth" id="DateofBirth" /></td>
+                                <td><input type="date" name="DateOfBirth" id="DateOfBirth" class="date" required="required"/></td>
                             </tr>
                             <tr>
                                 <td><span>5.</span></td>
                                 <td><span>Sex</span></td>
-                                <td class="whitebg"><select name="Sex" id="Sex" onload="loadFieldOptions(\'Sex\')" onchange="changeRelatedFieldOptions(\'Sex\')"></select></td>
+                                <td class="whitebg"><select name="Sex" id="Sex" onload="loadFieldOptions(\'Sex\')" onchange="changeRelatedFieldOptions(\'Sex\')" required="required"></select></td>
                             </tr>
                             <tr>
                                 <td><span>6.</span></td>
                                 <td><span>Marital Status</span></td>
-                                <td><select name="MaritalStatus" id="MaritalStatus" onload="loadFieldOptions(\'MaritalStatus\')" onchange="changeRelatedFieldOptions(\'MaritalStatus\')"></select></td>
+                                <td><select name="MaritalStatus" id="MaritalStatus" onload="loadFieldOptions(\'MaritalStatus\')" onchange="changeRelatedFieldOptions(\'MaritalStatus\')" required="required"></select></td>
                             </tr>
                             <tr>
                                 <td><span>7.</span></td>
                                 <td><span>Nationality</span></td>
-                                <td class="whitebg"><select name="Nationality" id="Nationality" onload="loadFieldOptions(\'Nationality\')" onchange="changeRelatedFieldOptions(\'Nationality\')"></select></td>
+                                <td class="whitebg"><select name="Nationality" id="Nationality" onload="loadFieldOptions(\'Nationality\')" onchange="changeRelatedFieldOptions(\'Nationality\')" required="required"></select></td>
                             </tr>
                             <tr>
                                 <td><span>8.</span></td>
                                 <td><span>Religion</span></td>
-                                <td><select name="Religion" id="Religion" onload="loadFieldOptions(\'Religion\')" onchange="changeRelatedFieldOptions(\'Religion\')"></select></td>
+                                <td><select name="Religion" id="Religion" onload="loadFieldOptions(\'Religion\')" onchange="changeRelatedFieldOptions(\'Religion\')" required="required"></select></td>
                             </tr>
                             <tr>
                                 <td><span>9.</span></td>
                                 <td><span>Basic Education Level</span></td>
-                                <td class="whitebg"><select name="BasicEducationLevel" id="BasicEducationLevel" onload="loadFieldOptions(\'BasicEducationLevel\')" onchange="changeRelatedFieldOptions(\'BasicEducationLevel\')"></select></td>
+                                <td class="whitebg"><select name="BasicEducationLevel" id="BasicEducationLevel" onload="loadFieldOptions(\'BasicEducationLevel\')" onchange="changeRelatedFieldOptions(\'BasicEducationLevel\')" required="required"></select></td>
                             </tr>
                             <tr>
                                 <td><span>10.</span></td>
                                 <td><span>Profession Education Level</span></td>
-                                <td><select name="ProfessionEducationLevel" id="ProfessionEducationLevel" onload="loadFieldOptions(\'ProfessionEducationLevel\')" onchange="changeRelatedFieldOptions(\'ProfessionEducationLevel\')"></select></td>
+                                <td><select name="ProfessionEducationLevel" id="ProfessionEducationLevel" onload="loadFieldOptions(\'ProfessionEducationLevel\')" onchange="changeRelatedFieldOptions(\'ProfessionEducationLevel\')" required="required"></select></td>
                             </tr>
                             <tr>
                                 <td><span>11.</span></td>
@@ -402,22 +404,22 @@ class LoadFormData extends AbstractFixture implements OrderedFixtureInterface
                             <tr>
                                 <td><span>13.</span></td>
                                 <td><span>Terms of Employment</span></td>
-                                <td><select name="TermsofEmployment" id="TermsofEmployment" onload="loadFieldOptions(\'TermsofEmployment\')" onchange="changeRelatedFieldOptions(\'TermsofEmployment\')"></select></td>
+                                <td><select name="TermsofEmployment" id="TermsofEmployment" onload="loadFieldOptions(\'TermsofEmployment\')" onchange="changeRelatedFieldOptions(\'TermsofEmployment\')" required="required"></select></td>
                             </tr>
                             <tr>
                                 <td><span>14.</span></td>
                                 <td><span>Profession</span></td>
-                                <td class="whitebg"><select name="Profession" id="Profession" onload="loadFieldOptions(\'Profession\')" onchange="changeRelatedFieldOptions(\'Profession\')"></select></td>
+                                <td class="whitebg"><select name="Profession" id="Profession" onload="loadFieldOptions(\'Profession\')" onchange="changeRelatedFieldOptions(\'Profession\')" required="required"></select></td>
                             </tr>
                             <tr>
                                 <td><span>15.</span></td>
                                 <td><span>Present Designation</span></td>
-                                <td><select name="PresentDesignation" id="PresentDesignation" onload="loadFieldOptions(\'PresentDesignation\')" onchange="changeRelatedFieldOptions(\'PresentDesignation\')"></select></td>
+                                <td><select name="PresentDesignation" id="PresentDesignation" onload="loadFieldOptions(\'PresentDesignation\')" onchange="changeRelatedFieldOptions(\'PresentDesignation\')" required="required"></select></td>
                             </tr>
                             <tr>
                                 <td><span>16.</span></td>
                                 <td><span>Department</span></td>
-                                <td><select name="Department" id="Department" onload="loadFieldOptions(\'Department\')" onchange="changeRelatedFieldOptions(\'Department\')"></select></td>
+                                <td><select name="Department" id="Department" onload="loadFieldOptions(\'Department\')" onchange="changeRelatedFieldOptions(\'Department\')" required="required"></select></td>
                             </tr>
                             <tr>
                                 <td><span>17.</span></td>
@@ -427,22 +429,22 @@ class LoadFormData extends AbstractFixture implements OrderedFixtureInterface
                             <tr>
                                 <td><span>18.</span></td>
                                 <td><span>Date of First Appointment</span></td>
-                                <td class="whitebg"><input type="date" name="DateofFirstAppointment" id="DateofFirstAppointment" /></td>
+                                <td class="whitebg"><input type="date" name="DateofFirstAppointment" class="date" id="DateofFirstAppointment" required="required"/></td>
                             </tr>
                             <tr>
                                 <td><span>19.</span></td>
                                 <td><span>Date of Last Promotion</span></td>
-                                <td class="whitebg"><input type="date" name="DateofLastPromotion" id="DateofLastPromotion" /></td>
+                                <td class="whitebg"><input type="date" name="DateofLastPromotion" class="date" id="DateofLastPromotion" /></td>
                             </tr>
                             <tr>
                                 <td><span>20.</span></td>
                                 <td><span>Employer</span></td>
-                                <td><select name="Employer" id="Employer" onload="loadFieldOptions(\'Employer\')" onchange="changeRelatedFieldOptions(\'Employer\')"></select></td>
+                                <td><select name="Employer" id="Employer" onload="loadFieldOptions(\'Employer\')" onchange="changeRelatedFieldOptions(\'Employer\')" required="required"></select></td>
                             </tr>
                             <tr>
                                 <td><span>21.</span></td>
                                 <td><span>Employment Status</span></td>
-                                <td class="whitebg"><select name="EmploymentStatus" id="EmploymentStatus" onload="loadFieldOptions(\'EmploymentStatus\')" onchange="changeRelatedFieldOptions(\'EmploymentStatus\')"></select></td>
+                                <td class="whitebg"><select name="EmploymentStatus" id="EmploymentStatus" onload="loadFieldOptions(\'EmploymentStatus\')" onchange="changeRelatedFieldOptions(\'EmploymentStatus\')" required="required"></select></td>
                             </tr>
                             <tr>
                                 <td><span>22.</span></td>
@@ -452,7 +454,7 @@ class LoadFormData extends AbstractFixture implements OrderedFixtureInterface
                             <tr>
                                 <td><span>23.</span></td>
                                 <td><span>Contacts of Employee</span></td>
-                                <td class="whitebg"><textarea name="ContactsofEmployee" id="ContactsofEmployee"></textarea></td>
+                                <td class="whitebg"><textarea name="ContactsofEmployee" id="ContactsofEmployee" required="required"></textarea></td>
                             </tr>
                             <tr>
                                 <td><span>24.</span></td>
@@ -479,7 +481,7 @@ class LoadFormData extends AbstractFixture implements OrderedFixtureInterface
                     0=>'Firstname',
                     1=>'Middlename',
                     2=>'Surname',
-                    3=>'Birthdate',
+                    3=>'DateOfBirth',
                     4=>'Sex',
                     5=>'MaritalStatus',
                     6=>'Nationality',
@@ -511,18 +513,18 @@ class LoadFormData extends AbstractFixture implements OrderedFixtureInterface
                 ),
                 'visibleFields'=>Array(
                     0=>'Firstname',
-                    1=>'Middlename',
                     2=>'Surname',
-                    3=>'Birthdate',
-                    4=>'Sex',
+                    3=>'DateOfBirth',
                     16=>'Profession',
-                    17=>'PresentDesignation',
+                    18=>'Age',
+                    19=>'EmploymentDuration',
+                    20=>'RetirementDate'
                 ),
                 'uniqueFields'=>Array(
                     0=>'Firstname',
                     1=>'Middlename',
                     2=>'Surname',
-                    3=>'Birthdate'
+                    3=>'DateOfBirth'
                 ),
                 'hypertext'=>'
                 <table class="dataentry" border="1">
@@ -537,7 +539,7 @@ class LoadFormData extends AbstractFixture implements OrderedFixtureInterface
                             <tr>
                                 <td><em>1.</em></td>
                                 <td><span>First Name</span></td>
-                                <td class="whitebg"><input type="text" name="Firstname" id="Firstname"/></td>
+                                <td class="whitebg"><input type="text" name="Firstname" id="Firstname" required="required"/></td>
                             </tr>
                             <tr>
                                 <td><span>2.</span></td>
@@ -547,42 +549,42 @@ class LoadFormData extends AbstractFixture implements OrderedFixtureInterface
                             <tr>
                                 <td><span>3.</span></td>
                                 <td><span>Surname</span></td>
-                                <td class="whitebg"><input type="text" name="Surname" id="Surname"/></td>
+                                <td class="whitebg"><input type="text" name="Surname" id="Surname" required="required"/></td>
                             </tr>
                             <tr>
                                 <td><span>4.</span></td>
                                 <td><span>Date of Birth</span></td>
-                                <td><input type="date" name="DateofBirth" id="DateofBirth" /></td>
+                                <td><input type="date" name="DateOfBirth" id="DateOfBirth" required="required"/></td>
                             </tr>
                             <tr>
                                 <td><span>5.</span></td>
                                 <td><span>Sex</span></td>
-                                <td class="whitebg"><select name="Sex" id="Sex" onload="loadFieldOptions(\'Sex\')" onchange="changeRelatedFieldOptions(\'Sex\')"></select></td>
+                                <td class="whitebg"><select name="Sex" id="Sex" onload="loadFieldOptions(\'Sex\')" onchange="changeRelatedFieldOptions(\'Sex\')" required="required"></select></td>
                             </tr>
                             <tr>
                                 <td><span>6.</span></td>
                                 <td><span>Marital Status</span></td>
-                                <td><select name="MaritalStatus" id="MaritalStatus" onload="loadFieldOptions(\'MaritalStatus\')" onchange="changeRelatedFieldOptions(\'MaritalStatus\')"></select></td>
+                                <td><select name="MaritalStatus" id="MaritalStatus" onload="loadFieldOptions(\'MaritalStatus\')" onchange="changeRelatedFieldOptions(\'MaritalStatus\')" required="required"></select></td>
                             </tr>
                             <tr>
                                 <td><span>7.</span></td>
                                 <td><span>Nationality</span></td>
-                                <td class="whitebg"><select name="Nationality" id="Nationality" onload="loadFieldOptions(\'Nationality\')" onchange="changeRelatedFieldOptions(\'Nationality\')"></select></td>
+                                <td class="whitebg"><select name="Nationality" id="Nationality" onload="loadFieldOptions(\'Nationality\')" onchange="changeRelatedFieldOptions(\'Nationality\')" required="required"></select></td>
                             </tr>
                             <tr>
                                 <td><span>8.</span></td>
                                 <td><span>Religion</span></td>
-                                <td><select name="Religion" id="Religion" onload="loadFieldOptions(\'Religion\')" onchange="changeRelatedFieldOptions(\'Religion\')"></select></td>
+                                <td><select name="Religion" id="Religion" onload="loadFieldOptions(\'Religion\')" onchange="changeRelatedFieldOptions(\'Religion\')" required="required"></select></td>
                             </tr>
                             <tr>
                                 <td><span>9.</span></td>
                                 <td><span>Basic Education Level</span></td>
-                                <td class="whitebg"><select name="BasicEducationLevel" id="BasicEducationLevel" onload="loadFieldOptions(\'BasicEducationLevel\')" onchange="changeRelatedFieldOptions(\'BasicEducationLevel\')"></select></td>
+                                <td class="whitebg"><select name="BasicEducationLevel" id="BasicEducationLevel" onload="loadFieldOptions(\'BasicEducationLevel\')" onchange="changeRelatedFieldOptions(\'BasicEducationLevel\')" required="required"></select></td>
                             </tr>
                             <tr>
                                 <td><span>10.</span></td>
                                 <td><span>Profession Education Level</span></td>
-                                <td><select name="ProfessionEducationLevel" id="ProfessionEducationLevel" onload="loadFieldOptions(\'ProfessionEducationLevel\')" onchange="changeRelatedFieldOptions(\'ProfessionEducationLevel\')"></select></td>
+                                <td><select name="ProfessionEducationLevel" id="ProfessionEducationLevel" onload="loadFieldOptions(\'ProfessionEducationLevel\')" onchange="changeRelatedFieldOptions(\'ProfessionEducationLevel\')" required="required"></select></td>
                             </tr>
                             <tr>
                                 <td><span>11.</span></td>
@@ -597,12 +599,12 @@ class LoadFormData extends AbstractFixture implements OrderedFixtureInterface
                             <tr>
                                 <td><span>13.</span></td>
                                 <td><span>Check Number</span></td>
-                                <td class="whitebg"><input type="text" name="CheckNumber" id="CheckNumber"/></td>
+                                <td class="whitebg"><input type="text" name="CheckNumber" id="CheckNumber" required="required"/></td>
                             </tr>
                             <tr>
                                 <td><span>14.</span></td>
                                 <td><span>Employer`s File Number</span></td>
-                                <td><input type="text" name="EmployersFileNumber" id="EmployersFileNumber"/></td>
+                                <td><input type="text" name="EmployersFileNumber" id="EmployersFileNumber" required="required"/></td>
                             </tr>
                             <tr>
                                 <td><span>15.</span></td>
@@ -612,32 +614,32 @@ class LoadFormData extends AbstractFixture implements OrderedFixtureInterface
                             <tr>
                                 <td><span>16.</span></td>
                                 <td><span>Terms of Employment</span></td>
-                                <td><select name="TermsofEmployment" id="TermsofEmployment" onload="loadFieldOptions(\'TermsofEmployment\')" onchange="changeRelatedFieldOptions(\'TermsofEmployment\')"></select></td>
+                                <td><select name="TermsofEmployment" id="TermsofEmployment" onload="loadFieldOptions(\'TermsofEmployment\')" onchange="changeRelatedFieldOptions(\'TermsofEmployment\')" required="required"></select></td>
                             </tr>
                             <tr>
                                 <td><span>17.</span></td>
                                 <td><span>Profession</span></td>
-                                <td class="whitebg"><select name="Profession" id="Profession" onload="loadFieldOptions(\'Profession\')" onchange="changeRelatedFieldOptions(\'Profession\')"></select></td>
+                                <td class="whitebg"><select name="Profession" id="Profession" onload="loadFieldOptions(\'Profession\')" onchange="changeRelatedFieldOptions(\'Profession\')" required="required"></select></td>
                             </tr>
                             <tr>
                                 <td><span>18.</span></td>
                                 <td><span>Present Designation</span></td>
-                                <td><select name="PresentDesignation" id="PresentDesignation" onload="loadFieldOptions(\'PresentDesignation\')" onchange="changeRelatedFieldOptions(\'PresentDesignation\')"></select></td>
+                                <td><select name="PresentDesignation" id="PresentDesignation" onload="loadFieldOptions(\'PresentDesignation\')" onchange="changeRelatedFieldOptions(\'PresentDesignation\')" required="required"></select></td>
                             </tr>
                             <tr>
                                 <td><span>19.</span></td>
                                 <td><span>Superlative Substantive Position</span></td>
-                                <td class="whitebg"><select name="SuperlativeSubstantivePosition" id="SuperlativeSubstantivePosition" onload="loadFieldOptions(\'SuperlativeSubstantivePosition\')" onchange="changeRelatedFieldOptions(\'SuperlativeSubstantivePosition\')"></select></td>
+                                <td class="whitebg"><select name="SuperlativeSubstantivePosition" id="SuperlativeSubstantivePosition" onload="loadFieldOptions(\'SuperlativeSubstantivePosition\')" onchange="changeRelatedFieldOptions(\'SuperlativeSubstantivePosition\')" required="required"></select></td>
                             </tr>
                             <tr>
                                 <td><span>20.</span></td>
                                 <td><span>Department</span></td>
-                                <td><select name="Department" id="Department" onload="loadFieldOptions(\'Department\')" onchange="changeRelatedFieldOptions(\'Department\')"></select></td>
+                                <td><select name="Department" id="Department" onload="loadFieldOptions(\'Department\')" onchange="changeRelatedFieldOptions(\'Department\')" required="required"></select></td>
                             </tr>
                             <tr>
                                 <td><span>21.</span></td>
                                 <td><span>Salary Scale</span></td>
-                                <td class="whitebg"><select name="SalaryScale" id="SalaryScale" onload="loadFieldOptions(\'SalaryScale\')" onchange="changeRelatedFieldOptions(\'SalaryScale\')"></select></td>
+                                <td class="whitebg"><select name="SalaryScale" id="SalaryScale" onload="loadFieldOptions(\'SalaryScale\')" onchange="changeRelatedFieldOptions(\'SalaryScale\')" required="required"></select></td>
                             </tr>
                             <tr>
                                 <td><span>22.</span></td>
@@ -647,27 +649,27 @@ class LoadFormData extends AbstractFixture implements OrderedFixtureInterface
                             <tr>
                                 <td><span>23.</span></td>
                                 <td><span>Date of First Appointment</span></td>
-                                <td class="whitebg"><input type="date" name="DateofFirstAppointment" id="DateofFirstAppointment" /></td>
+                                <td class="whitebg"><input type="date" name="DateofFirstAppointment" class="date" id="DateofFirstAppointment" required="required"/></td>
                             </tr>
                             <tr>
                                 <td><span>24.</span></td>
                                 <td><span>Date of Confirmation</span></td>
-                                <td><input type="date" name="DateofConfirmation" id="DateofConfirmation" /></td>
+                                <td><input type="date" name="DateofConfirmation" class="date" id="DateofConfirmation" /></td>
                             </tr>
                             <tr>
                                 <td><span>25.</span></td>
                                 <td><span>Date of Last Promotion</span></td>
-                                <td class="whitebg"><input type="date" name="DateofLastPromotion" id="DateofLastPromotion" /></td>
+                                <td class="whitebg"><input type="date" name="DateofLastPromotion" class="date" id="DateofLastPromotion" /></td>
                             </tr>
                             <tr>
                                 <td><span>26.</span></td>
                                 <td><span>Employer</span></td>
-                                <td><select name="Employer" id="Employer" onload="loadFieldOptions(\'Employer\')" onchange="changeRelatedFieldOptions(\'Employer\')"></select></td>
+                                <td><select name="Employer" id="Employer" onload="loadFieldOptions(\'Employer\')" onchange="changeRelatedFieldOptions(\'Employer\')" required="required"></select></td>
                             </tr>
                             <tr>
                                 <td><span>27.</span></td>
                                 <td><span>Employment Status</span></td>
-                                <td class="whitebg"><select name="EmploymentStatus" id="EmploymentStatus" onload="loadFieldOptions(\'EmploymentStatus\')" onchange="changeRelatedFieldOptions(\'EmploymentStatus\')"></select></td>
+                                <td class="whitebg"><select name="EmploymentStatus" id="EmploymentStatus" onload="loadFieldOptions(\'EmploymentStatus\')" onchange="changeRelatedFieldOptions(\'EmploymentStatus\')" required="required"></select></td>
                             </tr>
                             <tr>
                                 <td><span>28.</span></td>
@@ -677,7 +679,7 @@ class LoadFormData extends AbstractFixture implements OrderedFixtureInterface
                             <tr>
                                 <td><span>29.</span></td>
                                 <td><span>Contacts of Employee</span></td>
-                                <td class="whitebg"><textarea name="ContactsofEmployee" id="ContactsofEmployee"></textarea></td>
+                                <td class="whitebg"><textarea name="ContactsofEmployee" id="ContactsofEmployee" required="required"></textarea></td>
                             </tr>
                             <tr>
                                 <td><span>30.</span></td>
@@ -704,7 +706,7 @@ class LoadFormData extends AbstractFixture implements OrderedFixtureInterface
                     0=>'Firstname',
                     1=>'Middlename',
                     2=>'Surname',
-                    3=>'Birthdate',
+                    3=>'DateOfBirth',
                     4=>'Sex',
                     5=>'MaritalStatus',
                     6=>'Nationality',
@@ -736,18 +738,18 @@ class LoadFormData extends AbstractFixture implements OrderedFixtureInterface
                 ),
                 'visibleFields'=>Array(
                     0=>'Firstname',
-                    1=>'Middlename',
                     2=>'Surname',
-                    3=>'Birthdate',
-                    4=>'Sex',
+                    3=>'DateOfBirth',
                     16=>'Profession',
-                    17=>'HospitalPresentDesignation',
+                    18=>'Age',
+                    19=>'EmploymentDuration',
+                    20=>'RetirementDate'
                 ),
                 'uniqueFields'=>Array(
                     0=>'Firstname',
                     1=>'Middlename',
                     2=>'Surname',
-                    3=>'Birthdate'
+                    3=>'DateOfBirth'
                 ),
                 'hypertext'=>'
                 <table class="dataentry" border="1">
@@ -762,7 +764,7 @@ class LoadFormData extends AbstractFixture implements OrderedFixtureInterface
                             <tr>
                                 <td><em>1.</em></td>
                                 <td><span>First Name</span></td>
-                                <td class="whitebg"><input type="text" name="Firstname" id="Firstname"/></td>
+                                <td class="whitebg"><input type="text" name="Firstname" id="Firstname" required="required"/></td>
                             </tr>
                             <tr>
                                 <td><span>2.</span></td>
@@ -772,42 +774,42 @@ class LoadFormData extends AbstractFixture implements OrderedFixtureInterface
                             <tr>
                                 <td><span>3.</span></td>
                                 <td><span>Surname</span></td>
-                                <td class="whitebg"><input type="text" name="Surname" id="Surname"/></td>
+                                <td class="whitebg"><input type="text" name="Surname" id="Surname" required="required"/></td>
                             </tr>
                             <tr>
                                 <td><span>4.</span></td>
                                 <td><span>Date of Birth</span></td>
-                                <td><input type="date" name="DateofBirth" id="DateofBirth" /></td>
+                                <td><input type="date" name="DateOfBirth" id="DateOfBirth" class="date" required="required"/></td>
                             </tr>
                             <tr>
                                 <td><span>5.</span></td>
                                 <td><span>Sex</span></td>
-                                <td class="whitebg"><select name="Sex" id="Sex" onload="loadFieldOptions(\'Sex\')" onchange="changeRelatedFieldOptions(\'Sex\')"></select></td>
+                                <td class="whitebg"><select name="Sex" id="Sex" onload="loadFieldOptions(\'Sex\')" onchange="changeRelatedFieldOptions(\'Sex\')" required="required"></select></td>
                             </tr>
                             <tr>
                                 <td><span>6.</span></td>
                                 <td><span>Marital Status</span></td>
-                                <td><select name="MaritalStatus" id="MaritalStatus" onload="loadFieldOptions(\'MaritalStatus\')" onchange="changeRelatedFieldOptions(\'MaritalStatus\')"></select></td>
+                                <td><select name="MaritalStatus" id="MaritalStatus" onload="loadFieldOptions(\'MaritalStatus\')" onchange="changeRelatedFieldOptions(\'MaritalStatus\')" required="required"></select></td>
                             </tr>
                             <tr>
                                 <td><span>7.</span></td>
                                 <td><span>Nationality</span></td>
-                                <td class="whitebg"><select name="Nationality" id="Nationality" onload="loadFieldOptions(\'Nationality\')" onchange="changeRelatedFieldOptions(\'Nationality\')"></select></td>
+                                <td class="whitebg"><select name="Nationality" id="Nationality" onload="loadFieldOptions(\'Nationality\')" onchange="changeRelatedFieldOptions(\'Nationality\')" required="required"></select></td>
                             </tr>
                             <tr>
                                 <td><span>8.</span></td>
                                 <td><span>Religion</span></td>
-                                <td><select name="Religion" id="Religion" onload="loadFieldOptions(\'Religion\')" onchange="changeRelatedFieldOptions(\'Religion\')"></select></td>
+                                <td><select name="Religion" id="Religion" onload="loadFieldOptions(\'Religion\')" onchange="changeRelatedFieldOptions(\'Religion\')" required="required"></select></td>
                             </tr>
                             <tr>
                                 <td><span>9.</span></td>
                                 <td><span>Basic Education Level</span></td>
-                                <td class="whitebg"><select name="BasicEducationLevel" id="BasicEducationLevel" onload="loadFieldOptions(\'BasicEducationLevel\')" onchange="changeRelatedFieldOptions(\'BasicEducationLevel\')"></select></td>
+                                <td class="whitebg"><select name="BasicEducationLevel" id="BasicEducationLevel" onload="loadFieldOptions(\'BasicEducationLevel\')" onchange="changeRelatedFieldOptions(\'BasicEducationLevel\')" required="required"></select></td>
                             </tr>
                             <tr>
                                 <td><span>10.</span></td>
                                 <td><span>Profession Education Level</span></td>
-                                <td><select name="ProfessionEducationLevel" id="ProfessionEducationLevel" onload="loadFieldOptions(\'ProfessionEducationLevel\')" onchange="changeRelatedFieldOptions(\'ProfessionEducationLevel\')"></select></td>
+                                <td><select name="ProfessionEducationLevel" id="ProfessionEducationLevel" onload="loadFieldOptions(\'ProfessionEducationLevel\')" onchange="changeRelatedFieldOptions(\'ProfessionEducationLevel\')" required="required"></select></td>
                             </tr>
                             <tr>
                                 <td><span>11.</span></td>
@@ -822,12 +824,12 @@ class LoadFormData extends AbstractFixture implements OrderedFixtureInterface
                             <tr>
                                 <td><span>13.</span></td>
                                 <td><span>Check Number</span></td>
-                                <td class="whitebg"><input type="text" name="CheckNumber" id="CheckNumber"/></td>
+                                <td class="whitebg"><input type="text" name="CheckNumber" id="CheckNumber" required="required"/></td>
                             </tr>
                             <tr>
                                 <td><span>14.</span></td>
                                 <td><span>Employer`s File Number</span></td>
-                                <td><input type="text" name="EmployersFileNumber" id="EmployersFileNumber"/></td>
+                                <td><input type="text" name="EmployersFileNumber" id="EmployersFileNumber" required="required"/></td>
                             </tr>
                             <tr>
                                 <td><span>15.</span></td>
@@ -837,32 +839,32 @@ class LoadFormData extends AbstractFixture implements OrderedFixtureInterface
                             <tr>
                                 <td><span>16.</span></td>
                                 <td><span>Terms of Employment</span></td>
-                                <td><select name="TermsofEmployment" id="TermsofEmployment" onload="loadFieldOptions(\'TermsofEmployment\')" onchange="changeRelatedFieldOptions(\'TermsofEmployment\')"></select></td>
+                                <td><select name="TermsofEmployment" id="TermsofEmployment" onload="loadFieldOptions(\'TermsofEmployment\')" onchange="changeRelatedFieldOptions(\'TermsofEmployment\')" required="required"></select></td>
                             </tr>
                             <tr>
                                 <td><span>17.</span></td>
                                 <td><span>Profession</span></td>
-                                <td class="whitebg"><select name="Profession" id="Profession" onload="loadFieldOptions(\'Profession\')" onchange="changeRelatedFieldOptions(\'Profession\')"></select></td>
+                                <td class="whitebg"><select name="Profession" id="Profession" onload="loadFieldOptions(\'Profession\')" onchange="changeRelatedFieldOptions(\'Profession\')" required="required"></select></td>
                             </tr>
                             <tr>
                                 <td><span>18.</span></td>
                                 <td><span>Present Designation</span></td>
-                                <td><select name="PresentDesignation" id="PresentDesignation" onload="loadFieldOptions(\'PresentDesignation\')" onchange="changeRelatedFieldOptions(\'PresentDesignation\')"></select></td>
+                                <td><select name="PresentDesignation" id="PresentDesignation" onload="loadFieldOptions(\'PresentDesignation\')" onchange="changeRelatedFieldOptions(\'PresentDesignation\')" required="required"></select></td>
                             </tr>
                             <tr>
                                 <td><span>19.</span></td>
                                 <td><span>Superlative Substantive Position</span></td>
-                                <td class="whitebg"><select name="SuperlativeSubstantivePosition" id="SuperlativeSubstantivePosition" onload="loadFieldOptions(\'SuperlativeSubstantivePosition\')" onchange="changeRelatedFieldOptions(\'SuperlativeSubstantivePosition\')"></select></td>
+                                <td class="whitebg"><select name="SuperlativeSubstantivePosition" id="SuperlativeSubstantivePosition" onload="loadFieldOptions(\'SuperlativeSubstantivePosition\')" onchange="changeRelatedFieldOptions(\'SuperlativeSubstantivePosition\')" required="required"></select></td>
                             </tr>
                             <tr>
                                 <td><span>20.</span></td>
                                 <td><span>Department</span></td>
-                                <td><select name="Department" id="Department" onload="loadFieldOptions(\'Department\')" onchange="changeRelatedFieldOptions(\'Department\')"></select></td>
+                                <td><select name="Department" id="Department" onload="loadFieldOptions(\'Department\')" onchange="changeRelatedFieldOptions(\'Department\')" required="required"></select></td>
                             </tr>
                             <tr>
                                 <td><span>21.</span></td>
                                 <td><span>Salary Scale</span></td>
-                                <td class="whitebg"><select name="SalaryScale" id="SalaryScale" onload="loadFieldOptions(\'SalaryScale\')" onchange="changeRelatedFieldOptions(\'SalaryScale\')"></select></td>
+                                <td class="whitebg"><select name="SalaryScale" id="SalaryScale" onload="loadFieldOptions(\'SalaryScale\')" onchange="changeRelatedFieldOptions(\'SalaryScale\')" required="required"></select></td>
                             </tr>
                             <tr>
                                 <td><span>22.</span></td>
@@ -872,27 +874,27 @@ class LoadFormData extends AbstractFixture implements OrderedFixtureInterface
                             <tr>
                                 <td><span>23.</span></td>
                                 <td><span>Date of First Appointment</span></td>
-                                <td class="whitebg"><input type="date" name="DateofFirstAppointment" id="DateofFirstAppointment" /></td>
+                                <td class="whitebg"><input type="date" name="DateofFirstAppointment" class="date" id="DateofFirstAppointment" required="required"/></td>
                             </tr>
                             <tr>
                                 <td><span>24.</span></td>
                                 <td><span>Date of Confirmation</span></td>
-                                <td><input type="date" name="DateofConfirmation" id="DateofConfirmation" /></td>
+                                <td><input type="date" name="DateofConfirmation" class="date" id="DateofConfirmation" /></td>
                             </tr>
                             <tr>
                                 <td><span>25.</span></td>
                                 <td><span>Date of Last Promotion</span></td>
-                                <td class="whitebg"><input type="date" name="DateofLastPromotion" id="DateofLastPromotion" /></td>
+                                <td class="whitebg"><input type="date" name="DateofLastPromotion" class="date" id="DateofLastPromotion" /></td>
                             </tr>
                             <tr>
                                 <td><span>26.</span></td>
                                 <td><span>Employer</span></td>
-                                <td><select name="Employer" id="Employer" onload="loadFieldOptions(\'Employer\')" onchange="changeRelatedFieldOptions(\'Employer\')"></select></td>
+                                <td><select name="Employer" id="Employer" onload="loadFieldOptions(\'Employer\')" onchange="changeRelatedFieldOptions(\'Employer\')" required="required"></select></td>
                             </tr>
                             <tr>
                                 <td><span>27.</span></td>
                                 <td><span>Employment Status</span></td>
-                                <td class="whitebg"><select name="EmploymentStatus" id="EmploymentStatus" onload="loadFieldOptions(\'EmploymentStatus\')" onchange="changeRelatedFieldOptions(\'EmploymentStatus\')"></select></td>
+                                <td class="whitebg"><select name="EmploymentStatus" id="EmploymentStatus" onload="loadFieldOptions(\'EmploymentStatus\')" onchange="changeRelatedFieldOptions(\'EmploymentStatus\')" required="required"></select></td>
                             </tr>
                             <tr>
                                 <td><span>28.</span></td>
@@ -902,7 +904,7 @@ class LoadFormData extends AbstractFixture implements OrderedFixtureInterface
                             <tr>
                                 <td><span>29.</span></td>
                                 <td><span>Contacts of Employee</span></td>
-                                <td class="whitebg"><textarea name="ContactsofEmployee" id="ContactsofEmployee"></textarea></td>
+                                <td class="whitebg"><textarea name="ContactsofEmployee" id="ContactsofEmployee" required="required"></textarea></td>
                             </tr>
                             <tr>
                                 <td><span>30.</span></td>
@@ -927,6 +929,9 @@ class LoadFormData extends AbstractFixture implements OrderedFixtureInterface
     }
 	public function load(ObjectManager $manager)
 	{
+        $stopwatch = new Stopwatch();
+        $stopwatch->start('dummyFormGeneration');
+
         // Populate dummy forms
         $this->addDummyForms();
         // Seek dummy fields
@@ -934,12 +939,34 @@ class LoadFormData extends AbstractFixture implements OrderedFixtureInterface
         $loadFieldData->addDummyFields();
         $dummyFields = $loadFieldData->getFields();
 
+        // Once forms are in database, assign admin with all forms
+        // district user to public and private
+        // and hospital user to hospital form
+        //admin user
+        $adminUserByReference = $manager->merge($this->getReference( 'admin-user' ));
+        //district user
+        $districtUserByReference = $manager->merge($this->getReference( 'district-user' ));
+        //hospital user
+        $hospitalUserByReference = $manager->merge($this->getReference( 'hospital-user' ));
+
         foreach($this->forms as $key=>$humanResourceForm) {
             $form = new Form();
             $form->setName($humanResourceForm['name']);
             $form->setTitle($humanResourceForm['name']);
             $this->addReference(strtolower(str_replace(' ','',$humanResourceForm['name'])).'-form', $form);
             $manager->persist($form);
+            // Assign all forms to admin user
+            $adminUserByReference->addForm($form);
+            $manager->persist($adminUserByReference);
+            // Assign public and private form to district user and hospital to hospital user
+            if($humanResourceForm['name'] == 'Public Employee Form' || $humanResourceForm['name'] == 'Private Employee Form') {
+                $districtUserByReference->addForm($form);
+                $manager->persist($districtUserByReference);
+            }elseif($humanResourceForm['name'] == 'Hospital Employee Form') {
+                $hospitalUserByReference->addForm($form);
+                $manager->persist($hospitalUserByReference);
+            }
+
             // Add Field Members for the form created
             $sort=1;
             foreach($humanResourceForm['fields'] as $dummyField)
@@ -950,14 +977,16 @@ class LoadFormData extends AbstractFixture implements OrderedFixtureInterface
                 $formMember->setField($fieldByReference);
                 $formMember->setForm( $formByReference );
                 $formMember->setSort($sort++);
-                //$referenceName = strtolower(str_replace(' ','',$humanResourceForm['name']).str_replace(' ','',$dummyField['name'])).'-form-field-member';
+                //$referenceName = strtolower(str_replace(' ','',$humanResourceForm['name']).str_replace(' ','',$dummyField)).'-form-field-member';
                 //$this->addReference($referenceName, $formMember);
                 $manager->persist($formMember);
                 // Overwrite fieldnames in inputags ids with uids
-                $humanResourceForm['hypertext'] = str_replace("id=\"".$dummyField['name']."\"","id=\"".$fieldByReference->getUid()."\"",$humanResourceForm['hypertext']);
+                $humanResourceForm['hypertext'] = str_replace("id=\"".$dummyField."\"","id=\"".$fieldByReference->getUid()."\"",$humanResourceForm['hypertext']);
                 if($fieldByReference->getInputType()->getName()=="Select") {
-                    $humanResourceForm['hypertext'] = str_replace("changeRelatedFieldOptions('".$dummyField['name']."')","changeRelatedFieldOptions('".$fieldByReference->getUid()."')",$humanResourceForm['hypertext']);
+                    $humanResourceForm['hypertext'] = str_replace("changeRelatedFieldOptions('".$dummyField."')","changeRelatedFieldOptions('".$fieldByReference->getUid()."')",$humanResourceForm['hypertext']);
+                    $humanResourceForm['hypertext'] = str_replace("loadFieldOptions('".$dummyField."')","loadFieldOptions('".$fieldByReference->getUid()."')",$humanResourceForm['hypertext']);
                 }
+                unset($formMember);
             }
             $sort=1;
             foreach($humanResourceForm['visibleFields'] as $key => $dummyField)
@@ -969,11 +998,7 @@ class LoadFormData extends AbstractFixture implements OrderedFixtureInterface
                 $visibleFieldMember->setForm( $formByReference );
                 $visibleFieldMember->setSort($sort++);
                 $manager->persist($visibleFieldMember);
-                // Overwrite fieldnames in inputags ids with uids
-                $humanResourceForm['hypertext'] = str_replace("id=\"".$dummyField['name']."\"","id=\"".$fieldByReference->getUid()."\"",$humanResourceForm['hypertext']);
-                if($fieldByReference->getInputType()->getName()=="Select") {
-                    $humanResourceForm['hypertext'] = str_replace("changeRelatedFieldOptions('".$dummyField['name']."')","changeRelatedFieldOptions('".$fieldByReference->getUid()."')",$humanResourceForm['hypertext']);
-                }
+                unset($visibleFieldMember);
             }
             foreach($humanResourceForm['uniqueFields'] as $key => $dummyField)
             {
@@ -981,8 +1006,28 @@ class LoadFormData extends AbstractFixture implements OrderedFixtureInterface
                 $form->addUniqueRecordField($fieldByReference);
             }
             $form->setHypertext($humanResourceForm['hypertext']);
+            $manager->persist($form);
+            unset($form);
         }
+
 		$manager->flush();
+
+        /*
+         * Check Clock for time spent
+         */
+        $dummyFormGenerationTime = $stopwatch->stop('dummyFormGeneration');
+        $duration = $dummyFormGenerationTime->getDuration()/1000;
+        unset($stopwatch);
+        if( $duration <60 ) {
+            $durationMessage = round($duration,2).' seconds';
+        }elseif( $duration >= 60 && $duration < 3600 ) {
+            $durationMessage = round(($duration/60),2) .' minutes';
+        }elseif( $duration >=3600 && $duration < 216000) {
+            $durationMessage = round(($duration/3600),2) .' hours';
+        }else {
+            $durationMessage = round(($duration/86400),2) .' hours';
+        }
+        //echo "Dummy Form generation complete in ". $durationMessage .".\n\n";
 	}
 	
 	/**

@@ -90,9 +90,9 @@ class History
      * @var string
      *
      * @Gedmo\Versioned
-     * @ORM\Column(name="user", type="string", length=64)
+     * @ORM\Column(name="username", type="string", length=64)
      */
-    private $user;
+    private $username;
 
     /**
      * @var \DateTime
@@ -109,6 +109,22 @@ class History
      * @ORM\Column(name="finishtime", type="datetime")
      */
     private $finishtime;
+
+    /**
+     * @var \DateTime $datecreated
+     *
+     * @Gedmo\Timestampable(on="create")
+     * @ORM\Column(name="datecreated", type="datetime")
+     */
+    private $datecreated;
+
+    /**
+     * @var \DateTime $lastupdated
+     *
+     * @Gedmo\Timestampable(on="update")
+     * @ORM\Column(name="lastupdated", type="datetime", nullable=true)
+     */
+    private $lastupdated;
 
 
     /**
@@ -237,26 +253,26 @@ class History
     }
 
     /**
-     * Set user
+     * Set username
      *
-     * @param string $user
+     * @param string $username
      * @return History
      */
-    public function setUser($user)
+    public function setUsername($username)
     {
-        $this->user = $user;
+        $this->username = $username;
     
         return $this;
     }
 
     /**
-     * Get user
+     * Get username
      *
      * @return string 
      */
-    public function getUser()
+    public function getUsername()
     {
-        return $this->user;
+        return $this->username;
     }
 
     /**
@@ -303,6 +319,61 @@ class History
     public function getFinishtime()
     {
         return $this->finishtime;
+    }
+
+    /**
+     * Set datecreated
+     *
+     * @param \DateTime $datecreated
+     * @return Field
+     */
+    public function setDatecreated($datecreated)
+    {
+        $this->datecreated = $datecreated;
+
+        return $this;
+    }
+
+    /**
+     * Get datecreated
+     *
+     * @return \DateTime
+     */
+    public function getDatecreated()
+    {
+        return $this->datecreated;
+    }
+
+    /**
+     * Set lastupdated
+     *
+     * @param \DateTime $lastupdated
+     * @return Field
+     */
+    public function setLastupdated($lastupdated)
+    {
+        $this->lastupdated = $lastupdated;
+
+        return $this;
+    }
+
+    /**
+     * Get lastupdated
+     *
+     * @return \DateTime
+     */
+    public function getLastupdated()
+    {
+        return $this->lastupdated;
+    }
+
+    /**
+     * Constructor
+     */
+    public function __construct()
+    {
+        $this->uid = uniqid();
+        $this->datecreated = new \DateTime('now');
     }
 
     /**

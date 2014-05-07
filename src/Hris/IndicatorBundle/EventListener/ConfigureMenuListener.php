@@ -36,20 +36,20 @@ class ConfigureMenuListener
     {
         $menu = $event->getMenu();
 
-        $menu->addChild('Indicator Module',
+        $menu->addChild('Target Module',
             array(
-                'uri'=>'#indicatormodule',
+                'uri'=>'#targetmodule',
                 'extras'=>array('tag'=>'div'),
-                'name'=>'Indicator Module',
+                'name'=>'Target Module',
                 'attributes'=> array('class'=>'accordion-group'),
             )
         );
-        $indicatorModule = $menu->getChild('Indicator Module');
+        $indicatorModule = $menu->getChild('Target Module');
 
-        $indicatorModule->addChild('Indicators',
-            array('route'=>'indicator_list',
+        $indicatorModule->addChild('Targets',
+            array('route'=>'target_list',
                   'extras'=>array('tag'=>'div'),
-                  'name' =>'Indicators',
+                  'name' =>'Targets',
                   'attributes'=> array('class'=>'accordion-group')
             )
         );

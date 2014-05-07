@@ -1,0 +1,83 @@
+<table class="records_list dataTable table table-striped table-bordered table-hover">
+
+    <thead>
+        <tr>
+            <th>{% trans from 'FOSMessageBundle' %}participants{% endtrans %}</th>
+            <th>{% trans from 'FOSMessageBundle' %}subject{% endtrans %}</th>
+            <th>{% trans from 'FOSMessageBundle' %}startdate{% endtrans %}</th>
+            <th>{% trans from 'FOSMessageBundle' %}actions{% endtrans %}</th>
+        </tr>
+    </thead>
+
+    <tbody>
+
+    {% if threads %}
+        {% for thread in threads %}
+            <tr>
+                <td style="max-width: 300px;">
+
+                    {% spaceless %}
+                        <strong title="{% if thread.createdBy.organisationunit %} {{ thread.createdBy.jobTitle }} of {{ thread.createdBy.organisationunit.longname }} {% if thread.createdBy.email %}<{{ thread.createdBy.email }}>{% endif %}{% if thread.createdBy.phoneNumber %} Phone: {{ thread.createdBy.phoneNumber }} {% endif %} {% endif %}">{{ thread.createdBy }}</strong>,
+                        {% for participant in thread.getParticipants() | slice(0,3) %}
+                            {% if loop.index0 > 1 %},{% endif %}{% if participant.username != thread.createdBy.username %}<strong title="{% if participant.organisationunit %} {{ participant.jobTitle }} of {{ participant.organisationunit.longname }} {% if participant.email %}<{{ participant.email }}>{% endif %}{% if participant.phoneNumber %} Phone: {{ participant.phoneNumber }} {% endif %} {% endif %}">{{ participant }}</strong>{% endif %}
+                        {% endfor %}
+                        {% if thread.getParticipants() | length > 3 %}
+                            {% if thread.createdBy in thread.getParticipants() %}
+                                and <strong title="{{ thread.getParticipants() | join(',') }}">{{ thread.getParticipants() | length - 3 }} others</strong>
+                            {% else %}
+                                and <strong title="{{ thread.getParticipants() | join(',') }}">{{ thread.getParticipants() | length - 4 }} others</strong>
+                            {% endif %}
+                        {% endif %}
+                        ({{ thread.messages|length }})
+                    {% endspaceless %}
+
+                </td>
+                <td>
+                    <a href="{{ url('message_thread_view', {'threadId': thread.id}) }}">{{ thread.subject }}{% if not fos_message_is_read(thread) %}<div class="newMessage">new</div>{% endif %}</a>
+                </td>
+                <td>
+                    {{ thread.createdAt|date }}
+                </td>
+                <td style="min-width: 30px;">
+                    <ul class="inline">
+                        <li>
+                            <a href="{{ path('message_thread_view', {'threadId': thread.id}) }}"><i class="icon-info-sign icon-large" title="Show"></i></a>
+                        </li>
+                        <li>
+                            <a data-toggle="modal" href="#deleteModalFor{{ thread.uid }}"><i class="icon-remove-sign icon-large" title="Delete"></i></a>
+                            <!-- Modal -->
+                            <div class="modal fade" id="deleteModalFor{{ thread.uid }}">
+                                <div class="modal-dialog">
+                                    <div class="modal-content">
+                                        <div class="modal-header">
+                                            <button type="button" class="close" data-dismiss="modal" aria-hidden="true">×</button>
+                                            <h4 class="modal-title"><i class="icon-circle-remove icon-largest" title="Delete"></i>Deleting <strong>Conversation: {{ thread.subject | capitalize }}</strong></h4>
+                                        </div>
+                                        <div class="modal-body">
+                                            Are you sure you want to delete <strong>Conversation: {{ thread.subject | capitalize }}</strong> that was created on <em>{{ thread.datecreated|date('d/m/Y') }}</em>
+                                            {% if thread.lastUpdated %}
+                                                and last updated on {{ thread.lastUpdated|date('H:i:s d/m/Y') }} ??
+                                            {% else %}
+                                                and never updated ??
+                                            {% endif %}
+                                        </div>
+                                        <div class="modal-footer">
+                                            <form action="{{ url('message_thread_delete', {'threadId': thread.id}) }}" method="post">
+                                                <input type="hidden" name="_method" value="DELETE" />
+                                                <button type="button" class="btn btn-default" data-dismiss="modal">Close</button>
+                                                <input type="submit" value="Delete" class="btn"/>
+                                            </form>
+                                        </div>
+                                    </div><!-- /.modal-content -->
+                                </div><!-- /.modal-dialog -->
+                            </div><!-- /.modal -->
+                        </li>
+                    </ul>
+                </td>
+            </tr>
+        {% endfor %}
+    {% endif %}
+
+    </tbody>
+
+</table>

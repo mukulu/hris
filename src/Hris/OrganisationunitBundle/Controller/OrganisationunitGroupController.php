@@ -32,6 +32,7 @@ use Sensio\Bundle\FrameworkExtraBundle\Configuration\Route;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Template;
 use Hris\OrganisationunitBundle\Entity\OrganisationunitGroup;
 use Hris\OrganisationunitBundle\Form\OrganisationunitGroupType;
+use JMS\SecurityExtraBundle\Annotation\Secure;
 
 /**
  * OrganisationunitGroup controller.
@@ -44,6 +45,7 @@ class OrganisationunitGroupController extends Controller
     /**
      * Lists all OrganisationunitGroup entities.
      *
+     * @Secure(roles="ROLE_SUPER_USER,ROLE_ORGANISATIONUNITGROUP_LIST")
      * @Route("/", name="organisationunitgroup")
      * @Route("/list", name="organisationunitgroup_list")
      * @Method("GET")
@@ -55,6 +57,7 @@ class OrganisationunitGroupController extends Controller
 
         $entities = $em->getRepository('HrisOrganisationunitBundle:OrganisationunitGroup')->findAll();
 
+        $delete_forms = NULL;
         foreach($entities as $entity) {
             $delete_form= $this->createDeleteForm($entity->getId());
             $delete_forms[$entity->getId()] = $delete_form->createView();
@@ -68,6 +71,7 @@ class OrganisationunitGroupController extends Controller
     /**
      * Creates a new OrganisationunitGroup entity.
      *
+     * @Secure(roles="ROLE_SUPER_USER,ROLE_ORGANISATIONUNITGROUP_CREATE")
      * @Route("/", name="organisationunitgroup_create")
      * @Method("POST")
      * @Template("HrisOrganisationunitBundle:OrganisationunitGroup:new.html.twig")
@@ -108,6 +112,7 @@ class OrganisationunitGroupController extends Controller
     /**
      * Displays a form to create a new OrganisationunitGroup entity.
      *
+     * @Secure(roles="ROLE_SUPER_USER,ROLE_ORGANISATIONUNITGROUP_CREATE")
      * @Route("/new", name="organisationunitgroup_new")
      * @Method("GET")
      * @Template()
@@ -126,6 +131,7 @@ class OrganisationunitGroupController extends Controller
     /**
      * Finds and displays a OrganisationunitGroup entity.
      *
+     * @Secure(roles="ROLE_SUPER_USER,ROLE_ORGANISATIONUNITGROUP_SHOW")
      * @Route("/{id}", requirements={"id"="\d+"}, requirements={"id"="\d+"}, name="organisationunitgroup_show")
      * @Method("GET")
      * @Template()
@@ -151,6 +157,7 @@ class OrganisationunitGroupController extends Controller
     /**
      * Displays a form to edit an existing OrganisationunitGroup entity.
      *
+     * @Secure(roles="ROLE_SUPER_USER,ROLE_ORGANISATIONUNITGROUP_UPDATE")
      * @Route("/{id}/edit", requirements={"id"="\d+"}, name="organisationunitgroup_edit")
      * @Method("GET")
      * @Template()
@@ -178,6 +185,7 @@ class OrganisationunitGroupController extends Controller
     /**
      * Edits an existing OrganisationunitGroup entity.
      *
+     * @Secure(roles="ROLE_SUPER_USER,ROLE_ORGANISATIONUNITGROUP_UPDATE")
      * @Route("/{id}", requirements={"id"="\d+"}, name="organisationunitgroup_update")
      * @Method("PUT")
      * @Template("HrisOrganisationunitBundle:OrganisationunitGroup:edit.html.twig")
@@ -200,7 +208,7 @@ class OrganisationunitGroupController extends Controller
             $em->persist($entity);
             $em->flush();
 
-            return $this->redirect($this->generateUrl('organisationunitgroup_edit', array('id' => $id)));
+            return $this->redirect($this->generateUrl('organisationunitgroup_show', array('id' => $id)));
         }
 
         return array(
@@ -213,6 +221,7 @@ class OrganisationunitGroupController extends Controller
     /**
      * Updates OrganisationunitGroup member.
      *
+     * @Secure(roles="ROLE_SUPER_USER,ROLE_ORGANISATIONUNITGROUP_UPDATE")
      * @Route("/{id}/member", requirements={"id"="\d+"}, name="organisationunitgroup_update_member")
      * @Method("POST")
      * @Template()
@@ -245,6 +254,7 @@ class OrganisationunitGroupController extends Controller
     /**
      * Deletes a OrganisationunitGroup entity.
      *
+     * @Secure(roles="ROLE_SUPER_USER,ROLE_ORGANISATIONUNITGROUP_DELETE")
      * @Route("/{id}", requirements={"id"="\d+"}, name="organisationunitgroup_delete")
      * @Method("DELETE")
      */

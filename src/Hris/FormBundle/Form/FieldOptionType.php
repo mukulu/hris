@@ -24,22 +24,158 @@
  */
 namespace Hris\FormBundle\Form;
 
+use Doctrine\ORM\EntityRepository;
 use Symfony\Component\Form\AbstractType;
 use Symfony\Component\Form\FormBuilderInterface;
 use Symfony\Component\OptionsResolver\OptionsResolverInterface;
+use Symfony\Component\Validator\Constraints\NotBlank;
 
 class FieldOptionType extends AbstractType
 {
+
+    /**
+     * @return integer
+     */
+    public function getFieldId()
+    {
+        return $this->fieldId;
+    }
+
+    /**
+     * @return string
+     */
+    public function getFieldOptionValue()
+    {
+        return $this->fieldOptionValue;
+    }
+
+    /**
+     * @var integer
+     */
+    private $fieldId;
+
+    /**
+     * @var string
+     */
+    private $fieldOptionValue;
+
+    /**
+     * @param $fieldId
+     * @param $fieldOptionValue
+     */
+    public function __construct ($fieldId,$fieldOptionValue=null)
+    {
+        $this->fieldId = $fieldId;
+        $this->fieldOptionValue = $fieldOptionValue;
+    }
     /**
      * @param FormBuilderInterface $builder
      * @param array $options
      */
     public function buildForm(FormBuilderInterface $builder, array $options)
     {
+        $fieldId = $this->getFieldId();
+        $fieldOptionValue = $this->getFieldOptionValue();
         $builder
+            ->add('field','entity',array(
+                'class'=>'HrisFormBundle:Field',
+                'query_builder'=>function(EntityRepository $er) {
+                    return $er->createQueryBuilder('field')
+                        ->innerJoin('field.inputType','inputType')
+                        ->where('inputType.name=:inputTypeName')
+                        ->setParameter('inputTypeName',"Select")
+                        ->orderBy('field.isCalculated,field.name','ASC');
+                },
+                'constraints'=> array(
+                    new NotBlank(),
+                )
+            ))
+            ->add('sort',null,array(
+                'required'=>False,
+            ))
             ->add('value')
-            ->add('description')
-            ->add('field');
+            ->add('description',null,array(
+                'required'=>false,
+            ))
+            ->add('skipInReport',null,array(
+                'required'=>False,
+            ))
+        ;
+        if(!empty($this->fieldOptionValue)) {
+            $builder
+                ->add('childFieldOption','entity', array(
+                    'class'=>'HrisFormBundle:FieldOption',
+                    'multiple'=>true,
+                    'query_builder'=>function(EntityRepository $er) use ($fieldId,$fieldOptionValue) {
+                            return $er->createQueryBuilder('fieldOption')
+                                ->join('fieldOption.field','field')
+                                ->andWhere("field.id='".$fieldId."'")
+                                ->orderBy('fieldOption.value','ASC');
+                        },
+                    'constraints'=>array(
+                        new NotBlank(),
+                    ),
+                    'required'=>False,
+                ))
+            ;
+        }else {
+            $builder
+                ->add('childFieldOption','entity', array(
+                    'class'=>'HrisFormBundle:FieldOption',
+                    'multiple'=>true,
+                    'query_builder'=>function(EntityRepository $er) use ($fieldId) {
+                            return $er->createQueryBuilder('fieldOption')
+                                ->join('fieldOption.field','field')
+                                ->andWhere("field.id='".$fieldId."'")
+                                ->orderBy('fieldOption.value','ASC');
+                        },
+                    'constraints'=>array(
+                        new NotBlank(),
+                    ),
+                    'required'=>False,
+                ))
+            ;
+        }
+
+        if(!empty($this->fieldOptionValue)) {
+            $builder
+                ->add('fieldOptionMerge','entity', array(
+                    'class'=>'HrisFormBundle:FieldOption',
+                    'multiple'=>true,
+                    'query_builder'=>function(EntityRepository $er) use ($fieldId,$fieldOptionValue) {
+                            return $er->createQueryBuilder('fieldOption')
+                                ->join('fieldOption.field','field')
+                                ->andWhere("field.id='".$fieldId."'")
+                                ->andWhere("fieldOption.value!='".$fieldOptionValue."'")
+                                ->orderBy('fieldOption.value','ASC');
+                        },
+                    'constraints'=>array(
+                        new NotBlank(),
+                    ),
+                    'mapped'=>False,
+                    'required'=>False,
+                ))
+                ;
+        }else {
+            $builder
+                ->add('fieldOptionMerge','entity', array(
+                    'class'=>'HrisFormBundle:FieldOption',
+                    'multiple'=>true,
+                    'query_builder'=>function(EntityRepository $er) use ($fieldId) {
+                            return $er->createQueryBuilder('fieldOption')
+                                ->join('fieldOption.field','field')
+                                ->andWhere("field.id='".$fieldId."'")
+                                ->orderBy('fieldOption.value','ASC');
+                        },
+                    'constraints'=>array(
+                        new NotBlank(),
+                    ),
+                    'mapped'=>False,
+                    'required'=>False,
+                ))
+            ;
+        }
+
     }
 
     /**

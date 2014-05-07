@@ -287,6 +287,14 @@ class Settings
     }
 
     /**
+     * Constructor
+     */
+    public function __construct()
+    {
+        $this->uid = uniqid();
+    }
+
+    /**
      * Get Entity verbose name
      *
      * @return string

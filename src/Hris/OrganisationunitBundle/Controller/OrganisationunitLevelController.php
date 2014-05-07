@@ -45,6 +45,7 @@ class OrganisationunitLevelController extends Controller
     /**
      * Lists all OrganisationunitLevel entities.
      *
+     * @Secure(roles="ROLE_SUPER_USER,ROLE_ORGANISATIONUNITLEVEL_LIST")
      * @Route("/", name="organisationunitlevel")
      * @Route("/list", name="organisationunitlevel_list")
      * @Method("GET")
@@ -56,6 +57,19 @@ class OrganisationunitLevelController extends Controller
 
         $entities = $em->getRepository('HrisOrganisationunitBundle:OrganisationunitLevel')->findAll();
 
+        $queryBuilder = $em->createQueryBuilder();
+        $organisationunitStructureCount =  $queryBuilder->select('count( organisationunitStructure.id )')->from('HrisOrganisationunitBundle:OrganisationunitStructure','organisationunitStructure')->getQuery()->getSingleScalarResult();
+        $queryBuilder = $em->createQueryBuilder();
+        $organisationunitCount =  $queryBuilder->select('count( organisationunit.id )')->from('HrisOrganisationunitBundle:Organisationunit','organisationunit')->getQuery()->getSingleScalarResult();
+
+        // Regenerate Orgunit Stucture of Orgunit and OrgunitStructure Differs
+        if($organisationunitCount!=$organisationunitStructureCount) {
+            $regenerationRequired=True;
+        }else {
+            $regenerationRequired=False;
+        }
+
+        $delete_forms = NULL;
         foreach($entities as $entity) {
             $delete_form= $this->createDeleteForm($entity->getId());
             $delete_forms[$entity->getId()] = $delete_form->createView();
@@ -64,12 +78,14 @@ class OrganisationunitLevelController extends Controller
         return array(
             'entities' => $entities,
             'delete_forms' => $delete_forms,
+            'regenerationRequired'=>$regenerationRequired,
         );
     }
 
     /**
      * Regenerate all OrganisationunitLevel entities.
      *
+     * @Secure(roles="ROLE_SUPER_USER,ROLE_ORGANISATIONUNITLEVEL_REGENERATE")
      * @Route("/regeneration", name="organisationunitlevel_regeneration")
      * @Method("GET")
      * @Template()
@@ -132,6 +148,7 @@ class OrganisationunitLevelController extends Controller
     /**
      * Creates a new OrganisationunitLevel entity.
      *
+     * @Secure(roles="ROLE_SUPER_USER,ROLE_ORGANISATIONUNITLEVEL_CREATE")
      * @Route("/", name="organisationunitlevel_create")
      * @Method("POST")
      * @Template("HrisOrganisationunitBundle:OrganisationunitLevel:new.html.twig")
@@ -159,6 +176,7 @@ class OrganisationunitLevelController extends Controller
     /**
      * Displays a form to create a new OrganisationunitLevel entity.
      *
+     * @Secure(roles="ROLE_SUPER_USER,ROLE_ORGANISATIONUNITLEVEL_CREATE")
      * @Route("/new", name="organisationunitlevel_new")
      * @Method("GET")
      * @Template()
@@ -177,6 +195,7 @@ class OrganisationunitLevelController extends Controller
     /**
      * Finds and displays a OrganisationunitLevel entity.
      *
+     * @Secure(roles="ROLE_SUPER_USER,ROLE_ORGANISATIONUNITLEVEL_SHOW")
      * @Route("/{id}", requirements={"id"="\d+"}, name="organisationunitlevel_show")
      * @Method("GET")
      * @Template()
@@ -202,6 +221,7 @@ class OrganisationunitLevelController extends Controller
     /**
      * Displays a form to edit an existing OrganisationunitLevel entity.
      *
+     * @Secure(roles="ROLE_SUPER_USER,ROLE_ORGANISATIONUNITLEVEL_UPDATE")
      * @Route("/{id}/edit", requirements={"id"="\d+"}, name="organisationunitlevel_edit")
      * @Method("GET")
      * @Template()
@@ -229,6 +249,7 @@ class OrganisationunitLevelController extends Controller
     /**
      * Edits an existing OrganisationunitLevel entity.
      *
+     * @Secure(roles="ROLE_SUPER_USER,ROLE_ORGANISATIONUNITLEVEL_UPDATE")
      * @Route("/{id}", requirements={"id"="\d+"}, name="organisationunitlevel_update")
      * @Method("PUT")
      * @Template("HrisOrganisationunitBundle:OrganisationunitLevel:edit.html.twig")
@@ -251,7 +272,7 @@ class OrganisationunitLevelController extends Controller
             $em->persist($entity);
             $em->flush();
 
-            return $this->redirect($this->generateUrl('organisationunitlevel_edit', array('id' => $id)));
+            return $this->redirect($this->generateUrl('organisationunitlevel_show', array('id' => $id)));
         }
 
         return array(
@@ -263,6 +284,7 @@ class OrganisationunitLevelController extends Controller
     /**
      * Deletes a OrganisationunitLevel entity.
      *
+     * @Secure(roles="ROLE_SUPER_USER,ROLE_ORGANISATIONUNITLEVEL_DELETE")
      * @Route("/{id}", requirements={"id"="\d+"}, name="organisationunitlevel_delete")
      * @Method("DELETE")
      */
@@ -302,10 +324,9 @@ class OrganisationunitLevelController extends Controller
     }
 
     /**
-     * Returns OrganisationunitLevel json.
+     * Returns OrganisationunitLevel tree json.
      *
-     * @Secure(roles="ROLE_ORGANISATIONUNIT_ORGANISATIONUNIT_LEVEL,ROLE_USER")
-     *
+     * @Secure(roles="ROLE_SUPER_USER,ROLE_ORGANISATIONUNITLEVEL_TREE,ROLE_USER")
      * @Route("/levels.{_format}", requirements={"_format"="yml|xml|json|"}, defaults={"format"="json","parent"=0}, name="organisationunit_levels")
      * @Route("/levels/{parent}/parent",requirements={"parent"="\d+"},defaults={"parent"=0}, name="organisationunit_levels_parent")
      * @Method("GET|POST")

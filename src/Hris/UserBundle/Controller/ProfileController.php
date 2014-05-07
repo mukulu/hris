@@ -31,6 +31,7 @@ use Symfony\Component\DependencyInjection\ContainerAware;
 use Symfony\Component\HttpFoundation\RedirectResponse;
 use Symfony\Component\Security\Core\Exception\AccessDeniedException;
 use FOS\UserBundle\Model\UserInterface;
+use JMS\SecurityExtraBundle\Annotation\Secure;
 
 /**
  * Controller managing the user profile
@@ -42,6 +43,8 @@ class ProfileController extends ContainerAware
 {
     /**
      * Show the user
+     *
+     * @Secure(roles="ROLE_SUPER_USER,ROLE_USERPROFILE_SHOW")
      */
     public function showAction()
     {
@@ -55,6 +58,8 @@ class ProfileController extends ContainerAware
 
     /**
      * Edit the user
+     *
+     * @Secure(roles="ROLE_SUPER_USER,ROLE_USERPROFILE_UPDATE")
      */
     public function editAction()
     {
@@ -82,6 +87,7 @@ class ProfileController extends ContainerAware
     /**
      * Generate the redirection url when editing is completed.
      *
+     * @Secure(roles="ROLE_SUPER_USER,ROLE_USERPROFILE_SHOW")
      * @param \FOS\UserBundle\Model\UserInterface $user
      *
      * @return string

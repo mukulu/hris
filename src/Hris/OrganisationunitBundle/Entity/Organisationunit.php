@@ -30,8 +30,10 @@ use Gedmo\Mapping\Annotation as Gedmo;
 
 use Hris\OrganisationunitBundle\Entity\OrganisationunitStructure;
 use Hris\OrganisationunitBundle\Entity\OrganisationunitGroup;
+use Hris\IntergrationBundle\Entity\DHISDataConnection;
 use Hris\UserBundle\Entity\User;
 use Symfony\Component\Validator\Constraints as Assert;
+use Symfony\Bridge\Doctrine\Validator\Constraints\UniqueEntity;
 
 /**
  * Hris\OrganisationunitBundle\Entity\Organisationunit
@@ -40,6 +42,8 @@ use Symfony\Component\Validator\Constraints as Assert;
  * @ORM\Entity(repositoryClass="Hris\OrganisationunitBundle\Entity\OrganisationunitRepository")
  * @Gedmo\Loggable
  * @Gedmo\SoftDeleteable(fieldName="deletedAt")
+ * @UniqueEntity(fields="code", message="Code already exists")
+ * @UniqueEntity(fields="shortname", message="Shortname already exists")
  */
 class Organisationunit
 {
@@ -198,6 +202,14 @@ class Organisationunit
      * @ORM\Column(name="description", type="text", nullable=true)
      */
     private $description;
+
+    /**
+     * @var DHISDataConnection $dhisDataConnection
+     *
+     * @ORM\OneToMany(targetEntity="Hris\IntergrationBundle\Entity\DHISDataConnection", mappedBy="parentOrganisationunit",cascade={"ALL"})
+     * @ORM\OrderBy({"name" = "ASC"})
+     */
+    private $dhisDataConnection;
 
     /**
      * @var OrganisationunitCompleteness
@@ -683,6 +695,20 @@ class Organisationunit
     }
 
     /**
+     * Remove all organisationunitGroups
+     *
+     * @return Organisationunit
+     */
+    public function removeAllOrganisationunitGroups()
+    {
+        foreach($this->organisationunitGroup as $organisationunitGroupKey=>$organisationunitGroup) {
+            $this->organisationunitGroup->removeElement($organisationunitGroup);
+        }
+
+        return $this;
+    }
+
+    /**
      * Get organisationunitGroup
      *
      * @return \Doctrine\Common\Collections\Collection
@@ -911,10 +937,10 @@ class Organisationunit
     /**
      * Set parent
      *
-     * @param \Hris\OrganisationunitBundle\Entity\Organisationunit $parent
+     * @param Organisationunit $parent
      * @return Organisationunit
      */
-    public function setParent(\Hris\OrganisationunitBundle\Entity\Organisationunit $parent = null)
+    public function setParent(Organisationunit $parent = null)
     {
         $this->parent = $parent;
 

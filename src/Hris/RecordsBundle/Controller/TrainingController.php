@@ -30,7 +30,9 @@ use Sensio\Bundle\FrameworkExtraBundle\Configuration\Method;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Route;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Template;
 use Hris\RecordsBundle\Entity\Training;
+use Hris\RecordsBundle\Entity\Record;
 use Hris\RecordsBundle\Form\TrainingType;
+use JMS\SecurityExtraBundle\Annotation\Secure;
 
 /**
  * Training controller.
@@ -43,69 +45,140 @@ class TrainingController extends Controller
     /**
      * Lists all Training entities.
      *
+     * @Secure(roles="ROLE_SUPER_USER,ROLE_RECORDTRAINING_LIST")
      * @Route("/", name="training")
      * @Route("/list", name="training_list")
+     * @Route("/{recordid}/training", requirements={"recordid"="\d+"}, name="training_byrecord")
+     * @Route("/list/{recordid}/", requirements={"recordid"="\d+"}, name="training_list_byrecord")
      * @Method("GET")
      * @Template()
      */
-    public function indexAction()
+    public function indexAction( $recordid=NULL )
     {
         $em = $this->getDoctrine()->getManager();
 
-        $entities = $em->getRepository('HrisRecordsBundle:Training')->findAll();
+        if(!empty($recordid)){
+            $entities = $em->getRepository('HrisRecordsBundle:Training')->findBy(array('record'=>$recordid));
+            $record = $em->getRepository('HrisRecordsBundle:Record')->findOneBy(array('id'=>$recordid));
+        }
+
+        $delete_forms = array();
+        foreach($entities as $entity) {
+            $delete_form= $this->createDeleteForm($entity->getId());
+            $delete_forms[$entity->getId()] = $delete_form->createView();
+        }
+        //print_r($record->getValue());exit;
 
         return array(
             'entities' => $entities,
+            'delete_forms' => $delete_forms,
+            'recordid' => $recordid,
+            'record' => $record,
+            'employeeName' => $this->getEmployeeName($recordid),
         );
     }
     /**
      * Creates a new Training entity.
      *
-     * @Route("/", name="training_create")
+     * @Secure(roles="ROLE_SUPER_USER,ROLE_RECORDTRAINING_CREATE")
+     * @Route("/{recordid}/recordid", requirements={"recordid"="\d+"}, name="training_create")
      * @Method("POST")
      * @Template("HrisRecordsBundle:Training:new.html.twig")
      */
-    public function createAction(Request $request)
+    public function createAction(Request $request, $recordid = NULL)
     {
         $entity  = new Training();
         $form = $this->createForm(new TrainingType(), $entity);
         $form->bind($request);
+        $user = $this->container->get('security.context')->getToken()->getUser();
 
         if ($form->isValid()) {
             $em = $this->getDoctrine()->getManager();
+            if(!empty($recordid)) {
+                $record = $this->getDoctrine()->getManager()->getRepository('HrisRecordsBundle:Record')->findOneBy(array('id'=>$recordid));
+                $entity->setRecord($record);
+            }else {
+                $record = NULL;
+                $entity->setRecord($record);
+            }
+            $entity->setUsername($user->getUsername());
+
+            //Update Record Table hasTraining column
+            $record->setHastraining(true);
+
             $em->persist($entity);
+            $em->persist($record);
             $em->flush();
 
-            return $this->redirect($this->generateUrl('training_show', array('id' => $entity->getId())));
+            return $this->redirect($this->generateUrl('training_list_byrecord', array( 'recordid' => $recordid )));
         }
 
         return array(
             'entity' => $entity,
             'form'   => $form->createView(),
+            'employeeName' => $this->getEmployeeName($recordid),
         );
     }
 
     /**
      * Displays a form to create a new Training entity.
      *
-     * @Route("/new", name="training_new")
+     * @Secure(roles="ROLE_SUPER_USER,ROLE_RECORDTRAINING_CREATE")
+     * @Route("/new/{recordid}/recordid", requirements={"recordid"="\d+"}, name="training_new")
      * @Method("GET")
      * @Template()
      */
-    public function newAction()
+    public function newAction( $recordid=NULL )
     {
         $entity = new Training();
         $form   = $this->createForm(new TrainingType(), $entity);
+        if(!empty($recordid)) {
+            $record = $this->getDoctrine()->getManager()->getRepository('HrisRecordsBundle:Record')->findOneBy(array('id'=>$recordid));
+        }else {
+            $record = NULL;
+        }
 
         return array(
             'entity' => $entity,
             'form'   => $form->createView(),
+            'recordid' => $recordid,
+            'record' => $record,
+            'employeeName' => $this->getEmployeeName($recordid),
         );
+    }
+
+    /**
+     * Returns Employee's Full Name
+     *
+     * @Secure(roles="ROLE_SUPER_USER,ROLE_RECORDTRAINING_SHOWEMPLOYEENAME")
+     * @Method("GET")
+     * @Template()
+     */
+    private function getEmployeeName($recordid)
+    {
+        $entityManager = $this->getDoctrine()->getManager();
+
+        if(!empty($recordid)) {
+            $record = $this->getDoctrine()->getManager()->getRepository('HrisRecordsBundle:Record')->findOneBy(array('id'=>$recordid));
+        }else {
+            $record = NULL;
+        }
+        $resourceTableName = "_resource_all_fields";
+        $query = "SELECT firstname, middlename, surname FROM ".$resourceTableName;
+        $query .= " WHERE instance = '".$record->getInstance()."' ";
+
+        $result = $entityManager -> getConnection() -> executeQuery($query) -> fetchAll();
+        if(!empty($result)){
+            return $result[0]['firstname']." ".$result[0]['middlename']." ".$result[0]['surname'];
+        }else{
+            return "Employee";
+        }
     }
 
     /**
      * Finds and displays a Training entity.
      *
+     * @Secure(roles="ROLE_SUPER_USER,ROLE_RECORDTRAINING_SHOW")
      * @Route("/{id}", requirements={"id"="\d+"}, requirements={"id"="\d+"}, name="training_show")
      * @Method("GET")
      * @Template()
@@ -131,6 +204,7 @@ class TrainingController extends Controller
     /**
      * Displays a form to edit an existing Training entity.
      *
+     * @Secure(roles="ROLE_SUPER_USER,ROLE_RECORDTRAINING_UPDATE")
      * @Route("/{id}/edit", requirements={"id"="\d+"}, name="training_edit")
      * @Method("GET")
      * @Template()
@@ -152,12 +226,14 @@ class TrainingController extends Controller
             'entity'      => $entity,
             'edit_form'   => $editForm->createView(),
             'delete_form' => $deleteForm->createView(),
+            'employeeName' => $this->getEmployeeName($entity->getRecord()->getId()),
         );
     }
 
     /**
      * Edits an existing Training entity.
      *
+     * @Secure(roles="ROLE_SUPER_USER,ROLE_RECORDTRAINING_UPDATE")
      * @Route("/{id}", requirements={"id"="\d+"}, name="training_update")
      * @Method("PUT")
      * @Template("HrisRecordsBundle:Training:edit.html.twig")
@@ -165,12 +241,14 @@ class TrainingController extends Controller
     public function updateAction(Request $request, $id)
     {
         $em = $this->getDoctrine()->getManager();
+        $user = $this->container->get('security.context')->getToken()->getUser();
 
         $entity = $em->getRepository('HrisRecordsBundle:Training')->find($id);
 
         if (!$entity) {
             throw $this->createNotFoundException('Unable to find Training entity.');
         }
+        $entity->setUsername($user->getUsername() );
 
         $deleteForm = $this->createDeleteForm($id);
         $editForm = $this->createForm(new TrainingType(), $entity);
@@ -180,7 +258,7 @@ class TrainingController extends Controller
             $em->persist($entity);
             $em->flush();
 
-            return $this->redirect($this->generateUrl('training_edit', array('id' => $id)));
+            return $this->redirect($this->generateUrl('training_list_byrecord', array( 'recordid' => $entity->getRecord()->getId() )));
         }
 
         return array(
@@ -192,6 +270,7 @@ class TrainingController extends Controller
     /**
      * Deletes a Training entity.
      *
+     * @Secure(roles="ROLE_SUPER_USER,ROLE_RECORDTRAINING_DELETE")
      * @Route("/{id}", requirements={"id"="\d+"}, name="training_delete")
      * @Method("DELETE")
      */
@@ -207,12 +286,27 @@ class TrainingController extends Controller
             if (!$entity) {
                 throw $this->createNotFoundException('Unable to find Training entity.');
             }
+            $record = $entity->getRecord();
+
+            //check if this deleted entity is the last for this record
+            $query = "SELECT count (id) as total ";
+            $query .= " FROM hris_record_training T ";
+            $query .= " WHERE record_id = ". $record->getId();
+            $query .= " AND id <> ". $id;
+
+            $result = $em -> getConnection() -> executeQuery($query) -> fetchAll();
+
+            //Update records hasTraining column to false when no trainings will be left after delete
+            if ( $result[0]['total'] == 0 ){
+                $record->setHasTraining(false);
+                $em->persist($record);
+            }
 
             $em->remove($entity);
             $em->flush();
         }
 
-        return $this->redirect($this->generateUrl('training'));
+        return $this->redirect($this->generateUrl('training_list_byrecord', array( 'recordid' => $record->getId()) ));
     }
 
     /**

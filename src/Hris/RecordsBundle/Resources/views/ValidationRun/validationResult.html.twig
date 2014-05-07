@@ -1,0 +1,152 @@
+{% extends '::base.html.twig' %}
+{% block javascripts %}
+    {{ parent() }}
+    <script type="text/javascript" src="{{ asset('commons/js/jquery.dataTables.js') }}"></script>
+    <script type="text/javascript" src="{{ asset('commons/js/jquery.dataTables.ZeroClipboard.js') }}"></script>
+    <script type="text/javascript" src="{{ asset('commons/js/jquery.dataTables.TableTools.min.js') }}"></script>
+    <script type="text/javascript" src="{{ asset('commons/js/dt_settings.js') }}"></script>
+    <script type="text/javascript">
+        $(document).ready(function() {
+            $('.records_list').dataTable( {
+                "sDom": "<'row'<'span6'TRl><'span6'f>r>t<'row'<'span6'i><'span6'p>>",
+                "oTableTools": {
+                    "aButtons": [
+                        {"sExtends":"copy","mColumns":"visible"},
+                        {"sExtends":"xls","mColumns":"visible"},
+                        {"sExtends":"pdf","mColumns":"visible"}
+                    ],
+                    "sSwfPath": "{{ asset('commons/swf/copy_cvs_xls_pdf.swf') }}"
+                },
+                "sPdfOrientation": "landscape",
+                "sPaginationType": "bootstrap",
+                "oLanguage": {
+                    "sLengthMenu": "_MENU_ records per page"
+                },
+                "aLengthMenu": [[10, 25, 50,100,200, -1], [10, 25, 50,100,200, "All"]]
+            } );
+        } );
+    </script>
+{% endblock javascripts %}
+
+{% block stylesheets %}
+    {{ parent() }}
+    <link rel="stylesheet" href="{{ asset('commons/css/dt_bootstrap.css') }}" />
+{% endblock stylesheets %}
+
+{% block right_content -%}
+    <div class="container">
+        <h1><small>{{ title }}</small></h1>
+                {% if hrhisValues is null %}
+        <h5>No data found</h5>
+          {% else %}
+
+
+   {% for getValidation in getValidations %}
+        <h3> {{ getValidation.name }}</h3>
+        {% if getValidation.id not in validationFault|keys %}
+            <h5>All data are valid</h5>
+        {% else %}
+            <table class="records_list dataTable table table-striped table-bordered table-hover" cellpadding="0" cellspacing="0" border="0">
+                <thead>
+                <th width="50" height="20">SN</th>
+                <th width="50" height="20">Name</th>
+                <th width="80" height="20"> {{ displayTitle[getValidation.id].leftExpression }}</th>
+                <th width="80" height="20">{{ displayTitle[getValidation.id].rightExpression }}</th>
+                <th width="50" height="20">Facility Name</th>
+                {% set i=1 %}
+                {% for validationValue in validationFault[getValidation.id] %}
+                <tr>
+                    <td>{{i  }}</td>
+                    <td>{{validationValue.name  }}</td>
+                    <td>{{validationValue.leftSide  }}</td>
+                    <td>{{validationValue.rightSide  }}</td>
+                    <td>{{validationValue.orgunit  }}</td>
+                    {% set i=i+1 %}
+                    {% endfor %}
+                </tr>
+
+                </thead>
+                <tbody>
+                </tbody>
+            </table>
+        {% endif %}
+   {% endfor %}
+
+        {#display name validation results#}
+<h3>Name Validation</h3>
+  {% if duplicate is null %}
+        <h5>All Data are Valid</h5>
+        {% else %}
+
+      <div>
+          <table class="records_list dataTable table table-striped table-bordered table-hover" cellpadding="0" cellspacing="0" border="0">
+              <thead>
+              <th width="50" height="20">SN</th>
+              <th width="50" height="20">Instance</th>
+              <th width="50" height="20">Name</th>
+              <th width="50" height="20">Date of Birth</th>
+              <th width="50" height="20">Form</th>
+              <th width="50" height="20">Instance</th>
+              <th width="50" height="20">Repeated Name</th>
+              <th width="50" height="20">Date of Birth</th
+              <th width="50" height="20">Form</th>
+               <th width="50" height="20">Orgunit</th>
+              {% set counter=0%}
+              {% for person in duplicate %}
+              <tr>
+                  <td>{{counter+1  }}</td>
+                  <td>{{person.ref.instance  }}</td>
+                  <td>{{person.ref.name  }}</td>
+                  <td>{{person.ref.dBirth  }}</td>
+                  <td>{{person.ref.form  }}</td>
+                  <td>{{person.ref.instance  }}</td>
+                  <td>{{person.dup.name  }}</td>
+                  <td>{{person.dup.dBirth  }}</td>
+                  <td>{{person.dup.form  }}</td>
+                  <td>{{person.ref.orgunit }}</td>
+                  {% set counter=counter+1 %}
+                  {% endfor %}
+              </tr>
+
+              {% endif %}
+
+              </thead>
+              <tbody>
+              </tbody>
+          </table>
+      </div>
+
+
+        <h3>Compulsory Field Validation</h3>
+        {% if compulsoryInfo is null %}
+        <h5>There are no records with missing fields</h5>
+    {% else %}
+
+        <div>
+            <table class="records_list dataTable table table-striped table-bordered table-hover" cellpadding="0" cellspacing="0" border="0">
+                <thead>
+                <th width="50" height="20">SN</th>
+                 <th width="50" height="20">Name</th>
+                <th width="50" height="20">Missing Field</th>
+                 <th width="50" height="20">Orgunit</th>
+                {% set counter=0 %}
+                {% for emptyValue in emptyFields %}
+
+                <tr>
+                    <td>{{counter+1}}</td>
+                    <td>{{ compulsoryInfo.name  }}</td>
+                    <td>{compulsoryInfo.missingField}}</td>
+                    <td>{{compulsoryInfo.missingOrgUnit }}</td>
+                    {% set counter=counter+1 %}
+                </tr>
+                 {% endfor %}
+                {% endif %}
+
+                </thead>
+                <tbody>
+                </tbody>
+            </table>
+        </div>
+        {% endif %}
+{% endblock %}
+

@@ -1,20 +1,77 @@
 {% extends '::base.html.twig' %}
 
-{% block body -%}
-    <h1>Training creation</h1>
+{% block javascripts %}
+    {{ parent() }}
+    <script type="text/javascript" language="javascript" src="{{ asset('commons/js/jquery.validate.js') }}"></script>
+    <script type="text/javascript" language="javascript" src="{{ asset('commons/js/ext-all.js') }}"></script>
+    <script type="text/javascript" src="{{ asset('commons/js/jquery-ui.js') }}"></script>
+    <script type="text/javascript">
+        $( ".date" ).datepicker( {
+            changeMonth: true,
+            changeYear: true,
+            showOn: "both",
+            buttonImage: "{{ asset('commons/images/calendar.gif') }}",
+            buttonImageOnly: true,
+            dateFormat: "dd/mm/yy",
+            showAnim: "clip",
+            //minDate: "+0D",
+            yearRange:'c-60:c+60'
+        });
 
-    <form action="{{ path('training_create') }}" method="post" {{ form_enctype(form) }}>
+        $( document ).ready(function() {
+
+            var startdate='#hris_recordsbundle_trainingtype_startdate';
+            var enddate='#hris_recordsbundle_trainingtype_enddate';
+
+            // Disable end date
+            $(enddate).attr('disabled', 'true');
+
+            // Enable End date when startdate is set
+            $(startdate).on('change', function() {
+                // enable forms
+                if( $(startdate).val() != '') {
+                    $(enddate).removeAttr('disabled');
+                }else{
+                    $(enddate).attr('disabled', 'true');
+                }
+            });
+
+            //Check startdate should always be less than end date
+            $(enddate).on('change', function(){
+                var startdateValue = $(startdate).val();
+                var enddateValue = $(enddate).val();
+                if( Date.parse(startdateValue) > Date.parse(enddateValue) ){
+                    alert("End date can not be before startdate. Please enter correct value");
+                    $(enddate).val("");
+                }
+            });
+        });
+    </script>
+{% endblock javascripts %}
+
+{% block stylesheets %}
+    {{ parent() }}
+    <link rel="stylesheet" type="text/css" media="all" href="{{ asset('commons/css/ext-standard.css') }}">
+    <link rel="stylesheet" href="{{ asset('commons/css/datepicker.css') }}" />
+    <link rel="stylesheet" href="{{ asset('commons/css/jquery-ui.css') }}" />
+{% endblock stylesheets %}
+
+{% block right_content -%}
+    <h1><small>Add Training for {{ employeeName }}</small></h1>
+
+    <form action="{{ path('training_create',{'recordid': recordid}) }}" method="post" {{ form_enctype(form) }}>
         {{ form_widget(form) }}
-        <p>
-            <button type="submit">Create</button>
-        </p>
-    </form>
 
-        <ul class="record_actions">
-    <li>
-        <a href="{{ path('training') }}">
-            Back to the list
-        </a>
-    </li>
-</ul>
+        <br/>
+        <ul class="record_actions inline" style="..." >
+            <li>
+                <button type="submit" class="btn">Create</button>
+            </li>
+            <li>
+                <a href="{{ path('training_list_byrecord', { 'recordid': recordid }) }}" class="btn">
+                Back to the list
+                </a>
+            </li>
+        </ul>
+    </form>
 {% endblock %}

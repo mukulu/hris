@@ -37,17 +37,17 @@ class OrganisationunitRepository extends EntityRepository
 {
     /**
      * Returns organisationunit count
-     * @param Organisationunit $organiastionunit
+     * @param Organisationunit $organisationunit
      * @return null|integer
      */
-    public function getImmediateChildrenCount( Organisationunit $organiastionunit)
+    public function getImmediateChildrenCount( Organisationunit $organisationunit)
     {
-        $queryBuilder = $this->getEntityManager()-> $this->getEntityManager()->createQueryBuilder();
+        $queryBuilder = $this->getEntityManager()->createQueryBuilder();
         $query = $queryBuilder->select('COUNT(organisationunit')
                             ->from('HrisOrganisationunitBundle:Organisationunit','organisationunit')
                             ->where('organisationunit.parent = :parent')
                             ->setParameters(array(
-                                        'parent'=>$organiastionunit
+                                        'parent'=>$organisationunit
                             )
             )->getQuery();
 
@@ -61,28 +61,61 @@ class OrganisationunitRepository extends EntityRepository
     }
 
     /**
-     * Returns organisationunit count
-     * @param Organisationunit $organiastionunit
+     * Returns immediate organisationunits
+     * @param Organisationunit $organisationunit
      * @return \Doctrine\Common\Collections\Collection
      */
-    public function getImmediateChildren( Organisationunit $organiastionunit)
+    public function getImmediateChildren( Organisationunit $organisationunit, $active=NULL)
     {
         $queryBuilder = $this->getEntityManager()->createQueryBuilder();
         $query = $queryBuilder->select('organisationunit')
             ->from('HrisOrganisationunitBundle:Organisationunit','organisationunit')
-            ->where('organisationunit.parent = :parent')
-            ->setParameters(array(
-                    'parent'=>$organiastionunit
+            ->where('organisationunit.parent = :parent');
+        if($active==True) $query = $query->andWhere('organisationunit.active=True');
+        $query = $query->setParameters(array(
+                    'parent'=>$organisationunit
                 )
             )->getQuery();
 
         try {
-            $immediateChildren = $query->getSingleResult();
-            $result = $immediateChildren[1];
+            $immediateChildren = $query->getResult();
+            if(!empty($immediateChildren)) {
+                $result = $immediateChildren[1];
+            }else {
+                $result=NULL;
+            }
         } catch( NoResultException $e) {
             $result = NULL;
         }
         return $result;
+    }
+
+    /**
+     * Returns organisationunit children collection
+     * @param Organisationunit $organisationunit
+     * @return \Doctrine\Common\Collections\Collection
+     */
+    public function getAllChildren( Organisationunit $organisationunit)
+    {
+        $queryBuilder = $this->getEntityManager()->createQueryBuilder();
+        $organisationunitChildren = $queryBuilder->select('organisationunit', 'p.shortname')
+            ->from('HrisOrganisationunitBundle:Organisationunit','organisationunit')
+            ->join('organisationunit.parent','p')
+            ->join('organisationunit.organisationunitStructure','organisationunitStructure')
+            ->join('organisationunitStructure.level','level')
+            ->andWhere('
+                        (
+                            level.level >= :organisationunitLevel
+                            AND organisationunitStructure.level'.$organisationunit->getOrganisationunitStructure()->getLevel()->getLevel().'Organisationunit=:levelOrganisationunit
+                        )'
+            )
+            ->setParameters(array(
+                'levelOrganisationunit'=>$organisationunit,
+                'organisationunitLevel'=>$organisationunit->getOrganisationunitStructure()->getLevel()->getLevel()
+            ))
+            ->getQuery()->getArrayResult();
+
+        return $organisationunitChildren;
     }
 
     /**

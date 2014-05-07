@@ -32,6 +32,7 @@ use Symfony\Component\HttpFoundation\RedirectResponse;
 use Symfony\Component\HttpKernel\Exception\NotFoundHttpException;
 use Symfony\Component\Security\Core\Exception\AccountStatusException;
 use FOS\UserBundle\Model\UserInterface;
+use JMS\SecurityExtraBundle\Annotation\Secure;
 
 /**
  * Controller managing the resetting of the password
@@ -45,6 +46,8 @@ class ResettingController extends ContainerAware
 
     /**
      * Request reset user password: show form
+     *
+     * @Secure(roles="ROLE_SUPER_USER,ROLE_USER_RESETPASSWORD,IS_AUTHENTICATED_ANONYMOUSLY,ROLE_USER")
      */
     public function requestAction()
     {
@@ -53,6 +56,8 @@ class ResettingController extends ContainerAware
 
     /**
      * Request reset user password: submit form and send email
+     *
+     * @Secure(roles="ROLE_SUPER_USER,ROLE_USER_RESETPASSWORDSENDEMAIL,IS_AUTHENTICATED_ANONYMOUSLY,ROLE_USER")
      */
     public function sendEmailAction()
     {
@@ -79,12 +84,16 @@ class ResettingController extends ContainerAware
         $this->container->get('fos_user.mailer')->sendResettingEmailMessage($user);
         $user->setPasswordRequestedAt(new \DateTime());
         $this->container->get('fos_user.user_manager')->updateUser($user);
+        $response = new RedirectResponse($this->container->get('router')->generate('fos_user_resetting_check_email'));
+        $this->authenticateUser($user, $response);
 
-        return new RedirectResponse($this->container->get('router')->generate('fos_user_resetting_check_email'));
+        return $response;
     }
 
     /**
      * Tell the user to check his email provider
+     *
+     * @Secure(roles="ROLE_SUPER_USER,ROLE_USER_RESETPASSWORDCHECKEMAIL,IS_AUTHENTICATED_ANONYMOUSLY,ROLE_USER")
      */
     public function checkEmailAction()
     {
@@ -103,6 +112,7 @@ class ResettingController extends ContainerAware
     }
 
     /**
+     * @Secure(roles="ROLE_SUPER_USER,ROLE_USER_RESETPASSWORD,IS_AUTHENTICATED_ANONYMOUSLY,ROLE_USER")
      * Reset user password
      */
     public function resetAction($token)

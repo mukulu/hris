@@ -1,94 +1,130 @@
 {% extends '::base.html.twig' %}
 
 {% block right_content -%}
-    <h1><i class="icon-circle-info icon-largest" title="Show"></i> <small>Record</small></h1>
+    <h1><i class="icon-circle-info icon-largest" title="Show"></i> <small>Employee's Profile</small></h1>
 
     <table class="record_properties table table-striped table-bordered table-hover">
         <tbody>
-            <tr>
-                <th>Id</th>
-                <td>{{ entity.id }}</td>
-            </tr>
-            <tr>
-                <th>Uid</th>
-                <td>{{ entity.uid }}</td>
-            </tr>
-            <tr>
-                <th>Instance</th>
-                <td>{{ entity.instance }}</td>
-            </tr>
-            <tr>
-                <th>Complete</th>
-                <td>
-                    {% if entity.complete %}
-                        True
-                    {% else %}
-                        False
-                    {% endif %}
-                </td>
-            </tr>
-            <tr>
-                <th>Correct</th>
-                <td>
-                    {% if entity.correct %}
-                        True
-                    {% else %}
-                        False
-                    {% endif %}
-                </td>
-            </tr>
-            <tr>
-                <th>Hashistory</th>
-                <td>
-                    {% if entity.hashistory %}
-                        True
-                    {% else %}
-                        False
-                    {% endif %}
-                </td>
-            </tr>
-            <tr>
-                <th>Hastraining</th>
-                <td>
-                    {% if entity.hastraining %}
-                        True
-                    {% else %}
-                        False
-                    {% endif %}
-                </td>
-            </tr>
-            <tr>
-                <th>Datecreated</th>
-                <td>{{ entity.datecreated|date('Y-m-d H:i:s') }}</td>
-            </tr>
-            <tr>
-                <th>Lastupdated</th>
-                <td>{{ entity.lastupdated|date('Y-m-d H:i:s') }}</td>
-            </tr>
-            <tr>
-                <th>Username</th>
-                <td>{{ entity.username }}</td>
-            </tr>
+            {% for field in entity.getForm.getSimpleField %}
+                <tr>
+                    <th>{{ field.caption }}</th>
+                    <td>
+                        {% if field.getIsCalculated %}
+                            {{ entity | calculateFieldExpression(field.getCalculatedExpression,entity.getForm.getSimpleField) }}
+                        {% else %}
+                            {% if field.getInputType == 'Select' %}
+                                {% if field.uid in entity.getValue|keys %}
+                                    {{ optionMap[ entity.getValue( field.uid ) ] }}
+                                {% endif %}
+                            {% elseif field.getInputType == 'Date' %}
+                                {{ entity.getValue( field.uid ) | date('d/m/Y') }}
+                            {% else %}
+                                {{ entity.getValue( field.uid ) }}
+                            {% endif %}
+                        {% endif %}
+                    </td>
+                </tr>
+            {% endfor %}
         </tbody>
     </table>
 
+    {% if entity.hashistory %}
+        <h1><small>Employee's History</small></h1>
+        <table class="record_properties table table-striped table-bordered table-hover">
+            <thead>
+                <th>History type</th>
+                <th>History</th>
+                <th>Reason</th>
+                <th>Start date</th>
+            </thead>
+            <tbody>
+            {% for history in entity.getHistory() %}
+                <tr>
+                    <td>{{ history.field.caption }}</td>
+                    <td>
+                        {% if history.field.getInputType == 'Select' %}
+                            {{ history.history }}
+                        {% elseif history.field.getInputType == 'Date' %}
+                            {{ history.history | date('d/m/Y') }}
+                        {% else %}
+                            {{ history.history }}
+                        {% endif %}
+                    </td>
+                    <td>{{ history.reason }}</td>
+                    <td>{{ history.startdate | date('d/m/Y') }}</td>
+                </tr>
+            {% endfor %}
+            </tbody>
+        </table>
+    {% endif %}
+
+    {% if entity.hastraining %}
+        <h1><small>Employee's Inservice Training</small></h1>
+        <table class="record_properties table table-striped table-bordered table-hover">
+            <thead>
+            <th>Course name</th>
+            <th>Course Location</th>
+            <th>Sponsor</th>
+            <th>Start date</th>
+            <td>End date</td>
+            </thead>
+            <tbody>
+            {% for training in entity.getTraining() %}
+                <tr>
+                    <td>{{ training.coursename }}</td>
+                    <td>{{ training.courselocation }}</td>
+                    <td>{{ training.sponsor }}</td>
+                    <td>{{ training.startdate | date('d/m/Y') }}</td>
+                    <td>{{ training.enddate | date('d/m/Y') }}</td>
+                </tr>
+            {% endfor %}
+            </tbody>
+        </table>
+    {% endif %}
+
     <ul class="record_actions inline">
         <li>
-            <a href="{{ path('record') }}">
-                Back to the list
+            <a href="{{ path('record_viewrecords', { 'formid': entity.getForm.getId }) }}" class="btn">
+                Back to records
             </a>
         </li>
         <li>
-            <a href="{{ path('record_edit', { 'id': entity.id }) }}">
+            <a href="{{ path('record_edit', { 'id': entity.id }) }}" class="btn">
                 Edit
             </a>
         </li>
         <li>
-            <form action="{{ path('record_delete', { 'id': entity.id }) }}" method="post">
-                <input type="hidden" name="_method" value="DELETE" />
-                {{ form_widget(delete_form) }}
-                <button type="submit">Delete</button>
-            </form>
+
+            <a data-toggle="modal" href="#deleteModalFor{{ entity.uid }}" class="btn btn-danger">Delete Record</a>
+
+            <!-- Modal -->
+            <div class="modal fade" id="deleteModalFor{{ entity.uid }}">
+                <div class="modal-dialog">
+                    <div class="modal-content">
+                        <div class="modal-header">
+                            <button type="button" class="close" data-dismiss="modal" aria-hidden="true">×</button>
+                            <h4 class="modal-title"><i class="icon-circle-remove icon-largest" title="Delete"></i>Deleting Employee's Record</h4>
+                        </div>
+                        <div class="modal-body">
+                            Are you sure you want to delete <strong>Deleting Employee's Record</strong> that was created on <em>{{ entity.datecreated|date('d/m/Y') }}</em>
+                            {% if entity.lastUpdated %}
+                                and last updated on {{ entity.lastUpdated|date('H:i:s d/m/Y') }} ??
+                            {% else %}
+                                and never updated ??
+                            {% endif %}
+                        </div>
+                        <div class="modal-footer">
+                            <form action="{{ path('record_delete', { 'id': entity.id }) }}" method="post">
+                                <input type="hidden" class="btn btn-danger" name="_method" value="DELETE" />
+                                {{ form_widget(delete_form) }}
+                                <button type="button" class="btn btn-default" data-dismiss="modal">Close</button>
+                                <button type="submit" class="btn btn-danger">Delete</button>
+                            </form>
+
+                        </div>
+                    </div><!-- /.modal-content -->
+                </div><!-- /.modal-dialog -->
+            </div><!-- /.modal -->
         </li>
     </ul>
 {% endblock %}

@@ -28,7 +28,12 @@ use Doctrine\Common\DataFixtures\OrderedFixtureInterface;
 use Doctrine\Common\DataFixtures\AbstractFixture;
 use Doctrine\Common\Persistence\ObjectManager;
 
+use Hris\MessageBundle\Entity\Message;
+use Hris\MessageBundle\Entity\MessageMetadata;
+use Hris\MessageBundle\Entity\Thread;
+use Hris\MessageBundle\Entity\ThreadMetadata;
 use Hris\UserBundle\Entity\User;
+use Symfony\Component\Stopwatch\Stopwatch;
 
 class LoadUserData extends AbstractFixture implements OrderedFixtureInterface 
 {
@@ -55,7 +60,7 @@ class LoadUserData extends AbstractFixture implements OrderedFixtureInterface
                 'username'=>'admin',
                 'password'=>'district',
                 'email'=>'admin@localhost.local',
-                'role'=>'ROLE_SUPERUSER',
+                'role'=>'ROLE_SUPER_USER',
                 'enabled'=>True,
                 'phonenumber'=>'+255717000000',
                 'jobtitle'=>'System Administrator',
@@ -67,12 +72,24 @@ class LoadUserData extends AbstractFixture implements OrderedFixtureInterface
                 'username'=>'district',
                 'password'=>'district',
                 'email'=>'district@localhost.local',
-                'role'=>'ROLE_USER',
+                'role'=>'ROLE_DATA_MANAGER',
                 'enabled'=>True,
                 'phonenumber'=>'+255716000000',
                 'jobtitle'=>'Data Manager',
                 'firstname'=>'Hris',
                 'middlename'=>'Data',
+                'surname'=>'Manager',
+            ),
+            2=> Array(
+                'username'=>'hospital',
+                'password'=>'district',
+                'email'=>'hospital@localhost.local',
+                'role'=>'ROLE_DATA_MANAGER',
+                'enabled'=>True,
+                'phonenumber'=>'+255715000000',
+                'jobtitle'=>'Data Manager',
+                'firstname'=>'Hris',
+                'middlename'=>'Hospital',
                 'surname'=>'Manager',
             )
         );
@@ -85,6 +102,9 @@ class LoadUserData extends AbstractFixture implements OrderedFixtureInterface
 	 */
 	public function load(ObjectManager $manager)
 	{
+        $stopwatch = new Stopwatch();
+        $stopwatch->start('dummyUsersGeneration');
+
         $this->addDummyUsers();
         foreach($this->getUsers() as $userKey=>$humanResourceUser) {
             $user = new User();
@@ -102,11 +122,58 @@ class LoadUserData extends AbstractFixture implements OrderedFixtureInterface
 
             $manager->persist($user);
 
+            // Send welcome message to user
+
+            $messageThread = new Thread();
+            $messageThread->setSubject('Welcome');
+            $messageThread->setIsSpam(False);
+            $messageThread->setCreatedAt(new \DateTime('now'));
+            $messageThread->setCreatedBy($user);
+            $manager->persist($messageThread);
+            $messageThreadMetadata = new ThreadMetadata();
+            $messageThreadMetadata->setThread($messageThread);
+            $messageThreadMetadata->setDatecreated(new \DateTime('now'));
+            $messageThreadMetadata->setLastMessageDate(new \DateTime('now'));
+            $messageThreadMetadata->setIsDeleted(False);
+            $messageThreadMetadata->setLastParticipantMessageDate(new \DateTime('now'));
+            $messageThreadMetadata->setParticipant($user);
+            $manager->persist($messageThreadMetadata);
+
+            $message = new Message();
+            $message->setBody("Welcome to HRIS 3!! Feel free to explore the new features!!\n Yours Truly ".$user->getFirstName()." ".$user->getSurname());
+            $message->setSender($user);
+            $message->setThread($messageThread);
+            $manager->persist($message);
+            $messageMetadata = new MessageMetadata();
+            $messageMetadata->setMessage($message);
+            $messageMetadata->setParticipant($user);
+            $messageMetadata->setIsRead(False);
+            $manager->persist($messageMetadata);
+            unset($user);
+            unset($messageThread);
+            unset($messageThreadMetadata);
+            unset($message);
+            unset($messageMetadata);
         }
 
 		$manager->flush();
-		
 
+        /*
+         * Check Clock for time spent
+         */
+        $dummyUsersGenerationTime = $stopwatch->stop('dummyUsersGeneration');
+        $duration = $dummyUsersGenerationTime->getDuration()/1000;
+        unset($stopwatch);
+        if( $duration <60 ) {
+            $durationMessage = round($duration,2).' seconds';
+        }elseif( $duration >= 60 && $duration < 3600 ) {
+            $durationMessage = round(($duration/60),2) .' minutes';
+        }elseif( $duration >=3600 && $duration < 216000) {
+            $durationMessage = round(($duration/3600),2) .' hours';
+        }else {
+            $durationMessage = round(($duration/86400),2) .' hours';
+        }
+        //echo "Dummy users generation complete in ". $durationMessage .".\n\n";
 	}
 	
 	/**

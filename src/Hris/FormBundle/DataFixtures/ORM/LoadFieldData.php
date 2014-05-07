@@ -32,6 +32,7 @@ use Hris\FormBundle\Entity\FieldGroup;
 use Hris\FormBundle\Entity\FieldOption;
 use Hris\FormBundle\Entity\FieldOptionGroup;
 use Hris\FormBundle\Entity\FieldOptionGroupset;
+use Symfony\Component\Stopwatch\Stopwatch;
 
 class LoadFieldData extends AbstractFixture implements OrderedFixtureInterface
 {
@@ -126,6 +127,7 @@ class LoadFieldData extends AbstractFixture implements OrderedFixtureInterface
                 'caption'=>'First name',
                 'compulsory'=>true,
                 'isUnique'=>false,
+                'hastarget'=>false,
                 'isCalculated'=>false,
                 'skipInReport'=>false,
                 'calculatedExpression'=>'',
@@ -140,6 +142,7 @@ class LoadFieldData extends AbstractFixture implements OrderedFixtureInterface
                 'caption'=>'Middle name',
                 'compulsory'=>false,
                 'isUnique'=>false,
+                'hastarget'=>false,
                 'isCalculated'=>false,
                 'skipInReport'=>false,
                 'calculatedExpression'=>'',
@@ -155,6 +158,7 @@ class LoadFieldData extends AbstractFixture implements OrderedFixtureInterface
                 'compulsory'=>true,
                 'fieldRelation'=>False,
                 'isUnique'=>false,
+                'hastarget'=>false,
                 'isCalculated'=>false,
                 'skipInReport'=>false,
                 'calculatedExpression'=>'',
@@ -164,10 +168,11 @@ class LoadFieldData extends AbstractFixture implements OrderedFixtureInterface
             3=>Array(
                 'dataType'=>'Date',
                 'inputType'=>'Date',
-                'name'=>'Birthdate',
+                'name'=>'DateOfBirth',
                 'caption'=>'Date of Birth',
                 'compulsory'=>true,
                 'isUnique'=>false,
+                'hastarget'=>false,
                 'isCalculated'=>false,
                 'skipInReport'=>false,
                 'calculatedExpression'=>'',
@@ -182,6 +187,7 @@ class LoadFieldData extends AbstractFixture implements OrderedFixtureInterface
                 'caption'=>'Sex',
                 'compulsory'=>true,
                 'isUnique'=>false,
+                'hastarget'=>true,
                 'isCalculated'=>false,
                 'skipInReport'=>false,
                 'calculatedExpression'=>'',
@@ -196,6 +202,7 @@ class LoadFieldData extends AbstractFixture implements OrderedFixtureInterface
                 'caption'=>'Marital Status',
                 'compulsory'=>true,
                 'isUnique'=>false,
+                'hastarget'=>false,
                 'isCalculated'=>false,
                 'skipInReport'=>false,
                 'calculatedExpression'=>'',
@@ -210,6 +217,7 @@ class LoadFieldData extends AbstractFixture implements OrderedFixtureInterface
                 'caption'=>'Nationality',
                 'compulsory'=>true,
                 'isUnique'=>false,
+                'hastarget'=>false,
                 'isCalculated'=>false,
                 'skipInReport'=>true,
                 'calculatedExpression'=>'',
@@ -224,6 +232,7 @@ class LoadFieldData extends AbstractFixture implements OrderedFixtureInterface
                 'caption'=>'Religion',
                 'compulsory'=>true,
                 'isUnique'=>false,
+                'hastarget'=>false,
                 'isCalculated'=>false,
                 'skipInReport'=>true,
                 'calculatedExpression'=>'',
@@ -238,6 +247,7 @@ class LoadFieldData extends AbstractFixture implements OrderedFixtureInterface
                 'caption'=>'Basic Education Level',
                 'compulsory'=>true,
                 'isUnique'=>false,
+                'hastarget'=>false,
                 'isCalculated'=>false,
                 'skipInReport'=>false,
                 'calculatedExpression'=>'',
@@ -252,6 +262,7 @@ class LoadFieldData extends AbstractFixture implements OrderedFixtureInterface
                 'caption'=>'Profession Education Level',
                 'compulsory'=>true,
                 'isUnique'=>false,
+                'hastarget'=>true,
                 'isCalculated'=>false,
                 'skipInReport'=>false,
                 'calculatedExpression'=>'',
@@ -266,6 +277,7 @@ class LoadFieldData extends AbstractFixture implements OrderedFixtureInterface
                 'caption'=>'Number of Children/Dependants',
                 'compulsory'=>false,
                 'isUnique'=>false,
+                'hastarget'=>false,
                 'isCalculated'=>false,
                 'skipInReport'=>false,
                 'calculatedExpression'=>'',
@@ -280,6 +292,7 @@ class LoadFieldData extends AbstractFixture implements OrderedFixtureInterface
                 'caption'=>'District of Domicile',
                 'compulsory'=>false,
                 'isUnique'=>false,
+                'hastarget'=>false,
                 'isCalculated'=>false,
                 'skipInReport'=>false,
                 'calculatedExpression'=>'',
@@ -293,7 +306,8 @@ class LoadFieldData extends AbstractFixture implements OrderedFixtureInterface
                 'name'=>'CheckNumber',
                 'caption'=>'Check Number',
                 'compulsory'=>true,
-                'isUnique'=>false,
+                'isUnique'=>true,
+                'hastarget'=>false,
                 'isCalculated'=>false,
                 'skipInReport'=>false,
                 'calculatedExpression'=>'',
@@ -308,6 +322,7 @@ class LoadFieldData extends AbstractFixture implements OrderedFixtureInterface
                 'caption'=>'Employer`s File Number',
                 'compulsory'=>true,
                 'isUnique'=>true,
+                'hastarget'=>false,
                 'isCalculated'=>false,
                 'skipInReport'=>false,
                 'calculatedExpression'=>'',
@@ -322,6 +337,7 @@ class LoadFieldData extends AbstractFixture implements OrderedFixtureInterface
                 'caption'=>'Registration Number',
                 'compulsory'=>false,
                 'isUnique'=>false,
+                'hastarget'=>false,
                 'isCalculated'=>false,
                 'skipInReport'=>false,
                 'calculatedExpression'=>'',
@@ -336,6 +352,7 @@ class LoadFieldData extends AbstractFixture implements OrderedFixtureInterface
                 'caption'=>'Terms of Employment',
                 'compulsory'=>true,
                 'isUnique'=>false,
+                'hastarget'=>false,
                 'isCalculated'=>false,
                 'skipInReport'=>false,
                 'calculatedExpression'=>'',
@@ -350,6 +367,7 @@ class LoadFieldData extends AbstractFixture implements OrderedFixtureInterface
                 'caption'=>'Profession',
                 'compulsory'=>true,
                 'isUnique'=>false,
+                'hastarget'=>true,
                 'isCalculated'=>false,
                 'skipInReport'=>false,
                 'calculatedExpression'=>'',
@@ -364,6 +382,7 @@ class LoadFieldData extends AbstractFixture implements OrderedFixtureInterface
                 'caption'=>'Present Designation',
                 'compulsory'=>true,
                 'isUnique'=>false,
+                'hastarget'=>false,
                 'isCalculated'=>false,
                 'skipInReport'=>false,
                 'calculatedExpression'=>'',
@@ -378,6 +397,7 @@ class LoadFieldData extends AbstractFixture implements OrderedFixtureInterface
                 'caption'=>'Hospital Present Designation',
                 'compulsory'=>true,
                 'isUnique'=>false,
+                'hastarget'=>false,
                 'isCalculated'=>false,
                 'skipInReport'=>false,
                 'calculatedExpression'=>'',
@@ -392,6 +412,7 @@ class LoadFieldData extends AbstractFixture implements OrderedFixtureInterface
                 'caption'=>'Superlative Substantive Position',
                 'compulsory'=>true,
                 'isUnique'=>false,
+                'hastarget'=>false,
                 'isCalculated'=>false,
                 'skipInReport'=>false,
                 'calculatedExpression'=>'',
@@ -406,6 +427,7 @@ class LoadFieldData extends AbstractFixture implements OrderedFixtureInterface
                 'caption'=>'Department',
                 'compulsory'=>true,
                 'isUnique'=>false,
+                'hastarget'=>false,
                 'isCalculated'=>false,
                 'skipInReport'=>false,
                 'calculatedExpression'=>'',
@@ -420,6 +442,7 @@ class LoadFieldData extends AbstractFixture implements OrderedFixtureInterface
                 'caption'=>'Salary Scale',
                 'compulsory'=>true,
                 'isUnique'=>false,
+                'hastarget'=>false,
                 'isCalculated'=>false,
                 'skipInReport'=>false,
                 'calculatedExpression'=>'',
@@ -434,6 +457,7 @@ class LoadFieldData extends AbstractFixture implements OrderedFixtureInterface
                 'caption'=>'Monthly Basic Salary',
                 'compulsory'=>false,
                 'isUnique'=>false,
+                'hastarget'=>false,
                 'isCalculated'=>false,
                 'skipInReport'=>false,
                 'calculatedExpression'=>'',
@@ -448,6 +472,7 @@ class LoadFieldData extends AbstractFixture implements OrderedFixtureInterface
                 'caption'=>'Date of First Appointment',
                 'compulsory'=>true,
                 'isUnique'=>false,
+                'hastarget'=>false,
                 'isCalculated'=>false,
                 'skipInReport'=>false,
                 'calculatedExpression'=>'',
@@ -462,6 +487,7 @@ class LoadFieldData extends AbstractFixture implements OrderedFixtureInterface
                 'caption'=>'Date of Confirmation',
                 'compulsory'=>false,
                 'isUnique'=>false,
+                'hastarget'=>false,
                 'isCalculated'=>false,
                 'skipInReport'=>false,
                 'calculatedExpression'=>'',
@@ -476,6 +502,7 @@ class LoadFieldData extends AbstractFixture implements OrderedFixtureInterface
                 'caption'=>'Date of Last Promotion',
                 'compulsory'=>false,
                 'isUnique'=>false,
+                'hastarget'=>false,
                 'isCalculated'=>false,
                 'skipInReport'=>false,
                 'calculatedExpression'=>'',
@@ -490,6 +517,7 @@ class LoadFieldData extends AbstractFixture implements OrderedFixtureInterface
                 'caption'=>'Employer',
                 'compulsory'=>true,
                 'isUnique'=>false,
+                'hastarget'=>false,
                 'isCalculated'=>false,
                 'skipInReport'=>false,
                 'calculatedExpression'=>'',
@@ -504,6 +532,7 @@ class LoadFieldData extends AbstractFixture implements OrderedFixtureInterface
                 'caption'=>'Employment Status',
                 'compulsory'=>true,
                 'isUnique'=>false,
+                'hastarget'=>false,
                 'isCalculated'=>false,
                 'skipInReport'=>false,
                 'calculatedExpression'=>'',
@@ -518,6 +547,7 @@ class LoadFieldData extends AbstractFixture implements OrderedFixtureInterface
                 'caption'=>'Registered Disability',
                 'compulsory'=>false,
                 'isUnique'=>false,
+                'hastarget'=>false,
                 'isCalculated'=>false,
                 'skipInReport'=>false,
                 'calculatedExpression'=>'',
@@ -532,6 +562,7 @@ class LoadFieldData extends AbstractFixture implements OrderedFixtureInterface
                 'caption'=>'Contacts of Employee',
                 'compulsory'=>true,
                 'isUnique'=>false,
+                'hastarget'=>false,
                 'isCalculated'=>false,
                 'skipInReport'=>false,
                 'calculatedExpression'=>'',
@@ -546,6 +577,7 @@ class LoadFieldData extends AbstractFixture implements OrderedFixtureInterface
                 'caption'=>'Next of Kin',
                 'compulsory'=>false,
                 'isUnique'=>false,
+                'hastarget'=>false,
                 'isCalculated'=>false,
                 'skipInReport'=>false,
                 'calculatedExpression'=>'',
@@ -560,6 +592,7 @@ class LoadFieldData extends AbstractFixture implements OrderedFixtureInterface
                 'caption'=>'Relationship to Next of Kin',
                 'compulsory'=>false,
                 'isUnique'=>false,
+                'hastarget'=>false,
                 'isCalculated'=>false,
                 'skipInReport'=>false,
                 'calculatedExpression'=>'',
@@ -574,6 +607,7 @@ class LoadFieldData extends AbstractFixture implements OrderedFixtureInterface
                 'caption'=>'Contacts of Next of Kin',
                 'compulsory'=>false,
                 'isUnique'=>false,
+                'hastarget'=>false,
                 'isCalculated'=>false,
                 'skipInReport'=>false,
                 'calculatedExpression'=>'',
@@ -582,47 +616,95 @@ class LoadFieldData extends AbstractFixture implements OrderedFixtureInterface
                 'description'=>"Employee's Contacts of Next of Kin(Optional)",
                 'history'=>true),
             33=>Array(
-                'dataType'=>'String',
-                'inputType'=>'TextArea',
+                'dataType'=>'Integer',
+                'inputType'=>'Date',
                 'name'=>'EmploymentDistribution',
                 'caption'=>'Employment Distribution',
                 'compulsory'=>false,
                 'isUnique'=>false,
+                'hastarget'=>false,
                 'isCalculated'=>true,
                 'skipInReport'=>false,
-                'calculatedExpression'=>'range( date_format(#{DateofFirstAppointment},"Y"), date_format("now","Y")-10 ) ',
+                'calculatedExpression'=>"date('Y', strtotime('#{DateofFirstAppointment}'))",
                 'fieldRelation'=>False,
                 'parentField'=>Null,
-                'description'=>"Employee's Contacts of Next of Kin(Optional)",
-                'history'=>true),
+                'description'=>"Annual employment distrubtion based on Employee's Employment date",
+                'history'=>false),
             34=>Array(
-                'dataType'=>'String',
-                'inputType'=>'TextArea',
+                'dataType'=>'Integer',
+                'inputType'=>'Date',
                 'name'=>'RetirementDistribution',
                 'caption'=>'Retirement Distribution',
                 'compulsory'=>false,
                 'isUnique'=>false,
+                'hastarget'=>false,
                 'isCalculated'=>true,
                 'skipInReport'=>false,
-                'calculatedExpression'=>'range( date_format(#{Birthdate},"Y"), date_format("now","Y")-10 ) ',
+                'calculatedExpression'=>"date('Y', strtotime('#{DateOfBirth}'))+60",
                 'fieldRelation'=>False,
                 'parentField'=>Null,
-                'description'=>"Employee's Contacts of Next of Kin(Optional)",
-                'history'=>true),
+                'description'=>"Annual retirement distribution based on Employee's Date of Birth",
+                'history'=>false),
             35=>Array(
                 'dataType'=>'String',
-                'inputType'=>'TextArea',
+                'inputType'=>'Date',
                 'name'=>'AgeDistribution',
                 'caption'=>'Age Distribution',
                 'compulsory'=>false,
                 'isUnique'=>false,
+                'hastarget'=>false,
                 'isCalculated'=>true,
                 'skipInReport'=>false,
-                'calculatedExpression'=>'range( date_format(#{Birthdate},"Y"), date_format("now","Y")-10 ) ',
+                'calculatedExpression'=>"((floor(floor((time() - strtotime('#{DateOfBirth}')) / 31556926)/5))*5) .'-'.(((floor(floor((time() - strtotime('#{DateOfBirth}')) / 31556926)/5))*5)+4)",
                 'fieldRelation'=>False,
                 'parentField'=>Null,
-                'description'=>"Employee's Contacts of Next of Kin(Optional)",
-                'history'=>true),
+                'description'=>"Distribution by age group based on Employee's Date of Birth",
+                'history'=>false),
+            36=>Array(
+                'dataType'=>'Integer',
+                'inputType'=>'Date',
+                'name'=>'Age',
+                'caption'=>'Age',
+                'compulsory'=>false,
+                'isUnique'=>false,
+                'hastarget'=>false,
+                'isCalculated'=>true,
+                'skipInReport'=>false,
+                'calculatedExpression'=>"floor((time() - strtotime('#{DateOfBirth}')) / 31556926)",
+                'fieldRelation'=>False,
+                'parentField'=>Null,
+                'description'=>"Employee's age based on Employee's Date of birth",
+                'history'=>false),
+            37=>Array(
+                'dataType'=>'String',
+                'inputType'=>'Date',
+                'name'=>'EmploymentDuration',
+                'caption'=>'Employment Duration',
+                'compulsory'=>false,
+                'isUnique'=>false,
+                'hastarget'=>false,
+                'isCalculated'=>true,
+                'skipInReport'=>false,
+                'calculatedExpression'=>" floor((time() - strtotime('#{DateofFirstAppointment}'))/31556926) . 'y' . floor(((time() - strtotime('#{DateofFirstAppointment}'))%31556926)/2592000) . 'm'",
+                'fieldRelation'=>False,
+                'parentField'=>Null,
+                'description'=>"Employment duration(years and months at work, based on Date of First Appointment",
+                'history'=>false),
+            38=>Array(
+                'dataType'=>'Date',
+                'inputType'=>'Date',
+                'name'=>'RetirementDate',
+                'caption'=>'Retirement Date',
+                'compulsory'=>false,
+                'isUnique'=>false,
+                'hastarget'=>false,
+                'isCalculated'=>true,
+                'skipInReport'=>false,
+                'calculatedExpression'=>"date('Y-m-d', strtotime('#{DateOfBirth} +60 year'))",
+                'fieldRelation'=>False,
+                'parentField'=>Null,
+                'description'=>"Retirement date based on Employee's Date of Birth",
+                'history'=>false),
         );
         return $this->fields;
     }
@@ -2336,6 +2418,9 @@ class LoadFieldData extends AbstractFixture implements OrderedFixtureInterface
 
     public function load(ObjectManager $manager)
 	{
+        $stopwatch = new Stopwatch();
+        $stopwatch->start('dummyFieldGeneration');
+
         $this->addDummyFields();
         $this->addDummyFieldOptions();
         $this->addDummyFieldOptionGroups();
@@ -2364,6 +2449,7 @@ class LoadFieldData extends AbstractFixture implements OrderedFixtureInterface
             $field->setFieldrelation($humanResourceField['fieldRelation']);
 			$field->setCompulsory($humanResourceField['compulsory']);
             $field->setIsUnique($humanResourceField['isUnique']);
+            $field->setHastarget($humanResourceField['hastarget']);
             $field->setIsCalculated($humanResourceField['isCalculated']);
             $field->setSkipInReport($humanResourceField['skipInReport']);
             $field->setCalculatedExpression($humanResourceField['calculatedExpression']);
@@ -2430,6 +2516,8 @@ class LoadFieldData extends AbstractFixture implements OrderedFixtureInterface
 
                 $manager->persist($fieldOptionGroup);
             }
+            unset($field);
+            unset($fieldOptionGroup);
 		}
 		// Create FieldOptionGroups specific for indicators
         foreach($this->fieldOptionGroups as $fieldOptionGroupKey=>$humanResourceFieldOptionGroup) {
@@ -2446,6 +2534,7 @@ class LoadFieldData extends AbstractFixture implements OrderedFixtureInterface
             }
             $this->addReference($fieldOptionGroupReference, $fieldOptionGroup);
             $manager->persist($fieldOptionGroup);
+            unset($fieldOptionGroup);
         }
 
         // Populate dummy field Groups
@@ -2487,10 +2576,28 @@ class LoadFieldData extends AbstractFixture implements OrderedFixtureInterface
             }
 
             $manager->persist($fieldGroup);
+            unset($fieldGroup);
         }
 		$manager->flush();
+
+        /*
+         * Check Clock for time spent
+         */
+        $dummyFieldGenerationGenerationTime = $stopwatch->stop('dummyFieldGeneration');
+        $duration = $dummyFieldGenerationGenerationTime->getDuration()/1000;
+        unset($stopwatch);
+        if( $duration <60 ) {
+            $durationMessage = round($duration,2).' seconds';
+        }elseif( $duration >= 60 && $duration < 3600 ) {
+            $durationMessage = round(($duration/60),2) .' minutes';
+        }elseif( $duration >=3600 && $duration < 216000) {
+            $durationMessage = round(($duration/3600),2) .' hours';
+        }else {
+            $durationMessage = round(($duration/86400),2) .' hours';
+        }
+        //echo "Dummy Fields generation complete in ". $durationMessage .".\n\n";
 	}
-	
+
 	/**
      * The order in which this fixture will be loaded
 	 * @return integer

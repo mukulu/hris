@@ -32,7 +32,6 @@ use Hris\FormBundle\Entity\FriendlyReportCategory;
 use Hris\FormBundle\Entity\FieldOptionGroupset;
 use Hris\FormBundle\Entity\FieldOption;
 use Hris\FormBundle\Entity\Field;
-use Hris\IndicatorBundle\Entity\Indicator;
 use Symfony\Component\Validator\Constraints as Assert;
 
 /**
@@ -76,6 +75,14 @@ class FieldOptionGroup
      * @ORM\Column(name="description", type="text", nullable=true)
      */
     private $description;
+
+    /**
+     * @var string $operator
+     *
+     * @Gedmo\Versioned
+     * @ORM\Column(name="operator", type="string", length=64, nullable=true)
+     */
+    private $operator;
     
     /**
      * @var FieldOption $fieldOption
@@ -122,6 +129,22 @@ class FieldOptionGroup
     private $friendlyReportCategory;
 
     /**
+     * @var DataelementFieldOptionRelation $dataelementFieldOptionRelationColumn
+     *
+     * @ORM\OneToMany(targetEntity="Hris\IntergrationBundle\Entity\DataelementFieldOptionRelation", mappedBy="columnFieldOptionGroup",cascade={"ALL"})
+     * @ORM\OrderBy({"dataelementname" = "ASC"})
+     */
+    private $dataelementFieldOptionRelationColumn;
+
+    /**
+     * @var DataelementFieldOptionRelation $dataelementFieldOptionRelationRow
+     *
+     * @ORM\OneToMany(targetEntity="Hris\IntergrationBundle\Entity\DataelementFieldOptionRelation", mappedBy="rowFieldOptionGroup",cascade={"ALL"})
+     * @ORM\OrderBy({"dataelementname" = "ASC"})
+     */
+    private $dataelementFieldOptionRelationRow;
+
+    /**
      * @var \DateTime $datecreated
      *
      * @Gedmo\Timestampable(on="create")
@@ -136,14 +159,6 @@ class FieldOptionGroup
      * @ORM\Column(name="lastupdated", type="datetime", nullable=true)
      */
     private $lastupdated;
-
-    /**
-     * @var Indicator $indicator
-     *
-     * @ORM\OneToMany(targetEntity="Hris\IndicatorBundle\Entity\Indicator", mappedBy="indicator",cascade={"ALL"})
-     * @ORM\OrderBy({"name" = "ASC"})
-     */
-    private $indicator;
     
     /**
      * @todo Support filter to further constraint criteria for items fitting in the field group
@@ -214,7 +229,6 @@ class FieldOptionGroup
     public function __construct()
     {
         $this->fieldOption = new ArrayCollection();
-        $this->indicator = new ArrayCollection();
         $this->uid = uniqid();
     }
     
@@ -239,6 +253,29 @@ class FieldOptionGroup
     public function getDescription()
     {
         return $this->description;
+    }
+
+    /**
+     * Set operator
+     *
+     * @param string $operator
+     * @return FieldOptionGroup
+     */
+    public function setOperator($operator)
+    {
+        $this->operator = $operator;
+
+        return $this;
+    }
+
+    /**
+     * Get operator
+     *
+     * @return string
+     */
+    public function getOperator()
+    {
+        return $this->operator;
     }
 
     /**
@@ -408,39 +445,6 @@ class FieldOptionGroup
     public function getFriendlyReportCategory()
     {
         return $this->friendlyReportCategory;
-    }
-
-    /**
-     * Add indicator
-     *
-     * @param Indicator $indicator
-     * @return FieldOptionGroup
-     */
-    public function addIndicator(Indicator $indicator)
-    {
-        $this->indicator[$indicator->getId()] = $indicator;
-
-        return $this;
-    }
-
-    /**
-     * Remove indicator
-     *
-     * @param Indicator $indicator
-     */
-    public function removeIndicator(Indicator $indicator)
-    {
-        $this->indicator->removeElement($indicator);
-    }
-
-    /**
-     * Get indicator
-     *
-     * @return \Doctrine\Common\Collections\Collection
-     */
-    public function getIndicator()
-    {
-        return $this->indicator;
     }
 
     /**

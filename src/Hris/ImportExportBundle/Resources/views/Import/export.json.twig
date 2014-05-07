@@ -1,0 +1,16 @@
+{% extends '::base.html.twig' %}
+
+{% block message_alert %}
+    {% if message %}
+        <div class="alert alert-success">
+            <button type="button" class="close" data-dismiss="alert">&times;</button>
+            <small class="visible-phone"><strong>Success!</strong> {{ message }}</small>
+            <small class="hidden-phone"><strong>Success!</strong> {{ message }}</small>
+        </div>
+    {% endif %}
+{% endblock message_alert %}
+
+
+{% block right_content -%}
+
+{% endblock %}

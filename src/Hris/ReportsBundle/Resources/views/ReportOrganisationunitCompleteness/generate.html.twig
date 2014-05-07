@@ -2,8 +2,49 @@
 {% block javascripts %}
     {{ parent() }}
     <script type="text/javascript" src="{{ asset('commons/js/jquery.dataTables.js') }}"></script>
+    <script type="text/javascript" src="{{ asset('commons/js/jquery.dataTables.ZeroClipboard.js') }}"></script>
+    <script type="text/javascript" src="{{ asset('commons/js/jquery.dataTables.TableTools.min.js') }}"></script>
     <script type="text/javascript" src="{{ asset('commons/js/dt_settings.js') }}"></script>
-    <script>window["_GOOG_TRANS_EXT_VER"] = "1";</script>
+    {% if is_granted('ROLE_ORGANISATIONUNITCOMPLETENESS_AJAXUPDATE') or is_granted('ROLE_SUPER_USER') %}
+        {# jQuery editable completeness figures #}
+        <script type="text/javascript" src="{{ asset('commons/js/jquery.jeditable.mini.js') }}"></script>
+    {% endif %}
+    <script type="text/javascript">
+        $(document).ready(function() {
+            $('.records_list').dataTable( {
+                "sDom": "<'row'<'span6'TRl><'span6'f>r>t<'row'<'span6'i><'span6'p>>",
+                "oTableTools": {
+                    "aButtons": [
+                        {"sExtends":"copy","mColumns":"visible"},
+                        {"sExtends":"xls","mColumns":"visible"},
+                        {"sExtends":"pdf","mColumns":"visible"}
+                    ],
+                    "sSwfPath": "{{ asset('commons/swf/copy_cvs_xls_pdf.swf') }}"
+                },
+                "sPdfOrientation": "landscape",
+                "sPaginationType": "bootstrap",
+                "oLanguage": {
+                    "sLengthMenu": "_MENU_ records per page"
+                },
+                "aLengthMenu": [[10, 25, 50,100,200, -1], [10, 25, 50,100,200, "All"]]
+            } );
+            {% if is_granted('ROLE_ORGANISATIONUNITCOMPLETENESS_AJAXUPDATE') or is_granted('ROLE_SUPER_USER') %}
+                {# Editable expected figures #}
+                $(".dblclick").editable("{{ path('organisationunitcompleteness_ajaxupdate') }}", {
+                    {# indicator : "<img src='{{ asset('commons/images/indicator.gif') }}'>", #}
+                    tooltip   : "Doubleclick to edit...",
+                    event     : "dblclick",
+                    style  : "inherit",
+                    callback : function(value, settings) {
+                        console.log(this);
+                        console.log(value);
+                        console.log(settings);
+                    }
+                });
+            {% endif %}
+        } );
+    </script>
+    
 {% endblock javascripts %}
 
 {% block stylesheets %}
@@ -13,31 +54,38 @@
 
 {% block right_content -%}
 
+    {% set formIds = '' %}
+
+    {% for form in forms %}
+        {% if formIds is empty %}
+            {% set formIds = form.id %}
+        {% else %}
+            {% set formIds = formIds ~ ','~form.id %}
+        {% endif %}
+    {% endfor %}
+
 <div class="container">
     <h1><small>{{ title }}</small></h1>
-
-    {% if sameLevel or parent %}
+    {% if rootNodeOrganisationunit.parent and rootNodeOrganisationunit.parent.organisationunitStructure.level.level >= app.user.organisationunit.organisationunitStructure.level.level %}
         <ul class="inline">
-            {% if sameLevel %}
-                <li>
-                    <a class="btn" href="{{ path('report_organisationunit_completeness') }}">
+            <li>
+                <a class="btn" href="{{ path('report_organisationunit_completeness_generate_redirect', { 'organisationunit': rootNodeOrganisationunit.parent.id, 'forms': formIds }) }}">
+                    Back To {{ rootNodeOrganisationunit.parent.getLongname() }}
+                </a>
+                {% if sameLevel %}
+                    <a class="btn" href="{{ path('report_organisationunit_completeness_generate_redirect', { 'organisationunit': rootNodeOrganisationunit.id, 'forms': formIds }) }}">
                         Back To {{ rootNodeOrganisationunit.getLongname() }}
                     </a>
-                </li>
-            {% elseif parent %}
-                <li>
-                    <a class="btn" href="{{ path('report_organisationunit_completeness') }}">
-                        Back To {{ rootNodeOrganisationunit.getLongname() }}
-                    </a>
-                </li>
-            {% endif %}
+                {% endif %}
+            </li>
         </ul>
     {% endif %}
 
     <table class="records_list dataTable table table-striped table-bordered table-hover" cellpadding="0" cellspacing="0" border="0">
         <thead>
         <tr>
-            {% if organisationunitChildren %}
+            {% if organisationunitChildren and not sameLevel %}
+                {# Display children completeness#}
                 {% if organisationunitChildren %}
                     <th rowspan="2">Sn</th>
                     <th rowspan="2">Organisationunit</th>
@@ -70,7 +118,7 @@
             {% endif %}
         </tr>
 
-        {% if organisationunitChildren or sameLevel %}
+        {% if organisationunitChildren and not sameLevel %}
             <tr>
             {% for form in forms %}
                 <th>Entered Records</th>
@@ -85,37 +133,117 @@
         </thead>
         <tbody>
             {% set counter = 0 %}
-            {% if organisationunitChildren %}
+
+            {% if organisationunitChildren and not sameLevel %}
                 {% for childOrganisationunit in organisationunitChildren %}
                     {% set counter = counter + 1 %}
                     <tr>
                         <td>{{ counter }}</td>
-                        <td>{{ childOrganisationunit.longname }}</td>
+                        <td><a href="{{ path('report_organisationunit_completeness_generate_redirect', { 'organisationunit': childOrganisationunit.id, 'forms': formIds }) }}">
+
+                                {% for lowerLevel in lowerLevels %}
+
+                                    {% if selectedLevel.getLevel() - lowerLevel.level == 0 %}
+                                        {{ childOrganisationunit.getLongname() }}
+                                    {% elseif  lowerLevel.level - selectedLevel.getLevel() == 1 %}
+                                        {{ childOrganisationunit.getParent().getLongname() }}
+                                    {% elseif lowerLevel.level - selectedLevel.getLevel() == 2 %}
+                                        {{ childOrganisationunit.getParent().getParent().getLongname() }}
+                                    {% elseif  lowerLevel.level - selectedLevel.getLevel() == 3 %}
+                                        {{ childOrganisationunit.getParent().getParent().getParent().getLongname() }}
+                                    {% elseif lowerLevel.level - selectedLevel.getLevel() == 4 %}
+                                        {{ childOrganisationunit.getParent().getParent().getParent().getParent().getLongname() }}
+                                    {% elseif  lowerLevel.level - selectedLevel.getLevel() == 5 %}
+                                        {{ childOrganisationunit.getParent().getParent().getParent().getParent().getParent().getLongname() }}
+                                    {% endif %}
+                                    >
+                                {% endfor %}
+                                {{ childOrganisationunit.getLongname() }}
+                            </a>
+                        </td>
                         {% for form in forms %}
                             {# Entered records #}
                             <td>{{ completenessMatrix[childOrganisationunit.id][form.id] }}</td>
                             {# Expected records and Percentage #}
                             {% if expectedCompleteness[childOrganisationunit.id][form.id] %}
-                                {# Entered records #}
-                                <td>{{ expectedCompleteness[childOrganisationunit.id][form.id] }}</td>
+                                {# Expected records #}
+                                <td {% if is_granted('ROLE_ORGANISATIONUNITCOMPLETENESS_AJAXUPDATE') or is_granted('ROLE_SUPER_USER') %} class="dblclick" id="id_{{ childOrganisationunit.id }}_{{ form.id }}" {% endif %}>{{ expectedCompleteness[childOrganisationunit.id][form.id] }}</td>
                                 {# Percentage #}
                                 {% if completenessMatrix[childOrganisationunit.id][form.id] > expectedCompleteness[childOrganisationunit.id][form.id] %}
                                     <td>Above Expected</td>
                                 {% elseif expectedCompleteness[childOrganisationunit.id][form.id]<=0 %}
                                     <td>-</td>
                                 {% else %}
-                                    <td>{{ ( completenessMatrix[childOrganisationunit.id][form.id] / expectedCompleteness[childOrganisationunit.id][form.id] )*100  }}</td>
+                                    <td>{{ ( ( completenessMatrix[childOrganisationunit.id][form.id] / expectedCompleteness[childOrganisationunit.id][form.id] )*100 ) | round }}</td>
                                 {% endif %}
 
                             {% else %}
-                                {# Entered records #}
-                                <td>-</td>
+                                {# Expected records #}
+                                <td {% if is_granted('ROLE_ORGANISATIONUNITCOMPLETENESS_AJAXUPDATE') or is_granted('ROLE_SUPER_USER') %} class="dblclick" id="id_{{ childOrganisationunit.id }}_{{ form.id }}" {% endif %}>-</td>
                                 {# Percentage #}
                                 <td>-</td>
                             {% endif %}
                         {% endfor %}
                     </tr>
                 {% endfor %}
+                {# Root node completeness #}
+                <tr>
+                    {% set counter = counter + 1 %}
+                    <td>{{ counter }}</td>
+                    <td><a href="{{ path('report_organisationunit_completeness_generate_redirect', { 'organisationunit': rootNodeOrganisationunit.id, 'forms': formIds, 'sameLevel':'true' }) }}">{{ rootNodeOrganisationunit.longname }}</a></td>
+                    {% for form in forms %}
+                        {# Entered records #}
+                        <td>{{ completenessMatrix[rootNodeOrganisationunit.id][form.id] }}</td>
+                        {# Expected records and Percentage #}
+                        {% if expectedCompleteness[rootNodeOrganisationunit.id][form.id] %}
+                            {# Expected records #}
+                            <td {% if is_granted('ROLE_ORGANISATIONUNITCOMPLETENESS_AJAXUPDATE') or is_granted('ROLE_SUPER_USER') %} class="dblclick" id="id_{{ rootNodeOrganisationunit.id }}_{{ form.id }}" {% endif %}>{{ expectedCompleteness[rootNodeOrganisationunit.id][form.id] }}</td>
+                            {# Percentage #}
+                            {% if completenessMatrix[rootNodeOrganisationunit.id][form.id] > expectedCompleteness[rootNodeOrganisationunit.id][form.id] %}
+                                <td>Above Expected</td>
+                            {% elseif expectedCompleteness[rootNodeOrganisationunit.id][form.id]<=0 %}
+                                <td>-</td>
+                            {% else %}
+                                <td>{{ ( ( completenessMatrix[rootNodeOrganisationunit.id][form.id] / expectedCompleteness[rootNodeOrganisationunit.id][form.id] )*100 ) | round }}</td>
+                            {% endif %}
+
+                        {% else %}
+                            {# Expected records #}
+                            <td {% if is_granted('ROLE_ORGANISATIONUNITCOMPLETENESS_AJAXUPDATE') or is_granted('ROLE_SUPER_USER') %} class="dblclick" id="id_{{ rootNodeOrganisationunit.id }}_{{ form.id }}" {% endif %}>-</td>
+                            {# Percentage #}
+                            <td>-</td>
+                        {% endif %}
+                    {% endfor %}
+                </tr>
+                {# Total of completeness #}
+                <tr>
+                    {% set counter = counter + 1 %}
+                    <td>{{ counter }}</td>
+                    <td>Total: {{ rootNodeOrganisationunit.longname }} and lower levels</td>
+                    {% for form in forms %}
+                        {# Entered records #}
+                        <td>{{ totalCompletenessMatrix[form.id] }}</td>
+                        {# Expected records and Percentage #}
+                        {% if totalExpectedCompleteness[form.id] %}
+                            {# Entered records #}
+                            <td>{{ totalExpectedCompleteness[form.id] }}</td>
+                            {# Percentage #}
+                            {% if totalCompletenessMatrix[form.id] > totalExpectedCompleteness[form.id] %}
+                                <td>Above Expected</td>
+                            {% elseif totalExpectedCompleteness[form.id]<=0 %}
+                                <td>-</td>
+                            {% else %}
+                                <td>{{ ( ( totalCompletenessMatrix[form.id] / totalExpectedCompleteness[form.id] )*100 ) | round }}</td>
+                            {% endif %}
+
+                        {% else %}
+                            {# Entered records #}
+                            <td>-</td>
+                            {# Percentage #}
+                            <td>-</td>
+                        {% endif %}
+                    {% endfor %}
+                </tr>
             {% else %}
                 {% for recordInstance in recordInstances %}
                     {% set counter = counter + 1 %}
@@ -130,5 +258,16 @@
             {% endif %}
         </tbody>
     </table>
+    <div style="text-align: right">
+        {% if sameLevel %}
+            <a class="btn" href="{{ path('report_organisationunit_completeness_download', { 'organisationunitId': rootNodeOrganisationunit.id, 'formids':formIds, 'sameLevel':'true' } ) }}">
+                Download to Excel
+            </a>
+        {% else %}
+            <a class="btn" href="{{ path('report_organisationunit_completeness_download', { 'organisationunitId': rootNodeOrganisationunit.id, 'formids':formIds,'organisationunitLevel': level.id } ) }}">
+                Download to Excel
+            </a>
+        {% endif %}
+    </div>
 </div>
 {% endblock %}

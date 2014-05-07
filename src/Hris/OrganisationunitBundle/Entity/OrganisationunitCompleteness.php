@@ -34,7 +34,7 @@ use Symfony\Component\Validator\Constraints as Assert;
  * Hris\OrganisationunitBundle\Entity\OrganisationunitCompleteness
  *
  * @Gedmo\Loggable
- * @ORM\Table(name="hris_organisationunitcompleteness")
+ * @ORM\Table(name="hris_organisationunitcompleteness",uniqueConstraints={ @ORM\UniqueConstraint(name="unique_organisationunit_formcompleteness_idx",columns={"organisationunit_id", "form_id"}) })
  * @ORM\Entity(repositoryClass="Hris\OrganisationunitBundle\Entity\OrganisationunitCompletenessRepository")
  */
 class OrganisationunitCompleteness

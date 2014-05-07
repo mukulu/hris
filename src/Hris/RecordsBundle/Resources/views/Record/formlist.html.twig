@@ -5,26 +5,60 @@
 
     <script type="text/javascript">
 
-        /*
-        Creating the Database if not Existing
-         */
-        createDatabase('{{ project_code | lower | raw }}','{{ table_names | raw | escape('js') }}', '{{ column_names | raw }}', '{{ data_values | raw | escape('js')}}');
+        $('#pleaseWaitDialog').modal('show');
 
-        addRecords( '{{ project_code | lower | raw }}','{{ table_name | raw | escape('js') }}', '{{ data_values | raw | escape('js') }}' );
+        $.when.apply().done(function(){
+            setTimeout(function(){
+                $('#pleaseWaitDialog').modal('hide');
+            }, 10000);
+        });
 
-        addRecords( '{{ project_code | lower | raw }}','{{ field_table_name | raw | escape('js') }}', '{{ field_values | raw | escape('js') }}' );
+            /*
+             Creating the Database if not Existing
+             */
 
-        addRecords( '{{ project_code | lower | raw }}','{{ field_option_table_name | raw | escape('js') }}', '{{ field_option_values | raw | escape('js') }}' );
+            var entryChannel = {{ channel | json_encode | raw }};
+            var messageAlert = {{ message | json_encode | raw }};
 
-        addRecords( '{{ project_code | lower | raw }}','"{{ option_associations_table | raw | escape('js') }}"', '{{ option_associations_values | raw | escape('js') }}' );
+            if ( entryChannel == 'dataentry' ){
+
+                createDatabase('{{ project_code | lower | raw }}','{{ table_names | raw | escape('js') }}', '{{ column_names | raw }}', '{{ data_values | raw | escape('js')}}');
+
+                addRecords( '{{ project_code | lower | raw }}','{{ table_name | raw | escape('js') }}', '{{ data_values | raw | escape('js') }}' );
+
+                addRecords( '{{ project_code | lower | raw }}','{{ field_table_name | raw | escape('js') }}', '{{ field_values | raw | escape('js') }}' );
+
+                addRecords( '{{ project_code | lower | raw }}','{{ field_option_table_name | raw | escape('js') }}', '{{ field_option_values | raw | escape('js') }}' );
+
+                addRecords( '{{ project_code | lower | raw }}','"{{ option_associations_table | raw | escape('js') }}"', '{{ option_associations_values | raw | escape('js') }}' );
+
+                addRecords( '{{ project_code | lower | raw }}','{{ organisation_unit_table | raw | escape('js') }}', '{{ organisation_Values | raw | escape('js') }}' );
+            }
+        //}
 
     </script>
 
 {% endblock %}
 
+{% block message_alert %}
+    {% if message %}
+        <div class="alert alert-error">
+            <button type="button" class="close" data-dismiss="alert">&times;</button>
+            <small class="visible-phone"><strong>Warning!</strong> {{ message | raw }}</small>
+            <small class="hidden-phone"><strong>Warning!</strong> {{ message | raw }}</small>
+        </div>
+    {% endif %}
+{% endblock message_alert %}
+
 {% block right_content -%}
+    {% if message %}
+    {% else %}
 <div class="container">
-    <h1><small>Data Entry Forms</small></h1>
+    {% if channel=='dataentry' %}
+        <h1><small>Data Entry Forms</small></h1>
+    {% elseif channel=='updaterecords' %}
+        <h1><small>View Records</small></h1>
+    {% endif %}
 
     <table class="records_list dataTable table table-striped table-bordered table-hover">
         <thead>
@@ -33,15 +67,25 @@
                 <th>Actions</th>
             </tr>
         </thead>
-        <tbody>
+        <tbody  id="reload">
         {% for entity in entities %}
             <tr>
-                <td><a href="{{ path('record_new', { 'id': entity.id }) }}">{{ entity.title }}</a></td>
+                {% if channel=="dataentry" %}
+                    <td><a href="{{ path('record_new', { 'id': entity.id }) }}">{{ entity.title }}</a></td>
+                {% else %}
+                <td><a href="{{ path('record_viewrecords', { 'formid': entity.id }) }}">{{ entity.title }}</a></td>
+                {% endif %}
                 <td>
                 <ul class="inline">
-                    <li>
-                        <a href="{{ path('record_new', { 'id': entity.id }) }}"><i class="icon-down-arrow icon-large" title="Show"></i></a>
-                    </li>
+                    {% if channel=='dataentry' %}
+                        <li>
+                            <a href="{{ path('record_new', { 'id': entity.id }) }}"><i class="icon-down-arrow icon-large" title="Show"></i></a>
+                        </li>
+                    {% elseif channel=='updaterecords' %}
+                        <li>
+                            <a href="{{ path('record_viewrecords', { 'formid': entity.id }) }}"><i class="icon-folder-open icon-large" title="Show"></i></a>
+                        </li>
+                    {% endif %}
                 </ul>
                 </td>
             </tr>
@@ -49,7 +93,19 @@
         </tbody>
     </table>
 </div>
-    <button name='delete' onclick="deleteDatabase('{{ project_code | lower | raw }}')" class="btn">Delete</button>
+    <!--<button name='delete' onclick="deleteDatabase('{{ project_code | lower | raw }}')" class="btn">Clear Offline Data</button> -->
 
     <div id="result" />
+
+    <div class="modal fade" id="pleaseWaitDialog" data-backdrop="static" data-keyboard="false">
+        <div class="modal-header">
+            <h1>Loading Data ...</h1>
+        </div>
+        <div class="modal-body">
+            <div class="progress progress-striped active">
+                <div class="bar" style="width: 100%;"></div>
+            </div>
+        </div>
+    </div>
+    {% endif %}
     {% endblock %}

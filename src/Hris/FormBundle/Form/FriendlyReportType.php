@@ -27,7 +27,6 @@ namespace Hris\FormBundle\Form;
 use Doctrine\Common\Collections\ArrayCollection;
 use Hris\FieldOptionGroupToIdTransformer;
 use Hris\FormBundle\Entity\FriendlyReportCategory;
-use Hris\FormBundle\Form\EventListener\AddFriendlyReportCategorySubscriber;
 use Symfony\Component\Form\AbstractType;
 use Symfony\Component\Form\FormBuilderInterface;
 use Symfony\Component\Form\FormEvent;
@@ -40,15 +39,29 @@ class FriendlyReportType extends AbstractType
     {
         $builder
             ->add('name')
+            ->add('type','choice',array(
+                'choices' =>array('default'=>'Default','sql'=>'SQL'),
+                'required'=>False,
+            ))
             ->add('description')
             ->add('sort')
             ->add('serie')
             ->add('friendlyReportCategory','entity',array(
                     'class'=>'HrisFormBundle:FieldOptionGroup',
                     'multiple'=>True,
-                    'required'=>True,
+                    'required'=>False,
                     'mapped'=>False,
             ))
+            ->add('useTargets',null,array(
+                'required'=> False,
+            ))
+            ->add('ignoreSkipInReport',null,array(
+                'required'=> False,
+            ))
+            ->add('showDeficitSurplus',null,array(
+                'required'=>False,
+            ))
+            ->add('sql')
         ;
     }
 

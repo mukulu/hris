@@ -2,11 +2,13 @@
 
 {% block javascripts %}
     {{ parent() }}
+    <script type="text/javascript" language="javascript" src="{{ asset('commons/js/jquery.multi-select.js') }}"></script>
+    <script type="text/javascript" language="javascript" src="{{ asset('commons/js/jquery.validate.js') }}"></script>
     <script type="text/javascript" language="javascript" src="{{ asset('commons/js/ext-all.js') }}"></script>
     <script type="text/javascript">
         var treeplaceholder="treeplaceholder";
         var inputboxname="hris_reportsbundle_reportaggregationtype[organisationunit]";
-        var urlExtension="";
+        var urlExtension="?selectedNode=16";
         var selectedNode="";
         Ext.define('OrganisationUnitTreeModel2', {
             extend: 'Ext.data.Model',
@@ -53,6 +55,16 @@
             });
         });
         $( document ).ready(function() {
+            // validate signup form on keyup and submit
+            $("#aggregationForm").validate({ ignore:[] });
+            $('#hris_reportsbundle_reportaggregationtype_organisationunitGroup').multiSelect({
+                selectableHeader: "<div class=''>Avaiable Groups</div>",
+                selectionHeader: "<div class=''>Selected Groups</div>"
+            });
+            $('#hris_reportsbundle_reportaggregationtype_forms').multiSelect({
+                selectableHeader: "<div class=''>Avaiable Forms</div>",
+                selectionHeader: "<div class=''>Selected Forms</div>"
+            });
 
             var withLowerLevels='#hris_reportsbundle_reportaggregationtype_withLowerLevels';
             var organisationunitGroup='#hris_reportsbundle_reportaggregationtype_organisationunitGroup';
@@ -83,7 +95,7 @@
                     $(fieldTwoId+' option').each(function(){
                         if( $(fieldOneId).val() == $(this).val() ) {
                             //alert($(fieldTwoId).text());
-                            $(this).text('Use one Field')
+                            $(this).text('Use one Field').attr('selected', true)
                             //$(fieldTwoId).append(new Option($(this).text(), $(this).val()));
                         }else{
                             //alert($(fieldOneId).find('option[value="'+$(this).val()+'"]').text());
@@ -112,14 +124,16 @@
 {% block stylesheets %}
     {{ parent() }}
     <link rel="stylesheet" type="text/css" media="all" href="{{ asset('commons/css/ext-standard.css') }}">
+    <link rel="stylesheet" type="text/css" media="all" href="{{ asset('commons/css/multi-select.css') }}">
 {% endblock stylesheets %}
 
 {% block right_content -%}
     <h1><small>Report Aggregation</small></h1>
 
-    {{ form_start(aggregationForm, { 'method' : 'PUT' } ) }}
+    {{ form_start(aggregationForm, { 'method' : 'PUT','attr': {'class':'aggregationForm','id':'aggregationForm'} } ) }}
 
     <div>
+        {{ form_label( aggregationForm.organisationunit ) }}
         <div id="treeplaceholder"></div>
         {{ form_errors( aggregationForm.organisationunit ) }}
         {{ form_widget( aggregationForm.organisationunit ) }}
@@ -130,10 +144,9 @@
     {{ form_row( aggregationForm.forms ) }}
 
     {{ form_label(aggregationForm.fields) }}
-    {{ form_widget(aggregationForm.fields, {'attr': {'class': 'task_field'}}) }}
+    {{ form_widget(aggregationForm.fields, {'attr': {'class': 'task_field'} }) }}
     {{ form_widget(aggregationForm.fields, {'attr': {'class': 'task_field'}}) }}
 
     {{ form_end(aggregationForm) }}
-
 
 {% endblock %}

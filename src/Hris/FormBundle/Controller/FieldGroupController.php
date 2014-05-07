@@ -31,6 +31,7 @@ use Sensio\Bundle\FrameworkExtraBundle\Configuration\Route;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Template;
 use Hris\FormBundle\Entity\FieldGroup;
 use Hris\FormBundle\Form\FieldGroupType;
+use JMS\SecurityExtraBundle\Annotation\Secure;
 
 /**
  * FieldGroup controller.
@@ -43,6 +44,7 @@ class FieldGroupController extends Controller
     /**
      * Lists all FieldGroup entities.
      *
+     * @Secure(roles="ROLE_SUPER_USER,ROLE_FIELDGROUP_LIST")
      * @Route("/", name="fieldgroup")
      * @Route("/list", name="fieldgroup_list")
      * @Method("GET")
@@ -54,6 +56,7 @@ class FieldGroupController extends Controller
 
         $entities = $em->getRepository('HrisFormBundle:FieldGroup')->findAll();
 
+        $delete_forms = NULL;
         foreach($entities as $entity) {
             $delete_form= $this->createDeleteForm($entity->getId());
             $delete_forms[$entity->getId()] = $delete_form->createView();
@@ -67,6 +70,7 @@ class FieldGroupController extends Controller
     /**
      * Creates a new FieldGroup entity.
      *
+     * @Secure(roles="ROLE_SUPER_USER,ROLE_FIELDGROUP_CREATE")
      * @Route("/", name="fieldgroup_create")
      * @Method("POST")
      * @Template("HrisFormBundle:FieldGroup:new.html.twig")
@@ -94,6 +98,7 @@ class FieldGroupController extends Controller
     /**
      * Displays a form to create a new FieldGroup entity.
      *
+     * @Secure(roles="ROLE_SUPER_USER,ROLE_FIELDGROUP_CREATE")
      * @Route("/new", name="fieldgroup_new")
      * @Method("GET")
      * @Template()
@@ -112,6 +117,7 @@ class FieldGroupController extends Controller
     /**
      * Finds and displays a FieldGroup entity.
      *
+     * @Secure(roles="ROLE_SUPER_USER,ROLE_FIELDGROUP_SHOW")
      * @Route("/{id}", requirements={"id"="\d+"}, name="fieldgroup_show")
      * @Method("GET")
      * @Template()
@@ -137,6 +143,7 @@ class FieldGroupController extends Controller
     /**
      * Displays a form to edit an existing FieldGroup entity.
      *
+     * @Secure(roles="ROLE_SUPER_USER,ROLE_FIELDGROUP_UPDATE")
      * @Route("/{id}/edit", requirements={"id"="\d+"}, name="fieldgroup_edit")
      * @Method("GET")
      * @Template()
@@ -164,6 +171,7 @@ class FieldGroupController extends Controller
     /**
      * Edits an existing FieldGroup entity.
      *
+     * @Secure(roles="ROLE_SUPER_USER,ROLE_FIELDGROUP_UPDATE")
      * @Route("/{id}", requirements={"id"="\d+"}, name="fieldgroup_update")
      * @Method("PUT")
      * @Template("HrisFormBundle:FieldGroup:edit.html.twig")
@@ -198,6 +206,7 @@ class FieldGroupController extends Controller
     /**
      * Deletes a FieldGroup entity.
      *
+     * @Secure(roles="ROLE_SUPER_USER,ROLE_FIELDGROUP_DELETE")
      * @Route("/{id}", requirements={"id"="\d+"}, name="fieldgroup_delete")
      * @Method("DELETE")
      */

@@ -22,6 +22,10 @@
                 <td>{{ entity.description }}</td>
             </tr>
             <tr>
+                <th>Field OptionGroup</th>
+                <td>{{ entity.fieldOptionGroup | join(', ') }}</td>
+            </tr>
+            <tr>
                 <th>Datecreated</th>
                 <td>{{ entity.datecreated|date('Y-m-d H:i:s') }}</td>
             </tr>

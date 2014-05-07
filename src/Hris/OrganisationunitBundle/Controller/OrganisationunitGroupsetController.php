@@ -31,6 +31,7 @@ use Sensio\Bundle\FrameworkExtraBundle\Configuration\Route;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Template;
 use Hris\OrganisationunitBundle\Entity\OrganisationunitGroupset;
 use Hris\OrganisationunitBundle\Form\OrganisationunitGroupsetType;
+use JMS\SecurityExtraBundle\Annotation\Secure;
 
 /**
  * OrganisationunitGroupset controller.
@@ -43,6 +44,7 @@ class OrganisationunitGroupsetController extends Controller
     /**
      * Lists all OrganisationunitGroupset entities.
      *
+     * @Secure(roles="ROLE_SUPER_USER,ROLE_ORGANISATIONUNITGROUPSET_LIST")
      * @Route("/", name="organisationunitgroupset")
      * @Route("/list", name="organisationunitgroupset_list")
      * @Method("GET")
@@ -54,6 +56,7 @@ class OrganisationunitGroupsetController extends Controller
 
         $entities = $em->getRepository('HrisOrganisationunitBundle:OrganisationunitGroupset')->findAll();
 
+        $delete_forms = NULL;
         foreach($entities as $entity) {
             $delete_form= $this->createDeleteForm($entity->getId());
             $delete_forms[$entity->getId()] = $delete_form->createView();
@@ -67,6 +70,7 @@ class OrganisationunitGroupsetController extends Controller
     /**
      * Creates a new OrganisationunitGroupset entity.
      *
+     * @Secure(roles="ROLE_SUPER_USER,ROLE_ORGANISATIONUNITGROUPSET_CREATE")
      * @Route("/", name="organisationunitgroupset_create")
      * @Method("POST")
      * @Template("HrisOrganisationunitBundle:OrganisationunitGroupset:new.html.twig")
@@ -94,6 +98,7 @@ class OrganisationunitGroupsetController extends Controller
     /**
      * Displays a form to create a new OrganisationunitGroupset entity.
      *
+     * @Secure(roles="ROLE_SUPER_USER,ROLE_ORGANISATIONUNITGROUPSET_CREATE")
      * @Route("/new", name="organisationunitgroupset_new")
      * @Method("GET")
      * @Template()
@@ -112,6 +117,7 @@ class OrganisationunitGroupsetController extends Controller
     /**
      * Finds and displays a OrganisationunitGroupset entity.
      *
+     * @Secure(roles="ROLE_SUPER_USER,ROLE_ORGANISATIONUNITGROUPSET_SHOW")
      * @Route("/{id}", requirements={"id"="\d+"}, name="organisationunitgroupset_show")
      * @Method("GET")
      * @Template()
@@ -137,6 +143,7 @@ class OrganisationunitGroupsetController extends Controller
     /**
      * Displays a form to edit an existing OrganisationunitGroupset entity.
      *
+     * @Secure(roles="ROLE_SUPER_USER,ROLE_ORGANISATIONUNITGROUPSET_UPDATE")
      * @Route("/{id}/edit", requirements={"id"="\d+"}, name="organisationunitgroupset_edit")
      * @Method("GET")
      * @Template()
@@ -164,6 +171,7 @@ class OrganisationunitGroupsetController extends Controller
     /**
      * Edits an existing OrganisationunitGroupset entity.
      *
+     * @Secure(roles="ROLE_SUPER_USER,ROLE_ORGANISATIONUNITGROUPSET_UPDATE")
      * @Route("/{id}", requirements={"id"="\d+"}, name="organisationunitgroupset_update")
      * @Method("PUT")
      * @Template("HrisOrganisationunitBundle:OrganisationunitGroupset:edit.html.twig")
@@ -173,14 +181,26 @@ class OrganisationunitGroupsetController extends Controller
         $em = $this->getDoctrine()->getManager();
 
         $entity = $em->getRepository('HrisOrganisationunitBundle:OrganisationunitGroupset')->find($id);
+        // Get previous members of this groupset.
+        $organisationunitGroupsPreviously = $entity->getOrganisationunitGroup();
 
-        if (!$entity) {
-            throw $this->createNotFoundException('Unable to find OrganisationunitGroupset entity.');
-        }
-
-        $deleteForm = $this->createDeleteForm($id);
         $editForm = $this->createForm(new OrganisationunitGroupsetType(), $entity);
         $editForm->bind($request);
+//        $organisationunitGroups = $editForm->getData()->getOrganisationunitGroup();
+//
+//        foreach($organisationunitGroups as $organisationunitGroupKey=>$organisationunitGroup) {
+//            $em->persist($organisationunitGroup);
+//            if(empty($organisationunitGroup->getOrganisationunitGroupset())) {
+//                // Update membership of the group to this groupset.
+//            }
+//        }
+//        // Go through previous list of groupset members and unassign membership if not in current list
+//        foreach($organisationunitGroupsPreviously as $organisationunitGroupsPreviouslyKey=>$organisationunitGroupPreviously) {
+//            if(!in_array($organisationunitGroupPreviously,$organisationunitGroups)) {
+//                //Unassign the removed group from this dataset
+//
+//            }
+//        }
 
         if ($editForm->isValid()) {
             $em->persist($entity);
@@ -198,6 +218,7 @@ class OrganisationunitGroupsetController extends Controller
     /**
      * Deletes a OrganisationunitGroupset entity.
      *
+     * @Secure(roles="ROLE_SUPER_USER,ROLE_ORGANISATIONUNITGROUPSET_DELETE")
      * @Route("/{id}", requirements={"id"="\d+"}, name="organisationunitgroupset_delete")
      * @Method("DELETE")
      */

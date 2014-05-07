@@ -28,9 +28,16 @@ namespace Hris\UserBundle\Controller;
 
 use Symfony\Component\DependencyInjection\ContainerAware;
 use Symfony\Component\Security\Core\SecurityContext;
+use JMS\SecurityExtraBundle\Annotation\Secure;
 
 class SecurityController extends ContainerAware
 {
+    /**
+     * Proccess user registration
+     *
+     * @Secure(roles="ROLE_SUPER_USER,ROLE_USER_LOGIN,IS_AUTHENTICATED_ANONYMOUSLY,ROLE_USER")
+     * @return \Symfony\Component\HttpFoundation\Response
+     */
     public function loginAction()
     {
         $form = $this->container->get('fos_user.registration.form');
@@ -70,6 +77,7 @@ class SecurityController extends ContainerAware
      * Renders the login template with the given parameters. Overwrite this function in
      * an extended controller to provide additional data for the login template.
      *
+     * @Secure(roles="ROLE_SUPER_USER,ROLE_USER_LOGIN,IS_AUTHENTICATED_ANONYMOUSLY,ROLE_USER")
      * @param array $data
      *
      * @return \Symfony\Component\HttpFoundation\Response
@@ -81,11 +89,19 @@ class SecurityController extends ContainerAware
         return $this->container->get('templating')->renderResponse($template, $data);
     }
 
+    /**
+     * @Secure(roles="ROLE_SUPER_USER,ROLE_USER_LOGIN,IS_AUTHENTICATED_ANONYMOUSLY,ROLE_USER")
+     * @throws \RuntimeException
+     */
     public function checkAction()
     {
         throw new \RuntimeException('You must configure the check path to be handled by the firewall using form_login in your security firewall configuration.');
     }
 
+    /**
+     * @Secure(roles="ROLE_SUPER_USER,ROLE_USER_LOGIN,IS_AUTHENTICATED_ANONYMOUSLY,ROLE_USER")
+     * @throws \RuntimeException
+     */
     public function logoutAction()
     {
         throw new \RuntimeException('You must activate the logout in your security firewall configuration.');

@@ -31,6 +31,7 @@ use Sensio\Bundle\FrameworkExtraBundle\Configuration\Route;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Template;
 use Hris\IndicatorBundle\Entity\Indicator;
 use Hris\IndicatorBundle\Form\IndicatorType;
+use JMS\SecurityExtraBundle\Annotation\Secure;
 
 /**
  * Indicator controller.
@@ -43,6 +44,7 @@ class IndicatorController extends Controller
     /**
      * Lists all Indicator entities.
      *
+     * @Secure(roles="ROLE_SUPER_USER,ROLE_INDICATOR_LIST")
      * @Route("/", name="indicator")
      * @Route("/list", name="indicator_list")
      * @Method("GET")
@@ -53,6 +55,7 @@ class IndicatorController extends Controller
         $em = $this->getDoctrine()->getManager();
 
         $entities = $em->getRepository('HrisIndicatorBundle:Indicator')->findAll();
+        $delete_forms = NULL;
         foreach($entities as $entity) {
             $delete_form= $this->createDeleteForm($entity->getId());
             $delete_forms[$entity->getId()] = $delete_form->createView();
@@ -66,6 +69,7 @@ class IndicatorController extends Controller
     /**
      * Creates a new Indicator entity.
      *
+     * @Secure(roles="ROLE_SUPER_USER,ROLE_INDICATOR_CREATE")
      * @Route("/", name="indicator_create")
      * @Method("POST")
      * @Template("HrisIndicatorBundle:Indicator:new.html.twig")
@@ -93,6 +97,7 @@ class IndicatorController extends Controller
     /**
      * Displays a form to create a new Indicator entity.
      *
+     * @Secure(roles="ROLE_SUPER_USER,ROLE_INDICATOR_CREATE")
      * @Route("/new", name="indicator_new")
      * @Method("GET")
      * @Template()
@@ -111,6 +116,7 @@ class IndicatorController extends Controller
     /**
      * Finds and displays a Indicator entity.
      *
+     * @Secure(roles="ROLE_SUPER_USER,ROLE_INDICATOR_SHOW")
      * @Route("/{id}", requirements={"id"="\d+"}, name="indicator_show")
      * @Method("GET")
      * @Template()
@@ -136,6 +142,7 @@ class IndicatorController extends Controller
     /**
      * Displays a form to edit an existing Indicator entity.
      *
+     * @Secure(roles="ROLE_SUPER_USER,ROLE_INDICATOR_UPDATE")
      * @Route("/{id}/edit", name="indicator_edit")
      * @Method("GET")
      * @Template()
@@ -163,6 +170,7 @@ class IndicatorController extends Controller
     /**
      * Edits an existing Indicator entity.
      *
+     * @Secure(roles="ROLE_SUPER_USER,ROLE_INDICATOR_UPDATE")
      * @Route("/{id}", name="indicator_update")
      * @Method("PUT")
      * @Template("HrisIndicatorBundle:Indicator:edit.html.twig")
@@ -197,6 +205,7 @@ class IndicatorController extends Controller
     /**
      * Deletes a Indicator entity.
      *
+     * @Secure(roles="ROLE_SUPER_USER,ROLE_INDICATOR_DELETE")
      * @Route("/{id}", name="indicator_delete")
      * @Method("DELETE")
      */

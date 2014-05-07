@@ -31,6 +31,7 @@ use Gedmo\Mapping\Annotation as Gedmo;
 use Hris\FormBundle\Entity\FieldOptionMerge;
 use Hris\FormBundle\Entity\RelationalFilter;
 use Hris\FormBundle\Entity\FieldOptionGroup;
+use Hris\IntergrationBundle\Entity\DataelementFieldOptionRelation;
 use Symfony\Component\Validator\Constraints as Assert;
 
 /**
@@ -58,6 +59,17 @@ class FieldOption
      * @ORM\Column(name="uid", type="string", length=13, unique=true)
      */
     private $uid;
+
+    /**
+     * @var Field $field
+     *
+     * @Gedmo\Versioned
+     * @ORM\ManyToOne(targetEntity="Hris\FormBundle\Entity\Field", inversedBy="fieldOption")
+     * @ORM\JoinColumns({
+     *   @ORM\JoinColumn(name="field_id", referencedColumnName="id", onDelete="CASCADE", nullable=false)
+     * })
+     */
+    private $field;
 
     /**
      * @var string $value
@@ -123,17 +135,6 @@ class FieldOption
     private $fieldOptionGroup;
     
     /**
-     * @var Field $field
-     *
-     * @Gedmo\Versioned
-     * @ORM\ManyToOne(targetEntity="Hris\FormBundle\Entity\Field", inversedBy="fieldOption")
-     * @ORM\JoinColumns({
-     *   @ORM\JoinColumn(name="field_id", referencedColumnName="id", onDelete="CASCADE")
-     * })
-     */
-    private $field;
-    
-    /**
      * @var RelationalFilter $relationalFilter
      *
      * @ORM\ManyToMany(targetEntity="Hris\FormBundle\Entity\RelationalFilter", mappedBy="fieldOption")
@@ -145,9 +146,17 @@ class FieldOption
      * @var FieldOptionMerge $fieldOptionMerge
      *
      * @ORM\OneToMany(targetEntity="Hris\FormBundle\Entity\FieldOptionMerge", mappedBy="mergedFieldOption")
-     * @ORM\OrderBy({"removedoptionvalue" = "ASC"})
+     * @ORM\OrderBy({"removedFieldOptionValue" = "ASC"})
      */
     private $fieldOptionMerge;
+
+    /**
+     * @var DataelementFieldOptionRelation $dataelementFieldOptionRelation
+     *
+     * @ORM\OneToMany(targetEntity="Hris\IntergrationBundle\Entity\DataelementFieldOptionRelation", mappedBy="fieldOption",cascade={"ALL"})
+     * @ORM\OrderBy({"dataelementname" = "ASC"})
+     */
+    private $dataelementFieldOptionRelation;
 
     /**
      * @var \DateTime $datecreated
@@ -367,6 +376,7 @@ class FieldOption
     public function addFieldOptionGroup(FieldOptionGroup $fieldOptionGroup)
     {
         $this->fieldOptionGroup[$fieldOptionGroup->getId()] = $fieldOptionGroup;
+        //$fieldOptionGroup->addFieldOption($this);
     
         return $this;
     }

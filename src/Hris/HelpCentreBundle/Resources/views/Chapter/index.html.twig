@@ -1,0 +1,109 @@
+{% extends '::base.html.twig' %}
+{% block javascripts %}
+    {{ parent() }}
+    <script type="text/javascript" src="{{ asset('commons/js/jquery.dataTables.js') }}"></script>
+    <script type="text/javascript" src="{{ asset('commons/js/jquery.dataTables.ZeroClipboard.js') }}"></script>
+    <script type="text/javascript" src="{{ asset('commons/js/jquery.dataTables.TableTools.min.js') }}"></script>
+    <script type="text/javascript" src="{{ asset('commons/js/dt_settings.js') }}"></script>
+    <script type="text/javascript">
+        $(document).ready(function() {
+            $('.records_list').dataTable( {
+                "sDom": "<'row'<'span6'TRl><'span6'f>r>t<'row'<'span6'i><'span6'p>>",
+                "oTableTools": {
+                    "aButtons": [
+                        {"sExtends":"copy","mColumns":"visible"},
+                        {"sExtends":"xls","mColumns":"visible"},
+                        {"sExtends":"pdf","mColumns":"visible"}
+                    ],
+                    "sSwfPath": "{{ asset('commons/swf/copy_cvs_xls_pdf.swf') }}"
+                },
+                "sPdfOrientation": "landscape",
+                "sPaginationType": "bootstrap",
+                "oLanguage": {
+                    "sLengthMenu": "_MENU_ records per page"
+                },
+                "aLengthMenu": [[10, 25, 50,100,200, -1], [10, 25, 50,100,200, "All"]]
+            } );
+        } );
+    </script>
+{% endblock javascripts %}
+
+{% block stylesheets %}
+    {{ parent() }}
+    <link rel="stylesheet" href="{{ asset('commons/css/dt_bootstrap.css') }}" />
+{% endblock stylesheets %}
+
+{% block right_content -%}
+<div class="container">
+    <h1><small>Chapter list</small></h1>
+
+    <ul class="inline">
+        <li>
+            <a class="btn" href="{{ path('help_chapter_new') }}">
+                Create a new entry
+            </a>
+        </li>
+    </ul>
+
+    <table class="records_list dataTable table table-striped table-bordered table-hover">
+        <thead>
+            <tr>
+                <th>Name</th>
+                <th>Description</th>
+                <th>Content</th>
+                <th>Actions</th>
+            </tr>
+        </thead>
+        <tbody>
+        {% for entity in entities %}
+            <tr>
+                <td><a href="{{ path('help_chapter_show', { 'id': entity.id }) }}">{{ entity.name }}</a></td>
+                <td>{{ entity.description }}</td>
+                <td>{{ entity.content }}</td>
+                <td>
+                    <ul class="inline">
+                    <li>
+                        <a href="{{ path('help_chapter_show', { 'id': entity.id }) }}"><i class="icon-info-sign icon-large" title="Show"></i></a>
+                    </li>
+                    <li>
+                        <a href="{{ path('help_chapter_edit', { 'id': entity.id }) }}"><i class="icon-edit icon-large" title="Edit"></i></a>
+                    </li>
+                    <li>
+                        <a data-toggle="modal" href="#deleteModalFor{{ entity.uid }}"><i class="icon-remove-sign icon-large" title="Delete"></i></a>
+                        <!-- Modal -->
+                        <div class="modal fade" id="deleteModalFor{{ entity.uid }}">
+                            <div class="modal-dialog">
+                                <div class="modal-content">
+                                    <div class="modal-header">
+                                        <button type="button" class="close" data-dismiss="modal" aria-hidden="true">×</button>
+                                        <h4 class="modal-title"><i class="icon-circle-remove icon-largest" title="Delete"></i>Deleting <strong>{{ entity.name | capitalize }}</strong></h4>
+                                    </div>
+                                    <div class="modal-body">
+                                        Are you sure you want to delete <strong>{{ entity.name | capitalize }}</strong> that was created on <em>{{ entity.datecreated|date('d/m/Y') }}</em>
+                                        {% if entity.lastUpdated %}
+                                            and last updated on {{ entity.lastUpdated|date('H:i:s d/m/Y') }} ??
+                                        {% else %}
+                                            and never updated ??
+                                        {% endif %}
+                                    </div>
+                                    <div class="modal-footer">
+                                        <form action="{{ path('help_chapter_delete', { 'id': entity.id }) }}" method="post">
+                                            <input type="hidden" name="_method" value="DELETE" />
+                                            {{ form_widget(delete_forms[entity.id] ) }}
+                                            <button type="button" class="btn btn-default" data-dismiss="modal">Close</button>
+                                            <button type="submit" class="btn btn-danger">Delete</button>
+                                        </form>
+                                    </div>
+                                </div><!-- /.modal-content -->
+                            </div><!-- /.modal-dialog -->
+                        </div><!-- /.modal -->
+
+                    </li>
+                </ul>
+                </td>
+            </tr>
+        {% endfor %}
+        </tbody>
+    </table>
+</div>
+    {% endblock %}

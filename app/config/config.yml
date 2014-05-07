@@ -4,6 +4,7 @@ imports:
     - { resource: doctrine_extensions.yml }
     - { resource: "@HrisUserBundle/Resources/config/profile.xml" }
     - { resource: "@HrisUserBundle/Resources/config/registration.xml" }
+    - { resource: "@HrisUserBundle/Resources/config/group.xml" }
 
 framework:
     #esi:             ~
@@ -20,7 +21,8 @@ framework:
         #assets_version: SomeVersionScheme
     default_locale:  "%locale%"
     trusted_proxies: ~
-    session:         ~
+    session:
+        cookie_lifetime: 72000 # 20 minutes
     fragments:       ~
 
 # Twig Configuration
@@ -32,13 +34,14 @@ twig:
 #            - ':Form:fields.html.twig'
 
     globals:
+            fos_message_provider:   "@fos_message.provider"
         # Place Global Variables here, and they will be available in all Twig Templetes.
             project: "Human Resource for Health Information System"
             project_code: "HRHIS"
             project_site: "https://github.com/hrisproject/hris"
             version: "3.0"
             copyright: "Human Resource Information System 2012"
-            client_name: "Ministry of Health And Social Welfare"
+            client_name: "Ministry of Health and Social Welfare"
             client_code: "MOHSW"
 
     cache:                     "%kernel.cache_dir%/twig"
@@ -108,14 +111,14 @@ swiftmailer:
 # Monolog configuration
 monolog:
     handlers:
-        syslog:
-            type: stream
-            path: /var/log/symfony.log
-            level: error
         main:
             type: fingers_crossed
             action_level: warning
             handler: file
+        syslog:
+            type: stream
+            path: /var/log/symfony.log
+            level: error
         file:
             type: stream
             level: debug
@@ -124,50 +127,26 @@ fos_user:
     db_driver: orm # other valid values are 'mongodb', 'couchdb' and 'propel'
     firewall_name: secured_area
     user_class: Hris\UserBundle\Entity\User
+    group:
+        group_class: Hris\UserBundle\Entity\Group
+    use_listener: true
+    from_email:
+        sender_name: "HRIS Mailer"
     registration:
         confirmation:
-            enabled: false
+            from_email:
+                address: hrismailer@gmail.com
+                sender_name: "HRIS Mailer<noreply>"
+            enabled: true
+    resetting:
+        email:
+            from_email:
+                address: hrismailer@gmail.com
+                sender_name: "HRIS Mailer<noreply>"
 #KnpMenuBundle Configurations
 knp_menu:
    templating: false # if true, enables the helper for PHP templates
    default_renderer: twig # The renderer to use, list is also available by default
-        
-#SonataAdminBundle Configurations
-sonata_admin:
-#    security_handler: sonata.admin.security.handler.noop
-
-    title:      Sonata Project
-    title_logo: /bundles/sonataadmin/logo_title.png
-    templates:
-        # default global templates
-        layout:  SonataAdminBundle::standard_layout.html.twig
-        ajax:    SonataAdminBundle::ajax_layout.html.twig
-        dashboard: SonataAdminBundle:Core:dashboard.html.twig
-
-        # default actions templates, should extend a global templates
-        list:    SonataAdminBundle:CRUD:list.html.twig
-        show:    SonataAdminBundle:CRUD:show.html.twig
-        edit:    SonataAdminBundle:CRUD:edit.html.twig
-
-    dashboard:
-        blocks:
-            # display a dashboard block
-            - { position: left, type: sonata.admin.block.admin_list }
-
-            # Customize this part to add new block configuration
-#            - { position: right, type: sonata.block.service.text, settings: { content: "<h2>Welcome to the Sonata Admin</h2> <p>This is a <code>sonata.block.service.text</code> from the Block Bundle, you can create and add new block in these area by configuring the <code>sonata_admin</code> section.</p> <br /> For instance, here a RSS feed parser (<code>sonata.block.service.rss</code>):"} }
-#            - { position: right, type: sonata.block.service.rss, settings: { title: Sonata Project's Feeds, url: http://sonata-project.org/blog/archive.rss }}
-        groups:
-            default: ~
-sonata_block:
-    default_contexts: [cms]
-    blocks:
-        sonata.admin.block.admin_list:
-            contexts:   [admin]
-
-        sonata.block.service.text:
-        sonata.block.service.action:
-        sonata.block.service.rss:
 
 # Tiny MCE configuration Bundle       
 stfalcon_tinymce:
@@ -231,3 +210,13 @@ jms_security_extra:
     # Allows you to specify access control rules for specific methods, such
     # as controller actions
     method_access_control: { }
+
+fos_message:
+    db_driver: orm
+    thread_class: Hris\MessageBundle\Entity\Thread
+    message_class: Hris\MessageBundle\Entity\Message
+    new_thread_form:
+          type:               fos_message.new_thread_multiple_form.type
+          handler:            fos_message.new_thread_multiple_form.handler
+          model:              FOS\MessageBundle\FormModel\NewThreadMultipleMessage
+          name:               message

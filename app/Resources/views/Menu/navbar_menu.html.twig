@@ -106,7 +106,7 @@
     {% endif %}
 {% endblock %}
 
-{% block linkElement %}<a href="{{ item.uri }}"{{ _self.attributes(item.linkAttributes|merge({'class': 'dropdown-toggle' })) }} data-toggle="dropdown">{{ block('label') }}<b class="caret"></b></a>{% endblock %}
+{% block linkElement %}<a href="{{ item.uri }}"{{ _self.attributes(item.linkAttributes|merge({'class': 'dropdown-toggle' })) }} >{{ block('label') }}</a>{% endblock %}
 
 {% block spanElement %}<span{{ _self.attributes(item.labelAttributes) }}>{{ block('label') }}</span>{% endblock %}
 

@@ -31,6 +31,7 @@ use Hris\ReportsBundle\Form\ReportAggregationType;
 use Symfony\Component\HttpFoundation\Request;
 use Doctrine\Common\Collections\ArrayCollection;
 use Symfony\Bundle\FrameworkBundle\Controller\Controller;
+use Hris\FormBundle\Entity\ResourceTable;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Method;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Route;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Template;
@@ -38,6 +39,7 @@ use Hris\ReportsBundle\Entity\Report;
 use Hris\ReportsBundle\Form\ReportType;
 use Ob\HighchartsBundle\Highcharts\Highchart;
 use Zend\Json\Expr;
+use JMS\SecurityExtraBundle\Annotation\Secure;
 
 /**
  * Report Aggregation controller.
@@ -50,6 +52,7 @@ class ReportAggregationController extends Controller
     /**
      * Show Report Aggregation
      *
+     * @Secure(roles="ROLE_SUPER_USER,ROLE_REPORTAGGREGATION_GENERATE")
      * @Route("/", name="report_aggregation")
      * @Method("GET")
      * @Template()
@@ -57,7 +60,7 @@ class ReportAggregationController extends Controller
     public function indexAction()
     {
 
-        $aggregationForm = $this->createForm(new ReportAggregationType(),null,array('em'=>$this->getDoctrine()->getManager()));
+        $aggregationForm = $this->createForm(new ReportAggregationType($this->getUser()),null,array('em'=>$this->getDoctrine()->getManager()));
 
         return array(
             'aggregationForm'=>$aggregationForm->createView(),
@@ -67,13 +70,14 @@ class ReportAggregationController extends Controller
     /**
      * Generate aggregated reports
      *
+     * @Secure(roles="ROLE_SUPER_USER,ROLE_REPORTAGGREGATION_GENERATE")
      * @Route("/", name="report_aggregation_generate")
      * @Method("PUT")
      * @Template()
      */
     public function generateAction(Request $request)
     {
-        $aggregationForm = $this->createForm(new ReportAggregationType(),null,array('em'=>$this->getDoctrine()->getManager()));
+        $aggregationForm = $this->createForm(new ReportAggregationType($this->getUser()),null,array('em'=>$this->getDoctrine()->getManager()));
         $aggregationForm->bind($request);
 
         if ($aggregationForm->isValid()) {
@@ -85,6 +89,9 @@ class ReportAggregationController extends Controller
             $fields = $aggregationFormData['fields'];
             $fieldsTwo = $aggregationFormData['fieldsTwo'];
             $graphType = $aggregationFormData['graphType'];
+        }
+        if(empty($organisationUnit)) {
+            $organisationUnit = $this->getDoctrine()->getManager()->createQuery('SELECT organisationunit FROM HrisOrganisationunitBundle:Organisationunit organisationunit WHERE organisationunit.parent IS NULL')->getSingleResult();
         }
 
         $results = $this->aggregationEngine($organisationUnit, $forms, $fields, $organisationunitGroup, $withLowerLevels, $fieldsTwo);
@@ -123,7 +130,7 @@ class ReportAggregationController extends Controller
             );
             $formatterLabel = $fields->getCaption();
 
-        }else{
+        }else{//Two fields selected
             foreach($results as $result){
                 $keys[$result[strtolower($fieldsTwo->getName())]][] = $result['total'];
                 $categoryKeys[$result[strtolower($fields->getName())]] = $result['total'];
@@ -231,10 +238,12 @@ class ReportAggregationController extends Controller
      * @param Field $fieldsTwo
      * @return mixed
      */
-    private function aggregationEngine(Organisationunit $organisationUnit,  ArrayCollection $forms, Field $fields, ArrayCollection $organisationunitGroup, $withLowerLevels, Field $fieldsTwo)
+    public function aggregationEngine(Organisationunit $organisationUnit,  ArrayCollection $forms, Field $fields, ArrayCollection $organisationunitGroup, $withLowerLevels, Field $fieldsTwo)
     {
 
+
         $entityManager = $this->getDoctrine()->getManager();
+
         $selectedOrgunitStructure = $entityManager->getRepository('HrisOrganisationunitBundle:OrganisationunitStructure')->findOneBy(array('organisationunit' => $organisationUnit->getId()));
 
         //get the list of options to exclude from the reports
@@ -250,45 +259,9 @@ class ReportAggregationController extends Controller
 
         //create the query to aggregate the records from the static resource table
         //check if field one is calculating field so to create the sub query
-        $resourceTableName = "_resource_all_fields";
+        $resourceTableName = ResourceTable::getStandardResourceTableName();
         if($fields->getIsCalculated()){
-            $subQuery = 'SELECT ';
-            $subQuery .= $fields->getCalculatedExpression();
-            str_replace('$field',$fields->getName() ,$subQuery);
-            $subQuery .= " AS age";
-            if ($fields->getId() != $fieldsTwo->getId()) {
-                $subQuery .= " , ResourceTable.".$fieldsTwo->getName();
-            }
-
-            $subQuery .= " FROM ".$resourceTableName." ResourceTable inner join hris_organisationunit as Orgunit ON Orgunit.id = ResourceTable.organisationunit_id INNER JOIN hris_organisationunitstructure AS Structure ON Structure.organisationunit_id = ResourceTable.organisationunit_id";
-
-            $subQuery .= " WHERE ResourceTable.".$fields->getName()." is not NULL ";
-            if ($fields->getId() != $fieldsTwo->getId()) {
-                $subQuery .= " AND ResourceTable.".$fieldsTwo->getName()." is not NULL";
-            }
-
-            //filter the records by the selected form and facility
-            $subQuery .= " AND ResourceTable.form_id IN (";
-            foreach($forms as $form){
-                $subQuery .= $form->getId()." ,";
-            }
-
-            if($withLowerLevels){
-                $subQuery .= " AND Structure.level".$selectedOrgunitStructure->getLevel()->getLevel()."_id=".$organisationUnit->getId();
-                $subQuery .= " AND  Structure.level_id >= ";
-                $subQuery .= "(SELECT hris_organisationunitstructure.level_id FROM hris_organisationunitstructure WHERE hris_organisationunitstructure.organisationunit_id=".$organisationUnit->getId()." )";
-            }else{
-                $subQuery .= " AND ResourceTable.organisationunit_id=".$organisationUnit->getId();
-            }
-
-            //filter the records if the organisation group was choosen
-            //if(!empty($orgunitGroupId))$subQuery .= " AND (type='".$orgunitGroup->getName()."' OR ownership='".$orgunitGroup->getName()."' OR administrative='".$orgunitGroup->getName()."')";
-
-
-
-            //remove the record which have field option set to exclude in reports
-            foreach($fieldOptionsToExclude as $key => $fieldOptionToExclude)
-                $subQuery .= " AND ResourceTable.".$fieldOptionToExclude->getField()->getName()." != '".$fieldOptionToExclude->getValue()."'";
+            // @todo implement calculated fields feature and remove hard-coding
 
         }
         $query = "SELECT ResourceTable.".$fields->getName();
@@ -323,15 +296,16 @@ class ReportAggregationController extends Controller
         }
 
         //filter the records if the organisation group was choosen
-        /*if(!empty($organisationunitGroup)){
+        if($organisationunitGroup != NULL){
+            $groups = NULL;
             foreach($organisationunitGroup as $organisationunitGroups){
                 $groups .= "'".$organisationunitGroups->getName()."',";
             }
             //remove the last comma in the query
             $groups = rtrim($groups,",");
 
-            $query .= " AND (ResourceTable.type IN (".$groups.") OR ownership IN (".$groups.") )";//OR administrative IN (".$groups.")
-        }*/
+            if($groups != NULL) $query .= " AND (ResourceTable.type IN (".$groups.") OR ownership IN (".$groups.") )";//OR administrative IN (".$groups.")
+        }
 
         //remove the record which have field option set to exclude in reports
         foreach($fieldOptionsToExclude as $key => $fieldOptionToExclude)
@@ -350,52 +324,12 @@ class ReportAggregationController extends Controller
         //get the records
         $report = $entityManager -> getConnection() -> executeQuery($query) -> fetchAll();
         return $report;
-        /*
-        $tabulationValues = '';
-        $tempFieldOption = '';
-        if ($fieldsTwo->getId() != $fields->getId()) {//when two fields are  selected
-            foreach ($report as $key => $reportValue) {
-
-                if($tempFieldOption != $reportValue[$fieldOne->getName()]){
-                    if($key != 0){ //first time of the loop or the last time of the loop
-                        foreach ($fieldTwoOption as $keys => $fieldTwoOptions) {
-                            if (!array_key_exists($fieldTwoOptions, $tempArray)) {
-                                $tempArray[$fieldTwoOptions] = 0;
-                            }
-                        }
-                        ksort($tempArray);
-                        $tabulationValues[$tempFieldOption] = $tempArray;
-
-                    }
-                    $tempFieldOption = $reportValue[$fieldOne->getName()];
-                    $tempArray = '';
-                    $tempArray[$reportValue[$fieldTwo->getName()]] = $reportValue['total'];
-
-                }else{
-                    $tempArray[$reportValue[$fieldTwo->getName()]] = $reportValue['total'];
-                }
-
-                if($key == count($report)-1){//deal with the last record
-                    foreach ($fieldTwoOption as $keys => $fieldTwoOptions) {
-                        if (!array_key_exists($fieldTwoOptions, $tempArray)) {
-                            $tempArray[$fieldTwoOptions] = 0;
-                        }
-                    }
-                    ksort($tempArray);
-                    $tabulationValues[$tempFieldOption] = $tempArray;
-                }
-            }
-
-        }else{//when one field is  selected
-            foreach ($report as $key => $reportValue) {
-                $tabulationValues[$reportValue[$fieldOne->getName()]] = $reportValue['total'];
-            }
-        }*/
     }
 
     /**
      * Download aggregated reports
      *
+     * @Secure(roles="ROLE_SUPER_USER,ROLE_REPORTAGGREGATION_DOWNLOAD")
      * @Route("/download", name="report_aggregation_download")
      * @Method("GET")
      * @Template()
@@ -423,7 +357,7 @@ class ReportAggregationController extends Controller
         }
 
         foreach($organisationunitGroupsId as $organisationunitGroupId){
-            $organisationunitGroups->add($em->getRepository('HrisOrganisationunitBundle:OrganisationunitGroup')->find($organisationunitGroupId));
+            if($organisationunitGroupId != NULL)$organisationunitGroups->add($em->getRepository('HrisOrganisationunitBundle:OrganisationunitGroup')->find($organisationunitGroupId));
         }
 
         $results = $this->aggregationEngine($organisationUnit, $forms, $fields, $organisationunitGroups, $withLowerLevels, $fieldsTwo);
@@ -436,8 +370,8 @@ class ReportAggregationController extends Controller
         if($withLowerLevels == 1) $title .= " with lower levels";
 
         // ask the service for a Excel5
-        $excelService = $this->get('xls.service_xls5');
-        $excelService->excelObj->getProperties()->setCreator("HRHIS3")
+        $excelService = $this->get('phpexcel')->createPHPExcelObject();
+        $excelService->getProperties()->setCreator("HRHIS3")
             ->setLastModifiedBy("HRHIS3")
             ->setTitle($title)
             ->setSubject("Office 2005 XLSX Test Document")
@@ -449,9 +383,9 @@ class ReportAggregationController extends Controller
         $column = 'A';
         $row  = 1;
         $date = "Date: ".date("jS F Y");
-        $excelService->excelObj->getActiveSheet()->getDefaultRowDimension()->setRowHeight(15);
-        $excelService->excelObj->getActiveSheet()->getDefaultColumnDimension()->setWidth(15);
-        $excelService->excelObj->setActiveSheetIndex(0)
+        $excelService->getActiveSheet()->getDefaultRowDimension()->setRowHeight(15);
+        $excelService->getActiveSheet()->getDefaultColumnDimension()->setWidth(15);
+        $excelService->setActiveSheetIndex(0)
             ->setCellValue($column.$row++, $title)
             ->setCellValue($column.$row, $date);
         //add style to the header
@@ -507,8 +441,8 @@ class ReportAggregationController extends Controller
             ),
         );
 
-        $excelService->excelObj->getActiveSheet()->getRowDimension('1')->setRowHeight(30);
-        $excelService->excelObj->getActiveSheet()->getRowDimension('2')->setRowHeight(20);
+        $excelService->getActiveSheet()->getRowDimension('1')->setRowHeight(30);
+        $excelService->getActiveSheet()->getRowDimension('2')->setRowHeight(20);
 
         //reset the colomn and row number
         $column == 'A';
@@ -522,19 +456,19 @@ class ReportAggregationController extends Controller
 
             }
             //apply the styles
-            $excelService->excelObj->getActiveSheet()->getStyle('A1:D2')->applyFromArray($heading_format);
-            $excelService->excelObj->getActiveSheet()->mergeCells('A1:D1');
-            $excelService->excelObj->getActiveSheet()->mergeCells('A2:D2');
+            $excelService->getActiveSheet()->getStyle('A1:D2')->applyFromArray($heading_format);
+            $excelService->getActiveSheet()->mergeCells('A1:D1');
+            $excelService->getActiveSheet()->mergeCells('A2:D2');
 
             //write the table heading of the values
-            $excelService->excelObj->getActiveSheet()->getStyle('A4:D4')->applyFromArray($header_format);
-            $excelService->excelObj->setActiveSheetIndex(0)
+            $excelService->getActiveSheet()->getStyle('A4:D4')->applyFromArray($header_format);
+            $excelService->setActiveSheetIndex(0)
                 ->setCellValue($column++.$row, 'SN')
                 ->setCellValue($column++.$row, $fields->getCaption());
             $fieldOptions = $em->getRepository('HrisFormBundle:FieldOption')->findBy(array('field'=>$fieldsTwo));
 
             foreach ($fieldOptions as $fieldOption) {
-                $excelService->excelObj->setActiveSheetIndex(0)->setCellValue($column++.$row, $fieldOption->getValue());
+                $excelService->setActiveSheetIndex(0)->setCellValue($column++.$row, $fieldOption->getValue());
             }
 
             //write the values
@@ -545,27 +479,27 @@ class ReportAggregationController extends Controller
 
                 //format of the row
                 if (($row % 2) == 1)
-                    $excelService->excelObj->getActiveSheet()->getStyle($column.$row.':D'.$row)->applyFromArray($text_format1);
+                    $excelService->getActiveSheet()->getStyle($column.$row.':D'.$row)->applyFromArray($text_format1);
                 else
-                    $excelService->excelObj->getActiveSheet()->getStyle($column.$row.':D'.$row)->applyFromArray($text_format2);
-                $excelService->excelObj->setActiveSheetIndex(0)
+                    $excelService->getActiveSheet()->getStyle($column.$row.':D'.$row)->applyFromArray($text_format2);
+                $excelService->setActiveSheetIndex(0)
                     ->setCellValue($column++.$row, $i++)
                     ->setCellValue($column++.$row, $key);
 
                 foreach ($items as $item) {
-                    $excelService->excelObj->setActiveSheetIndex(0)->setCellValue($column++.$row, $item);
+                    $excelService->setActiveSheetIndex(0)->setCellValue($column++.$row, $item);
                 }
             }
 
         }else{
             //apply the styles
-            $excelService->excelObj->getActiveSheet()->getStyle('A1:C2')->applyFromArray($heading_format);
-            $excelService->excelObj->getActiveSheet()->mergeCells('A1:C1');
-            $excelService->excelObj->getActiveSheet()->mergeCells('A2:C2');
+            $excelService->getActiveSheet()->getStyle('A1:C2')->applyFromArray($heading_format);
+            $excelService->getActiveSheet()->mergeCells('A1:C1');
+            $excelService->getActiveSheet()->mergeCells('A2:C2');
 
             //write the table heading of the values
-            $excelService->excelObj->getActiveSheet()->getStyle('A4:C4')->applyFromArray($header_format);
-            $excelService->excelObj->setActiveSheetIndex(0)
+            $excelService->getActiveSheet()->getStyle('A4:C4')->applyFromArray($header_format);
+            $excelService->setActiveSheetIndex(0)
                 ->setCellValue($column++.$row, 'SN')
                 ->setCellValue($column++.$row, $fields->getCaption())
                 ->setCellValue($column.$row, 'Value');
@@ -578,10 +512,10 @@ class ReportAggregationController extends Controller
 
                 //format of the row
                 if (($row % 2) == 1)
-                    $excelService->excelObj->getActiveSheet()->getStyle($column.$row.':C'.$row)->applyFromArray($text_format1);
+                    $excelService->getActiveSheet()->getStyle($column.$row.':C'.$row)->applyFromArray($text_format1);
                 else
-                    $excelService->excelObj->getActiveSheet()->getStyle($column.$row.':C'.$row)->applyFromArray($text_format2);
-                $excelService->excelObj->setActiveSheetIndex(0)
+                    $excelService->getActiveSheet()->getStyle($column.$row.':C'.$row)->applyFromArray($text_format2);
+                $excelService->setActiveSheetIndex(0)
                     ->setCellValue($column++.$row, $i++)
                     ->setCellValue($column++.$row, $result[strtolower($fields->getName())])
                     ->setCellValue($column.$row, $result['total']);
@@ -589,22 +523,21 @@ class ReportAggregationController extends Controller
             }
         }
 
-        $excelService->excelObj->getActiveSheet()->setTitle('Aggregate Report');
+        $excelService->getActiveSheet()->setTitle('Aggregate Report');
 
 
         // Set active sheet index to the first sheet, so Excel opens this as the first sheet
-        $excelService->excelObj->setActiveSheetIndex(0);
+        $excelService->setActiveSheetIndex(0);
 
-        //create the response
-
-        $response = $excelService->getResponse();
-        $response->headers->set('Content-Type', 'application/vnd.ms-excel; charset=utf-8');
-        $response->headers->set('Content-Disposition', 'attachment; filename='.$title.'.xls');
-
-        // If you are using a https connection, you have to set those two headers and use sendHeaders() for compatibility with IE <9
+        // create the writer
+        $writer = $this->get('phpexcel')->createWriter($excelService, 'Excel5');
+        $response = $this->get('phpexcel')->createStreamedResponse($writer);
+        // create the response
+        $response->headers->set('Content-Type', 'text/vnd.ms-excel; charset=utf-8');
+        $response->headers->set('Content-Disposition', 'attachment;filename='.$title.'.xls');
         $response->headers->set('Pragma', 'public');
         $response->headers->set('Cache-Control', 'maxage=1');
-        $response->sendHeaders();
+        //$response->sendHeaders();
         return $response;
 
     }
@@ -612,6 +545,7 @@ class ReportAggregationController extends Controller
     /**
      * Download aggregated reports by Cadre
      *
+     * @Secure(roles="ROLE_SUPER_USER,ROLE_REPORTAGGREGATION_DOWNLOADRECORDS")
      * @Route("/records", name="report_aggregation_download_records")
      * @Method("GET")
      * @Template()
@@ -639,7 +573,7 @@ class ReportAggregationController extends Controller
         }
 
         foreach($organisationunitGroupsId as $organisationunitGroupId){
-            $organisationunitGroups->add($em->getRepository('HrisOrganisationunitBundle:OrganisationunitGroup')->find($organisationunitGroupId));
+            if($organisationunitGroupId != NULL) $organisationunitGroups->add($em->getRepository('HrisOrganisationunitBundle:OrganisationunitGroup')->find($organisationunitGroupId));
         }
 
         //get the list of options to exclude from the reports
@@ -657,7 +591,7 @@ class ReportAggregationController extends Controller
         //Pull the organisation unit Structure
         $selectedOrgunitStructure = $em->getRepository('HrisOrganisationunitBundle:OrganisationunitStructure')->findOneBy(array('organisationunit' => $organisationUnit->getId()));
 
-        $resourceTableName = "_resource_all_fields";
+        $resourceTableName = ResourceTable::getStandardResourceTableName();
         //create the query to select the records from the resource table
         $query ="SELECT ResourceTable.firstname, ResourceTable.middlename, ResourceTable.surname, ResourceTable.profession,ResourceTable.".$fields->getName();
 
@@ -689,15 +623,18 @@ class ReportAggregationController extends Controller
         }
 
         //filter the records if the organisation group was choosen
-        /*if(!empty($organisationunitGroup)){
-            foreach($organisationunitGroup as $organisationunitGroups){
-                $groups .= "'".$organisationunitGroups->getName()."',";
-            }
+        $groups = NULL;
+        foreach($organisationunitGroups as $organisationunitGroup){
+            
+            if($organisationunitGroup != NULL)
+                $groups .= "'".$organisationunitGroup->getName()."',";
+        }
+
+        if($groups != NULL){
             //remove the last comma in the query
             $groups = rtrim($groups,",");
-
             $query .= " AND (ResourceTable.type IN (".$groups.") OR ownership IN (".$groups.") )";//OR administrative IN (".$groups.")
-        }*/
+        }
 
         //remove the record which have field option set to exclude in reports
         foreach($fieldOptionsToExclude as $key => $fieldOptionToExclude)
@@ -716,8 +653,8 @@ class ReportAggregationController extends Controller
 
 
         // ask the service for a Excel5
-        $excelService = $this->get('xls.service_xls5');
-        $excelService->excelObj->getProperties()->setCreator("HRHIS3")
+        $excelService = $this->get('phpexcel')->createPHPExcelObject();
+        $excelService->getProperties()->setCreator("HRHIS3")
             ->setLastModifiedBy("HRHIS3")
             ->setTitle($title)
             ->setSubject("Office 2005 XLSX Test Document")
@@ -729,9 +666,9 @@ class ReportAggregationController extends Controller
         $column = 'A';
         $row  = 1;
         $date = "Date: ".date("jS F Y");
-        $excelService->excelObj->getActiveSheet()->getDefaultRowDimension()->setRowHeight(15);
-        $excelService->excelObj->getActiveSheet()->getDefaultColumnDimension()->setWidth(15);
-        $excelService->excelObj->setActiveSheetIndex(0)
+        $excelService->getActiveSheet()->getDefaultRowDimension()->setRowHeight(15);
+        $excelService->getActiveSheet()->getDefaultColumnDimension()->setWidth(15);
+        $excelService->setActiveSheetIndex(0)
             ->setCellValue($column.$row++, $title)
             ->setCellValue($column.$row, $date);
         //add style to the header
@@ -787,8 +724,8 @@ class ReportAggregationController extends Controller
             ),
         );
 
-        $excelService->excelObj->getActiveSheet()->getRowDimension('1')->setRowHeight(30);
-        $excelService->excelObj->getActiveSheet()->getRowDimension('2')->setRowHeight(20);
+        $excelService->getActiveSheet()->getRowDimension('1')->setRowHeight(30);
+        $excelService->getActiveSheet()->getRowDimension('2')->setRowHeight(20);
 
         //reset the colomn and row number
         $column == 'A';
@@ -796,22 +733,22 @@ class ReportAggregationController extends Controller
 
         //apply the styles
         if($fields->getId() != $fieldsTwo->getId()) $cellMerge = 'F'; else $cellMerge = 'E';
-        $excelService->excelObj->getActiveSheet()->getStyle('A1:'.$cellMerge.'2')->applyFromArray($heading_format);
-        $excelService->excelObj->getActiveSheet()->mergeCells('A1:'.$cellMerge.'1');
-        $excelService->excelObj->getActiveSheet()->mergeCells('A2:'.$cellMerge.'2');
+        $excelService->getActiveSheet()->getStyle('A1:'.$cellMerge.'2')->applyFromArray($heading_format);
+        $excelService->getActiveSheet()->mergeCells('A1:'.$cellMerge.'1');
+        $excelService->getActiveSheet()->mergeCells('A2:'.$cellMerge.'2');
 
         //write the table heading of the values
-        $excelService->excelObj->getActiveSheet()->getStyle('A4:'.$cellMerge.'4')->applyFromArray($header_format);
-        $excelService->excelObj->setActiveSheetIndex(0)
+        $excelService->getActiveSheet()->getStyle('A4:'.$cellMerge.'4')->applyFromArray($header_format);
+        $excelService->setActiveSheetIndex(0)
             ->setCellValue($column++.$row, 'SN')
             ->setCellValue($column++.$row, 'Name')
             ->setCellValue($column++.$row, 'Profession');
         if ($fields->getName() != "profession")
-            $excelService->excelObj->setActiveSheetIndex(0)->setCellValue($column++.$row, $fields->getCaption());
+            $excelService->setActiveSheetIndex(0)->setCellValue($column++.$row, $fields->getCaption());
         if($fields->getId() != $fieldsTwo->getId())
             if ($fieldsTwo->getName() != "profession")
-                $excelService->excelObj->setActiveSheetIndex(0)->setCellValue($column++.$row, $fieldsTwo->getCaption());
-        $excelService->excelObj->setActiveSheetIndex(0)->setCellValue($column.$row, 'Facility Name');
+                $excelService->setActiveSheetIndex(0)->setCellValue($column++.$row, $fieldsTwo->getCaption());
+        $excelService->setActiveSheetIndex(0)->setCellValue($column.$row, 'Facility Name');
         //write the values
         $i =1; //count the row
         foreach($results as $result){
@@ -820,38 +757,38 @@ class ReportAggregationController extends Controller
 
             //format of the row
             if (($row % 2) == 1)
-                $excelService->excelObj->getActiveSheet()->getStyle($column.$row.':'.$cellMerge.$row)->applyFromArray($text_format1);
+                $excelService->getActiveSheet()->getStyle($column.$row.':'.$cellMerge.$row)->applyFromArray($text_format1);
             else
-                $excelService->excelObj->getActiveSheet()->getStyle($column.$row.':'.$cellMerge.$row)->applyFromArray($text_format2);
-            $excelService->excelObj->setActiveSheetIndex(0)
+                $excelService->getActiveSheet()->getStyle($column.$row.':'.$cellMerge.$row)->applyFromArray($text_format2);
+            $excelService->setActiveSheetIndex(0)
                 ->setCellValue($column++.$row, $i++)
                 ->setCellValue($column++.$row, $result['firstname'].' '.$result['middlename'].' '.$result['surname'])
                 ->setCellValue($column++.$row, $result['profession']);
             if ($fields->getName() != "profession")
-                $excelService->excelObj->setActiveSheetIndex(0)->setCellValue($column++.$row, $result[strtolower($fields->getName())]);
+                $excelService->setActiveSheetIndex(0)->setCellValue($column++.$row, $result[strtolower($fields->getName())]);
             if($fields->getId() != $fieldsTwo->getId())
                 if ($fieldsTwo->getName() != "profession")
-                    $excelService->excelObj->setActiveSheetIndex(0)->setCellValue($column++.$row, $result[strtolower($fieldsTwo->getName())]);
-            $excelService->excelObj->setActiveSheetIndex(0)->setCellValue($column.$row, $result['longname']);
+                    $excelService->setActiveSheetIndex(0)->setCellValue($column++.$row, $result[strtolower($fieldsTwo->getName())]);
+            $excelService->setActiveSheetIndex(0)->setCellValue($column.$row, $result['longname']);
 
         }
 
-        $excelService->excelObj->getActiveSheet()->setTitle('List of Records');
+        $excelService->getActiveSheet()->setTitle('List of Records');
 
 
         // Set active sheet index to the first sheet, so Excel opens this as the first sheet
-        $excelService->excelObj->setActiveSheetIndex(0);
+        $excelService->setActiveSheetIndex(0);
 
-        //create the response
 
-        $response = $excelService->getResponse();
-        $response->headers->set('Content-Type', 'application/vnd.ms-excel; charset=utf-8');
-        $response->headers->set('Content-Disposition', 'attachment; filename='.$title.'.xls');
-
-        // If you are using a https connection, you have to set those two headers and use sendHeaders() for compatibility with IE <9
+        // create the writer
+        $writer = $this->get('phpexcel')->createWriter($excelService, 'Excel5');
+        // create the response
+        $response = $this->get('phpexcel')->createStreamedResponse($writer);
+        $response->headers->set('Content-Type', 'text/vnd.ms-excel; charset=utf-8');
+        $response->headers->set('Content-Disposition', 'attachment;filename='.$title.'.xls');
         $response->headers->set('Pragma', 'public');
         $response->headers->set('Cache-Control', 'maxage=1');
-        $response->sendHeaders();
+        //$response->sendHeaders();
         return $response;
     }
 

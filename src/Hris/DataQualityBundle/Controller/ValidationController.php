@@ -31,7 +31,7 @@ use Sensio\Bundle\FrameworkExtraBundle\Configuration\Route;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Template;
 use Hris\DataQualityBundle\Entity\Validation;
 use Hris\DataQualityBundle\Form\ValidationType;
-//use Hris\FormBundle\Entity\Field;
+use JMS\SecurityExtraBundle\Annotation\Secure;
 
 /**
  * Validation controller.
@@ -44,6 +44,7 @@ class ValidationController extends Controller
     /**
      * Lists all Validation entities.
      *
+     * @Secure(roles="ROLE_SUPER_USER,ROLE_VALIDATION_LIST")
      * @Route("/", name="validation")
      * @Route("/list", name="validation_list")
      * @Method("GET")
@@ -54,6 +55,7 @@ class ValidationController extends Controller
         $em = $this->getDoctrine()->getManager();
 
         $entities = $em->getRepository('HrisDataQualityBundle:Validation')->findAll();
+        $delete_forms = NULL;
         foreach($entities as $entity) {
             $delete_form= $this->createDeleteForm($entity->getId());
             $delete_forms[$entity->getId()] = $delete_form->createView();
@@ -67,6 +69,7 @@ class ValidationController extends Controller
     /**
      * Creates a new Validation entity.
      *
+     * @Secure(roles="ROLE_SUPER_USER,ROLE_VALIDATION_CREATE")
      * @Route("/", name="validation_create")
      * @Method("POST")
      * @Template()
@@ -102,6 +105,7 @@ class ValidationController extends Controller
     /**
      * Displays a form to create a new Validation entity.
      *
+     * @Secure(roles="ROLE_SUPER_USER,ROLE_VALIDATION_CREATE")
      * @Route("/new", name="validation_new")
      * @Method("GET")
      * @Template()
@@ -115,7 +119,7 @@ class ValidationController extends Controller
         $query = $em->createQuery('SELECT n from Hris\FormBundle\Entity\Field n WHERE (n.name = :name1 OR n.name = :name2 OR n.name=:name3 OR n.name=:name4 OR n.name=:name5 OR n.name=:name6 OR n.name=:name7)');
         $query->setParameters(array(
             'name1' => 'MonthlyBasicSalary',
-            'name2' => 'Birthdate',
+            'name2' => 'DateOfBirth',
             'name3' => 'DateofLastPromotion',
             'name4' => 'DateofConfirmation',
             'name5' => 'DateofFirstAppointment',
@@ -145,6 +149,7 @@ class ValidationController extends Controller
     /**
      * Finds and displays a Validation entity.
      *
+     * @Secure(roles="ROLE_SUPER_USER,ROLE_VALIDATION_SHOW")
      * @Route("/{id}", requirements={"id"="\d+"}, name="validation_show")
      * @Method("GET")
      * @Template()
@@ -170,6 +175,7 @@ class ValidationController extends Controller
     /**
      * Displays a form to edit an existing Validation entity.
      *
+     * @Secure(roles="ROLE_SUPER_USER,ROLE_VALIDATION_UPDATE")
      * @Route("/{id}/edit", requirements={"id"="\d+"}, name="validation_edit")
      * @Method("GET")
      * @Template()
@@ -219,6 +225,7 @@ class ValidationController extends Controller
     /**
      * Edits an existing Validation entity.
      *
+     * @Secure(roles="ROLE_SUPER_USER,ROLE_VALIDATION_UPDATE")
      * @Route("/{id}", requirements={"id"="\d+"}, name="validation_update")
      * @Method("POST")
      * @Template()
@@ -253,6 +260,7 @@ class ValidationController extends Controller
     /**
      * Deletes a Validation entity.
      *
+     * @Secure(roles="ROLE_SUPER_USER,ROLE_VALIDATION_DELETE")
      * @Route("/{id}", requirements={"id"="\d+"}, name="validation_delete")
      * @Method("DELETE")
      */

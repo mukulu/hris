@@ -2,6 +2,8 @@
 
 {% block javascripts %}
     {{ parent() }}
+    <script type="text/javascript" language="javascript" src="{{ asset('commons/js/jquery.multi-select.js') }}"></script>
+    <script type="text/javascript" language="javascript" src="{{ asset('commons/js/jquery.validate.js') }}"></script>
     <script type="text/javascript" language="javascript" src="{{ asset('commons/js/ext-all.js') }}"></script>
     <script type="text/javascript">
         var treeplaceholder="treeplaceholder";
@@ -52,26 +54,53 @@
 
             });
         });
+        $(document).ready(function() {
+            // validate signup form on keyup and submit
+            $("#employeeRecordsForm").validate({ ignore:[] });
+            $('#hris_reportsbundle_reportemployeerecordstype_forms').multiSelect({
+                selectableHeader: "<div class=''>Avaiable Forms</div>",
+                selectionHeader: "<div class=''>Selected Forms</div>"
+            });
+            $( 'input[required="required"],select[required="required"]').closest(".control-group").children("label").prepend('<em class="required-asterisk">*</em>');
+        });
     </script>
 {% endblock javascripts %}
 
 {% block stylesheets %}
     {{ parent() }}
     <link rel="stylesheet" type="text/css" media="all" href="{{ asset('commons/css/ext-standard.css') }}">
+    <link rel="stylesheet" type="text/css" media="all" href="{{ asset('commons/css/multi-select.css') }}">
 {% endblock stylesheets %}
 
 {% block right_content -%}
     <h1><small>Report Employee Records</small></h1>
 
-    {{ form_start(employeeRecordsForm, { 'method' : 'PUT' } ) }}
+    {{ form_start(employeeRecordsForm, { 'method' : 'PUT','attr': {'class':'employeeRecordsForm form-horizontal','id':'employeeRecordsForm'} } ) }}
 
-    <div>
-        <div id="treeplaceholder"></div>
-        {{ form_errors( employeeRecordsForm.organisationunit ) }}
-        {{ form_widget( employeeRecordsForm.organisationunit ) }}
+    <div class="control-group">
+        {{ form_label( employeeRecordsForm.organisationunit,'Select Organisationunit', {'label_attr': {'class': 'control-label'} } ) }}
+        <div class="controls">
+            <div id="treeplaceholder"></div>
+            {{ form_errors( employeeRecordsForm.organisationunit ) }}
+            {{ form_widget( employeeRecordsForm.organisationunit ) }}
+        </div>
     </div>
     <br/>
-    {{ form_row( employeeRecordsForm.forms ) }}
+    <div class="control-group">
+        {{ form_label( employeeRecordsForm.forms,'Select Forms', {'label_attr': {'class': 'control-label'} } ) }}
+        <div class="controls">
+            {{ form_errors( employeeRecordsForm.forms ) }}
+            {{ form_widget( employeeRecordsForm.forms ) }}
+        </div>
+    </div>
+    <div class="control-group">
+        {{ form_label( employeeRecordsForm.withLowerLevels,'Use data for selected unit with lower level', {'label_attr': {'class': 'control-label'} } ) }}
+        <div class="controls">
+            {{ form_errors( employeeRecordsForm.withLowerLevels ) }}
+            {{ form_widget( employeeRecordsForm.withLowerLevels ) }}
+        </div>
+    </div>
+
 
     {{ form_end(employeeRecordsForm) }}
 

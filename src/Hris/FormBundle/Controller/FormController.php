@@ -34,6 +34,7 @@ use Sensio\Bundle\FrameworkExtraBundle\Configuration\Route;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Template;
 use Hris\FormBundle\Entity\Form;
 use Hris\FormBundle\Form\FormType;
+use JMS\SecurityExtraBundle\Annotation\Secure;
 
 /**
  * Form controller.
@@ -46,6 +47,7 @@ class FormController extends Controller
     /**
      * Lists all Form entities.
      *
+     * @Secure(roles="ROLE_SUPER_USER,ROLE_FORM_LIST")
      * @Route("/", name="form")
      * @Route("/list", name="form_list")
      * @Method("GET")
@@ -57,6 +59,7 @@ class FormController extends Controller
 
         $entities = $em->getRepository('HrisFormBundle:Form')->findAll();
 
+        $delete_forms = NULL;
         foreach($entities as $entity) {
             $delete_form= $this->createDeleteForm($entity->getId());
             $delete_forms[$entity->getId()] = $delete_form->createView();
@@ -70,6 +73,7 @@ class FormController extends Controller
     /**
      * Creates a new Form entity.
      *
+     * @Secure(roles="ROLE_SUPER_USER,ROLE_FORM_CREATE")
      * @Route("/", name="form_create")
      * @Method("POST")
      * @Template("HrisFormBundle:Form:new.html.twig")
@@ -121,6 +125,7 @@ class FormController extends Controller
     /**
      * Displays a form to create a new Form entity.
      *
+     * @Secure(roles="ROLE_SUPER_USER,ROLE_FORM_CREATE")
      * @Route("/new", name="form_new")
      * @Method("GET")
      * @Template()
@@ -139,7 +144,8 @@ class FormController extends Controller
     /**
      * Finds and displays a Form entity.
      *
-     * @Route("/{id}", requirements={"id"="\d+"}, requirements={"id"="\d+"}, name="form_show")
+     * @Secure(roles="ROLE_SUPER_USER,ROLE_FORM_SHOW")
+     * @Route("/{id}", requirements={"id"="\d+"}, name="form_show")
      * @Method("GET")
      * @Template()
      */
@@ -164,6 +170,7 @@ class FormController extends Controller
     /**
      * Displays a form to edit an existing Form entity.
      *
+     * @Secure(roles="ROLE_SUPER_USER,ROLE_FORM_UPDATE")
      * @Route("/{id}/edit", requirements={"id"="\d+"}, name="form_edit")
      * @Method("GET")
      * @Template()
@@ -205,6 +212,7 @@ class FormController extends Controller
     /**
      * Edits an existing Form entity.
      *
+     * @Secure(roles="ROLE_SUPER_USER,ROLE_FORM_UPDATE")
      * @Route("/{id}", requirements={"id"="\d+"}, name="form_update")
      * @Method("PUT")
      * @Template("HrisFormBundle:Form:edit.html.twig")
@@ -265,7 +273,7 @@ class FormController extends Controller
             $em->persist($entity);
             $em->flush();
 
-            return $this->redirect($this->generateUrl('form_edit', array('id' => $id)));
+            return $this->redirect($this->generateUrl('form_show', array('id' => $id)));
         }
 
         return array(
@@ -277,6 +285,7 @@ class FormController extends Controller
     /**
      * Deletes a Form entity.
      *
+     * @Secure(roles="ROLE_SUPER_USER,ROLE_FORM_DELETE")
      * @Route("/{id}", requirements={"id"="\d+"}, name="form_delete")
      * @Method("DELETE")
      */
